@@ -43,6 +43,7 @@ public partial class MainWindow : Window
             _subscribed.CharacterSheetRequested -= OnCharacterSheetRequested;
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
+            _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
         }
         _subscribed = DataContext as MainWindowViewModel;
         if (_subscribed is not { } vm) return;
@@ -54,6 +55,7 @@ public partial class MainWindow : Window
         vm.CharacterSheetRequested += OnCharacterSheetRequested;
         vm.HighScoresRequested += OnHighScoresRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
+        vm.KeyCommandsRequested += OnKeyCommandsRequested;
 
         // "New game as" lists the classes from the game data.
         if (this.FindControl<MenuItem>("NewGameAsMenu") is { } menu)
@@ -94,6 +96,9 @@ public partial class MainWindow : Window
 
     private void OnKnowledgeRequested(KnowledgeViewModel knowledge) =>
         new KnowledgeWindow { DataContext = knowledge }.Show(this);
+
+    private void OnKeyCommandsRequested(KeyCommandsViewModel commands) =>
+        new KeyCommandsWindow { DataContext = commands }.Show(this);
 
     private void OnHighScoresRequested(HighScoresViewModel scores) =>
         new HighScoresWindow { DataContext = scores }.Show(this);

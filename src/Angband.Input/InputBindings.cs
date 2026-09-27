@@ -86,6 +86,7 @@ public sealed class InputBindings
         K(InputAction.Feeling, "Ctrl+F");
         K(InputAction.MonsterList, "Char:[");
         K(InputAction.ObjectList, "Char:]");
+        K(InputAction.ShowCommands, "Char:?", "F1");
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
         K(InputAction.ShowWholeMap, "F7");

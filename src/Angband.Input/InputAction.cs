@@ -44,6 +44,8 @@ public enum InputAction
     ToggleTiles, ToggleMute, OpenSettings, ZoomIn, ZoomOut, NewGame, SaveGame, LoadGame, Retire,
     CharacterSheet, HighScores,
     ShowWholeMap, RegenerateLevel, JumpDeeper,
+    /// <summary>The list of commands and their keys (Angband '?' help). Added last so saved bindings keep their meaning.</summary>
+    ShowCommands,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -92,6 +94,12 @@ public static class InputActions
         InputAction.Confirm => "Confirm / context action",
         InputAction.Cancel => "Cancel",
         InputAction.TakeOff => "Take off",
+        InputAction.Wield => "Wear / wield",
+        InputAction.Pickup => "Pick up",
+        InputAction.MonsterKnowledge => "Knowledge",
+        InputAction.Hold => "Hold (stay put)",
+        InputAction.Inscribe => "Inscribe",
+        InputAction.SwitchPane => "Buy / sell (stores)",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",
@@ -104,6 +112,7 @@ public static class InputActions
         InputAction.ShowWholeMap => "Show whole map (debug)",
         InputAction.RegenerateLevel => "Regenerate level (debug)",
         InputAction.JumpDeeper => "Jump 5 levels (debug)",
+        InputAction.ShowCommands => "Keyboard commands",
         _ => System.Text.RegularExpressions.Regex.Replace(action.ToString(), "(?<=[a-z])([A-Z])", " $1").ToLowerInvariant() is var s
             ? char.ToUpperInvariant(s[0]) + s[1..] : action.ToString(),
     };

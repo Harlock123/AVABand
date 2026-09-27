@@ -711,7 +711,13 @@ Arrows / numpad / `hjklyubn` move, `<` `>` stairs, `o`/`c`/`T`/`D` + direction o
 `I` inspect, `a` aim a wand, `Z` use a staff, `z` zap a rod, `A` activate (these open an item list: press its letter, or Esc), `m` cast, `G` study, `B` browse spells,
 F5 regenerate the level, F6 go 5 levels deeper, F7 show the whole map, Ctrl+T tiles/ASCII, F10 display settings, Ctrl+N new game, Ctrl+S save, Ctrl+O load, `C` character sheet, Ctrl+H high scores, `Q` retire (winners), `x` look, `*` target, `~` knowledge (monsters, objects, runes, egos, artifacts), `=` options, `{`/`}` inscribe/uninscribe, Ctrl+D ignore, `K` show ignored, Ctrl+F level feeling, Ctrl +/- zoom.
 
-Every dialog (settings, options, knowledge, character sheet, scores, load, new character) closes with
+**`?` or F1** (Game → Keyboard commands) lists every command by group — moving, items, fighting
+and devices, magic, looking and information, menus, game and display — with what it does, the
+keys and controller button bound to it right now (rebinding in Settings → Controls shows up
+there), and the keys that only work in menus, look/target mode, direction prompts and stores, and
+the mouse; a Find box narrows it to a word, a command or a key.
+
+Every dialog (settings, options, knowledge, character sheet, commands, scores, load, new character) closes with
 **Esc** or the controller's **B** and has a Close or Cancel button, so none relies on a window title bar — tiling window managers
 such as Hyprland/Omarchy draw none. Esc first closes an open drop-down, or cancels a key or button
 being rebound in Settings → Controls. While a dialog is open the controller works the dialog instead of the game behind it: the

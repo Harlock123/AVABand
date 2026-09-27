@@ -30,6 +30,12 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     public void ShowKnowledge() => KnowledgeRequested?.Invoke(CreateKnowledge());
 
+    /// <summary>'?' or F1: the list of commands and the keys bound to them.</summary>
+    public event Action<KeyCommandsViewModel>? KeyCommandsRequested;
+
+    [RelayCommand]
+    public void ShowKeyCommands() => KeyCommandsRequested?.Invoke(new KeyCommandsViewModel(Bindings));
+
     public MonsterKnowledgeViewModel CreateMonsterKnowledge()
     {
         var rows = _data.Monsters
