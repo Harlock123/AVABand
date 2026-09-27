@@ -91,17 +91,17 @@ public partial class MainWindow : Window
         var window = new CharacterSheetWindow { DataContext = sheet };
         // While it is open its paper doll follows the equipment; once closed, it is let go.
         window.Closed += (_, _) => (DataContext as MainWindowViewModel)?.SheetClosed(sheet);
-        window.Show(this);
+        DialogFit.Show(window, this);
     }
 
     private void OnKnowledgeRequested(KnowledgeViewModel knowledge) =>
-        new KnowledgeWindow { DataContext = knowledge }.Show(this);
+        DialogFit.Show(new KnowledgeWindow { DataContext = knowledge }, this);
 
     private void OnKeyCommandsRequested(KeyCommandsViewModel commands) =>
-        new KeyCommandsWindow { DataContext = commands }.Show(this);
+        DialogFit.Show(new KeyCommandsWindow { DataContext = commands }, this);
 
     private void OnHighScoresRequested(HighScoresViewModel scores) =>
-        new HighScoresWindow { DataContext = scores }.Show(this);
+        DialogFit.Show(new HighScoresWindow { DataContext = scores }, this);
 
     /// <summary>The dialog on top, if one is open (the active one, else the latest opened).</summary>
     public Window? OpenDialog =>
@@ -127,7 +127,7 @@ public partial class MainWindow : Window
     public LoadGameWindow OpenLoadGame()
     {
         var window = new LoadGameWindow { DataContext = ((MainWindowViewModel)DataContext!).CreateLoadGame() };
-        window.Show(this);
+        DialogFit.Show(window, this);
         return window;
     }
 
@@ -142,7 +142,7 @@ public partial class MainWindow : Window
     public CharacterCreationWindow OpenCharacterCreation()
     {
         var window = new CharacterCreationWindow { DataContext = ((MainWindowViewModel)DataContext!).CreateCharacterCreation() };
-        window.Show(this);
+        DialogFit.Show(window, this);
         return window;
     }
 
@@ -246,7 +246,7 @@ public partial class MainWindow : Window
     public SettingsWindow OpenSettings()
     {
         var window = new SettingsWindow { DataContext = DataContext };
-        window.Show(this);
+        DialogFit.Show(window, this);
         return window;
     }
 }

@@ -730,6 +730,10 @@ D-pad moves between controls (Up/Down; in a list or an open drop-down they choos
 Left/Right leave a list, move a slider or change tab), and **A** presses a button, toggles a check
 box or switch, opens or closes a drop-down, or picks a list entry. Deleting a saved character
 asks twice ("Really delete?").
+Each dialog is shrunk to fit the screen it opens on (less a margin for the bar and borders) before it
+is shown; its contents scroll. At 200% scaling a small display has only about 800 points of height, and
+Hyprland shrinks a floating window asked for taller than the screen to a fraction of its size, leaving
+the character sheet tiny and unreadable.
 Launch with `--seed N` and/or `--depth N` to reproduce a game or jump straight to a level (`--seed` skips resuming the last save).
 
 Rendering: seen squares in full colour (torch-lit floor tinted yellow), remembered squares dimmed

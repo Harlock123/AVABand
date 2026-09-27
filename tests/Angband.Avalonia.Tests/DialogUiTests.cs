@@ -380,4 +380,27 @@ public class DialogUiTests
         TileRenderingTests.Save(creation, "creation-gamepad");
         creation.Close();
     }
+
+    /// <summary>
+    /// A dialog taller or wider than the screen is shrunk to fit before it opens (Hyprland shrinks an
+    /// oversized floating window to unreadable), and one that fits is left alone.
+    /// </summary>
+    [AvaloniaFact]
+    public void Dialogs_ShrinkToFitTheScreen()
+    {
+        var sheet = new CharacterSheetWindow { Width = 760, Height = 900 };
+        DialogFit.FitTo(sheet, new global::Avalonia.Size(1312, 794));
+        Assert.Equal(760, sheet.Width);
+        Assert.Equal(794 - DialogFit.Margin, sheet.Height);
+
+        var settings = new SettingsWindow { Width = 900, Height = 620 };
+        DialogFit.FitTo(settings, new global::Avalonia.Size(800, 500));
+        Assert.Equal(800 - DialogFit.Margin, settings.Width);
+        Assert.Equal(500 - DialogFit.Margin, settings.Height);
+
+        var scores = new HighScoresWindow { Width = 900, Height = 520 };
+        DialogFit.FitTo(scores, null);
+        Assert.Equal(900, scores.Width);
+        Assert.Equal(520, scores.Height);
+    }
 }
