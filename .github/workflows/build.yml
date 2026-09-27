@@ -91,6 +91,8 @@ jobs:
         with:
           path: artifacts
           merge-multiple: true
+          # The builds were uploaded as their own .zip/.tar.gz files: keep them that way.
+          skip-decompress: true
       - name: Release
         env:
           GH_TOKEN: ${{ github.token }}
