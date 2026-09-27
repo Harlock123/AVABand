@@ -41,7 +41,7 @@ internal sealed class TemplateRoomBuilder(string type, MapTemplateKind kind) : R
         {
             for (var y = 0; y < height; y++)
             for (var x = 0; x < width; x++)
-                TemplateLegend.Apply(c, new Loc(tl.X + x, tl.Y + y), rows[y][x], flags);
+                TemplateLegend.Apply(c, new Loc(tl.X + x, tl.Y + y), rows[y][x], flags, TemplateLegend.LetterDepthBonus(kind));
             if (isVault) c.Level.Vaults.Add(template.Name.Length > 0 ? template.Name : template.Id);
             return new Loc(tl.X + width / 2, tl.Y + height / 2);
         });

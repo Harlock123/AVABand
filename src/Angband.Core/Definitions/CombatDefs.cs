@@ -88,6 +88,25 @@ public sealed class MonsterBlowDef
     public Dice Damage { get; init; } = Dice.Zero;
 }
 
+/// <summary>
+/// A monster's escort (Angband monster.txt "friends" / "friends-base"): with <see cref="Chance"/>
+/// percent odds, <see cref="Number"/> more monsters — of the same race, a named race, or any race
+/// of a base (matched by its symbol, <see cref="Glyph"/>).
+/// </summary>
+public sealed class MonsterFriendDef
+{
+    public int Chance { get; init; } = 100;
+    public Dice Number { get; init; } = Dice.Constant(1);
+    /// <summary>A race id, or <c>same</c> for more of the monster's own race; null for a base.</summary>
+    public string? Race { get; init; }
+    /// <summary>Angband monster base name (e.g. <c>person</c>), for a base escort.</summary>
+    public string? Base { get; init; }
+    /// <summary>The base's symbol: escorts of a base are drawn from races shown with it.</summary>
+    public char? Glyph { get; init; }
+
+    public bool IsSame => string.Equals(Race, "same", StringComparison.Ordinal);
+}
+
 /// <summary>A kind of monster (Angband monster.txt).</summary>
 public sealed class MonsterRaceDef
 {
@@ -124,6 +143,8 @@ public sealed class MonsterRaceDef
     public int Experience { get; init; }
     public IReadOnlyList<MonsterBlowDef> Blows { get; init; } = [];
     public IReadOnlySet<string> Flags { get; init; } = new HashSet<string>();
+    /// <summary>Who comes with it when it is placed (Angband friends / friends-base lines).</summary>
+    public IReadOnlyList<MonsterFriendDef> Friends { get; init; } = [];
     /// <summary>Races it can change into with the SHAPECHANGE spell (Angband "shape:" lines).</summary>
     public IReadOnlyList<string> Shapes { get; init; } = [];
     /// <summary>Object kinds a mimic poses as until found out (Angband "mimic:" lines).</summary>
@@ -144,7 +165,6 @@ public static class MonsterFlags
     public const string NeverBlow = "NEVER_BLOW";
     public const string Rand25 = "RAND_25";
     public const string Rand50 = "RAND_50";
-    public const string Friends = "FRIENDS";
     public const string OpenDoor = "OPEN_DOOR";
     public const string BashDoor = "BASH_DOOR";
     public const string NoFear = "NO_FEAR";

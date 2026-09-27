@@ -85,6 +85,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   the town to Morgoth, imported with `tools/angband_monster_import.py`
   (see *Game data from Angband* below) alongside 27 hand-written ones, with depth/rarity
   allocation with out-of-depth rolls, packs, vault/pit/nest population (one theme per pit).
+  - **Groups and escorts**, as Angband 4.2 places them (`mon-make.c` `place_new_monster`,
+    `place_friends`): each race's `friends` entries, imported from `monster.txt`, give a percent
+    chance, a number (dice) and who comes — more of the same race, a named race, or any race of a
+    base (e.g. "person", matched by its symbol, drawn for the leader's level). Groups shrink within
+    five levels of their native depth (a wild-dog pack of 2d7 is halved on level 1), escorts more
+    than four levels out of depth don't come at all, a group puddles out from its leader (others
+    start within 5 squares) up to 25, and a unique escort comes once. So a soldier sometimes
+    brings one or two more and a few "persons"; a hill orc on level 1 comes alone. Names are
+    resolved as Angband's `lookup_monster` does (an exact name, else the first containing it).
   - Powers: thieves that steal gold or items and vanish in a puff of smoke (killing them returns
     the loot), eaters of food and light, stat drain (sustains protect; gaining a level restores),
     experience drain that can cost levels (hold life protects; Restore Life Levels undoes it),
@@ -446,12 +455,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   character dump). A winner can keep playing and retire when ready (`Q` or Game → Retire, with a
   confirmation): the game ends and the victory goes on the high-score table as *Retired
   victorious*. Quest progress is saved and shown on the character sheet.
-- **Vaults & rooms** (`templates/*.json`): 69 room templates and 93 lesser, medium and greater
+- **Vaults & rooms** (`templates/*.json`): 69 interesting rooms and 93 lesser, medium and greater
   vaults (65 and 89 of them Angband's, via `tools/angband_vault_import.py` — all but 8 sealed by
   permanent rock). Many vaults, as in Angband, are entered by tunnelling through their granite,
   and some treasure pockets are sealed: level generation leaves those alone instead of carving a
   way in. The template legend gained Angband's deeper monster/object symbols and letters for
-  monsters of a given kind.
+  monsters of a given kind. As in Angband 4.2 (`get_vault_monsters`, `build_vault`): a letter's
+  monster is drawn at the level's depth in an interesting room and 2/4/6 deeper in a
+  lesser/medium/greater vault, placed awake and without escorts, and left out if no monster of
+  that symbol is native that shallow (the "Birds of a feather" room stays mostly empty on level 1,
+  where no bird is native); `,` (Angband's `1`) is a monster (50%), else an object (50%), else a
+  trap (25%), at the level's depth. Interesting rooms are as rare as in 4.2's usual profile —
+  about 1 room in 60 on level 1.
 - **Tunnelling** (`Game/GameSession.Tunnel.cs`; `T` + direction): Angband 4.2's digging. Skill
   comes from race (dwarves +40), Strength (`adj_str_dig`) and the best tool carried — the wielded
   weapon or any digger in the pack (shovel, pick, mattock: +20 per point of digging, plus a tenth

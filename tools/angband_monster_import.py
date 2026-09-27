@@ -91,12 +91,42 @@ def flag_list(entry, key):
     return [f.strip() for line in values(entry, key) for f in line.split("|") if f.strip()]
 
 
-def convert(entry, bases):
+# Angband monsters AVABand keeps under older names (see --skip-names).
+ALIASES = {"wild dog": "jackal", "half-orc": "hill_orc"}
+
+
+def friend_race(target, names):
+    """Angband lookup_monster: an exact name, else the first race whose name contains it."""
+    if target.lower() == "same":
+        return "same"
+    exact = next((n for n in names if n.lower() == target.lower()), None)
+    name = exact or next((n for n in names if target.lower() in n.lower()), None)
+    if name is None:
+        return None
+    return ALIASES.get(name.lower(), slug(name))
+
+
+def friends_of(entry, bases, names):
+    """Angband friends / friends-base lines: chance, number (dice), and a race or a base's symbol."""
+    out = []
+    for key, value in entry["lines"]:
+        if key not in ("friends", "friends-base"):
+            continue
+        parts = value.split(":")
+        chance, dice, target = int(parts[0]), parts[1], parts[2]
+        if key == "friends":
+            race = friend_race(target, names)
+            if race:
+                out.append({"chance": chance, "number": dice, "race": race})
+        else:
+            out.append({"chance": chance, "number": dice, "base": target, "glyph": bases.get(target, {}).get("glyph", "?")})
+    return out
+
+
+def convert(entry, bases, names=()):
     base = bases.get(one(entry, "base"), {})
     depth = int(one(entry, "depth", "0"))
     flags = [f for f in base.get("flags", []) + flag_list(entry, "flags") if f not in set(flag_list(entry, "flags-off"))]
-    if any(k == "friends" and v.split(":")[2].strip() == "Same" for k, v in entry["lines"]):
-        flags.append("FRIENDS")
     flags = list(dict.fromkeys(flags))
 
     blows = []
@@ -142,6 +172,9 @@ def convert(entry, bases):
         out["shapeNames"] = [x.strip() for x in shapes]
     if one(entry, "plural"):
         out["plural"] = one(entry, "plural")
+    friends = friends_of(entry, bases, names)
+    if friends:
+        out["friends"] = friends
     if spells:
         if any(sp in INNATE for sp in spells):
             out["innateFrequency"] = innate_freq
@@ -180,10 +213,12 @@ def main():
     names = {m["name"].lower() for m in existing} | {n.lower() for n in args.skip_names}
     ids = {m["id"] for m in existing}
     added = 0
-    for entry in parse(args.monsters):
+    entries = parse(args.monsters)
+    all_names = [e["name"] for e in entries if not e["name"].startswith("<")]
+    for entry in entries:
         if entry["name"].startswith("<") or entry["name"].lower() in names:
             continue
-        m = convert(entry, bases)
+        m = convert(entry, bases, all_names)
         mimic_lines = values(entry, "mimic")
         if mimic_lines:
             poses = [kinds.get((tval.strip(), name.strip().lower())) for tval, _, name in (l.partition(":") for l in mimic_lines)]

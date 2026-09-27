@@ -13,17 +13,17 @@
     "minDepth": 1,
     "weight": 80,
     "rooms": [
-      { "type": "simple", "weight": 40 },
-      { "type": "overlap", "weight": 16 },
-      { "type": "crossed", "weight": 12 },
-      { "type": "large", "weight": 10, "minDepth": 3 },
-      { "type": "circular", "weight": 8, "minDepth": 5 },
-      { "type": "template", "weight": 10 },
-      { "type": "nest", "weight": 3, "minDepth": 11, "maxCount": 1 },
-      { "type": "pit", "weight": 3, "minDepth": 13, "maxCount": 1 },
-      { "type": "lesser_vault", "weight": 3, "minDepth": 8, "maxCount": 1 },
-      { "type": "medium_vault", "weight": 2, "minDepth": 20, "maxCount": 1 },
-      { "type": "greater_vault", "weight": 1, "minDepth": 40, "maxCount": 1 }
+      { "type": "simple", "weight": 400 },
+      { "type": "overlap", "weight": 160 },
+      { "type": "crossed", "weight": 120 },
+      { "type": "large", "weight": 100, "minDepth": 3 },
+      { "type": "circular", "weight": 80, "minDepth": 5 },
+      { "type": "template", "weight": 12 },
+      { "type": "nest", "weight": 30, "minDepth": 11, "maxCount": 1 },
+      { "type": "pit", "weight": 30, "minDepth": 13, "maxCount": 1 },
+      { "type": "lesser_vault", "weight": 30, "minDepth": 8, "maxCount": 1 },
+      { "type": "medium_vault", "weight": 20, "minDepth": 20, "maxCount": 1 },
+      { "type": "greater_vault", "weight": 10, "minDepth": 40, "maxCount": 1 }
     ]
   },
   {

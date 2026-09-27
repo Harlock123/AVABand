@@ -113,8 +113,14 @@
   ],
   "flags": [
    "ANIMAL",
-   "FRIENDS",
    "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A yapping snarling dog, dangerous when in a pack.",
   "smell": 20
@@ -362,8 +368,14 @@
   ],
   "flags": [
    "ANIMAL",
-   "FRIENDS",
    "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d8",
+    "race": "same"
+   }
   ],
   "description": "It is a black spider that moves in fits and starts."
  },
@@ -426,11 +438,22 @@
    "MALE",
    "EVIL",
    "ORC",
-   "FRIENDS",
    "OPEN_DOOR",
    "BASH_DOOR",
    "HURT_LIGHT",
    "DROP_60"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d8",
+    "race": "snaga"
+   },
+   {
+    "chance": 100,
+    "number": "2d6",
+    "race": "same"
+   }
   ],
   "description": "A squat, strong orc that lives in the caves, and comes out in groups.",
   "smell": 20
@@ -459,11 +482,22 @@
    "MALE",
    "EVIL",
    "ORC",
-   "FRIENDS",
    "OPEN_DOOR",
    "BASH_DOOR",
    "HURT_LIGHT",
    "DROP_60"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d3",
+    "race": "crow"
+   },
+   {
+    "chance": 100,
+    "number": "2d9",
+    "race": "same"
+   }
   ],
   "description": "One of the lesser orcs, weak and prone to fear.",
   "smell": 20
@@ -503,6 +537,13 @@
    "DROP_GOOD",
    "MOVE_BODY"
   ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "1d7",
+    "race": "scruffy_looking_hobbit"
+   }
+  ],
   "description": "A sturdy hobbit who is renowned for his unusual strength."
  },
  {
@@ -532,8 +573,14 @@
   ],
   "flags": [
    "ANIMAL",
-   "FRIENDS",
    "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d10",
+    "race": "same"
+   }
   ],
   "description": "It howls and snaps at you.",
   "smell": 30
@@ -575,6 +622,13 @@
    "DROP_60",
    "DROP_90"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
+  ],
   "description": "Flesh is falling off in chunks from this decaying abomination."
  },
  {
@@ -614,6 +668,18 @@
    "ONLY_ITEM",
    "MOVE_BODY"
   ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d7",
+    "race": "fire_hound"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "same"
+   }
+  ],
   "description": "A glowing fourteen foot tall giant, with flames in its hair."
  },
  {
@@ -646,6 +712,20 @@
    "OPEN_DOOR",
    "BASH_DOOR",
    "DROP_60"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d2",
+    "base": "kobold",
+    "glyph": "k"
+   },
+   {
+    "chance": 70,
+    "number": "1d2",
+    "base": "kobold",
+    "glyph": "k"
+   }
   ],
   "description": "A kobold with a short bow, who prefers to fight from a distance."
  },
@@ -680,6 +760,20 @@
    "OPEN_DOOR",
    "DROP_60"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d2",
+    "base": "kobold",
+    "glyph": "k"
+   },
+   {
+    "chance": 70,
+    "number": "1d2",
+    "base": "kobold",
+    "glyph": "k"
+   }
+  ],
   "description": "A kobold wrapped in charms and bones, muttering to itself."
  },
  {
@@ -707,11 +801,27 @@
    "MALE",
    "EVIL",
    "ORC",
-   "FRIENDS",
    "OPEN_DOOR",
    "BASH_DOOR",
    "HURT_LIGHT",
    "DROP_60"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "race": "warg"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "A hardy, well-armed orc from the hills."
  },
@@ -844,6 +954,23 @@
    "DROP_90",
    "DROP_GOOD"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d5",
+    "race": "terrified_yeek"
+   },
+   {
+    "chance": 100,
+    "number": "2d5",
+    "race": "blue_yeek"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "master_yeek"
+   }
+  ],
   "description": "The self-proclaimed king of the yeeks, and a fair spellcaster."
  },
  {
@@ -923,8 +1050,24 @@
    "MALE",
    "RAND_25",
    "OPEN_DOOR",
-   "TAKE_ITEM",
-   "FRIENDS"
+   "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d1",
+    "race": "scrawny_cat"
+   },
+   {
+    "chance": 50,
+    "number": "2d1",
+    "race": "scruffy_dog"
+   },
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "same"
+   }
   ],
   "description": "He looks squalid and thoroughly revolting."
  },
@@ -1230,6 +1373,13 @@
    "BASH_DOOR",
    "TAKE_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "2d2",
+    "race": "filthy_street_urchin"
+   }
+  ],
   "description": "The typical ponce around town, with purse jingling, and looking for more amulets of adornment to buy."
  },
  {
@@ -1326,8 +1476,14 @@
    "BASH_DOOR",
    "SPIRIT",
    "CLEAR_WEB",
-   "SEASONAL",
-   "FRIENDS"
+   "SEASONAL"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d5",
+    "race": "same"
+   }
   ],
   "description": "It's Yuletide and this elf has had a few too many.",
   "plural": "red-hatted elves"
@@ -1752,8 +1908,32 @@
    "CLEAR_WEB",
    "MALE",
    "DROP_60",
-   "OPEN_DOOR",
-   "FRIENDS"
+   "OPEN_DOOR"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "An inexperienced but tough warrior."
  },
@@ -1791,8 +1971,32 @@
    "EVIL",
    "DROP_40",
    "OPEN_DOOR",
-   "TAKE_ITEM",
-   "FRIENDS"
+   "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "A rather shifty individual."
  },
@@ -1824,8 +2028,32 @@
    "MALE",
    "DROP_40",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "He is tripping over his priestly robes.",
   "spellFrequency": 12,
@@ -1862,8 +2090,32 @@
    "MALE",
    "DROP_40",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "He is leaving behind a trail of dropped spell components.",
   "spellFrequency": 12,
@@ -2609,6 +2861,13 @@
    "WEIRD_MIND",
    "BASH_DOOR"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
+  ],
   "description": "It is about two feet long and has sharp pincers."
  },
  {
@@ -2841,8 +3100,32 @@
    "MALE",
    "DROP_60",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "An agile hunter, ready and relaxed.",
   "innateFrequency": 3,
@@ -2885,8 +3168,32 @@
    "MALE",
    "DROP_60",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "An adventurer both devoutly religious and skillful in combat.",
   "spellFrequency": 9,
@@ -2925,8 +3232,32 @@
    "SPIRIT",
    "CLEAR_WEB",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "person",
+    "glyph": "p"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "A lover of nature.",
   "spellFrequency": 8,
@@ -3287,6 +3618,20 @@
    "CLEAR_WEB",
    "IM_POIS",
    "DROP_60"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d2",
+    "base": "kobold",
+    "glyph": "k"
+   },
+   {
+    "chance": 30,
+    "number": "1d2",
+    "base": "kobold",
+    "glyph": "k"
+   }
   ],
   "description": "It is a man-sized figure with the all too recognizable face of a kobold."
  },
@@ -3889,8 +4234,14 @@
    "ANIMAL",
    "WEIRD_MIND",
    "IM_POIS",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "It scuttles towards you."
  },
@@ -4276,6 +4627,33 @@
    "DROP_GOOD",
    "ONLY_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d10",
+    "race": "small_kobold"
+   },
+   {
+    "chance": 100,
+    "number": "1d10",
+    "race": "kobold"
+   },
+   {
+    "chance": 100,
+    "number": "1d3",
+    "race": "kobold_shaman"
+   },
+   {
+    "chance": 100,
+    "number": "1d5",
+    "race": "kobold_archer"
+   },
+   {
+    "chance": 100,
+    "number": "1d5",
+    "race": "large_kobold"
+   }
+  ],
   "description": "Strong and powerful, for a kobold."
  },
  {
@@ -4327,6 +4705,18 @@
    "DROP_1",
    "DROP_GOOD",
    "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "2d7",
+    "race": "wolf"
+   },
+   {
+    "chance": 100,
+    "number": "5d4",
+    "race": "snaga"
+   }
   ],
   "description": "A captain of a regiment of weaker orcs, Lagduf keeps his troop in order with displays of excessive violence."
  },
@@ -4499,8 +4889,14 @@
    "IM_FIRE",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "NO_FEAR",
-   "FRIENDS"
+   "NO_FEAR"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "It is a minor but aggressive demon."
  },
@@ -5437,6 +5833,23 @@
    "DROP_GOOD",
    "ONLY_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d5",
+    "race": "snaga"
+   },
+   {
+    "chance": 80,
+    "number": "2d7",
+    "race": "wolf"
+   },
+   {
+    "chance": 100,
+    "number": "5d4",
+    "race": "grishnakh_the_hill_orc"
+   }
+  ],
   "description": "He is a cunning and devious orc with a chaotic nature."
  },
  {
@@ -5770,8 +6183,29 @@
    "EVIL",
    "DROP_1",
    "OPEN_DOOR",
-   "TAKE_ITEM",
-   "FRIENDS"
+   "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "illusionist"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "priest"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "warrior"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "She is dressed in black and smells of decay.",
   "plural": "witches",
@@ -5953,8 +6387,14 @@
    "CLEAR_WEB",
    "MALE",
    "DROP_60",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "A mage of short stature with stumpy legs and a wispy beard.",
   "spellFrequency": 4,
@@ -5998,6 +6438,13 @@
    "WEIRD_MIND",
    "NO_STUN",
    "NO_SLOW"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "same"
+   }
   ],
   "description": "An ancient tree that seems to be watching you.",
   "spellFrequency": 12,
@@ -6072,8 +6519,14 @@
    "RAND_25",
    "BASH_DOOR",
    "IM_COLD",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A large and muscled wolf from the northern wastes. Its breath is cold and icy and its fur coated in frost.",
   "plural": "white wolves"
@@ -6207,6 +6660,33 @@
    "IM_FIRE",
    "IM_POIS"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "4d4",
+    "race": "snaga"
+   },
+   {
+    "chance": 80,
+    "number": "2d7",
+    "race": "warg"
+   },
+   {
+    "chance": 100,
+    "number": "5d4",
+    "race": "grishnakh_the_hill_orc"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "bullroarer"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "grishnakh_the_hill_orc"
+   }
+  ],
   "description": "A leader of a band of raiding orcs, he picks on hobbits."
  },
  {
@@ -6286,8 +6766,29 @@
    "SMART",
    "DROP_60",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "brigand"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "illusionist"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "warrior"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "A robed man, dedicated to his god.",
   "spellFrequency": 3,
@@ -6589,8 +7090,29 @@
    "CLEAR_WEB",
    "MALE",
    "DROP_1",
-   "OPEN_DOOR",
-   "FRIENDS"
+   "OPEN_DOOR"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "brigand"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "priest"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "illusionist"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "A warrior of considerable skill.",
   "innateFrequency": 10,
@@ -6810,6 +7332,28 @@
    "ONLY_ITEM",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d6",
+    "race": "terrified_yeek"
+   },
+   {
+    "chance": 100,
+    "number": "2d6",
+    "race": "blue_yeek"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "master_yeek"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "orfax"
+   }
+  ],
   "description": "A great yeek, powerful in magic and sorcery, but a yeek all the same.",
   "spellFrequency": 3,
   "spells": [
@@ -6850,8 +7394,20 @@
    "OPEN_DOOR",
    "BASH_DOOR",
    "CLEAR_WEB",
-   "DROP_40",
-   "FRIENDS"
+   "DROP_40"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "base": "orc",
+    "glyph": "o"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "same"
+   }
   ],
   "description": "A hideous, smallish giant that is often found near or with orcs."
  },
@@ -6932,8 +7488,29 @@
    "SMART",
    "DROP_1",
    "OPEN_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "brigand"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "priest"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "warrior"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "A deceptive spell caster.",
   "spellFrequency": 3,
@@ -7033,8 +7610,14 @@
    "BASH_DOOR",
    "CLEAR_WEB",
    "DROP_20",
-   "HURT_LIGHT",
-   "FRIENDS"
+   "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d3",
+    "race": "same"
+   }
   ],
   "description": "He has a bow of horn and a quiver full of black-feathered arrows.",
   "innateFrequency": 3,
@@ -7122,6 +7705,23 @@
    "DROP_GOOD",
    "ONLY_ITEM",
    "IM_COLD"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d2",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "snaga"
+   },
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "cave_orc"
+   }
   ],
   "description": "A strong orc guarding the pass of Cirith Ungol. He is mortally afraid of spiders."
  },
@@ -7243,8 +7843,14 @@
    "EVIL",
    "GROUP_AI",
    "RAND_25",
-   "BASH_DOOR",
-   "FRIENDS"
+   "BASH_DOOR"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "It is a large wolf with eyes full of cunning."
  },
@@ -7370,8 +7976,19 @@
    "BASH_DOOR",
    "CLEAR_WEB",
    "DROP_40",
-   "RAND_25",
-   "FRIENDS"
+   "RAND_25"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "2d4",
+    "race": "ogre"
+   },
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "same"
+   }
   ],
   "description": "A massive orc-like figure with black skin and powerful arms."
  },
@@ -7512,8 +8129,14 @@
    "GROUP_AI",
    "CLEAR_WEB",
    "BASH_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A brilliant canine form whose light hurts your eyes, even at this distance.",
   "innateFrequency": 5,
@@ -7557,8 +8180,14 @@
    "GROUP_AI",
    "CLEAR_WEB",
    "BASH_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A hole in the air in the shape of a huge hound. No light falls upon its form.",
   "innateFrequency": 5,
@@ -7750,8 +8379,14 @@
    "CLEAR_WEB",
    "INVISIBLE",
    "BASH_DOOR",
-   "ATTR_CLEAR",
-   "FRIENDS"
+   "ATTR_CLEAR"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A completely translucent hound."
  },
@@ -7832,8 +8467,14 @@
   "flags": [
    "ANIMAL",
    "RAND_25",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d6",
+    "race": "same"
+   }
   ],
   "description": "A giant bat, the beating of whose wings produces a strangely unnerving noise."
  },
@@ -7978,8 +8619,29 @@
    "EVIL",
    "DROP_1",
    "OPEN_DOOR",
-   "TAKE_ITEM",
-   "FRIENDS"
+   "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "illusionist"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "priest"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "warrior"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "He is eyeing your backpack.",
   "innateFrequency": 8,
@@ -8036,6 +8698,13 @@
    "ONLY_ITEM",
    "OPEN_DOOR",
    "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d3",
+    "race": "warrior"
+   }
   ],
   "description": "A short and swarthy Easterling."
  },
@@ -8130,8 +8799,34 @@
    "OPEN_DOOR",
    "BASH_DOOR",
    "CLEAR_WEB",
-   "DROP_20",
-   "FRIENDS"
+   "DROP_20"
+  ],
+  "friends": [
+   {
+    "chance": 40,
+    "number": "1d4",
+    "race": "hill_orc"
+   },
+   {
+    "chance": 80,
+    "number": "2d5",
+    "race": "warg"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "same"
+   }
   ],
   "description": "A cunning orc of power, as tall as a man, and stronger. It fears little.",
   "innateFrequency": 9,
@@ -8212,8 +8907,14 @@
   "flags": [
    "ANIMAL",
    "CLEAR_WEB",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "same"
+   }
   ],
   "description": "A type of crow, specially bred by the forces of evil as spies; their rudimentary intelligence guided by an evil mind has tracked you down, and now they seek to alert other evil creatures to your presence.",
   "plural": "crebain",
@@ -8315,8 +9016,14 @@
    "CLEAR_WEB",
    "MALE",
    "DROP_20",
-   "HURT_LIGHT",
-   "FRIENDS"
+   "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "He is green skinned, ugly and stupid."
  },
@@ -8625,6 +9332,46 @@
    "CLEAR_WEB",
    "DROP_60"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d5",
+    "race": "wolf"
+   },
+   {
+    "chance": 50,
+    "number": "1d5",
+    "race": "warg"
+   },
+   {
+    "chance": 80,
+    "number": "1d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 80,
+    "number": "1d4",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 50,
+    "number": "1d5",
+    "base": "orc",
+    "glyph": "o"
+   },
+   {
+    "chance": 50,
+    "number": "1d5",
+    "base": "orc",
+    "glyph": "o"
+   },
+   {
+    "chance": 50,
+    "number": "1d5",
+    "base": "orc",
+    "glyph": "o"
+   }
+  ],
   "description": "An armoured orc with an air of authority.",
   "innateFrequency": 9,
   "spells": [
@@ -8671,6 +9418,23 @@
    "DROP_1",
    "OPEN_DOOR",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "rogue"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "ranger"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "paladin"
+   }
   ],
   "description": "A hulking figure encased in deep black plate armour; he looks at you menacingly.",
   "innateFrequency": 6,
@@ -8760,8 +9524,14 @@
    "BASH_DOOR",
    "IM_FIRE",
    "HURT_COLD",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Flames lick at its feet and its tongue is a blade of fire. You can feel a furnace heat radiating from the creature.",
   "innateFrequency": 10,
@@ -8807,8 +9577,14 @@
    "BASH_DOOR",
    "IM_COLD",
    "HURT_FIRE",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A hound as tall as a man, this creature appears to be composed of angular planes of ice. Cold radiates from it and freezes your breath in the air.",
   "innateFrequency": 10,
@@ -8853,8 +9629,14 @@
    "CLEAR_WEB",
    "BASH_DOOR",
    "IM_ELEC",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Saint Elmo's Fire forms a ghostly halo around this hound, and sparks sting your fingers as energy builds up in the air around you.",
   "innateFrequency": 10,
@@ -8950,8 +9732,14 @@
    "RAND_25",
    "BASH_DOOR",
    "GROUP_AI",
-   "ATTR_FLICKER",
-   "FRIENDS"
+   "ATTR_FLICKER"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A strange magical member of the canine race, its form seems to shimmer and fade in front of your very eyes.",
   "spellFrequency": 4,
@@ -8998,6 +9786,13 @@
    "ONLY_GOLD",
    "OPEN_DOOR",
    "BASH_DOOR"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d1",
+    "race": "giant_fruit_fly"
+   }
   ],
   "description": "A pile of rotting vegetation that slides towards you with a disgusting stench, waking all it nears.",
   "innateFrequency": 4,
@@ -9095,6 +9890,33 @@
    "DROP_GOOD",
    "ONLY_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "3d4",
+    "race": "snaga"
+   },
+   {
+    "chance": 80,
+    "number": "2d4",
+    "race": "cave_orc"
+   },
+   {
+    "chance": 80,
+    "number": "1d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 100,
+    "number": "1d2",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "uruk"
+   }
+  ],
   "description": "He is an orc of power and great cunning, leader of the garrison at Cirith Ungol."
  },
  {
@@ -9146,6 +9968,33 @@
    "DROP_1",
    "DROP_GOOD",
    "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "3d4",
+    "race": "snaga"
+   },
+   {
+    "chance": 80,
+    "number": "2d4",
+    "race": "cave_orc"
+   },
+   {
+    "chance": 80,
+    "number": "1d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 100,
+    "number": "1d2",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "uruk"
+   }
   ],
   "description": "He is an orc of power and great cunning, leader of the garrison at Minas Morgul."
  },
@@ -9357,8 +10206,14 @@
    "ANIMAL",
    "WEIRD_MIND",
    "IM_POIS",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A strong and powerful spider from Mirkwood forest. Cunning and evil, it seeks to taste your juicy insides."
  },
@@ -9412,6 +10267,33 @@
    "DROP_2",
    "DROP_GOOD",
    "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "3d4",
+    "race": "cave_orc"
+   },
+   {
+    "chance": 80,
+    "number": "2d7",
+    "race": "warg"
+   },
+   {
+    "chance": 100,
+    "number": "2d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 100,
+    "number": "4d2",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "uruk"
+   }
   ],
   "description": "A large and powerful orc, he looks just like his father. He is tall and fast, but fortunately blessed with orcish brains."
  },
@@ -9504,8 +10386,14 @@
    "GROUP_AI",
    "CLEAR_WEB",
    "BASH_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A beautiful crystalline shape does not disguise the danger this hound clearly presents. Your flesh tingles as it approaches.",
   "innateFrequency": 10,
@@ -9555,8 +10443,14 @@
    "CLEAR_WEB",
    "BASH_DOOR",
    "IM_POIS",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Swirling vapours surround this beast as it floats towards you, seemingly walking on air. Noxious gases sting your throat.",
   "innateFrequency": 10,
@@ -9649,8 +10543,14 @@
    "CLEAR_WEB",
    "BASH_DOOR",
    "IM_ACID",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Liquid footprints follow this hound as it pads around the dungeon. An acrid smell of acid rises from the dog's pelt.",
   "innateFrequency": 10,
@@ -9855,6 +10755,28 @@
    "ONLY_ITEM",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "eastern_dwarf"
+   },
+   {
+    "chance": 70,
+    "number": "1d2",
+    "race": "stonefoot_warrior"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "blacklock_mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "ironfist_priest"
+   }
+  ],
   "description": "A leader of Morgoth's eastern dwarf recruits, dressed in black chainmail and radiating evil power.",
   "spellFrequency": 5,
   "spells": [
@@ -9901,6 +10823,33 @@
    "OPEN_DOOR",
    "TAKE_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "easterling_champion"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "rogue"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "illusionist"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "priest"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "paladin"
+   }
+  ],
   "description": "A warrior who is at one with nature. A master of both bow and sword, with minor spellcasting skills, and animals come to do his bidding.",
   "innateFrequency": 4,
   "spellFrequency": 5,
@@ -9946,6 +10895,33 @@
    "DROP_1",
    "OPEN_DOOR",
    "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "easterling_champion"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "rogue"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "illusionist"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "priest"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "ranger"
+   }
   ],
   "description": "A warrior for a holy cause. Unfortunately, his god is not yours, and there is rivalry even between the various gods of Good, so he is your enemy.",
   "spellFrequency": 4,
@@ -10003,6 +10979,28 @@
    "DROP_1",
    "DROP_GOOD",
    "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "3d4",
+    "race": "hill_orc"
+   },
+   {
+    "chance": 80,
+    "number": "2d7",
+    "race": "warg"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "orc_captain"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "uruk"
+   }
   ],
   "description": "A large and powerful orc, captain of one of Saruman's orcish regiments."
  },
@@ -10377,6 +11375,33 @@
    "NO_SLEEP",
    "NO_HOLD"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "race": "hill_orc"
+   },
+   {
+    "chance": 80,
+    "number": "2d5",
+    "race": "warg"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "uruk"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "orc_captain"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "lugdush_the_uruk"
+   }
+  ],
   "description": "A strong and cunning orc warrior, the commander of Saruman's orcish horde."
  },
  {
@@ -10580,8 +11605,14 @@
    "WEIRD_MIND",
    "ATTR_FLICKER",
    "IM_POIS",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A spider that never seems quite there. Everywhere you look it is just half-seen in the corner of one eye.",
   "spellFrequency": 5,
@@ -10669,6 +11700,28 @@
    "OPEN_DOOR",
    "TAKE_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "rogue"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "ranger"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "paladin"
+   }
+  ],
   "description": "A scarred warrior who wields an axe and moves with confidence.",
   "innateFrequency": 6,
   "spells": [
@@ -10721,6 +11774,43 @@
    "DROP_GOOD",
    "ONLY_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "3d4",
+    "race": "cave_orc"
+   },
+   {
+    "chance": 80,
+    "number": "2d7",
+    "race": "warg"
+   },
+   {
+    "chance": 100,
+    "number": "2d2",
+    "race": "orc_tracker"
+   },
+   {
+    "chance": 100,
+    "number": "4d2",
+    "race": "orc_archer"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "uruk"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "orc_captain"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "bolg_son_of_azog"
+   }
+  ],
   "description": "A great orc with a huge iron-clad head, agile and strong. He is notorious for starting the War of the Dwarves and Orcs by killing Durin's heir, Thrór."
  },
  {
@@ -10768,6 +11858,28 @@
    "DROP_2",
    "OPEN_DOOR",
    "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "easterling_champion"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "ranger"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "paladin"
+   }
   ],
   "description": "A thief of great power and shifty speed.",
   "innateFrequency": 4,
@@ -11225,6 +12337,13 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "angamaite_of_umbar"
+   }
+  ],
   "description": "A Black Númenórean with a blacker heart.",
   "spellFrequency": 4,
   "spells": [
@@ -11286,6 +12405,13 @@
    "NO_SLEEP",
    "NO_HOLD",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "sangahyando_of_umbar"
+   }
   ],
   "description": "A Black Númenórean who hates the men of the west.",
   "spellFrequency": 4,
@@ -11423,8 +12549,14 @@
    "NO_FEAR",
    "RAND_50",
    "ONLY_ITEM",
-   "DROP_60",
-   "FRIENDS"
+   "DROP_60"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Little sparks of flame that dance around you, lashing whips and cursing horribly.",
   "innateFrequency": 3,
@@ -11477,6 +12609,14 @@
    "OPEN_DOOR",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "skeleton",
+    "glyph": "s"
+   }
+  ],
   "description": "A gaunt figure, clothed in black robes.",
   "spellFrequency": 5,
   "spells": [
@@ -11521,8 +12661,19 @@
    "BASH_DOOR",
    "CLEAR_WEB",
    "DROP_40",
-   "OPEN_DOOR",
-   "FRIENDS"
+   "OPEN_DOOR"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d7",
+    "race": "wolf"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "same"
+   }
   ],
   "description": "A ten foot tall humanoid with powerful muscles.",
   "innateFrequency": 10,
@@ -11622,8 +12773,19 @@
    "MALE",
    "DROP_20",
    "HURT_ROCK",
-   "HURT_LIGHT",
-   "FRIENDS"
+   "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d5",
+    "race": "earth_hound"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "same"
+   }
   ],
   "description": "He is a large, lumpish troll with scabrous black skin."
  },
@@ -11658,8 +12820,14 @@
    "WEIRD_MIND",
    "RAND_25",
    "BASH_DOOR",
-   "IM_POIS",
-   "FRIENDS"
+   "IM_POIS"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "same"
+   }
   ],
   "description": "A hideous centipede covered in slime and with glowing tentacles around its head."
  },
@@ -11846,6 +13014,18 @@
    "OPEN_DOOR",
    "TAKE_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "easterling_champion"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "ulfast_son_of_ulfang"
+   }
+  ],
   "description": "A short and swarthy Easterling."
  },
  {
@@ -11960,8 +13140,24 @@
    "OPEN_DOOR",
    "BASH_DOOR",
    "CLEAR_WEB",
-   "DROP_40",
-   "FRIENDS"
+   "DROP_40"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "race": "ogre"
+   },
+   {
+    "chance": 50,
+    "number": "2d4",
+    "race": "black_ogre"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "same"
+   }
   ],
   "description": "A giant orc-like figure with an awesomely muscled frame."
  },
@@ -12042,6 +13238,28 @@
    "IM_COLD",
    "NO_FEAR"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "wolf"
+   },
+   {
+    "chance": 60,
+    "number": "2d4",
+    "race": "white_wolf"
+   },
+   {
+    "chance": 60,
+    "number": "2d4",
+    "race": "warg"
+   },
+   {
+    "chance": 60,
+    "number": "1d4",
+    "race": "werewolf"
+   }
+  ],
   "description": "A great wolf-chieftain whose pack is in the service of the Dark Lord, and whose howls strike fear into even the boldest heart.",
   "spellFrequency": 8,
   "spells": [
@@ -12106,6 +13324,18 @@
    "NO_SLEEP",
    "NO_HOLD",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "ibun_son_of_mim"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "khim_son_of_mim"
+   }
   ],
   "description": "The last of his race, Mîm is a Petty-Dwarf. Petty-Dwarves are strange creatures, powerful in sorcery and originating in the East. They have been hunted nearly to extinction by the High Elves.",
   "spellFrequency": 6,
@@ -12251,8 +13481,19 @@
    "CLEAR_WEB",
    "DROP_20",
    "IM_POIS",
-   "HURT_LIGHT",
-   "FRIENDS"
+   "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d5",
+    "race": "forest_troll"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "same"
+   }
   ],
   "description": "A powerful, man-eating troll, its claws foul with the traces of its last kill."
  },
@@ -12300,8 +13541,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "NO_STUN",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A blurry canine form which seems to be moving as fast as the eye can follow. You can feel the earth resonating beneath your feet.",
   "innateFrequency": 5,
@@ -12353,8 +13600,14 @@
    "IM_NEXUS",
    "NO_CONF",
    "NO_SLEEP",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A locus of conflicting points coalesce to form the vague shape of a huge hound. Or is it just your imagination?",
   "innateFrequency": 5,
@@ -12600,8 +13853,19 @@
    "CLEAR_WEB",
    "DROP_40",
    "OPEN_DOOR",
-   "IM_COLD",
-   "FRIENDS"
+   "IM_COLD"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d7",
+    "race": "cold_hound"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "same"
+   }
   ],
   "description": "A twelve foot tall giant covered in furs.",
   "innateFrequency": 10,
@@ -12771,6 +14035,33 @@
    "OPEN_DOOR",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "rogue"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "ranger"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "paladin"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "southron_assassin"
+   }
+  ],
   "description": "A hulking figure encased in deep black plate armour; he looks at you menacingly.",
   "spellFrequency": 8,
   "spells": [
@@ -12871,6 +14162,14 @@
    "ONLY_ITEM",
    "OPEN_DOOR",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "base": "golem",
+    "glyph": "g"
+   }
   ],
   "description": "A mage of some power - you can tell by the size of his hat.",
   "spellFrequency": 3,
@@ -12988,6 +14287,31 @@
    "BASH_DOOR",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d3",
+    "base": "minor demon",
+    "glyph": "u"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "base": "minor demon",
+    "glyph": "u"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "base": "minor demon",
+    "glyph": "u"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "imp"
+   }
+  ],
   "description": "An intensely irritating git of a monster.",
   "spellFrequency": 5,
   "spells": [
@@ -13103,8 +14427,24 @@
    "MALE",
    "DROP_20",
    "HURT_LIGHT",
-   "IM_COLD",
-   "FRIENDS"
+   "IM_COLD"
+  ],
+  "friends": [
+   {
+    "chance": 40,
+    "number": "1d5",
+    "race": "cold_hound"
+   },
+   {
+    "chance": 60,
+    "number": "2d7",
+    "race": "white_wolf"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "He is a white troll with shaggy fur and powerfully clawed hands."
  },
@@ -13141,8 +14481,14 @@
    "RAND_25",
    "BASH_DOOR",
    "MOVE_BODY",
-   "IM_POIS",
-   "FRIENDS"
+   "IM_POIS"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Fed with horrid meats and grown to enormous size, this slavering creature seeks livelier prey.",
   "plural": "bats of Gorgoroth",
@@ -13250,6 +14596,23 @@
    "DROP_GOOD",
    "ONLY_ITEM",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "cave_bear"
+   },
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "grizzly_bear"
+   },
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "werebear"
+   }
   ],
   "description": "Beorn is only occasionally seen in human form these days, preferring to appear in the shape of a giant black bear: he also prefers the company of beasts to that of humans. He has never taken kindly to strangers, even in human form.",
   "spellFrequency": 2,
@@ -13936,8 +15299,14 @@
    "BASH_DOOR",
    "RAND_25",
    "IM_ELEC",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "It is a giant ant that crackles with energy.",
   "innateFrequency": 6,
@@ -13977,8 +15346,14 @@
    "BASH_DOOR",
    "RAND_25",
    "KILL_BODY",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "An armoured form moving with purpose. Powerful on its own, flee when hordes of them march."
  },
@@ -14123,6 +15498,33 @@
    "MOVE_BODY",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "race": "ogre"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "black_ogre"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "cave_ogre"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "ogre_mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "ogre_shaman"
+   }
+  ],
   "description": "This ogre is leader of his tribe. He sneers at you as he advances towards you, wielding a huge club and pushing his own followers rudely aside."
  },
  {
@@ -14171,6 +15573,43 @@
    "NO_STUN",
    "DROP_40",
    "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 20,
+    "number": "1d3",
+    "race": "zombified_kobold"
+   },
+   {
+    "chance": 20,
+    "number": "1d3",
+    "race": "zombified_orc"
+   },
+   {
+    "chance": 20,
+    "number": "1d3",
+    "race": "zombified_human"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "race": "mummified_orc"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "race": "mummified_human"
+   },
+   {
+    "chance": 40,
+    "number": "1d3",
+    "race": "mummified_troll"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "ghoul"
+   }
   ],
   "description": "This vile abomination is a relative of ghouls, and often leads packs of them. It smells foul, and its bite carries a rotting disease.",
   "spellFrequency": 7,
@@ -14228,6 +15667,18 @@
    "HURT_LIGHT",
    "IM_COLD"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "tom_the_stone_troll"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "bill_the_stone_troll"
+   }
+  ],
   "description": "Big, brawny, powerful and with a taste for hobbit. He has friends called Bill and Tom.",
   "innateFrequency": 7,
   "spells": [
@@ -14283,6 +15734,18 @@
    "HURT_LIGHT",
    "IM_COLD"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "bert_the_stone_troll"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "tom_the_stone_troll"
+   }
+  ],
   "description": "Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Tom.",
   "innateFrequency": 7,
   "spells": [
@@ -14337,6 +15800,18 @@
    "HURT_ROCK",
    "HURT_LIGHT",
    "IM_COLD"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "bert_the_stone_troll"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "bill_the_stone_troll"
+   }
   ],
   "description": "Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Bill.",
   "innateFrequency": 7,
@@ -14839,6 +16314,23 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "master_thief"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "blackguard"
+   }
+  ],
   "description": "A man of Harad clothed in black who moves with blinding speed."
  },
  {
@@ -15073,8 +16565,19 @@
    "CLEAR_WEB",
    "DROP_40",
    "OPEN_DOOR",
-   "TAKE_ITEM",
-   "FRIENDS"
+   "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d7",
+    "race": "earth_hound"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "same"
+   }
   ],
   "description": "It is eighteen feet tall and looking at you.",
   "innateFrequency": 5,
@@ -15183,8 +16686,24 @@
    "CLEAR_WEB",
    "MALE",
    "DROP_20",
-   "HURT_LIGHT",
-   "FRIENDS"
+   "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d5",
+    "race": "stone_troll"
+   },
+   {
+    "chance": 30,
+    "number": "1d5",
+    "race": "troll_scavenger"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "same"
+   }
   ],
   "description": "He is a vicious monster, feared for his ferocity."
  },
@@ -15239,6 +16758,14 @@
    "NO_SLEEP",
    "NO_HOLD",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "base": "spider",
+    "glyph": "S"
+   }
   ],
   "description": "An adept at unarmed combat, the mystic strikes with stunning power. He can summon help from nature and is able to focus his power to ease any pain.",
   "spellFrequency": 6,
@@ -15295,8 +16822,14 @@
    "DROP_40",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "It is a ghostly nightmare of an entity.",
   "spellFrequency": 8,
@@ -15925,6 +17458,14 @@
    "DROP_20",
    "ONLY_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d4",
+    "base": "troll",
+    "glyph": "T"
+   }
+  ],
   "description": "A half-smart, vicious troll with some rudimentary magic and a love of violence.",
   "spellFrequency": 6,
   "spells": [
@@ -16037,6 +17578,23 @@
    "OPEN_DOOR",
    "TAKE_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "blackguard"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "mage"
+   },
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "southron_assassin"
+   }
+  ],
   "description": "Cool and confident, fast and lithe; protect your possessions quickly!",
   "plural": "master thieves",
   "innateFrequency": 10,
@@ -16095,6 +17653,28 @@
    "ONLY_ITEM",
    "OPEN_DOOR",
    "TAKE_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d3",
+    "race": "mumak"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "easterling_champion"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "ulfast_son_of_ulfang"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "ulwarth_son_of_ulfang"
+   }
   ],
   "description": "A short and swarthy Easterling dressed in black. He and his three sons once openly swore allegiance to the High Elves, but were secretly in the pay of Morgoth.",
   "spellFrequency": 10,
@@ -16156,6 +17736,14 @@
    "FORCE_SLEEP",
    "DROP_1",
    "HURT_LIGHT"
+  ],
+  "friends": [
+   {
+    "chance": 70,
+    "number": "1d3",
+    "base": "skeleton",
+    "glyph": "s"
+   }
   ],
   "description": "It is a skeletal form dressed in robes. It radiates vastly evil power.",
   "plural": "liches",
@@ -16426,6 +18014,38 @@
    "DROP_GOOD",
    "ONLY_ITEM"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "ogre"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "black_ogre"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "cave_ogre"
+   },
+   {
+    "chance": 80,
+    "number": "1d2",
+    "race": "ogre_mage"
+   },
+   {
+    "chance": 80,
+    "number": "1d2",
+    "race": "ogre_shaman"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "ogre_chieftain"
+   }
+  ],
   "description": "An ogre renowned for acts of surpassing cruelty, Lokkak quickly became the leader of a large band of violent ogres."
  },
  {
@@ -16472,8 +18092,14 @@
    "BASH_DOOR",
    "CLEAR_WEB",
    "MALE",
-   "DROP_20",
-   "FRIENDS"
+   "DROP_20"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "Clad only in close-fitting mesh of horny scales (unless that is his skin) this troll strides toward you roaring like a beast, wielding a heavy hammer in his knotted hand."
  },
@@ -16569,8 +18195,14 @@
    "BASH_DOOR",
    "NO_CONF",
    "NO_SLEEP",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Unfettered by the usual constraints of gravity, these unnatural creatures are walking on the walls and even the ceiling! The earth suddenly feels rather less solid as you see gravity warp all round the monsters.",
   "innateFrequency": 5,
@@ -16622,8 +18254,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "NO_SLOW",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Bizarrely, this hound seems to be hardly moving at all, yet it approaches you with deadly menace. It makes you tired just to look at it.",
   "innateFrequency": 5,
@@ -16675,8 +18313,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "NO_STUN",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A deep brown shape is visible before you, its canine form strikes you with an almost physical force. The dungeon floor buckles as if struck by a powerful blow as it stalks towards you.",
   "innateFrequency": 5,
@@ -16718,8 +18362,14 @@
   "flags": [
    "BASH_DOOR",
    "CLEAR_WEB",
-   "ANIMAL",
-   "FRIENDS"
+   "ANIMAL"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "A massive elephantine form with eyes twisted by madness.",
   "plural": "mûmakil"
@@ -16756,8 +18406,14 @@
    "BASH_DOOR",
    "KILL_BODY",
    "IM_FIRE",
-   "GROUP_AI",
-   "FRIENDS"
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "A giant ant covered in shaggy fur. Its powerful jaws glow with heat.",
   "innateFrequency": 6,
@@ -16944,6 +18600,13 @@
    "SMART",
    "DROP_20"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "olog"
+   }
+  ],
   "description": "It is a massive intelligent troll with needle-sharp fangs."
  },
  {
@@ -17028,8 +18691,19 @@
    "DROP_60",
    "OPEN_DOOR",
    "TAKE_ITEM",
-   "IM_ELEC",
-   "FRIENDS"
+   "IM_ELEC"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d7",
+    "race": "energy_hound"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "same"
+   }
   ],
   "description": "It is a twenty foot tall giant wreathed in clouds.",
   "innateFrequency": 8,
@@ -17454,6 +19128,14 @@
    "OPEN_DOOR",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "skeleton",
+    "glyph": "s"
+   }
+  ],
   "description": "A necromancer recruited to the evil realm of Angmar during the decline of the North Kingdom.",
   "plural": "dúnedain of Angmar",
   "spellFrequency": 3,
@@ -17527,6 +19209,18 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "mumak"
+   },
+   {
+    "chance": 100,
+    "number": "2d5",
+    "race": "easterling_champion"
+   }
+  ],
   "description": "A mighty warrior from the east, Lorgan hates everything that he cannot control.",
   "spellFrequency": 4,
   "spells": [
@@ -17576,6 +19270,19 @@
    "ONLY_ITEM",
    "OPEN_DOOR",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d3",
+    "base": "minor demon",
+    "glyph": "u"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "quasit"
+   }
   ],
   "description": "A figure twisted by evil standing in robes of deepest crimson.",
   "spellFrequency": 2,
@@ -18142,6 +19849,14 @@
    "BASH_DOOR",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d3",
+    "base": "wraith",
+    "glyph": "W"
+   }
+  ],
   "description": "Your life force is torn from your body as this powerful unearthly being approaches.",
   "spellFrequency": 6,
   "spells": [
@@ -18211,6 +19926,23 @@
    "IM_ELEC",
    "NO_FEAR",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "mummified_orc"
+   },
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "mummified_human"
+   },
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "mummified_troll"
+   }
   ],
   "description": "A powerful ruler who refused the summons of Mandos on death, preferring to re-occupy his now embalmed body. He commands a legion of his former subjects with unearthly shrieks.",
   "innateFrequency": 9,
@@ -18333,6 +20065,13 @@
    "OPEN_DOOR",
    "IM_COLD",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "imp"
+   }
   ],
   "description": "It is a humanoid figure dressed in armour of an ancient form. From beneath its helmet, eyes glow a baleful red and seem to pierce you like lances of fire.",
   "spellFrequency": 5,
@@ -18714,6 +20453,13 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "1d4",
+    "race": "southron_assassin"
+   }
+  ],
   "description": "A man of Harad clad in black and red and carrying a longbow. His quiver is full of red feathered arrows, and carries an insignia of a black serpent.",
   "innateFrequency": 2,
   "spells": [
@@ -18762,6 +20508,18 @@
    "IM_COLD",
    "NO_CONF",
    "NO_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_white_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_white_dragon"
+   }
   ],
   "description": "A large dragon, scales gleaming bright white.",
   "innateFrequency": 12,
@@ -18814,6 +20572,18 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_blue_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_blue_dragon"
+   }
+  ],
   "description": "A large dragon, scales tinted deep blue.",
   "innateFrequency": 12,
   "spellFrequency": 20,
@@ -18864,6 +20634,18 @@
    "IM_POIS",
    "NO_CONF",
    "NO_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_green_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_green_dragon"
+   }
   ],
   "description": "A large dragon, scales tinted deep green.",
   "innateFrequency": 12,
@@ -19319,6 +21101,20 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d1",
+    "base": "dragon",
+    "glyph": "d"
+   },
+   {
+    "chance": 60,
+    "number": "1d1",
+    "base": "dragon",
+    "glyph": "d"
+   }
+  ],
   "description": "This elusive female spellcaster has a special affinity for dragons, whom she rarely fights without.",
   "spellFrequency": 2,
   "spells": [
@@ -19385,6 +21181,28 @@
    "NO_SLEEP",
    "NO_HOLD",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "master_thief"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "ranger_chieftain"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "patriarch"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "berserker"
+   }
   ],
   "description": "A human figure in robes, he moves with magically improved speed, and his hands are ablur with spell casting.",
   "spellFrequency": 2,
@@ -19583,8 +21401,14 @@
    "NO_HOLD",
    "FORCE_SLEEP",
    "DROP_40",
-   "IM_FIRE",
-   "FRIENDS"
+   "IM_FIRE"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "It is a demon with a long neck and raking claws.",
   "spellFrequency": 8,
@@ -19697,6 +21521,28 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "master_thief"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "ranger_chieftain"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "sorcerer"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "berserker"
+   }
+  ],
   "description": "A priest of great power, he is convinced of the righteousness of his beliefs. Stand in his way at your peril.",
   "spellFrequency": 2,
   "spells": [
@@ -19759,6 +21605,38 @@
    "TAKE_ITEM",
    "NO_FEAR"
   ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "forest_troll"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "stone_troll"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "snow_troll"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "hill_troll"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "cave_troll"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "olog"
+   }
+  ],
   "description": "This troll's great strength and size have won it the place of chieftain of its tribe. It fears nothing."
  },
  {
@@ -19803,6 +21681,18 @@
    "IM_FIRE",
    "NO_CONF",
    "NO_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_red_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_red_dragon"
+   }
   ],
   "description": "A large dragon, scales tinted deep red.",
   "innateFrequency": 12,
@@ -19856,6 +21746,18 @@
    "NO_SLEEP",
    "NO_STUN"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_gold_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_gold_dragon"
+   }
+  ],
   "description": "A large dragon with scales of gleaming gold.",
   "innateFrequency": 12,
   "spellFrequency": 20,
@@ -19907,6 +21809,18 @@
    "IM_ACID",
    "NO_CONF",
    "NO_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_black_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_black_dragon"
+   }
   ],
   "description": "A large dragon, with scales of deepest black.",
   "innateFrequency": 12,
@@ -20034,6 +21948,20 @@
    "FORCE_SLEEP",
    "DROP_4",
    "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "zombie",
+    "glyph": "z"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "base": "skeleton",
+    "glyph": "s"
+   }
   ],
   "description": "A skeletal form wrapped in robes. Powerful magic crackles along its bony fingers.",
   "plural": "master liches",
@@ -20165,6 +22093,28 @@
    "NO_SLEEP",
    "NO_HOLD"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "master_thief"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "sorcerer"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "patriarch"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "berserker"
+   }
+  ],
   "description": "A chieftain among the Rangers. His understanding of nature gives him powerful elemental spells to use against you, in addition to his skills as an archer and a warrior. Furthermore, he is a master of camouflage, so you will need magically enhanced seeing to spot him.",
   "innateFrequency": 2,
   "spellFrequency": 5,
@@ -20290,8 +22240,14 @@
    "MOVE_BODY",
    "IM_FIRE",
    "GROUP_AI",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d5",
+    "race": "same"
+   }
   ],
   "description": "It is a giant wolf that glows with heat. Flames pour from its nostrils.",
   "innateFrequency": 5,
@@ -20413,6 +22369,38 @@
    "FORCE_SLEEP",
    "GROUP_AI"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d6",
+    "race": "soldier_ant"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "giant_silver_ant"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "giant_grey_ant"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "giant_blue_ant"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "giant_fire_ant"
+   },
+   {
+    "chance": 100,
+    "number": "3d3",
+    "race": "giant_army_ant"
+   }
+  ],
   "description": "She's upset because you hurt her children.",
   "spellFrequency": 2,
   "spells": [
@@ -20471,6 +22459,33 @@
    "MOVE_BODY",
    "TAKE_ITEM",
    "IM_COLD"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "troll_scavenger"
+   },
+   {
+    "chance": 60,
+    "number": "2d3",
+    "race": "cave_troll"
+   },
+   {
+    "chance": 40,
+    "number": "2d3",
+    "race": "hill_troll"
+   },
+   {
+    "chance": 30,
+    "number": "1d2",
+    "race": "mountain_troll"
+   },
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "olog"
+   }
   ],
   "description": "A massive and cruel troll of great power, drool slides caustically down his muscular frame. Despite his bulk, he strikes with stunning speed.",
   "innateFrequency": 7,
@@ -20668,6 +22683,18 @@
    "NO_CONF",
    "NO_SLEEP",
    "ATTR_MULTI"
+  ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "baby_multi_hued_dragon"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "young_multi_hued_dragon"
+   }
   ],
   "description": "A large dragon, scales shimmering many colours.",
   "innateFrequency": 10,
@@ -21044,8 +23071,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "ATTR_MULTI",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Shimmering in rainbow hues, this hound is beautiful and deadly.",
   "innateFrequency": 5,
@@ -21184,8 +23217,14 @@
    "ONLY_ITEM",
    "RAND_25",
    "TAKE_ITEM",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d5",
+    "race": "same"
+   }
   ],
   "description": "It is a form that screams its presence against the eye. Death incarnate, its hideous black body seems to struggle against reality as the universe itself struggles to banish it.",
   "spellFrequency": 15,
@@ -21574,6 +23613,28 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "master_thief"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "ranger_chieftain"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "patriarch"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "sorcerer"
+   }
+  ],
   "description": "Even the strongest of normal human warriors fears the Berserker - the one who can drive himself into such a terrible battle-frenzy that he can survive blows which should kill him, and still apparently feel no pain. He tramples weaker creatures underfoot in his eagerness to get to his real enemy, and his battle-cry strikes terror into his foes.",
   "spellFrequency": 4,
   "spells": [
@@ -21735,6 +23796,28 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "master_thief"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "ranger_chieftain"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "sorcerer"
+   },
+   {
+    "chance": 30,
+    "number": "1d1",
+    "race": "berserker"
+   }
+  ],
   "description": "An evil priest, dressed all in black. Deadly spells hit you at an alarming rate as his black spiked mace rains down blow after blow on your pitiful frame.",
   "plural": "lords of Carn Dûm",
   "spellFrequency": 2,
@@ -21801,6 +23884,13 @@
    "NO_STUN",
    "FORCE_SLEEP",
    "DROP_4"
+  ],
+  "friends": [
+   {
+    "chance": 40,
+    "number": "1d4",
+    "race": "vampire"
+   }
   ],
   "description": "A foul wind chills your bones as this ghastly figure approaches.",
   "spellFrequency": 7,
@@ -21974,6 +24064,13 @@
    "HURT_LIGHT",
    "IM_POIS",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "cave_spider"
+   }
   ],
   "description": "A foul creature of spider form, older even than the pits of Angband.",
   "innateFrequency": 20,
@@ -22150,8 +24247,19 @@
    "TAKE_ITEM",
    "IM_COLD",
    "IM_ELEC",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d7",
+    "race": "energy_hound"
+   },
+   {
+    "chance": 80,
+    "number": "1d3",
+    "race": "same"
+   }
   ],
   "description": "It is a twenty-five foot tall giant wreathed in lightning.",
   "innateFrequency": 40,
@@ -22775,6 +24883,14 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "base": "spider",
+    "glyph": "S"
+   }
+  ],
   "description": "A lord of all that is natural, skilled in the mystic ways. He is a master of martial arts and is at one with nature, able to summon help from the wild if need be.",
   "spellFrequency": 3,
   "spells": [
@@ -22898,6 +25014,18 @@
    "DROP_GOOD",
    "MOVE_BODY",
    "IM_FIRE"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "cave_orc"
+   },
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "cave_troll"
+   }
   ],
   "description": "A huge Balrog surrounded by raging pillars of fire, this is indeed a terrible opponent. Wielding a great whip of fire and a blazing sword, his fury blisters your skin and melts your flesh!",
   "innateFrequency": 15,
@@ -23126,8 +25254,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "IM_NETHER",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "You feel a soul-tearing chill upon viewing this beast, a ghostly form of darkness in the shape of a large dog.",
   "innateFrequency": 5,
@@ -23181,8 +25315,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "NO_HOLD",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "You get a terrible sense of deja vu, or is it a premonition? All at once you see a little puppy and a toothless old dog. Perhaps you should give up and go to bed.",
   "innateFrequency": 5,
@@ -23239,8 +25379,14 @@
    "NO_CONF",
    "NO_SLEEP",
    "NO_HOLD",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "The very air warps as pure elemental energy stalks towards you in the shape of a giant hound. Your hair stands on end and your palms itch as you sense trouble.",
   "innateFrequency": 5,
@@ -23439,6 +25585,13 @@
    "NO_SLEEP",
    "IM_ACID"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "huorn"
+   }
+  ],
   "description": "Ents are not altogether on anybody's side, because nobody is altogether on their side. This one seems quite roused, and does not seem to be on your side."
  },
  {
@@ -23553,8 +25706,14 @@
    "DROP_1",
    "IM_FIRE",
    "IM_ACID",
-   "NO_FEAR",
-   "FRIENDS"
+   "NO_FEAR"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d2",
+    "race": "same"
+   }
   ],
   "description": "A sluggish demon of lizard form, firing powerful missiles. From the terribly oversized jaws to the stumpy lashing tail, pools of burning acid froth and sizzle.",
   "innateFrequency": 3,
@@ -24158,6 +26317,18 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "4d4",
+    "race": "uruk"
+   },
+   {
+    "chance": 100,
+    "number": "3d7",
+    "race": "mirkwood_spider"
+   }
+  ],
   "description": "Shelob is an enormous bloated spider, the last daughter of Ungoliant the Unlight. Her poison is legendary, as is her ego. She normally guards the pass through Cirith Ungol, but occasionally goes out foraging for food to feed her voracious appetite.",
   "innateFrequency": 20,
   "spellFrequency": 4,
@@ -24419,8 +26590,14 @@
    "NO_HOLD",
    "FORCE_SLEEP",
    "DROP_1",
-   "IM_POIS",
-   "FRIENDS"
+   "IM_POIS"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "4d4",
+    "race": "same"
+   }
   ],
   "description": "A foul, humanoid creature with a long tail, clawed hands and feet, and a disgusting, wiry, snaky beard. They are the elite shock troops of the hells, capable of a terrifying berserk fury.",
   "plural": "barbazu",
@@ -24545,6 +26722,14 @@
    "NO_SLEEP",
    "NO_HOLD",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 80,
+    "number": "3d5",
+    "base": "spider",
+    "glyph": "S"
+   }
   ],
   "description": "He is one of the few true masters of the art, being extremely skillful in all forms of unarmed combat and controlling the world's natural creatures with disdainful ease.",
   "spellFrequency": 3,
@@ -24819,6 +27004,14 @@
    "INVISIBLE",
    "DROP_4",
    "PASS_WALL"
+  ],
+  "friends": [
+   {
+    "chance": 30,
+    "number": "1d3",
+    "base": "ghost",
+    "glyph": "G"
+   }
   ],
   "description": "A terrible robed undead figure, this creature has existed in its unlife for many centuries by stealing the life of others. It can summon the very shades of its victims from beyond the grave to come enslaved to its aid.",
   "spellFrequency": 5,
@@ -25313,6 +27506,13 @@
    "IM_ELEC",
    "ATTR_MULTI"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "wormtongue"
+   }
+  ],
   "description": "Originally known as the White, Saruman fell prey to Sauron's wiles. He seeks to emulate him and breeds orcs and trolls to fight for him. He searches forever for the One Ring, to become a mighty Sorcerer-King of the world.",
   "spellFrequency": 2,
   "spells": [
@@ -25523,6 +27723,13 @@
    "TAKE_ITEM",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d3",
+    "race": "dread"
+   }
+  ],
   "description": "It is a massive form of animated death, its colour deeper than black. It drinks in light, and space around it is twisted and torn by the weight of its evil. It is unlife and it knows nothing but the stealing of souls and the stench of death. Flee its hunger!",
   "spellFrequency": 4,
   "spells": [
@@ -25651,6 +27858,23 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "2d4",
+    "race": "warg"
+   },
+   {
+    "chance": 50,
+    "number": "2d3",
+    "race": "hellhound"
+   },
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "werewolf"
+   }
+  ],
   "description": "A massive wolf, appearing like a mighty shadow. Its glowing red eyes glare malevolently as it defends its evil master's fortress.",
   "plural": "werewolves of Sauron",
   "innateFrequency": 6,
@@ -25716,6 +27940,13 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "cave_spider"
+   }
+  ],
   "description": "One of the hideous brood of Ungoliant, spawned in the endless shadow of Nan Dungortheb beneath the mountains of Ered Gorgoroth.",
   "plural": "spiders of Gorgoroth",
   "innateFrequency": 20,
@@ -25777,8 +28008,14 @@
    "NO_SLEEP",
    "NO_HOLD",
    "ATTR_MULTI",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A constantly changing canine form, this hound rushes towards you as if expecting mayhem and chaos ahead. It appears to have an almost kamikaze relish for combat. You suspect all may not be as it seems.",
   "innateFrequency": 5,
@@ -26354,6 +28591,23 @@
    "NO_HOLD",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "tiger"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "sabre_tooth_tiger"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "displacer_beast"
+   }
+  ],
   "description": "Master of all things feline, Tevildo serves his master Morgoth well. He delights in small torments and cunning stratagems, and laughs merrily as he bats you about.",
   "spellFrequency": 3,
   "spells": [
@@ -26737,8 +28991,14 @@
    "NO_HOLD",
    "IM_NETHER",
    "IM_DISEN",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "Bodies of death, receptacles of all foulness, they emerge like smoke from the angles of time, ravenous and snarling and unsatisfied.",
   "plural": "hounds of Tindalos",
@@ -28047,8 +30307,14 @@
    "NO_SLOW",
    "NO_STUN",
    "ATTR_MULTI",
-   "FORCE_SLEEP",
-   "FRIENDS"
+   "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d7",
+    "race": "same"
+   }
   ],
   "description": "A shifting, swirling form. It seems to be all colours and sizes and shapes, though the dominant form is that of a huge dog. You feel very uncertain all of a sudden.",
   "innateFrequency": 5,
@@ -28578,6 +30844,38 @@
    "DROP_GOOD",
    "DROP_GREAT",
    "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "dread"
+   },
+   {
+    "chance": 40,
+    "number": "1d2",
+    "race": "dreadmaster"
+   },
+   {
+    "chance": 10,
+    "number": "1d2",
+    "race": "dreadlord"
+   },
+   {
+    "chance": 100,
+    "number": "1d4",
+    "race": "lich"
+   },
+   {
+    "chance": 40,
+    "number": "1d2",
+    "race": "master_lich"
+   },
+   {
+    "chance": 10,
+    "number": "1d2",
+    "race": "archlich"
+   }
   ],
   "description": "A stench of corruption and decay surrounds this sorcerer, who has clearly risen from the dead to continue his foul plots and schemes.",
   "spellFrequency": 2,
@@ -29669,6 +31967,13 @@
    "IM_FIRE",
    "IM_POIS"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d3",
+    "race": "giant_roc"
+   }
+  ],
   "description": "A winged humanoid demon, Pazuzu grins inhumanely at you as he decides your fate.",
   "spellFrequency": 3,
   "spells": [
@@ -29880,6 +32185,18 @@
    "TAKE_ITEM",
    "IM_POIS",
    "FORCE_SLEEP"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d5",
+    "race": "werewolf"
+   },
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "wolf_chieftain"
+   }
   ],
   "description": "Draugluin provides Sauron with a fearsome personal guard. He is an enormous wolf inhabited with a human spirit. He is chief of all his kind.",
   "spellFrequency": 3,
@@ -30176,6 +32493,13 @@
    "MOVE_BODY",
    "FORCE_SLEEP"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d1",
+    "race": "winged_horror"
+   }
+  ],
   "description": "The most fell of all Sauron's captains: King of Angmar, Sorcerer, Ringwraith, Lord of the Nazgûl, a spear of terror in the hand of Sauron, shadow of despair. His spells are lethal and his combat blows crushingly hard. He moves at speed, and commands legions of evil to do his bidding. It is said that he is fated never to die by the hand of mortal man.",
   "spellFrequency": 2,
   "spells": [
@@ -30254,6 +32578,33 @@
    "IM_ELEC",
    "IM_FIRE",
    "IM_POIS"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "kavlax_the_many_headed"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "scatha_the_worm"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "itangast_the_fire_drake"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "smaug_the_golden"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "glaurung_father_of_the_dragons"
+   }
   ],
   "description": "\"Rushing Jaws\" is his name, and death is his game; the greatest and most terrible of all dragonkind, his power dismayed even the Valar for a time.",
   "innateFrequency": 4,
@@ -30394,6 +32745,33 @@
    "IM_ELEC",
    "NO_STUN"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "maia_of_orome"
+   },
+   {
+    "chance": 50,
+    "number": "1d4",
+    "race": "maia_of_aule"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "lesser_titan"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "greater_titan"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "makar_the_warrior"
+   }
+  ],
   "description": "Sister of Makar the Warrior, she would shout encouragement to the warriors of their hall and heal their wounds so they could battle on, until her arms were reddened to the elbow. Meássë is delighted by all violence, and recruits any beings of like abilities to her service.",
   "innateFrequency": 6,
   "spellFrequency": 5,
@@ -30464,6 +32842,23 @@
    "MOVE_BODY",
    "IM_FIRE",
    "IM_PLASMA"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d3",
+    "race": "lesser_balrog"
+   },
+   {
+    "chance": 50,
+    "number": "1d2",
+    "race": "greater_balrog"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "the_balrog_of_moria"
+   }
   ],
   "description": "A massive form cloaked in flame. Lungorthin stares balefully at you with eyes that smoulder red. The dungeon floor where he stands is scorched by the heat of his body.",
   "innateFrequency": 12,
@@ -30679,6 +33074,58 @@
    "IM_ELEC",
    "IM_FIRE"
   ],
+  "friends": [
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "mummified_chieftain"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "skeleton_etten"
+   },
+   {
+    "chance": 50,
+    "number": "1d3",
+    "race": "night_mare"
+   },
+   {
+    "chance": 30,
+    "number": "1d2",
+    "race": "dreadlord"
+   },
+   {
+    "chance": 40,
+    "number": "1d2",
+    "race": "archlich"
+   },
+   {
+    "chance": 30,
+    "number": "1d2",
+    "race": "nightwing"
+   },
+   {
+    "chance": 30,
+    "number": "1d2",
+    "race": "nightcrawler"
+   },
+   {
+    "chance": 20,
+    "number": "1d2",
+    "race": "nightwalker"
+   },
+   {
+    "chance": 20,
+    "number": "1d2",
+    "race": "bone_golem"
+   },
+   {
+    "chance": 20,
+    "number": "1d2",
+    "race": "black_reaver"
+   }
+  ],
   "description": "The greatest of all undead sorcerers, even the gods once feared him. This ancient shadow of death wilts every living thing it passes.",
   "spellFrequency": 2,
   "spells": [
@@ -30819,6 +33266,43 @@
    "IM_FIRE",
    "IM_PLASMA"
   ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d5",
+    "race": "lesser_balrog"
+   },
+   {
+    "chance": 30,
+    "number": "1d3",
+    "race": "osyluth"
+   },
+   {
+    "chance": 30,
+    "number": "1d3",
+    "race": "gelugon"
+   },
+   {
+    "chance": 30,
+    "number": "1d3",
+    "race": "pit_fiend"
+   },
+   {
+    "chance": 100,
+    "number": "1d2",
+    "race": "greater_balrog"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "the_balrog_of_moria"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "lungorthin_the_balrog_of_white_fire"
+   }
+  ],
   "description": "Gothmog is the Chief Balrog in Morgoth's personal guard. He is renowned for slaying Fëanor and Fingon, two of the High Kings of the Noldor, and has never been defeated in combat. With his whip of flame and awesome fiery breath he saved his master from Ungoliant's rage.",
   "innateFrequency": 8,
   "spellFrequency": 4,
@@ -30897,6 +33381,18 @@
    "IM_ELEC",
    "NO_FEAR",
    "FORCE_DEPTH"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "khamul_the_black_easterling"
+   },
+   {
+    "chance": 100,
+    "number": "1d1",
+    "race": "the_witch_king_of_angmar"
+   }
   ],
   "description": "Greatest and most terrible of the servants of Morgoth, creator of the One Ring. A sorcerer of dreadful powers, master of shadows and of phantoms, foul in wisdom, cruel in strength, misshaping what he rules, lord of werewolves; his dominion is torment. He has many servants, and rarely fights without them.",
   "spellFrequency": 2,

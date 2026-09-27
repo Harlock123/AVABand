@@ -65,18 +65,111 @@ public sealed class MonsterSpawner(GameData data)
         return monster;
     }
 
-    /// <summary>Places a monster and, for FRIENDS races, a small pack around it.</summary>
-    public List<Monster> PlaceWithFriends(Level level, GameRandom rng, MonsterRaceDef race, Loc at, ISet<string> uniques)
-    {
-        var placed = new List<Monster> { Place(level, rng, race, at) };
-        if (race.IsUnique) uniques.Add(race.Id);
-        if (!race.Has(MonsterFlags.Friends)) return placed;
+    /// <summary>Angband group-max: the most monsters one group puddles out to.</summary>
+    public const int GroupMax = 25;
+    /// <summary>Angband group-dist: how far from the leader an escort of another race may start.</summary>
+    public const int GroupDistance = 5;
 
-        var extra = rng.RandRange(1, 5);
-        foreach (var p in NearbyEmpty(level, at, extra))
-            placed.Add(Place(level, rng, race, p));
+    /// <summary>
+    /// Angband place_new_monster with groups allowed: the monster, then each of its escorts in turn —
+    /// with that escort's percent chance, a number rolled from its dice, of its own race, a named
+    /// race, or a race of a base drawn for the leader's level.
+    /// </summary>
+    public List<Monster> PlaceWithFriends(Level level, GameRandom rng, MonsterRaceDef race, Loc at, ISet<string> uniques,
+        bool asleep = true)
+    {
+        var placed = new List<Monster> { Place(level, rng, race, at, asleep) };
+        if (race.IsUnique) uniques.Add(race.Id);
+
+        foreach (var friend in race.Friends)
+        {
+            if (rng.RandInt0(100) >= friend.Chance) continue;
+            var total = friend.Number.Roll(rng);
+            MonsterRaceDef? friendRace;
+            if (friend.IsSame) friendRace = race;
+            else if (friend.Race is { } id) friendRace = data.Monster(id);
+            else
+            {
+                // Angband: get_mon_num(race->level) restricted to the base; no race, no more escorts.
+                friendRace = PickRace(rng, Math.Max(1, race.Depth), uniques, r => r.Glyph == friend.Glyph && !r.IsUnique);
+                if (friendRace is null) break;
+            }
+            if (friendRace is null) continue;
+            placed.AddRange(PlaceFriends(level, rng, race, friendRace, total, at, asleep, uniques));
+        }
         return placed;
     }
+
+    /// <summary>
+    /// Angband place_friends: a group of escorts. Escorts more than four levels out of depth come
+    /// alone or not at all, and groups shrink within five levels of their native depth. Escorts of
+    /// the leader's own race puddle out from the leader; others start a little way off.
+    /// </summary>
+    private List<Monster> PlaceFriends(Level level, GameRandom rng, MonsterRaceDef race, MonsterRaceDef friendRace, int total,
+        Loc at, bool asleep, ISet<string> uniques)
+    {
+        var levelDifference = level.Depth - friendRace.Depth + 5;
+        if (friendRace.IsUnique)
+        {
+            if (uniques.Contains(friendRace.Id)) return [];
+        }
+        else
+        {
+            if (levelDifference <= 0) return [];
+            if (levelDifference < 10)
+            {
+                // The fraction left over is the chance of one more.
+                var extraChance = total * levelDifference % 10;
+                total = total * levelDifference / 10;
+                if (rng.RandInt0(10) > extraChance) total++;
+            }
+        }
+        if (total <= 0) return [];
+
+        if (friendRace == race) return PlaceGroup(level, rng, race, at, total, asleep, uniques, leaderPlaced: true);
+
+        // Angband scatter_ext: any open square within group-dist of the leader.
+        var spots = new List<Loc>();
+        for (var dy = -GroupDistance; dy <= GroupDistance; dy++)
+        for (var dx = -GroupDistance; dx <= GroupDistance; dx++)
+        {
+            var p = at + new Loc(dx, dy);
+            if (level.InBounds(p) && p.DistanceTo(at) <= GroupDistance && level.IsEmptyFloor(p)) spots.Add(p);
+        }
+        if (spots.Count == 0) return [];
+        return PlaceGroup(level, rng, friendRace, rng.Pick(spots), total, asleep, uniques, leaderPlaced: false);
+    }
+
+    /// <summary>
+    /// Angband place_new_monster_group: monsters puddle out breadth-first from a square, onto empty
+    /// floor, until the group (counting the one already there) numbers <paramref name="total"/>.
+    /// </summary>
+    private List<Monster> PlaceGroup(Level level, GameRandom rng, MonsterRaceDef race, Loc start, int total, bool asleep,
+        ISet<string> uniques, bool leaderPlaced)
+    {
+        var placed = new List<Monster>();
+        total = Math.Min(total, GroupMax);
+        if (!leaderPlaced)
+        {
+            placed.Add(Place(level, rng, race, start, asleep));
+            if (race.IsUnique) { uniques.Add(race.Id); return placed; }
+        }
+        var squares = new List<Loc> { start };
+        for (var n = 0; n < squares.Count && squares.Count < total; n++)
+            foreach (var dir in Direction8)
+            {
+                if (squares.Count >= total) break;
+                var p = squares[n] + dir;
+                if (!level.InBounds(p) || !level.IsEmptyFloor(p)) continue;
+                placed.Add(Place(level, rng, race, p, asleep));
+                squares.Add(p);
+            }
+        return placed;
+    }
+
+    /// <summary>Angband ddgrid_ddd: the eight directions, in its order.</summary>
+    private static readonly Loc[] Direction8 =
+        [new(0, 1), new(0, -1), new(1, 0), new(-1, 0), new(1, 1), new(-1, 1), new(1, -1), new(-1, -1)];
 
     /// <summary>
     /// Fills generator spawn hints (vault guardians, pits, nests) and then scatters the level's
@@ -95,10 +188,13 @@ public sealed class MonsterSpawner(GameData data)
             switch (hint.Kind)
             {
                 case SpawnKind.Monster when hint.Tag is ['g', 'l', 'y', 'p', 'h', ':', var g]:
-                    // A vault's letter: a monster of that kind, falling back to anything if none fits.
-                    if ((PickRace(rng, level.Depth + hint.DepthBonus, unavailableUniques, r => r.Glyph == g)
-                         ?? PickRace(rng, level.Depth + hint.DepthBonus, unavailableUniques)) is { } kind)
-                        PlaceWithFriends(level, rng, kind, hint.Loc, unavailableUniques);
+                    // A vault's letter: a monster of that kind — or nothing, if none is native this
+                    // shallow. Angband get_vault_monsters places these awake and without escorts.
+                    if (PickRace(rng, level.Depth + hint.DepthBonus, unavailableUniques, r => r.Glyph == g) is { } kind)
+                    {
+                        Place(level, rng, kind, hint.Loc, asleep: false);
+                        if (kind.IsUnique) unavailableUniques.Add(kind.Id);
+                    }
                     break;
                 case SpawnKind.Monster:
                 case SpawnKind.MonsterOrObject when rng.OneIn(2):
@@ -168,21 +264,5 @@ public sealed class MonsterSpawner(GameData data)
             if (ok(p)) return p;
         }
         return null;
-    }
-
-    /// <summary>Empty floor squares spiralling out from <paramref name="center"/>, nearest first.</summary>
-    private static IEnumerable<Loc> NearbyEmpty(Level level, Loc center, int count)
-    {
-        var found = 0;
-        for (var r = 1; r <= 3 && found < count; r++)
-        for (var dy = -r; dy <= r && found < count; dy++)
-        for (var dx = -r; dx <= r && found < count; dx++)
-        {
-            if (Math.Max(Math.Abs(dx), Math.Abs(dy)) != r) continue;
-            var p = new Loc(center.X + dx, center.Y + dy);
-            if (!level.InBoundsFully(p) || !level.IsEmptyFloor(p)) continue;
-            found++;
-            yield return p;
-        }
     }
 }

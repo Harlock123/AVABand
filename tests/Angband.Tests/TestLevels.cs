@@ -10,10 +10,13 @@ internal static class TestLevels
     /// Legend: <c>#</c> granite, <c>g</c> glowing granite, <c>.</c> dark (corridor) floor, <c>,</c> glowing room floor,
     /// <c>+</c> closed door, <c>'</c> open door, <c>@</c> dark floor marking the returned eye position.
     /// </summary>
-    public static Level FromAscii(out Loc eye, params string[] rows)
+    public static Level FromAscii(out Loc eye, params string[] rows) => FromAscii(1, out eye, rows);
+
+    /// <summary>The same, for a level at <paramref name="depth"/>.</summary>
+    public static Level FromAscii(int depth, out Loc eye, params string[] rows)
     {
         var t = TestData.Game.Terrain;
-        var level = new Level(t, rows[0].Length, rows.Length, depth: 1);
+        var level = new Level(t, rows[0].Length, rows.Length, depth);
         eye = default;
         for (var y = 0; y < rows.Length; y++)
         for (var x = 0; x < rows[y].Length; x++)

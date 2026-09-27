@@ -15,7 +15,7 @@ namespace Angband.Core.Generation;
 /// <item><term>D</term><description>closed (possibly locked) door</description></item>
 /// <item><term>^</term><description>trap</description></item>
 /// <item><term>*</term><description>treasure or trap</description></item>
-/// <item><term>,</term><description>monster (+3) or object (+7)</description></item>
+/// <item><term>,</term><description>Angband's '1': a monster (50%), else an object (50%, 1 in 8 good), else a trap (25%), all at the level's depth</description></item>
 /// <item><term>&amp;</term><description>monster (+5)</description></item>
 /// <item><term>@</term><description>monster (+11)</description></item>
 /// <item><term>9</term><description>monster (+9) and good object (+7)</description></item>
@@ -24,7 +24,7 @@ namespace Angband.Core.Generation;
 /// <item><term>0</term><description>monster (+20)</description></item>
 /// <item><term>3 5 7</term><description>object (+3, +7, +15)</description></item>
 /// <item><term>4</term><description>monster (+3) and/or object (+7), even odds each</description></item>
-/// <item><term>letters</term><description>a monster shown with that glyph (not <c>D</c> or <c>X</c>)</description></item>
+/// <item><term>letters</term><description>a monster shown with that glyph (not <c>D</c> or <c>X</c>), awake and alone, at the level's depth in rooms and +2/+4/+6 in lesser/medium/greater vaults</description></item>
 /// <item><term>&lt; &gt;</term><description>up / down staircase</description></item>
 /// <item><term>:</term><description>passable rubble</description></item>
 /// <item><term>;</term><description>rubble</description></item>
@@ -43,7 +43,19 @@ public static class TemplateLegend
     /// <summary>A letter placing a monster of that glyph (Angband vaults: 'o' for orcs, 'T' for trolls...).</summary>
     public static bool IsMonsterGlyph(char c) => c is >= 'a' and <= 'z' or >= 'A' and <= 'Z' && c is not ('D' or 'X');
 
-    internal static void Apply(GenContext c, Loc p, char symbol, SquareFlags flags)
+    /// <summary>
+    /// Angband get_vault_monsters: how much deeper a letter's monster is drawn — none in an
+    /// interesting room, 2 / 4 / 6 in a lesser / medium / greater vault.
+    /// </summary>
+    public static int LetterDepthBonus(Definitions.MapTemplateKind kind) => kind switch
+    {
+        Definitions.MapTemplateKind.LesserVault => 2,
+        Definitions.MapTemplateKind.MediumVault => 4,
+        Definitions.MapTemplateKind.GreaterVault => 6,
+        _ => 0,
+    };
+
+    internal static void Apply(GenContext c, Loc p, char symbol, SquareFlags flags, int letterDepthBonus = 0)
     {
         switch (symbol)
         {
@@ -70,7 +82,12 @@ public static class TemplateLegend
                 if (c.Rng.OneIn(2)) c.PlaceTrap(p);
                 else c.AddHint(p, SpawnKind.Object, 3);
                 break;
-            case ',': c.AddHint(p, SpawnKind.MonsterOrObject, 3); break;
+            case ',':
+                // Angband's '1' (vault.txt): an ordinary monster, object or trap.
+                if (c.Rng.OneIn(2)) c.AddHint(p, SpawnKind.Monster, 0);
+                else if (c.Rng.OneIn(2)) c.AddHint(p, c.Rng.OneIn(8) ? SpawnKind.GoodObject : SpawnKind.Object, 0);
+                else if (c.Rng.OneIn(4)) c.PlaceTrap(p);
+                break;
             case '&': c.AddHint(p, SpawnKind.Monster, 5); break;
             case '@': c.AddHint(p, SpawnKind.Monster, 11); break;
             case '9':
@@ -90,7 +107,7 @@ public static class TemplateLegend
                 if (c.Rng.OneIn(2)) c.AddHint(p, SpawnKind.Monster, 3);
                 if (c.Rng.OneIn(2)) c.AddHint(p, SpawnKind.Object, 7);
                 break;
-            case var g when IsMonsterGlyph(g): c.AddHint(p, SpawnKind.Monster, 5, "glyph:" + g); break;
+            case var g when IsMonsterGlyph(g): c.AddHint(p, SpawnKind.Monster, letterDepthBonus, "glyph:" + g); break;
             case '<': c.SetFeature(p, c.F.UpStair); break;
             case '>': c.SetFeature(p, c.F.DownStair); break;
             case ':': c.SetFeature(p, c.F.PassableRubble); break;

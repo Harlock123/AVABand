@@ -350,6 +350,7 @@ public static class DataLoader
             Spells = m.Spells ?? [],
             Experience = m.Experience,
             Blows = m.Blows ?? [],
+            Friends = m.Friends ?? [],
             Flags = new HashSet<string>(m.Flags ?? [], StringComparer.Ordinal),
             Mimics = m.Mimics ?? [],
             Shapes = m.Shapes ?? [],
@@ -374,12 +375,23 @@ public static class DataLoader
                 errors.Add($"blow effect '{effect.Id}' uses unknown timed effect '{t}'.");
         }
         foreach (var monster in monsters)
-        foreach (var blow in monster.Blows)
         {
-            if (!methodIds.Contains(blow.Method))
-                errors.Add($"monster '{monster.Id}' uses unknown blow method '{blow.Method}'.");
-            if (!effectIds.Contains(blow.Effect))
-                errors.Add($"monster '{monster.Id}' uses unknown blow effect '{blow.Effect}'.");
+            foreach (var friend in monster.Friends)
+            {
+                if (friend.Race is { } r && !friend.IsSame && monsters.All(x => x.Id != r))
+                    errors.Add($"monster '{monster.Id}' is escorted by unknown race '{r}'.");
+                if (friend.Race is null && friend.Glyph is null)
+                    errors.Add($"monster '{monster.Id}' has an escort with neither a race nor a base symbol.");
+                if (friend.Chance is < 1 or > 100)
+                    errors.Add($"monster '{monster.Id}' has an escort chance outside 1-100.");
+            }
+            foreach (var blow in monster.Blows)
+            {
+                if (!methodIds.Contains(blow.Method))
+                    errors.Add($"monster '{monster.Id}' uses unknown blow method '{blow.Method}'.");
+                if (!effectIds.Contains(blow.Effect))
+                    errors.Add($"monster '{monster.Id}' uses unknown blow effect '{blow.Effect}'.");
+            }
         }
     }
 
@@ -620,6 +632,7 @@ public static class DataLoader
         public int Experience { get; init; }
         public List<MonsterBlowDef>? Blows { get; init; }
         public List<string>? Flags { get; init; }
+        public List<MonsterFriendDef>? Friends { get; init; }
         public string? Description { get; init; }
         public List<string>? Shapes { get; init; }
         public List<string>? Mimics { get; init; }
