@@ -32,7 +32,7 @@ public sealed partial class BindingRow(InputAction action) : ObservableObject
 /// </summary>
 public sealed partial class MainWindowViewModel
 {
-    private enum DirectionFor { None, Open, Close, Device, Tunnel, Disarm, Steal }
+    private enum DirectionFor { None, Open, Close, Device, Tunnel, Disarm, Steal, Run }
     private DirectionFor _pendingDirection;
     private Angband.Core.Items.Item? _pendingDevice;
     private bool _pendingActivation;
@@ -74,6 +74,9 @@ public sealed partial class MainWindowViewModel
     public void HandleAction(InputAction action)
     {
         if (action == InputAction.None) return;
+        // Outside the map (menus, stores, lists, look mode) Shift+direction just moves, as the direction would.
+        if ((IsInStore || IsShowingList || IsConfirming || IsLooking || IsPrompting) && action.ToRunDirection() is { } runDir)
+            action = InputActions.FromDirection(runDir);
         if (HandleStoreAction(action)) return;
         if (HandleListAction(action)) return;
 
@@ -112,11 +115,13 @@ public sealed partial class MainWindowViewModel
             // "Hold" means the square underfoot, for a chest you're standing on.
             if (action == InputAction.Hold && what is DirectionFor.Open or DirectionFor.Disarm) dir = Direction.Here;
             _pendingDirection = DirectionFor.None;
+            dir ??= action.ToRunDirection(); // Shift+direction answers too
             if (dir is null && action == InputAction.Confirm) dir = _game.DirectionToTarget();
             if (dir is not { } d) LastMessage = "Cancelled.";
             else if (what == DirectionFor.Device && _pendingDevice is { } device)
                 Execute(_pendingActivation ? new ActivateCommand(device, Direction: d) : new UseCommand(device, Direction: d));
             else if (what == DirectionFor.Tunnel) Execute(new TunnelCommand(d));
+            else if (what == DirectionFor.Run) Execute(new RunCommand(d));
             else if (what == DirectionFor.Disarm) Execute(new DisarmCommand(d));
             else if (what == DirectionFor.Steal) Execute(new StealCommand(d));
             else Execute(what == DirectionFor.Open ? new OpenCommand(d) : new CloseCommand(d));
@@ -127,6 +132,11 @@ public sealed partial class MainWindowViewModel
         if (dir is { } move)
         {
             Execute(new WalkCommand(move));
+            return;
+        }
+        if (action.ToRunDirection() is { } run)
+        {
+            Execute(new RunCommand(run));
             return;
         }
 
@@ -140,6 +150,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.Open: AskDirection(DirectionFor.Open); break;
             case InputAction.Close: AskDirection(DirectionFor.Close); break;
             case InputAction.Tunnel: AskDirection(DirectionFor.Tunnel); break;
+            case InputAction.Run: AskDirection(DirectionFor.Run); break;
             case InputAction.Disarm: AskDirection(DirectionFor.Disarm); break;
             case InputAction.Steal:
                 if (_game.ClassHas(ClassFlags.Steal)) AskDirection(DirectionFor.Steal);

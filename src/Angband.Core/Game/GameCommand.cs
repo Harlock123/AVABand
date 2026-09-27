@@ -91,6 +91,9 @@ public sealed record CastCommand(string SpellId, Loc? Target = null, Direction? 
 /// </summary>
 public sealed record TravelCommand(Loc Target) : GameCommand;
 
+/// <summary>Run one way until something interesting happens (Angband Shift+direction or '.').</summary>
+public sealed record RunCommand(Direction Direction) : GameCommand;
+
 /// <summary>Enter the store whose entrance the player is standing on (Angband '_').</summary>
 public sealed record EnterStoreCommand : GameCommand;
 

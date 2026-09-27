@@ -43,7 +43,7 @@ public sealed partial class GameSession
         if (!Level.FeelSquares.Remove(p)) return;
         Level.FeelingSquaresSeen++;
         if (Level.FeelingSquaresSeen != LevelFeelings.FeelingNeed || _arriving || !FeelingsOn) return;
-        Player.IsResting = false; // Angband disturbs
+        Disturb(); // Angband disturbs
         Publish(new MessageEvent($"You feel that {LevelFeelings.ObjectTexts[Math.Min(Level.Feeling / 10, LevelFeelings.ObjectTexts.Length - 1)]}"));
     }
 

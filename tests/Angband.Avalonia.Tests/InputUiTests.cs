@@ -110,4 +110,44 @@ public class InputUiTests
 
         Assert.Equal(target, game.Player.Position);
     }
+
+    /// <summary>Shift+arrow runs: one key press takes the player the length of a corridor.</summary>
+    [AvaloniaFact]
+    public void ShiftArrow_RunsDownACorridor()
+    {
+        var (window, vm) = Open();
+        var game = vm.Game;
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+
+        // Carve a known corridor running east from the player, ten squares long.
+        var start = game.Player.Position;
+        var terrain = game.Data.Terrain.Ids;
+        for (var dx = -1; dx <= 11; dx++)
+        for (var dy = -1; dy <= 1; dy++)
+        {
+            var p = new Loc(start.X + dx, start.Y + dy);
+            if (!game.Level.InBounds(p)) continue;
+            game.Level[p].Feature = dy == 0 && dx is >= 0 and <= 10 ? terrain.Floor : terrain.Granite;
+            game.Level[p].Trap = 0;
+            foreach (var item in game.Level.Objects.At(p).ToList()) game.Level.Objects.Remove(p, item);
+        }
+        game.Known.RememberAll(game.Level);
+        game.UpdateView();
+
+        window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.Shift);
+
+        Assert.Equal(start + new Loc(10, 0), game.Player.Position);
+    }
+
+    /// <summary>In a menu, Shift+arrow moves the selection as the arrow does, rather than closing the menu.</summary>
+    [AvaloniaFact]
+    public void ShiftArrow_InAMenu_MovesTheSelection()
+    {
+        var (window, vm) = Open();
+        window.KeyPressQwerty(PhysicalKey.D, RawInputModifiers.None);
+        Assert.True(vm.PromptRows.Count > 2);
+        window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.Shift);
+        Assert.True(vm.IsPrompting);
+        Assert.Equal(1, vm.PromptSelectedIndex);
+    }
 }

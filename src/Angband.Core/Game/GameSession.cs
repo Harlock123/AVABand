@@ -140,6 +140,7 @@ public sealed partial class GameSession : ITurnHandler
             return Player.IsDead;
         }
         if (command is TravelCommand travel) return Travel(travel.Target);
+        if (command is RunCommand run) return Run(run.Direction);
 
         var energy = command switch
         {
@@ -245,9 +246,9 @@ public sealed partial class GameSession : ITurnHandler
         UpdateView();
     }
 
-    private int Walk(Direction dir)
+    private int Walk(Direction dir, bool confuse = true)
     {
-        if (Player.Timed.Has(Effects.TimedIds.Confused) && Rng.RandInt0(100) < 40)
+        if (confuse && Player.Timed.Has(Effects.TimedIds.Confused) && Rng.RandInt0(100) < 40)
         {
             dir = Rng.Pick(DirectionExtensions.Compass);
             Publish(new MessageEvent("You are confused."));

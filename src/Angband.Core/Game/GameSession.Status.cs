@@ -14,7 +14,7 @@ public sealed partial class GameSession
     {
         if (Player.IsDead || damage <= 0) return;
         Player.Hp -= damage;
-        Player.IsResting = false;
+        Disturb();
         CombatRegenOnWound(damage, killer);
         Publish(new PlayerHurtEvent(damage, Player.Hp, Player.MaxHp));
 

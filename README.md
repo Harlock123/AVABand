@@ -503,7 +503,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     orc (12)."), use old target (off: aimed commands take the nearest monster), always pick up /
     pick up items matching the pack (each object picked up costs a tenth of a turn), show flavours
     ("an Icky Green Potion of Speed"), disturb whenever a viewable monster moves (a monster coming
-    into view always stops travel and tunnelling; with this on, one in view moving does too), notify
+    into view always stops running, travel and tunnelling; with this on, one in view moving does too), notify
     on recharge; and display options: highlight target, highlight player, solid walls, shaded
     walls, yellow torchlight, centre the map continuously (off: Angband's panel scrolling, when
     within 3 squares of the edge), purple uniques, player colour by hit points, mouse movement,
@@ -700,6 +700,16 @@ the context action, or a game command.
 
 - **Keyboard**: bindings are chords — key names (`Up`, `NumPad8`, `Ctrl+T`, `F7`) or typed
   characters (`Char:>`), so symbols follow the keyboard layout. Letters still pick menu entries.
+- **Running** (`Core/Game/GameSession.Run.cs`, a port of 4.2's `player-path.c` `run_init` /
+  `run_test` / `run_step`): Shift+direction keeps stepping one way, following a corridor round its
+  bends, and stops when anything interesting happens: a monster comes into view (or one in view
+  moves, with *disturb whenever viewable monster moves*), a visible monster is about to come
+  alongside, an object, visible trap, door, stairs or shop comes alongside, the corridor branches
+  or opens into a room, a wall is ahead, or you are hurt, get hungry, faint or feel the level. The
+  first step is checked like a walk (a known wall says so and takes no time; a monster there is
+  attacked, a closed door opened), and only that step can be sent astray by confusion. In menus,
+  stores, lists and look mode Shift+direction moves like the plain direction. The gamepad has no
+  default run button: bind *Run (asks which way)* or a *Run north*… action in Settings → Controls.
 - **Mouse**: left-click travels to a known square along the shortest known path (stopping when a
   monster comes into view or you are hurt; adjacent monsters are attacked); right-click shoots a
   monster or describes the square; the wheel zooms.
@@ -711,7 +721,7 @@ the context action, or a game command.
   capture the next press. Bindings are saved to `<AppData>/AVABand/bindings.json`; actions added in later versions get their default keys when those keys are still free (so a saved `bindings.json` that still has `s` as hold keeps it; rebind Steal in Settings).
 
 Default keys:
-Arrows / numpad / `hjklyubn` move, `<` `>` stairs, `o`/`c`/`T`/`D` + direction open/close/tunnel/disarm (`5` for underfoot), `5` or `,` hold, `s` + direction steal (rogues; others hold), `f` fire at the nearest visible monster, `R` rest, walk into a monster to attack,
+Arrows / numpad / `hjklyubn` move; Shift+arrow or Shift+keypad (or `H` `J` `L` `Y` `U` `N` — `K` and `B` stay toggle-ignore and browse) runs, and `.` + direction runs too; `<` `>` stairs, `o`/`c`/`T`/`D` + direction open/close/tunnel/disarm (`5` for underfoot), `5` or `,` hold, `s` + direction steal (rogues; others hold), `f` fire at the nearest visible monster, `R` rest, walk into a monster to attack,
 `w` wield, `t` take off, `q` quaff, `r` read, `E` eat, `d` drop, `v` throw, `g` pick up, `F` refuel,
 `I` inspect, `a` aim a wand, `Z` use a staff, `z` zap a rod, `A` activate (these open an item list: press its letter, or Esc), `m` cast, `G` study, `B` browse spells,
 F5 regenerate the level, F6 go 5 levels deeper, F7 show the whole map, Ctrl+T tiles/ASCII, F10 display settings, Ctrl+N new game, Ctrl+S save, Ctrl+O load, `C` character sheet, Ctrl+H high scores, `Q` retire (winners), `x` look, `*` target, `~` knowledge (monsters, objects, runes, egos, artifacts), `=` options, `{`/`}` inscribe/uninscribe, Ctrl+D ignore, `K` show ignored, Ctrl+F level feeling, Ctrl +/- zoom.

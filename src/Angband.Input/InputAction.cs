@@ -46,6 +46,11 @@ public enum InputAction
     ShowWholeMap, RegenerateLevel, JumpDeeper,
     /// <summary>The list of commands and their keys (Angband '?' help). Added last so saved bindings keep their meaning.</summary>
     ShowCommands,
+    /// <summary>
+    /// Run until something interesting happens (Angband Shift+direction, roguelike Shift+letter): one
+    /// per direction, and <see cref="Run"/> ('.') asks which way. Added last so saved bindings keep their meaning.
+    /// </summary>
+    RunNorth, RunNorthEast, RunEast, RunSouthEast, RunSouth, RunSouthWest, RunWest, RunNorthWest, Run,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -71,6 +76,20 @@ public static class InputActions
         _ => null,
     };
 
+    /// <summary>The direction of a run action (Shift+direction).</summary>
+    public static Direction? ToRunDirection(this InputAction action) => action switch
+    {
+        InputAction.RunNorth => Direction.North,
+        InputAction.RunNorthEast => Direction.NorthEast,
+        InputAction.RunEast => Direction.East,
+        InputAction.RunSouthEast => Direction.SouthEast,
+        InputAction.RunSouth => Direction.South,
+        InputAction.RunSouthWest => Direction.SouthWest,
+        InputAction.RunWest => Direction.West,
+        InputAction.RunNorthWest => Direction.NorthWest,
+        _ => null,
+    };
+
     public static InputAction FromDirection(Direction dir) => dir switch
     {
         Direction.North => InputAction.MoveNorth,
@@ -91,6 +110,11 @@ public static class InputActions
         InputAction.MoveSouthEast => "Move south-east",
         InputAction.MoveSouthWest => "Move south-west",
         InputAction.MoveNorthWest => "Move north-west",
+        InputAction.RunNorthEast => "Run north-east",
+        InputAction.RunSouthEast => "Run south-east",
+        InputAction.RunSouthWest => "Run south-west",
+        InputAction.RunNorthWest => "Run north-west",
+        InputAction.Run => "Run (asks which way)",
         InputAction.Confirm => "Confirm / context action",
         InputAction.Cancel => "Cancel",
         InputAction.TakeOff => "Take off",

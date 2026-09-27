@@ -33,6 +33,17 @@ public sealed class InputBindings
         K(InputAction.MoveNorthEast, "PageUp", "NumPad9", "Char:u");
         K(InputAction.MoveSouthWest, "End", "NumPad1", "Char:b");
         K(InputAction.MoveSouthEast, "PageDown", "NumPad3", "Char:n");
+        // Running: Shift with the arrows or keypad (Angband), Shift with the roguelike letters where
+        // they are free (K and B already toggle ignoring and browse), or '.' and a direction.
+        K(InputAction.RunNorth, "Shift+Up", "Shift+NumPad8");
+        K(InputAction.RunSouth, "Shift+Down", "Shift+NumPad2", "Char:J");
+        K(InputAction.RunWest, "Shift+Left", "Shift+NumPad4", "Char:H");
+        K(InputAction.RunEast, "Shift+Right", "Shift+NumPad6", "Char:L");
+        K(InputAction.RunNorthWest, "Shift+Home", "Shift+NumPad7", "Char:Y");
+        K(InputAction.RunNorthEast, "Shift+PageUp", "Shift+NumPad9", "Char:U");
+        K(InputAction.RunSouthWest, "Shift+End", "Shift+NumPad1");
+        K(InputAction.RunSouthEast, "Shift+PageDown", "Shift+NumPad3", "Char:N");
+        K(InputAction.Run, "Char:.");
         K(InputAction.Hold, "NumPad5", "Clear", "Char:5", "Char:,");
         K(InputAction.Steal, "Char:s");
         K(InputAction.Options, "Char:=");

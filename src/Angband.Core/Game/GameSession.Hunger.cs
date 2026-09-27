@@ -58,7 +58,7 @@ public sealed partial class GameSession
 
         Publish(new MessageEvent(Hunger.Message(before, after)));
         Publish(new HungerChangedEvent(after, Worse: after < before));
-        if (after < before && after <= HungerLevel.Hungry) Player.IsResting = false;
+        if (after < before && after <= HungerLevel.Hungry) Disturb();
         if (before == HungerLevel.Gorged || after == HungerLevel.Gorged) RecalculateBonuses();
     }
 
@@ -86,7 +86,7 @@ public sealed partial class GameSession
             && Data.Timed(TimedIds.Paralyzed) is { } paralysis)
         {
             Publish(new MessageEvent("You faint from the lack of food."));
-            Player.IsResting = false;
+            Disturb();
             Player.Timed.Increase(paralysis, 1 + Rng.RandInt0(5));
             Publish(new StatusChangedEvent(TimedIds.Paralyzed, Player.Timed[TimedIds.Paralyzed]));
         }
