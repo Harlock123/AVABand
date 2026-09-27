@@ -49,13 +49,23 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
     }
 
     public bool IsAvailable { get; }
+
+    /// <summary>The mixing period asked for at start-up (0: OpenAL's default).</summary>
+    public int PeriodFrames { get; private init; }
     public string? CurrentMusic { get; private set; }
 
-    /// <summary>Opens the default device; falls back to a silent engine if that is impossible.</summary>
-    public static IAudioEngine CreateOrSilent()
+    /// <summary>
+    /// Opens the default device; falls back to a silent engine if that is impossible.
+    /// <paramref name="periodFrames"/> is how many sample frames OpenAL mixes at a time (0: its
+    /// default). Bigger periods cost a little latency but ride out a jittery audio path — a
+    /// virtual machine's emulated sound card underruns constantly at the default size.
+    /// </summary>
+    public static IAudioEngine CreateOrSilent(int periodFrames = 0)
     {
         try
         {
+            // Before OpenAL Soft first reads its configuration (on the first call below).
+            if (periodFrames > 0) OpenAlConfig.UsePeriod(periodFrames);
             var alc = ALContext.GetApi(soft: true);
             var al = AL.GetApi(soft: true);
             var device = alc.OpenDevice(null);
@@ -66,7 +76,7 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
                 alc.CloseDevice(device);
                 return new NullAudioEngine();
             }
-            return new OpenAlAudioEngine(al, alc, device, context);
+            return new OpenAlAudioEngine(al, alc, device, context) { PeriodFrames = periodFrames };
         }
         catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException or InvalidOperationException
                                        or FileNotFoundException or TypeInitializationException)

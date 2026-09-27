@@ -617,7 +617,14 @@ game or in `<AppData>/AVABand/tilesets/`:
 Windows, Linux and macOS on x64 and ARM), decoding WAV itself, Ogg Vorbis with NVorbis and MP3 with
 NLayer. A `SoundDirector` subscribes to the engine's event bus and turns events into sounds, so the
 engine knows nothing about audio (and sound never touches the game's RNG). Without an audio device
-(or with `--no-audio`) the game is silent. Settings → Sound (F10) has master/effects/music volumes,
+(or with `--no-audio`) the game is silent. The **Audio buffer** choice (Settings → Sound) sets how much sound
+OpenAL mixes at a time: *Automatic* — the default — uses OpenAL's own small buffer, or a large
+one (2048 frames, about 43 ms) when AVABand finds it is running in a virtual machine, whose
+emulated sound card otherwise underruns and crackles (measured in a QEMU VM on PipeWire: about 25
+dropouts a second at the default size, none at 2048). *Small*, *Medium* (1024) and *Large* force a
+size; a change applies the next time the game starts. It works through a one-line OpenAL Soft
+config file in the temp folder named by `ALSOFT_CONF` (your own `alsoft.conf` still applies; if
+you set `ALSOFT_CONF` yourself, AVABand leaves it alone). Settings → Sound (F10) has master/effects/music volumes,
 separate effects and music packs, and Ctrl+M mutes.
 
 Bundled packs (in `src/Angband.Avalonia/soundpacks/`):

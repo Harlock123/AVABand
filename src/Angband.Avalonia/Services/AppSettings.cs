@@ -22,6 +22,8 @@ public sealed class AppSettings
     public double MusicVolume { get; set; } = 50;
     public string? SoundPackId { get; set; } = "angband-dubtrain";
     public string? MusicPackId { get; set; } = "cc0-dungeon-music";
+    /// <summary>Audio buffer size (<see cref="Angband.Audio.AudioBuffer"/>): applied when the game starts.</summary>
+    public string AudioBuffer { get; set; } = Angband.Audio.AudioBuffer.Automatic;
 
     /// <summary>The last character created, reused by quick start (null until the first one).</summary>
     public SavedCharacter? LastCharacter { get; set; }

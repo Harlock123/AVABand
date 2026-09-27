@@ -69,4 +69,28 @@ public class SoundUiTests
         Assert.Equal(0.25f, engine.Music, 3);
         Assert.Equal(25, saved.MusicVolume);
     }
+
+    [AvaloniaFact]
+    public void TheAudioBuffer_IsChosenInTheSoundTab_AndKeptForTheNextStart()
+    {
+        var settings = new AppSettings();
+        var saves = new List<string>();
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, s => saves.Add(s.AudioBuffer));
+        vm.StartGame(42);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        Assert.Equal(AudioBuffer.Automatic, settings.AudioBuffer);
+        Assert.Equal(0, vm.AudioBufferIndex);
+
+        var dialog = window.OpenSettings();
+        var tabs = dialog.GetVisualDescendants().OfType<TabControl>().First();
+        tabs.SelectedIndex = 1; // Sound
+        dialog.UpdateLayout();
+        var box = dialog.GetVisualDescendants().OfType<ComboBox>().Single(c => c.Name == "AudioBufferBox");
+        Assert.Equal(AudioBuffer.Choices.Count, box.ItemCount);
+        box.SelectedIndex = 3;
+        Assert.Equal(AudioBuffer.Large, settings.AudioBuffer);
+        Assert.Equal([AudioBuffer.Large], saves);
+        Assert.Contains("No audio device", vm.AudioBufferNote); // no real engine in this test
+    }
 }

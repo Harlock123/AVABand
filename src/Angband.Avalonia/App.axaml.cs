@@ -25,10 +25,11 @@ public partial class App : Application
             var data = DataLoader.LoadDefault();
             var problems = new List<string>();
             var tilesets = TilesetCatalog.DiscoverDefault(problems);
-            var vm = new MainWindowViewModel(data, tilesets, AppSettings.Load(), s => s.Save());
+            var settings = AppSettings.Load();
+            var vm = new MainWindowViewModel(data, tilesets, settings, s => s.Save());
 
             // Audio is optional: without a device (or with --no-audio) the game is simply silent.
-            var engine = desktop.Args?.Contains("--no-audio") == true ? new NullAudioEngine() : OpenAlAudioEngine.CreateOrSilent();
+            var engine = desktop.Args?.Contains("--no-audio") == true ? new NullAudioEngine() : OpenAlAudioEngine.CreateOrSilent(AudioBuffer.PeriodFrames(settings.AudioBuffer, VirtualMachine.Detect()));
             var director = new SoundDirector(engine);
             vm.UseAudio(new AudioServices(engine, director, SoundPackCatalog.DiscoverDefault(problems)));
             desktop.Exit += (_, _) => { director.Dispose(); engine.Dispose(); };

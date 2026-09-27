@@ -59,6 +59,37 @@ public sealed partial class MainWindowViewModel
     partial void OnEffectsVolumeChanged(double value) => AudioChanged();
     partial void OnMusicVolumeChanged(double value) => AudioChanged();
 
+    /// <summary>The "Audio buffer" choices, in Settings → Sound.</summary>
+    public IReadOnlyList<string> AudioBufferChoices { get; } = [.. AudioBuffer.Choices.Select(c => c.Label)];
+
+    /// <summary>The chosen audio buffer; it takes effect the next time AVABand starts.</summary>
+    public int AudioBufferIndex
+    {
+        get => Math.Max(0, AudioBuffer.Choices.ToList().FindIndex(c => c.Id == _settings.AudioBuffer));
+        set
+        {
+            if (value < 0 || value >= AudioBuffer.Choices.Count || AudioBuffer.Choices[value].Id == _settings.AudioBuffer) return;
+            _settings.AudioBuffer = AudioBuffer.Choices[value].Id;
+            _saveSettings?.Invoke(_settings);
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(AudioBufferNote));
+        }
+    }
+
+    /// <summary>What the buffer is now, and that a change waits for a restart.</summary>
+    public string AudioBufferNote
+    {
+        get
+        {
+            var running = _audio?.Engine is OpenAlAudioEngine al ? al.PeriodFrames : -1;
+            var now = running < 0 ? "No audio device." : running == 0 ? "Now: OpenAL's default (small)." : $"Now: {running} frames.";
+            var vm = VirtualMachine.Detect() ? " Running in a virtual machine." : "";
+            var chosen = AudioBuffer.PeriodFrames(_settings.AudioBuffer, VirtualMachine.Detect());
+            var restart = running >= 0 && chosen != running ? " Restart AVABand to use the new size." : "";
+            return now + vm + restart;
+        }
+    }
+
     [RelayCommand]
     private void ToggleMute()
     {

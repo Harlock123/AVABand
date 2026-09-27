@@ -90,6 +90,11 @@
             <ToggleSwitch OnContent="Music on" OffContent="Music off" IsChecked="{Binding MusicEnabled}" />
             <Button Content="Play test sound" Command="{Binding TestSoundCommand}" VerticalAlignment="Center" />
           </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <TextBlock Text="Audio buffer" VerticalAlignment="Center" />
+            <ComboBox x:Name="AudioBufferBox" ItemsSource="{Binding AudioBufferChoices}" SelectedIndex="{Binding AudioBufferIndex}" MinWidth="360" />
+            <TextBlock Text="{Binding AudioBufferNote}" VerticalAlignment="Center" Opacity="0.7" FontSize="12" TextWrapping="Wrap" MaxWidth="360" />
+          </StackPanel>
           <Grid ColumnDefinitions="110,260,Auto" RowDefinitions="Auto,Auto,Auto">
             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Master" />
             <Slider x:Name="MasterSlider" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MasterVolume}" />
