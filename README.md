@@ -108,10 +108,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     cornered; **pack tactics** (`GROUP_AI` waits out of sight while the player is in a corridor);
     **breeding** (`MULTIPLY`, capped per level); opening, unlocking and bashing doors; pushing
     past or trampling weaker monsters (`MOVE_BODY`/`KILL_BODY`).
-  - **Spells** (`monster_spells.json`, cast 1-in-N): arrows, boulders, bolts, balls, breaths
+  - **Spells** (`monster_spells.json`): arrows, boulders, bolts, balls, breaths
     (damage from the caster's HP), wounds, blind/confuse/scare/slow/hold (saving throw and
     protections apply), heal, blink, teleport, teleport-to, summon (kin), shriek. Bolts need a clear
-    shot; non-innate spells can fail; frightened casters prefer escapes.
+    shot; non-innate spells can fail; frightened casters prefer escapes. As in Angband 4.2, a race
+    has two frequencies, imported from `monster.txt`: `spellFrequency` (its `spell-freq`) for
+    spells, and `innateFrequency` (`innate-freq`) for innate attacks — breaths, arrows, boulders,
+    spit, shrieks — each "1 in N", a 100/N percent chance. Each turn it rolls for a spell first,
+    then for an innate attack, and uses one of that kind (`make_ranged_attack`); taunting halves
+    both chances. So a scout fires arrows 1 time in 3 but hastes itself only 1 time in 10, and a
+    kobold archer shoots every other turn. Kinds with no frequency given use Angband's 1 in 4.
+    Not modelled: Angband doubles the chance when a monster is at its preferred range (AVABand's
+    monsters have none).
 - **Character creation** (`Game/Birth.cs`, `races.json`; Game → New character, Ctrl+N): name,
   11 races (Human, Half-Elf, Elf, Hobbit, Gnome, Dwarf, Half-Orc, Half-Troll, Dunadan, High-Elf,
   Kobold) with stat/skill adjustments, hit dice, experience factors, infravision and innate
@@ -379,8 +387,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     sentences — "It may fire small arrows (6)", "It may breathe fire (29)", "It may cast spells
     intelligently which produce fire bolts (72), confuse, or blink-self". The most a spell can do is
     shown; for a breath, only once one has been killed (its life is known then). Wound spells are
-    described by power (light to mortal wounds). The frequency is guessed as Angband does ("about 1
-    time in 2") once one is seen, and known after 50 innate attacks or 50 spells.
+    described by power (light to mortal wounds). Each sentence gives its own frequency (innate or
+    spell), guessed as Angband does ("about 1 time in 2") once one is seen, and known after 50
+    innate attacks or 50 spells.
   - **Colours**: each spell is shown green, yellow, orange or red for how dangerous it is to *you*,
     given the resistances, protections and saving throw you know you have (gear whose rune you
     haven't learned doesn't count), as Angband's `spell_color` does; resistances are umber and
@@ -708,9 +717,9 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: separate innate and spell frequencies for monsters (4.2's `innate-freq` and
-`spell-freq`), hallucination (potions, mushrooms and monster attacks that make you see things), and
-Angband's stacking of armour and devices (AVABand keeps one per slot).
+Natural next steps: hallucination (potions, mushrooms and monster attacks that make you see
+things), Angband's stacking of armour and devices (AVABand keeps one per slot), and monsters'
+preferred range (archers and casters keeping their distance, breathers closing in).
 
 ## Licence
 

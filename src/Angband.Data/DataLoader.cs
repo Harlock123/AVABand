@@ -346,6 +346,7 @@ public static class DataLoader
             Hearing = m.Hearing,
             Smell = m.Smell,
             SpellFrequency = m.SpellFrequency,
+            InnateFrequency = m.InnateFrequency,
             Spells = m.Spells ?? [],
             Experience = m.Experience,
             Blows = m.Blows ?? [],
@@ -395,8 +396,11 @@ public static class DataLoader
         {
             foreach (var spell in m.Spells.Where(sp => !ids.Contains(sp)))
                 errors.Add($"monster '{m.Id}' knows unknown spell '{spell}'.");
-            if (m.Spells.Count > 0 && m.SpellFrequency <= 0)
+            var known = m.Spells.Select(sp => spells.FirstOrDefault(s => s.Id == sp)).OfType<MonsterSpellDef>().ToList();
+            if (known.Any(s => !s.Innate) && m.SpellFrequency <= 0)
                 errors.Add($"monster '{m.Id}' has spells but no spellFrequency.");
+            if (known.Any(s => s.Innate) && m.InnateFrequency <= 0)
+                errors.Add($"monster '{m.Id}' has innate attacks but no innateFrequency.");
         }
     }
 
@@ -611,6 +615,7 @@ public static class DataLoader
         public int Hearing { get; init; } = 20;
         public int Smell { get; init; }
         public int SpellFrequency { get; init; }
+        public int InnateFrequency { get; init; }
         public List<string>? Spells { get; init; }
         public int Experience { get; init; }
         public List<MonsterBlowDef>? Blows { get; init; }

@@ -123,7 +123,7 @@ public class SpellLoreTests
     public void Spells_ShowTheirMostDamage_InnateAndCastSeparately()
     {
         var game = Game();
-        var scout = game.Data.Monster("scout")!; // HASTE, ARROW; 1_IN_3
+        var scout = game.Data.Monster("scout")!; // ARROW 1 in 3 (innate-freq), HASTE 1 in 10 (spell-freq)
         var lore = game.Lore.For(scout.Id);
         lore.SpellsSeen.UnionWith(["ARROW", "HASTE"]);
         lore.CastsInnate = 1;
@@ -132,9 +132,11 @@ public class SpellLoreTests
         var max = MonsterRecall.LoreDamage(arrow, scout, knowHp: false);
         Assert.Equal(arrow.Damage.Max + scout.Depth / arrow.LevelDivisor, max);
         var text = game.Recall(scout);
-        // 1 in 3 is a 33% chance; Angband's guess rounds it up to 40%: "about 1 time in 2".
+        // Each sentence has its own frequency. 1 in 3 is a 33% chance, which Angband's guess rounds up
+        // to 40%: "about 1 time in 2"; 1 in 10 is 10%, "about 1 time in 10".
+        Assert.Equal((3, 10), (scout.InnateFrequency, scout.SpellFrequency));
         Assert.Contains($"He may fire small arrows ({max}); about 1 time in 2.", text);
-        Assert.Contains("He may cast spells which haste-self; about 1 time in 2.", text);
+        Assert.Contains("He may cast spells which haste-self; about 1 time in 10.", text);
     }
 
     [Fact]

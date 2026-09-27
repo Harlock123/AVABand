@@ -19,6 +19,9 @@ public sealed partial class GameSession
     /// <summary>The player's scent trail (followed by monsters with a sense of smell).</summary>
     public ScentMap Scent { get; } = new();
 
+    /// <summary>One monster's turn, on demand (for tests).</summary>
+    internal int RunMonsterTurn(Monster monster) => MonsterTurn(monster);
+
     private int MonsterTurn(Monster monster)
     {
         if (Player.IsDead || !monster.IsActive) return EnergyTable.MoveEnergy;
@@ -37,9 +40,7 @@ public sealed partial class GameSession
         var race = monster.Race;
         if (race.Has(MonsterFlags.Multiply) && TryMultiply(monster)) return EnergyTable.MoveEnergy;
         if (monster.IsVisible) Lore.For(race.Id).TurnsWatched++;
-        // Angband: a taunted monster is half as likely to use a spell or ranged attack.
-        var spellOdds = race.SpellFrequency * (Player.Timed.Has("taunt") ? 2 : 1);
-        if (race.SpellFrequency > 0 && Rng.OneIn(spellOdds) && TryCastSpell(monster)) return EnergyTable.MoveEnergy;
+        if (RangedAttackKind(race) is { } innate && TryCastSpell(monster, innate)) return EnergyTable.MoveEnergy;
 
         var adjacent = monster.Position.ChebyshevTo(Player.Position) == 1;
         if (race.Has(MonsterFlags.NeverMove))

@@ -111,8 +111,13 @@ public sealed class MonsterRaceDef
     public int Hearing { get; init; } = 20;
     /// <summary>How old (in player moves) a scent trail it can still follow is; 0 = no sense of smell.</summary>
     public int Smell { get; init; }
-    /// <summary>Casts on 1 turn in N (0 = never).</summary>
+    /// <summary>
+    /// Casts a spell on 1 turn in N (0 = never): Angband's spell-freq, for everything but its
+    /// innate attacks. A 1-in-N frequency is a 100/N percent chance, as Angband stores it.
+    /// </summary>
     public int SpellFrequency { get; init; }
+    /// <summary>Uses an innate attack — breath, arrows, boulders, spit, shrieks — on 1 turn in N (Angband innate-freq).</summary>
+    public int InnateFrequency { get; init; }
     /// <summary>Spell ids from monster_spells.json.</summary>
     public IReadOnlyList<string> Spells { get; init; } = [];
     /// <summary>Experience value (multiplied by level, divided by player level).</summary>

@@ -113,7 +113,10 @@ def convert(entry, bases):
         mapped = wound_for(depth) if s == "WOUND" else SPELLS.get(s)
         if mapped and mapped not in spells:
             spells.append(mapped)
-    freqs = [int(f) for f in values(entry, "spell-freq") + values(entry, "innate-freq")]
+    # Angband 4.2 keeps two frequencies (1 in N): innate-freq for innate attacks, spell-freq for
+    # the rest; a race with attacks of a kind but no frequency for it gets 1 in 4 (mon-init.c).
+    innate_freq = int(one(entry, "innate-freq", "0")) or 4
+    spell_freq = int(one(entry, "spell-freq", "0")) or 4
 
     color = one(entry, "color", "w")
     out = {
@@ -139,10 +142,19 @@ def convert(entry, bases):
         out["shapeNames"] = [x.strip() for x in shapes]
     if one(entry, "plural"):
         out["plural"] = one(entry, "plural")
-    if spells and freqs:
-        out["spellFrequency"] = min(freqs)
+    if spells:
+        if any(sp in INNATE for sp in spells):
+            out["innateFrequency"] = innate_freq
+        if any(sp not in INNATE for sp in spells):
+            out["spellFrequency"] = spell_freq
         out["spells"] = spells
     return out
+
+
+# Angband's innate "spells" (list-mon-spells.h, RST_INNATE): breaths, missiles, spit, shrieks.
+INNATE = {"SHRIEK", "WHIP", "SPIT", "SHOT", "ARROW", "BOLT", "BOULDER", "WEAVE"} | {
+    "BR_ACID", "BR_ELEC", "BR_FIRE", "BR_COLD", "BR_POIS", "BR_NETH", "BR_LIGHT", "BR_DARK", "BR_SOUN", "BR_CHAO",
+    "BR_DISE", "BR_NEXU", "BR_TIME", "BR_INER", "BR_GRAV", "BR_SHAR", "BR_PLAS", "BR_WALL", "BR_MANA"}
 
 
 def main():

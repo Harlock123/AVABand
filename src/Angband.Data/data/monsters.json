@@ -630,7 +630,7 @@
   "hearing": 20,
   "smell": 20,
   "experience": 12,
-  "spellFrequency": 3,
+  "innateFrequency": 2,
   "spells": [
    "ARROW"
   ],
@@ -728,7 +728,7 @@
   "sleep": 70,
   "hearing": 20,
   "experience": 35,
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_ELEC"
   ],
@@ -1646,7 +1646,7 @@
   ],
   "description": "Yum! It looks quite tasty. It doesn't sound so nice, though...",
   "plural": "shrieker mushroom patches",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SHRIEK"
   ]
@@ -2845,7 +2845,8 @@
    "FRIENDS"
   ],
   "description": "An agile hunter, ready and relaxed.",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
+  "spellFrequency": 10,
   "spells": [
    "HASTE",
    "ARROW"
@@ -3486,7 +3487,7 @@
   ],
   "description": "It is a large fly that drips frost.",
   "plural": "giant white dragon flies",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_COLD"
   ]
@@ -3523,7 +3524,7 @@
   ],
   "description": "A vast, foul-smelling dragonfly.",
   "plural": "giant green dragon flies",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_POIS"
   ]
@@ -3776,7 +3777,7 @@
   ],
   "description": "The size of a large bird, this fly drips caustic acid.",
   "plural": "giant black dragon flies",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_ACID"
   ]
@@ -3814,7 +3815,7 @@
   ],
   "description": "Large beating wings support this dazzling insect. A loud buzzing noise pervades the air.",
   "plural": "giant gold dragon flies",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_SOUN"
   ]
@@ -4356,7 +4357,7 @@
    "NEVER_BLOW"
   ],
   "description": "It is a strange small humanoid in a constant state of extreme terror.",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
   "spells": [
    "SHRIEK"
   ]
@@ -4391,7 +4392,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A large black and yellow lizard. You'd better run away!",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
   "spells": [
    "BR_FIRE"
   ]
@@ -4536,7 +4537,7 @@
    "HURT_LIGHT"
   ],
   "description": "A small orc with wide and snuffling nostrils.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "ARROW"
   ]
@@ -4578,7 +4579,7 @@
    "TAKE_ITEM"
   ],
   "description": "An uncultured brute with a club, a sling and a whip.",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "SHOT",
    "WHIP"
@@ -4853,7 +4854,7 @@
    "IM_COLD"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a pale white.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_COLD"
   ]
@@ -4903,7 +4904,7 @@
    "IM_POIS"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a sickly green.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_POIS"
   ]
@@ -4953,7 +4954,7 @@
    "IM_ACID"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a dull black.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_ACID"
   ]
@@ -5003,7 +5004,7 @@
    "IM_FIRE"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a pale red.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_FIRE"
   ]
@@ -5126,7 +5127,7 @@
    "IM_POIS"
   ],
   "description": "It is a large snake with a hooded face.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SPIT"
   ]
@@ -5176,7 +5177,7 @@
    "NO_STUN"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a pale gold.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_SOUN"
   ]
@@ -5581,7 +5582,8 @@
    "BASH_DOOR"
   ],
   "description": "A small relative of the dragon that inhabits dark caves.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "CONF",
    "SCARE",
@@ -5773,7 +5775,8 @@
   ],
   "description": "She is dressed in black and smells of decay.",
   "plural": "witches",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
+  "spellFrequency": 8,
   "spells": [
    "WHIP",
    "CAUSE_1",
@@ -5831,7 +5834,7 @@
    "ATTR_MULTI"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales shimmering with hints of many different colours.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "BR_ACID",
    "BR_COLD",
@@ -6032,7 +6035,7 @@
    "IM_POIS"
   ],
   "description": "It has glistening black skin, a sleek body and highly venomous fangs.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SPIT"
   ]
@@ -6590,7 +6593,7 @@
    "FRIENDS"
   ],
   "description": "A warrior of considerable skill.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BOLT"
   ]
@@ -7034,7 +7037,7 @@
    "FRIENDS"
   ],
   "description": "He has a bow of horn and a quiver full of black-feathered arrows.",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
   "spells": [
    "ARROW"
   ]
@@ -7513,7 +7516,7 @@
    "FRIENDS"
   ],
   "description": "A brilliant canine form whose light hurts your eyes, even at this distance.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_LIGHT"
   ]
@@ -7558,7 +7561,7 @@
    "FRIENDS"
   ],
   "description": "A hole in the air in the shape of a huge hound. No light falls upon its form.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_DARK"
   ]
@@ -7979,7 +7982,7 @@
    "FRIENDS"
   ],
   "description": "He is eyeing your backpack.",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "SHOT"
   ]
@@ -8131,7 +8134,7 @@
    "FRIENDS"
   ],
   "description": "A cunning orc of power, as tall as a man, and stronger. It fears little.",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
   "spells": [
    "ARROW",
    "WHIP"
@@ -8214,7 +8217,7 @@
   ],
   "description": "A type of crow, specially bred by the forces of evil as spies; their rudimentary intelligence guided by an evil mind has tracked you down, and now they seek to alert other evil creatures to your presence.",
   "plural": "crebain",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "SHRIEK"
   ]
@@ -8623,7 +8626,7 @@
    "DROP_60"
   ],
   "description": "An armoured orc with an air of authority.",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
   "spells": [
    "ARROW"
   ]
@@ -8670,7 +8673,8 @@
    "FORCE_SLEEP"
   ],
   "description": "A hulking figure encased in deep black plate armour; he looks at you menacingly.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
+  "spellFrequency": 12,
   "spells": [
    "DARKNESS",
    "SCARE",
@@ -8760,7 +8764,7 @@
    "FRIENDS"
   ],
   "description": "Flames lick at its feet and its tongue is a blade of fire. You can feel a furnace heat radiating from the creature.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_FIRE"
   ]
@@ -8807,7 +8811,7 @@
    "FRIENDS"
   ],
   "description": "A hound as tall as a man, this creature appears to be composed of angular planes of ice. Cold radiates from it and freezes your breath in the air.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_COLD"
   ]
@@ -8853,7 +8857,7 @@
    "FRIENDS"
   ],
   "description": "Saint Elmo's Fire forms a ghostly halo around this hound, and sparks sting your fingers as energy builds up in the air around you.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_ELEC"
   ]
@@ -8996,7 +9000,7 @@
    "BASH_DOOR"
   ],
   "description": "A pile of rotting vegetation that slides towards you with a disgusting stench, waking all it nears.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SHRIEK"
   ]
@@ -9504,7 +9508,7 @@
    "FRIENDS"
   ],
   "description": "A beautiful crystalline shape does not disguise the danger this hound clearly presents. Your flesh tingles as it approaches.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_SHAR"
   ]
@@ -9555,7 +9559,7 @@
    "FRIENDS"
   ],
   "description": "Swirling vapours surround this beast as it floats towards you, seemingly walking on air. Noxious gases sting your throat.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_POIS"
   ]
@@ -9649,7 +9653,7 @@
    "FRIENDS"
   ],
   "description": "Liquid footprints follow this hound as it pads around the dungeon. An acrid smell of acid rises from the dog's pelt.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_ACID"
   ]
@@ -9692,7 +9696,7 @@
    "FORCE_SLEEP"
   ],
   "description": "It is a strange concoction of goat, lion and dragon, with the heads of all three beasts.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BR_FIRE"
   ]
@@ -9898,7 +9902,8 @@
    "TAKE_ITEM"
   ],
   "description": "A warrior who is at one with nature. A master of both bow and sword, with minor spellcasting skills, and animals come to do his bidding.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
+  "spellFrequency": 5,
   "spells": [
    "ARROW",
    "BLINK",
@@ -10030,7 +10035,7 @@
    "FORCE_SLEEP"
   ],
   "description": "It is a glowing blue bat with a sharp tail.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_ELEC"
   ]
@@ -10141,7 +10146,7 @@
   ],
   "description": "A whirling maelstrom of fire.",
   "plural": "fire vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_FIRE"
   ]
@@ -10185,7 +10190,7 @@
   ],
   "description": "A caustic spinning whirlpool of water.",
   "plural": "water vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_ACID"
   ]
@@ -10229,7 +10234,7 @@
   ],
   "description": "A twisting whirlpool of frost.",
   "plural": "cold vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_COLD"
   ]
@@ -10310,7 +10315,7 @@
    "EVIL"
   ],
   "description": "Believed to be an evil relative of the cricket, this creature gets its name from its incessant squeaking, which can best be described as \"neek-breek, neek-breek\". The noise can drive people frantic, and worse still, can be heard for quite some distance, alerting other monsters to your presence.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
   "spells": [
    "SHRIEK"
   ]
@@ -10665,7 +10670,7 @@
    "TAKE_ITEM"
   ],
   "description": "A scarred warrior who wields an axe and moves with confidence.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
   "spells": [
    "BOLT"
   ]
@@ -10765,7 +10770,7 @@
    "TAKE_ITEM"
   ],
   "description": "A thief of great power and shifty speed.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SHOT"
   ]
@@ -10799,7 +10804,7 @@
    "FORCE_SLEEP"
   ],
   "description": "It is a sharp-tailed bat, wreathed in fire.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_FIRE"
   ]
@@ -10837,7 +10842,7 @@
    "RAND_25"
   ],
   "description": "A giant silver ant with a caustic bite and hard scales.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
   "spells": [
    "SPIT"
   ]
@@ -11422,6 +11427,7 @@
    "FRIENDS"
   ],
   "description": "Little sparks of flame that dance around you, lashing whips and cursing horribly.",
+  "innateFrequency": 3,
   "spellFrequency": 2,
   "spells": [
    "BLINK",
@@ -11519,7 +11525,7 @@
    "FRIENDS"
   ],
   "description": "A ten foot tall humanoid with powerful muscles.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BOULDER"
   ]
@@ -11916,7 +11922,7 @@
    "IM_FIRE"
   ],
   "description": "It is smoking and burning with great heat.",
-  "spellFrequency": 20,
+  "innateFrequency": 20,
   "spells": [
    "SPIT"
   ]
@@ -12143,7 +12149,7 @@
    "IM_FIRE"
   ],
   "description": "It is a giant beetle wreathed in flames.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "SPIT"
   ]
@@ -12298,7 +12304,7 @@
    "FRIENDS"
   ],
   "description": "A blurry canine form which seems to be moving as fast as the eye can follow. You can feel the earth resonating beneath your feet.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_SOUN"
   ]
@@ -12351,7 +12357,7 @@
    "FRIENDS"
   ],
   "description": "A locus of conflicting points coalesce to form the vague shape of a huge hound. Or is it just your imagination?",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_NEXU"
   ]
@@ -12461,7 +12467,7 @@
    "FORCE_SLEEP"
   ],
   "description": "The result of evil experiments, this travesty of nature should never be alive. It has three heads - goat, dragon and gorgon - all attached to a lion's body.",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "BR_FIRE"
   ]
@@ -12598,7 +12604,7 @@
    "FRIENDS"
   ],
   "description": "A twelve foot tall giant covered in furs.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
   "spells": [
    "BOULDER"
   ]
@@ -13046,7 +13052,7 @@
    "NO_HOLD"
   ],
   "description": "A vile reptile that preys on unsuspecting travellers. Its eyes stare deeply at you and your soul starts to wilt!",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "BR_POIS"
   ]
@@ -13140,7 +13146,8 @@
   ],
   "description": "Fed with horrid meats and grown to enormous size, this slavering creature seeks livelier prey.",
   "plural": "bats of Gorgoroth",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 25,
   "spells": [
    "SCARE",
    "BR_DARK",
@@ -13344,7 +13351,8 @@
    "FORCE_SLEEP"
   ],
   "description": "An elf of the Land of the Seven Rivers, whose woodcraft was such that a stranger might pass through their land from end to end and see none of them.",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
+  "spellFrequency": 12,
   "spells": [
    "CONF",
    "HEAL",
@@ -13595,7 +13603,8 @@
    "IM_ELEC"
   ],
   "description": "It has a form that legends are made of. Its still-tender scales are a deep blue in hue. Sparks crackle along its length.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_ELEC"
@@ -13644,7 +13653,8 @@
    "IM_COLD"
   ],
   "description": "It has a form that legends are made of. Its still-tender scales are a frosty white in hue. Icy blasts of cold air come from it as it breathes.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_COLD"
@@ -13693,7 +13703,8 @@
    "IM_POIS"
   ],
   "description": "It has a form that legends are made of. Its still-tender scales are a deep green in hue. Foul gas seeps through its scales.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_POIS"
@@ -13738,7 +13749,8 @@
   ],
   "description": "A shimmering tornado of air, sparks crackle along its length.",
   "plural": "energy vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
+  "spellFrequency": 5,
   "spells": [
    "BR_ELEC",
    "BE_ELEC"
@@ -13892,7 +13904,7 @@
    "FORCE_SLEEP"
   ],
   "description": "It is a winged lion's body with a human torso and a tail covered in vicious spikes.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "ARROW"
   ]
@@ -13928,7 +13940,7 @@
    "FRIENDS"
   ],
   "description": "It is a giant ant that crackles with energy.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
   "spells": [
    "SPIT"
   ]
@@ -14217,7 +14229,7 @@
    "IM_COLD"
   ],
   "description": "Big, brawny, powerful and with a taste for hobbit. He has friends called Bill and Tom.",
-  "spellFrequency": 7,
+  "innateFrequency": 7,
   "spells": [
    "BOULDER"
   ]
@@ -14272,7 +14284,7 @@
    "IM_COLD"
   ],
   "description": "Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Tom.",
-  "spellFrequency": 7,
+  "innateFrequency": 7,
   "spells": [
    "BOULDER"
   ]
@@ -14327,7 +14339,7 @@
    "IM_COLD"
   ],
   "description": "Big, brawny, powerful and with a taste for hobbit. He has friends called Bert and Bill.",
-  "spellFrequency": 7,
+  "innateFrequency": 7,
   "spells": [
    "BOULDER"
   ]
@@ -14476,7 +14488,8 @@
    "IM_ACID"
   ],
   "description": "It has a form that legends are made of. Its still-tender scales are a darkest black hue. Acid drips from its body.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_ACID"
@@ -14525,7 +14538,8 @@
    "NO_STUN"
   ],
   "description": "It has a form that legends are made of. Its still-tender scales are a tarnished gold hue, and light is reflected from its form.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_SOUN"
@@ -14574,7 +14588,8 @@
    "IM_FIRE"
   ],
   "description": "It has a form that legends are made of. Its still-tender scales are a deepest red hue. Heat radiates from its form.",
-  "spellFrequency": 15,
+  "innateFrequency": 15,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_FIRE"
@@ -14916,7 +14931,8 @@
    "ATTR_MULTI"
   ],
   "description": "It has a form that legends are made of. Beautiful scales of shimmering and magical colours cover it.",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
+  "spellFrequency": 50,
   "spells": [
    "SCARE",
    "BR_ACID",
@@ -15061,7 +15077,7 @@
    "FRIENDS"
   ],
   "description": "It is eighteen feet tall and looking at you.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BOULDER"
   ]
@@ -15112,6 +15128,7 @@
    "IM_NETHER"
   ],
   "description": "It is a dragon-like form wrapped in shadow. Glowing red eyes shine out in the dark, and it is surrounded by an aura of unearthly cold that chills the soul rather than the body.",
+  "innateFrequency": 25,
   "spellFrequency": 10,
   "spells": [
    "CONF",
@@ -15393,7 +15410,8 @@
    "ATTR_MULTI"
   ],
   "description": "A dragon twisted by the forces of chaos. It seems first ugly, then fair, as its form shimmers and changes in front of your eyes.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 13,
   "spells": [
    "CONF",
    "SCARE",
@@ -15449,7 +15467,8 @@
    "NO_STUN"
   ],
   "description": "This dragon is clever and cunning. It laughs at your puny efforts to disturb it.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 13,
   "spells": [
    "CONF",
    "SCARE",
@@ -15507,7 +15526,8 @@
    "NO_STUN"
   ],
   "description": "A mighty dragon, the balance drake seeks to maintain the Cosmic Balance, and despises your feeble efforts to destroy evil.",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
+  "spellFrequency": 12,
   "spells": [
    "CONF",
    "SCARE",
@@ -15563,7 +15583,8 @@
    "NO_SLEEP"
   ],
   "description": "A dragon of great power, with control over light and dark, the ethereal drake's eyes glare with white hatred from the shadows.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 13,
   "spells": [
    "CONF",
    "SCARE",
@@ -15724,6 +15745,7 @@
    "NO_SLEEP"
   ],
   "description": "A dragon of strange crystalline form. Light shines through it, dazzling your eyes with spectra of colour.",
+  "innateFrequency": 20,
   "spellFrequency": 8,
   "spells": [
    "CONF",
@@ -16017,6 +16039,7 @@
   ],
   "description": "Cool and confident, fast and lithe; protect your possessions quickly!",
   "plural": "master thieves",
+  "innateFrequency": 10,
   "spellFrequency": 6,
   "spells": [
    "SHOT",
@@ -16550,7 +16573,7 @@
    "FRIENDS"
   ],
   "description": "Unfettered by the usual constraints of gravity, these unnatural creatures are walking on the walls and even the ceiling! The earth suddenly feels rather less solid as you see gravity warp all round the monsters.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_GRAV"
   ]
@@ -16603,7 +16626,7 @@
    "FRIENDS"
   ],
   "description": "Bizarrely, this hound seems to be hardly moving at all, yet it approaches you with deadly menace. It makes you tired just to look at it.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_INER"
   ]
@@ -16656,7 +16679,7 @@
    "FRIENDS"
   ],
   "description": "A deep brown shape is visible before you, its canine form strikes you with an almost physical force. The dungeon floor buckles as if struck by a powerful blow as it stalks towards you.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_WALL"
   ]
@@ -16737,7 +16760,7 @@
    "FRIENDS"
   ],
   "description": "A giant ant covered in shaggy fur. Its powerful jaws glow with heat.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
   "spells": [
    "SPIT"
   ]
@@ -16863,6 +16886,7 @@
    "IM_POIS"
   ],
   "description": "A figure carved from stone, with three vulture faces whose eyes glow with a malevolent light.",
+  "innateFrequency": 10,
   "spellFrequency": 6,
   "spells": [
    "CONF",
@@ -17008,7 +17032,7 @@
    "FRIENDS"
   ],
   "description": "It is a twenty foot tall giant wreathed in clouds.",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "BOULDER"
   ]
@@ -17872,7 +17896,7 @@
    "ATTR_FLICKER"
   ],
   "description": "It is a giant beetle, whose carapace shimmers with vibrant energies.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
   "spells": [
    "SPIT"
   ]
@@ -17916,7 +17940,7 @@
   ],
   "description": "A maelstrom of potent magical energy.",
   "plural": "nexus vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_NEXU"
   ]
@@ -17967,7 +17991,7 @@
   ],
   "description": "A whirlpool of intense flame, charring the stones at your feet.",
   "plural": "plasma vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_PLAS"
   ]
@@ -18058,7 +18082,7 @@
    "NONLIVING"
   ],
   "description": "A howling blast of razor-sharp mountain fragments, kept intact by perilous magics.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_SHAR"
   ]
@@ -18189,6 +18213,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A powerful ruler who refused the summons of Mandos on death, preferring to re-occupy his now embalmed body. He commands a legion of his former subjects with unearthly shrieks.",
+  "innateFrequency": 9,
   "spellFrequency": 3,
   "spells": [
    "SHRIEK",
@@ -18419,7 +18444,7 @@
   ],
   "description": "You haven't seen it yet.",
   "plural": "time vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_TIME"
   ]
@@ -18468,7 +18493,7 @@
   ],
   "description": "A strange pillar of shining light that hurts your eyes. Its shape changes constantly as it cuts through the air towards you. It is like a beacon, waking monsters from their slumber.",
   "plural": "shimmering vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SHRIEK",
    "BR_LIGHT"
@@ -18632,6 +18657,7 @@
    "IM_POIS"
   ],
   "description": "A massive spider, heaving the bloated bag of its body between great spined legs.",
+  "innateFrequency": 6,
   "spellFrequency": 5,
   "spells": [
    "CONF",
@@ -18689,7 +18715,7 @@
    "NO_SLEEP"
   ],
   "description": "A man of Harad clad in black and red and carrying a longbow. His quiver is full of red feathered arrows, and carries an insignia of a black serpent.",
-  "spellFrequency": 2,
+  "innateFrequency": 2,
   "spells": [
    "ARROW"
   ]
@@ -18738,7 +18764,8 @@
    "NO_SLEEP"
   ],
   "description": "A large dragon, scales gleaming bright white.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_COLD"
@@ -18788,7 +18815,8 @@
    "NO_SLEEP"
   ],
   "description": "A large dragon, scales tinted deep blue.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_ELEC"
@@ -18838,7 +18866,8 @@
    "NO_SLEEP"
   ],
   "description": "A large dragon, scales tinted deep green.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_POIS"
@@ -18904,6 +18933,7 @@
    "IM_ACID"
   ],
   "description": "A 5-headed hydra which seems to have an extra head, if you could just see it properly.",
+  "innateFrequency": 10,
   "spellFrequency": 8,
   "spells": [
    "SCARE",
@@ -19236,6 +19266,7 @@
    "NO_CONF"
   ],
   "description": "A 6-headed hydra with an extra head that waves mesmerisingly at you.",
+  "innateFrequency": 8,
   "spellFrequency": 6,
   "spells": [
    "SCARE",
@@ -19774,7 +19805,8 @@
    "NO_SLEEP"
   ],
   "description": "A large dragon, scales tinted deep red.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 20,
   "spells": [
    "CONF",
    "SCARE",
@@ -19825,7 +19857,8 @@
    "NO_STUN"
   ],
   "description": "A large dragon with scales of gleaming gold.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 20,
   "spells": [
    "CONF",
    "SCARE",
@@ -19876,7 +19909,8 @@
    "NO_SLEEP"
   ],
   "description": "A large dragon, with scales of deepest black.",
-  "spellFrequency": 12,
+  "innateFrequency": 12,
+  "spellFrequency": 20,
   "spells": [
    "SCARE",
    "BR_ACID"
@@ -20132,7 +20166,8 @@
    "NO_HOLD"
   ],
   "description": "A chieftain among the Rangers. His understanding of nature gives him powerful elemental spells to use against you, in addition to his skills as an archer and a warrior. Furthermore, he is a master of camouflage, so you will need magically enhanced seeing to spot him.",
-  "spellFrequency": 2,
+  "innateFrequency": 2,
+  "spellFrequency": 5,
   "spells": [
    "ARROW",
    "BLINK",
@@ -20202,7 +20237,7 @@
    "NO_HOLD"
   ],
   "description": "A large dragon with a selection of heads, all shouting and arguing as they look for prey, but each with its own deadly breath weapon.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_ACID",
    "BR_COLD",
@@ -20259,7 +20294,7 @@
    "FRIENDS"
   ],
   "description": "It is a giant wolf that glows with heat. Flames pour from its nostrils.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_FIRE"
   ]
@@ -20438,7 +20473,7 @@
    "IM_COLD"
   ],
   "description": "A massive and cruel troll of great power, drool slides caustically down his muscular frame. Despite his bulk, he strikes with stunning speed.",
-  "spellFrequency": 7,
+  "innateFrequency": 7,
   "spells": [
    "BOULDER"
   ]
@@ -20635,7 +20670,8 @@
    "ATTR_MULTI"
   ],
   "description": "A large dragon, scales shimmering many colours.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
+  "spellFrequency": 15,
   "spells": [
    "BLIND",
    "CONF",
@@ -21012,7 +21048,7 @@
    "FRIENDS"
   ],
   "description": "Shimmering in rainbow hues, this hound is beautiful and deadly.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_ACID",
    "BR_COLD",
@@ -21091,6 +21127,7 @@
    "IM_ACID"
   ],
   "description": "A 7-headed hydra with an extra head which reeks of death.",
+  "innateFrequency": 7,
   "spellFrequency": 5,
   "spells": [
    "SCARE",
@@ -21198,7 +21235,7 @@
    "IM_COLD"
   ],
   "description": "A giant beetle with a gleaming white carapace. The air condenses around its mandibles as it scuttles toward you.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "SPIT"
   ]
@@ -21285,6 +21322,7 @@
    "IM_FIRE"
   ],
   "description": "It is a large demon with the head of a giant boar. Flames run up and down its length.",
+  "innateFrequency": 30,
   "spellFrequency": 12,
   "spells": [
    "BLIND",
@@ -21486,7 +21524,7 @@
    "NO_HOLD"
   ],
   "description": "A large basilisk, whose shape resembles that of a great wyrm.",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "BR_DARK",
    "BR_NEXU",
@@ -21586,7 +21624,7 @@
   ],
   "description": "A gigantic ugly humanoid with but one eye and very thick skin.",
   "plural": "cyclopes",
-  "spellFrequency": 8,
+  "innateFrequency": 8,
   "spells": [
    "BOULDER"
   ]
@@ -21938,6 +21976,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A foul creature of spider form, older even than the pits of Angband.",
+  "innateFrequency": 20,
   "spellFrequency": 6,
   "spells": [
    "CAUSE_3",
@@ -21994,7 +22033,7 @@
    "IM_NETHER"
   ],
   "description": "A terrifying sight: a winged creature greater than any bird you have ever seen, and with no feathers on its horrid black leathery wings. Descended from a creature of an older world perhaps, bred by Sauron to be a winged steed for his Ringwraiths.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
   "spells": [
    "BR_DARK",
    "BR_NETH",
@@ -22115,6 +22154,7 @@
    "FRIENDS"
   ],
   "description": "It is a twenty-five foot tall giant wreathed in lightning.",
+  "innateFrequency": 40,
   "spellFrequency": 8,
   "spells": [
    "BLINK",
@@ -22180,6 +22220,7 @@
    "IM_FIRE"
   ],
   "description": "It is a massive humanoid demon wreathed in flames.",
+  "innateFrequency": 14,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -22376,6 +22417,7 @@
    "IM_ELEC"
   ],
   "description": "A huge draconic form. Lightning crackles along its length.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "BLIND",
@@ -22432,6 +22474,7 @@
    "IM_COLD"
   ],
   "description": "A huge draconic form. Frost covers it from head to tail.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "BLIND",
@@ -22488,6 +22531,7 @@
    "IM_POIS"
   ],
   "description": "A huge draconic form enveloped in clouds of poisonous vapour.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "BLIND",
@@ -22548,6 +22592,7 @@
    "IM_NETHER"
   ],
   "description": "It is a dragon-like form wrapped in darkness. You cannot make out its true form but you sense its evil.",
+  "innateFrequency": 12,
   "spellFrequency": 6,
   "spells": [
    "CONF",
@@ -22607,6 +22652,7 @@
    "IM_COLD"
   ],
   "description": "A huge crystalline dragon. Its claws could cut you to shreds and its teeth are razor sharp. Strange colours ripple through it as it moves in the light.",
+  "innateFrequency": 12,
   "spellFrequency": 6,
   "spells": [
    "CONF",
@@ -22664,7 +22710,8 @@
    "PASS_WALL"
   ],
   "description": "This terrible dragon is a master of light and dark. Its form disappears from sight as it cloaks itself in unearthly shadows.",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
+  "spellFrequency": 10,
   "spells": [
    "BLIND",
    "CONF",
@@ -22853,6 +22900,7 @@
    "IM_FIRE"
   ],
   "description": "A huge Balrog surrounded by raging pillars of fire, this is indeed a terrible opponent. Wielding a great whip of fire and a blazing sword, his fury blisters your skin and melts your flesh!",
+  "innateFrequency": 15,
   "spellFrequency": 5,
   "spells": [
    "CONF",
@@ -22910,6 +22958,7 @@
    "IM_ACID"
   ],
   "description": "A huge draconic form. Pools of acid melt the floor around it.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "BLIND",
@@ -22966,6 +23015,7 @@
    "IM_FIRE"
   ],
   "description": "A huge draconic form. Wisps of smoke steam from its nostrils and the extreme heat surrounding it makes you gasp for breath.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "BLIND",
@@ -23022,6 +23072,7 @@
    "NO_STUN"
   ],
   "description": "A huge draconic form wreathed in a nimbus of light. Its roar stuns and deafens you.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "BLIND",
@@ -23079,7 +23130,7 @@
    "FRIENDS"
   ],
   "description": "You feel a soul-tearing chill upon viewing this beast, a ghostly form of darkness in the shape of a large dog.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_NETH"
   ]
@@ -23134,7 +23185,7 @@
    "FRIENDS"
   ],
   "description": "You get a terrible sense of deja vu, or is it a premonition? All at once you see a little puppy and a toothless old dog. Perhaps you should give up and go to bed.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_TIME"
   ]
@@ -23192,7 +23243,7 @@
    "FRIENDS"
   ],
   "description": "The very air warps as pure elemental energy stalks towards you in the shape of a giant hound. Your hair stands on end and your palms itch as you sense trouble.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_PLAS"
   ]
@@ -23319,6 +23370,7 @@
   ],
   "description": "A servant of Oromë, hunter of monsters and fell beasts.",
   "plural": "Maiar of Oromë",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "ARROW",
@@ -23446,6 +23498,7 @@
    "IM_FIRE"
   ],
   "description": "A mighty ancient dragon, Itangast's form scorches your flesh. Wisps of smoke curl up from his nostrils as he regards you with disdain.",
+  "innateFrequency": 8,
   "spellFrequency": 8,
   "spells": [
    "CAUSE_4",
@@ -23504,6 +23557,7 @@
    "FRIENDS"
   ],
   "description": "A sluggish demon of lizard form, firing powerful missiles. From the terribly oversized jaws to the stumpy lashing tail, pools of burning acid froth and sizzle.",
+  "innateFrequency": 3,
   "spellFrequency": 3,
   "spells": [
    "BO_FIRE",
@@ -23567,7 +23621,8 @@
    "ATTR_MULTI"
   ],
   "description": "A huge draconic form. Many colours ripple down its massive frame. Few live to see another.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
+  "spellFrequency": 13,
   "spells": [
    "BLIND",
    "CONF",
@@ -23633,7 +23688,7 @@
   ],
   "description": "Void, nothingness, spinning destructively.",
   "plural": "chaos vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_CHAO"
   ]
@@ -23695,6 +23750,7 @@
    "IM_COLD"
   ],
   "description": "An ancient and wise Dragon. Scatha has grown clever over the long years. His scales are covered with frost, and his breath sends a shower of ice into the air.",
+  "innateFrequency": 8,
   "spellFrequency": 8,
   "spells": [
    "CAUSE_4",
@@ -23758,6 +23814,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A massive glowing eagle bathed in flames. The searing heat chars your skin and melts your armour.",
+  "innateFrequency": 6,
   "spellFrequency": 5,
   "spells": [
    "BA_FIRE",
@@ -23823,6 +23880,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A constructed dragon, the drolem has massive strength. Powerful spells weaved during its creation make it a fearsome adversary. Its eyes show little intelligence, but it has been instructed to destroy all it meets.",
+  "innateFrequency": 8,
   "spellFrequency": 8,
   "spells": [
    "ARROW",
@@ -24101,6 +24159,7 @@
    "FORCE_SLEEP"
   ],
   "description": "Shelob is an enormous bloated spider, the last daughter of Ungoliant the Unlight. Her poison is legendary, as is her ego. She normally guards the pass through Cirith Ungol, but occasionally goes out foraging for food to feed her voracious appetite.",
+  "innateFrequency": 20,
   "spellFrequency": 4,
   "spells": [
    "BLIND",
@@ -24170,7 +24229,8 @@
   ],
   "description": "The skeletal form of a once-great dragon, enchanted by magic most perilous. Its animated form strikes with speed and drains life from its prey to satisfy its hunger.",
   "plural": "dracoliches",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
+  "spellFrequency": 12,
   "spells": [
    "CONF",
    "SCARE",
@@ -24235,7 +24295,8 @@
    "IM_NEXUS"
   ],
   "description": "A mixture of dragon and basilisk, the dracolisk stares at you with deep piercing eyes, its evil breath burning the ground where it stands.",
-  "spellFrequency": 10,
+  "innateFrequency": 10,
+  "spellFrequency": 12,
   "spells": [
    "HOLD",
    "SCARE",
@@ -24420,6 +24481,7 @@
    "FORCE_SLEEP"
   ],
   "description": "It is a humanoid figure thirty feet tall that gives off an aura of power and hate.",
+  "innateFrequency": 6,
   "spellFrequency": 4,
   "spells": [
    "HEAL",
@@ -24625,7 +24687,8 @@
    "NO_HOLD"
   ],
   "description": "A massive legendary hydra, like an 8-headed hydra, but with a massive extra head that opens its mighty jaws at you. Its many eyes stare at you as clouds of vapour rise from its seething form. And it grows new heads as fast as you chop them off.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
+  "spellFrequency": 9,
   "spells": [
    "SCARE",
    "BR_FIRE",
@@ -24689,6 +24752,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A fearsome bull-headed monster, Baphomet swings a mighty axe as he curses all that defy him.",
+  "innateFrequency": 10,
   "spellFrequency": 8,
   "spells": [
    "ARROW",
@@ -24894,6 +24958,7 @@
    "FORCE_SLEEP"
   ],
   "description": "Known as the giant of winter and the northern reaches, he is tall even among giants, and his name is cursed in many lands.",
+  "innateFrequency": 6,
   "spellFrequency": 3,
   "spells": [
    "BOULDER",
@@ -25030,6 +25095,7 @@
   ],
   "description": "A servant of Aulë the Smith, lord of all the substances of Arda and friend of the Noldor.",
   "plural": "Maiar of Aulë",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BOULDER",
@@ -25094,6 +25160,7 @@
    "IM_ELEC"
   ],
   "description": "Appearing as a giant of stone, this mighty elemental seems to draw its power from the very fabric of the dungeon.",
+  "innateFrequency": 6,
   "spellFrequency": 6,
   "spells": [
    "BOULDER",
@@ -25164,7 +25231,7 @@
   ],
   "description": "An awesome vortex of pure magic, power radiates from its frame.",
   "plural": "aether vortices",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
   "spells": [
    "BR_ACID",
    "BR_CHAO",
@@ -25390,7 +25457,8 @@
    "IM_POIS"
   ],
   "description": "It's big. It's fat. It's red. It's ugly. It's got a severe attack of highly poisonous flatulence. And its insides are corrosive. All of which go together to make the single most repulsive sight - and smell - you have ever experienced.",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
+  "spellFrequency": 10,
   "spells": [
    "ARROW",
    "BLIND",
@@ -25527,7 +25595,8 @@
    "IM_FIRE"
   ],
   "description": "Smaug is one of the Urulóki that still survive, a fire-drake of immense cunning and intelligence. His speed through air is matched by few other dragons and his dragonfire is what legends are made of; he is believed to be the greatest dragon still surviving into the Third Age.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
+  "spellFrequency": 8,
   "spells": [
    "CAUSE_4",
    "CONF",
@@ -25584,7 +25653,8 @@
   ],
   "description": "A massive wolf, appearing like a mighty shadow. Its glowing red eyes glare malevolently as it defends its evil master's fortress.",
   "plural": "werewolves of Sauron",
-  "spellFrequency": 6,
+  "innateFrequency": 6,
+  "spellFrequency": 7,
   "spells": [
    "BR_NETH",
    "BR_DARK",
@@ -25648,6 +25718,7 @@
   ],
   "description": "One of the hideous brood of Ungoliant, spawned in the endless shadow of Nan Dungortheb beneath the mountains of Ered Gorgoroth.",
   "plural": "spiders of Gorgoroth",
+  "innateFrequency": 20,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -25710,7 +25781,7 @@
    "FRIENDS"
   ],
   "description": "A constantly changing canine form, this hound rushes towards you as if expecting mayhem and chaos ahead. It appears to have an almost kamikaze relish for combat. You suspect all may not be as it seems.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_CHAO"
   ]
@@ -25918,6 +25989,7 @@
    "IM_COLD"
   ],
   "description": "A mighty column of water, terrible as a mounting wave that strides to the land.",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BA_WATE",
@@ -26118,7 +26190,7 @@
    "IM_ELEC"
   ],
   "description": "A veteran of the battles waged by Fëanor and his sons in pursuit of the Silmarils, he attacks you with agility, power and cruelty.",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
   "spells": [
    "BOLT"
   ]
@@ -26217,6 +26289,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A forty foot tall humanoid that shakes the ground as it walks. The power radiating from its frame shakes your courage, its hatred inspired by your defiance.",
+  "innateFrequency": 6,
   "spellFrequency": 4,
   "spells": [
    "HEAL",
@@ -26476,7 +26549,8 @@
    "NO_CONF"
   ],
   "description": "\"Beware the Jabberwock, my son! The jaws that bite, the claws that catch!\" Run and run quickly, for death incarnate chases behind you!",
-  "spellFrequency": 9,
+  "innateFrequency": 9,
+  "spellFrequency": 10,
   "spells": [
    "CAUSE_4",
    "BR_CHAO"
@@ -26668,7 +26742,7 @@
   ],
   "description": "Bodies of death, receptacles of all foulness, they emerge like smoke from the angles of time, ravenous and snarling and unsatisfied.",
   "plural": "hounds of Tindalos",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_NETH",
    "BR_DISE",
@@ -26730,6 +26804,7 @@
    "FORCE_SLEEP"
   ],
   "description": "Known as the giant of summer and the south, he towers above you like a great elm. In his right hand, he holds the longest sword you have ever beheld.",
+  "innateFrequency": 6,
   "spellFrequency": 4,
   "spells": [
    "BOULDER",
@@ -26799,6 +26874,7 @@
    "FORCE_SLEEP"
   ],
   "description": "This intensely evil creature bears the form of a gargantuan black worm. Its gaping maw is a void of blackness, acid drips from its steely hide. It is like nothing you have ever seen before, and a terrible chill runs down your spine as you face it.",
+  "innateFrequency": 25,
   "spellFrequency": 4,
   "spells": [
    "BLIND",
@@ -26865,6 +26941,7 @@
    "IM_COLD"
   ],
   "description": "This demon from the icy regions is a truly terrifying sight. It has an extremely large, insect-like body towering a full twelve feet tall, with great claws on its hands and pincers on its mouth, and its head bulges with great multi-faceted eyes. Its tail is covered with razor-sharp spikes.",
+  "innateFrequency": 20,
   "spellFrequency": 8,
   "spells": [
    "HOLD",
@@ -26932,6 +27009,7 @@
    "IM_ELEC"
   ],
   "description": "A vast dragon of power. Storms and lightning crash around its titanic form. Deep blue scales reflect the flashes and highlight the creature's great muscles. It regards you with contempt.",
+  "innateFrequency": 8,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -26995,6 +27073,7 @@
    "IM_COLD"
   ],
   "description": "An immense dragon capable of awesome destruction. You have never felt such extreme cold, or witnessed such an icy stare. Begone quickly or feel its wrath!",
+  "innateFrequency": 8,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -27058,6 +27137,7 @@
    "IM_POIS"
   ],
   "description": "A truly enormous dragon with great powers. The foul gases issuing from the beast nearly make you vomit; and while you may try to hold your breath as you fight it, it sees no reason to do likewise.",
+  "innateFrequency": 8,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -27445,6 +27525,7 @@
    "IM_DISEN"
   ],
   "description": "Encrusted with barnacles, slimy and dripping, the Maia of the untamed sea has dragged himself down into Angband to send you to a watery grave. Ossë is the most powerful and heartless of Ulmo's servants and embodies the untamed power of the ocean. Terror grows in your heart with each squelching step of his approach.",
+  "innateFrequency": 4,
   "spellFrequency": 2,
   "spells": [
    "BLIND",
@@ -27512,6 +27593,7 @@
    "IM_FIRE"
   ],
   "description": "A vast dragon of immense power. Fire leaps continuously from its huge form. The air around it scalds you. Its slightest glance burns you, and you truly realize how insignificant you are.",
+  "innateFrequency": 8,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -27575,6 +27657,7 @@
    "IM_ACID"
   ],
   "description": "A huge and very powerful dragon. Great steaming pools of acid drip from its form onto the ground. You shudder when you see the acid eating away the very stones of the dungeon - what could it do to you?",
+  "innateFrequency": 8,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -27639,6 +27722,7 @@
   ],
   "description": "A dragon of gigantic proportions, with destructive abilities to match. The sheer loudness of its roar leaves you stunned and unable to think clearly enough to defend yourself adequately.",
   "plural": "great wyrms of thunder",
+  "innateFrequency": 8,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -27967,7 +28051,7 @@
    "FRIENDS"
   ],
   "description": "A shifting, swirling form. It seems to be all colours and sizes and shapes, though the dominant form is that of a huge dog. You feel very uncertain all of a sudden.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_ACID",
    "BR_CHAO",
@@ -28046,6 +28130,7 @@
   ],
   "description": "A massive dragon of changing form. As you watch, it appears first fair and then foul. Its body is twisted by chaotic forces as it strives to stay real. Its very existence distorts the universe around it.",
   "plural": "great wyrms of chaos",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -28113,6 +28198,7 @@
   ],
   "description": "A massive dragon of powerful intellect. It seeks to dominate the universe and despises all other life. It sees all who do not obey it as mere insects to be crushed underfoot.",
   "plural": "great wyrms of law",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -28181,6 +28267,7 @@
    "FORCE_SLEEP"
   ],
   "description": "This enormous, hideous spirit of void is in the form of a spider of immense proportions. She is surrounded by a cloud of Unlight as she sucks in all living light into her bloated body, and breathes out the blackest of darkness. She is always ravenously hungry and would even eat herself to avoid starvation.",
+  "innateFrequency": 11,
   "spellFrequency": 4,
   "spells": [
    "BLIND",
@@ -28247,6 +28334,7 @@
    "FORCE_SLEEP"
   ],
   "description": "A gigantic four-armed animated bronze statue of demonic shape, glowing with great heat.",
+  "innateFrequency": 40,
   "spellFrequency": 9,
   "spells": [
    "TELE_TO",
@@ -28317,6 +28405,7 @@
    "IM_POIS"
   ],
   "description": "Glaurung is the father of all dragons, and was for a long time the most powerful. Though this is no longer so, he still has full command over his brood and can command them to appear whenever he so wishes. He is the definition of dragonfire.",
+  "innateFrequency": 5,
   "spellFrequency": 3,
   "spells": [
    "BRAIN_SMASH",
@@ -28565,6 +28654,7 @@
    "IM_POIS"
   ],
   "description": "Appearing as a giant, clawed and winged humanoid with a scaly red body and massive fangs dripping a foul green liquid, the pit fiend is a dreadful enemy from the lowest depths of the hells. They are often the commanders of vast demon armies.",
+  "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
    "CAUSE_4",
@@ -28685,6 +28775,7 @@
   ],
   "description": "Writhing coil upon coil, this mighty spawn of chaos constantly disintegrates and reforms before your dazzled eyes. It seeks to obliterate you utterly; beware!",
   "plural": "serpents of chaos",
+  "innateFrequency": 10,
   "spellFrequency": 6,
   "spells": [
    "BLINK",
@@ -29011,6 +29102,7 @@
   ],
   "description": "A massive dragon of hideous form. From its shadowy aura comes the stench of the underworld. Its body is twisted by chaotic forces as it strives to stay real. Its very existence distorts the universe around it.",
   "plural": "great wyrms of annihilation",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -29080,6 +29172,7 @@
    "NO_STUN"
   ],
   "description": "A wrathful dragon, of a breed that even legends do not mention, rushing towards you like a thunderbolt. Few ever face the wyrms of the exotic airs; fewer live to tell the tale.",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -29142,7 +29235,8 @@
    "IM_ACID"
   ],
   "description": "A violent icy whirlpool, brought from the frozen wastes of the Helcaraxë by Morgoth as guard and entertainment. Smaller vortices arise on its edges, and you feel as if you will never be free of its deafening roar.",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
+  "spellFrequency": 5,
   "spells": [
    "BR_COLD",
    "BR_SOUN",
@@ -29428,6 +29522,7 @@
   ],
   "description": "A massive dragon, one of the mightiest of dragonkind. It is thousands of years old and seeks to maintain the Cosmic Balance. It sees you as an upstart troublemaker without the wisdom to control your actions. It will destroy you.",
   "plural": "great wyrms of balance",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -29500,6 +29595,7 @@
   ],
   "description": "A gigantic dragon whose scales shimmer in myriad hues.",
   "plural": "great wyrms of many colours",
+  "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
    "BLIND",
@@ -30005,6 +30101,7 @@
    "IM_PLASMA"
   ],
   "description": "Originally of the semi-divine Maiar, this evil spirit swore allegiance to Morgoth at the beginning of time and is now one of his most terrible demonic servants. With its flaming whip and sword it seeks to destroy you.",
+  "innateFrequency": 5,
   "spellFrequency": 4,
   "spells": [
    "CONF",
@@ -30159,7 +30256,8 @@
    "IM_POIS"
   ],
   "description": "\"Rushing Jaws\" is his name, and death is his game; the greatest and most terrible of all dragonkind, his power dismayed even the Valar for a time.",
-  "spellFrequency": 4,
+  "innateFrequency": 4,
+  "spellFrequency": 10,
   "spells": [
    "BR_ACID",
    "BR_COLD",
@@ -30227,7 +30325,7 @@
    "FORCE_SLEEP"
   ],
   "description": "The Tarrasque is a massive reptile of legend, rumoured to be unkillable and immune to magic. Fear its anger, for its devastation is unmatched!",
-  "spellFrequency": 2,
+  "innateFrequency": 2,
   "spells": [
    "BR_COLD",
    "BR_DISE",
@@ -30297,6 +30395,7 @@
    "NO_STUN"
   ],
   "description": "Sister of Makar the Warrior, she would shout encouragement to the warriors of their hall and heal their wounds so they could battle on, until her arms were reddened to the elbow. Meássë is delighted by all violence, and recruits any beings of like abilities to her service.",
+  "innateFrequency": 6,
   "spellFrequency": 5,
   "spells": [
    "HEAL",
@@ -30367,6 +30466,7 @@
    "IM_PLASMA"
   ],
   "description": "A massive form cloaked in flame. Lungorthin stares balefully at you with eyes that smoulder red. The dungeon floor where he stands is scorched by the heat of his body.",
+  "innateFrequency": 12,
   "spellFrequency": 6,
   "spells": [
    "BLIND",
@@ -30439,7 +30539,7 @@
    "FORCE_SLEEP"
   ],
   "description": "The wolfhound of the Valar, Huan has served many masters in his time, from Celegorm son of Fëanor to Beren son of Barahir: but now he runs wild and acknowledges no master save himself, as he hunts alone for his nemesis - Carcharoth, the terrible wolf of Angband.",
-  "spellFrequency": 5,
+  "innateFrequency": 5,
   "spells": [
    "BR_COLD",
    "BR_LIGHT",
@@ -30507,7 +30607,8 @@
    "FORCE_SLEEP"
   ],
   "description": "The first guard of Angband, Carcharoth, also known as 'The Red Maw', is the greatest wolf to ever walk the earth. He is highly intelligent and a deadly opponent in combat.",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
+  "spellFrequency": 15,
   "spells": [
    "BR_DARK",
    "BR_FIRE",
@@ -30651,7 +30752,7 @@
   ],
   "description": "Howling through the disintegrating dungeon, this whirlpool of Unmagic rips the enchantments from everything it touches.",
   "plural": "storms of Unmagic",
-  "spellFrequency": 3,
+  "innateFrequency": 3,
   "spells": [
    "BR_CHAO",
    "BR_DISE",
@@ -30719,6 +30820,7 @@
    "IM_PLASMA"
   ],
   "description": "Gothmog is the Chief Balrog in Morgoth's personal guard. He is renowned for slaying Fëanor and Fingon, two of the High Kings of the Noldor, and has never been defeated in combat. With his whip of flame and awesome fiery breath he saved his master from Ungoliant's rage.",
+  "innateFrequency": 8,
   "spellFrequency": 4,
   "spells": [
    "BLIND",
@@ -30880,6 +30982,7 @@
    "NO_FEAR"
   ],
   "description": "Sauron's form as the mightiest wolf to walk the world.",
+  "innateFrequency": 3,
   "spellFrequency": 3,
   "spells": [
    "BLINK",
@@ -30958,6 +31061,7 @@
    "NO_FEAR"
   ],
   "description": "Sauron's form as a serpent: poisonous, biting, spitting, and threatening to crush you in its mighty coils.",
+  "innateFrequency": 4,
   "spellFrequency": 4,
   "spells": [
    "BLINK",

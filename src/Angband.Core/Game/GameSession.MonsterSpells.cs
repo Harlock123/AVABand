@@ -10,8 +10,25 @@ namespace Angband.Core.Game;
 /// <summary>Monster spells and innate ranged attacks (Angband make_ranged_attack / mon-spell.c).</summary>
 public sealed partial class GameSession
 {
-    /// <summary>Picks and casts a spell; false if nothing suitable could be cast (the monster then moves).</summary>
-    private bool TryCastSpell(Monster monster)
+    /// <summary>
+    /// Angband make_ranged_attack / monster_can_cast: first a roll against the race's spell
+    /// frequency, then against its innate frequency — each a 100/N percent chance, halved while the
+    /// player taunts. Returns whether this turn is for a spell (false) or an innate attack (true),
+    /// or null for neither.
+    /// </summary>
+    private bool? RangedAttackKind(MonsterRaceDef race)
+    {
+        int Chance(int oneIn) => oneIn <= 0 ? 0 : 100 / oneIn / (Player.Timed.Has("taunt") ? 2 : 1);
+        if (Chance(race.SpellFrequency) is > 0 and var spell && Rng.RandInt0(100) < spell) return false;
+        if (Chance(race.InnateFrequency) is > 0 and var innate && Rng.RandInt0(100) < innate) return true;
+        return null;
+    }
+
+    /// <summary>
+    /// Picks and casts a spell of the kind chosen (innate attacks or other spells, as Angband's
+    /// choose_attack_spell); false if nothing suitable could be cast (the monster then moves).
+    /// </summary>
+    private bool TryCastSpell(Monster monster, bool innate)
     {
         var race = monster.Race;
         var here = monster.Position;
@@ -33,6 +50,7 @@ public sealed partial class GameSession
                 MonsterSpellKind.Summon => inView || here.DistanceTo(Player.Position) <= 10,
                 _ => inView,
             })
+            .Where(s => s.Innate == innate)
             .Where(s => monster.Confused == 0 || s.Innate)
             .ToList();
 

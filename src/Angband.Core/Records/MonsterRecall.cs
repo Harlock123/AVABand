@@ -245,27 +245,27 @@ public static class MonsterRecall
                 .Append(RecallMarkup.Color("breathe ", RecallColors.Verb))
                 .Append(SpellClause(data, race, breaths, knowHp, viewer));
         }
-        if (innate.Count + breaths.Count > 0) sb.Append(Frequency(race, lore.CastsInnate)).Append(". ");
+        if (innate.Count + breaths.Count > 0) sb.Append(Frequency(race.InnateFrequency, lore.CastsInnate)).Append(". ");
 
         if (spells.Count > 0)
         {
             sb.Append($"{pronoun} may ").Append(RecallMarkup.Color("cast spells", RecallColors.Verb));
             if (lore.FlagsKnown.Contains(MonsterFlags.Smart)) sb.Append(" intelligently");
             sb.Append(" which ").Append(SpellClause(data, race, spells, knowHp, viewer))
-                .Append(Frequency(race, lore.CastsSpell)).Append(". ");
+                .Append(Frequency(race.SpellFrequency, lore.CastsSpell)).Append(". ");
         }
         sb.Append('\n');
     }
 
     /// <summary>"; 1 time in 4" once known, "; about 1 time in 5" as a guess, nothing if never seen.</summary>
-    private static string Frequency(MonsterRaceDef race, int casts)
+    private static string Frequency(int oneIn, int casts)
     {
-        if (race.SpellFrequency <= 0 || casts == 0) return "";
+        if (oneIn <= 0 || casts == 0) return "";
         var green = RecallColors.Number;
         if (casts > CastsForFrequency)
-            return $"; {RecallMarkup.Color("1", green)} time in {RecallMarkup.Color(race.SpellFrequency.ToString(Inv), green)}";
+            return $"; {RecallMarkup.Color("1", green)} time in {RecallMarkup.Color(oneIn.ToString(Inv), green)}";
         // Angband: the percentage chance rounded up to a multiple of ten.
-        var percent = 100 / race.SpellFrequency;
+        var percent = 100 / oneIn;
         var approx = Math.Max((percent + 9) / 10 * 10, 1);
         return $"; about {RecallMarkup.Color("1", green)} time in {RecallMarkup.Color((100 / approx).ToString(Inv), green)}";
     }
