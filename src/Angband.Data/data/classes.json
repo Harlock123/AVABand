@@ -1,0 +1,492 @@
+[
+  {
+    "id": "warrior",
+    "name": "Warrior",
+    "hitDie": 10,
+    "blows": 200,
+    "skills": {
+      "melee": 70,
+      "bow": 55,
+      "throw": 55,
+      "save": 18,
+      "stealth": 2,
+      "disarm": 30,
+      "device": 18
+    },
+    "skillsPer10Levels": {
+      "melee": 45,
+      "bow": 45,
+      "throw": 45,
+      "save": 10,
+      "disarm": 10,
+      "device": 7
+    },
+    "stats": {
+      "str": 3,
+      "int": -2,
+      "wis": -2,
+      "dex": 2,
+      "con": 2
+    },
+    "startingKit": [
+      {
+        "kind": "dagger",
+        "equip": true
+      },
+      {
+        "kind": "sling",
+        "equip": true
+      },
+      {
+        "kind": "iron_shot",
+        "count": 40
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      }
+    ],
+    "description": "A master of weapons and armour, relying on strength rather than magic.",
+    "expFactor": 0,
+    "flags": [
+      "SHIELD_BASH",
+      "BRAVERY_30"
+    ]
+  },
+  {
+    "id": "mage",
+    "name": "Mage",
+    "hitDie": 0,
+    "blows": 100,
+    "realm": "arcane",
+    "firstSpellLevel": 1,
+    "skills": {
+      "melee": 34,
+      "bow": 20,
+      "throw": 20,
+      "save": 30,
+      "stealth": 2,
+      "disarm": 30,
+      "device": 36
+    },
+    "skillsPer10Levels": {
+      "melee": 15,
+      "bow": 15,
+      "throw": 15,
+      "save": 9,
+      "disarm": 10,
+      "device": 13
+    },
+    "stats": {
+      "str": -3,
+      "int": 3,
+      "wis": 0,
+      "dex": 1,
+      "con": -2
+    },
+    "startingKit": [
+      {
+        "kind": "dagger",
+        "equip": true
+      },
+      {
+        "kind": "first_spells"
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      }
+    ],
+    "description": "A student of arcane magic: frail, but able to blast foes from afar.",
+    "expFactor": 30,
+    "flags": [
+      "BEAM",
+      "ZERO_FAIL"
+    ]
+  },
+  {
+    "id": "priest",
+    "name": "Priest",
+    "hitDie": 2,
+    "blows": 150,
+    "realm": "divine",
+    "firstSpellLevel": 1,
+    "skills": {
+      "melee": 35,
+      "bow": 20,
+      "throw": 20,
+      "save": 32,
+      "stealth": 2,
+      "disarm": 25,
+      "device": 30
+    },
+    "skillsPer10Levels": {
+      "melee": 20,
+      "bow": 20,
+      "throw": 20,
+      "save": 12,
+      "disarm": 9,
+      "device": 10
+    },
+    "stats": {
+      "str": 0,
+      "int": -3,
+      "wis": 3,
+      "dex": -1,
+      "con": 1
+    },
+    "startingKit": [
+      {
+        "kind": "mace",
+        "equip": true
+      },
+      {
+        "kind": "novices_handbook"
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      }
+    ],
+    "description": "A servant of the divine, gifted with healing and holy light.",
+    "expFactor": 20,
+    "flags": [
+      "BLESS_WEAPON",
+      "ZERO_FAIL"
+    ]
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "hitDie": 5,
+    "blows": 150,
+    "realm": "nature",
+    "firstSpellLevel": 3,
+    "skills": {
+      "melee": 56,
+      "bow": 72,
+      "throw": 72,
+      "save": 30,
+      "stealth": 3,
+      "disarm": 50,
+      "device": 32
+    },
+    "skillsPer10Levels": {
+      "melee": 30,
+      "bow": 45,
+      "throw": 45,
+      "save": 10,
+      "disarm": 15,
+      "device": 10
+    },
+    "stats": {
+      "str": 0,
+      "int": 0,
+      "wis": 1,
+      "dex": 2,
+      "con": 1
+    },
+    "startingKit": [
+      {
+        "kind": "dagger",
+        "equip": true
+      },
+      {
+        "kind": "short_bow",
+        "equip": true
+      },
+      {
+        "kind": "arrow",
+        "count": 40
+      },
+      {
+        "kind": "lesser_charms"
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      }
+    ],
+    "description": "A hunter and archer of the wilds, with a little nature magic.",
+    "expFactor": 30,
+    "flags": [
+      "FAST_SHOT"
+    ]
+  },
+  {
+    "id": "druid",
+    "name": "Druid",
+    "hitDie": 0,
+    "blows": 100,
+    "realm": "nature",
+    "firstSpellLevel": 1,
+    "skills": {
+      "melee": 35,
+      "bow": 25,
+      "throw": 30,
+      "save": 30,
+      "stealth": 3,
+      "disarm": 30,
+      "device": 30
+    },
+    "skillsPer10Levels": {
+      "melee": 15,
+      "bow": 20,
+      "throw": 20,
+      "save": 10,
+      "disarm": 10,
+      "device": 12
+    },
+    "stats": {
+      "str": -2,
+      "int": 0,
+      "wis": 3,
+      "dex": 0,
+      "con": 0
+    },
+    "startingKit": [
+      {
+        "kind": "sling",
+        "equip": true
+      },
+      {
+        "kind": "iron_shot",
+        "count": 20
+      },
+      {
+        "kind": "lesser_charms"
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      }
+    ],
+    "description": "A keeper of the natural world who calls on storms, stone and living things.",
+    "expFactor": 30,
+    "flags": [
+      "ZERO_FAIL",
+      "CHARM"
+    ]
+  },
+  {
+    "id": "rogue",
+    "name": "Rogue",
+    "hitDie": 4,
+    "blows": 150,
+    "realm": "arcane",
+    "firstSpellLevel": 5,
+    "skills": {
+      "melee": 35,
+      "bow": 66,
+      "throw": 72,
+      "save": 28,
+      "stealth": 3,
+      "disarm": 45,
+      "device": 32
+    },
+    "skillsPer10Levels": {
+      "melee": 45,
+      "bow": 30,
+      "throw": 45,
+      "save": 10,
+      "stealth": 1,
+      "disarm": 20,
+      "device": 10
+    },
+    "stats": {
+      "str": 0,
+      "int": 1,
+      "wis": -3,
+      "dex": 3,
+      "con": -1
+    },
+    "flags": [
+      "STEAL"
+    ],
+    "startingKit": [
+      {
+        "kind": "dagger",
+        "equip": true
+      },
+      {
+        "kind": "sling",
+        "equip": true
+      },
+      {
+        "kind": "iron_shot",
+        "count": 20
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      },
+      {
+        "kind": "first_spells"
+      }
+    ],
+    "description": "A stealthy thief and trickster: deadly with thrown weapons and slings, a picker of locks and pockets, with a little arcane magic.",
+    "expFactor": 25
+  },
+  {
+    "id": "paladin",
+    "name": "Paladin",
+    "hitDie": 6,
+    "blows": 200,
+    "realm": "divine",
+    "firstSpellLevel": 1,
+    "skills": {
+      "melee": 65,
+      "bow": 50,
+      "throw": 50,
+      "save": 25,
+      "stealth": 0,
+      "disarm": 20,
+      "device": 24
+    },
+    "skillsPer10Levels": {
+      "melee": 40,
+      "bow": 30,
+      "throw": 30,
+      "save": 11,
+      "disarm": 15,
+      "device": 10
+    },
+    "stats": {
+      "str": 1,
+      "int": -3,
+      "wis": 1,
+      "dex": -1,
+      "con": 2
+    },
+    "flags": [
+      "BLESS_WEAPON",
+      "SHIELD_BASH"
+    ],
+    "startingKit": [
+      {
+        "kind": "main_gauche",
+        "equip": true
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      },
+      {
+        "kind": "scroll_of_protection_from_evil"
+      },
+      {
+        "kind": "novices_handbook"
+      }
+    ],
+    "description": "A holy warrior: nearly a warrior's equal in battle, with a few prayers of blessing and healing. Blessed and hafted weapons serve paladins best.",
+    "expFactor": 35
+  },
+  {
+    "id": "necromancer",
+    "name": "Necromancer",
+    "hitDie": 2,
+    "blows": 100,
+    "realm": "shadow",
+    "firstSpellLevel": 1,
+    "skills": {
+      "melee": 35,
+      "bow": 20,
+      "throw": 20,
+      "save": 30,
+      "stealth": 2,
+      "disarm": 30,
+      "device": 36
+    },
+    "skillsPer10Levels": {
+      "melee": 25,
+      "bow": 15,
+      "throw": 15,
+      "save": 9,
+      "disarm": 10,
+      "device": 13
+    },
+    "stats": {
+      "str": -3,
+      "int": 3,
+      "wis": 0,
+      "dex": 0,
+      "con": -2
+    },
+    "flags": [
+      "UNLIGHT",
+      "ZERO_FAIL"
+    ],
+    "startingKit": [
+      {
+        "kind": "main_gauche",
+        "equip": true
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      },
+      {
+        "kind": "into_the_shadows"
+      }
+    ],
+    "description": "A dark caster who shuns the light: sees without it, and performs rituals of nether and darkness that falter on lit ground.",
+    "expFactor": 30
+  },
+  {
+    "id": "blackguard",
+    "name": "Blackguard",
+    "hitDie": 8,
+    "blows": 200,
+    "realm": "shadow",
+    "firstSpellLevel": 1,
+    "skills": {
+      "melee": 65,
+      "bow": 35,
+      "throw": 40,
+      "save": 18,
+      "stealth": -1,
+      "disarm": 20,
+      "device": 24
+    },
+    "skillsPer10Levels": {
+      "melee": 40,
+      "bow": 15,
+      "throw": 30,
+      "save": 10,
+      "stealth": -1,
+      "disarm": 15,
+      "device": 10
+    },
+    "stats": {
+      "str": 2,
+      "int": 0,
+      "wis": -3,
+      "dex": 0,
+      "con": 2
+    },
+    "flags": [
+      "SHIELD_BASH",
+      "COMBAT_REGEN",
+      "IMPAIR_HP"
+    ],
+    "startingKit": [
+      {
+        "kind": "tulwar",
+        "equip": true
+      },
+      {
+        "kind": "leather_shield",
+        "equip": true
+      },
+      {
+        "kind": "soft_leather_armour",
+        "equip": true
+      },
+      {
+        "kind": "into_the_shadows"
+      }
+    ],
+    "description": "A brutal warrior fed by bloodshed: mana comes from fighting rather than rest, and fuels rituals of fury and fear. Heals slowly.",
+    "expFactor": 30
+  }
+]

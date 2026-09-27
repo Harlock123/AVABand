@@ -1,0 +1,8 @@
+Sound effects by Dubtrain <angband@dubtrain.com>, from Angband 4.2 (lib/sounds).
+https://github.com/angband/angband/tree/master/lib/sounds
+Original Wave versions: http://www.dubtrain.com/angband/
+
+Licensed under the Creative Commons Attribution 4.0 International licence:
+https://creativecommons.org/licenses/by/4.0/
+The files are included unmodified. soundpack.json (the mapping of game events to files) was
+generated from Angband's lib/customize/sound.prf by tools/angband_sound_prf_to_soundpack.py.

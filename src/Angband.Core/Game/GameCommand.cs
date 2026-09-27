@@ -1,0 +1,104 @@
+using Angband.Core.Geometry;
+
+namespace Angband.Core.Game;
+
+/// <summary>
+/// Everything the player can ask for. Keyboard, mouse and gamepad input all end up as one of
+/// these, so the engine never deals with raw input.
+/// </summary>
+public abstract record GameCommand;
+
+/// <summary>Step in a direction; bumping a door opens it (Angband "easy_alter").</summary>
+public sealed record WalkCommand(Direction Direction) : GameCommand;
+
+/// <summary>Spend a turn doing nothing.</summary>
+public sealed record HoldCommand : GameCommand;
+
+public sealed record OpenCommand(Direction Direction) : GameCommand;
+
+/// <summary>Retire a winning character (ends the game with the victory on the score table).</summary>
+public sealed record RetireCommand : GameCommand;
+
+/// <summary>Disarm a chest or a known trap in a direction (<see cref="Direction.Here"/> for underfoot).</summary>
+public sealed record DisarmCommand(Direction Direction) : GameCommand;
+
+/// <summary>Tunnel into rubble, a vein or a wall (Angband 'T'), repeating until through or disturbed.</summary>
+public sealed record TunnelCommand(Direction Direction) : GameCommand;
+
+/// <summary>Inscribe an item (Angband '{'); an empty text removes the inscription. Takes no time.</summary>
+public sealed record InscribeCommand(Items.Item Item, string Text) : GameCommand;
+
+/// <summary>Remove an item's inscription (Angband '}'). Takes no time.</summary>
+public sealed record UninscribeCommand(Items.Item Item) : GameCommand;
+
+/// <summary>Repeat the level feeling (Angband Ctrl+F). Takes no time.</summary>
+public sealed record FeelingCommand : GameCommand;
+
+/// <summary>Steal from the adjacent monster in a direction (rogues; Angband 's').</summary>
+public sealed record StealCommand(Direction Direction) : GameCommand;
+
+public sealed record CloseCommand(Direction Direction) : GameCommand;
+
+/// <summary>Take the staircase underfoot.</summary>
+public sealed record TakeStairsCommand(bool Down) : GameCommand;
+
+/// <summary>Debug: jump straight to a depth.</summary>
+public sealed record DebugJumpCommand(int Depth) : GameCommand;
+
+/// <summary>Fire the launcher at a square (or the nearest visible monster), using given or first matching ammo.</summary>
+public sealed record FireCommand(Loc? Target = null, Items.Item? Ammo = null) : GameCommand;
+
+/// <summary>Pick up everything underfoot, or one item.</summary>
+public sealed record PickupCommand(Items.Item? Item = null) : GameCommand;
+
+public sealed record DropCommand(Items.Item Item, int Count = 1) : GameCommand;
+
+public sealed record WieldCommand(Items.Item Item) : GameCommand;
+
+public sealed record TakeOffCommand(Items.Item Item) : GameCommand;
+
+/// <summary>Quaff a potion, read a scroll or eat food.</summary>
+/// <summary>Activate a worn item (Angband 'A'), aiming it if its effect needs a target or direction.</summary>
+public sealed record ActivateCommand(Items.Item Item, Loc? Target = null, Direction? Direction = null, char? Glyph = null) : GameCommand;
+
+/// <summary>Return to the player's own shape.</summary>
+public sealed record ResumeShapeCommand : GameCommand;
+
+/// <param name="Glyph">For banishment: the monster letter to banish.</param>
+public sealed record UseCommand(Items.Item Item, Loc? Target = null, Direction? Direction = null, char? Glyph = null) : GameCommand;
+
+/// <summary>Throw an item at a square, or the nearest visible monster when null.</summary>
+public sealed record ThrowCommand(Items.Item Item, Loc? Target = null) : GameCommand;
+
+/// <summary>Refill the wielded lantern from a flask of oil.</summary>
+public sealed record RefuelCommand(Items.Item Fuel) : GameCommand;
+
+/// <summary>Rest until healed or disturbed.</summary>
+public sealed record RestCommand : GameCommand;
+
+/// <summary>Learn a new spell (a specific one, or the first available).</summary>
+public sealed record StudyCommand(string? SpellId = null) : GameCommand;
+
+/// <summary>
+/// Cast a learned spell at a target (or the nearest visible monster), or in a direction for spells
+/// that need one. Casting without enough mana must be allowed explicitly: it may make you faint.
+/// </summary>
+public sealed record CastCommand(string SpellId, Loc? Target = null, Direction? Direction = null, bool AllowOverexert = false) : GameCommand;
+
+/// <summary>
+/// Walk to a known square along the shortest known path (mouse click travel). Stops when a
+/// monster is in view, the player is hurt, or the way is blocked.
+/// </summary>
+public sealed record TravelCommand(Loc Target) : GameCommand;
+
+/// <summary>Enter the store whose entrance the player is standing on (Angband '_').</summary>
+public sealed record EnterStoreCommand : GameCommand;
+
+/// <summary>Buy from the current store (at home: take back). Takes no game time.</summary>
+public sealed record BuyCommand(Items.Item Item, int Count = 1) : GameCommand;
+
+/// <summary>Sell to the current store (at home: store). Takes no game time.</summary>
+public sealed record SellCommand(Items.Item Item, int Count = 1) : GameCommand;
+
+/// <summary>Leave the store screen (no game time; lets listeners react).</summary>
+public sealed record LeaveStoreCommand : GameCommand;

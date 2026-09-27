@@ -1,0 +1,15 @@
+[
+  { "id": "acid", "name": "acid", "numerator": 1, "divisor": "3", "immunityFlag": "IM_ACID" },
+  { "id": "elec", "name": "lightning", "numerator": 1, "divisor": "3", "immunityFlag": "IM_ELEC" },
+  { "id": "fire", "name": "fire", "numerator": 1, "divisor": "3", "immunityFlag": "IM_FIRE", "vulnerabilityFlag": "HURT_FIRE" },
+  { "id": "cold", "name": "cold", "numerator": 1, "divisor": "3", "immunityFlag": "IM_COLD", "vulnerabilityFlag": "HURT_COLD" },
+  { "id": "pois", "name": "poison", "numerator": 1, "divisor": "3", "immunityFlag": "IM_POIS" },
+  { "id": "light", "name": "light", "numerator": 4, "divisor": "1d4+7", "vulnerabilityFlag": "HURT_LIGHT" },
+  { "id": "dark", "name": "darkness", "numerator": 4, "divisor": "1d4+7" },
+  { "id": "sound", "name": "sound", "numerator": 5, "divisor": "1d6+7" },
+  { "id": "shards", "name": "shards", "numerator": 6, "divisor": "1d6+6" },
+  { "id": "nexus", "name": "nexus", "numerator": 6, "divisor": "1d6+6" },
+  { "id": "nether", "name": "nether", "numerator": 6, "divisor": "1d6+6" },
+  { "id": "chaos", "name": "chaos", "numerator": 6, "divisor": "1d6+6" },
+  { "id": "disen", "name": "disenchantment", "numerator": 6, "divisor": "1d6+6" }
+]

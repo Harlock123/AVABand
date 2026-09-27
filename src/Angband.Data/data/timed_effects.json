@@ -1,0 +1,287 @@
+[
+  {
+    "id": "poisoned",
+    "name": "Poisoned",
+    "onBegin": "You are poisoned!",
+    "onEnd": "You are no longer poisoned.",
+    "onIncrease": "You are more poisoned!"
+  },
+  {
+    "id": "cut",
+    "name": "Cut",
+    "onBegin": "You have been given a cut.",
+    "onEnd": "You are no longer bleeding.",
+    "onIncrease": "Your cut gets worse.",
+    "max": 1000
+  },
+  {
+    "id": "stun",
+    "name": "Stun",
+    "onBegin": "You have been stunned.",
+    "onEnd": "You are no longer stunned.",
+    "onIncrease": "You are more dazed.",
+    "max": 200
+  },
+  {
+    "id": "confused",
+    "name": "Confused",
+    "onBegin": "You are confused!",
+    "onEnd": "You feel less confused now.",
+    "onIncrease": "You are more confused!"
+  },
+  {
+    "id": "afraid",
+    "name": "Afraid",
+    "onBegin": "You are terrified!",
+    "onEnd": "You feel bolder now.",
+    "onIncrease": "You are more scared!"
+  },
+  {
+    "id": "paralyzed",
+    "name": "Paralyzed",
+    "onBegin": "You are paralysed!",
+    "onEnd": "You can move again.",
+    "stacking": "no_stack"
+  },
+  {
+    "id": "blind",
+    "name": "Blind",
+    "onBegin": "You are blind.",
+    "onEnd": "You blink and your eyes clear.",
+    "onIncrease": "Your eyes are clouded further."
+  },
+  {
+    "id": "slow",
+    "name": "Slow",
+    "onBegin": "You feel yourself moving slower!",
+    "onEnd": "You feel yourself speed up."
+  },
+  {
+    "id": "fast",
+    "name": "Haste",
+    "onBegin": "You feel yourself moving faster!",
+    "onEnd": "You feel yourself slow down.",
+    "harmful": false,
+    "stacking": "max"
+  },
+  {
+    "id": "blessed",
+    "name": "Blessed",
+    "onBegin": "You feel righteous!",
+    "onEnd": "The prayer has expired.",
+    "harmful": false
+  },
+  {
+    "id": "hero",
+    "name": "Hero",
+    "onBegin": "You feel like a hero!",
+    "onEnd": "The heroism wears off.",
+    "harmful": false
+  },
+  {
+    "id": "regen",
+    "name": "Regen",
+    "onBegin": "You feel your body renewing itself.",
+    "onEnd": "You feel less vital.",
+    "harmful": false
+  },
+  {
+    "id": "oppose_fire",
+    "name": "ResFire",
+    "onBegin": "You feel resistant to fire!",
+    "onEnd": "You feel less resistant to fire.",
+    "harmful": false
+  },
+  {
+    "id": "oppose_cold",
+    "name": "ResCold",
+    "onBegin": "You feel resistant to cold!",
+    "onEnd": "You feel less resistant to cold.",
+    "harmful": false
+  },
+  {
+    "id": "oppose_pois",
+    "name": "ResPois",
+    "onBegin": "You feel resistant to poison!",
+    "onEnd": "You feel less resistant to poison.",
+    "harmful": false
+  },
+  {
+    "id": "berserk",
+    "name": "Berserk",
+    "onBegin": "You feel like a killing machine!",
+    "onEnd": "You feel less berserk.",
+    "harmful": false
+  },
+  {
+    "id": "see_invisible",
+    "name": "SInvis",
+    "onBegin": "Your eyes feel very sensitive!",
+    "onEnd": "Your eyes feel less sensitive.",
+    "harmful": false
+  },
+  {
+    "id": "infravision",
+    "name": "Infra",
+    "onBegin": "Your eyes begin to tingle!",
+    "onEnd": "Your eyes stop tingling.",
+    "harmful": false
+  },
+  {
+    "id": "prot_evil",
+    "name": "ProtEvil",
+    "onBegin": "You feel safe from evil!",
+    "onEnd": "You no longer feel safe from evil.",
+    "harmful": false
+  },
+  {
+    "id": "oppose_acid",
+    "name": "ResAcid",
+    "onBegin": "You feel resistant to acid!",
+    "onEnd": "You feel less resistant to acid.",
+    "harmful": false
+  },
+  {
+    "id": "oppose_elec",
+    "name": "ResElec",
+    "onBegin": "You feel resistant to electricity!",
+    "onEnd": "You feel less resistant to electricity.",
+    "harmful": false
+  },
+  {
+    "id": "telepathy",
+    "name": "ESP",
+    "onBegin": "Your mind expands!",
+    "onEnd": "Your mind contracts.",
+    "harmful": false
+  },
+  {
+    "id": "att_conf",
+    "name": "AttConf",
+    "onBegin": "Your hands begin to glow!",
+    "onEnd": "The glow fades from your hands.",
+    "harmful": false
+  },
+  {
+    "id": "terror",
+    "name": "Terror",
+    "onBegin": "You feel the need to run away and fast!",
+    "onEnd": "The urge to run dissipates.",
+    "harmful": false
+  },
+  {
+    "id": "stoneskin",
+    "name": "Stone",
+    "onBegin": "Your skin turns to stone.",
+    "onEnd": "A fleshy shade returns to your skin.",
+    "harmful": false
+  },
+  {
+    "id": "sprint",
+    "name": "Sprint",
+    "onBegin": "You start sprinting.",
+    "onEnd": "You suddenly stop sprinting.",
+    "harmful": false
+  },
+  {
+    "id": "stealth",
+    "name": "Stealth",
+    "onBegin": "You feel silent!",
+    "onEnd": "You feel less stealthy.",
+    "harmful": false
+  },
+  {
+    "id": "scrambled",
+    "name": "Scrambled",
+    "onBegin": "Your body starts to scramble...",
+    "onEnd": "Your body reasserts its true nature.",
+    "onIncrease": "You are more scrambled!",
+    "harmful": true
+  },
+  {
+    "id": "grim_purpose",
+    "name": "Purpose",
+    "onBegin": "You focus your mind grimly.",
+    "onEnd": "Your grim purpose fades.",
+    "harmful": false
+  },
+  {
+    "id": "att_pois",
+    "name": "AttPois",
+    "onBegin": "Poison drips from your weapon!",
+    "onEnd": "Your weapon is no longer poisonous.",
+    "harmful": false
+  },
+  {
+    "id": "att_run",
+    "name": "HitRun",
+    "onBegin": "You tense up ready to escape!",
+    "onEnd": "You relax again.",
+    "harmful": false
+  },
+  {
+    "id": "taunt",
+    "name": "Taunt",
+    "onBegin": "You start aggravating your enemies!",
+    "onEnd": "You stop aggravating your enemies.",
+    "harmful": false
+  },
+  {
+    "id": "bloodlust",
+    "name": "Bloodlust",
+    "onBegin": "A red mist descends over your eyes!",
+    "onIncrease": "Your thirst for blood increases!",
+    "onEnd": "The mist clears.",
+    "harmful": false,
+    "max": 50
+  },
+  {
+    "id": "att_evil",
+    "name": "AttEvil",
+    "onBegin": "Your weapon is imbued with holy force!",
+    "onEnd": "Holy force fades from your weapon.",
+    "harmful": false
+  },
+  {
+    "id": "att_demon",
+    "name": "AttDemon",
+    "onBegin": "Your weapon becomes a bane of demons!",
+    "onEnd": "Your weapon returns to normal.",
+    "harmful": false
+  },
+  {
+    "id": "att_vamp",
+    "name": "AttVamp",
+    "onBegin": "You can drain life from your victims!",
+    "onEnd": "Your thirst for life fades.",
+    "harmful": false
+  },
+  {
+    "id": "command",
+    "name": "Command",
+    "onBegin": "You take control of your victim!",
+    "onEnd": "You lose control of your victim.",
+    "harmful": false
+  },
+  {
+    "id": "fastcast",
+    "name": "FastCast",
+    "onBegin": "Your mind accelerates!",
+    "onEnd": "Your mind slows down again.",
+    "harmful": false
+  },
+  {
+    "id": "covertracks",
+    "name": "NoTrack",
+    "onBegin": "You begin covering your tracks.",
+    "onEnd": "You stop covering your tracks.",
+    "harmful": false
+  },
+  {
+    "id": "heal",
+    "name": "Heal",
+    "onBegin": "You feel your body mending!",
+    "onEnd": "Your body stops mending so quickly.",
+    "harmful": false
+  }
+]

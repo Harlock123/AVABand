@@ -1,0 +1,18 @@
+[
+  { "id": "vulnerability", "name": "vulnerability", "description": "makes you easier to hit", "toAc": -20 },
+  { "id": "clumsiness", "name": "clumsiness", "description": "makes your attacks less accurate", "toHit": -10 },
+  { "id": "weakness", "name": "weakness", "description": "weakens your blows", "toDam": -5 },
+  { "id": "slowness", "name": "slowness", "description": "slows you down", "modifiers": { "speed": -5 } },
+  { "id": "annoyance", "name": "annoyance", "description": "makes you noisy and slow",
+    "modifiers": { "speed": -3, "stealth": -5 } },
+  { "id": "burning_up", "name": "burning up", "description": "makes you vulnerable to fire", "vulnerabilities": ["fire"] },
+  { "id": "chilled", "name": "chilled to the bone", "description": "makes you vulnerable to cold", "vulnerabilities": ["cold"] },
+  { "id": "teleportation", "name": "teleportation", "description": "randomly teleports you",
+    "effectChance": 150, "effect": "teleport:40", "effectMessage": "Your pack twitches and space warps around you." },
+  { "id": "poison", "name": "poison", "description": "occasionally poisons you",
+    "effectChance": 200, "effect": "timed:poisoned:10+1d10", "effectMessage": "You feel a sting." },
+  { "id": "cowardice", "name": "cowardice", "description": "occasionally terrifies you",
+    "effectChance": 200, "effect": "timed:afraid:10+1d10", "effectMessage": "A wave of dread washes over you." },
+  { "id": "paralysis", "name": "paralysis", "description": "occasionally paralyses you",
+    "effectChance": 500, "effect": "timed:paralyzed:3+1d5", "effectMessage": "Your limbs lock up!" }
+]

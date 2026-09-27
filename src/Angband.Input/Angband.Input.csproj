@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Device-independent input: actions, configurable key/button bindings, and providers.
+    Keyboard and mouse events come from the UI; gamepads are read through SDL2 (Silk.NET, with
+    native libraries for Windows, Linux and macOS). No UI dependency.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Angband.Input</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.SDL" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Angband.Core\Angband.Core.csproj" />
+  </ItemGroup>
+</Project>

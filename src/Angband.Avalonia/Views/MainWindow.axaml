@@ -1,0 +1,221 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:controls="using:Angband.Avalonia.Controls"
+        x:Class="Angband.Avalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="AVABand"
+        Width="1280" Height="800"
+        Background="Black">
+  <Window.Resources>
+    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace</FontFamily>
+    <DataTemplate x:Key="ItemRowTemplate" x:DataType="vm:ItemRow">
+      <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1">
+        <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
+                   FontFamily="{StaticResource MonoFont}" FontSize="12" Margin="0,0,4,0" />
+        <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
+                   FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
+        <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="#eee" FontSize="12" TextWrapping="Wrap" />
+        <TextBlock Grid.Column="3" Text="{Binding Weight}" Foreground="#888" FontSize="11" Margin="6,0,0,0" />
+      </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="ListRowTemplate" x:DataType="vm:ListRow">
+      <Grid ColumnDefinitions="18,*,Auto" Margin="0,1">
+        <TextBlock Grid.Column="0" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
+                   FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
+        <TextBlock Grid.Column="1" Text="{Binding Text}" Foreground="{Binding TextBrush}" FontWeight="{Binding Weight}"
+                   FontFamily="{StaticResource MonoFont}" FontSize="12" TextTrimming="CharacterEllipsis" />
+        <TextBlock Grid.Column="2" Text="{Binding Location}" Foreground="{Binding TextBrush}"
+                   FontFamily="{StaticResource MonoFont}" FontSize="12" Margin="10,0,0,0" />
+      </Grid>
+    </DataTemplate>
+  </Window.Resources>
+
+  <Window.Styles>
+    <Style Selector="TextBlock.header">
+      <Setter Property="Foreground" Value="#8ab4f8" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Margin" Value="0,10,0,2" />
+    </Style>
+  </Window.Styles>
+
+  <DockPanel>
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="_Game">
+        <MenuItem Header="_New character..." Command="{Binding NewGameCommand}" InputGesture="Ctrl+N" />
+        <MenuItem Header="_Quick start (same character)" Command="{Binding QuickStartCommand}" />
+        <MenuItem x:Name="NewGameAsMenu" Header="Quick start _as" />
+        <Separator />
+        <MenuItem Header="_Save" Command="{Binding SaveGameCommand}" InputGesture="Ctrl+S" IsEnabled="{Binding CanSave}" />
+        <MenuItem Header="_Load character..." Command="{Binding LoadGameCommand}" InputGesture="Ctrl+O" IsEnabled="{Binding CanSave}" />
+        <Separator />
+        <MenuItem Header="_Character sheet..." Command="{Binding ShowCharacterSheetCommand}" InputGesture="Shift+C" />
+        <MenuItem Header="_High scores..." Command="{Binding ShowHighScoresCommand}" InputGesture="Ctrl+H" />
+        <MenuItem Header="_Knowledge..." Command="{Binding ShowKnowledgeCommand}" InputGesture="Shift+OemTilde" />
+        <MenuItem Header="Level _feeling" Command="{Binding ShowFeelingCommand}" InputGesture="Ctrl+F" />
+        <MenuItem Header="_Retire (after winning)" Command="{Binding RetireCommand}" InputGesture="Shift+Q" />
+        <Separator />
+        <MenuItem Header="E_xit" Click="OnExit" />
+      </MenuItem>
+      <MenuItem Header="_View">
+        <MenuItem Header="_Graphical tiles" Command="{Binding ToggleTilesCommand}" InputGesture="Ctrl+T"
+                  ToggleType="CheckBox" IsChecked="{Binding UseTiles, Mode=OneWay}" IsEnabled="{Binding HasTilesets}" />
+        <MenuItem Header="_Options..." Command="{Binding ShowOptionsCommand}" InputGesture="OemPlus" />
+        <MenuItem Header="_Settings..." Click="OnOpenSettings" InputGesture="F10" />
+        <MenuItem Header="_Mute sound" Command="{Binding ToggleMuteCommand}" InputGesture="Ctrl+M"
+                  ToggleType="CheckBox" IsChecked="{Binding Muted, Mode=OneWay}" />
+        <Separator />
+        <MenuItem Header="Monster list in the sidebar" Command="{Binding ToggleMonsterPanelCommand}"
+                  ToggleType="CheckBox" IsChecked="{Binding ShowMonsterPanel, Mode=OneWay}" />
+        <MenuItem Header="Object list in the sidebar" Command="{Binding ToggleObjectPanelCommand}"
+                  ToggleType="CheckBox" IsChecked="{Binding ShowObjectPanel, Mode=OneWay}" />
+        <Separator />
+        <MenuItem Header="Zoom _in" Command="{Binding ZoomInCommand}" InputGesture="Ctrl+OemPlus" />
+        <MenuItem Header="Zoom _out" Command="{Binding ZoomOutCommand}" InputGesture="Ctrl+OemMinus" />
+      </MenuItem>
+      <MenuItem Header="_Debug">
+        <MenuItem Header="_Regenerate level" Command="{Binding RegenerateLevelCommand}" InputGesture="F5" />
+        <MenuItem Header="_Jump 5 levels deeper" Command="{Binding JumpDeeperCommand}" InputGesture="F6" />
+        <MenuItem Header="Show _whole map" Command="{Binding ToggleWholeMapCommand}" InputGesture="F7" />
+      </MenuItem>
+    </Menu>
+
+    <Border DockPanel.Dock="Top" Background="#101010" Padding="8,4">
+      <TextBlock Text="{Binding LastMessage}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
+    </Border>
+
+    <Border DockPanel.Dock="Bottom" Background="#101010" Padding="8,4">
+      <TextBlock Text="{Binding StatusText}" Foreground="#C0C0C0" FontFamily="{StaticResource MonoFont}" />
+    </Border>
+
+    <!-- Inventory panel -->
+    <Border DockPanel.Dock="Right" Width="340" Background="#0c0c0c" BorderBrush="#222" BorderThickness="1,0,0,0">
+      <ScrollViewer>
+        <StackPanel Margin="10" Spacing="4">
+          <TextBlock Text="{Binding GoldText}" Foreground="Gold" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding BurdenText}" Foreground="#aaa" FontSize="12" TextWrapping="Wrap" />
+          <TextBlock Classes="header" Text="Equipment" />
+          <ItemsControl ItemsSource="{Binding EquipmentRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
+          <TextBlock Classes="header" Text="Inventory" />
+          <ItemsControl ItemsSource="{Binding PackRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
+          <TextBlock Classes="header" Text="Quiver" />
+          <ItemsControl ItemsSource="{Binding QuiverRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
+          <TextBlock Classes="header" Text="On the floor" IsVisible="{Binding HasFloorItems}" />
+          <ItemsControl ItemsSource="{Binding FloorRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
+          <TextBlock Classes="header" Text="Monsters" IsVisible="{Binding ShowMonsterPanel}" />
+          <ItemsControl x:Name="MonsterPanel" ItemsSource="{Binding MonsterPanelRows}" ItemTemplate="{StaticResource ListRowTemplate}"
+                        IsVisible="{Binding ShowMonsterPanel}" />
+          <TextBlock Classes="header" Text="Objects" IsVisible="{Binding ShowObjectPanel}" />
+          <ItemsControl x:Name="ObjectPanel" ItemsSource="{Binding ObjectPanelRows}" ItemTemplate="{StaticResource ListRowTemplate}"
+                        IsVisible="{Binding ShowObjectPanel}" />
+          <TextBlock Margin="0,12,0,0" Foreground="#777" FontSize="11" TextWrapping="Wrap"
+                     Text="w wield  t take off  q quaff  r read  E eat  d drop  v throw  g pick up  F refuel  I inspect  { } inscribe  ^D ignore  K show ignored  f fire  R rest  m cast  G study  B browse  a aim  Z use staff  z zap  A activate  o/c open/close  T tunnel  D disarm  s steal (rogues)  x look  * target  [ monsters  ] objects  ~ knowledge  = options  C character  Q retire" />
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+
+    <Panel>
+    <controls:MapView x:Name="Map"
+                      Source="{Binding Map}"
+                      Revision="{Binding Revision}"
+                      CellFontSize="{Binding MapFontSize}"
+                      UseTiles="{Binding UseTiles}"
+                      Tileset="{Binding SelectedTileset}"
+                      TileScale="{Binding TileScale}"
+                      CenterPlayer="{Binding CenterPlayer}"
+                      ClipToBounds="True" />
+
+      <!-- Monster / object list ('[' and ']'), at the top right of the map as in Angband -->
+      <Border IsVisible="{Binding IsShowingList}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,12,0"
+              MinWidth="360" MaxWidth="560" Background="#101218" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10">
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Bottom" Text="{Binding ListFooter}" Foreground="#888" FontSize="11" Margin="0,8,0,0" />
+          <ScrollViewer MaxHeight="520">
+            <ItemsControl x:Name="ListOverlay" ItemsSource="{Binding ListRows}" ItemTemplate="{StaticResource ListRowTemplate}" />
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
+
+      <!-- Store screen -->
+      <Border IsVisible="{Binding IsInStore}" Margin="24" Background="#101218" BorderBrush="#556" BorderThickness="1"
+              CornerRadius="6" Padding="18,14">
+        <DockPanel>
+          <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,10">
+            <TextBlock Text="{Binding StoreTitle}" FontSize="20" FontWeight="SemiBold" Foreground="White" />
+            <TextBlock Text="{Binding StoreSubtitle}" Foreground="#e6c35c" />
+            <TextBlock Text="{Binding StoreModeText}" Foreground="#8ab4f8" Margin="0,6,0,0" />
+          </StackPanel>
+          <TextBlock DockPanel.Dock="Bottom" Margin="0,10,0,0" Foreground="#888" FontSize="11" TextWrapping="Wrap"
+                     Text="letter: one · Shift+letter: whole stack · Tab (pad X): buy/sell · arrows + Enter (pad A) · I: examine · Esc (pad B): leave" />
+          <ListBox ItemsSource="{Binding StoreRows}" SelectedIndex="{Binding StoreSelectedIndex, Mode=OneWay}"
+                   Focusable="False" IsHitTestVisible="False" Background="Transparent">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:StoreRow">
+                <Grid ColumnDefinitions="Auto,18,*,Auto,70">
+                  <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
+                             FontFamily="{StaticResource MonoFont}" FontSize="13" />
+                  <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
+                             FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
+                  <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="#eee" TextWrapping="Wrap" />
+                  <TextBlock Grid.Column="3" Text="{Binding Price}" Foreground="#e6c35c" Margin="12,0" />
+                  <TextBlock Grid.Column="4" Text="{Binding Weight}" Foreground="#888" FontSize="12" HorizontalAlignment="Right" />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+      </Border>
+
+      <!-- Inscription ('{'): the text to write on the chosen item -->
+      <Border IsVisible="{Binding IsInscribing}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0"
+              Background="#101218" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14" MinWidth="460">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding InscriptionTitle}" FontWeight="SemiBold" TextWrapping="Wrap" />
+          <TextBox x:Name="InscriptionBox" Text="{Binding InscriptionText}" MaxLength="80"
+                   FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" />
+          <TextBlock Opacity="0.6" FontSize="12" TextWrapping="Wrap"
+                     Text="Enter writes it, Escape cancels, empty removes it. @q1: press 1 in the quaff menu; !d: ask before dropping; =g / !g: always / never pick up; @f1: first in the quiver." />
+        </StackPanel>
+      </Border>
+
+      <!-- Item prompt ("Quaff which potion?") -->
+      <Border IsVisible="{Binding IsPrompting}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0"
+              Background="#E0101018" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10" MinWidth="420">
+        <StackPanel Spacing="6">
+          <TextBlock Text="{Binding PromptTitle}" FontWeight="SemiBold" Foreground="White" />
+          <ListBox ItemsSource="{Binding PromptRows}" IsVisible="{Binding !!PromptRows.Count}" ItemTemplate="{StaticResource ItemRowTemplate}"
+                   SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}" Focusable="False" IsHitTestVisible="False"
+                   Background="Transparent" Padding="0" />
+          <ListBox ItemsSource="{Binding SpellPromptRows}" IsVisible="{Binding !!SpellPromptRows.Count}" SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}"
+                   Focusable="False" IsHitTestVisible="False" Background="Transparent" Padding="0">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:SpellRow">
+                <Grid ColumnDefinitions="Auto,200,Auto,Auto" Margin="0,1" ToolTip.Tip="{Binding Description}">
+                  <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
+                             FontFamily="{StaticResource MonoFont}" FontSize="12" />
+                  <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="#eee" FontSize="12" />
+                  <TextBlock Grid.Column="2" Text="{Binding Stats}" Foreground="#9ab" FontFamily="{StaticResource MonoFont}" FontSize="12" />
+                  <TextBlock Grid.Column="3" Text="{Binding Note}" Foreground="#c96" FontSize="12" Margin="10,0,0,0" />
+                </Grid>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <ListBox ItemsSource="{Binding ChoiceRows}" IsVisible="{Binding !!ChoiceRows.Count}" SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}"
+                   Focusable="False" IsHitTestVisible="False" Background="Transparent" Padding="0">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ChoiceRow">
+                <StackPanel Orientation="Horizontal" Margin="0,1">
+                  <TextBlock MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
+                             FontFamily="{StaticResource MonoFont}" FontSize="12" />
+                  <TextBlock Text="{Binding Text}" Foreground="#eee" FontSize="12" />
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+          <TextBlock Text="Press a letter (or move and confirm), Esc to cancel." Foreground="#888" FontSize="11" />
+        </StackPanel>
+      </Border>
+    </Panel>
+  </DockPanel>
+
+</Window>

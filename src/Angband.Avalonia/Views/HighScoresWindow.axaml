@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.HighScoresWindow"
+        x:DataType="vm:HighScoresViewModel"
+        Title="High scores"
+        Width="900" Height="520"
+        WindowStartupLocation="CenterOwner">
+  <Window.Styles>
+    <Style Selector="TextBlock.head">
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="#8ab4f8" />
+    </Style>
+    <Style Selector="Border.current">
+      <Setter Property="Background" Value="#33507a" />
+    </Style>
+  </Window.Styles>
+  <DockPanel Margin="16">
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+      <Button Content="Close" Classes="accent" Click="OnClose" />
+    </StackPanel>
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="44,90,*,80,80,260,90" Margin="8,0,8,6">
+      <TextBlock Classes="head" Grid.Column="0" Text="#" />
+      <TextBlock Classes="head" Grid.Column="1" Text="Points" />
+      <TextBlock Classes="head" Grid.Column="2" Text="Character" />
+      <TextBlock Classes="head" Grid.Column="3" Text="Level" />
+      <TextBlock Classes="head" Grid.Column="4" Text="Max depth" />
+      <TextBlock Classes="head" Grid.Column="5" Text="Fate" />
+      <TextBlock Classes="head" Grid.Column="6" Text="Date" />
+    </Grid>
+    <Panel>
+      <TextBlock Text="No scores yet. Characters enter the table when they die."
+                 IsVisible="{Binding IsEmpty}" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      <ScrollViewer x:Name="Scroller">
+        <ItemsControl x:Name="ScoreList" ItemsSource="{Binding Rows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ScoreRow">
+              <Border Classes.current="{Binding IsCurrent}" Padding="8,4" CornerRadius="3">
+                <Grid ColumnDefinitions="44,90,*,80,80,260,90">
+                  <TextBlock Grid.Column="0" Text="{Binding RankText}" />
+                  <TextBlock Grid.Column="1" Text="{Binding Points}" />
+                  <TextBlock Grid.Column="2" Text="{Binding Who}" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Grid.Column="3" Text="{Binding Level}" />
+                  <TextBlock Grid.Column="4" Text="{Binding Depth}" />
+                  <TextBlock Grid.Column="5" Text="{Binding Fate}" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Grid.Column="6" Text="{Binding Date}" Opacity="0.7" />
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Panel>
+  </DockPanel>
+</Window>

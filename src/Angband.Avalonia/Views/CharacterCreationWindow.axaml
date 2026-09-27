@@ -1,0 +1,92 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:defs="using:Angband.Core.Definitions"
+        x:Class="Angband.Avalonia.Views.CharacterCreationWindow"
+        x:DataType="vm:CharacterCreationViewModel"
+        Title="Create a character"
+        Width="980" Height="700"
+        WindowStartupLocation="CenterOwner">
+  <!-- Name, then race, class and stats, then Start/Cancel: the order the controller's D-pad takes. -->
+  <Grid Margin="16" RowDefinitions="Auto,*,Auto">
+    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,0,0,12">
+      <TextBlock Text="Name" VerticalAlignment="Center" FontWeight="SemiBold" />
+      <TextBox x:Name="NameBox" Text="{Binding Name}" Width="240" />
+      <Button Content="Random name" Command="{Binding RandomNameCommand}" />
+    </StackPanel>
+
+    <Grid Grid.Row="1" ColumnDefinitions="200,12,200,12,*">
+      <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="Race" FontWeight="SemiBold" Margin="0,0,0,6" />
+        <TextBlock DockPanel.Dock="Bottom" Text="{Binding RaceDescription}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" Margin="0,8,0,0" />
+        <ListBox x:Name="RaceList" ItemsSource="{Binding Races}" SelectedItem="{Binding SelectedRace}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="defs:RaceDef"><TextBlock Text="{Binding Name}" /></DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+
+      <DockPanel Grid.Column="2">
+        <TextBlock DockPanel.Dock="Top" Text="Class" FontWeight="SemiBold" Margin="0,0,0,6" />
+        <TextBlock DockPanel.Dock="Bottom" Text="{Binding ClassDescription}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" Margin="0,8,0,0" />
+        <ListBox x:Name="ClassList" ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="defs:ClassDef"><TextBlock Text="{Binding Name}" /></DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+
+      <ScrollViewer Grid.Column="4">
+      <StackPanel Spacing="8" Margin="0,0,14,0">
+        <StackPanel Orientation="Horizontal" Spacing="12">
+          <ToggleSwitch x:Name="MethodSwitch" OnContent="Point-buy" OffContent="Rolled" IsChecked="{Binding IsPointBuy}" />
+          <Button Content="Reroll" Command="{Binding RerollCommand}" IsVisible="{Binding !IsPointBuy}" VerticalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="{Binding PointsText}" Opacity="0.8" />
+        <Grid ColumnDefinitions="120,50,40,40,44,70" Margin="0,4,0,0">
+          <TextBlock Grid.Column="1" Text="Base" Opacity="0.6" FontSize="12" />
+          <TextBlock Grid.Column="2" Text="Race" Opacity="0.6" FontSize="12" />
+          <TextBlock Grid.Column="3" Text="Class" Opacity="0.6" FontSize="12" />
+          <TextBlock Grid.Column="5" Text="Final" Opacity="0.6" FontSize="12" />
+        </Grid>
+        <ItemsControl ItemsSource="{Binding StatRows}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:StatRow">
+              <Grid ColumnDefinitions="120,50,40,40,44,70,Auto,Auto" Margin="0,2">
+                <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding Base}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                <TextBlock Grid.Column="2" Text="{Binding RaceMod}" VerticalAlignment="Center" Foreground="#8ab4f8" />
+                <TextBlock Grid.Column="3" Text="{Binding ClassMod}" VerticalAlignment="Center" Foreground="#e6c35c" />
+                <TextBlock Grid.Column="5" Text="{Binding Final}" VerticalAlignment="Center" FontWeight="Bold" />
+                <Button Grid.Column="6" Content="−" Padding="10,0" Margin="2,0"
+                        IsVisible="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).IsPointBuy}"
+                        Command="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).DecreaseCommand}" CommandParameter="{Binding}" />
+                <Button Grid.Column="7" Content="+" Padding="10,0" Margin="2,0"
+                        IsVisible="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).IsPointBuy}"
+                        Command="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).IncreaseCommand}" CommandParameter="{Binding}" />
+              </Grid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border Background="#12151c" CornerRadius="6" Padding="12" Margin="0,10,0,0">
+          <TextBlock Text="{Binding Preview}" TextWrapping="Wrap" FontSize="13" LineHeight="20" />
+        </Border>
+        <Expander x:Name="BirthOptions" Header="Birth options (fixed for the character's life)" HorizontalAlignment="Stretch">
+          <ItemsControl ItemsSource="{Binding BirthOptionRows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:OptionRow">
+                <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Description}" Margin="0,1" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </Expander>
+      </StackPanel>
+      </ScrollViewer>
+    </Grid>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,12,0,0">
+      <TextBlock Text="{Binding Error}" Foreground="#ff8a80" VerticalAlignment="Center" />
+      <Button Content="Cancel" Click="OnCancel" />
+      <Button x:Name="StartButton" Content="Start the adventure" Classes="accent" Command="{Binding StartCommand}" />
+    </StackPanel>
+  </Grid>
+</Window>

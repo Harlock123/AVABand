@@ -1,0 +1,12 @@
+{
+  "name": "CC0 dungeon music",
+  "author": "RandomMind, JaggedStone, yd, Paul Wortmann (via OpenGameArt.org)",
+  "license": "CC0 1.0 Public Domain Dedication (https://creativecommons.org/publicdomain/zero/1.0/)",
+  "source": "https://opengameart.org",
+  "music": {
+    "town": ["The_Old_Tower_Inn.mp3"],
+    "town_night": ["dungeon002_0.ogg"],
+    "dungeon": ["dungeon_ambient_1_0.ogg", "dungeon002_0.ogg"],
+    "deep": ["dark_cavern_ambient_002.ogg"]
+  }
+}

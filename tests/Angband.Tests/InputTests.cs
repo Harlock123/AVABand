@@ -1,0 +1,241 @@
+using Angband.Core.Definitions;
+using Angband.Core.Game;
+using Angband.Core.Geometry;
+using Angband.Input;
+
+namespace Angband.Tests;
+
+public class InputTests
+{
+    private static readonly TimeSpan T0 = TimeSpan.Zero;
+
+    private static (GamepadMapper Mapper, List<InputAction> Actions) Pad()
+    {
+        var mapper = new GamepadMapper(InputBindings.Defaults());
+        var actions = new List<InputAction>();
+        mapper.ActionTriggered += actions.Add;
+        return (mapper, actions);
+    }
+
+    // --- Gamepad mapping ----------------------------------------------------------------------
+
+    [Fact]
+    public void Buttons_TriggerTheirBoundActionOncePerPress()
+    {
+        var (pad, actions) = Pad();
+        pad.ButtonDown("A", T0);
+        pad.ButtonDown("A", T0); // still held: no repeat for buttons
+        pad.ButtonUp("A", T0);
+        pad.ButtonDown("X", T0);
+        Assert.Equal([InputAction.Confirm, InputAction.Fire], actions);
+    }
+
+    [Fact]
+    public void DPad_MovesAndRepeatsWhileHeld()
+    {
+        var (pad, actions) = Pad();
+        pad.ButtonDown("DPadUp", T0);
+        Assert.Equal([InputAction.MoveNorth], actions);
+
+        pad.Tick(TimeSpan.FromMilliseconds(200));                   // before the repeat delay
+        Assert.Single(actions);
+        pad.Tick(GamepadMapper.RepeatDelay);                        // first repeat
+        pad.Tick(GamepadMapper.RepeatDelay + GamepadMapper.RepeatInterval); // second
+        Assert.Equal(3, actions.Count);
+
+        pad.ButtonUp("DPadUp", TimeSpan.FromSeconds(1));
+        pad.Tick(TimeSpan.FromSeconds(5));
+        Assert.Equal(3, actions.Count);
+    }
+
+    [Fact]
+    public void TwoDPadButtons_GiveADiagonal()
+    {
+        var (pad, actions) = Pad();
+        pad.ButtonDown("DPadUp", T0);
+        pad.ButtonDown("DPadRight", T0);
+        Assert.Equal([InputAction.MoveNorth, InputAction.MoveNorthEast], actions);
+    }
+
+    [Theory]
+    [InlineData(1.0, 0.0, InputAction.MoveEast)]
+    [InlineData(0.7, 0.7, InputAction.MoveSouthEast)]
+    [InlineData(0.0, 1.0, InputAction.MoveSouth)]
+    [InlineData(-0.7, 0.7, InputAction.MoveSouthWest)]
+    [InlineData(-1.0, 0.0, InputAction.MoveWest)]
+    [InlineData(-0.7, -0.7, InputAction.MoveNorthWest)]
+    [InlineData(0.0, -1.0, InputAction.MoveNorth)]
+    [InlineData(0.7, -0.7, InputAction.MoveNorthEast)]
+    public void Stick_SnapsToEightDirections(double x, double y, InputAction expected)
+    {
+        var (pad, actions) = Pad();
+        pad.LeftStick(x, y, T0);
+        Assert.Equal([expected], actions);
+    }
+
+    [Fact]
+    public void Stick_HasADeadZone()
+    {
+        var (pad, actions) = Pad();
+        pad.LeftStick(0.3, 0.2, T0);
+        Assert.Empty(actions);
+    }
+
+    [Fact]
+    public void Triggers_PressPastTheThreshold_WithHysteresis()
+    {
+        var (pad, actions) = Pad();
+        pad.Trigger("LeftTrigger", 0.4, T0);
+        Assert.Empty(actions);
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        pad.Trigger("LeftTrigger", 0.45, T0); // not released yet (hysteresis)
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        Assert.Equal([InputAction.Throw], actions);
+        pad.Trigger("LeftTrigger", 0.0, T0);
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        Assert.Equal([InputAction.Throw, InputAction.Throw], actions);
+    }
+
+    [Fact]
+    public void CaptureNextButton_ReportsInsteadOfActing()
+    {
+        var (pad, actions) = Pad();
+        string? captured = null;
+        pad.CaptureNextButton = b => captured = b;
+        pad.ButtonDown("Y", T0);
+        Assert.Equal("Y", captured);
+        Assert.Empty(actions);
+        pad.ButtonUp("Y", T0);
+        pad.ButtonDown("Y", T0);
+        Assert.Equal([InputAction.Cast], actions);
+    }
+
+    // --- Bindings -----------------------------------------------------------------------------
+
+    [Fact]
+    public void Defaults_BindEveryActionToAKey()
+    {
+        var b = InputBindings.Defaults();
+        var unbound = Enum.GetValues<InputAction>().Where(a => a != InputAction.None && !b.KeysFor(a).Any()).ToList();
+        Assert.Empty(unbound);
+    }
+
+    [Fact]
+    public void Rebinding_TakesChordsAndButtonsOver()
+    {
+        var b = InputBindings.Defaults();
+        b.BindKey("Char:f", InputAction.Quaff);
+        Assert.Equal(InputAction.Quaff, b.ForKey("Char:f"));
+        Assert.DoesNotContain("Char:f", b.KeysFor(InputAction.Fire));
+
+        b.BindButton("Y", InputAction.Fire);   // Fire had X; a pad action keeps one button
+        Assert.Equal(["Y"], b.ButtonsFor(InputAction.Fire));
+        Assert.Equal(InputAction.None, b.ForButton("X"));
+    }
+
+    [Fact]
+    public void Bindings_SaveAndLoad()
+    {
+        var path = Path.Combine(Directory.CreateTempSubdirectory("avaband-bind-").FullName, "bindings.json");
+        var b = InputBindings.Defaults();
+        b.BindKey("F2", InputAction.Rest);
+        b.Save(path);
+
+        var loaded = InputBindings.Load(path);
+        Assert.Equal(InputAction.Rest, loaded.ForKey("F2"));
+        Assert.Equal(b.Keys.Count, loaded.Keys.Count);
+        Assert.Equal(InputAction.Confirm, loaded.ForButton("A"));
+    }
+
+    [Fact]
+    public void Sdl_StartsOrDeclinesGracefully()
+    {
+        using var pad = SdlGamepadProvider.TryCreate(InputBindings.Defaults());
+        if (pad is null) return; // no SDL on this machine: gamepads are simply unavailable
+        pad.Poll();
+        Assert.False(string.IsNullOrEmpty(pad.Status));
+    }
+
+    // --- Travel (mouse clicks) ------------------------------------------------------------------
+
+    private static readonly string[] Maze =
+    [
+        "############",
+        "#@.......#.#",
+        "########.#.#",
+        "#........+.#",
+        "############",
+    ];
+
+    private static GameSession Known(params string[] rows)
+    {
+        var game = Arena.Create(1, rows);
+        game.Known.RememberAll(game.Level);
+        return game;
+    }
+
+    [Fact]
+    public void Travel_FollowsKnownCorridors_AndOpensDoors()
+    {
+        var game = Known(Maze);
+        Assert.True(game.Execute(new TravelCommand(new Loc(10, 1))));
+        Assert.Equal(new Loc(10, 1), game.Player.Position);
+        Assert.True(game.Level.Has(new Loc(9, 3), TerrainFlags.Passable)); // the door was opened on the way
+    }
+
+    [Fact]
+    public void Travel_NeedsAKnownRoute()
+    {
+        var game = Arena.Create(1, Maze); // nothing remembered beyond what's in view
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        Assert.False(game.Execute(new TravelCommand(new Loc(10, 3))));
+        Assert.Contains("You don't know a way there.", messages);
+    }
+
+    [Fact]
+    public void Travel_StopsWhenAMonsterAppears()
+    {
+        var game = Known(Maze);
+        Arena.AddMonster(game, "grey_mold", new Loc(7, 3)).Hp = 10_000; // lit by the torch as the player passes
+        game.Execute(new TravelCommand(new Loc(10, 1)));
+        Assert.NotEqual(new Loc(10, 1), game.Player.Position);
+    }
+
+    [Fact]
+    public void Travel_AvoidsVisibleTraps()
+    {
+        var game = Known(
+            "#######",
+            "#@....#",
+            "#.....#",
+            "#######");
+        game.Level[new Loc(2, 1)].Trap = 1;
+        game.Level[new Loc(2, 1)].Flags |= Angband.Core.World.SquareFlags.TrapVisible;
+        var path = game.FindPath(game.Player.Position, new Loc(5, 1))!;
+        Assert.DoesNotContain(new Loc(2, 1), path);
+        Assert.Equal(new Loc(5, 1), path[^1]);
+    }
+
+    [Fact]
+    public void Saved_bindings_gain_new_actions_without_losing_changes()
+    {
+        var path = Path.Combine(Path.GetTempPath(), "avaband-bindings-" + Guid.NewGuid() + ".json");
+        try
+        {
+            var old = InputBindings.Defaults();
+            foreach (var key in old.KeysFor(InputAction.SaveGame).ToList()) old.Keys.Remove(key);
+            old.Keys.Remove("Ctrl+H");
+            old.Keys["Ctrl+H"] = InputAction.Rest; // the player's own choice
+            old.Save(path);
+
+            var loaded = InputBindings.Load(path);
+            Assert.Equal(InputAction.SaveGame, loaded.Keys["Ctrl+S"]);
+            Assert.Equal(InputAction.Rest, loaded.Keys["Ctrl+H"]);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+}

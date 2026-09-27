@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Angband.Avalonia</RootNamespace>
+    <AssemblyName>AVABand</AssemblyName>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Bundled tilesets ship as loose files so players can add or edit their own. -->
+    <Content Include="tilesets\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="soundpacks\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Angband.Core\Angband.Core.csproj" />
+    <ProjectReference Include="..\Angband.Data\Angband.Data.csproj" />
+    <ProjectReference Include="..\Angband.Audio\Angband.Audio.csproj" />
+    <ProjectReference Include="..\Angband.Input\Angband.Input.csproj" />
+  </ItemGroup>
+</Project>

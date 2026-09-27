@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Pure game engine: no UI, no file-format dependencies beyond the BCL. -->
+  <PropertyGroup>
+    <RootNamespace>Angband.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Angband.Tests" />
+  </ItemGroup>
+</Project>

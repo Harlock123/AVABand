@@ -1,0 +1,17 @@
+{
+  "maxDepth": 127,
+  "feetPerLevel": 50,
+  "connectedStairs": true,
+  "maxSight": 20,
+  "dayLength": 10000,
+  "birthPoints": 20,
+  "startGold": 200,
+  "foodUpper": 20000,
+  "foodMax": 15000,
+  "foodFull": 10000,
+  "foodHungry": 2000,
+  "foodWeak": 1000,
+  "foodFaint": 500,
+  "foodStarve": 100,
+  "digestInterval": 100
+}

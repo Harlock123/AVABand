@@ -1,0 +1,9 @@
+Adam Bolt's 16x16 tiles, from Angband 4.2 (lib/tiles/adam-bolt/16x16.png).
+https://github.com/angband/angband/tree/master/lib/tiles/adam-bolt
+
+Licence (from Angband's docs/copying.rst):
+  "Adam Bolt's (16x16) graphics may be redistributed and used for any purpose,
+   with or without modification."
+
+tileset.json was generated from Angband's graf-new.prf and xtra-new.prf by
+tools/angband_prf_to_tileset.py.

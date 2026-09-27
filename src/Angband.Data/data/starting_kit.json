@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "wooden_torch",
+    "equip": true
+  },
+  {
+    "kind": "wooden_torch",
+    "count": 2
+  },
+  {
+    "kind": "cure_light_wounds",
+    "count": 2
+  },
+  {
+    "kind": "phase_door",
+    "count": 2
+  },
+  {
+    "kind": "ration_of_food",
+    "count": 3
+  },
+  {
+    "kind": "flask_of_oil",
+    "count": 2
+  }
+]

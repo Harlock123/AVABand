@@ -1,0 +1,70 @@
+[
+  {
+    "id": "town",
+    "name": "Town",
+    "generator": "town",
+    "minDepth": 0,
+    "maxDepth": 0
+  },
+  {
+    "id": "classic",
+    "name": "Classic",
+    "generator": "classic",
+    "minDepth": 1,
+    "weight": 80,
+    "rooms": [
+      { "type": "simple", "weight": 40 },
+      { "type": "overlap", "weight": 16 },
+      { "type": "crossed", "weight": 12 },
+      { "type": "large", "weight": 10, "minDepth": 3 },
+      { "type": "circular", "weight": 8, "minDepth": 5 },
+      { "type": "template", "weight": 10 },
+      { "type": "nest", "weight": 3, "minDepth": 11, "maxCount": 1 },
+      { "type": "pit", "weight": 3, "minDepth": 13, "maxCount": 1 },
+      { "type": "lesser_vault", "weight": 3, "minDepth": 8, "maxCount": 1 },
+      { "type": "medium_vault", "weight": 2, "minDepth": 20, "maxCount": 1 },
+      { "type": "greater_vault", "weight": 1, "minDepth": 40, "maxCount": 1 }
+    ]
+  },
+  {
+    "id": "fortress",
+    "name": "Fortress",
+    "generator": "classic",
+    "minDepth": 30,
+    "weight": 15,
+    "roomAttempts": 60,
+    "roomLightDepth": 10,
+    "tunnel": { "random": 20, "change": 50, "continue": 25, "pierceDoor": 60, "junctionDoor": 95 },
+    "doors": { "openWeight": 10, "brokenWeight": 5, "secretWeight": 35, "closedWeight": 50, "lockedChance": 50, "maxLockPower": 12 },
+    "streamers": { "magmaCount": 1, "quartzCount": 1 },
+    "rooms": [
+      { "type": "simple", "weight": 10 },
+      { "type": "crossed", "weight": 10 },
+      { "type": "large", "weight": 25 },
+      { "type": "template", "weight": 15 },
+      { "type": "nest", "weight": 6, "maxCount": 2 },
+      { "type": "pit", "weight": 6, "maxCount": 2 },
+      { "type": "lesser_vault", "weight": 8, "maxCount": 2 },
+      { "type": "medium_vault", "weight": 6, "maxCount": 2 },
+      { "type": "greater_vault", "weight": 3, "minDepth": 40, "maxCount": 1 }
+    ]
+  },
+  {
+    "id": "cavern",
+    "name": "Cavern",
+    "generator": "cavern",
+    "minDepth": 15,
+    "weight": 10,
+    "allocation": { "upStairs": "1d3", "downStairs": "1d3+1", "rubble": "1d8" },
+    "cavern": { "fillPercent": 44, "smoothingPasses": 5, "minPocketSize": 20, "minOpenPercent": 20 }
+  },
+  {
+    "id": "labyrinth",
+    "name": "Labyrinth",
+    "generator": "labyrinth",
+    "minDepth": 5,
+    "weight": 6,
+    "allocation": { "upStairs": "1", "downStairs": "1d2", "rubble": "1d2", "trapBase": 2 },
+    "labyrinth": { "baseHeight": 15, "baseWidth": 51, "growthDepth": 15, "doorChance": 10 }
+  }
+]

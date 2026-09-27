@@ -1,0 +1,106 @@
+# Every push: build and test, then publish AVABand as a self-contained single-file program for
+# every platform Avalonia and .NET support. The builds are attached to the workflow run; pushes to
+# main also refresh the "latest" pre-release, and a v* tag (e.g. v0.1.0) makes a proper release.
+name: Build
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build
+        run: dotnet build AVABand.sln -c Release -warnaserror
+      - name: Test
+        run: dotnet test AVABand.sln -c Release --no-build
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rid:
+          - win-x64
+          - win-x86
+          - win-arm64
+          - linux-x64
+          - linux-arm64
+          - linux-arm
+          - linux-musl-x64
+          - linux-musl-arm64
+          - osx-x64
+          - osx-arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Publish ${{ matrix.rid }}
+        run: >
+          dotnet publish src/Angband.Avalonia/Angband.Avalonia.csproj
+          -c Release -r ${{ matrix.rid }} --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:IncludeAllContentForSelfExtract=true
+          -p:EnableCompressionInSingleFile=true
+          -p:DebugType=none
+          -o publish/${{ matrix.rid }}
+      - name: Package
+        # Windows gets a zip; everything else a tar.gz, which keeps the executable bit.
+        run: |
+          mkdir -p artifacts
+          cp LICENSE THIRD-PARTY-NOTICES.md README.md publish/${{ matrix.rid }}/
+          name="AVABand-${{ matrix.rid }}"
+          cd publish/${{ matrix.rid }}
+          if [[ "${{ matrix.rid }}" == win-* ]]; then
+            zip -9 -r "../../artifacts/$name.zip" .
+          else
+            chmod +x AVABand
+            tar -czf "../../artifacts/$name.tar.gz" .
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AVABand-${{ matrix.rid }}
+          path: artifacts/*
+          if-no-files-found: error
+
+  release:
+    needs: publish
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            gh release create "$GITHUB_REF_NAME" artifacts/* --title "AVABand $GITHUB_REF_NAME" --generate-notes
+          else
+            # A rolling pre-release of the newest main build.
+            gh release delete latest --yes --cleanup-tag || true
+            gh release create latest artifacts/* --prerelease --target "$GITHUB_SHA" \
+              --title "Latest build (main)" \
+              --notes "Built automatically from ${GITHUB_SHA::7} on main. Unzip or untar and run AVABand (AVABand.exe on Windows)."
+          fi

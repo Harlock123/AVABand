@@ -1,0 +1,292 @@
+[
+  {
+    "id": "sword",
+    "name": "Sword",
+    "glyph": "|",
+    "color": "White",
+    "slot": "weapon",
+    "breakChance": 10
+  },
+  {
+    "id": "hafted",
+    "name": "Hafted Weapon",
+    "glyph": "\\",
+    "color": "White",
+    "slot": "weapon",
+    "breakChance": 10
+  },
+  {
+    "id": "polearm",
+    "name": "Polearm",
+    "glyph": "/",
+    "color": "White",
+    "slot": "weapon",
+    "breakChance": 10
+  },
+  {
+    "id": "digger",
+    "name": "Digger",
+    "glyph": "\\",
+    "color": "Slate",
+    "slot": "weapon",
+    "breakChance": 0,
+    "maxStack": 1
+  },
+  {
+    "id": "sling",
+    "name": "Sling",
+    "glyph": "}",
+    "color": "Umber",
+    "slot": "bow",
+    "ammoClass": "shot"
+  },
+  {
+    "id": "bow",
+    "name": "Bow",
+    "glyph": "}",
+    "color": "Umber",
+    "slot": "bow",
+    "ammoClass": "arrow"
+  },
+  {
+    "id": "crossbow",
+    "name": "Crossbow",
+    "glyph": "}",
+    "color": "Slate",
+    "slot": "bow",
+    "ammoClass": "bolt"
+  },
+  {
+    "id": "shot",
+    "name": "Shot",
+    "glyph": "{",
+    "color": "Slate",
+    "isAmmo": true,
+    "ammoClass": "shot",
+    "breakChance": 25
+  },
+  {
+    "id": "arrow",
+    "name": "Arrow",
+    "glyph": "{",
+    "color": "LightUmber",
+    "isAmmo": true,
+    "ammoClass": "arrow",
+    "breakChance": 35
+  },
+  {
+    "id": "bolt",
+    "name": "Bolt",
+    "glyph": "{",
+    "color": "Slate",
+    "isAmmo": true,
+    "ammoClass": "bolt",
+    "breakChance": 25
+  },
+  {
+    "id": "soft_armour",
+    "name": "Soft Armour",
+    "glyph": "(",
+    "color": "Slate",
+    "slot": "body",
+    "maxStack": 1
+  },
+  {
+    "id": "hard_armour",
+    "name": "Hard Armour",
+    "glyph": "[",
+    "color": "Slate",
+    "slot": "body",
+    "maxStack": 1
+  },
+  {
+    "id": "shield",
+    "name": "Shield",
+    "glyph": ")",
+    "color": "Umber",
+    "slot": "shield",
+    "maxStack": 1
+  },
+  {
+    "id": "helm",
+    "name": "Helm",
+    "glyph": "]",
+    "color": "Umber",
+    "slot": "head",
+    "maxStack": 1
+  },
+  {
+    "id": "gloves",
+    "name": "Gloves",
+    "glyph": "]",
+    "color": "Umber",
+    "slot": "hands",
+    "maxStack": 1
+  },
+  {
+    "id": "boots",
+    "name": "Boots",
+    "glyph": "]",
+    "color": "Umber",
+    "slot": "feet",
+    "maxStack": 1
+  },
+  {
+    "id": "cloak",
+    "name": "Cloak",
+    "glyph": "(",
+    "color": "Green",
+    "slot": "cloak",
+    "maxStack": 1
+  },
+  {
+    "id": "light",
+    "name": "Light Source",
+    "glyph": "~",
+    "color": "Yellow",
+    "slot": "light",
+    "breakChance": 50
+  },
+  {
+    "id": "amulet",
+    "name": "Amulet~",
+    "glyph": "\"",
+    "color": "Orange",
+    "slot": "amulet",
+    "flavor": "amulet"
+  },
+  {
+    "id": "ring",
+    "name": "Ring~",
+    "glyph": "=",
+    "color": "Red",
+    "slot": "ring",
+    "flavor": "ring"
+  },
+  {
+    "id": "magic_book",
+    "name": "Magic Book~",
+    "glyph": "?",
+    "color": "Red",
+    "breakChance": 50
+  },
+  {
+    "id": "prayer_book",
+    "name": "Holy Book~",
+    "glyph": "?",
+    "color": "LightGreen",
+    "breakChance": 50
+  },
+  {
+    "id": "nature_book",
+    "name": "Nature Book~",
+    "glyph": "?",
+    "color": "Green",
+    "breakChance": 50
+  },
+  {
+    "id": "shadow_book",
+    "name": "Necromantic Tome~",
+    "glyph": "?",
+    "color": "Violet",
+    "breakChance": 50
+  },
+  {
+    "id": "potion",
+    "name": "Potion~",
+    "glyph": "!",
+    "color": "LightBlue",
+    "flavor": "potion",
+    "breakChance": 100
+  },
+  {
+    "id": "scroll",
+    "name": "Scroll~",
+    "glyph": "?",
+    "color": "White",
+    "flavor": "scroll",
+    "breakChance": 50
+  },
+  {
+    "id": "food",
+    "name": "Food",
+    "glyph": ",",
+    "color": "LightUmber",
+    "breakChance": 100
+  },
+  {
+    "id": "flask",
+    "name": "Flask",
+    "glyph": "!",
+    "color": "Yellow",
+    "breakChance": 100
+  },
+  {
+    "id": "crown",
+    "name": "Crown",
+    "glyph": "]",
+    "color": "Yellow",
+    "slot": "head",
+    "breakChance": 0,
+    "maxStack": 1
+  },
+  {
+    "id": "dragon_armour",
+    "name": "Dragon Scale Mail",
+    "glyph": "[",
+    "color": "LightGreen",
+    "slot": "body",
+    "breakChance": 0,
+    "maxStack": 1
+  },
+  {
+    "id": "mushroom",
+    "name": "Mushroom",
+    "glyph": ",",
+    "color": "LightUmber",
+    "flavor": "mushroom",
+    "breakChance": 100
+  },
+  {
+    "id": "wand",
+    "name": "Wand",
+    "glyph": "-",
+    "color": "LightSlate",
+    "flavor": "wand",
+    "breakChance": 25,
+    "maxStack": 1
+  },
+  {
+    "id": "staff",
+    "name": "Staff",
+    "glyph": "_",
+    "color": "LightUmber",
+    "flavor": "staff",
+    "breakChance": 10,
+    "maxStack": 1
+  },
+  {
+    "id": "rod",
+    "name": "Rod",
+    "glyph": "-",
+    "color": "Slate",
+    "flavor": "rod",
+    "breakChance": 15,
+    "maxStack": 1
+  },
+  {
+    "id": "chest",
+    "name": "Chest",
+    "glyph": "~",
+    "color": "Slate",
+    "breakChance": 0,
+    "maxStack": 1
+  },
+  {
+    "id": "gold",
+    "name": "Gold",
+    "glyph": "$",
+    "color": "Yellow",
+    "maxStack": 1
+  }
+]

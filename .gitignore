@@ -1,0 +1,10 @@
+bin/
+obj/
+.idea/
+.vs/
+*.user
+TestResults/
+__pycache__/
+*.pyc
+publish/
+artifacts/

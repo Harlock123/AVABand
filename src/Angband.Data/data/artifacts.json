@@ -1,0 +1,4248 @@
+[
+  {
+    "id": "galadriel",
+    "name": "of Galadriel",
+    "kind": "phial",
+    "level": 5,
+    "rarity": 5,
+    "modifiers": {
+      "light": 3
+    },
+    "resists": [
+      "light"
+    ],
+    "description": "A small crystal phial containing the light of Earendil's star.",
+    "activation": "light_area",
+    "activationText": "lights up the surrounding area",
+    "recharge": "10+d10",
+    "activationPower": 4
+  },
+  {
+    "id": "narthanc",
+    "name": "'Narthanc'",
+    "kind": "dagger",
+    "level": 10,
+    "rarity": 10,
+    "toHit": 4,
+    "toDam": 6,
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire"
+    ],
+    "description": "An ornate dagger, wreathed in flames.",
+    "activation": "bolt:fire:9d8",
+    "activationText": "fires a fire bolt (9d8)",
+    "recharge": "8+d8",
+    "activationPower": 5
+  },
+  {
+    "id": "nimthanc",
+    "name": "'Nimthanc'",
+    "kind": "dagger",
+    "level": 10,
+    "rarity": 10,
+    "toHit": 4,
+    "toDam": 6,
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold"
+    ],
+    "description": "A dagger of frosty steel.",
+    "activation": "bolt:cold:6d8",
+    "activationText": "fires a frost bolt (6d8)",
+    "recharge": "7+d7",
+    "activationPower": 4
+  },
+  {
+    "id": "dethanc",
+    "name": "'Dethanc'",
+    "kind": "dagger",
+    "level": 12,
+    "rarity": 12,
+    "toHit": 4,
+    "toDam": 6,
+    "brands": [
+      {
+        "element": "elec",
+        "multiplier": 3,
+        "verb": "shock",
+        "name": "lightning"
+      }
+    ],
+    "resists": [
+      "elec"
+    ],
+    "description": "A dagger that crackles with sparks.",
+    "activation": "beam:elec:6d6",
+    "activationText": "fires a beam of lightning (6d6)",
+    "recharge": "6+d6",
+    "activationPower": 5
+  },
+  {
+    "id": "sting",
+    "name": "'Sting'",
+    "kind": "short_sword",
+    "level": 20,
+    "rarity": 15,
+    "toHit": 7,
+    "toDam": 8,
+    "modifiers": {
+      "light": 1,
+      "speed": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "description": "An elvish blade that glows blue when orcs are near."
+  },
+  {
+    "id": "hithlomir",
+    "name": "'Hithlomir'",
+    "kind": "soft_leather_armour",
+    "level": 20,
+    "rarity": 15,
+    "toAc": 20,
+    "modifiers": {
+      "stealth": 4
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "dark"
+    ],
+    "description": "Soft armour woven from shadow."
+  },
+  {
+    "id": "belthronding",
+    "name": "'Belthronding'",
+    "kind": "long_bow",
+    "level": 20,
+    "rarity": 15,
+    "toHit": 20,
+    "toDam": 22,
+    "modifiers": {
+      "speed": 1,
+      "shots": 10
+    },
+    "description": "The black yew bow of Beleg Cuthalion."
+  },
+  {
+    "id": "of_elendil",
+    "name": "of Elendil",
+    "kind": "star",
+    "level": 30,
+    "rarity": 25,
+    "modifiers": {
+      "light": 4
+    },
+    "resists": [
+      "see_invis"
+    ],
+    "activation": "map_area:30",
+    "activationText": "maps the area around you",
+    "recharge": "50+d50",
+    "description": "The shining Star of the North, a treasured heirloom of Elendil's house.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_thrain",
+    "name": "of Thráin",
+    "kind": "arkenstone",
+    "level": 50,
+    "rarity": 50,
+    "modifiers": {
+      "light": 4
+    },
+    "resists": [
+      "light",
+      "dark",
+      "see_invis"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "activation": "enlightenment",
+    "activationText": "lights and maps the entire level, sensing objects",
+    "recharge": "50+d50",
+    "description": "A great globe seemingly filled with moonlight, the famed Heart of the Mountain. It splinters the light that falls upon it into ten thousand sparks of white radiance shot with glints of the rainbow.",
+    "activationPower": 22
+  },
+  {
+    "id": "angrist",
+    "name": "'Angrist'",
+    "kind": "dagger",
+    "level": 60,
+    "rarity": 50,
+    "damage": "2d7",
+    "toHit": 18,
+    "toDam": 16,
+    "toAc": 5,
+    "modifiers": {
+      "dex": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "acid",
+        "multiplier": 3,
+        "verb": "dissolve",
+        "name": "acid"
+      }
+    ],
+    "resists": [
+      "acid",
+      "dark",
+      "free_act",
+      "sust_dex"
+    ],
+    "description": "Forged by Telchar, greatest of Dwarven smiths, and used by Beren to gouge a Silmaril out of Morgoth's crown, this long chopping dagger slices through ordinary metal as easily as its name, \"Iron Cleaver\", suggests."
+  },
+  {
+    "id": "of_rilia",
+    "name": "of Rilia",
+    "kind": "dagger",
+    "level": 5,
+    "rarity": 20,
+    "damage": "2d4",
+    "toHit": 14,
+    "toDam": 13,
+    "slays": [
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "resists": [
+      "pois",
+      "disen"
+    ],
+    "activation": "ball:pois:12:3",
+    "activationText": "fires a ball of poison (12)",
+    "recharge": "4+d4",
+    "description": "A large stiletto dagger that glistens with odorless poison, to which the wearer seems oddly immune.",
+    "activationPower": 3
+  },
+  {
+    "id": "belangil",
+    "name": "'Belangil'",
+    "kind": "dagger",
+    "level": 10,
+    "rarity": 50,
+    "damage": "3d4",
+    "toHit": 16,
+    "toDam": 14,
+    "modifiers": {
+      "dex": 2
+    },
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "see_invis"
+    ],
+    "flags": [
+      "SLOW_DIGEST",
+      "REGEN"
+    ],
+    "activation": "ball:cold:50:2",
+    "activationText": "fires a ball of frost (50)",
+    "recharge": "5+d5",
+    "description": "A frosty dagger wreathed in a nimbus of ice with a hilt of elk horn and an edge to wound the wind.",
+    "activationPower": 8
+  },
+  {
+    "id": "of_azaghal",
+    "name": "of Azaghâl",
+    "kind": "main_gauche",
+    "level": 18,
+    "rarity": 33,
+    "damage": "2d5",
+    "toHit": 12,
+    "toDam": 14,
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      }
+    ],
+    "resists": [
+      "fire",
+      "acid",
+      "fear"
+    ],
+    "description": "Azaghâl, Dwarf-king of Belegost, fell before Glaurung in the Battle of Unnumbered Tears. With his final breath, Azaghâl plunged this blade into Glaurung's belly with such a blow that the Father of Dragons fled the field with all his kin, and was at first believed to be mortally wounded."
+  },
+  {
+    "id": "of_maedhros",
+    "name": "of Maedhros",
+    "kind": "main_gauche",
+    "level": 15,
+    "rarity": 33,
+    "damage": "2d6",
+    "toHit": 12,
+    "toDam": 15,
+    "modifiers": {
+      "int": 3,
+      "dex": 3
+    },
+    "slays": [
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      }
+    ],
+    "resists": [
+      "free_act",
+      "see_invis"
+    ],
+    "description": "A short thrusting blade with a large guard worn by the eldest son of Fëanor, Maedhros the Tall, who lost his right hand while escaping from Angband."
+  },
+  {
+    "id": "forasgil",
+    "name": "'Forasgil'",
+    "kind": "rapier",
+    "level": 5,
+    "rarity": 3,
+    "damage": "1d12",
+    "toHit": 12,
+    "toDam": 19,
+    "modifiers": {
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "light"
+    ],
+    "description": "A slender, tapered needle of ice that coldly grips its impaled prey."
+  },
+  {
+    "id": "careth_asdriag",
+    "name": "'Careth Asdriag'",
+    "kind": "rapier",
+    "level": 15,
+    "rarity": 10,
+    "damage": "2d6",
+    "toHit": 16,
+    "toDam": 12,
+    "modifiers": {
+      "blows": 1,
+      "str": 2,
+      "dex": 2,
+      "con": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "description": "An heirloom of the dauntless Lords of Rhûn far to the east, and a name of dismay to creatures natural and unnatural."
+  },
+  {
+    "id": "dagmor",
+    "name": "'Dagmor'",
+    "kind": "short_sword",
+    "level": 20,
+    "rarity": 8,
+    "damage": "1d7",
+    "toHit": 13,
+    "toDam": 11,
+    "modifiers": {
+      "blows": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "flags": [
+      "SLOW_DIGEST",
+      "REGEN"
+    ],
+    "description": "A stubby blade worn by Beren, whose horn sounded of old in the glades of Brethil."
+  },
+  {
+    "id": "gondricam",
+    "name": "'Gondricam'",
+    "kind": "cutlass",
+    "level": 20,
+    "rarity": 8,
+    "damage": "1d8",
+    "toHit": 10,
+    "toDam": 11,
+    "toAc": 50,
+    "modifiers": {
+      "dex": 4,
+      "stealth": 2
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "see_invis",
+      "free_act"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "description": "Famed sea-defender of Lebennin. A short, slightly curved chopping blade with a perfect edge shining cleanly in the sun, an object of hate to the men of Umbar who met it in combat."
+  },
+  {
+    "id": "haradekket",
+    "name": "'Haradekket'",
+    "kind": "scimitar",
+    "level": 20,
+    "rarity": 14,
+    "damage": "4d2",
+    "toHit": 9,
+    "toDam": 11,
+    "modifiers": {
+      "dex": 2,
+      "blows": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "resists": [
+      "see_invis"
+    ],
+    "description": "A damascened scimitar that hefts with wondrous ease. Famed in song as the \"Sickle of Harad\", and a deadly foe to the undead."
+  },
+  {
+    "id": "ringil",
+    "name": "'Ringil'",
+    "kind": "long_sword",
+    "level": 20,
+    "rarity": 100,
+    "damage": "4d5",
+    "toHit": 22,
+    "toDam": 25,
+    "modifiers": {
+      "speed": 10,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "light",
+      "fear",
+      "free_act",
+      "see_invis"
+    ],
+    "flags": [
+      "SLOW_DIGEST",
+      "REGEN"
+    ],
+    "activation": "ball:cold:100:2",
+    "activationText": "fires a ball of frost (100)",
+    "recharge": "40",
+    "description": "The weapon of Fingolfin, High King of the Noldor; it shines like a column of ice lit by light unquenchable. Morgoth came but unwillingly to meet it of old; his lame foot will remind him of its might should he face it again.",
+    "activationPower": 10
+  },
+  {
+    "id": "anduril",
+    "name": "'Andúril'",
+    "kind": "long_sword",
+    "level": 20,
+    "rarity": 33,
+    "damage": "3d5",
+    "toHit": 10,
+    "toDam": 15,
+    "toAc": 10,
+    "modifiers": {
+      "str": 4,
+      "dex": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "disen",
+      "fear",
+      "free_act",
+      "sust_str",
+      "sust_dex",
+      "see_invis"
+    ],
+    "activation": "ball:fire:72:2",
+    "activationText": "fires a ball of fire (72)",
+    "recharge": "40",
+    "description": "The famed \"Flame of the West\", the Sword that was Broken and is forged again. It glows with the essence of fire, its wearer is mighty in combat, and no creature of Sauron can withstand it.",
+    "activationPower": 9
+  },
+  {
+    "id": "anguirel",
+    "name": "'Anguirel'",
+    "kind": "long_sword",
+    "level": 20,
+    "rarity": 33,
+    "damage": "2d5",
+    "toHit": 10,
+    "toDam": 12,
+    "modifiers": {
+      "speed": 3,
+      "str": 2,
+      "con": 2,
+      "blows": 1,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "resists": [
+      "elec",
+      "light",
+      "dark",
+      "free_act",
+      "see_invis"
+    ],
+    "description": "This black blade was forged of meteoric iron by Eöl the Dark Elf. It is imbued with the malice of its maker; as dangerous to its wielder as it is deadly to his foes."
+  },
+  {
+    "id": "elvagil",
+    "name": "'Elvagil'",
+    "kind": "long_sword",
+    "level": 10,
+    "rarity": 2,
+    "damage": "2d5",
+    "toHit": 12,
+    "toDam": 12,
+    "modifiers": {
+      "dex": 2,
+      "stealth": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "see_invis"
+    ],
+    "description": "The \"Singing Blade\", whose wearer can slay Orcs and Trolls in the hidden and secret places of the earth."
+  },
+  {
+    "id": "aranruth",
+    "name": "'Aranrúth'",
+    "kind": "broad_sword",
+    "level": 20,
+    "rarity": 50,
+    "damage": "3d5",
+    "toHit": 20,
+    "toDam": 12,
+    "modifiers": {
+      "dex": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "cold",
+      "free_act"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "activation": "bolt:cold:12d8",
+    "activationText": "fires a frost bolt (12d8)",
+    "recharge": "50",
+    "description": "The beautiful sword of Thingol, justly named \"King's Ire\". It glistens icy enough to freeze the hearts of demons, and you feel supple and lightfooted as you clasp its hilt of gold and silver inlay.",
+    "activationPower": 7
+  },
+  {
+    "id": "glamdring",
+    "name": "'Glamdring'",
+    "kind": "broad_sword",
+    "level": 20,
+    "rarity": 20,
+    "damage": "2d5",
+    "toHit": 10,
+    "toDam": 15,
+    "modifiers": {
+      "search": 1,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "light"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "description": "This fiery, shining blade, mate to Orcrist, earned its sobriquet \"Beater\" from dying orcs who dared to behold hidden Gondolin."
+  },
+  {
+    "id": "aeglin",
+    "name": "'Aeglin'",
+    "kind": "broad_sword",
+    "level": 20,
+    "rarity": 33,
+    "damage": "2d5",
+    "toHit": 12,
+    "toDam": 16,
+    "modifiers": {
+      "search": 1,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      }
+    ],
+    "brands": [
+      {
+        "element": "elec",
+        "multiplier": 3,
+        "verb": "shock",
+        "name": "lightning"
+      }
+    ],
+    "resists": [
+      "elec",
+      "blind"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "description": "Companion to Orcrist and Glamdring, and like them long lost, this sword is continually covered in tiny arcs of captive lightning that flash and dance eerily in the globes of light they create."
+  },
+  {
+    "id": "orcrist",
+    "name": "'Orcrist'",
+    "kind": "broad_sword",
+    "level": 20,
+    "rarity": 20,
+    "damage": "2d5",
+    "toHit": 10,
+    "toDam": 15,
+    "modifiers": {
+      "search": 1,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "dark"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "description": "This coldly gleaming blade, mate to Glamdring, is called simply \"Biter\" by orcs who came to know its power all too well."
+  },
+  {
+    "id": "calris",
+    "name": "'Calris'",
+    "kind": "bastard_sword",
+    "level": 30,
+    "rarity": 14,
+    "damage": "3d7",
+    "toDam": 20,
+    "modifiers": {
+      "con": 5
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      }
+    ],
+    "resists": [
+      "disen"
+    ],
+    "description": "This sword has runes of power incused on its ornate hilt, and a single blood channel that gleams coldly blue as you grasp this mighty weapon of peril."
+  },
+  {
+    "id": "of_eowyn",
+    "name": "of Éowyn",
+    "kind": "bastard_sword",
+    "level": 30,
+    "rarity": 33,
+    "damage": "4d4",
+    "toHit": 12,
+    "toDam": 16,
+    "modifiers": {
+      "str": 4,
+      "stealth": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      }
+    ],
+    "resists": [
+      "nether",
+      "dark",
+      "cold",
+      "fear"
+    ],
+    "description": "The blade of the legendary Shieldmaiden of Rohan, who slew the foul steed of the Morgul-lord before striking down the mighty Witch-king himself, whom no mortal man could hinder."
+  },
+  {
+    "id": "aglarang",
+    "name": "'Aglarang'",
+    "kind": "katana",
+    "level": 30,
+    "rarity": 25,
+    "damage": "6d6",
+    "toHit": 10,
+    "toDam": 10,
+    "modifiers": {
+      "speed": 5,
+      "dex": 5,
+      "blows": 1
+    },
+    "resists": [
+      "sust_dex"
+    ],
+    "description": "An utterly perfect, cleanly chiseled sword, with an edge that effortlessly slices rock and bone, and spells to render the wearer lithe and nimble. It is combat incarnate."
+  },
+  {
+    "id": "gurthang",
+    "name": "'Gurthang'",
+    "kind": "zweihander",
+    "level": 30,
+    "rarity": 33,
+    "damage": "3d6",
+    "toHit": 13,
+    "toDam": 17,
+    "modifiers": {
+      "str": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      },
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "pois",
+      "free_act"
+    ],
+    "flags": [
+      "SLOW_DIGEST",
+      "REGEN"
+    ],
+    "description": "A giant sword once wielded by mighty Túrin, and an even greater dragonbane; for what worm could stand against the blade that bathed in Glaurung's blood?"
+  },
+  {
+    "id": "zarcuthra",
+    "name": "'Zarcuthra'",
+    "kind": "zweihander",
+    "level": 30,
+    "rarity": 100,
+    "damage": "3d8",
+    "toHit": 19,
+    "toDam": 21,
+    "modifiers": {
+      "str": 4,
+      "infra": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "chaos",
+      "free_act",
+      "see_invis"
+    ],
+    "description": "Runes dark and deadly stand stark against the naked steel of this awesome weapon, and you feel a wrathful power of slaying and rending as you slowly approach."
+  },
+  {
+    "id": "mormegil",
+    "name": "'Mormegil'",
+    "kind": "zweihander",
+    "level": 30,
+    "rarity": 14,
+    "damage": "3d6",
+    "toHit": -15,
+    "toDam": -15,
+    "toAc": -10,
+    "modifiers": {
+      "speed": -10
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "resists": [
+      "see_invis"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "description": "A foul, twisted sword with blackened spines and knobs, its very name is a curse upon the lips of Elves and Men. It is said that it will drink the very lifeblood of its wielder."
+  },
+  {
+    "id": "crisdurian",
+    "name": "'Crisdurian'",
+    "kind": "executioners_sword",
+    "level": 40,
+    "rarity": 25,
+    "damage": "4d6",
+    "toHit": 18,
+    "toDam": 19,
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "see_invis"
+    ],
+    "description": "A giant's weapon, with a long blade tall and straight thrusting out from a massive double-pronged hilt. On its blade are written doomspells against both the living and undead."
+  },
+  {
+    "id": "doomcaller",
+    "name": "'Doomcaller'",
+    "kind": "blade_of_chaos",
+    "level": 70,
+    "rarity": 25,
+    "damage": "4d7",
+    "toHit": 18,
+    "toDam": 28,
+    "toAc": -50,
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "chaos",
+      "free_act",
+      "see_invis"
+    ],
+    "flags": [
+      "TELEPATHY"
+    ],
+    "description": "This weapon of wrath, wrought by a desperate berserker gang, dives hungrily into the yielding flesh of your enemies. You yourself fall under the shadow of death even as you inflict wounds that will not heal."
+  },
+  {
+    "id": "of_gothmog",
+    "name": "of Gothmog",
+    "kind": "whip",
+    "level": 60,
+    "rarity": 25,
+    "damage": "6d3",
+    "toHit": 13,
+    "toDam": 15,
+    "modifiers": {
+      "str": 3,
+      "int": -3,
+      "dex": -3,
+      "wis": -3,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "elec",
+      "dark"
+    ],
+    "activation": "ball:fire:144:2",
+    "activationText": "fires a ball of fire (144)",
+    "recharge": "15",
+    "description": "A great crackling Balrog's whip of flame, this weapon could bring even Ungoliant to heel.",
+    "activationPower": 11
+  },
+  {
+    "id": "of_fundin_bluecloak",
+    "name": "of Fundin Bluecloak",
+    "kind": "ball_and_chain",
+    "level": 65,
+    "rarity": 50,
+    "damage": "4d4",
+    "toHit": 13,
+    "toDam": 17,
+    "toAc": 10,
+    "modifiers": {
+      "str": 4,
+      "wis": 4,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "resists": [
+      "fire",
+      "elec",
+      "nether"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "activation": "dispel:EVIL:20",
+    "activationText": "deals five times your level's damage to all evil creatures that you can see",
+    "recharge": "100+d100",
+    "description": "The weapon of a mighty dwarven priest, whose shade is rumoured to haunt the halls of Angband still.",
+    "activationPower": 12
+  },
+  {
+    "id": "bloodspike",
+    "name": "'Bloodspike'",
+    "kind": "morning_star",
+    "level": 20,
+    "rarity": 33,
+    "damage": "2d6",
+    "toHit": 8,
+    "toDam": 22,
+    "modifiers": {
+      "str": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "resists": [
+      "nexus",
+      "see_invis"
+    ],
+    "description": "You feel strong and firm of foot as you whip its spiked orb around and bathe it in the blood of your foes."
+  },
+  {
+    "id": "firestar",
+    "name": "'Firestar'",
+    "kind": "morning_star",
+    "level": 20,
+    "rarity": 14,
+    "damage": "2d6",
+    "toHit": 15,
+    "toDam": 17,
+    "toAc": 2,
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire"
+    ],
+    "activation": "ball:fire:72:2",
+    "activationText": "fires a ball of fire (72)",
+    "recharge": "20",
+    "description": "A famed battle-lord of old with a head as ruddy as embers that can yet rise up in wrath.",
+    "activationPower": 9
+  },
+  {
+    "id": "totila",
+    "name": "'Totila'",
+    "kind": "flail",
+    "level": 20,
+    "rarity": 8,
+    "damage": "3d6",
+    "toHit": 16,
+    "toDam": 12,
+    "modifiers": {
+      "stealth": 2,
+      "speed": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "conf"
+    ],
+    "activation": "monster_status:confuse:20",
+    "activationText": "confuses a target monster",
+    "recharge": "15",
+    "description": "A flail whose head befuddles those who stare as you whirl it round and becomes a fiery comet as you bring it down.",
+    "activationPower": 3
+  },
+  {
+    "id": "thunderfist",
+    "name": "'Thunderfist'",
+    "kind": "two_handed_great_flail",
+    "level": 45,
+    "rarity": 33,
+    "damage": "3d9",
+    "toHit": 5,
+    "toDam": 18,
+    "modifiers": {
+      "str": 4,
+      "con": 3
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "elec",
+        "multiplier": 3,
+        "verb": "shock",
+        "name": "lightning"
+      },
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "elec",
+      "fire",
+      "dark",
+      "fear"
+    ],
+    "description": "The long-lost weapon of Kzurin, Dwarven champion of ancient Belegost Runes of strength adorn its handle, and flames and sparks roar and crackle around its massive head."
+  },
+  {
+    "id": "taratol",
+    "name": "'Taratol'",
+    "kind": "mace",
+    "level": 20,
+    "rarity": 14,
+    "damage": "3d6",
+    "toHit": 12,
+    "toDam": 12,
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "elec",
+        "multiplier": 3,
+        "verb": "shock",
+        "name": "lightning"
+      }
+    ],
+    "resists": [
+      "elec"
+    ],
+    "activation": "timed:fast:1d20+20",
+    "activationText": "hastens you for d20+20 turns",
+    "recharge": "100+d100",
+    "description": "A great ridged mace that surrounds you with a nimbus of living lightning. You remain utterly untouched, even as fat sparks crackle around your fingers and eyebrows.",
+    "activationPower": 10
+  },
+  {
+    "id": "nar_i_vagil",
+    "name": "'Nar-i-vagil'",
+    "kind": "quarterstaff",
+    "level": 20,
+    "rarity": 20,
+    "damage": "1d9",
+    "toHit": 10,
+    "toDam": 20,
+    "modifiers": {
+      "int": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "pois"
+    ],
+    "description": "Named for a fiery star and set with priceless gems bearing mystic auras of protection and thought."
+  },
+  {
+    "id": "eriril",
+    "name": "'Eriril'",
+    "kind": "quarterstaff",
+    "level": 20,
+    "rarity": 20,
+    "damage": "1d9",
+    "toHit": 13,
+    "toDam": 15,
+    "modifiers": {
+      "int": 4,
+      "wis": 4,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      }
+    ],
+    "resists": [
+      "light",
+      "see_invis"
+    ],
+    "activation": "detect_objects:30",
+    "activationText": "detects all objects in the immediate area",
+    "recharge": "50+d50",
+    "description": "The radiant golden staff of an Istar of legend, this wizard's companion grants keen sight and clear knowledge of many hidden things.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_olorin",
+    "name": "of Olórin",
+    "kind": "quarterstaff",
+    "level": 30,
+    "rarity": 100,
+    "damage": "2d9",
+    "toHit": 10,
+    "toDam": 13,
+    "modifiers": {
+      "int": 4,
+      "wis": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "nether",
+      "see_invis"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "activation": "probe",
+    "activationText": "gives you information on the health and abilities of monsters you can see",
+    "recharge": "20",
+    "description": "A staff tall and sturdy, borne of old by Gandalf. Rough-hewn runes that invoke the element of Earth stand bold upon its gnarled surface, and no creature who lives in the shadow of mountains can withstand the blows it deals.",
+    "activationPower": 8
+  },
+  {
+    "id": "of_aule",
+    "name": "of Aulë",
+    "kind": "great_hammer",
+    "level": 40,
+    "rarity": 100,
+    "damage": "18d1",
+    "toHit": 19,
+    "toDam": 21,
+    "toAc": 5,
+    "modifiers": {
+      "tunnel": 8,
+      "wis": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "acid",
+        "multiplier": 3,
+        "verb": "dissolve",
+        "name": "acid"
+      }
+    ],
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "nexus",
+      "fear",
+      "free_act",
+      "see_invis"
+    ],
+    "description": "The wondrous hammer of Aulë, creator of the wise Dwarven lords of old. It bears demolishing magics that no serpent or demon can withstand, and invokes the strength of mountains to ward off the tumult of the elements."
+  },
+  {
+    "id": "deathwreaker",
+    "name": "'Deathwreaker'",
+    "kind": "mace_of_disruption",
+    "level": 80,
+    "rarity": 33,
+    "damage": "7d8",
+    "toHit": 18,
+    "toDam": 18,
+    "modifiers": {
+      "str": 6,
+      "tunnel": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "dark",
+      "chaos",
+      "disen"
+    ],
+    "description": "A weapon so massive it seems beyond the strength of mortals, yet you feel the might of giants within you as you heft it. As you grip the handle of ebony and steel, coronas of fire blaze, and mighty spells to preserve magic surge around you. You wield the Fear of Dragons and the Despair of the Undead!"
+  },
+  {
+    "id": "aiglos",
+    "name": "'Aiglos'",
+    "kind": "spear",
+    "level": 15,
+    "rarity": 50,
+    "damage": "3d6",
+    "toHit": 15,
+    "toDam": 25,
+    "toAc": 5,
+    "modifiers": {
+      "dex": 4,
+      "wis": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "fear",
+      "free_act"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "activation": "ball:cold:100:2",
+    "activationText": "fires a ball of frost (100)",
+    "recharge": "35",
+    "description": "The mighty spear of Gil-galad, famed as \"Snow-point\" in the songs of Elves. Against it, all the foul corruptions of Sauron dashed in vain.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_orome",
+    "name": "of Oromë",
+    "kind": "spear",
+    "level": 15,
+    "rarity": 50,
+    "damage": "4d6",
+    "toHit": 15,
+    "toDam": 15,
+    "modifiers": {
+      "int": 4,
+      "speed": 4,
+      "infra": 4,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "light",
+      "see_invis"
+    ],
+    "activation": "stone_to_mud",
+    "activationText": "turns a wall to mud",
+    "recharge": "5",
+    "description": "The thrusting spear of wise Oromë the Vala, strong against giants of frost, and able to pierce rock or flesh with ease.",
+    "activationPower": 6
+  },
+  {
+    "id": "nimloth",
+    "name": "'Nimloth'",
+    "kind": "spear",
+    "level": 15,
+    "rarity": 12,
+    "damage": "1d7",
+    "toHit": 11,
+    "toDam": 13,
+    "modifiers": {
+      "stealth": 3,
+      "speed": 3
+    },
+    "slays": [
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "see_invis"
+    ],
+    "description": "A thin spike of thrice-forged steel caps a straight silvan shaft cut from a legendary tree, and spells to break the wills of the undead and strike cold into the breasts of your enemies lay upon this perfectly balanced spear."
+  },
+  {
+    "id": "of_melkor",
+    "name": "of Melkor",
+    "kind": "spear",
+    "level": 65,
+    "rarity": 50,
+    "damage": "4d6",
+    "toHit": -12,
+    "toDam": 20,
+    "modifiers": {
+      "stealth": -4,
+      "wis": -4
+    },
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "resists": [
+      "dark",
+      "light",
+      "nether",
+      "blind"
+    ],
+    "description": "A mighty, heavy black spear, once wielded by the Lord of Darkness himself as he came to Valinor in wrath. Its envenomed bite pierced the Two Trees with wounds that would not heal."
+  },
+  {
+    "id": "of_wrath",
+    "name": "of Wrath",
+    "kind": "trident",
+    "level": 15,
+    "rarity": 33,
+    "damage": "3d10",
+    "toHit": 16,
+    "toDam": 18,
+    "modifiers": {
+      "str": 2,
+      "dex": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ],
+    "brands": [
+      {
+        "element": "pois",
+        "multiplier": 3,
+        "verb": "poison",
+        "name": "poison"
+      }
+    ],
+    "resists": [
+      "light",
+      "dark",
+      "see_invis"
+    ],
+    "description": "A massive triple-pronged spear, so great it normally requires two hands to wield, evoking the spirit of Osse who with it pierced legions of evil and undead."
+  },
+  {
+    "id": "of_ulmo",
+    "name": "of Ulmo",
+    "kind": "trident",
+    "level": 30,
+    "rarity": 100,
+    "damage": "4d10",
+    "toHit": 15,
+    "toDam": 19,
+    "modifiers": {
+      "dex": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      }
+    ],
+    "resists": [
+      "acid",
+      "nether",
+      "free_act",
+      "see_invis"
+    ],
+    "flags": [
+      "HOLD_LIFE",
+      "SLOW_DIGEST",
+      "REGEN"
+    ],
+    "activation": "teleport_other",
+    "activationText": "teleports a target monster away",
+    "recharge": "50",
+    "description": "The awesome weapon of the Vala Ulmo, Lord of Waters. Mightiest of all the powers of good save Manwë himself, Ulmo laughs to scorn the dread powers of the undead, and is utterly in command of the Element of water.",
+    "activationPower": 11
+  },
+  {
+    "id": "osondir",
+    "name": "'Osondir'",
+    "kind": "halberd",
+    "level": 25,
+    "rarity": 8,
+    "damage": "3d7",
+    "toHit": 16,
+    "toDam": 12,
+    "modifiers": {
+      "str": 3,
+      "wis": 3
+    },
+    "slays": [
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire",
+      "sound",
+      "see_invis"
+    ],
+    "description": "Lordly and tall did Osondir stand against the wrath of giants, and clear-eyed in barrows fell, wielding a halberd glowing ruby red."
+  },
+  {
+    "id": "til_i_arc",
+    "name": "'Til-i-arc'",
+    "kind": "pike",
+    "level": 20,
+    "rarity": 14,
+    "damage": "1d15",
+    "toHit": 10,
+    "toDam": 12,
+    "toAc": 10,
+    "modifiers": {
+      "str": 3,
+      "int": 3,
+      "speed": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      }
+    ],
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      },
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "fire",
+      "cold",
+      "sust_int"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "description": "Within this long two-handed spear dwell the spirits of frost giants and fire demons, who war forever, fettered by sorcerous binds."
+  },
+  {
+    "id": "of_theoden",
+    "name": "of Théoden",
+    "kind": "beaked_axe",
+    "level": 20,
+    "rarity": 14,
+    "damage": "2d6",
+    "toHit": 8,
+    "toDam": 10,
+    "modifiers": {
+      "wis": 3,
+      "con": 3
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      }
+    ],
+    "flags": [
+      "TELEPATHY",
+      "SLOW_DIGEST"
+    ],
+    "activation": "drain_life:120",
+    "activationText": "drains up to 120 hit points of life from a target creature.  Does not affect undead, demons, golems, elementals or vortices",
+    "recharge": "40",
+    "description": "The narrow axe head of this weapon would pierce the armour of a very Dragon, and the designs of your enemies stand naked and revealed.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_hurin",
+    "name": "of Húrin",
+    "kind": "beaked_axe",
+    "level": 20,
+    "rarity": 14,
+    "damage": "3d6",
+    "toHit": 12,
+    "toDam": 15,
+    "modifiers": {
+      "str": 2,
+      "con": 2,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "acid",
+        "multiplier": 3,
+        "verb": "dissolve",
+        "name": "acid"
+      }
+    ],
+    "resists": [
+      "acid",
+      "dark",
+      "fire"
+    ],
+    "activation": "timed:berserk:1d50+50",
+    "activationText": "puts you in a berserker rage for d50+50 turns",
+    "recharge": "80+d80",
+    "description": "Wielded by Húrin Thalion, last lord of Dor-Lómin at the Battle of Tears Unnumbered. He stood alone, his friends and kinsmen dead about him, his axe smoking in the black blood of Gothmog's troll-guard. No less than seventy times, as he slew his foes, did he utter his mighty war-cry: \"Aurë entuluva!\" - \"Day shall come again!\"",
+    "activationPower": 10
+  },
+  {
+    "id": "barukkheled",
+    "name": "'Barukkheled'",
+    "kind": "broad_axe",
+    "level": 20,
+    "rarity": 8,
+    "damage": "2d6",
+    "toHit": 13,
+    "toDam": 19,
+    "modifiers": {
+      "con": 3
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "see_invis"
+    ],
+    "description": "A royal heirloom of the southern coast, strong in combat against the evil creatures of earth."
+  },
+  {
+    "id": "of_balli_stonehand",
+    "name": "of Balli Stonehand",
+    "kind": "battle_axe",
+    "level": 30,
+    "rarity": 14,
+    "damage": "3d8",
+    "toHit": 8,
+    "toDam": 11,
+    "toAc": 5,
+    "modifiers": {
+      "str": 3,
+      "con": 3,
+      "stealth": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "free_act",
+      "blind",
+      "see_invis"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "description": "The twin blades of this weapon were forged in Belegost, and powerful forces to resist and endure lie ready for its next owner."
+  },
+  {
+    "id": "lotharang",
+    "name": "'Lotharang'",
+    "kind": "battle_axe",
+    "level": 30,
+    "rarity": 14,
+    "damage": "2d8",
+    "toHit": 14,
+    "toDam": 13,
+    "modifiers": {
+      "str": 3,
+      "dex": 3,
+      "blows": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "disen"
+    ],
+    "activation": "heal:40:0; cure:blind; cure:cut; cure:confused",
+    "activationText": "heals 40 hitpoints, cut damage, and cures blindness and confusion",
+    "recharge": "3+d3",
+    "description": "A superbly crafted double-bladed axe once borne by Ceruthain, commander of the Rangers of Arnor.",
+    "activationPower": 6
+  },
+  {
+    "id": "mundwine",
+    "name": "'Mundwine'",
+    "kind": "lochaber_axe",
+    "level": 30,
+    "rarity": 8,
+    "damage": "3d10",
+    "toHit": 12,
+    "toDam": 17,
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
+    "description": "A massive axe with twin razor-sharp heads, so large that it usually requires two hands to wield, with spells to ward off the elements intricately engraved upon its surface in filleted gold."
+  },
+  {
+    "id": "of_durin",
+    "name": "of Durin",
+    "kind": "great_axe",
+    "level": 40,
+    "rarity": 100,
+    "damage": "4d4",
+    "toHit": 10,
+    "toDam": 20,
+    "toAc": 15,
+    "modifiers": {
+      "tunnel": 5,
+      "str": 3,
+      "con": 3,
+      "stealth": -1
+    },
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "acid",
+        "multiplier": 3,
+        "verb": "dissolve",
+        "name": "acid"
+      },
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "acid",
+      "fire",
+      "light",
+      "dark",
+      "chaos",
+      "free_act",
+      "fear"
+    ],
+    "description": "The twin massive axe heads of this ancient demon's dread gleam with mithril inlay telling sagas of endurance. The powers of Khazad-dûm protect its wielder and slay all evils found underground."
+  },
+  {
+    "id": "of_eonwe",
+    "name": "of Eönwë",
+    "kind": "great_axe",
+    "level": 40,
+    "rarity": 100,
+    "damage": "5d4",
+    "toHit": 15,
+    "toDam": 18,
+    "toAc": 8,
+    "modifiers": {
+      "str": 2,
+      "int": 2,
+      "wis": 2,
+      "dex": 2,
+      "con": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "fear",
+      "free_act",
+      "see_invis"
+    ],
+    "activation": "mass_banishment:20",
+    "activationText": "removes all non-unique monsters within 20 squares, dealing you damage in the process",
+    "recharge": "1000",
+    "description": "The axe of Eönwë, leader of the Hosts of the West in the War of Wrath, strikes with icy wrath at the undead, disperses hosts of evil at a word, and grants Maia-like powers of body and mind.",
+    "activationPower": 25
+  },
+  {
+    "id": "avavir",
+    "name": "'Avavir'",
+    "kind": "scythe",
+    "level": 45,
+    "rarity": 8,
+    "damage": "5d3",
+    "toHit": 18,
+    "toDam": 12,
+    "toAc": 30,
+    "modifiers": {
+      "dex": 3,
+      "speed": 3,
+      "light": 1
+    },
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      },
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "fire",
+      "cold",
+      "light",
+      "free_act",
+      "see_invis"
+    ],
+    "activation": "recall",
+    "activationText": "returns you from the dungeon or takes you to the dungeon after a short delay",
+    "recharge": "200",
+    "description": "Holding elemental powers whose struggles turn this weapon red and purest white, this shining reaper bears within it a power of going forth and returning.",
+    "activationPower": 15
+  },
+  {
+    "id": "of_pain",
+    "name": "of Pain",
+    "kind": "glaive",
+    "level": 30,
+    "rarity": 25,
+    "damage": "6d9",
+    "toDam": 30,
+    "description": "The massive cleaver that crowns this glaive glows blood-red and black; fell spells of annihilation swirl and dance as you swing death's myrmidon down."
+  },
+  {
+    "id": "of_the_eorlingas",
+    "name": "of the Eorlingas",
+    "kind": "lance",
+    "level": 20,
+    "rarity": 25,
+    "damage": "2d17",
+    "toHit": 3,
+    "toDam": 21,
+    "modifiers": {
+      "str": 2,
+      "dex": 2,
+      "speed": 2
+    },
+    "slays": [
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "fear",
+      "see_invis"
+    ],
+    "description": "\"Forth Eorlingas!\" To the field of Celebrant, Eorl the Young came beyond hope to save beleaguered Gondor, and from his lance fled massive trolls and dire wolves."
+  },
+  {
+    "id": "turmil",
+    "name": "'Turmil'",
+    "kind": "lead_filled_mace",
+    "level": 20,
+    "rarity": 14,
+    "damage": "4d4",
+    "toHit": 10,
+    "toDam": 11,
+    "toAc": 8,
+    "modifiers": {
+      "wis": 4,
+      "infra": 4,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 3,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold",
+      "light"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "activation": "drain_life:90",
+    "activationText": "drains up to 90 hit points of life from a target creature.  Does not affect undead, demons, golems, elementals or vortices",
+    "recharge": "40",
+    "description": "Once wielded by the High Priest of Meneltarma, this great mace gleams coldly as though moonlit, and can strike equally mighty spiritual and physical blows.",
+    "activationPower": 9
+  },
+  {
+    "id": "of_amrod",
+    "name": "of Amrod",
+    "kind": "short_bow",
+    "level": 30,
+    "rarity": 10,
+    "toHit": 12,
+    "toDam": 15,
+    "modifiers": {
+      "str": 2,
+      "con": 2
+    },
+    "resists": [
+      "fire",
+      "elec",
+      "cold"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "description": "One of a pair of hunting bows once belonging to Fëanor's two youngest sons. The bows are like and yet unlike, much as the twin brothers were."
+  },
+  {
+    "id": "of_amras",
+    "name": "of Amras",
+    "kind": "short_bow",
+    "level": 30,
+    "rarity": 10,
+    "toHit": 12,
+    "toDam": 15,
+    "modifiers": {
+      "int": 2,
+      "wis": 2,
+      "dex": 2,
+      "shots": 5,
+      "speed": 1
+    },
+    "resists": [
+      "fire",
+      "elec",
+      "cold"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "description": "One of a pair of hunting bows once belonging to Fëanor's two youngest sons. The bows are like and yet unlike, much as the twin brothers were."
+  },
+  {
+    "id": "of_bard",
+    "name": "of Bard",
+    "kind": "long_bow",
+    "level": 40,
+    "rarity": 20,
+    "toHit": 17,
+    "toDam": 19,
+    "modifiers": {
+      "dex": 1,
+      "speed": 1
+    },
+    "resists": [
+      "free_act"
+    ],
+    "description": "The great yew bow of grim-faced Bard, who shot the mightiest arrow that songs record."
+  },
+  {
+    "id": "cubragol",
+    "name": "'Cubragol'",
+    "kind": "light_crossbow",
+    "level": 50,
+    "rarity": 25,
+    "toHit": 10,
+    "toDam": 14,
+    "modifiers": {
+      "speed": 10
+    },
+    "brands": [
+      {
+        "element": "fire",
+        "multiplier": 3,
+        "verb": "burn",
+        "name": "fire"
+      }
+    ],
+    "resists": [
+      "fire"
+    ],
+    "description": "A crossbow that grants fiery speed to its finder, and imbues its bolts with flame unquenchable."
+  },
+  {
+    "id": "of_umbar",
+    "name": "of Umbar",
+    "kind": "heavy_crossbow",
+    "level": 60,
+    "rarity": 20,
+    "toHit": 18,
+    "toDam": 18,
+    "modifiers": {
+      "str": 1,
+      "con": 1
+    },
+    "resists": [
+      "light",
+      "dark",
+      "elec",
+      "blind"
+    ],
+    "activation": "bolt:none:150",
+    "activationText": "fires a magic missile (150)",
+    "recharge": "20+d20",
+    "description": "A great brazen arbalest with arms of gleaming steel. It shoots quarrels with mighty power for those brave enough to risk betrayal.",
+    "activationPower": 11
+  },
+  {
+    "id": "of_erebor",
+    "name": "of Erebor",
+    "kind": "pick",
+    "level": 55,
+    "rarity": 5,
+    "toHit": 5,
+    "toDam": 20,
+    "modifiers": {
+      "tunnel": 5,
+      "str": 3,
+      "con": 3,
+      "light": 1
+    },
+    "slays": [
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "demons"
+      }
+    ],
+    "brands": [
+      {
+        "element": "acid",
+        "multiplier": 3,
+        "verb": "dissolve",
+        "name": "acid"
+      }
+    ],
+    "resists": [
+      "chaos",
+      "light",
+      "dark",
+      "sust_str"
+    ],
+    "description": "A fine dwarven pick, good for a miner, and suitable as a weapon should the wielder ever tunnel through into a foe's stronghold."
+  },
+  {
+    "id": "of_nain",
+    "name": "of Náin",
+    "kind": "mattock",
+    "level": 60,
+    "rarity": 8,
+    "toHit": 12,
+    "toDam": 18,
+    "modifiers": {
+      "tunnel": 6,
+      "search": 4,
+      "infra": 4,
+      "str": 4
+    },
+    "slays": [
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "GIANT",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "giants"
+      },
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "dragons"
+      }
+    ],
+    "resists": [
+      "dark",
+      "disen"
+    ],
+    "activation": "stone_to_mud",
+    "activationText": "turns a wall to mud",
+    "recharge": "2",
+    "description": "A mighty Dwarven mattock, as good for hewing orc-necks as for hewing stone. Náin, King of the Iron Hills, brought his mattock-wielding warriors to the Battle of Azanulbizar, and no Orc could withstand them, although Náin himself fell before their lord Azog.",
+    "activationPower": 6
+  },
+  {
+    "id": "of_feanor",
+    "name": "of Fëanor",
+    "kind": "leather_boots",
+    "level": 40,
+    "rarity": 100,
+    "armour": 2,
+    "toAc": 20,
+    "modifiers": {
+      "speed": 15
+    },
+    "resists": [
+      "nexus"
+    ],
+    "activation": "timed:fast:1d20+20",
+    "activationText": "hastens you for d20+20 turns",
+    "recharge": "200",
+    "description": "This wondrous pair of leather boots once sped Fëanor, creator of the Silmarils and the mightiest of the Eldar, to fulfill his hero's challenge and do battle for a Middle-Earth held in thrall. \"Dear-bought those songs shall be accounted, and yet shall be well-bought. For the price could be no other.\"",
+    "activationPower": 10
+  },
+  {
+    "id": "dal_i_thalion",
+    "name": "'Dal-i-thalion'",
+    "kind": "leather_boots",
+    "level": 50,
+    "rarity": 25,
+    "armour": 2,
+    "toAc": 15,
+    "modifiers": {
+      "dex": 5,
+      "speed": 5
+    },
+    "resists": [
+      "nether",
+      "free_act",
+      "conf",
+      "sust_con"
+    ],
+    "activation": "cure:afraid; cure:poisoned",
+    "activationText": "cures you of fear and poison",
+    "recharge": "5",
+    "description": "A pair of high-laced shoes, bestowing extraordinary agility and proof against the powers of corruption and withering.",
+    "activationPower": 3
+  },
+  {
+    "id": "of_wormtongue",
+    "name": "of Wormtongue",
+    "kind": "leather_boots",
+    "level": 15,
+    "rarity": 12,
+    "toHit": -1,
+    "toDam": -1,
+    "armour": 2,
+    "modifiers": {
+      "int": 2,
+      "dex": 2,
+      "stealth": 2
+    },
+    "activation": "teleport:10",
+    "activationText": "teleports you randomly up to 10 squares away",
+    "recharge": "20",
+    "description": "A pair of running shoes once used by the treacherous Gríma son of Gálmód, the Wormtongue of Edoras. They are aptly suited for a messenger, a servant, a spy... or a coward.",
+    "activationPower": 5
+  },
+  {
+    "id": "of_radagast",
+    "name": "of Radagast",
+    "kind": "leather_boots",
+    "level": 15,
+    "rarity": 12,
+    "armour": 2,
+    "toAc": 12,
+    "modifiers": {
+      "infra": 5,
+      "stealth": 3,
+      "wis": 1
+    },
+    "resists": [
+      "cold",
+      "free_act"
+    ],
+    "description": "Made of brown leather, covered with scuff marks and dust, still these boots possess the magic of Radagast, friend of birds and nature."
+  },
+  {
+    "id": "of_thror",
+    "name": "of Thrór",
+    "kind": "pair_of_steel_shod_boots",
+    "level": 30,
+    "rarity": 20,
+    "armour": 7,
+    "toAc": 20,
+    "modifiers": {
+      "str": 3,
+      "con": 3,
+      "speed": 3,
+      "stealth": -1
+    },
+    "resists": [
+      "fear"
+    ],
+    "description": "Sturdy footwear of leather and steel as enduring as the long-suffering Dwarven king-in-exile who wore them."
+  },
+  {
+    "id": "stormwalker",
+    "name": "'Stormwalker'",
+    "kind": "pair_of_mithril_shod_boots",
+    "level": 60,
+    "rarity": 33,
+    "armour": 8,
+    "toAc": 24,
+    "modifiers": {
+      "speed": 6
+    },
+    "resists": [
+      "elec",
+      "sound"
+    ],
+    "activation": "timed:berserk:1d50+50",
+    "activationText": "puts you in a berserker rage for d50+50 turns",
+    "recharge": "100",
+    "description": "And they hewed off Gelmir's hands and feet, and his head last, within sight of the Elves, and left him. By ill chance there stood Gwindor of Nargothrond, the brother of Gelmir. Now his wrath was kindled to madness, and he leapt forth on horseback, and many riders with him; and they pursued the heralds and slew them, and drove on deep into the main host.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_thranduil",
+    "name": "of Thranduil",
+    "kind": "hard_leather_cap",
+    "level": 40,
+    "rarity": 7,
+    "armour": 2,
+    "toAc": 10,
+    "modifiers": {
+      "int": 2,
+      "wis": 2
+    },
+    "resists": [
+      "blind"
+    ],
+    "flags": [
+      "TELEPATHY"
+    ],
+    "description": "The hunting cap of King Thranduil, to whose ears come all the secrets of his forest domain."
+  },
+  {
+    "id": "of_thengel",
+    "name": "of Thengel",
+    "kind": "metal_cap",
+    "level": 10,
+    "rarity": 6,
+    "armour": 3,
+    "toAc": 12,
+    "modifiers": {
+      "wis": 3
+    },
+    "resists": [
+      "conf"
+    ],
+    "description": "A ridged helmet made of steel and embossed with scenes of valor in fine- engraved silver. It grants the wearer nobility and understanding."
+  },
+  {
+    "id": "of_celebrimbor",
+    "name": "of Celebrimbor",
+    "kind": "metal_cap",
+    "level": 55,
+    "rarity": 12,
+    "armour": 3,
+    "toAc": 18,
+    "modifiers": {
+      "int": 2,
+      "dex": 2,
+      "search": 3
+    },
+    "resists": [
+      "fire",
+      "acid",
+      "disen",
+      "shards"
+    ],
+    "description": "A metal cap forged by the greatest Noldorin smith of the Second Age, this helm serves equally well in battle or at the forge, and its enchantment will never be diminished."
+  },
+  {
+    "id": "of_dor_lomin",
+    "name": "of Dor-Lómin",
+    "kind": "iron_helm",
+    "level": 40,
+    "rarity": 20,
+    "armour": 7,
+    "toAc": 20,
+    "modifiers": {
+      "str": 4,
+      "con": 4,
+      "dex": 2,
+      "stealth": -1
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "fear",
+      "see_invis"
+    ],
+    "flags": [
+      "TELEPATHY"
+    ],
+    "description": "The legendary Dragon-helm, forged by one of the legendary Dwarven smiths of the First Age. The visage of mighty Glaurung forms its crest, and the mere sight of the helm, borne by Túrin Turambar, struck dread into the hearts of the servants of Morgoth."
+  },
+  {
+    "id": "holhenneth",
+    "name": "'Holhenneth'",
+    "kind": "iron_helm",
+    "level": 20,
+    "rarity": 6,
+    "armour": 7,
+    "toAc": 10,
+    "modifiers": {
+      "int": 2,
+      "wis": 2,
+      "search": 2
+    },
+    "resists": [
+      "blind",
+      "conf",
+      "see_invis"
+    ],
+    "activation": "detect_objects:30; detect_invisible:30; detect_monsters:30; map_area:30",
+    "activationText": "detects treasure and all creatures and maps an area nearby",
+    "recharge": "55+d55",
+    "description": "A famous forged iron helm granting extraordinary powers of mind and awareness.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_gorlim",
+    "name": "of Gorlim",
+    "kind": "iron_helm",
+    "level": 20,
+    "rarity": 6,
+    "toHit": 8,
+    "toDam": 8,
+    "armour": 7,
+    "toAc": 10,
+    "modifiers": {
+      "int": -3,
+      "wis": -3,
+      "search": -5
+    },
+    "resists": [
+      "fear",
+      "see_invis",
+      "free_act"
+    ],
+    "description": "A headpiece, gaudy and barbaric, that betrayed a warrior when he most needed succor."
+  },
+  {
+    "id": "of_hammerhand",
+    "name": "of Hammerhand",
+    "kind": "steel_helm",
+    "level": 40,
+    "rarity": 9,
+    "armour": 9,
+    "toAc": 20,
+    "modifiers": {
+      "str": 3,
+      "dex": 3,
+      "con": 3,
+      "stealth": -2
+    },
+    "resists": [
+      "acid",
+      "nexus",
+      "cold",
+      "dark",
+      "free_act"
+    ],
+    "description": "A great helm, as steady and as distinctive as the hero of the Westdike. Many long months was Helm Hammerhand besieged in the Hornburg, yet he strode out time and again among his foes and slew many. Although they knew of his coming, none could stand against him."
+  },
+  {
+    "id": "of_beruthiel",
+    "name": "of Berúthiel",
+    "kind": "iron_crown",
+    "level": 45,
+    "rarity": 12,
+    "toAc": 20,
+    "modifiers": {
+      "con": -5,
+      "str": -3,
+      "dex": -3
+    },
+    "resists": [
+      "free_act",
+      "see_invis"
+    ],
+    "flags": [
+      "TELEPATHY"
+    ],
+    "description": "The midnight-hued steel circlet of the sorceress-queen Berúthiel. It grants extraordinary powers of sight and awareness at a terrible physical cost."
+  },
+  {
+    "id": "of_gondor",
+    "name": "of Gondor",
+    "kind": "golden_crown",
+    "level": 45,
+    "rarity": 20,
+    "toAc": 15,
+    "modifiers": {
+      "str": 3,
+      "con": 3,
+      "wis": 2,
+      "light": 1
+    },
+    "resists": [
+      "cold",
+      "fire",
+      "light",
+      "blind",
+      "conf",
+      "see_invis"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "activation": "heal:500:0; cure:cut",
+    "activationText": "heals 500 hit points",
+    "recharge": "250",
+    "description": "From dying Númenor, Elendil brought this shining winged circlet, emblem of Gondor through an age of the world.",
+    "activationPower": 13
+  },
+  {
+    "id": "of_numenor",
+    "name": "of Númenor",
+    "kind": "jewel_encrusted_crown",
+    "level": 60,
+    "rarity": 20,
+    "toAc": 18,
+    "modifiers": {
+      "int": 3,
+      "dex": 2,
+      "search": 3,
+      "light": 1
+    },
+    "resists": [
+      "shards",
+      "cold",
+      "light",
+      "dark",
+      "see_invis",
+      "free_act",
+      "blind"
+    ],
+    "description": "A massive golden crown, set with wondrous jewels of thought and warding, once worn by the kings of ancient Númenor."
+  },
+  {
+    "id": "colluin",
+    "name": "'Colluin'",
+    "kind": "cloak",
+    "level": 5,
+    "rarity": 50,
+    "armour": 1,
+    "toAc": 15,
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "pois"
+    ],
+    "activation": "timed:oppose_acid:1d20+20; timed:oppose_elec:1d20+20; timed:oppose_fire:1d20+20; timed:oppose_cold:1d20+20; timed:oppose_pois:1d20+20",
+    "activationText": "grants temporary resistance to acid, electricity, fire, cold and poison for 1d20+20 turns",
+    "recharge": "111",
+    "description": "A cape worn by a hero from Valinor, a land utterly beyond the strife of Elements.",
+    "activationPower": 10
+  },
+  {
+    "id": "holcolleth",
+    "name": "'Holcolleth'",
+    "kind": "cloak",
+    "level": 5,
+    "rarity": 20,
+    "armour": 1,
+    "toAc": 4,
+    "modifiers": {
+      "stealth": 3,
+      "int": 2,
+      "wis": 2
+    },
+    "resists": [
+      "acid"
+    ],
+    "activation": "project_los:sleep:40",
+    "activationText": "puts to sleep the monsters around you",
+    "recharge": "55",
+    "description": "This elven-grey mantle possesses great powers of tranquility and concealment, and grants the wearer the knowledge and understanding of the Sindar.",
+    "activationPower": 8
+  },
+  {
+    "id": "of_thingol",
+    "name": "of Thingol",
+    "kind": "cloak",
+    "level": 5,
+    "rarity": 20,
+    "armour": 1,
+    "toAc": 18,
+    "modifiers": {
+      "dex": 3
+    },
+    "resists": [
+      "acid",
+      "fire",
+      "cold",
+      "free_act"
+    ],
+    "activation": "recharge:100",
+    "activationText": "tries to recharge a wand or staff, destroying the wand or staff on failure",
+    "recharge": "70",
+    "description": "A translucent cloak of pearly grey with glowing, energized Elven runes showing calm and clear as moonlight on still water.",
+    "activationPower": 11
+  },
+  {
+    "id": "of_thorongil",
+    "name": "of Thorongil",
+    "kind": "cloak",
+    "level": 5,
+    "rarity": 10,
+    "armour": 1,
+    "toAc": 10,
+    "resists": [
+      "acid",
+      "free_act",
+      "fear",
+      "see_invis"
+    ],
+    "description": "This shimmering cloak of greens and browns was once worn by the young Aragorn, a keen-eyed captain of Rohan and Gondor, valiant on both land and sea."
+  },
+  {
+    "id": "colannon",
+    "name": "'Colannon'",
+    "kind": "cloak",
+    "level": 5,
+    "rarity": 20,
+    "armour": 1,
+    "toAc": 15,
+    "modifiers": {
+      "stealth": 2,
+      "speed": 2
+    },
+    "resists": [
+      "nexus"
+    ],
+    "activation": "teleport:60",
+    "activationText": "teleports you randomly about 60 per cent of the largest distance you could go",
+    "recharge": "45",
+    "description": "A crystal-blue cape of fine silk worn by a silent messenger of the forces of Law. Seldom will its wearer be diverted from his mission.",
+    "activationPower": 6
+  },
+  {
+    "id": "of_luthien",
+    "name": "of Lúthien",
+    "kind": "elven_cloak",
+    "level": 40,
+    "rarity": 50,
+    "armour": 6,
+    "toAc": 20,
+    "modifiers": {
+      "int": 4,
+      "wis": 4,
+      "stealth": 3,
+      "speed": 2
+    },
+    "resists": [
+      "acid",
+      "fire",
+      "cold"
+    ],
+    "activation": "restore_exp",
+    "activationText": "restores your experience to full",
+    "recharge": "250",
+    "description": "The opaque midnight folds of this cloak, inlaid with a multitude of tiny diamonds, swirl around you, and you feel a hint, a fragment of the restorative magics of Lúthien, the most beautiful being who ever knew death.",
+    "activationPower": 8
+  },
+  {
+    "id": "of_tuor",
+    "name": "of Tuor",
+    "kind": "ethereal_cloak",
+    "level": 70,
+    "rarity": 50,
+    "armour": 6,
+    "toAc": 12,
+    "modifiers": {
+      "stealth": 4,
+      "dex": 4
+    },
+    "resists": [
+      "acid",
+      "free_act",
+      "see_invis"
+    ],
+    "description": "The great cloak given to Tuor by the Dweller in the Deep. As you wrap yourself from head to foot the words of Ulmo echo: \"Thus thou shalt walk under my shadow\"."
+  },
+  {
+    "id": "cambeleg",
+    "name": "'Cambeleg'",
+    "kind": "leather_gloves",
+    "level": 10,
+    "rarity": 33,
+    "toHit": 8,
+    "toDam": 8,
+    "armour": 1,
+    "toAc": 15,
+    "modifiers": {
+      "str": 2,
+      "con": 2
+    },
+    "resists": [
+      "free_act"
+    ],
+    "description": "A hero's handgear that lends great prowess in battle."
+  },
+  {
+    "id": "cammithrim",
+    "name": "'Cammithrim'",
+    "kind": "leather_gloves",
+    "level": 10,
+    "rarity": 6,
+    "toHit": 5,
+    "toDam": 5,
+    "armour": 1,
+    "toAc": 10,
+    "modifiers": {
+      "light": 1
+    },
+    "resists": [
+      "light",
+      "free_act",
+      "sust_con"
+    ],
+    "activation": "bolt:none:3d4",
+    "activationText": "fires a magic missile (3d4)",
+    "recharge": "2",
+    "description": "These gloves glow so brightly as to light the way for the wearer and cast magical bolts with great frequency.",
+    "activationPower": 3
+  },
+  {
+    "id": "paurhach",
+    "name": "'Paurhach'",
+    "kind": "gauntlets",
+    "level": 10,
+    "rarity": 2,
+    "armour": 3,
+    "toAc": 14,
+    "resists": [
+      "fire"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "activation": "bolt:fire:9d8",
+    "activationText": "fires a fire bolt (9d8)",
+    "recharge": "8+d8",
+    "description": "A set of gauntlets that smoulder with an unnatural heat.",
+    "activationPower": 5
+  },
+  {
+    "id": "paurnimmen",
+    "name": "'Paurnimmen'",
+    "kind": "gauntlets",
+    "level": 50,
+    "rarity": 20,
+    "armour": 3,
+    "toAc": 14,
+    "brands": [
+      {
+        "element": "cold",
+        "multiplier": 2,
+        "verb": "freeze",
+        "name": "cold"
+      }
+    ],
+    "resists": [
+      "cold"
+    ],
+    "flags": [
+      "SLOW_DIGEST"
+    ],
+    "activation": "bolt:cold:6d8",
+    "activationText": "fires a frost bolt (6d8)",
+    "recharge": "7+d7",
+    "description": "A set of handgear, freezing with unnatural cold.",
+    "activationPower": 4
+  },
+  {
+    "id": "pauraegen",
+    "name": "'Pauraegen'",
+    "kind": "gauntlets",
+    "level": 10,
+    "rarity": 4,
+    "armour": 3,
+    "toAc": 14,
+    "modifiers": {
+      "light": 1
+    },
+    "resists": [
+      "elec",
+      "light"
+    ],
+    "activation": "beam:elec:6d6",
+    "activationText": "fires a beam of lightning (6d6)",
+    "recharge": "6+d6",
+    "description": "A set of handgear with sparks that crackle across its knuckleguards.",
+    "activationPower": 5
+  },
+  {
+    "id": "paurnen",
+    "name": "'Paurnen'",
+    "kind": "gauntlets",
+    "level": 10,
+    "rarity": 3,
+    "toHit": 3,
+    "toDam": 3,
+    "armour": 3,
+    "toAc": 14,
+    "resists": [
+      "acid"
+    ],
+    "activation": "bolt:acid:5d8",
+    "activationText": "fires a acid bolt (5d8)",
+    "recharge": "5+d5",
+    "description": "A set of gauntlets that give off a foul, acrid odour yet remain untarnished.",
+    "activationPower": 4
+  },
+  {
+    "id": "camlost",
+    "name": "'Camlost'",
+    "kind": "gauntlets",
+    "level": 10,
+    "rarity": 20,
+    "toHit": -12,
+    "toDam": -12,
+    "armour": 3,
+    "modifiers": {
+      "str": -3,
+      "dex": -3
+    },
+    "resists": [
+      "fire",
+      "disen",
+      "free_act"
+    ],
+    "description": "A pair of weakening gauntlets, named after Beren, who returned to Thingol having lost to Carcharoth the hand that clasped a Silmaril."
+  },
+  {
+    "id": "of_eol",
+    "name": "of Eöl",
+    "kind": "gauntlets",
+    "level": 55,
+    "rarity": 33,
+    "armour": 3,
+    "toAc": 14,
+    "modifiers": {
+      "int": 3
+    },
+    "resists": [
+      "elec",
+      "dark",
+      "pois",
+      "fire",
+      "free_act"
+    ],
+    "activation": "bolt:none:12d8",
+    "activationText": "fires a magic missile (12d8)",
+    "recharge": "30+d30",
+    "description": "The iron-shod gauntlets of the Dark Elven smith Eöl, who imbued them with magics he could channel in battle.",
+    "activationPower": 7
+  },
+  {
+    "id": "of_fingolfin",
+    "name": "of Fingolfin",
+    "kind": "set_of_caestus",
+    "level": 40,
+    "rarity": 33,
+    "toHit": 10,
+    "toDam": 10,
+    "armour": 5,
+    "toAc": 20,
+    "modifiers": {
+      "dex": 4
+    },
+    "resists": [
+      "acid",
+      "free_act"
+    ],
+    "activation": "bolt:none:150",
+    "activationText": "fires a magic missile (150)",
+    "recharge": "30+d30",
+    "description": "The hand-sheathing of Fingolfin, the Elven warrior-king, who dealt Morgoth seven mighty wounds and pain that will last until the end of Arda.",
+    "activationPower": 11
+  },
+  {
+    "id": "of_elros",
+    "name": "of Elros",
+    "kind": "wicker_shield",
+    "level": 50,
+    "rarity": 10,
+    "armour": 2,
+    "toAc": 20,
+    "modifiers": {
+      "con": 4,
+      "wis": 1,
+      "int": 1
+    },
+    "resists": [
+      "elec",
+      "shards",
+      "conf"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "description": "The shield of Elros Tar-Minyatur, founder of Númenor. Granted long life by the Valar, even his shield became imbued with power."
+  },
+  {
+    "id": "of_thorin",
+    "name": "of Thorin",
+    "kind": "small_metal_shield",
+    "level": 40,
+    "rarity": 7,
+    "armour": 5,
+    "toAc": 25,
+    "modifiers": {
+      "con": 4,
+      "str": 3,
+      "stealth": -1
+    },
+    "resists": [
+      "sound",
+      "acid",
+      "chaos",
+      "fear",
+      "free_act"
+    ],
+    "description": "Invoking the strength and endurance of Thorin, King under the Mountain, this little metal shield is proof against the Element of Earth."
+  },
+  {
+    "id": "of_celegorm",
+    "name": "of Celegorm",
+    "kind": "leather_shield",
+    "level": 30,
+    "rarity": 4,
+    "armour": 8,
+    "toAc": 20,
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "light",
+      "dark",
+      "blind"
+    ],
+    "description": "This shield emblazoned with a multitude of creatures unseen for ages once protected Celegorm, Lord of Himlad; around it, a mystic balance lies, containing the conflicts of the elements."
+  },
+  {
+    "id": "of_the_haradrim",
+    "name": "of the Haradrim",
+    "kind": "leather_shield",
+    "level": 35,
+    "rarity": 10,
+    "toHit": 5,
+    "toDam": 5,
+    "armour": 9,
+    "toAc": 15,
+    "modifiers": {
+      "str": 2,
+      "con": 2,
+      "stealth": -2
+    },
+    "resists": [
+      "pois",
+      "sust_str",
+      "sust_con",
+      "fear",
+      "blind"
+    ],
+    "activation": "timed:berserk:1d50+50",
+    "activationText": "puts you in a berserker rage for d50+50 turns",
+    "recharge": "50",
+    "description": "The painted shield of a chieftain of Far Harad, gaudy and barbaric. Its wielder will fear nothing and fight with unnatural strength, but also draw attention to himself.",
+    "activationPower": 10
+  },
+  {
+    "id": "of_anarion",
+    "name": "of Anárion",
+    "kind": "large_metal_shield",
+    "level": 40,
+    "rarity": 9,
+    "armour": 12,
+    "toAc": 20,
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "sust_str",
+      "sust_int",
+      "sust_wis",
+      "sust_dex",
+      "sust_con"
+    ],
+    "description": "The great metal-bound shield of Elendil's younger son Anárion, whom even Sauron could not corrupt."
+  },
+  {
+    "id": "of_earendil",
+    "name": "of Eärendil",
+    "kind": "knights_shield",
+    "level": 65,
+    "rarity": 17,
+    "armour": 10,
+    "toAc": 15,
+    "modifiers": {
+      "light": 1
+    },
+    "resists": [
+      "dark",
+      "nether",
+      "elec",
+      "fire",
+      "blind"
+    ],
+    "activation": "cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused",
+    "activationText": "heals cut damage, and cures all stunning, poison, blindness and confusion",
+    "recharge": "100",
+    "description": "A shining shield wrought for Eärendil Half-Elven, son of Tuor and Idril, \"scored with runes to keep all wounds and harm from him\".",
+    "activationPower": 9
+  },
+  {
+    "id": "of_gil_galad",
+    "name": "of Gil-galad",
+    "kind": "mithril_shield",
+    "level": 70,
+    "rarity": 4,
+    "armour": 20,
+    "toAc": 20,
+    "modifiers": {
+      "wis": 5,
+      "light": 1
+    },
+    "resists": [
+      "elec",
+      "acid",
+      "disen",
+      "dark",
+      "sust_wis",
+      "sust_dex"
+    ],
+    "activation": "light_area",
+    "activationText": "lights up the area",
+    "recharge": "100",
+    "description": "The legendary shield of Ereinion Gil-galad, who fought his way to the gates of the Dark Tower, and with whom came light even to Gorgoroth.",
+    "activationPower": 7
+  },
+  {
+    "id": "of_barahir",
+    "name": "of Barahir",
+    "kind": "ring",
+    "level": 50,
+    "rarity": 25,
+    "modifiers": {
+      "str": 1,
+      "int": 1,
+      "wis": 1,
+      "dex": 1,
+      "con": 1,
+      "stealth": 1
+    },
+    "resists": [
+      "pois",
+      "dark"
+    ],
+    "description": "Twinned serpents with eyes of emerald meet beneath a crown of flowers to form this ring, an ancient treasure of Isildur's house."
+  },
+  {
+    "id": "of_tulkas",
+    "name": "of Tulkas",
+    "kind": "band",
+    "level": 70,
+    "rarity": 50,
+    "modifiers": {
+      "str": 4,
+      "dex": 4,
+      "con": 4
+    },
+    "resists": [
+      "fear"
+    ],
+    "activation": "timed:fast:1d75+75",
+    "activationText": "hastens you for d75+75 turns",
+    "recharge": "150+d150",
+    "description": "The treasure of Tulkas, most fleet and wrathful of the Valar.",
+    "activationPower": 13
+  },
+  {
+    "id": "narya",
+    "name": "'Narya'",
+    "kind": "ring_of_fire",
+    "level": 70,
+    "rarity": 50,
+    "toHit": 2,
+    "toDam": 2,
+    "modifiers": {
+      "str": 1,
+      "int": 1,
+      "wis": 1,
+      "dex": 1,
+      "con": 1,
+      "speed": 5
+    },
+    "resists": [
+      "fire",
+      "free_act",
+      "see_invis",
+      "sust_str",
+      "sust_con",
+      "fear"
+    ],
+    "flags": [
+      "SLOW_DIGEST",
+      "REGEN",
+      "TELEPATHY"
+    ],
+    "activation": "timed:prot_evil:1d25+20",
+    "activationText": "grants you protection from evil for 1d25 plus 3 times your character level turns",
+    "recharge": "200+4d50",
+    "description": "The Ring of Fire, made of gold and set with a ruby that glows like flame. Narya is one of the three Rings of Power created by Celebrimbor and hidden by the Elves from Sauron.",
+    "activationPower": 6
+  },
+  {
+    "id": "nenya",
+    "name": "'Nenya'",
+    "kind": "ring_of_adamant",
+    "level": 80,
+    "rarity": 50,
+    "toHit": 3,
+    "toDam": 3,
+    "modifiers": {
+      "str": 2,
+      "int": 2,
+      "wis": 2,
+      "dex": 2,
+      "con": 2,
+      "speed": 5
+    },
+    "resists": [
+      "cold",
+      "free_act",
+      "see_invis",
+      "sust_int",
+      "sust_wis",
+      "sust_con",
+      "blind"
+    ],
+    "flags": [
+      "HOLD_LIFE",
+      "REGEN",
+      "TELEPATHY"
+    ],
+    "activation": "restore_exp",
+    "activationText": "restores your experience to full",
+    "recharge": "200+2d50",
+    "description": "The Ring of Adamant, made of mithril with a pure white stone as centerpiece. Nenya is one of the three Rings of Power created by Celebrimbor and hidden by the Elves from Sauron.",
+    "activationPower": 8
+  },
+  {
+    "id": "vilya",
+    "name": "'Vilya'",
+    "kind": "ring_of_firmament",
+    "level": 90,
+    "rarity": 100,
+    "toHit": 5,
+    "toDam": 5,
+    "modifiers": {
+      "str": 3,
+      "int": 3,
+      "wis": 3,
+      "dex": 3,
+      "con": 3,
+      "speed": 5
+    },
+    "resists": [
+      "elec",
+      "pois",
+      "dark",
+      "free_act",
+      "see_invis",
+      "sust_dex",
+      "sust_int",
+      "sust_con"
+    ],
+    "flags": [
+      "HOLD_LIFE",
+      "SLOW_DIGEST",
+      "REGEN",
+      "TELEPATHY"
+    ],
+    "activation": "heal:1000:0; cure:cut",
+    "activationText": "heals 1000 hit points",
+    "recharge": "200+2d50",
+    "description": "The Ring of Sapphire, made of gold with a brilliant blue gem that shines like stars. It glitters untouchable despite all that Morgoth ever wrought. Vilya is one of the three Rings of Power created by Celebrimbor and hidden by the Elves from Sauron.",
+    "activationPower": 16
+  },
+  {
+    "id": "the_one_ring",
+    "name": "'The One Ring'",
+    "kind": "ring_of_power",
+    "level": 100,
+    "rarity": 100,
+    "toHit": 15,
+    "toDam": 15,
+    "modifiers": {
+      "str": 5,
+      "int": 5,
+      "wis": 5,
+      "dex": 5,
+      "con": 5,
+      "speed": 5
+    },
+    "resists": [
+      "fire",
+      "cold",
+      "elec",
+      "acid",
+      "dark",
+      "disen",
+      "pois",
+      "nether",
+      "see_invis",
+      "sust_str",
+      "sust_dex",
+      "sust_con",
+      "sust_int",
+      "sust_wis"
+    ],
+    "flags": [
+      "REGEN",
+      "TELEPATHY"
+    ],
+    "activation": "wonder",
+    "activationText": "does bizarre things",
+    "recharge": "200+9d50",
+    "description": "\"One Ring to rule them all, One Ring to find them, One Ring to bring them all and in the darkness bind them.\" Made of massive gold, and inscribed with hidden runes in the foul speech of Mordor, Isildur's Bane possesses powers so great that it inevitably twists and masters any mortal being who wears it.",
+    "activationPower": 20
+  },
+  {
+    "id": "of_carlammas",
+    "name": "of Carlammas",
+    "kind": "amulet",
+    "level": 50,
+    "rarity": 10,
+    "modifiers": {
+      "con": 3,
+      "str": 1
+    },
+    "resists": [
+      "fire"
+    ],
+    "activation": "timed:prot_evil:1d25+20",
+    "activationText": "grants you protection from evil for 1d25 plus 3 times your character level turns",
+    "recharge": "225+d225",
+    "description": "A fiery circle of bronze, with mighty spells to ward off and banish evil.",
+    "activationPower": 6
+  },
+  {
+    "id": "of_ingwe",
+    "name": "of Ingwë",
+    "kind": "pendant",
+    "level": 65,
+    "rarity": 33,
+    "modifiers": {
+      "int": 3,
+      "wis": 3,
+      "infra": 4
+    },
+    "resists": [
+      "acid",
+      "cold",
+      "elec",
+      "see_invis",
+      "free_act",
+      "conf"
+    ],
+    "activation": "dispel:EVIL:20",
+    "activationText": "deals five times your level's damage to all evil creatures that you can see",
+    "recharge": "50+d50",
+    "description": "The ancient heirloom of Ingwë, high lord of the Vanyar, against whom nothing of evil could stand.",
+    "activationPower": 12
+  },
+  {
+    "id": "of_the_dwarves",
+    "name": "of the Dwarves",
+    "kind": "necklace",
+    "level": 50,
+    "rarity": 50,
+    "modifiers": {
+      "str": 3,
+      "con": 3,
+      "infra": 5,
+      "light": 1
+    },
+    "resists": [
+      "see_invis",
+      "free_act",
+      "fear"
+    ],
+    "flags": [
+      "REGEN"
+    ],
+    "description": "The Nauglamír, a carcanet of gold set with a multitude of shining gems of Valinor. The radiant Silmaril of Fëanor hangs in its midst as its crowning glory. The sturdy spirits of Dwarvish craftsmen who labored long in mountain smithies lie within it still, and as gossamer it rests upon the bearer."
+  },
+  {
+    "id": "elessar",
+    "name": "'Elessar'",
+    "kind": "elfstone",
+    "level": 60,
+    "rarity": 50,
+    "toAc": 10,
+    "modifiers": {
+      "str": 2,
+      "wis": 2,
+      "speed": 2
+    },
+    "resists": [
+      "fire",
+      "pois",
+      "fear"
+    ],
+    "activation": "heal:500:0; cure:cut",
+    "activationText": "heals 500 hit points",
+    "recharge": "200",
+    "description": "A green stone, imbued with the power of Elvendom and the light of the Sun. Those who gaze through it see the aged and infirm as young again, and its wearer brings healing after victory in battle.",
+    "activationPower": 13
+  },
+  {
+    "id": "evenstar",
+    "name": "'Evenstar'",
+    "kind": "jewel",
+    "level": 30,
+    "rarity": 50,
+    "modifiers": {
+      "wis": 2
+    },
+    "resists": [
+      "dark",
+      "cold",
+      "nether",
+      "sust_con",
+      "sust_wis"
+    ],
+    "flags": [
+      "HOLD_LIFE",
+      "REGEN"
+    ],
+    "activation": "restore_exp",
+    "activationText": "restores your experience to full",
+    "recharge": "150",
+    "description": "A plain white jewel, given by Queen Arwen to Frodo Baggins before his return to the Shire.",
+    "activationPower": 8
+  },
+  {
+    "id": "grond",
+    "name": "'Grond'",
+    "kind": "mighty_hammer",
+    "level": 100,
+    "rarity": 100,
+    "damage": "9d9",
+    "toHit": 5,
+    "toDam": 25,
+    "toAc": 10,
+    "slays": [
+      {
+        "monsterFlag": "DRAGON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "dragons"
+      },
+      {
+        "monsterFlag": "ANIMAL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "animals"
+      },
+      {
+        "monsterFlag": "EVIL",
+        "multiplier": 2,
+        "verb": "smite",
+        "name": "evil creatures"
+      },
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "undead"
+      },
+      {
+        "monsterFlag": "DEMON",
+        "multiplier": 5,
+        "verb": "smite",
+        "name": "demons"
+      },
+      {
+        "monsterFlag": "TROLL",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "trolls"
+      },
+      {
+        "monsterFlag": "ORC",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "orcs"
+      }
+    ],
+    "resists": [
+      "see_invis"
+    ],
+    "flags": [
+      "TELEPATHY"
+    ],
+    "description": "The mighty Hammer of the Underworld, blackened by doomspells of shattering. Its wielder holds the lives of all Morgoth's servants in his hand."
+  },
+  {
+    "id": "of_morgoth",
+    "name": "of Morgoth",
+    "kind": "massive_iron_crown",
+    "level": 100,
+    "rarity": 100,
+    "modifiers": {
+      "str": 50,
+      "int": 50,
+      "wis": 50,
+      "dex": 50,
+      "con": 50,
+      "infra": 50,
+      "light": 1
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "pois",
+      "light",
+      "dark",
+      "nexus",
+      "nether",
+      "conf",
+      "see_invis",
+      "fear"
+    ],
+    "flags": [
+      "TELEPATHY"
+    ],
+    "description": "Containing much of the power of he who once was mightiest among the Ainur, this plain iron crown has mounted upon it the two remaining Silmarils, greatest treasures of Middle-Earth."
+  }
+]

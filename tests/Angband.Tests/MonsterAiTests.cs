@@ -1,0 +1,430 @@
+using Angband.Core.Definitions;
+using Angband.Core.Effects;
+using Angband.Core.Game;
+using Angband.Core.Geometry;
+using Angband.Core.Monsters;
+using Angband.Data;
+
+namespace Angband.Tests;
+
+public class MonsterAiTests
+{
+    private static void Hold(GameSession game, int turns)
+    {
+        for (var i = 0; i < turns && !game.IsGameOver; i++) game.Execute(new HoldCommand());
+    }
+
+    private static List<T> Collect<T>(GameSession game) where T : IGameEvent
+    {
+        var list = new List<T>();
+        game.Events.Subscribe<T>(list.Add);
+        return list;
+    }
+
+    // --- Senses --------------------------------------------------------------------------------
+
+    [Fact]
+    public void Stealth_ReducesHearing()
+    {
+        var game = Arena.Create();
+        var kobold = Arena.AddMonster(game, "kobold", new Loc(9, 3)); // hearing 20, ~4 away
+        game.Player.Stealth = 0;
+        Assert.True(game.CanHear(kobold));
+        game.Player.Stealth = 60; // hearing 20 - 60/3 = 0: deaf to the player
+        Assert.False(game.CanHear(kobold));
+    }
+
+    /// <summary>An L-shaped dark corridor: the far end can't be seen from the start.</summary>
+    private static readonly string[] Corridor =
+    [
+        "################",
+        "#@............##",
+        "#############.##",
+        "#############.##",
+        "#############.##",
+        "#############.##",
+        "################",
+    ];
+
+    private static GameSession WalkTheCorridor(ulong seed)
+    {
+        var game = Arena.Create(seed, Corridor);
+        game.Player.Stealth = 60; // silent: only scent gives the player away
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        for (var i = 0; i < 12; i++) game.Execute(new WalkCommand(Direction.East));
+        for (var i = 0; i < 4; i++) game.Execute(new WalkCommand(Direction.South));
+        Assert.Equal(new Loc(13, 5), game.Player.Position);
+        return game;
+    }
+
+    [Fact]
+    public void Smell_LetsMonstersTrackAPlayerTheyCannotSenseOtherwise()
+    {
+        var game = WalkTheCorridor(1);
+        var fang = Arena.AddMonster(game, "fang", new Loc(1, 1)); // smell 30, fast
+        Assert.False(game.CanSee(fang));
+        Assert.False(game.CanHear(fang));
+        Assert.True(game.CanSmell(fang));
+
+        for (var i = 0; i < 15 && fang.Position.ChebyshevTo(game.Player.Position) > 1; i++) Hold(game, 1);
+
+        Assert.Equal(1, fang.Position.ChebyshevTo(game.Player.Position));
+    }
+
+    [Fact]
+    public void WithoutSmell_TheSameMonsterJustWanders()
+    {
+        var game = WalkTheCorridor(1);
+        var lizard = Arena.AddMonster(game, "rock_lizard", new Loc(1, 1)); // no smell
+        Assert.False(game.CanSmell(lizard));
+        Hold(game, 15);
+        Assert.True(lizard.Position.ChebyshevTo(game.Player.Position) > 1);
+    }
+
+    [Fact]
+    public void UnawareMonsters_Wander()
+    {
+        var game = Arena.Create(3,
+            "##########################",
+            "#,,,,,,,,,,#.............#",
+            "#,,,,@,,,,,#.............#",
+            "#,,,,,,,,,,#.............#",
+            "##########################");
+        game.Player.Stealth = 60;
+        var lizard = Arena.AddMonster(game, "rock_lizard", new Loc(18, 2));
+        var visited = new HashSet<Loc> { lizard.Position };
+
+        for (var i = 0; i < 40; i++)
+        {
+            Hold(game, 1);
+            visited.Add(lizard.Position);
+        }
+
+        Assert.True(visited.Count >= 4, $"only visited {visited.Count} squares");
+    }
+
+    // --- Fear -----------------------------------------------------------------------------------
+
+    [Fact]
+    public void CorneredMonsters_TurnToFight()
+    {
+        var game = Arena.Create(1,
+            "#######",
+            "#,,@k##",
+            "#######");
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        var kobold = Arena.AddMonster(game, "kobold", new Loc(4, 1));
+        kobold.Fear = 50;
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+
+        Hold(game, 2);
+
+        Assert.Equal(0, kobold.Fear);
+        Assert.Contains("The kobold turns to fight!", messages);
+    }
+
+    // --- Pack tactics --------------------------------------------------------------------------
+
+    [Fact]
+    public void Packs_WaitOutOfSightWhileThePlayerIsInACorridor_ThenAttackInTheOpen()
+    {
+        var game = Arena.Create(4,
+            "###############",
+            "#,,,,,,,,,,,,,#",
+            "#,,,,,,,,,,,,,#",
+            "#######.#######",
+            "#######.#######",
+            "#######@#######",
+            "###############");
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        var jackals = new[] { new Loc(2, 1), new Loc(12, 1), new Loc(3, 2) }
+            .Select(p => Arena.AddMonster(game, "jackal", p)).ToList();
+        var bites = Collect<MonsterAttackEvent>(game);
+
+        Hold(game, 15);
+        Assert.Empty(bites);
+        Assert.All(jackals, j => Assert.False(game.Level[j.Position].Has(Angband.Core.World.SquareFlags.View),
+            $"jackal at {j.Position} is in plain view"));
+
+        game.Player.Position = new Loc(7, 2); // step out into the room
+        game.UpdateView();
+        Hold(game, 15);
+        Assert.NotEmpty(bites);
+    }
+
+    // --- Breeding --------------------------------------------------------------------------------
+
+    private static readonly string[] BigRoom =
+    [
+        "##############################",
+        "#,,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "#,,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "#,,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "#,,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "#,,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "#,,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "#@,,,,,,,,,,,,,,,,,,,,,,,,,,,#",
+        "##############################",
+    ];
+
+    [Fact]
+    public void Breeders_Multiply()
+    {
+        var game = Arena.Create(5, BigRoom);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        game.Player.Stealth = 60;
+        Arena.AddMonster(game, "white_worm_mass", new Loc(20, 3));
+
+        Hold(game, 150);
+
+        Assert.True(game.Level.Monsters.Count > 3, $"{game.Level.Monsters.Count} worms");
+    }
+
+    [Fact]
+    public void Breeding_StopsAtTheLevelCap()
+    {
+        using var mod = new TempDir();
+        File.WriteAllText(Path.Combine(mod.Path, DataLoader.ConstantsFile), """{ "maxBreeders": 6 }""");
+        var data = DataLoader.Load(DataLoader.DefaultDataDirectory, mod.Path);
+        var game = Arena.CreateWith(data, 6, BigRoom);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        game.Player.Stealth = 60;
+        Arena.AddMonster(game, "white_worm_mass", new Loc(20, 3));
+
+        Hold(game, 300);
+
+        Assert.Equal(6, game.Level.Monsters.Count);
+    }
+
+    // --- Movement rules -------------------------------------------------------------------------
+
+    [Fact]
+    public void BigMonsters_PushPastWeakerOnes()
+    {
+        var game = Arena.Create(7,
+            "#############",
+            "#@.......,,,#",
+            "#############");
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        var giant = Arena.AddMonster(game, "fire_giant", new Loc(10, 1));
+        var mold = Arena.AddMonster(game, "rock_lizard", new Loc(8, 1));
+        mold.Sleep = 10_000;
+
+        for (var i = 0; i < 20 && giant.Position.X > 7; i++) Hold(game, 1);
+
+        Assert.True(giant.Position.X < 8, $"giant stuck at {giant.Position}");
+    }
+
+    [Fact]
+    public void BashersBreakLockedDoors()
+    {
+        var game = Arena.Create(8,
+            "#########",
+            "#@,,+,,,#",
+            "#########");
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        var door = new Loc(4, 1);
+        game.Level[door].LockPower = 1;
+        Arena.AddMonster(game, "baby_blue_dragon", new Loc(6, 1)); // BASH_DOOR only
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+
+        Hold(game, 30);
+
+        Assert.False(game.Level.Has(door, TerrainFlags.DoorClosed));
+        Assert.Contains(messages, m => m.Contains("burst open"));
+    }
+
+    // --- Spells --------------------------------------------------------------------------------
+
+    private static readonly string[] Hall =
+    [
+        "#################",
+        "#,,,,,,,,,,,,,,,#",
+        "#,,@,,,,,,,,,,,,#",
+        "#,,,,,,,,,,,,,,,#",
+        "#################",
+    ];
+
+    [Fact]
+    public void Archers_ShootFromRange()
+    {
+        var game = Arena.Create(9, Hall);
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        var archer = Arena.AddMonster(game, "kobold_archer", new Loc(14, 2));
+        archer.Hp = archer.MaxHp = 10_000;
+        var spells = Collect<MonsterSpellEvent>(game);
+        var hurt = Collect<PlayerHurtEvent>(game);
+
+        Hold(game, 10);
+
+        Assert.Contains(spells, s => s.SpellId == "ARROW");
+        Assert.NotEmpty(hurt); // (regeneration at 1000 max HP hides small hits in the HP total)
+    }
+
+    [Fact]
+    public void Bolts_AreNotCastThroughOtherMonsters()
+    {
+        var game = Arena.Create(10,
+            "#################",
+            "#@,,,,,,,,,,,,,,#",
+            "#################");
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        Arena.AddMonster(game, "grey_mold", new Loc(5, 1)).Hp = 100_000;
+        var archer = Arena.AddMonster(game, "kobold_archer", new Loc(12, 1));
+        archer.Sleep = 0;
+        var spells = Collect<MonsterSpellEvent>(game);
+
+        Hold(game, 20);
+
+        Assert.DoesNotContain(spells, s => s.SpellId == "ARROW");
+    }
+
+    [Fact]
+    public void Casters_HealTheirWounds_AndPullThePlayerClose_AndSummon()
+    {
+        var game = Arena.Create(11, BigRoom);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        game.Player.SkillSave = 1000;
+        var orfax = Arena.AddMonster(game, "orfax", new Loc(15, 2));
+        var spells = Collect<MonsterSpellEvent>(game);
+        var moves = Collect<PlayerMovedEvent>(game);
+
+        bool SeenAll() => new[] { "HEAL", "TELE_TO", "S_MONSTER" }.All(id => spells.Any(s => s.SpellId == id));
+        for (var i = 0; i < 600 && !SeenAll(); i++)
+        {
+            orfax.Hp = Math.Min(orfax.Hp, orfax.MaxHp / 2); // keep him hurt so healing is worthwhile
+            Hold(game, 1);
+        }
+
+        Assert.Contains(spells, s => s.SpellId == "HEAL");
+        Assert.Contains(spells, s => s.SpellId == "TELE_TO");
+        Assert.Contains(spells, s => s.SpellId == "S_MONSTER");
+        Assert.NotEmpty(moves);
+        Assert.True(game.Level.Monsters.Count > 1);
+    }
+
+    [Fact]
+    public void SavingThrows_AndProtections_StopStatusSpells()
+    {
+        var game = Arena.Create(12, Hall);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        game.Player.SkillSave = 1000; // always saves
+        var priest = Arena.AddMonster(game, "dark_elven_priest", new Loc(12, 2));
+        priest.Hp = priest.MaxHp = 100_000;
+        var spells = Collect<MonsterSpellEvent>(game);
+
+        Hold(game, 80);
+
+        Assert.Contains(spells, s => s.SpellId is "BLIND" or "CONF" or "SCARE");
+        Assert.False(game.Player.Timed.Has(TimedIds.Blind));
+        Assert.False(game.Player.Timed.Has(TimedIds.Confused));
+        Assert.False(game.Player.Timed.Has(TimedIds.Afraid));
+    }
+
+    [Fact]
+    public void Breath_ScalesWithTheCastersHealth_AndIsResisted()
+    {
+        int BreathDamage(int resist, int hp)
+        {
+            var game = Arena.Create(13, Hall);
+            game.Player.Hp = game.Player.MaxHp = 100_000;
+            if (resist != 0) game.Player.IntrinsicResists["elec"] = resist;
+            game.RecalculateBonuses();
+            var dragon = Arena.AddMonster(game, "baby_blue_dragon", new Loc(12, 2));
+            dragon.Hp = dragon.MaxHp = hp;
+            var hurt = 0;
+            var breathing = false;
+            game.Events.Subscribe<MonsterSpellEvent>(_ => breathing = true);
+            game.Events.Subscribe<PlayerHurtEvent>(e => { if (breathing) hurt = e.Damage; breathing = false; });
+            for (var i = 0; i < 400 && hurt == 0; i++) Hold(game, 1);
+            return hurt;
+        }
+
+        Assert.Equal(600 / 6, BreathDamage(0, 600));
+        Assert.Equal(60 / 6, BreathDamage(0, 60));
+        Assert.Equal(600 / 6 / 3, BreathDamage(1, 600));
+    }
+
+    [Fact]
+    public void FrightenedCasters_OnlyUseEscapes()
+    {
+        var game = Arena.Create(14, BigRoom);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        var orfax = Arena.AddMonster(game, "orfax", new Loc(15, 2));
+        var spells = Collect<MonsterSpellEvent>(game);
+
+        for (var i = 0; i < 100; i++)
+        {
+            orfax.Fear = 50;
+            orfax.Hp = orfax.MaxHp / 3;
+            Hold(game, 1);
+        }
+
+        // Healing also restores courage, so a non-escape spell may follow a heal - but never otherwise.
+        Assert.NotEmpty(spells);
+        var offensive = spells.Count(s => s.SpellId is not ("HEAL" or "BLINK"));
+        Assert.True(offensive <= spells.Count(s => s.SpellId == "HEAL"), $"{offensive} offensive casts while afraid");
+    }
+
+    [Fact]
+    public void LowLevelCasters_SometimesFail()
+    {
+        var game = Arena.Create(15, Hall);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        var shaman = Arena.AddMonster(game, "kobold_shaman", new Loc(12, 2));
+        shaman.Hp = shaman.MaxHp = 100_000;
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+
+        Hold(game, 300);
+
+        Assert.Contains(messages, m => m.EndsWith("tries to cast a spell, but fails."));
+    }
+
+    [Fact]
+    public void PitsAndNests_AreFilledWithOneKindOfMonster()
+    {
+        var generator = new Angband.Core.Generation.DungeonGenerator(TestData.Game);
+        var spawner = new MonsterSpawner(TestData.Game);
+        var checkedRooms = 0;
+        for (ulong seed = 0; seed < 60 && checkedRooms < 3; seed++)
+        {
+            var level = generator.Generate(new Angband.Core.Generation.LevelRequest(40, seed, ProfileId: "fortress")).Level;
+            var hints = level.SpawnHints.Where(h => h.Kind is Angband.Core.World.SpawnKind.PitMonster or Angband.Core.World.SpawnKind.NestMonster).ToList();
+            if (hints.Count == 0) continue;
+
+            spawner.Populate(level, new Angband.Core.Randomness.GameRandom(seed), new Loc(1, 1), new HashSet<string>());
+            var clusters = MonsterSpawner.PitClusters(hints);
+            foreach (var room in hints.GroupBy(h => clusters[h.Loc]))
+            {
+                var glyphs = room.Select(h => level.Monsters.At(h.Loc)).OfType<Monster>().Select(m => m.Race.Glyph).Distinct().ToList();
+                if (glyphs.Count == 0) continue;
+                Assert.Single(glyphs);
+                checkedRooms++;
+            }
+        }
+        Assert.True(checkedRooms > 0, "no pits or nests were generated");
+    }
+
+    [Fact]
+    public void MonsterAi_IsDeterministic()
+    {
+        static string Run()
+        {
+            var game = GameSession.NewGame(TestData.Game, 31);
+            game.Execute(new DebugJumpCommand(12));
+            game.Player.Hp = game.Player.MaxHp = 100_000;
+            for (var i = 0; i < 200; i++) game.Execute(new HoldCommand());
+            return string.Join(";", game.Level.Monsters.All.Select(m => $"{m.Race.Id}@{m.Position}:{m.Hp}")) + $"|{game.Player.Hp}";
+        }
+        Assert.Equal(Run(), Run());
+    }
+
+    private sealed class TempDir : IDisposable
+    {
+        public string Path { get; } = Directory.CreateTempSubdirectory("avaband-ai-").FullName;
+        public void Dispose() => Directory.Delete(Path, recursive: true);
+    }
+}

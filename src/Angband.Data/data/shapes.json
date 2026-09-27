@@ -1,0 +1,189 @@
+[
+  {
+    "id": "fox",
+    "name": "fox",
+    "toHit": -3,
+    "toDam": -3,
+    "toAc": 3,
+    "modifiers": {
+      "str": -3,
+      "stealth": 5,
+      "blows": 1
+    },
+    "resists": [
+      "free_act"
+    ],
+    "blows": [
+      "bite",
+      "claw"
+    ]
+  },
+  {
+    "id": "pukel_man",
+    "name": "Púkel-man",
+    "toHit": 0,
+    "toDam": 5,
+    "toAc": 20,
+    "skills": {
+      "save": 20
+    },
+    "modifiers": {
+      "str": 4,
+      "con": 4,
+      "stealth": -2,
+      "speed": -5
+    },
+    "resists": [
+      "pois",
+      "shards",
+      "sust_str",
+      "sust_con",
+      "stun"
+    ],
+    "flags": [
+      "REGEN",
+      "HOLD_LIFE"
+    ],
+    "effect": "cure:poisoned; cure:stun",
+    "blows": [
+      "punch",
+      "crush",
+      "thump",
+      "strike"
+    ]
+  },
+  {
+    "id": "bear",
+    "name": "bear",
+    "toHit": 15,
+    "toDam": 15,
+    "toAc": 5,
+    "skills": {
+      "melee": 10,
+      "disarm": -5
+    },
+    "modifiers": {
+      "str": 3,
+      "int": -2,
+      "con": 2,
+      "infra": 1,
+      "stealth": -3,
+      "blows": 1
+    },
+    "resists": [
+      "fear"
+    ],
+    "blows": [
+      "cuff",
+      "clout",
+      "claw",
+      "hit",
+      "hit",
+      "swipe",
+      "slash"
+    ]
+  },
+  {
+    "id": "eagle",
+    "name": "eagle",
+    "toHit": 5,
+    "toDam": 0,
+    "toAc": 10,
+    "resists": [
+      "sust_wis",
+      "blind",
+      "conf",
+      "fear",
+      "see_invis",
+      "free_act"
+    ],
+    "blows": [
+      "peck",
+      "claw",
+      "claw",
+      "strike",
+      "tear"
+    ]
+  },
+  {
+    "id": "bat",
+    "name": "bat",
+    "toHit": 0,
+    "toDam": -10,
+    "toAc": 10,
+    "modifiers": {
+      "speed": 3,
+      "stealth": 3,
+      "infra": 5
+    },
+    "resists": [
+      "see_invis",
+      "blind"
+    ],
+    "effect": "damage:5",
+    "blows": [
+      "bite",
+      "scratch"
+    ]
+  },
+  {
+    "id": "warg",
+    "name": "warg",
+    "toHit": 5,
+    "toDam": 5,
+    "toAc": 0,
+    "modifiers": {
+      "blows": 2
+    },
+    "effect": "damage:1d20; cure:afraid; timed:berserk:1d20+5",
+    "blows": [
+      "bite",
+      "bite",
+      "claw",
+      "tear"
+    ]
+  },
+  {
+    "id": "vampire",
+    "name": "vampire",
+    "toHit": 3,
+    "toDam": 3,
+    "toAc": -5,
+    "modifiers": {
+      "light": -1,
+      "stealth": 5,
+      "infra": 5,
+      "speed": 5
+    },
+    "resists": [
+      "see_invis"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "effect": "lose_hp_fraction:4; timed:att_vamp:10+1d20",
+    "blows": [
+      "bite"
+    ]
+  },
+  {
+    "id": "werewolf",
+    "name": "werewolf",
+    "toHit": 5,
+    "toDam": 5,
+    "toAc": 0,
+    "modifiers": {
+      "blows": 1
+    },
+    "flags": [
+      "REGEN"
+    ],
+    "effect": "cure:afraid; timed:berserk:1d20+5",
+    "blows": [
+      "bite",
+      "bite",
+      "slash",
+      "tear"
+    ]
+  }
+]

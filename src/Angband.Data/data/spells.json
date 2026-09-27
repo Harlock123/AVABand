@@ -1,0 +1,2426 @@
+[
+  {
+    "id": "nether_bolt",
+    "name": "Nether Bolt",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "bolt:nether:{L/4+3}d4",
+    "description": "Fires a bolt of nether; the undead shrug it off.",
+    "classes": {
+      "necromancer": {
+        "level": 1,
+        "mana": 1,
+        "fail": 22,
+        "exp": 2
+      }
+    }
+  },
+  {
+    "id": "sense_invisible",
+    "name": "Sense Invisible",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "timed:see_invisible:24+1d24",
+    "description": "Lets you see invisible monsters for 24+1d24 turns.",
+    "classes": {
+      "necromancer": {
+        "level": 2,
+        "mana": 4,
+        "fail": 25,
+        "exp": 3
+      }
+    }
+  },
+  {
+    "id": "create_darkness",
+    "name": "Create Darkness",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "darken_area",
+    "description": "Darkens the area around you, and the room you are in.",
+    "classes": {
+      "necromancer": {
+        "level": 3,
+        "mana": 3,
+        "fail": 10,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "bat_form",
+    "name": "Bat Form",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "shapechange:bat",
+    "description": "Changes you into a bat: weak, but with excellent senses. A bat cannot use items.",
+    "classes": {
+      "necromancer": {
+        "level": 3,
+        "mana": 4,
+        "fail": 20,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "read_minds",
+    "name": "Read Minds",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "detect_minds:30:{L/10+1}",
+    "description": "Detects monsters with minds nearby, and maps the area around each of them.",
+    "classes": {
+      "necromancer": {
+        "level": 4,
+        "mana": 4,
+        "fail": 10,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "tap_unlife",
+    "name": "Tap Unlife",
+    "realm": "shadow",
+    "book": "dark_rituals",
+    "effect": "tap_unlife:{L/4+2}d6",
+    "description": "Drains the nearest undead monster, turning the damage into mana.",
+    "classes": {
+      "necromancer": {
+        "level": 7,
+        "mana": 0,
+        "fail": 50,
+        "exp": 3
+      }
+    }
+  },
+  {
+    "id": "crush",
+    "name": "Crush",
+    "realm": "shadow",
+    "book": "dark_rituals",
+    "effect": "crush:{L*4}; damage:1d{L*2}",
+    "description": "Kills every monster in view with fewer than four times your level in hit points, at some cost to you.",
+    "classes": {
+      "necromancer": {
+        "level": 10,
+        "mana": 6,
+        "fail": 40,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "sleep_evil",
+    "name": "Sleep Evil",
+    "realm": "shadow",
+    "book": "dark_rituals",
+    "effect": "project_los:sleep:{L*10+500}:EVIL",
+    "description": "Puts every evil monster in view to sleep.",
+    "classes": {
+      "necromancer": {
+        "level": 12,
+        "mana": 5,
+        "fail": 50,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "shadow_shift",
+    "name": "Shadow Shift",
+    "realm": "shadow",
+    "book": "dark_rituals",
+    "effect": "teleport:30; damage:2d5",
+    "description": "Displaces your spirit a short distance, hurting your body as it is dragged along.",
+    "classes": {
+      "necromancer": {
+        "level": 15,
+        "mana": 10,
+        "fail": 50,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "disenchant",
+    "name": "Disenchant",
+    "realm": "shadow",
+    "book": "dark_rituals",
+    "effect": "bolt:disen:2d{L*2+10}",
+    "description": "Fires a bolt of disenchantment.",
+    "classes": {
+      "necromancer": {
+        "level": 16,
+        "mana": 12,
+        "fail": 50,
+        "exp": 15
+      }
+    }
+  },
+  {
+    "id": "frighten",
+    "name": "Frighten",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "monster_status:scare:{L}",
+    "description": "Scares a monster, unless it is fearless.",
+    "classes": {
+      "necromancer": {
+        "level": 17,
+        "mana": 4,
+        "fail": 40,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "vampire_strike",
+    "name": "Vampire Strike",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "vampire_strike:{L*2}",
+    "description": "Leaps to the nearest living monster and drains its blood, healing and feeding you.",
+    "classes": {
+      "necromancer": {
+        "level": 20,
+        "mana": 5,
+        "fail": 50,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "dispel_life",
+    "name": "Dispel Life",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "dispel:LIVING:1d{L*3}",
+    "description": "Damages every living monster in view.",
+    "classes": {
+      "necromancer": {
+        "level": 22,
+        "mana": 20,
+        "fail": 50,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "dark_spear",
+    "name": "Dark Spear",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "beam:dark:2d{L*2}",
+    "description": "Fires a beam of darkness.",
+    "classes": {
+      "necromancer": {
+        "level": 25,
+        "mana": 10,
+        "fail": 60,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "warg_form",
+    "name": "Warg Form",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "shapechange:warg",
+    "description": "Changes you into a warg, with berserk strength.",
+    "classes": {
+      "necromancer": {
+        "level": 28,
+        "mana": 20,
+        "fail": 60,
+        "exp": 80
+      }
+    }
+  },
+  {
+    "id": "banish_spirits",
+    "name": "Banish Spirits",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "project_los:away:100:SPIRIT",
+    "description": "Teleports away every monster with a spirit in view.",
+    "classes": {
+      "necromancer": {
+        "level": 25,
+        "mana": 25,
+        "fail": 80,
+        "exp": 25
+      }
+    }
+  },
+  {
+    "id": "annihilate",
+    "name": "Annihilate",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "drain_life:{L*4}",
+    "description": "Drains four times your level in hit points from a living monster.",
+    "classes": {
+      "necromancer": {
+        "level": 30,
+        "mana": 20,
+        "fail": 75,
+        "exp": 25
+      }
+    }
+  },
+  {
+    "id": "gronds_blow",
+    "name": "Grond's Blow",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "destruction:15",
+    "description": "Destroys everything within 15 squares of you.",
+    "classes": {
+      "necromancer": {
+        "level": 35,
+        "mana": 35,
+        "fail": 80,
+        "exp": 115
+      }
+    }
+  },
+  {
+    "id": "unleash_chaos",
+    "name": "Unleash Chaos",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "random:3; beam:chaos:8d{L}; ball:chaos:8d{L}:1; ball:chaos:8d{L}:3; aggravate; project_los:scare:{L}",
+    "description": "Fires chaos as a beam or a ball, waking everything nearby and frightening whatever is in view.",
+    "classes": {
+      "necromancer": {
+        "level": 38,
+        "mana": 15,
+        "fail": 90,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "fume_of_mordor",
+    "name": "Fume of Mordor",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "darken_level",
+    "description": "Darkens and maps the whole level, and senses every object on it.",
+    "classes": {
+      "necromancer": {
+        "level": 40,
+        "mana": 50,
+        "fail": 80,
+        "exp": 150
+      }
+    }
+  },
+  {
+    "id": "storm_of_darkness",
+    "name": "Storm of Darkness",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "ball:dark:4d{L*2}:4",
+    "description": "Invokes a great ball of darkness.",
+    "classes": {
+      "necromancer": {
+        "level": 43,
+        "mana": 16,
+        "fail": 80,
+        "exp": 200
+      }
+    }
+  },
+  {
+    "id": "seek_battle",
+    "name": "Seek Battle",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "detect_fearful:30",
+    "description": "Detects nearby monsters that can be frightened.",
+    "classes": {
+      "blackguard": {
+        "level": 1,
+        "mana": 1,
+        "fail": 15,
+        "exp": 2
+      }
+    }
+  },
+  {
+    "id": "berserk_strength",
+    "name": "Berserk Strength",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "cure:afraid; timed:berserk:{L+5}+1d{L+5}",
+    "description": "Removes fear and sends you into a berserk rage.",
+    "classes": {
+      "blackguard": {
+        "level": 3,
+        "mana": 2,
+        "fail": 20,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "whirlwind_attack",
+    "name": "Whirlwind Attack",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "sweep:{(L+10)/15}",
+    "description": "Strikes every adjacent enemy: one blow at level 5, one more every 15 levels.",
+    "classes": {
+      "blackguard": {
+        "level": 5,
+        "mana": 4,
+        "fail": 25,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "shatter_stone",
+    "name": "Shatter Stone",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "stone_to_mud:1",
+    "description": "Destroys an adjacent section of wall or rubble.",
+    "classes": {
+      "blackguard": {
+        "level": 7,
+        "mana": 3,
+        "fail": 20,
+        "exp": 8
+      }
+    },
+    "needsDirection": true
+  },
+  {
+    "id": "leap_into_battle",
+    "name": "Leap into Battle",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "leap:{(L+5)/15}",
+    "description": "Runs up to 4 squares at a monster and strikes it; each square run costs a quarter of the blows.",
+    "classes": {
+      "blackguard": {
+        "level": 10,
+        "mana": 5,
+        "fail": 30,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "grim_purpose",
+    "name": "Grim Purpose",
+    "realm": "shadow",
+    "book": "into_the_shadows",
+    "effect": "timed:grim_purpose:12+1d12",
+    "description": "Makes your mind too focused to be slowed, paralyzed or confused.",
+    "classes": {
+      "blackguard": {
+        "level": 13,
+        "mana": 8,
+        "fail": 30,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "maim_foe",
+    "name": "Maim Foe",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "blows:stun:{L/15}",
+    "description": "Strikes an adjacent enemy with one blow per 15 levels, stunning it if any lands.",
+    "classes": {
+      "blackguard": {
+        "level": 15,
+        "mana": 6,
+        "fail": 35,
+        "exp": 14
+      }
+    },
+    "needsDirection": true
+  },
+  {
+    "id": "howl_of_the_damned",
+    "name": "Howl of the Damned",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "project_los:scare:{L}",
+    "description": "Tries to frighten every monster in view.",
+    "classes": {
+      "blackguard": {
+        "level": 18,
+        "mana": 8,
+        "fail": 30,
+        "exp": 16
+      }
+    }
+  },
+  {
+    "id": "venom",
+    "name": "Venom",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "timed:att_pois:18+1d18",
+    "description": "Coats your weapon with poison.",
+    "classes": {
+      "blackguard": {
+        "level": 28,
+        "mana": 18,
+        "fail": 35,
+        "exp": 30
+      }
+    }
+  },
+  {
+    "id": "werewolf_form",
+    "name": "Werewolf Form",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "shapechange:werewolf",
+    "description": "With a blood-curdling cry you become half man, half wolf.",
+    "classes": {
+      "blackguard": {
+        "level": 32,
+        "mana": 30,
+        "fail": 40,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "unholy_reprieve",
+    "name": "Unholy Reprieve",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "restore_stat:str; restore_stat:int; restore_stat:con; restore_exp; damage:66",
+    "description": "Restores strength, intelligence, constitution and experience, at the cost of 66 hit points.",
+    "classes": {
+      "blackguard": {
+        "level": 34,
+        "mana": 45,
+        "fail": 60,
+        "exp": 120
+      }
+    }
+  },
+  {
+    "id": "forceful_blow",
+    "name": "Forceful Blow",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "blows:force:1",
+    "description": "A single mighty blow that hurls the target back and may stun it.",
+    "classes": {
+      "blackguard": {
+        "level": 38,
+        "mana": 16,
+        "fail": 50,
+        "exp": 150
+      }
+    },
+    "needsDirection": true
+  },
+  {
+    "id": "quake",
+    "name": "Quake",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "earthquake:13",
+    "description": "Causes a great earthquake around you.",
+    "classes": {
+      "blackguard": {
+        "level": 44,
+        "mana": 39,
+        "fail": 55,
+        "exp": 175
+      }
+    }
+  },
+  {
+    "id": "relentless_taunting",
+    "name": "Relentless Taunting",
+    "realm": "shadow",
+    "book": "fear_and_torment",
+    "effect": "timed:taunt:12+1d12",
+    "description": "Makes monsters keen to close in on you, and half as likely to use spells or other ranged attacks.",
+    "classes": {
+      "blackguard": {
+        "level": 24,
+        "mana": 10,
+        "fail": 32,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "bloodlust",
+    "name": "Bloodlust",
+    "realm": "shadow",
+    "book": "deadly_powers",
+    "effect": "timed:bloodlust:10",
+    "description": "A powerful desire to kill, fed by every kill: extra damage and blows, but it wears on body and mind.",
+    "classes": {
+      "blackguard": {
+        "level": 30,
+        "mana": 25,
+        "fail": 37,
+        "exp": 80
+      }
+    }
+  },
+  {
+    "id": "power_sacrifice",
+    "name": "Power Sacrifice",
+    "realm": "shadow",
+    "book": "corruption_of_spirit",
+    "effect": "damage:50; gain_mana:50",
+    "description": "Exchanges 50 hit points for 50 mana.",
+    "classes": {
+      "necromancer": {
+        "level": 27,
+        "mana": 0,
+        "fail": 20,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "zone_of_unmagic",
+    "name": "Zone of Unmagic",
+    "realm": "shadow",
+    "book": "corruption_of_spirit",
+    "effect": "spot:disen:{L*3}:4",
+    "description": "A zone of disenchantment around you, radius 4, affecting you as well as the monsters in it.",
+    "classes": {
+      "necromancer": {
+        "level": 32,
+        "mana": 16,
+        "fail": 60,
+        "exp": 110
+      }
+    }
+  },
+  {
+    "id": "vampire_form",
+    "name": "Vampire Form",
+    "realm": "shadow",
+    "book": "corruption_of_spirit",
+    "effect": "shapechange:vampire; vampire_strike:{L}",
+    "description": "Takes the form of a vampire at the cost of a quarter of your hit points, then leaps to feed on the nearest living monster.",
+    "classes": {
+      "necromancer": {
+        "level": 37,
+        "mana": 20,
+        "fail": 60,
+        "exp": 140
+      }
+    }
+  },
+  {
+    "id": "curse",
+    "name": "Curse",
+    "realm": "shadow",
+    "book": "corruption_of_spirit",
+    "effect": "damage:100; curse:{L/12+1}",
+    "description": "Deals direct damage to a monster, more the more hurt it already is, at the cost of 100 hit points.",
+    "classes": {
+      "necromancer": {
+        "level": 40,
+        "mana": 50,
+        "fail": 60,
+        "exp": 180
+      }
+    }
+  },
+  {
+    "id": "command",
+    "name": "Command",
+    "realm": "shadow",
+    "book": "corruption_of_spirit",
+    "effect": "command:5+1d10",
+    "description": "Takes control of a monster: for a while you move it instead of yourself.",
+    "classes": {
+      "necromancer": {
+        "level": 45,
+        "mana": 40,
+        "fail": 60,
+        "exp": 250
+      }
+    }
+  },
+  {
+    "id": "magic_missile",
+    "name": "Magic Missile",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "bolt_or_beam:none:{(L-1)/5+3}d4:-10",
+    "description": "Fires a bolt of pure magic — sometimes a beam — with more dice as you gain levels.",
+    "classes": {
+      "mage": {
+        "level": 1,
+        "mana": 1,
+        "fail": 22,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "light_room",
+    "name": "Light Room",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "light_area; light_damage:1:1",
+    "description": "Lights up the room you are in and the squares around you.",
+    "classes": {
+      "mage": {
+        "level": 1,
+        "mana": 2,
+        "fail": 26,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "find_traps_doors",
+    "name": "Find Traps, Doors & Stairs",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "detect_traps:30; detect_stairs:30",
+    "description": "Detects the traps, doors and stairs nearby.",
+    "classes": {
+      "mage": {
+        "level": 1,
+        "mana": 1,
+        "fail": 20,
+        "exp": 2
+      }
+    }
+  },
+  {
+    "id": "phase_door",
+    "name": "Phase Door",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "teleport:10",
+    "description": "Teleports you up to 10 squares away.",
+    "classes": {
+      "mage": {
+        "level": 2,
+        "mana": 2,
+        "fail": 22,
+        "exp": 4
+      },
+      "rogue": {
+        "level": 7,
+        "mana": 2,
+        "fail": 55,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "electric_arc",
+    "name": "Electric Arc",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "short_beam:elec:{(L-1)/5+3}d6:0:1",
+    "description": "A short beam of lightning, longer as you gain levels.",
+    "classes": {
+      "mage": {
+        "level": 2,
+        "mana": 2,
+        "fail": 34,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "detect_monsters",
+    "name": "Detect Monsters",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "detect_monsters:30",
+    "description": "Detects the visible monsters nearby.",
+    "classes": {
+      "mage": {
+        "level": 3,
+        "mana": 2,
+        "fail": 24,
+        "exp": 4
+      },
+      "rogue": {
+        "level": 5,
+        "mana": 1,
+        "fail": 50,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "fire_ball",
+    "name": "Fire Ball",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "ball:fire:{L*2}:2",
+    "description": "A ball of fire, radius 2.",
+    "classes": {
+      "mage": {
+        "level": 6,
+        "mana": 5,
+        "fail": 33,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "object_detection",
+    "name": "Object Detection",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "detect_objects:30",
+    "description": "Detects the objects nearby, gold included.",
+    "classes": {
+      "rogue": {
+        "level": 10,
+        "mana": 3,
+        "fail": 60,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "detect_stairs",
+    "name": "Detect Stairs",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "detect_stairs:40",
+    "description": "Detects the stairs (and doors) in a wide area.",
+    "classes": {
+      "rogue": {
+        "level": 12,
+        "mana": 3,
+        "fail": 50,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "recharging",
+    "name": "Recharging",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "recharge:{L/10+4}",
+    "description": "Adds charges to a wand or staff; a failed attempt destroys it.",
+    "classes": {
+      "rogue": {
+        "level": 20,
+        "mana": 10,
+        "fail": 50,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "reveal_monsters",
+    "name": "Reveal Monsters",
+    "realm": "arcane",
+    "book": "first_spells",
+    "effect": "detect_monsters:30; detect_invisible:30",
+    "description": "Detects all the monsters nearby.",
+    "classes": {
+      "rogue": {
+        "level": 25,
+        "mana": 3,
+        "fail": 40,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "mage_recharging",
+    "name": "Recharging",
+    "realm": "arcane",
+    "book": "attacks_and_knowledge",
+    "effect": "recharge:{L/8+6}",
+    "description": "Adds charges to a wand or staff; a failed attempt destroys it.",
+    "classes": {
+      "mage": {
+        "level": 5,
+        "mana": 5,
+        "fail": 28,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "identify_rune",
+    "name": "Identify Rune",
+    "realm": "arcane",
+    "book": "attacks_and_knowledge",
+    "effect": "identify",
+    "description": "Reveals an unknown rune on something you carry.",
+    "classes": {
+      "mage": {
+        "level": 8,
+        "mana": 7,
+        "fail": 25,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "find_treasure",
+    "name": "Treasure Detection",
+    "realm": "arcane",
+    "book": "attacks_and_knowledge",
+    "effect": "detect_objects:30",
+    "description": "Detects gold and senses objects nearby.",
+    "classes": {
+      "mage": {
+        "level": 10,
+        "mana": 3,
+        "fail": 60,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "frost_bolt",
+    "name": "Frost Bolt",
+    "realm": "arcane",
+    "book": "attacks_and_knowledge",
+    "effect": "bolt_or_beam:cold:{(L-5)/3+6}d8:0",
+    "description": "A bolt (sometimes a beam) of frost.",
+    "classes": {
+      "mage": {
+        "level": 13,
+        "mana": 5,
+        "fail": 40,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "mage_reveal_monsters",
+    "name": "Reveal Monsters",
+    "realm": "arcane",
+    "book": "attacks_and_knowledge",
+    "effect": "detect_monsters:30; detect_invisible:30",
+    "description": "Detects all the monsters nearby.",
+    "classes": {
+      "mage": {
+        "level": 15,
+        "mana": 6,
+        "fail": 40,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "acid_spray",
+    "name": "Acid Spray",
+    "realm": "arcane",
+    "book": "attacks_and_knowledge",
+    "effect": "arc:acid:{L/2}d8:10:60",
+    "description": "A spray of acid in a cone, up to 10 squares.",
+    "classes": {
+      "mage": {
+        "level": 20,
+        "mana": 5,
+        "fail": 30,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "disable_traps_destroy_doors",
+    "name": "Disable Traps, Destroy Doors",
+    "realm": "arcane",
+    "book": "magical_defences",
+    "effect": "destroy_doors; destroy_traps",
+    "description": "Destroys the doors and traps next to you.",
+    "classes": {
+      "mage": {
+        "level": 5,
+        "mana": 5,
+        "fail": 30,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "teleport_self",
+    "name": "Teleport Self",
+    "realm": "arcane",
+    "book": "magical_defences",
+    "effect": "teleport:{L*9/5}",
+    "description": "Teleports you a level-dependent distance.",
+    "classes": {
+      "mage": {
+        "level": 7,
+        "mana": 6,
+        "fail": 35,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "mage_teleport_other",
+    "name": "Teleport Other",
+    "realm": "arcane",
+    "book": "magical_defences",
+    "effect": "teleport_other",
+    "description": "Teleports away the first monster in the bolt's path.",
+    "classes": {
+      "mage": {
+        "level": 15,
+        "mana": 10,
+        "fail": 30,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "resist_elements",
+    "name": "Resistance",
+    "realm": "arcane",
+    "book": "magical_defences",
+    "effect": "timed:oppose_acid:20+1d20; timed:oppose_elec:20+1d20; timed:oppose_cold:20+1d20; timed:oppose_fire:20+1d20",
+    "description": "Temporary resistance to acid, lightning, frost and fire.",
+    "classes": {
+      "mage": {
+        "level": 20,
+        "mana": 20,
+        "fail": 65,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "tap_magical_energy",
+    "name": "Tap Magical Energy",
+    "realm": "arcane",
+    "book": "magical_defences",
+    "effect": "tap_device",
+    "description": "Drains the charges of a wand or staff into mana, leaving you a little stunned.",
+    "classes": {
+      "mage": {
+        "level": 22,
+        "mana": 2,
+        "fail": 30,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "mana_channel",
+    "name": "Mana Channel",
+    "realm": "arcane",
+    "book": "magical_defences",
+    "effect": "timed:fastcast:5+1d5",
+    "description": "For a few turns your spells take three quarters of a turn.",
+    "classes": {
+      "mage": {
+        "level": 25,
+        "mana": 10,
+        "fail": 50,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "door_creation",
+    "name": "Door Creation",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "make_doors",
+    "description": "Creates doors in the open squares around you.",
+    "classes": {
+      "mage": {
+        "level": 13,
+        "mana": 9,
+        "fail": 40,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "mana_bolt",
+    "name": "Mana Bolt",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "bolt_or_beam:mana:{L-10}d8:0",
+    "description": "A bolt (sometimes a beam) of pure mana.",
+    "classes": {
+      "mage": {
+        "level": 25,
+        "mana": 8,
+        "fail": 60,
+        "exp": 30
+      }
+    }
+  },
+  {
+    "id": "teleport_level_spell",
+    "name": "Teleport Level",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "teleport_level",
+    "description": "Takes you one level up or down.",
+    "classes": {
+      "mage": {
+        "level": 28,
+        "mana": 17,
+        "fail": 65,
+        "exp": 20
+      },
+      "rogue": {
+        "level": 35,
+        "mana": 17,
+        "fail": 65,
+        "exp": 80
+      }
+    }
+  },
+  {
+    "id": "detection",
+    "name": "Detection",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "detect_traps:30; detect_stairs:30; detect_objects:30; detect_monsters:30; detect_invisible:30",
+    "description": "Detects traps, doors, stairs, objects and monsters nearby.",
+    "classes": {
+      "mage": {
+        "level": 30,
+        "mana": 10,
+        "fail": 70,
+        "exp": 30
+      }
+    }
+  },
+  {
+    "id": "dimension_door",
+    "name": "Dimension Door",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "teleport_to",
+    "description": "Teleports you to the targeted place.",
+    "classes": {
+      "mage": {
+        "level": 35,
+        "mana": 30,
+        "fail": 80,
+        "exp": 40
+      }
+    }
+  },
+  {
+    "id": "thrust_away",
+    "name": "Thrust Away",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "short_beam:force:{L}d8:1:10",
+    "description": "A short beam of force.",
+    "classes": {
+      "mage": {
+        "level": 40,
+        "mana": 12,
+        "fail": 90,
+        "exp": 40
+      }
+    }
+  },
+  {
+    "id": "rogue_teleport_self",
+    "name": "Teleport Self",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "teleport:{L*9/5}",
+    "description": "Teleports you a level-dependent distance.",
+    "classes": {
+      "rogue": {
+        "level": 17,
+        "mana": 6,
+        "fail": 35,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "teleport_other_spell",
+    "name": "Teleport Other",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "teleport_other",
+    "description": "Teleports away the first monster in the bolt's path.",
+    "classes": {
+      "rogue": {
+        "level": 30,
+        "mana": 10,
+        "fail": 30,
+        "exp": 50
+      }
+    }
+  },
+  {
+    "id": "shock_wave",
+    "name": "Shock Wave",
+    "realm": "arcane",
+    "book": "wizards_tome_of_power",
+    "effect": "ball:sound:{L*2}:2",
+    "description": "A ball of sound, radius 2.",
+    "classes": {
+      "mage": {
+        "level": 20,
+        "mana": 5,
+        "fail": 40,
+        "exp": 16
+      }
+    }
+  },
+  {
+    "id": "explosion",
+    "name": "Explosion",
+    "realm": "arcane",
+    "book": "wizards_tome_of_power",
+    "effect": "ball:shards:{L*2}:2; ball:force:{L/5}:2",
+    "description": "A blast of shards and force.",
+    "classes": {
+      "mage": {
+        "level": 30,
+        "mana": 10,
+        "fail": 50,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "banishment",
+    "name": "Banishment",
+    "realm": "arcane",
+    "book": "wizards_tome_of_power",
+    "effect": "banish",
+    "description": "Banishes every monster of a kind you choose.",
+    "classes": {
+      "mage": {
+        "level": 35,
+        "mana": 45,
+        "fail": 95,
+        "exp": 25
+      }
+    }
+  },
+  {
+    "id": "mass_banishment",
+    "name": "Mass Banishment",
+    "realm": "arcane",
+    "book": "wizards_tome_of_power",
+    "effect": "mass_banishment",
+    "description": "Banishes the monsters around you.",
+    "classes": {
+      "mage": {
+        "level": 40,
+        "mana": 75,
+        "fail": 90,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "mana_storm",
+    "name": "Mana Storm",
+    "realm": "arcane",
+    "book": "wizards_tome_of_power",
+    "effect": "ball:mana:{L*2+300}:3",
+    "description": "A great ball of pure mana.",
+    "classes": {
+      "mage": {
+        "level": 45,
+        "mana": 16,
+        "fail": 85,
+        "exp": 200
+      }
+    }
+  },
+  {
+    "id": "call_light",
+    "name": "Call Light",
+    "realm": "divine",
+    "book": "novices_handbook",
+    "effect": "light_area; light_damage:2:{L/2}",
+    "description": "Lights the area and hurts light-sensitive monsters.",
+    "classes": {
+      "priest": {
+        "level": 1,
+        "mana": 1,
+        "fail": 10,
+        "exp": 2
+      },
+      "paladin": {
+        "level": 5,
+        "mana": 3,
+        "fail": 10,
+        "exp": 2
+      }
+    }
+  },
+  {
+    "id": "detect_evil",
+    "name": "Detect Evil",
+    "realm": "divine",
+    "book": "novices_handbook",
+    "effect": "detect_evil:30",
+    "description": "Detects the evil monsters nearby.",
+    "classes": {
+      "priest": {
+        "level": 1,
+        "mana": 1,
+        "fail": 10,
+        "exp": 4
+      },
+      "paladin": {
+        "level": 3,
+        "mana": 2,
+        "fail": 10,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "minor_healing",
+    "name": "Minor Healing",
+    "realm": "divine",
+    "book": "novices_handbook",
+    "effect": "heal:{L+10}:{L/4}; reduce:cut; reduce:stun",
+    "description": "Heals a level-dependent amount, and eases cuts and stunning.",
+    "classes": {
+      "priest": {
+        "level": 1,
+        "mana": 2,
+        "fail": 15,
+        "exp": 4
+      },
+      "paladin": {
+        "level": 7,
+        "mana": 3,
+        "fail": 15,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "bless",
+    "name": "Bless",
+    "realm": "divine",
+    "book": "novices_handbook",
+    "effect": "timed:blessed:{L+10}+1d{L+10}",
+    "description": "+5 armour and +10 to-hit for a while.",
+    "classes": {
+      "priest": {
+        "level": 1,
+        "mana": 2,
+        "fail": 20,
+        "exp": 4
+      },
+      "paladin": {
+        "level": 1,
+        "mana": 2,
+        "fail": 20,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "sense_invisible_prayer",
+    "name": "Sense Invisible",
+    "realm": "divine",
+    "book": "novices_handbook",
+    "effect": "timed:see_invisible:24+1d24",
+    "description": "Lets you see invisible monsters for 24+1d24 turns.",
+    "classes": {
+      "priest": {
+        "level": 3,
+        "mana": 4,
+        "fail": 25,
+        "exp": 4
+      },
+      "paladin": {
+        "level": 8,
+        "mana": 4,
+        "fail": 25,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "heroism",
+    "name": "Heroism",
+    "realm": "divine",
+    "book": "novices_handbook",
+    "effect": "heal:10; cure:afraid; timed:hero:{L-19}+1d{L-19}",
+    "description": "Heals a little and removes fear; from level 20, grants heroism too.",
+    "classes": {
+      "priest": {
+        "level": 5,
+        "mana": 2,
+        "fail": 30,
+        "exp": 5
+      },
+      "paladin": {
+        "level": 12,
+        "mana": 5,
+        "fail": 30,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "orb_of_draining",
+    "name": "Orb of Draining",
+    "realm": "divine",
+    "book": "cleansing_power",
+    "effect": "ball:holy_orb:{L*3/2}+3d6:2",
+    "description": "A holy orb, doubly hurtful to evil.",
+    "classes": {
+      "priest": {
+        "level": 7,
+        "mana": 7,
+        "fail": 40,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "spear_of_light",
+    "name": "Spear of Light",
+    "realm": "divine",
+    "book": "cleansing_power",
+    "effect": "light_line:6d8",
+    "description": "A beam of light that hurts light-sensitive monsters.",
+    "classes": {
+      "priest": {
+        "level": 7,
+        "mana": 6,
+        "fail": 30,
+        "exp": 5
+      }
+    },
+    "needsDirection": true
+  },
+  {
+    "id": "dispel_undead",
+    "name": "Dispel Undead",
+    "realm": "divine",
+    "book": "cleansing_power",
+    "effect": "dispel:UNDEAD:1d{L*5}",
+    "description": "Damages every undead monster in view.",
+    "classes": {
+      "priest": {
+        "level": 10,
+        "mana": 14,
+        "fail": 55,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "dispel_evil",
+    "name": "Dispel Evil",
+    "realm": "divine",
+    "book": "cleansing_power",
+    "effect": "dispel:EVIL:1d{L*5}",
+    "description": "Damages every evil monster in view.",
+    "classes": {
+      "priest": {
+        "level": 12,
+        "mana": 20,
+        "fail": 70,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "priest_protection_from_evil",
+    "name": "Protection from Evil",
+    "realm": "divine",
+    "book": "cleansing_power",
+    "effect": "timed:prot_evil:{L*3}+1d25",
+    "description": "Evil monsters' blows may be repelled, unless they are of a higher level than you.",
+    "classes": {
+      "priest": {
+        "level": 14,
+        "mana": 8,
+        "fail": 42,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "priest_remove_curse",
+    "name": "Remove Curse",
+    "realm": "divine",
+    "book": "cleansing_power",
+    "effect": "remove_curse",
+    "description": "Tries to remove a curse.",
+    "classes": {
+      "priest": {
+        "level": 16,
+        "mana": 6,
+        "fail": 38,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "portal",
+    "name": "Portal",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "teleport:{L/2+30}",
+    "description": "Teleports you a medium distance.",
+    "classes": {
+      "priest": {
+        "level": 10,
+        "mana": 4,
+        "fail": 30,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "remembrance",
+    "name": "Remembrance",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "restore_exp",
+    "description": "Restores your life levels.",
+    "classes": {
+      "priest": {
+        "level": 20,
+        "mana": 30,
+        "fail": 90,
+        "exp": 50
+      }
+    }
+  },
+  {
+    "id": "word_of_recall",
+    "name": "Word of Recall",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "recall",
+    "description": "Takes you to the town, or back to your deepest level, after a short delay.",
+    "classes": {
+      "priest": {
+        "level": 25,
+        "mana": 30,
+        "fail": 75,
+        "exp": 10
+      },
+      "paladin": {
+        "level": 25,
+        "mana": 30,
+        "fail": 75,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "healing",
+    "name": "Healing",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "heal:2000; cure:cut; cure:poisoned; cure:stun",
+    "description": "Heals 2000 hit points and cures cuts, poison and stunning.",
+    "classes": {
+      "priest": {
+        "level": 30,
+        "mana": 50,
+        "fail": 80,
+        "exp": 100
+      },
+      "paladin": {
+        "level": 30,
+        "mana": 50,
+        "fail": 80,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "restoration",
+    "name": "Restoration",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con",
+    "description": "Restores your stats.",
+    "classes": {
+      "priest": {
+        "level": 35,
+        "mana": 70,
+        "fail": 90,
+        "exp": 130
+      }
+    }
+  },
+  {
+    "id": "clairvoyance",
+    "name": "Clairvoyance",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "light_level",
+    "description": "Lights up, maps out and senses the objects of the whole level.",
+    "classes": {
+      "priest": {
+        "level": 37,
+        "mana": 50,
+        "fail": 80,
+        "exp": 150
+      },
+      "paladin": {
+        "level": 37,
+        "mana": 50,
+        "fail": 80,
+        "exp": 150
+      }
+    }
+  },
+  {
+    "id": "protection_from_evil",
+    "name": "Protection from Evil",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "timed:prot_evil:{L*3}+1d25",
+    "description": "Evil monsters' blows may be repelled, unless they are of a higher level than you.",
+    "classes": {
+      "paladin": {
+        "level": 15,
+        "mana": 8,
+        "fail": 42,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "dispel_curse",
+    "name": "Remove Curse",
+    "realm": "divine",
+    "book": "healing_and_sanctuary",
+    "effect": "remove_curse",
+    "description": "Tries to remove a curse.",
+    "classes": {
+      "paladin": {
+        "level": 20,
+        "mana": 12,
+        "fail": 38,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "enchant_weapon",
+    "name": "Enchant Weapon",
+    "realm": "divine",
+    "book": "battle_blessings",
+    "effect": "enchant:to_h:1d4; enchant:to_d:1d4",
+    "description": "Attempts to improve your weapon's accuracy and damage.",
+    "classes": {
+      "priest": {
+        "level": 35,
+        "mana": 50,
+        "fail": 80,
+        "exp": 230
+      },
+      "paladin": {
+        "level": 35,
+        "mana": 50,
+        "fail": 80,
+        "exp": 230
+      }
+    }
+  },
+  {
+    "id": "enchant_armour",
+    "name": "Enchant Armour",
+    "realm": "divine",
+    "book": "battle_blessings",
+    "effect": "enchant:to_a:1+1d3",
+    "description": "Attempts to improve a piece of your armour.",
+    "classes": {
+      "priest": {
+        "level": 37,
+        "mana": 60,
+        "fail": 85,
+        "exp": 250
+      },
+      "paladin": {
+        "level": 37,
+        "mana": 60,
+        "fail": 85,
+        "exp": 250
+      }
+    }
+  },
+  {
+    "id": "smite_evil",
+    "name": "Smite Evil",
+    "realm": "divine",
+    "book": "battle_blessings",
+    "effect": "timed:att_evil:20+1d20",
+    "description": "Your blows slay evil creatures for a while.",
+    "classes": {
+      "priest": {
+        "level": 25,
+        "mana": 20,
+        "fail": 70,
+        "exp": 40
+      },
+      "paladin": {
+        "level": 25,
+        "mana": 20,
+        "fail": 70,
+        "exp": 40
+      }
+    }
+  },
+  {
+    "id": "glyph_of_warding",
+    "name": "Glyph of Warding",
+    "realm": "divine",
+    "book": "battle_blessings",
+    "effect": "glyph",
+    "description": "Inscribes a glyph that monsters must break to reach you.",
+    "classes": {
+      "priest": {
+        "level": 20,
+        "mana": 40,
+        "fail": 90,
+        "exp": 35
+      }
+    }
+  },
+  {
+    "id": "demon_bane",
+    "name": "Demon Bane",
+    "realm": "divine",
+    "book": "battle_blessings",
+    "effect": "timed:att_demon:20+1d20",
+    "description": "Your blows powerfully slay demons for a while.",
+    "classes": {
+      "priest": {
+        "level": 42,
+        "mana": 40,
+        "fail": 80,
+        "exp": 300
+      },
+      "paladin": {
+        "level": 30,
+        "mana": 40,
+        "fail": 80,
+        "exp": 150
+      }
+    }
+  },
+  {
+    "id": "single_combat",
+    "name": "Single Combat",
+    "realm": "divine",
+    "book": "battle_blessings",
+    "effect": "single_combat",
+    "description": "Seals you and the target in a stone cell from which only the winner emerges.",
+    "classes": {
+      "paladin": {
+        "level": 40,
+        "mana": 50,
+        "fail": 30,
+        "exp": 300
+      }
+    }
+  },
+  {
+    "id": "banish_evil",
+    "name": "Banish Evil",
+    "realm": "divine",
+    "book": "wrath_of_the_valar",
+    "effect": "project_los:away:100:EVIL",
+    "description": "Teleports away every evil monster in view.",
+    "classes": {
+      "priest": {
+        "level": 25,
+        "mana": 25,
+        "fail": 80,
+        "exp": 250
+      }
+    }
+  },
+  {
+    "id": "word_of_destruction",
+    "name": "Word of Destruction",
+    "realm": "divine",
+    "book": "wrath_of_the_valar",
+    "effect": "destruction:15",
+    "description": "Destroys everything within 15 squares of you.",
+    "classes": {
+      "priest": {
+        "level": 35,
+        "mana": 35,
+        "fail": 80,
+        "exp": 115
+      }
+    }
+  },
+  {
+    "id": "holy_word",
+    "name": "Holy Word",
+    "realm": "divine",
+    "book": "wrath_of_the_valar",
+    "effect": "dispel:EVIL:1d{L*4}; heal:1000; cure:afraid; cure:poisoned; cure:stun; cure:cut",
+    "description": "Damages every evil monster in view, and heals and cures you.",
+    "classes": {
+      "priest": {
+        "level": 39,
+        "mana": 32,
+        "fail": 95,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "spear_of_orome",
+    "name": "Spear of Oromë",
+    "realm": "divine",
+    "book": "wrath_of_the_valar",
+    "effect": "beam:holy_orb:{L/2}d8",
+    "description": "A beam of holy power.",
+    "classes": {
+      "priest": {
+        "level": 40,
+        "mana": 10,
+        "fail": 75,
+        "exp": 130
+      }
+    }
+  },
+  {
+    "id": "light_of_manwe",
+    "name": "Light of Manwë",
+    "realm": "divine",
+    "book": "wrath_of_the_valar",
+    "effect": "ball:light:{L*5}:4; light_damage:2:{L/2}",
+    "description": "A great ball of light.",
+    "classes": {
+      "priest": {
+        "level": 42,
+        "mana": 40,
+        "fail": 85,
+        "exp": 200
+      }
+    }
+  },
+  {
+    "id": "detect_life",
+    "name": "Detect Life",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "detect_living:30",
+    "description": "Detects the living monsters nearby.",
+    "classes": {
+      "druid": {
+        "level": 1,
+        "mana": 1,
+        "fail": 23,
+        "exp": 2
+      },
+      "ranger": {
+        "level": 5,
+        "mana": 2,
+        "fail": 23,
+        "exp": 2
+      }
+    }
+  },
+  {
+    "id": "fox_form",
+    "name": "Fox Form",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "shapechange:fox",
+    "description": "Changes you into a fox: fast and stealthy, but you can't use items.",
+    "classes": {
+      "druid": {
+        "level": 1,
+        "mana": 2,
+        "fail": 20,
+        "exp": 10
+      }
+    }
+  },
+  {
+    "id": "remove_hunger",
+    "name": "Remove Hunger",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "nourish_to:50",
+    "description": "Leaves you comfortably fed (but not satiated).",
+    "classes": {
+      "druid": {
+        "level": 2,
+        "mana": 2,
+        "fail": 25,
+        "exp": 2
+      },
+      "ranger": {
+        "level": 3,
+        "mana": 1,
+        "fail": 25,
+        "exp": 2
+      }
+    }
+  },
+  {
+    "id": "stinking_cloud",
+    "name": "Stinking Cloud",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "ball:pois:{L/2+10}:2",
+    "description": "A cloud of poison, radius 2.",
+    "classes": {
+      "druid": {
+        "level": 3,
+        "mana": 2,
+        "fail": 27,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "confuse_monster",
+    "name": "Confuse Monster",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "monster_status:confuse:{L+5}",
+    "description": "Confuses a monster.",
+    "classes": {
+      "druid": {
+        "level": 5,
+        "mana": 3,
+        "fail": 30,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "slow_monster",
+    "name": "Slow Monster",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "monster_status:slow:{L+5}",
+    "description": "Slows a monster.",
+    "classes": {
+      "druid": {
+        "level": 6,
+        "mana": 4,
+        "fail": 30,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "ranger_herbal_curing",
+    "name": "Herbal Curing",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "cure:cut; cure:poisoned; cure:stun",
+    "description": "Cures cuts, poison and stunning.",
+    "classes": {
+      "ranger": {
+        "level": 9,
+        "mana": 6,
+        "fail": 30,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "ranger_resist_poison",
+    "name": "Resist Poison",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "timed:oppose_pois:20+1d20",
+    "description": "Resistance to poison for 20+1d20 turns.",
+    "classes": {
+      "ranger": {
+        "level": 12,
+        "mana": 10,
+        "fail": 32,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "ranger_stone_to_mud",
+    "name": "Turn Stone to Mud",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "stone_to_mud",
+    "description": "Turns a wall to mud.",
+    "classes": {
+      "ranger": {
+        "level": 15,
+        "mana": 5,
+        "fail": 25,
+        "exp": 5
+      }
+    },
+    "needsDirection": true
+  },
+  {
+    "id": "ranger_sense_surroundings",
+    "name": "Sense Surroundings",
+    "realm": "nature",
+    "book": "lesser_charms",
+    "effect": "map_area:30",
+    "description": "Maps the area around you.",
+    "classes": {
+      "ranger": {
+        "level": 20,
+        "mana": 8,
+        "fail": 35,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "cure_poison",
+    "name": "Cure Poison",
+    "realm": "nature",
+    "book": "gifts_of_nature",
+    "effect": "cure:poisoned",
+    "description": "Cures poison.",
+    "classes": {
+      "druid": {
+        "level": 4,
+        "mana": 4,
+        "fail": 30,
+        "exp": 4
+      }
+    }
+  },
+  {
+    "id": "resist_poison",
+    "name": "Resist Poison",
+    "realm": "nature",
+    "book": "gifts_of_nature",
+    "effect": "timed:oppose_pois:20+1d20",
+    "description": "Resistance to poison for 20+1d20 turns.",
+    "classes": {
+      "druid": {
+        "level": 7,
+        "mana": 6,
+        "fail": 32,
+        "exp": 5
+      }
+    }
+  },
+  {
+    "id": "earth_to_dust",
+    "name": "Turn Stone to Mud",
+    "realm": "nature",
+    "book": "gifts_of_nature",
+    "effect": "stone_to_mud",
+    "description": "Turns a wall to mud.",
+    "classes": {
+      "druid": {
+        "level": 8,
+        "mana": 3,
+        "fail": 25,
+        "exp": 5
+      }
+    },
+    "needsDirection": true
+  },
+  {
+    "id": "sense_surroundings",
+    "name": "Sense Surroundings",
+    "realm": "nature",
+    "book": "gifts_of_nature",
+    "effect": "map_area:30",
+    "description": "Maps the area around you.",
+    "classes": {
+      "druid": {
+        "level": 9,
+        "mana": 4,
+        "fail": 35,
+        "exp": 6
+      }
+    }
+  },
+  {
+    "id": "lightning_strike",
+    "name": "Lightning Strike",
+    "realm": "nature",
+    "book": "gifts_of_nature",
+    "effect": "strike:elec:{L/4}d4:0; strike:sound:{L+5}:3",
+    "description": "Lightning strikes the target, with a clap of thunder.",
+    "classes": {
+      "druid": {
+        "level": 12,
+        "mana": 6,
+        "fail": 35,
+        "exp": 8
+      }
+    }
+  },
+  {
+    "id": "earth_rising",
+    "name": "Earth Rising",
+    "realm": "nature",
+    "book": "gifts_of_nature",
+    "effect": "short_beam:shards:{L/3+2}d6:4:5",
+    "description": "A short beam of rising earth.",
+    "classes": {
+      "druid": {
+        "level": 14,
+        "mana": 5,
+        "fail": 40,
+        "exp": 12
+      }
+    }
+  },
+  {
+    "id": "trance",
+    "name": "Trance",
+    "realm": "nature",
+    "book": "creature_dominion",
+    "effect": "hold_adjacent:{L+10}",
+    "description": "Holds the monsters next to you still.",
+    "classes": {
+      "druid": {
+        "level": 20,
+        "mana": 10,
+        "fail": 45,
+        "exp": 15
+      }
+    }
+  },
+  {
+    "id": "mass_sleep",
+    "name": "Mass Sleep",
+    "realm": "nature",
+    "book": "creature_dominion",
+    "effect": "project_los:sleep:{L*10+500}",
+    "description": "Puts every monster in view to sleep.",
+    "classes": {
+      "druid": {
+        "level": 25,
+        "mana": 15,
+        "fail": 50,
+        "exp": 15
+      }
+    }
+  },
+  {
+    "id": "become_pukel_man",
+    "name": "Become Pukel-man",
+    "realm": "nature",
+    "book": "creature_dominion",
+    "effect": "shapechange:pukel_man",
+    "description": "Changes you into a Púkel-man of stone.",
+    "classes": {
+      "druid": {
+        "level": 30,
+        "mana": 20,
+        "fail": 75,
+        "exp": 50
+      }
+    }
+  },
+  {
+    "id": "eagles_flight",
+    "name": "Eagle's Flight",
+    "realm": "nature",
+    "book": "creature_dominion",
+    "effect": "shapechange:eagle",
+    "description": "Changes you into an eagle.",
+    "classes": {
+      "druid": {
+        "level": 35,
+        "mana": 20,
+        "fail": 80,
+        "exp": 80
+      }
+    }
+  },
+  {
+    "id": "bear_form",
+    "name": "Bear Form",
+    "realm": "nature",
+    "book": "creature_dominion",
+    "effect": "shapechange:bear",
+    "description": "Changes you into a bear.",
+    "classes": {
+      "druid": {
+        "level": 40,
+        "mana": 20,
+        "fail": 85,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "tremor",
+    "name": "Tremor",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "earthquake_at:4",
+    "description": "Shakes the ground around the target.",
+    "classes": {
+      "druid": {
+        "level": 20,
+        "mana": 20,
+        "fail": 60,
+        "exp": 16
+      }
+    }
+  },
+  {
+    "id": "haste_self",
+    "name": "Haste Self",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "timed:fast:{L}+1d20",
+    "description": "Hastes you (+10 speed) for a level-dependent time.",
+    "classes": {
+      "druid": {
+        "level": 25,
+        "mana": 12,
+        "fail": 65,
+        "exp": 15
+      },
+      "ranger": {
+        "level": 25,
+        "mana": 12,
+        "fail": 65,
+        "exp": 15
+      }
+    }
+  },
+  {
+    "id": "revitalize",
+    "name": "Revitalize",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; restore_exp",
+    "description": "Restores your stats and life levels.",
+    "classes": {
+      "druid": {
+        "level": 35,
+        "mana": 70,
+        "fail": 90,
+        "exp": 90
+      }
+    }
+  },
+  {
+    "id": "rapid_regeneration",
+    "name": "Rapid Regeneration",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "timed:heal:5+1d3",
+    "description": "Heals 30 hit points a turn for a few turns.",
+    "classes": {
+      "druid": {
+        "level": 37,
+        "mana": 20,
+        "fail": 90,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "herbal_curing",
+    "name": "Herbal Curing",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "cure:cut; cure:poisoned; cure:stun; nourish_to:80",
+    "description": "Cures cuts, poison and stunning, and feeds you.",
+    "classes": {
+      "druid": {
+        "level": 40,
+        "mana": 20,
+        "fail": 90,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "cover_tracks",
+    "name": "Cover Tracks",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "timed:covertracks:{L*2}+1d20",
+    "description": "You leave no scent, and monsters beyond a short way can't see you.",
+    "classes": {
+      "ranger": {
+        "level": 20,
+        "mana": 20,
+        "fail": 40,
+        "exp": 40
+      }
+    }
+  },
+  {
+    "id": "create_arrows",
+    "name": "Create Arrows",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "create_arrows",
+    "description": "Turns a staff into arrows, better from a deeper staff.",
+    "classes": {
+      "ranger": {
+        "level": 22,
+        "mana": 20,
+        "fail": 40,
+        "exp": 40
+      }
+    }
+  },
+  {
+    "id": "decoy",
+    "name": "Decoy",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "decoy",
+    "description": "Leaves a decoy that monsters who see it go for instead of you.",
+    "classes": {
+      "ranger": {
+        "level": 30,
+        "mana": 30,
+        "fail": 40,
+        "exp": 60
+      }
+    }
+  },
+  {
+    "id": "brand_ammunition",
+    "name": "Brand Ammunition",
+    "realm": "nature",
+    "book": "nature_craft",
+    "effect": "brand_ammo",
+    "description": "Brands your ammunition with fire, frost or venom.",
+    "classes": {
+      "ranger": {
+        "level": 40,
+        "mana": 60,
+        "fail": 95,
+        "exp": 120
+      }
+    }
+  },
+  {
+    "id": "meteor_swarm",
+    "name": "Meteor Swarm",
+    "realm": "nature",
+    "book": "wild_forces",
+    "effect": "swarm:meteor:{L/2+30}:1:{L/20+2}",
+    "description": "Several meteors strike the target.",
+    "classes": {
+      "druid": {
+        "level": 30,
+        "mana": 14,
+        "fail": 85,
+        "exp": 20
+      }
+    }
+  },
+  {
+    "id": "rift",
+    "name": "Rift",
+    "realm": "nature",
+    "book": "wild_forces",
+    "effect": "beam:gravity:40+{L}d7",
+    "description": "A beam of gravity.",
+    "classes": {
+      "druid": {
+        "level": 35,
+        "mana": 20,
+        "fail": 60,
+        "exp": 25
+      }
+    }
+  },
+  {
+    "id": "ice_storm",
+    "name": "Ice Storm",
+    "realm": "nature",
+    "book": "wild_forces",
+    "effect": "dispel:none:3d{L*3}",
+    "description": "Ice lashes every monster in view.",
+    "classes": {
+      "druid": {
+        "level": 37,
+        "mana": 25,
+        "fail": 75,
+        "exp": 24
+      }
+    }
+  },
+  {
+    "id": "volcanic_eruption",
+    "name": "Volcanic Eruption",
+    "realm": "nature",
+    "book": "wild_forces",
+    "effect": "sphere:fire:{L*3/2}+1d{L*3}:5; earthquake:5",
+    "description": "Fire all around you, and the earth shakes.",
+    "classes": {
+      "druid": {
+        "level": 40,
+        "mana": 30,
+        "fail": 75,
+        "exp": 50
+      }
+    }
+  },
+  {
+    "id": "river_of_lightning",
+    "name": "River of Lightning",
+    "realm": "nature",
+    "book": "wild_forces",
+    "effect": "arc:plasma:{L+10}d8:0:20",
+    "description": "A great arc of plasma.",
+    "classes": {
+      "druid": {
+        "level": 43,
+        "mana": 35,
+        "fail": 75,
+        "exp": 100
+      }
+    }
+  },
+  {
+    "id": "hit_and_run",
+    "name": "Hit and Run",
+    "realm": "arcane",
+    "book": "arcane_control",
+    "effect": "timed:att_run:10",
+    "description": "Prepares you to vanish a short distance after your next attempt to steal.",
+    "classes": {
+      "rogue": {
+        "level": 23,
+        "mana": 20,
+        "fail": 40,
+        "exp": 20
+      }
+    }
+  }
+]

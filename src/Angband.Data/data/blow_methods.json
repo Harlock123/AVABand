@@ -1,0 +1,21 @@
+[
+  {"id": "hit", "message": "hits you", "cut": true, "stun": true},
+  {"id": "touch", "message": "touches you"},
+  {"id": "punch", "message": "punches you", "stun": true},
+  {"id": "kick", "message": "kicks you", "stun": true},
+  {"id": "claw", "message": "claws you", "cut": true},
+  {"id": "bite", "message": "bites you", "cut": true},
+  {"id": "sting", "message": "stings you"},
+  {"id": "butt", "message": "butts you", "stun": true},
+  {"id": "crush", "message": "crushes you", "stun": true},
+  {"id": "engulf", "message": "engulfs you"},
+  {"id": "crawl", "message": "crawls on you"},
+  {"id": "gaze", "message": "gazes at you", "missMessage": "looks away"},
+  {"id": "spit", "message": "spits on you"},
+  {"id": "spore", "message": "releases spores at you", "missMessage": "releases spores harmlessly"},
+  {"id": "wail", "message": "wails at you"},
+  {"id": "insult", "message": "insults you"},
+  {"id": "beg", "message": "begs you for money"},
+  {"id": "drool", "message": "drools on you"},
+  {"id": "moan", "message": "moans at you"}
+]

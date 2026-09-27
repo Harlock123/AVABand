@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Sound effects and music. Listens to the engine's event bus; no UI dependency.
+    OpenAL Soft (via Silk.NET, with native libraries for Windows, Linux and macOS on x64/ARM) does the
+    mixing; NVorbis and NLayer decode Ogg Vorbis and MP3 in managed code.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Angband.Audio</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.OpenAL" />
+    <PackageReference Include="Silk.NET.OpenAL.Soft.Native" />
+    <PackageReference Include="NVorbis" />
+    <PackageReference Include="NLayer" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Angband.Core\Angband.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Angband.Tests" />
+  </ItemGroup>
+</Project>

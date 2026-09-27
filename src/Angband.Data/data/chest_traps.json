@@ -1,0 +1,9 @@
+[
+  {"id": "locked", "name": "Locked", "level": 1, "effect": "", "message": ""},
+  {"id": "poison_gas", "name": "Gas Trap", "level": 1, "effect": "timed:poisoned:10+1d20", "message": "A puff of green gas surrounds you!"},
+  {"id": "needle_str", "name": "Poison Needle", "level": 2, "effect": "damage:1d4; drain:str", "message": "A small needle has pricked you!", "deathMessage": "a poison needle"},
+  {"id": "needle_con", "name": "Poison Needle", "level": 3, "effect": "damage:1d4; drain:con", "message": "A small needle has pricked you!", "deathMessage": "a poison needle"},
+  {"id": "summon", "name": "Summoning Runes", "level": 15, "effect": "summon:2+1d3", "message": "You are enveloped in a cloud of smoke!", "magic": true},
+  {"id": "paralysis_gas", "name": "Gas Trap", "level": 19, "effect": "timed:paralyzed:10+1d20", "message": "A puff of yellow gas surrounds you!"},
+  {"id": "explosion", "name": "Explosion Device", "level": 25, "effect": "damage:5d8", "message": "There is a sudden explosion! Everything inside the chest is destroyed!", "deathMessage": "an exploding chest", "destroy": true}
+]

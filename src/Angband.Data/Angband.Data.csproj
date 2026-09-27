@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- JSON game content + loaders that turn it into Angband.Core definitions. -->
+  <PropertyGroup>
+    <RootNamespace>Angband.Data</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Angband.Core\Angband.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Shipped as loose files so players can edit/mod them; flows to every referencing project's output. -->
+    <Content Include="data\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

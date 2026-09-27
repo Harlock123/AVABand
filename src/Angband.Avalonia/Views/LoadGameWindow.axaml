@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:app="using:Angband.Avalonia"
+        x:Class="Angband.Avalonia.Views.LoadGameWindow"
+        x:DataType="vm:LoadGameViewModel"
+        Title="Load a character"
+        Width="620" Height="420"
+        WindowStartupLocation="CenterOwner">
+  <!-- The list first, then Load, Cancel and (last, asking twice) Delete: the controller's D-pad
+       goes in that order. -->
+  <Grid Margin="16" RowDefinitions="Auto,*,Auto">
+    <TextBlock Text="Saved characters" FontWeight="SemiBold" Margin="0,0,0,8" />
+    <Panel Grid.Row="1">
+      <TextBlock Text="No saved characters yet. Press Ctrl+S during a game to save it."
+                 IsVisible="{Binding IsEmpty}" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" />
+      <ListBox x:Name="SaveList" ItemsSource="{Binding Saves}" SelectedItem="{Binding Selected}" DoubleTapped="OnDoubleTapped">
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="app:SaveEntry">
+            <StackPanel Spacing="2">
+              <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding Details}" Opacity="0.7" FontSize="12" />
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+    </Panel>
+    <!-- Shown Delete, Cancel, Load; declared Load, Cancel, Delete for the focus order. -->
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,10,Auto,10,Auto" Margin="0,12,0,0">
+      <TextBlock Text="{Binding Error}" Foreground="#ff8a80" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="300" HorizontalAlignment="Right" Margin="0,0,10,0" />
+      <Button x:Name="LoadButton" Grid.Column="5" Content="Load" Classes="accent" Command="{Binding LoadCommand}" />
+      <Button Grid.Column="3" Content="Cancel" Click="OnCancel" />
+      <Button x:Name="DeleteButton" Grid.Column="1" Content="{Binding DeleteText}" Command="{Binding DeleteCommand}" />
+    </Grid>
+  </Grid>
+</Window>

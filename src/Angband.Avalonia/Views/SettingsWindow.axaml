@@ -1,0 +1,220 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:tiles="using:Angband.Data.Tiles"
+        xmlns:audio="using:Angband.Audio"
+        xmlns:input="using:Angband.Input"
+        xmlns:controls="using:Angband.Avalonia.Controls"
+        x:Class="Angband.Avalonia.Views.SettingsWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Settings"
+        Width="900" Height="620"
+        WindowStartupLocation="CenterOwner">
+  <Window.Resources>
+    <DataTemplate x:Key="OptionTemplate" x:DataType="vm:OptionRow">
+      <CheckBox IsChecked="{Binding IsChecked}" IsEnabled="{Binding IsEnabled}" Margin="0,1">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="{Binding Description}" />
+          <TextBlock Text="{Binding Id}" Opacity="0.5" FontSize="12" VerticalAlignment="Center"
+                     FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" />
+        </StackPanel>
+      </CheckBox>
+    </DataTemplate>
+  </Window.Resources>
+  <Grid RowDefinitions="*,Auto">
+  <TabControl x:Name="Tabs" Grid.Row="0">
+    <TabItem Header="Display">
+  <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,12">
+          <StackPanel Orientation="Horizontal" Spacing="16">
+            <ToggleSwitch x:Name="TilesSwitch" OnContent="Graphical tiles" OffContent="ASCII text"
+                          IsChecked="{Binding UseTiles}" IsEnabled="{Binding HasTilesets}" />
+            <TextBlock VerticalAlignment="Center" Opacity="0.7" Text="Ctrl+T switches while playing." />
+          </StackPanel>
+          <Grid ColumnDefinitions="Auto,240,Auto,Auto,240,Auto" RowDefinitions="Auto">
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0" Text="Tile scale" />
+            <Slider Grid.Column="1" Minimum="0.5" Maximum="4" TickFrequency="0.25" IsSnapToTickEnabled="True"
+                    Value="{Binding TileScale}" />
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,0,24,0"
+                       Text="{Binding TileScale, StringFormat={}{0:0.##}x}" />
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Margin="0,0,8,0" Text="ASCII font size" />
+            <Slider Grid.Column="4" Minimum="8" Maximum="40" TickFrequency="1" IsSnapToTickEnabled="True"
+                    Value="{Binding MapFontSize}" />
+            <TextBlock Grid.Column="5" VerticalAlignment="Center" Margin="8,0,0,0" Text="{Binding MapFontSize}" />
+          </Grid>
+        </StackPanel>
+    
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,12,0,0" Opacity="0.7" TextWrapping="Wrap"
+                   Text="Add your own tilesets as folders containing a tileset.json in the 'tilesets' folder next to the game, or in your user AVABand/tilesets folder." />
+    
+        <Grid ColumnDefinitions="280,16,*">
+          <ListBox x:Name="TilesetList" ItemsSource="{Binding Tilesets}" SelectedItem="{Binding SelectedTileset}">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="tiles:TilesetManifest">
+                <StackPanel Margin="2">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                  <TextBlock Opacity="0.7" FontSize="12">
+                    <Run Text="{Binding TileWidth}" /><Run Text="x" /><Run Text="{Binding TileHeight}" /><Run Text=" tiles, " /><Run Text="{Binding Tiles.Count}" /><Run Text=" mapped" />
+                  </TextBlock>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+    
+          <DockPanel Grid.Column="2">
+            <StackPanel DockPanel.Dock="Top" Spacing="4" Margin="0,0,0,12">
+              <TextBlock Text="{Binding SelectedTileset.Name, FallbackValue='No tileset selected'}" FontSize="18" FontWeight="SemiBold" />
+              <TextBlock TextWrapping="Wrap"><Run Text="Artist: " FontWeight="SemiBold" /><Run Text="{Binding SelectedTileset.Author, FallbackValue=''}" /></TextBlock>
+              <TextBlock TextWrapping="Wrap"><Run Text="Licence: " FontWeight="SemiBold" /><Run Text="{Binding SelectedTileset.License, FallbackValue=''}" /></TextBlock>
+              <TextBlock TextWrapping="Wrap" Opacity="0.7" Text="{Binding SelectedTileset.Source, FallbackValue=''}" />
+            </StackPanel>
+            <Border Background="Black" CornerRadius="4" ClipToBounds="True">
+              <controls:MapView x:Name="PreviewMap"
+                                Source="{Binding Preview}"
+                                UseTiles="{Binding UseTiles}"
+                                Tileset="{Binding SelectedTileset}"
+                                FitToBounds="True"
+                                CellFontSize="{Binding MapFontSize}" />
+            </Border>
+          </DockPanel>
+        </Grid>
+      </DockPanel>
+    </TabItem>
+    <TabItem Header="Sound">
+      <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,12">
+          <TextBlock Text="{Binding AudioStatus}" Opacity="0.7" />
+          <StackPanel Orientation="Horizontal" Spacing="24">
+            <ToggleSwitch x:Name="MuteSwitch" OnContent="Muted" OffContent="Sound on" IsChecked="{Binding Muted}" />
+            <ToggleSwitch OnContent="Effects on" OffContent="Effects off" IsChecked="{Binding EffectsEnabled}" />
+            <ToggleSwitch OnContent="Music on" OffContent="Music off" IsChecked="{Binding MusicEnabled}" />
+            <Button Content="Play test sound" Command="{Binding TestSoundCommand}" VerticalAlignment="Center" />
+          </StackPanel>
+          <Grid ColumnDefinitions="110,260,Auto" RowDefinitions="Auto,Auto,Auto">
+            <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Master" />
+            <Slider x:Name="MasterSlider" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MasterVolume}" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{Binding MasterVolume, StringFormat={}{0:0}%}" />
+            <TextBlock Grid.Row="1" VerticalAlignment="Center" Text="Effects" />
+            <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding EffectsVolume}" />
+            <TextBlock Grid.Row="1" Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{Binding EffectsVolume, StringFormat={}{0:0}%}" />
+            <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Music" />
+            <Slider Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MusicVolume}" />
+            <TextBlock Grid.Row="2" Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{Binding MusicVolume, StringFormat={}{0:0}%}" />
+          </Grid>
+        </StackPanel>
+
+        <TextBlock DockPanel.Dock="Bottom" Margin="0,12,0,0" Opacity="0.7" TextWrapping="Wrap"
+                   Text="Add your own packs as folders containing a soundpack.json in the 'soundpacks' folder next to the game, or in your user AVABand/soundpacks folder. Events use Angband's names (HIT, MISS, OPENDOOR, LEVEL...); music moods are town, town_night, dungeon and deep." />
+
+        <Grid ColumnDefinitions="*,16,*">
+          <DockPanel>
+            <TextBlock DockPanel.Dock="Top" Classes="h" Text="Sound effects" FontWeight="SemiBold" Margin="0,0,0,6" />
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0" Spacing="2">
+              <TextBlock TextWrapping="Wrap" FontSize="12"><Run Text="By " /><Run Text="{Binding SelectedSoundPack.Author, FallbackValue=''}" /></TextBlock>
+              <TextBlock TextWrapping="Wrap" FontSize="12" Opacity="0.8" Text="{Binding SelectedSoundPack.License, FallbackValue=''}" />
+            </StackPanel>
+            <ListBox x:Name="SoundPackList" ItemsSource="{Binding EffectPacks}" SelectedItem="{Binding SelectedSoundPack}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="audio:SoundPack">
+                  <StackPanel Margin="2">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Opacity="0.7" FontSize="12"><Run Text="{Binding Sounds.Count}" /><Run Text=" events" /></TextBlock>
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+          <DockPanel Grid.Column="2">
+            <TextBlock DockPanel.Dock="Top" Text="Music" FontWeight="SemiBold" Margin="0,0,0,6" />
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,8,0,0" Spacing="2">
+              <TextBlock TextWrapping="Wrap" FontSize="12"><Run Text="By " /><Run Text="{Binding SelectedMusicPack.Author, FallbackValue=''}" /></TextBlock>
+              <TextBlock TextWrapping="Wrap" FontSize="12" Opacity="0.8" Text="{Binding SelectedMusicPack.License, FallbackValue=''}" />
+            </StackPanel>
+            <ListBox x:Name="MusicPackList" ItemsSource="{Binding MusicPacks}" SelectedItem="{Binding SelectedMusicPack}">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="audio:SoundPack">
+                  <StackPanel Margin="2">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Opacity="0.7" FontSize="12"><Run Text="{Binding Music.Count}" /><Run Text=" moods" /></TextBlock>
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Grid>
+      </DockPanel>
+    </TabItem>
+    <TabItem Header="Controls">
+      <DockPanel Margin="16">
+        <StackPanel DockPanel.Dock="Top" Spacing="6" Margin="0,0,0,10">
+          <TextBlock Text="{Binding GamepadStatus}" Opacity="0.8" />
+          <TextBlock Text="Keyboard, mouse and gamepad all trigger the same actions. Mouse: left-click travels (or attacks), right-click shoots or looks, the wheel zooms. Gamepad: D-pad or left stick moves and navigates menus; A confirms (or takes stairs / picks up), B cancels."
+                     TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <Button Content="Reset to defaults" Command="{Binding ResetBindingsCommand}" />
+            <TextBlock Text="{Binding CaptureHint}" VerticalAlignment="Center" Foreground="#e6c35c" />
+          </StackPanel>
+        </StackPanel>
+        <ScrollViewer>
+          <ItemsControl ItemsSource="{Binding BindingRows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:BindingRow">
+                <Grid ColumnDefinitions="220,*,150,Auto,Auto,Auto" Margin="0,2">
+                  <TextBlock Grid.Column="0" Text="{Binding Label}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding Keys}" VerticalAlignment="Center" FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" FontSize="12" />
+                  <TextBlock Grid.Column="2" Text="{Binding Button}" VerticalAlignment="Center" Foreground="#8ab4f8" FontSize="12" />
+                  <Button Grid.Column="3" Content="Key..." Padding="8,2" Margin="4,0"
+                          Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RebindKeyCommand}" CommandParameter="{Binding}" />
+                  <Button Grid.Column="4" Content="Button..." Padding="8,2" Margin="4,0"
+                          Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RebindButtonCommand}" CommandParameter="{Binding}" />
+                  <Button Grid.Column="5" Content="Clear keys" Padding="8,2" Margin="4,0"
+                          Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).ClearKeysCommand}" CommandParameter="{Binding}" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </DockPanel>
+    </TabItem>
+    <TabItem Header="Options">
+      <ScrollViewer>
+        <StackPanel Margin="16" Spacing="6">
+          <TextBlock Text="User interface" FontSize="18" FontWeight="SemiBold" />
+          <TextBlock Opacity="0.7" TextWrapping="Wrap"
+                     Text="Angband's interface options. They apply at once and are kept with your settings, for every character." />
+          <ItemsControl x:Name="InterfaceOptions" ItemsSource="{Binding InterfaceOptionRows}" ItemTemplate="{StaticResource OptionTemplate}" />
+
+          <TextBlock Text="Birth" FontSize="18" FontWeight="SemiBold" Margin="0,14,0,0" />
+          <TextBlock Opacity="0.7" TextWrapping="Wrap"
+                     Text="Chosen when a character is created (Game → New character) and fixed for its life. These are this character's." />
+          <ItemsControl ItemsSource="{Binding BirthOptionRows}" ItemTemplate="{StaticResource OptionTemplate}" />
+
+          <TextBlock Text="Cheat" FontSize="18" FontWeight="SemiBold" Margin="0,14,0,0" />
+          <TextBlock Opacity="0.7" TextWrapping="Wrap" Text="{Binding CheaterText}" />
+          <ItemsControl x:Name="CheatOptions" ItemsSource="{Binding CheatOptionRows}" ItemTemplate="{StaticResource OptionTemplate}" />
+
+          <TextBlock Text="Item ignoring" FontSize="18" FontWeight="SemiBold" Margin="0,14,0,0" />
+          <TextBlock Opacity="0.7" TextWrapping="Wrap"
+                     Text="Hide equipment of each type at or below a quality, once you know it (this character's; artifacts are never ignored). Ctrl+D ignores single items, kinds and egos; K shows ignored items." />
+          <ItemsControl x:Name="IgnoreQuality" ItemsSource="{Binding IgnoreQualityRows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:IgnoreQualityRow">
+                <Grid ColumnDefinitions="260,200" Margin="0,2">
+                  <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                  <ComboBox Grid.Column="1" ItemsSource="{Binding Choices}" SelectedIndex="{Binding SelectedIndex}" HorizontalAlignment="Stretch" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+    </TabItem>
+  </TabControl>
+  <Border Grid.Row="1" BorderBrush="#333" BorderThickness="0,1,0,0" Padding="12,8">
+    <DockPanel>
+      <Button x:Name="CloseButton" DockPanel.Dock="Right" Content="Close" Classes="accent" Click="OnClose" />
+      <TextBlock Text="Changes apply as you make them. Esc or B closes; the D-pad and A work the controls." Opacity="0.6" VerticalAlignment="Center" />
+    </DockPanel>
+  </Border>
+  </Grid>
+</Window>

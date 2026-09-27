@@ -1,0 +1,351 @@
+[
+  {
+    "id": "general",
+    "owners": [
+      {
+        "name": "Bilbo the Friendly (Hobbit)",
+        "purse": 5000
+      },
+      {
+        "name": "Rincewind the Chicken (Human)",
+        "purse": 10000
+      },
+      {
+        "name": "Snafu the Midget (Gnome)",
+        "purse": 20000
+      },
+      {
+        "name": "Lyar-el the Comely (Elf)",
+        "purse": 30000
+      }
+    ],
+    "always": [
+      "cloak",
+      "ration_of_food",
+      "wooden_torch",
+      "flask_of_oil",
+      "shovel",
+      "pick",
+      "iron_shot",
+      "arrow",
+      "bolt"
+    ],
+    "normal": [
+      "pint_of_fine_wine",
+      "slime_mold",
+      "flask_of_whisky",
+      "hard_biscuit",
+      "mushroom_of_stoneskin",
+      "mushroom_of_purging"
+    ],
+    "buys": [
+      "light",
+      "food",
+      "mushroom",
+      "flask",
+      "digger",
+      "cloak",
+      "shot",
+      "bolt",
+      "arrow"
+    ],
+    "minItems": 0,
+    "maxItems": 4,
+    "turnover": 2
+  },
+  {
+    "id": "armoury",
+    "owners": [
+      {
+        "name": "Kon-Dar the Ugly (Half-Orc)",
+        "purse": 5000
+      },
+      {
+        "name": "Darg-Low the Grim (Human)",
+        "purse": 10000
+      },
+      {
+        "name": "Decado the Handsome (Dunadan)",
+        "purse": 25000
+      },
+      {
+        "name": "Mauglin the Grumpy (Dwarf)",
+        "purse": 30000
+      }
+    ],
+    "normal": [
+      "leather_sandals",
+      "leather_boots",
+      "pair_of_iron_shod_boots",
+      "hard_leather_cap",
+      "metal_cap",
+      "iron_helm",
+      "robe",
+      "soft_leather_armour",
+      "studded_leather_armour",
+      "hard_leather_armour",
+      "soft_armour_leather_scale_mail",
+      "metal_scale_mail",
+      "chain_mail",
+      "leather_gloves",
+      "gauntlets",
+      "wicker_shield",
+      "small_metal_shield",
+      "leather_shield"
+    ],
+    "buys": [
+      "boots",
+      "gloves",
+      "crown",
+      "helm",
+      "shield",
+      "cloak",
+      "soft_armour",
+      "hard_armour",
+      "dragon_armour"
+    ],
+    "minItems": 6,
+    "maxItems": 18,
+    "turnover": 9
+  },
+  {
+    "id": "weaponsmith",
+    "owners": [
+      {
+        "name": "Ithyl-Mak the Beastly (Half-Troll)",
+        "purse": 5000
+      },
+      {
+        "name": "Arndal Beast-Slayer (Half-Elf)",
+        "purse": 10000
+      },
+      {
+        "name": "Tarl Beast-Master (Hobbit)",
+        "purse": 25000
+      },
+      {
+        "name": "Oglign Dragon-Slayer (Dwarf)",
+        "purse": 30000
+      }
+    ],
+    "normal": [
+      "iron_shot",
+      "arrow",
+      "bolt",
+      "dagger",
+      "main_gauche",
+      "rapier",
+      "short_sword",
+      "cutlass",
+      "tulwar",
+      "broad_sword",
+      "long_sword",
+      "scimitar",
+      "katana",
+      "bastard_sword",
+      "spear",
+      "awl_pike",
+      "trident",
+      "pike",
+      "beaked_axe",
+      "broad_axe",
+      "battle_axe",
+      "lance",
+      "lucerne_hammer",
+      "whip",
+      "sling",
+      "short_bow",
+      "long_bow",
+      "light_crossbow"
+    ],
+    "buys": [
+      "shot",
+      "bolt",
+      "arrow",
+      "sling",
+      "bow",
+      "crossbow",
+      "digger",
+      "sword",
+      "polearm",
+      "hafted"
+    ],
+    "minItems": 3,
+    "maxItems": 14,
+    "turnover": 9
+  },
+  {
+    "id": "bookseller",
+    "owners": [
+      {
+        "name": "Ludwig the Humble (Human)",
+        "purse": 15000
+      },
+      {
+        "name": "Gunnar the Paladin (Human)",
+        "purse": 20000
+      },
+      {
+        "name": "Delilah the Pure (Elf)",
+        "purse": 25000
+      },
+      {
+        "name": "Bosk the Wise (Dwarf)",
+        "purse": 30000
+      }
+    ],
+    "always": [
+      "novices_handbook",
+      "cleansing_power",
+      "first_spells",
+      "attacks_and_knowledge",
+      "magical_defences",
+      "lesser_charms",
+      "gifts_of_nature",
+      "into_the_shadows",
+      "dark_rituals",
+      "fear_and_torment"
+    ],
+    "buys": [
+      "magic_book",
+      "prayer_book",
+      "nature_book",
+      "shadow_book"
+    ],
+    "minItems": 0,
+    "maxItems": 2,
+    "turnover": 0
+  },
+  {
+    "id": "alchemist",
+    "owners": [
+      {
+        "name": "Mauser the Chemist (Half-Elf)",
+        "purse": 10000
+      },
+      {
+        "name": "Wizzle the Chaotic (Hobbit)",
+        "purse": 10000
+      },
+      {
+        "name": "Ga-nat the Greedy (Gnome)",
+        "purse": 15000
+      },
+      {
+        "name": "Vella the Slender (Human)",
+        "purse": 15000
+      }
+    ],
+    "always": [
+      "scroll_of_word_of_recall",
+      "phase_door",
+      "remove_curse",
+      "cure_light_wounds"
+    ],
+    "normal": [
+      "scroll_of_monster_confusion",
+      "magic_mapping",
+      "scroll_of_detect_invisible",
+      "scroll_of_recharging",
+      "scroll_of_remove_hunger",
+      "scroll_of_blessing",
+      "scroll_of_holy_chant",
+      "boldness",
+      "potion_of_berserk_strength",
+      "potion_of_resist_heat",
+      "potion_of_resist_cold",
+      "potion_of_restore_life_levels",
+      "neutralize_poison",
+      "cure_serious_wounds",
+      "potion_of_cure_critical_wounds"
+    ],
+    "buys": [
+      "scroll",
+      "potion"
+    ],
+    "minItems": 6,
+    "maxItems": 10,
+    "turnover": 9
+  },
+  {
+    "id": "magic",
+    "owners": [
+      {
+        "name": "Ariel the Sorceress (Half-Elf)",
+        "purse": 15000
+      },
+      {
+        "name": "Buggerby the Great (Gnome)",
+        "purse": 20000
+      },
+      {
+        "name": "Inglorian the Mage (Human)",
+        "purse": 25000
+      },
+      {
+        "name": "Luthien Starshine (High-Elf)",
+        "purse": 30000
+      }
+    ],
+    "normal": [
+      "ring_of_searching",
+      "ring_of_feather_falling",
+      "ring_of_protection",
+      "ring_of_open_wounds",
+      "amulet_of_slow_digestion",
+      "amulet_of_resist_acid",
+      "wand_of_light",
+      "wand_of_slow_monster",
+      "wand_of_confuse_monster",
+      "wand_of_magic_missile",
+      "wand_of_stinking_cloud",
+      "wand_of_stone_to_mud",
+      "staff_of_teleportation",
+      "staff_of_light",
+      "staff_of_mapping",
+      "staff_of_detect_invisible",
+      "staff_of_detect_evil"
+    ],
+    "buys": [
+      "magic_book",
+      "amulet",
+      "ring",
+      "staff",
+      "wand",
+      "rod"
+    ],
+    "minItems": 4,
+    "maxItems": 14,
+    "turnover": 9
+  },
+  {
+    "id": "black_market",
+    "owners": [
+      {
+        "name": "Lo-Hak the Awful (Half-Troll)",
+        "purse": 15000
+      },
+      {
+        "name": "Histor the Goblin (Kobold)",
+        "purse": 20000
+      },
+      {
+        "name": "Durwin the Shifty (Half-Orc)",
+        "purse": 25000
+      },
+      {
+        "name": "Drago the Fair (Elf)",
+        "purse": 30000
+      }
+    ],
+    "minItems": 6,
+    "maxItems": 18,
+    "turnover": 9,
+    "blackMarket": true
+  },
+  {
+    "id": "home",
+    "home": true,
+    "capacity": 24
+  }
+]

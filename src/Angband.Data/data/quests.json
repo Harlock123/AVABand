@@ -1,0 +1,16 @@
+[
+  {
+    "id": "sauron",
+    "name": "Sauron",
+    "level": 99,
+    "race": "sauron_the_sorcerer",
+    "number": 1
+  },
+  {
+    "id": "morgoth",
+    "name": "Morgoth",
+    "level": 100,
+    "race": "morgoth_lord_of_darkness",
+    "number": 1
+  }
+]

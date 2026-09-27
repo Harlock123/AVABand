@@ -1,0 +1,9 @@
+David Gervais' 32x32 tiles, from Angband 4.2 (lib/tiles/gervais/32x32.png).
+https://github.com/angband/angband/tree/master/lib/tiles/gervais
+
+Artwork by David Gervais. Licensed under the Creative Commons Attribution 3.0
+Unported licence: https://creativecommons.org/licenses/by/3.0/
+The image is included unmodified.
+
+tileset.json (the mapping of game ids to tiles) was generated from Angband's
+graf-dvg.prf and xtra-dvg.prf by tools/angband_prf_to_tileset.py.

@@ -1,0 +1,34 @@
+[
+  {
+    "id": "arcane",
+    "name": "Arcane",
+    "stat": "int",
+    "verb": "cast",
+    "spellNoun": "spell",
+    "bookBase": "magic_book"
+  },
+  {
+    "id": "divine",
+    "name": "Divine",
+    "stat": "wis",
+    "verb": "recite",
+    "spellNoun": "prayer",
+    "bookBase": "prayer_book"
+  },
+  {
+    "id": "nature",
+    "name": "Nature",
+    "stat": "wis",
+    "verb": "invoke",
+    "spellNoun": "charm",
+    "bookBase": "nature_book"
+  },
+  {
+    "id": "shadow",
+    "name": "Necromantic",
+    "stat": "int",
+    "verb": "perform",
+    "spellNoun": "ritual",
+    "bookBase": "shadow_book"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "width": 66,
+  "height": 22,
+  "lotColumns": 4,
+  "lotRows": 2,
+  "rubble": "1d4",
+  "shops": [
+    { "id": "general", "name": "General Store", "terrain": "shop_general" },
+    { "id": "armoury", "name": "Armoury", "terrain": "shop_armoury" },
+    { "id": "weaponsmith", "name": "Weapon Smiths", "terrain": "shop_weaponsmith" },
+    { "id": "bookseller", "name": "Bookseller", "terrain": "shop_bookseller" },
+    { "id": "alchemist", "name": "Alchemy shop", "terrain": "shop_alchemist" },
+    { "id": "magic", "name": "Magic shop", "terrain": "shop_magic" },
+    { "id": "black_market", "name": "Black market", "terrain": "shop_black_market" },
+    { "id": "home", "name": "Home", "terrain": "shop_home", "isHome": true }
+  ]
+}
