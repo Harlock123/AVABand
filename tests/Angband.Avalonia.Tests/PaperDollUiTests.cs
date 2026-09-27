@@ -76,4 +76,50 @@ public class PaperDollUiTests
         Assert.False(((CharacterSheetViewModel)recall.DataContext!).HasPaperDoll);
         Assert.False(recall.GetVisualDescendants().OfType<Grid>().Single(g => g.Name == "PaperDoll").IsVisible);
     }
+
+    [AvaloniaFact]
+    public void TheDoll_FollowsTheEquipment_WhileTheSheetIsOpen()
+    {
+        var (window, vm) = Open(tiles: false);
+        vm.HandleAction(InputAction.CharacterSheet);
+        var sheetWindow = Assert.IsType<CharacterSheetWindow>(window.OwnedWindows.Last());
+        var sheet = (CharacterSheetViewModel)sheetWindow.DataContext!;
+        var game = vm.Game;
+        Assert.True(sheet.PaperDoll!.Head.IsEmpty);
+
+        // Put a cap on: the head slot fills in, on the open sheet.
+        var cap = game.Objects.Create("hard_leather_cap");
+        game.Player.Inventory.Add(cap);
+        vm.Execute(new Angband.Core.Game.WieldCommand(cap));
+        Assert.Same(cap, sheet.PaperDoll!.Head.Item);
+        Assert.Equal(game.Describe(cap), sheet.PaperDoll.Head.Name);
+        var shown = sheetWindow.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+        Assert.Contains(game.Describe(cap), shown);
+        TileRenderingTests.Save(sheetWindow, "paper-doll-updated");
+
+        // Take the weapon off: its slot empties.
+        vm.Execute(new Angband.Core.Game.TakeOffCommand(game.Player.Inventory.Weapon!));
+        Assert.True(sheet.PaperDoll.Weapon.IsEmpty);
+
+        // Switching to tiles redraws it with the tileset.
+        vm.ToggleTilesCommand.Execute(null);
+        Assert.Equal(vm.UseTiles, sheet.PaperDoll.Weapon.UseTiles);
+
+        // A turn passing burns the torch, and the doll shows its fuel going down...
+        var torch = game.Player.Inventory.Light!;
+        vm.Execute(new Angband.Core.Game.HoldCommand());
+        Assert.Equal(game.Describe(torch), sheet.PaperDoll.Light.Name);
+
+        // ...but when nothing it shows has changed, the same doll stays (no needless redraws).
+        var doll = sheet.PaperDoll;
+        vm.HandleAction(InputAction.Feeling); // takes no game time
+        Assert.Same(doll, sheet.PaperDoll);
+
+        // Once the sheet is closed it is no longer kept up to date.
+        sheetWindow.Close();
+        var boots = game.Objects.Create("leather_sandals");
+        game.Player.Inventory.Add(boots);
+        vm.Execute(new Angband.Core.Game.WieldCommand(boots));
+        Assert.True(sheet.PaperDoll.Feet.IsEmpty);
+    }
 }

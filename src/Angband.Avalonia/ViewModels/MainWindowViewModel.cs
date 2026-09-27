@@ -238,6 +238,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         RefreshInventory();
         if (IsInStore) RefreshStore();
         RefreshListPanels();
+        RefreshPaperDolls();
         var next = player.Level >= Angband.Core.Magic.StatTables.MaxLevel ? "max" : _game.ExperienceForLevel(player.Level).ToString(CultureInfo.InvariantCulture);
         var mana = player.MaxMana > 0 ? $"  SP {player.Mana}/{player.MaxMana}" : "";
         StatusText = player.IsDead && player.IsWinner

@@ -48,7 +48,35 @@ public sealed partial class MainWindowViewModel
         {
             PaperDoll = CreatePaperDoll(),
         };
+        _openSheets.Add(sheet);
         CharacterSheetRequested?.Invoke(sheet);
+    }
+
+    /// <summary>Character sheets on screen, whose paper dolls follow the equipment.</summary>
+    private readonly List<CharacterSheetViewModel> _openSheets = [];
+
+    /// <summary>A character sheet was closed: its doll no longer needs keeping up to date.</summary>
+    public void SheetClosed(CharacterSheetViewModel sheet) => _openSheets.Remove(sheet);
+
+    /// <summary>
+    /// Keeps open character sheets' paper dolls current: rebuilt when an item is put on or taken
+    /// off, or changes (an inscription, charges, a rune learned), when hit points change the
+    /// character's colour, or when tiles, tileset or font size change.
+    /// </summary>
+    private void RefreshPaperDolls()
+    {
+        if (_openSheets.Count == 0) return;
+        var signature = PaperDollSignature();
+        foreach (var sheet in _openSheets)
+            if (sheet.PaperDoll is { } doll && doll.Signature != signature)
+                sheet.PaperDoll = CreatePaperDoll();
+    }
+
+    private string PaperDollSignature()
+    {
+        var p = _game.Player;
+        var items = p.Inventory.Equipment.Select(i => i is null ? "-" : $"{i.Serial}:{_game.Describe(i)}");
+        return string.Join("|", items) + $"|{p.Name}|{p.Hp}/{p.MaxHp}|{UseTiles}|{SelectedTileset?.Id}|{MapFontSize}";
     }
 
     /// <summary>The paper doll for the character sheet: what is worn where, drawn as on the map.</summary>
@@ -75,6 +103,7 @@ public sealed partial class MainWindowViewModel
             Player = Drawn(new PaperDollSlot($"{p.Race?.Name} {p.Class?.Name}", null, p.Name, $"{p.Name} the {p.Race?.Name} {p.Class?.Name}",
                 new SingleCellSource(_cells.Player(floor, p.Hp, p.MaxHp)))) with { IsCharacter = true },
             PlayerName = p.Name,
+            Signature = PaperDollSignature(),
         };
     }
 

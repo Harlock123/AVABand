@@ -84,8 +84,13 @@ public partial class MainWindow : Window
 
     private void OnLoadRequested() => OpenLoadGame();
 
-    private void OnCharacterSheetRequested(CharacterSheetViewModel sheet) =>
-        new CharacterSheetWindow { DataContext = sheet }.Show(this);
+    private void OnCharacterSheetRequested(CharacterSheetViewModel sheet)
+    {
+        var window = new CharacterSheetWindow { DataContext = sheet };
+        // While it is open its paper doll follows the equipment; once closed, it is let go.
+        window.Closed += (_, _) => (DataContext as MainWindowViewModel)?.SheetClosed(sheet);
+        window.Show(this);
+    }
 
     private void OnKnowledgeRequested(KnowledgeViewModel knowledge) =>
         new KnowledgeWindow { DataContext = knowledge }.Show(this);

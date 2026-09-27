@@ -61,6 +61,7 @@ public sealed partial class MainWindowViewModel
 
     private void SaveSettings()
     {
+        RefreshPaperDolls();
         OnPropertyChanged(nameof(DisplayModeText));
         _settings.UseTiles = UseTiles;
         _settings.TilesetId = SelectedTileset?.Id ?? _settings.TilesetId;

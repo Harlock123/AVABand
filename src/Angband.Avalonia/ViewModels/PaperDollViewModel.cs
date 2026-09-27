@@ -48,6 +48,8 @@ public sealed class PaperDollViewModel
     public required PaperDollSlot Feet { get; init; }
     public required PaperDollSlot Player { get; init; }
     public required string PlayerName { get; init; }
+    /// <summary>Everything the doll shows, as text: when it differs, the doll is out of date.</summary>
+    public string Signature { get; init; } = "";
     /// <summary>All the slots, in <see cref="Inventory.Slots"/> order.</summary>
     public IReadOnlyList<PaperDollSlot> Slots =>
         [Weapon, Bow, RingLeft, RingRight, Amulet, Light, Body, Cloak, Shield, Head, Hands, Feet];

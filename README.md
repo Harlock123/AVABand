@@ -349,7 +349,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   the middle and each piece of equipment where it is worn — head, amulet, body armour and boots
   down the centre, light, weapon, left ring and gloves on one side, bow, shield, right ring and
   cloak on the other — drawn with the map's own tiles (or coloured letters in ASCII mode), named,
-  and described in full on hover. "Save to file" writes it to
+  and described in full on hover. While the sheet is open the doll keeps up with the game: putting
+  things on or taking them off, a torch burning down, a rune learned, hit points colouring the
+  `@`, or a change of tiles redraw it (the text below stays as it was when opened). "Save to file" writes it to
   `<AppData>/AVABand/dumps/`. Ctrl+H shows the high-score table (`<AppData>/AVABand/scores.json`,
   top 100). Points follow Angband: experience + 100 × max dungeon level, ties going to the fewer
   turns. The living character is shown where they would place, without entering the table. On
