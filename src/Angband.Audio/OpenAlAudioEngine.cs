@@ -32,6 +32,7 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
     private IAudioDecoder? _decoder;
     private bool _loop;
     private float _fade;          // current music fade level 0..1
+    private float _musicGain = 1; // evens out the current track's loudness
     private string? _pendingPath; // track to start once the current one has faded out
     private bool _pendingLoop;
 
@@ -129,6 +130,9 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
         {
             var (samples, channels, rate) = AudioDecoders.DecodeAll(path);
             if (samples.Length == 0) return null;
+            // Bring every effect to the same loudness, whatever level it was recorded at.
+            var (rms, peak) = Loudness.Measure(samples);
+            Loudness.Apply(samples, Loudness.Gain(rms, peak, Loudness.EffectTargetDb, Loudness.EffectMaxBoostDb));
             var buffer = _al.GenBuffer();
             _al.BufferData(buffer, channels == 1 ? BufferFormat.Mono16 : BufferFormat.Stereo16, samples, rate);
             return buffer;
@@ -178,6 +182,7 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
         }
         _loop = _pendingLoop;
         CurrentMusic = path;
+        _musicGain = MeasureMusic(_decoder);
         _fade = 0;
         foreach (var buffer in _musicBuffers)
             if (Fill(buffer)) _al.SourceQueueBuffers(_musicSource, [buffer]);
@@ -198,6 +203,31 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
         _decoder = null;
     }
 
+    /// <summary>How much music may be read to judge a track's loudness (seconds).</summary>
+    private const int MusicMeasureSeconds = 30;
+
+    /// <summary>
+    /// Listens to the start of a track to settle its loudness (see <see cref="Loudness"/>), then
+    /// rewinds it.
+    /// </summary>
+    private float MeasureMusic(IAudioDecoder decoder)
+    {
+        var limit = MusicMeasureSeconds * decoder.SampleRate * Math.Max(1, decoder.Channels);
+        double sumSquares = 0;
+        long count = 0;
+        var peak = 0.0;
+        int read;
+        while (count < limit && (read = decoder.Read(_chunk)) > 0)
+        {
+            var (rms, chunkPeak) = Loudness.Measure(_chunk.AsSpan(0, read));
+            sumSquares += rms * rms * read;
+            count += read;
+            peak = Math.Max(peak, chunkPeak);
+        }
+        decoder.Rewind();
+        return count == 0 ? 1f : Loudness.Gain(Math.Sqrt(sumSquares / count), peak, Loudness.MusicTargetDb, Loudness.MusicMaxBoostDb);
+    }
+
     /// <summary>Decodes the next chunk into a buffer; loops or ends the track at end of file.</summary>
     private bool Fill(uint buffer)
     {
@@ -209,6 +239,7 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
             read = _decoder.Read(_chunk);
         }
         if (read == 0) return false;
+        Loudness.Apply(_chunk.AsSpan(0, read), _musicGain);
         _al.BufferData(buffer, _decoder.Channels == 1 ? BufferFormat.Mono16 : BufferFormat.Stereo16,
             _chunk.AsSpan(0, read).ToArray(), _decoder.SampleRate);
         return true;

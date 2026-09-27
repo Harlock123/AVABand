@@ -647,7 +647,12 @@ game or in `<AppData>/AVABand/tilesets/`:
 Windows, Linux and macOS on x64 and ARM), decoding WAV itself, Ogg Vorbis with NVorbis and MP3 with
 NLayer. A `SoundDirector` subscribes to the engine's event bus and turns events into sounds, so the
 engine knows nothing about audio (and sound never touches the game's RNG). Without an audio device
-(or with `--no-audio`) the game is silent. The **Audio buffer** choice (Settings → Sound) sets how much sound
+(or with `--no-audio`) the game is silent. Sounds are **levelled** as they load (`Loudness.cs`): packs are recorded at very
+different levels — the Angband effects sit 10-30 dB under the bundled music, and the music tracks
+differ by 30 dB among themselves — so each effect is brought to about -20 dB average and each music
+track, measured over its first 30 seconds, to -30 dB, putting swings, hits and deaths clearly over
+the music. Boosts stop at 16x (so faint recordings don't turn to hiss) and peaks stay under -1 dB.
+The **Audio buffer** choice (Settings → Sound) sets how much sound
 OpenAL mixes at a time: *Automatic* — the default — uses OpenAL's own small buffer, or a large
 one (2048 frames, about 43 ms) when AVABand finds it is running in a virtual machine, whose
 emulated sound card otherwise underruns and crackles (measured in a QEMU VM on PipeWire: about 25
