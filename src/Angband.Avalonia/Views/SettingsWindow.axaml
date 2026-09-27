@@ -16,7 +16,7 @@
         <StackPanel Orientation="Horizontal" Spacing="8">
           <TextBlock Text="{Binding Description}" />
           <TextBlock Text="{Binding Id}" Opacity="0.5" FontSize="12" VerticalAlignment="Center"
-                     FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" />
+                     FontFamily="{StaticResource MonoFont}" />
         </StackPanel>
       </CheckBox>
     </DataTemplate>
@@ -166,7 +166,7 @@
               <DataTemplate x:DataType="vm:BindingRow">
                 <Grid ColumnDefinitions="220,*,150,Auto,Auto,Auto" Margin="0,2">
                   <TextBlock Grid.Column="0" Text="{Binding Label}" VerticalAlignment="Center" />
-                  <TextBlock Grid.Column="1" Text="{Binding Keys}" VerticalAlignment="Center" FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" FontSize="12" />
+                  <TextBlock Grid.Column="1" Text="{Binding Keys}" VerticalAlignment="Center" FontFamily="{StaticResource MonoFont}" FontSize="12" />
                   <TextBlock Grid.Column="2" Text="{Binding Button}" VerticalAlignment="Center" Foreground="#8ab4f8" FontSize="12" />
                   <Button Grid.Column="3" Content="Key..." Padding="8,2" Margin="4,0"
                           Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RebindKeyCommand}" CommandParameter="{Binding}" />

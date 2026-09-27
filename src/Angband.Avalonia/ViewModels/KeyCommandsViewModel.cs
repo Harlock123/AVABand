@@ -38,14 +38,14 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.MoveSouthWest, "Step south-west, or attack"),
             (InputAction.MoveSouthEast, "Step south-east, or attack"),
             (InputAction.RunNorth, "Run north until something interesting happens"),
-            (InputAction.RunSouth, "Run south: corridors are followed round bends; a monster, object, door or junction stops you"),
-            (InputAction.RunWest, "Run west"),
-            (InputAction.RunEast, "Run east"),
-            (InputAction.RunNorthWest, "Run north-west"),
-            (InputAction.RunNorthEast, "Run north-east"),
-            (InputAction.RunSouthWest, "Run south-west"),
-            (InputAction.RunSouthEast, "Run south-east"),
-            (InputAction.Run, "Run: asks which way"),
+            (InputAction.RunSouth, "Run south until something interesting happens"),
+            (InputAction.RunWest, "Run west until something interesting happens"),
+            (InputAction.RunEast, "Run east until something interesting happens"),
+            (InputAction.RunNorthWest, "Run north-west until something interesting happens"),
+            (InputAction.RunNorthEast, "Run north-east until something interesting happens"),
+            (InputAction.RunSouthWest, "Run south-west until something interesting happens"),
+            (InputAction.RunSouthEast, "Run south-east until something interesting happens"),
+            (InputAction.Run, "Run, asking which way. Runs follow corridors round bends; a monster, object, door or junction stops them"),
             (InputAction.Hold, "Stay in place for a turn"),
             (InputAction.Rest, "Rest until healed or disturbed"),
             (InputAction.StairsDown, "Take a staircase down"),
@@ -179,7 +179,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
     private static string Keys(IEnumerable<string> chords)
     {
         var shown = chords.Select(c => c.StartsWith("Char:", StringComparison.Ordinal) ? c[5..] : KeyboardInput.Display(c)).ToList();
-        return shown.Count == 0 ? "(none)" : string.Join("  ·  ", shown);
+        return shown.Count == 0 ? "(none)" : string.Join(" · ", shown);
     }
 
     /// <summary>Only commands whose name, description or keys contain this.</summary>

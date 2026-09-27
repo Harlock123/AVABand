@@ -51,7 +51,7 @@
     </Grid>
     <ScrollViewer HorizontalScrollBarVisibility="{Binding HorizontalScroll}" Background="#111111">
       <SelectableTextBlock x:Name="SheetText" Text="{Binding Text}" v:RichText.Runs="{Binding Runs}" TextWrapping="{Binding Wrapping}" Margin="10"
-                           FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" FontSize="13" />
+                           FontFamily="{StaticResource MonoFont}" FontSize="13" />
     </ScrollViewer>
   </DockPanel>
 </Window>

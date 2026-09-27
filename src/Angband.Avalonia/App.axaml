@@ -2,6 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Angband.Avalonia.App"
              RequestedThemeVariant="Dark">
+  <Application.Resources>
+    <!-- Bundled (Assets/Fonts), so columns line up on every system whatever monospace fonts it has. -->
+    <FontFamily x:Key="MonoFont">avares://AVABand/Assets/Fonts#DejaVu Sans Mono</FontFamily>
+  </Application.Resources>
   <Application.Styles>
     <FluentTheme />
   </Application.Styles>

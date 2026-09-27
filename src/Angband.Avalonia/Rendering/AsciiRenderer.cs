@@ -9,8 +9,10 @@ namespace Angband.Avalonia.Rendering;
 /// <summary>The classic look: one coloured glyph per cell. Glyphs are formatted once and cached.</summary>
 public sealed class AsciiRenderer : IMapRenderer
 {
-    private static readonly Typeface Mono = new(new FontFamily(
-        "Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, Liberation Mono, Noto Sans Mono, monospace"));
+    /// <summary>The bundled DejaVu Sans Mono (Assets/Fonts), the same on every system.</summary>
+    public const string MonoFontUri = "avares://AVABand/Assets/Fonts#DejaVu Sans Mono";
+
+    private static readonly Typeface Mono = new(new FontFamily(MonoFontUri));
 
     private readonly Dictionary<(char, uint), FormattedText> _glyphs = [];
     private readonly Dictionary<uint, IBrush> _brushes = [];

@@ -21,7 +21,7 @@
                 <DataTemplate x:DataType="vm:KnowledgeRow">
                   <DockPanel>
                     <TextBlock DockPanel.Dock="Left" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}" Width="20"
-                               FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" FontWeight="Bold" />
+                               FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
                     <TextBlock DockPanel.Dock="Right" Text="{Binding Note}" Opacity="0.6" FontSize="12" Margin="8,0,0,0" />
                     <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
                   </DockPanel>
@@ -36,7 +36,7 @@
               <Button DockPanel.Dock="Right" Content="Set" Margin="8,0,0,0" Command="{Binding SetAutoInscriptionCommand}" />
               <TextBlock DockPanel.Dock="Left" Text="Auto-inscription" VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.8" />
               <TextBox x:Name="AutoInscriptionBox" Text="{Binding AutoInscription}" MaxLength="80" Watermark="e.g. @q1 or =g"
-                       FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" />
+                       FontFamily="{StaticResource MonoFont}" />
             </DockPanel>
             <ScrollViewer Background="#111111">
               <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="12" FontSize="14" />
@@ -62,7 +62,7 @@
                   <DataTemplate x:DataType="vm:MonsterKnowledgeRow">
                     <DockPanel>
                       <TextBlock DockPanel.Dock="Left" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}" Width="20"
-                                 FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" FontWeight="Bold" />
+                                 FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
                       <TextBlock DockPanel.Dock="Right" Text="{Binding KillsText}" Opacity="0.6" FontSize="12" Margin="8,0,0,0" />
                       <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" />
                     </DockPanel>

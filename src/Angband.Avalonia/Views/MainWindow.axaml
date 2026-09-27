@@ -8,7 +8,6 @@
         Width="1280" Height="800"
         Background="Black">
   <Window.Resources>
-    <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace</FontFamily>
     <DataTemplate x:Key="ItemRowTemplate" x:DataType="vm:ItemRow">
       <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1">
         <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
@@ -173,7 +172,7 @@
         <StackPanel Spacing="8">
           <TextBlock Text="{Binding InscriptionTitle}" FontWeight="SemiBold" TextWrapping="Wrap" />
           <TextBox x:Name="InscriptionBox" Text="{Binding InscriptionText}" MaxLength="80"
-                   FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" />
+                   FontFamily="{StaticResource MonoFont}" />
           <TextBlock Opacity="0.6" FontSize="12" TextWrapping="Wrap"
                      Text="Enter writes it, Escape cancels, empty removes it. @q1: press 1 in the quaff menu; !d: ask before dropping; =g / !g: always / never pick up; @f1: first in the quiver." />
         </StackPanel>

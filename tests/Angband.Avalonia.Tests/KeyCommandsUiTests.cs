@@ -75,8 +75,8 @@ public class KeyCommandsUiTests
         var (_, vm) = Open();
         vm.Bindings.BindKey("Char:M", InputAction.Cast);
         var commands = new KeyCommandsViewModel(vm.Bindings);
-        Assert.Equal("M  ·  m", Row(commands, "Cast").Keys);
-        Assert.Equal(",  ·  5  ·  Clear  ·  NumPad5", Row(commands, "Hold (stay put)").Keys);
+        Assert.Equal("M · m", Row(commands, "Cast").Keys);
+        Assert.Equal(", · 5 · Clear · NumPad5", Row(commands, "Hold (stay put)").Keys);
         Assert.Equal("Y", Row(commands, "Cast").Button);
     }
 

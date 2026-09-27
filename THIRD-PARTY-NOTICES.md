@@ -37,6 +37,13 @@ Each tileset folder carries its own `LICENSE.txt`.
 
 See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.
 
+## Font (`src/Angband.Avalonia/Assets/Fonts`)
+
+DejaVu Sans Mono (regular and bold), built into AVABand for the map's letters and every column of
+text. Copyright (c) 2003 Bitstream, Inc. (Bitstream Vera), with DejaVu changes in the public
+domain; free to use, copy and redistribute under the Bitstream Vera / DejaVu licence in
+`Assets/Fonts/LICENSE.txt`. Source: https://dejavu-fonts.github.io/
+
 ## Libraries (bundled in the release builds)
 
 | Library | Licence |

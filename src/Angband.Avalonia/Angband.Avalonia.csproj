@@ -18,6 +18,8 @@
     <!-- Bundled tilesets ship as loose files so players can add or edit their own. -->
     <Content Include="tilesets\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="soundpacks\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- DejaVu Sans Mono, built in: the map's letters and every column of text use it. -->
+    <AvaloniaResource Include="Assets\Fonts\*.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Angband.Core\Angband.Core.csproj" />

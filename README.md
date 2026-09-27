@@ -2,6 +2,29 @@
 
 A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 11.
 
+![Five levels down with the David Gervais tiles: Bullroarer, a kobold archer and two cave spiders, with the monster and object lists beside the map](screenshots/dungeon-tiles.png)
+
+## Screenshots
+
+| | |
+|---|---|
+| ![The same kind of room in the classic letters](screenshots/dungeon-ascii.png) | ![The town by day, in letters](screenshots/town-ascii.png) |
+| Classic ASCII, the original look | The town (the numbers are the shops) |
+| ![The character sheet: a paper doll of what is worn above the character dump](screenshots/character-sheet.png) | ![Character creation: race, class, point-buy stats and birth options](screenshots/character-creation.png) |
+| Character sheet with paper doll | Character creation |
+| ![A mage's spell menu with level, mana and failure chance](screenshots/cast-a-spell.png) | ![An item menu with letters and weights](screenshots/item-menu.png) |
+| Casting a spell | Choosing an item |
+| ![The Alchemy shop's stock and prices](screenshots/store.png) | ![The monster list, over the map](screenshots/monster-list.png) |
+| The Alchemist (4.2's store stock) | Monster list (`[`) |
+| ![Monster knowledge: what you have learned about each monster seen](screenshots/knowledge.png) | ![Every keyboard command and the keys bound to it](screenshots/keyboard-commands.png) |
+| Knowledge (`~`) | Keyboard commands (`?` or F1) |
+| ![Settings: tilesets with a preview, tile scale and font size](screenshots/settings.png) | |
+| Settings | |
+
+The screenshots are rendered by the real windows without a display, from fixed seeds:
+`tools/screenshots.sh` regenerates them all (`tests/Angband.Avalonia.Tests/ReadmeScreenshots.cs`
+sets up each scene).
+
 ## Download and run
 
 Every push is built and tested by GitHub Actions (`.github/workflows/build.yml`), which then
@@ -745,6 +768,8 @@ is shown; its contents scroll. At 200% scaling a small display has only about 80
 Hyprland shrinks a floating window asked for taller than the screen to a fraction of its size, leaving
 the character sheet tiny and unreadable.
 Launch with `--seed N` and/or `--depth N` to reproduce a game or jump straight to a level (`--seed` skips resuming the last save).
+
+Text: the ASCII map, the status line and every column of text (character sheet, lists, menus) use DejaVu Sans Mono, built into the program, so columns line up whatever fonts the system has (Omarchy, for one, has none of Cascadia Mono, Consolas, Menlo or DejaVu Sans Mono).
 
 Rendering: seen squares in full colour (torch-lit floor tinted yellow), remembered squares dimmed
 (stairs, doors and shops stay bright), unknown squares blank.
