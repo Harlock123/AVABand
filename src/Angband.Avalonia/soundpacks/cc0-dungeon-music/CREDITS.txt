@@ -8,3 +8,28 @@ dungeon002_0.ogg              "Dungeon Ambience" by yd
                               https://opengameart.org/content/dungeon-ambience
 dark_cavern_ambient_002.ogg   "Dark Cavern Ambient" by Paul Wortmann
                               https://opengameart.org/content/dark-cavern-ambient
+
+Added later (all CC0 on OpenGameArt; the long or large ones re-encoded to Ogg Vorbis to keep
+the download small). Dungeon (levels 1-19):
+
+dark_theme.ogg                "Dark Theme" by JaggedStone
+                              https://opengameart.org/content/dark-theme
+cave_theme.ogg                "Cave Theme" by HaelDB
+                              https://opengameart.org/content/cave-theme
+deep_humidity.ogg             "Deep Humidity" by TinyWorlds
+                              https://opengameart.org/content/deep-humidity
+rat_sewer.ogg                 "Rat Sewer" by HaelDB
+                              https://opengameart.org/content/rat-sewer
+within_the_abandoned_castle.ogg  "Within The Abandoned Castle" (V2) by Spring Spring
+                              https://opengameart.org/content/within-the-abandoned-castle
+
+Deep dungeon (level 20 and below):
+
+cold_silence.ogg              "Cold Silence" by Eponasoft
+                              https://opengameart.org/content/cold-silence
+eternal_sleep.ogg             "Eternal Sleep" by The Oracle
+                              https://opengameart.org/content/eternal-sleep
+evil_temple.ogg               "Evil temple Ambiance loop" by HaelDB
+                              https://opengameart.org/content/evil-temple-ambiance-loop
+horror_atmosphere.ogg         "Post Apocalyptic Wastelands" by Juhani Junkala (SubspaceAudio)
+                              https://opengameart.org/content/horror-atmosphere

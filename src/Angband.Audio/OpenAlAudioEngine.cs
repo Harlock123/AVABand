@@ -55,6 +55,8 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
     public int PeriodFrames { get; private init; }
     public string? CurrentMusic { get; private set; }
 
+    public event Action? MusicEnded;
+
     /// <summary>
     /// Opens the default device; falls back to a silent engine if that is impossible.
     /// <paramref name="periodFrames"/> is how many sample frames OpenAL mixes at a time (0: its
@@ -248,6 +250,7 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
     /// <summary>Background tick: fades, and keeps the music queue topped up.</summary>
     private void Pump()
     {
+        var ended = false;
         lock (_lock)
         {
             if (_decoder is null)
@@ -278,8 +281,15 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
             _al.GetSourceProperty(_musicSource, GetSourceInteger.SourceState, out var state);
             _al.GetSourceProperty(_musicSource, GetSourceInteger.BuffersQueued, out var queued);
             if (state != (int)SourceState.Playing && queued > 0) _al.SourcePlay(_musicSource); // recover from underrun
-            if (queued == 0) { StopStream(); CurrentMusic = null; }
+            if (queued == 0)
+            {
+                // The track played to its end (it wasn't looping): say so, outside the lock.
+                StopStream();
+                CurrentMusic = null;
+                ended = true;
+            }
         }
+        if (ended) MusicEnded?.Invoke();
     }
 
     public void Dispose()

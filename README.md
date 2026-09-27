@@ -690,7 +690,7 @@ Bundled packs (in `src/Angband.Avalonia/soundpacks/`):
 | Pack | Content | Licence |
 |---|---|---|
 | Angband sounds (Dubtrain) | 246 effects for 149 events | CC BY 4.0, see its `LICENSE.txt` |
-| CC0 dungeon music | town, night, dungeon and deep tracks | CC0, see its `CREDITS.txt` |
+| CC0 dungeon music | 13 tracks (about 48 minutes): town, night, 7 for the dungeon, 5 for the deep levels | CC0, see its `CREDITS.txt` |
 
 A sound pack is a folder with a `soundpack.json` (in `soundpacks/` next to the game or
 `<AppData>/AVABand/soundpacks/`):
@@ -709,7 +709,10 @@ MON_BITE/MON_CLAW…, OPENDOOR, SHUTDOOR, LOCKPICK(_FAIL), STAIRS_UP/DOWN, MONEY
 QUAFF, EAT, RUNE, LEVEL, STUDY, SPELL, PRAYER, TELEPORT, BLIND/CONFUSED/POISONED/…/RECOVER,
 HITPOINT_WARN, DEATH, monster spells such as BR_FIRE and SHRIEK, SUM_MONSTER, MULTIPLY, and
 AMBIENT_DAY/NITE/DNG1-5). One file is picked at random per play; `town_night` falls back to `town`
-and `deep` to `dungeon`. `tools/angband_sound_prf_to_soundpack.py` converts Angband's `sound.prf`.
+and `deep` to `dungeon`. Music is a **playlist**: each track plays through once and then another
+from the same mood follows (never the same one twice running, unless it's the only one); taking
+the stairs changes the mood, and a track that also belongs to the new mood's list carries on.
+The music moods: `town` by day, `town_night`, `dungeon` for levels 1-19 and `deep` from level 20. `tools/angband_sound_prf_to_soundpack.py` converts Angband's `sound.prf`.
 
 ## Modding
 Data loads from `data/` next to the executable, then from each folder in

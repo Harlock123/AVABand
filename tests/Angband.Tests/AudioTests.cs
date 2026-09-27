@@ -10,11 +10,13 @@ internal sealed class RecordingAudioEngine : NullAudioEngine
 {
     public List<string> Effects { get; } = [];
     public List<string> MusicStarted { get; } = [];
+    public bool? LastLoop { get; private set; }
     public override bool IsAvailable => true;
     public override void PlayEffect(string path, float gain = 1f) => Effects.Add(Path.GetFileName(path));
     public override void PlayMusic(string path, bool loop = true)
     {
         base.PlayMusic(path, loop);
+        LastLoop = loop;
         MusicStarted.Add(Path.GetFileName(path));
     }
 }
@@ -215,10 +217,59 @@ public class AudioTests
 
         game.Execute(new DebugJumpCommand(30));
         Assert.Equal("deep", director.MusicMood);
-        Assert.Equal("dark_cavern_ambient_002.ogg", engine.MusicStarted.Last());
+        Assert.Contains(engine.MusicStarted.Last(), Music.Music["deep"]);
 
         director.MusicEnabled = false;
         Assert.Null(engine.CurrentMusic);
+    }
+
+    /// <summary>A track plays once; when it ends another from the same playlist follows, never the same one twice running.</summary>
+    [Fact]
+    public void Music_MovesOnThroughThePlaylist_WhenATrackEnds()
+    {
+        var game = GameSession.NewGame(TestData.Game, 7);
+        var (_, director, _, engine) = Setup(game);
+        game.Execute(new DebugJumpCommand(5));
+        Assert.False(engine.LastLoop); // tracks don't loop; the playlist moves on
+
+        for (var i = 0; i < 30; i++) engine.FinishMusic();
+
+        var played = engine.MusicStarted.Skip(1).ToList(); // after the town's
+        Assert.All(played, t => Assert.Contains(t, Music.Music["dungeon"]));
+        Assert.All(played.Zip(played.Skip(1)), pair => Assert.NotEqual(pair.First, pair.Second));
+        Assert.True(played.Distinct().Count() >= 4, string.Join(", ", played));
+
+        // Nothing plays on when the music is off.
+        director.MusicEnabled = false;
+        var count = engine.MusicStarted.Count;
+        engine.FinishMusic();
+        Assert.Equal(count, engine.MusicStarted.Count);
+    }
+
+    /// <summary>A playlist of one just plays that track again.</summary>
+    [Fact]
+    public void Music_WithOneTrack_PlaysItAgain()
+    {
+        var game = GameSession.NewGame(TestData.Game, 7);
+        var (_, _, _, engine) = Setup(game);
+        Assert.Equal("The_Old_Tower_Inn.mp3", engine.MusicStarted.Last());
+        engine.FinishMusic();
+        Assert.Equal(["The_Old_Tower_Inn.mp3", "The_Old_Tower_Inn.mp3"], engine.MusicStarted.TakeLast(2));
+    }
+
+    /// <summary>Every bundled track decodes, and each playlist has a choice of tracks.</summary>
+    [Fact]
+    public void EveryBundledTrack_Decodes()
+    {
+        var buffer = new short[8192];
+        foreach (var track in Music.Music.Values.SelectMany(t => t).Distinct())
+        {
+            using var decoder = AudioDecoders.Open(Music.Resolve(track));
+            Assert.True(decoder.Read(buffer) > 0, track);
+            Assert.InRange(decoder.Channels, 1, 2);
+        }
+        Assert.True(Music.Music["dungeon"].Count >= 6);
+        Assert.True(Music.Music["deep"].Count >= 4);
     }
 
     [Fact]
@@ -250,6 +301,37 @@ public class AudioTests
         Thread.Sleep(300);
         engine.StopMusic();
         if (engine.IsAvailable) Assert.NotNull(engine);
+    }
+
+    /// <summary>On a real device, a track started without looping plays out and says so (silently: volume 0).</summary>
+    [Fact]
+    public void OpenAl_ATrackThatEnds_RaisesMusicEnded()
+    {
+        using var engine = OpenAlAudioEngine.CreateOrSilent();
+        if (!engine.IsAvailable) return; // no sound device (CI): nothing to check
+        engine.SetVolumes(0f, 0f, 0f);
+
+        // A quarter of a second of 16-bit mono silence.
+        var path = Path.Combine(Path.GetTempPath(), $"avaband-end-{Guid.NewGuid():N}.wav");
+        const int rate = 22050, samples = rate / 4;
+        using (var w = new BinaryWriter(File.Create(path)))
+        {
+            w.Write("RIFF"u8); w.Write(36 + samples * 2); w.Write("WAVE"u8);
+            w.Write("fmt "u8); w.Write(16); w.Write((short)1); w.Write((short)1); w.Write(rate); w.Write(rate * 2); w.Write((short)2); w.Write((short)16);
+            w.Write("data"u8); w.Write(samples * 2); w.Write(new byte[samples * 2]);
+        }
+        try
+        {
+            using var ended = new ManualResetEventSlim();
+            engine.MusicEnded += ended.Set;
+            engine.PlayMusic(path, loop: false);
+            Assert.True(ended.Wait(TimeSpan.FromSeconds(10)), "the track never ended");
+            Assert.Null(engine.CurrentMusic);
+        }
+        finally
+        {
+            File.Delete(path);
+        }
     }
 
     [Fact]

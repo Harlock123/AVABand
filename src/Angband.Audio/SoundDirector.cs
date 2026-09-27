@@ -21,7 +21,15 @@ public sealed class SoundDirector : IDisposable
     private bool _day = true;
     private bool _warned;
 
-    public SoundDirector(IAudioEngine engine) => _engine = engine;
+    public SoundDirector(IAudioEngine engine)
+    {
+        _engine = engine;
+        _engine.MusicEnded += OnMusicEnded;
+    }
+
+    // The music is chosen from the game's thread and, when a track ends, the audio thread.
+    private readonly object _musicLock = new();
+    private string? _lastTrack;
 
     public SoundPack? Effects { get; set; }
 
@@ -229,25 +237,55 @@ public sealed class SoundDirector : IDisposable
         }
     }
 
-    /// <summary>Starts a track for the current mood (falling back town_night→town, deep→dungeon).</summary>
+    /// <summary>
+    /// Starts a track for the current mood (falling back town_night→town, deep→dungeon). Tracks
+    /// don't loop: when one ends, <see cref="OnMusicEnded"/> picks another from the playlist.
+    /// </summary>
     private void UpdateMusic()
     {
-        if (!MusicEnabled || MusicPack is not { } pack)
+        lock (_musicLock)
         {
-            _engine.StopMusic();
-            return;
+            if (Playlist() is not { } tracks)
+            {
+                _engine.StopMusic();
+                return;
+            }
+            // Keep playing if the current track already belongs to this mood's playlist.
+            if (_engine.CurrentMusic is { } current && tracks.Contains(current)) return;
+            PlayFrom(tracks);
         }
-        var mood = MusicMood;
-        var fallback = mood switch { "town_night" => "town", "deep" => "dungeon", _ => mood };
-        if (!pack.Music.TryGetValue(mood, out var tracks) && !pack.Music.TryGetValue(fallback, out tracks))
-        {
-            _engine.StopMusic();
-            return;
-        }
-        // Keep playing if the current track already belongs to this mood's playlist.
-        if (_engine.CurrentMusic is { } current && tracks.Any(t => pack.Resolve(t) == current)) return;
-        _engine.PlayMusic(pack.Resolve(tracks[_random.Next(tracks.Count)]));
     }
 
-    public void Dispose() => Detach();
+    /// <summary>A track played out: on to another from the same playlist (not the same one, if there is a choice).</summary>
+    private void OnMusicEnded()
+    {
+        lock (_musicLock)
+        {
+            if (Playlist() is { } tracks) PlayFrom(tracks);
+        }
+    }
+
+    /// <summary>The current mood's tracks (as full paths), or null when there is no music to play.</summary>
+    private List<string>? Playlist()
+    {
+        if (!MusicEnabled || MusicPack is not { } pack) return null;
+        var mood = MusicMood;
+        var fallback = mood switch { "town_night" => "town", "deep" => "dungeon", _ => mood };
+        if (!pack.Music.TryGetValue(mood, out var tracks) && !pack.Music.TryGetValue(fallback, out tracks)) return null;
+        return tracks.Count == 0 ? null : [.. tracks.Select(pack.Resolve)];
+    }
+
+    private void PlayFrom(List<string> tracks)
+    {
+        var choices = tracks.Count > 1 ? tracks.Where(t => t != _lastTrack).ToList() : tracks;
+        var next = choices[_random.Next(choices.Count)];
+        _lastTrack = next;
+        _engine.PlayMusic(next, loop: false);
+    }
+
+    public void Dispose()
+    {
+        _engine.MusicEnded -= OnMusicEnded;
+        Detach();
+    }
 }
