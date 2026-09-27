@@ -44,8 +44,38 @@ public sealed partial class MainWindowViewModel
     {
         var p = _game.Player;
         var sheet = new CharacterSheetViewModel($"{p.Name} the {p.Race?.Name} {p.Class?.Name}", BuildDump(),
-            _records is null ? null : () => _records.WriteDump(_game, BuildDump()));
+            _records is null ? null : () => _records.WriteDump(_game, BuildDump()))
+        {
+            PaperDoll = CreatePaperDoll(),
+        };
         CharacterSheetRequested?.Invoke(sheet);
+    }
+
+    /// <summary>The paper doll for the character sheet: what is worn where, drawn as on the map.</summary>
+    public PaperDollViewModel CreatePaperDoll()
+    {
+        var floor = _cells.Terrain(_data.Terrain["floor"], Angband.Data.Tiles.TileLighting.Lit);
+        var equipment = _game.Player.Inventory.Equipment;
+        PaperDollSlot Slot(int index, string label)
+        {
+            var item = equipment[index];
+            if (item is null) return Drawn(new PaperDollSlot(label, null, "(nothing)", $"{label}: nothing worn", new SingleCellSource(MapCell.Unknown)));
+            var name = _game.Describe(item);
+            return Drawn(new PaperDollSlot(label, item, name, name, new SingleCellSource(_cells.Object(item, 1, _game.Knowledge, floor))));
+        }
+        PaperDollSlot Drawn(PaperDollSlot slot) => slot with { UseTiles = UseTiles, Tileset = SelectedTileset, FontSize = MapFontSize };
+        var p = _game.Player;
+        // Indices follow Inventory.Slots: weapon, bow, ring (left), ring (right), amulet, light,
+        // body, cloak, shield, head, hands, feet.
+        return new PaperDollViewModel
+        {
+            Weapon = Slot(0, "Weapon"), Bow = Slot(1, "Bow"), RingLeft = Slot(2, "Left ring"), RingRight = Slot(3, "Right ring"),
+            Amulet = Slot(4, "Amulet"), Light = Slot(5, "Light"), Body = Slot(6, "Body"), Cloak = Slot(7, "Cloak"),
+            Shield = Slot(8, "Shield"), Head = Slot(9, "Head"), Hands = Slot(10, "Hands"), Feet = Slot(11, "Feet"),
+            Player = Drawn(new PaperDollSlot($"{p.Race?.Name} {p.Class?.Name}", null, p.Name, $"{p.Name} the {p.Race?.Name} {p.Class?.Name}",
+                new SingleCellSource(_cells.Player(floor, p.Hp, p.MaxHp)))) with { IsCharacter = true },
+            PlayerName = p.Name,
+        };
     }
 
     [RelayCommand]

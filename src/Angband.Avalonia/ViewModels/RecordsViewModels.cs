@@ -13,6 +13,9 @@ public sealed partial class CharacterSheetViewModel(string title, string text, F
     public string Text { get; } = text;
     /// <summary>The text in colour, when it has any (monster recall); otherwise plain <see cref="Text"/>.</summary>
     public IReadOnlyList<ColoredRun>? Runs { get; init; }
+    /// <summary>The character's equipment where it is worn (the character sheet only).</summary>
+    public PaperDollViewModel? PaperDoll { get; init; }
+    public bool HasPaperDoll => PaperDoll is not null;
     /// <summary>Prose (monster recall) wraps; the character sheet keeps its columns.</summary>
     public global::Avalonia.Media.TextWrapping Wrapping => Runs is null ? global::Avalonia.Media.TextWrapping.NoWrap : global::Avalonia.Media.TextWrapping.Wrap;
     public global::Avalonia.Controls.Primitives.ScrollBarVisibility HorizontalScroll =>

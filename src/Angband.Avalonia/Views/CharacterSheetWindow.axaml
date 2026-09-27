@@ -2,17 +2,53 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Angband.Avalonia.ViewModels"
         xmlns:v="using:Angband.Avalonia.Views"
+        xmlns:controls="using:Angband.Avalonia.Controls"
         x:Class="Angband.Avalonia.Views.CharacterSheetWindow"
         x:DataType="vm:CharacterSheetViewModel"
         Title="{Binding Title}"
-        Width="720" Height="760"
+        Width="760" Height="900"
         WindowStartupLocation="CenterOwner">
+  <Window.Resources>
+    <!-- One equipment slot: its picture (the map's tile or letter), the slot's name and what is worn. -->
+    <DataTemplate x:Key="SlotTemplate" x:DataType="vm:PaperDollSlot">
+      <Border Background="#161616" BorderBrush="#333" BorderThickness="1" CornerRadius="4" Padding="6" Margin="3"
+              ToolTip.Tip="{Binding Description}">
+        <DockPanel>
+          <Border DockPanel.Dock="Left" Width="40" Height="40" Background="Black" ClipToBounds="True" Margin="0,0,8,0">
+            <controls:MapView Source="{Binding Picture}" FitToBounds="True" UseTiles="{Binding UseTiles}"
+                              Tileset="{Binding Tileset}" CellFontSize="{Binding FontSize}" />
+          </Border>
+          <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="{Binding Label}" FontSize="11" Foreground="#8ab4f8" />
+            <TextBlock Text="{Binding Name}" FontSize="12" Opacity="{Binding NameOpacity}" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+        </DockPanel>
+      </Border>
+    </DataTemplate>
+  </Window.Resources>
   <DockPanel Margin="12">
     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,10,0,0">
       <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Opacity="0.8" TextWrapping="Wrap" MaxWidth="420" />
       <Button x:Name="SaveButton" Content="Save to file" Command="{Binding SaveCommand}" IsVisible="{Binding CanSave}" />
       <Button Content="Close" Classes="accent" Click="OnClose" />
     </StackPanel>
+    <!-- The paper doll: what is worn where (character sheet only). -->
+    <Grid x:Name="PaperDoll" DockPanel.Dock="Top" IsVisible="{Binding HasPaperDoll}" Margin="0,0,0,10"
+          ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+      <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding PaperDoll.Light}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding PaperDoll.Weapon}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding PaperDoll.RingLeft}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="3" Grid.Column="0" Content="{Binding PaperDoll.Hands}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding PaperDoll.Head}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding PaperDoll.Amulet}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding PaperDoll.Player}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="3" Grid.Column="1" Content="{Binding PaperDoll.Body}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="4" Grid.Column="1" Content="{Binding PaperDoll.Feet}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="0" Grid.Column="2" Content="{Binding PaperDoll.Bow}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding PaperDoll.Shield}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding PaperDoll.RingRight}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="3" Grid.Column="2" Content="{Binding PaperDoll.Cloak}" ContentTemplate="{StaticResource SlotTemplate}" />
+    </Grid>
     <ScrollViewer HorizontalScrollBarVisibility="{Binding HorizontalScroll}" Background="#111111">
       <SelectableTextBlock x:Name="SheetText" Text="{Binding Text}" v:RichText.Runs="{Binding Runs}" TextWrapping="{Binding Wrapping}" Margin="10"
                            FontFamily="Cascadia Mono, Consolas, Menlo, DejaVu Sans Mono, monospace" FontSize="13" />

@@ -345,7 +345,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Character dumps and scores** (`Angband.Core/Records`): `C` opens the character sheet, a
   plain-text dump in the style of Angband's (summary, stats with race/class adjustments, skills,
   a per-slot resistance grid that shows unknown runes as `?`, equipment, pack, quiver, home, spells
-  with failure rates, uniques slain, last messages). "Save to file" writes it to
+  with failure rates, uniques slain, last messages), under a **paper doll**: your character in
+  the middle and each piece of equipment where it is worn — head, amulet, body armour and boots
+  down the centre, light, weapon, left ring and gloves on one side, bow, shield, right ring and
+  cloak on the other — drawn with the map's own tiles (or coloured letters in ASCII mode), named,
+  and described in full on hover. "Save to file" writes it to
   `<AppData>/AVABand/dumps/`. Ctrl+H shows the high-score table (`<AppData>/AVABand/scores.json`,
   top 100). Points follow Angband: experience + 100 × max dungeon level, ties going to the fewer
   turns. The living character is shown where they would place, without entering the table. On
