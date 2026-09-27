@@ -84,6 +84,11 @@ public static class ClassFlags
     public const string BlessWeapon = "BLESS_WEAPON";
     public const string CombatRegen = "COMBAT_REGEN";
     public const string ImpairHp = "IMPAIR_HP";
+    public const string Bravery30 = "BRAVERY_30";
+    public const string Beam = "BEAM";
+    public const string ZeroFail = "ZERO_FAIL";
+    public const string FastShot = "FAST_SHOT";
+    public const string Charm = "CHARM";
 }
 
 /// <summary>A player race (Angband p_race.txt).</summary>

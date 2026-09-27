@@ -172,7 +172,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         abilities.AddRange(p.IntrinsicResists.Keys.Select(r => r switch
         {
             "free_act" => "free action", "blind" => "cannot be blinded", "pois" => "resists poison",
-            "light" => "resists light", "dark" => "resists darkness", _ => r,
+            "light" => "resists light", "dark" => "resists darkness", _ => Readable(r),
         }));
         if (p.Regenerates) abilities.Add("regenerates quickly");
         abilities.AddRange((cls?.Flags ?? []).Select(f => f switch
@@ -183,7 +183,13 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             ClassFlags.BlessWeapon => "+2 with hafted or blessed weapons",
             ClassFlags.CombatRegen => "mana from fighting, not rest",
             ClassFlags.ImpairHp => "heals slowly",
-            _ => f.ToLowerInvariant(),
+            // Angband 4.2's player_property.txt descriptions, in the same few words.
+            ClassFlags.Bravery30 => "immune to fear from level 30",
+            ClassFlags.Beam => "bolt spells often become beams",
+            ClassFlags.ZeroFail => "spells can reach 0% failure",
+            ClassFlags.FastShot => "shoots faster with a bow as levels rise",
+            ClassFlags.Charm => "extra persuasive to animals",
+            _ => Readable(f),
         }));
         var realm = cls?.Realm is { } r ? _data.Realm(r) : null;
 
@@ -199,6 +205,9 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             $"Starting gold {p.Gold}",
         });
     }
+
+    /// <summary>A flag with no wording of its own, readably: "SOME_FLAG" → "some flag" (never the raw id).</summary>
+    private static string Readable(string flag) => flag.Replace('_', ' ').ToLowerInvariant();
 
     private static string Mod(int v) => v == 0 ? "" : v.ToString("+0;-0", CultureInfo.InvariantCulture);
 }

@@ -67,6 +67,29 @@ public class CharacterCreationUiTests
         TileRenderingTests.Save(window.OwnedWindows[0], "character-creation");
     }
 
+    /// <summary>Every race and class's abilities are described in words, never as a raw flag ("bravery_30").</summary>
+    [AvaloniaFact]
+    public void Preview_DescribesEveryAbilityInWords()
+    {
+        var (window, _, _) = Open();
+        var creation = (CharacterCreationViewModel)window.OpenCharacterCreation().DataContext!;
+        foreach (var race in creation.Races)
+        foreach (var cls in creation.Classes)
+        {
+            creation.SelectedRace = race;
+            creation.SelectedClass = cls;
+            var abilities = creation.Preview.Split(Environment.NewLine).Single(l => l.Contains("abilities", StringComparison.OrdinalIgnoreCase));
+            Assert.DoesNotContain("_", abilities);
+            Assert.DoesNotMatch("[A-Z]{3,}", abilities);
+        }
+
+        creation.SelectedRace = creation.Races.Single(r => r.Id == "human");
+        creation.SelectedClass = creation.Classes.Single(c => c.Id == "warrior");
+        Assert.Contains("Abilities: shield bashes, immune to fear from level 30", creation.Preview);
+        creation.SelectedClass = creation.Classes.Single(c => c.Id == "mage");
+        Assert.Contains("bolt spells often become beams, spells can reach 0% failure", creation.Preview);
+    }
+
     [AvaloniaFact]
     public void Start_BeginsTheGame_AndRemembersTheCharacter()
     {
