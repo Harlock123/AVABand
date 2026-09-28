@@ -17,6 +17,15 @@ public interface IGamepadService
     void UseBindings(InputBindings bindings);
 }
 
+/// <summary>A keymap on the Controls tab: its key, and the keys it types (editable).</summary>
+public sealed partial class KeymapRow(string chord, string action, Action<string> changed) : ObservableObject
+{
+    public string Chord { get; } = chord;
+    public string Key { get; } = KeyboardInput.Display(chord);
+    [ObservableProperty] private string _action = action;
+    partial void OnActionChanged(string value) => changed(value);
+}
+
 /// <summary>A row of the Controls settings tab.</summary>
 public sealed partial class BindingRow(InputAction action) : ObservableObject
 {
@@ -302,6 +311,13 @@ public sealed partial class MainWindowViewModel
 
     private void RefreshBindingRows()
     {
+        KeymapRows.Clear();
+        foreach (var (chord, action) in Bindings.Keymaps.OrderBy(k => k.Key, StringComparer.Ordinal))
+            KeymapRows.Add(new KeymapRow(chord, action, text =>
+            {
+                Bindings.Keymaps[chord] = text;
+                _saveBindings?.Invoke(Bindings);
+            }));
         BindingRows.Clear();
         foreach (var action in Enum.GetValues<InputAction>().Where(a => a != InputAction.None))
         {
@@ -365,6 +381,7 @@ public sealed partial class MainWindowViewModel
             preset.Buttons.Clear();
             foreach (var (button, action) in Bindings.Buttons) preset.Buttons[button] = action;
         }
+        foreach (var (chord, action) in Bindings.Keymaps) preset.Keymaps[chord] = action; // keymaps stay
         Bindings = preset;
         _gamepad?.UseBindings(Bindings);
         if (keyset != InputBindings.Keyset.Avaband && OptionValue(DisplayOptions.RoguelikeKeys) != (keyset == InputBindings.Keyset.Roguelike))
@@ -382,9 +399,43 @@ public sealed partial class MainWindowViewModel
     public void CaptureKey(string? chord)
     {
         if (!IsCapturingKey) return;
-        if (chord is not null) Bindings.BindKey(chord, _capturingAction);
+        if (_capturingKeymap)
+        {
+            _capturingKeymap = false;
+            if (chord is not null) Bindings.Keymaps.TryAdd(chord, "");
+        }
+        else if (chord is not null) Bindings.BindKey(chord, _capturingAction);
         FinishCapture();
     }
+
+    // --- Keymaps (Controls tab) ----------------------------------------------------------------------
+
+    private bool _capturingKeymap;
+
+    public ObservableCollection<KeymapRow> KeymapRows { get; } = [];
+
+    [RelayCommand]
+    private void AddKeymap()
+    {
+        _capturingKeymap = true;
+        _capturingKey = true;
+        CaptureHint = "Press the key the new keymap is for (Esc cancels)...";
+    }
+
+    [RelayCommand]
+    private void RemoveKeymap(KeymapRow row)
+    {
+        Bindings.Keymaps.Remove(row.Chord);
+        FinishCapture();
+    }
+
+    /// <summary>
+    /// Whether the game is waiting for a command (not inside a menu, question, prompt or look mode):
+    /// the only time a keymap is expanded, as in Angband.
+    /// </summary>
+    public bool IsAtCommandPrompt => !IsPrompting && !IsConfirming && !IsLooking && !IsInStore && !IsShowingList
+                                     && !IsEnteringCount && !IsEnteringNumber && !IsAwaitingDirection && !IsInscribing
+                                     && !IsChoosingGlyph && PendingSpellDirection is null;
 
     /// <summary>Stops waiting for a key or controller button; true if it was waiting.</summary>
     public bool CancelCapture()
@@ -398,6 +449,7 @@ public sealed partial class MainWindowViewModel
     private void FinishCapture()
     {
         CaptureHint = null;
+        _capturingKeymap = false;
         _saveBindings?.Invoke(Bindings);
         RefreshBindingRows();
     }

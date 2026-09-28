@@ -200,6 +200,15 @@ public partial class MainWindow : Window
             return;
         }
 
+        // A keymap (Angband): at the command prompt, a key that types others. What it types isn't
+        // itself keymapped.
+        if (!_replaying && vm.IsAtCommandPrompt && vm.Bindings.KeymapFor(KeyboardInput.Chords(e)) is { } keys)
+        {
+            e.Handled = true;
+            Replay(keys);
+            return;
+        }
+
         // Banishment asks for a monster letter: any typed character (Escape cancels).
         if (vm.IsChoosingGlyph)
         {
@@ -263,6 +272,47 @@ public partial class MainWindow : Window
         }
         vm.HandleAction(action);
         e.Handled = true;
+    }
+
+    private bool _replaying;
+
+    /// <summary>Types a keymap's keys, one after another, as if pressed.</summary>
+    private void Replay(string keys)
+    {
+        _replaying = true;
+        try
+        {
+            foreach (var stroke in Angband.Input.KeymapText.Parse(keys)) OnGameKeyDown(this, ToKeyEvent(stroke));
+        }
+        finally
+        {
+            _replaying = false;
+        }
+    }
+
+    /// <summary>A keystroke as the key event it stands for.</summary>
+    private static KeyEventArgs ToKeyEvent(Angband.Input.KeyStroke stroke)
+    {
+        var key = Key.None;
+        string? symbol = null;
+        if (stroke.KeyName is { } name)
+        {
+            if (!Enum.TryParse(name, ignoreCase: true, out key)) key = Key.None;
+        }
+        else if (stroke.Character is { } c)
+        {
+            symbol = c.ToString();
+            key = char.IsAsciiLetter(c) ? Key.A + (char.ToUpperInvariant(c) - 'A')
+                : char.IsAsciiDigit(c) ? Key.D0 + (c - '0')
+                : c == ' ' ? Key.Space : Key.None;
+        }
+        return new KeyEventArgs
+        {
+            RoutedEvent = KeyDownEvent,
+            Key = key,
+            KeySymbol = stroke.Ctrl ? null : symbol,
+            KeyModifiers = stroke.Ctrl ? KeyModifiers.Control : KeyModifiers.None,
+        };
     }
 
     private void OnExit(object? sender, RoutedEventArgs e) => Close();

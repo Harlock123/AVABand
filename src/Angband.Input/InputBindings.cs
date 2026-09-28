@@ -15,6 +15,12 @@ public sealed class InputBindings
 {
     public Dictionary<string, InputAction> Keys { get; init; } = new(StringComparer.Ordinal);
     public Dictionary<string, InputAction> Buttons { get; init; } = new(StringComparer.Ordinal);
+    /// <summary>Keymaps (Angband): a key chord and the keys it types (see <see cref="KeymapText"/>).</summary>
+    public Dictionary<string, string> Keymaps { get; init; } = new(StringComparer.Ordinal);
+
+    /// <summary>The keymap for the first of these chords that has one, if any.</summary>
+    public string? KeymapFor(IEnumerable<string> chords) =>
+        chords.Select(c => Keymaps.GetValueOrDefault(c)).FirstOrDefault(a => !string.IsNullOrEmpty(a));
 
     /// <summary>Gamepad buttons SDL's game-controller API knows.</summary>
     public static readonly IReadOnlyList<string> ButtonNames =
@@ -231,6 +237,7 @@ public sealed class InputBindings
             {
                 Keys = new Dictionary<string, InputAction>(loaded.Keys, StringComparer.Ordinal),
                 Buttons = new Dictionary<string, InputAction>(loaded.Buttons, StringComparer.Ordinal),
+                Keymaps = new Dictionary<string, string>(loaded.Keymaps ?? [], StringComparer.Ordinal),
             };
             bindings.AddMissingDefaults();
             return bindings;

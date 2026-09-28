@@ -206,6 +206,77 @@ public class KeysetUiTests
     }
 }
 
+public class KeymapUiTests
+{
+    private static (MainWindow Window, MainWindowViewModel Vm) Open(string cls)
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
+        vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.StartGame(42, cls);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        return (window, vm);
+    }
+
+    [AvaloniaFact]
+    public void AKeymap_TypesItsKeys_AtTheCommandPrompt()
+    {
+        var (window, vm) = Open("warrior");
+        vm.Bindings.Keymaps["F2"] = "05,";            // hold five times
+        var turn = vm.Game.GameTurn;
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.F2, global::Avalonia.Input.RawInputModifiers.None);
+        var five = vm.Game.GameTurn - turn;
+        turn = vm.Game.GameTurn;
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.Comma, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.Equal(5 * (vm.Game.GameTurn - turn), five);
+
+        // Inside a menu the key is just a key: the keymap waits for the command prompt.
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.Q, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.True(vm.IsPrompting);
+        turn = vm.Game.GameTurn;
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.F2, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.Equal(turn, vm.Game.GameTurn);
+    }
+
+    [AvaloniaFact]
+    public void AKeymap_CanCastASpellAtTheNearestMonster()
+    {
+        var (window, vm) = Open("mage");
+        var game = vm.Game;
+        game.Player.LearnedSpells.Add("magic_missile");
+        game.Player.Mana = game.Player.MaxMana = 50;
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) is >= 2 and <= 4 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        var jackal = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("jackal")!, at, asleep: true)!;
+        jackal.Hp = jackal.MaxHp = 10_000;
+        game.UpdateView();
+        var cast = 0;
+        game.Events.Subscribe<SpellCastEvent>(_ => cast++);
+        vm.Bindings.Keymaps["F3"] = "ma'";            // cast, the first spell, at the nearest monster
+        for (var i = 0; i < 10 && cast == 0; i++)
+            window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.F3, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.True(cast > 0);
+        Assert.False(vm.IsPrompting);
+    }
+
+    [AvaloniaFact]
+    public void Keymaps_AreMadeAndChanged_OnTheControlsTab()
+    {
+        var (_, vm) = Open("warrior");
+        vm.AddKeymapCommand.Execute(null);
+        Assert.True(vm.IsCapturingKey);
+        vm.CaptureKey("F4");
+        var row = Assert.Single(vm.KeymapRows);
+        Assert.Equal("F4", row.Key);
+        row.Action = "R\n";
+        Assert.Equal("R\n", vm.Bindings.Keymaps["F4"]);
+        vm.RemoveKeymapCommand.Execute(row);
+        Assert.Empty(vm.KeymapRows);
+    }
+}
+
 public class FeelingUiTests
 {
     [AvaloniaFact]

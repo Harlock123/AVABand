@@ -894,6 +894,13 @@ the context action, or a game command.
   tiles/ASCII moves to Ctrl+Shift+T — `t` fire, `a` zap, `z` aim, `Z` use a staff, `P` browse, `O`
   show ignored, `.` hold, `,` run) — or by ticking 4.2's *Use the roguelike command keyset* option
   (unticking puts the original set in). *Reset to defaults* brings back AVABand's own.
+- **Keymaps** (Angband's): a key that types other keys — Settings → Controls → *New keymap…*, press
+  the key, then write what it types: `ma'` casts your first spell at the nearest monster, `05,`
+  holds five turns. Written as Angband writes them: `^x` is Ctrl+x; `\e` Escape, `\n`
+  Enter, `\t` Tab; `[F1]`, `[Up]` and the like name other keys. As in Angband a keymap works only
+  when the game waits for a command (a key in a menu is just a key), and what it types is not
+  itself keymapped. (AVABand's spell menu has no book step, so Angband's `maa'` is `ma'` here.)
+  They are saved with the key bindings and kept when you switch keysets.
 - **Rebinding**: Settings → Controls lists every action with its keys and button; *Key…*/*Button…*
   capture the next press. Bindings are saved to `<AppData>/AVABand/bindings.json`; actions added in later versions get their default keys when those keys are still free (so a saved `bindings.json` that still has `s` as hold keeps it; rebind Steal in Settings).
 

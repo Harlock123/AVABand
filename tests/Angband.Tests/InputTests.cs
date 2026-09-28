@@ -66,6 +66,31 @@ public class InputTests
         }
     }
 
+    // --- Keymaps ------------------------------------------------------------------------------
+
+    [Fact]
+    public void KeymapText_IsWrittenAsAngbandWritesIt()
+    {
+        Assert.Equal([new KeyStroke(null, 'm'), new KeyStroke(null, 'a'), new KeyStroke(null, 'a'), new KeyStroke(null, '\'')],
+            KeymapText.Parse("maa'"));
+        Assert.Equal([new KeyStroke(null, 't', Ctrl: true)], KeymapText.Parse("^T"));
+        Assert.Equal([new KeyStroke("Escape", null), new KeyStroke("Enter", null), new KeyStroke(null, '\\')],
+            KeymapText.Parse("\\e\\n\\\\"));
+        Assert.Equal([new KeyStroke("F1", null), new KeyStroke(null, 'q')], KeymapText.Parse("[F1]q"));
+    }
+
+    [Fact]
+    public void Keymaps_AreSaved_WithTheBindings()
+    {
+        var path = Path.Combine(Directory.CreateTempSubdirectory("avaband-keys-").FullName, "bindings.json");
+        var b = InputBindings.Defaults();
+        b.Keymaps["F2"] = "maa'";
+        b.Save(path);
+        var loaded = InputBindings.Load(path);
+        Assert.Equal("maa'", loaded.KeymapFor(["F2"]));
+        Assert.Null(loaded.KeymapFor(["F3"]));
+    }
+
     // --- Gamepad mapping ----------------------------------------------------------------------
 
     [Fact]
