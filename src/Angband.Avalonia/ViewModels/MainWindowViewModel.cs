@@ -37,6 +37,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _selectedTileset = tilesets.FirstOrDefault(t => t.Id == settings.TilesetId) ?? tilesets.FirstOrDefault();
         _useTiles = settings.UseTiles && _selectedTileset is not null;
         _showMonsterPanel = settings.ShowMonsterPanel;
+        _showRecallPanel = settings.ShowRecallPanel;
         _showObjectPanel = settings.ShowObjectPanel;
         Preview = new PreviewMapSource(data, _cells);
         RefreshBindingRows();

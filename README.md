@@ -518,7 +518,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     items are left out. Known artifacts come first (violet), then kinds you haven't learned (light
     red), then the rest by type, nearest first; worthless things are slate.
   - Angband's subwindows: View → *Monster list in the sidebar* / *Object list in the sidebar* keeps
-    either list below the inventory, updated every turn (remembered in the settings).
+    either list below the inventory, updated every turn (remembered in the settings); *Monster
+    recall in the sidebar* (on by default) is 4.2's monster recall subwindow: the full recall of
+    the monster under the look cursor, or else the one last targeted, looked at or struck, in a
+    box at the foot of the sidebar — speed, spells, resistances, what you know of its blows —
+    updated as you learn more in the fight (hidden while you hallucinate).
   - AVABand remembers only the top object of a pile out of view, so such piles list that one item.
     While you hallucinate the monster list just says "Your hallucinations are too wild to see
     things clearly."

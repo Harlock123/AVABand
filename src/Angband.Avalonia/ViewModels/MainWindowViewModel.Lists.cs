@@ -84,6 +84,47 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     private void ToggleObjectPanel() => ShowObjectPanel = !ShowObjectPanel;
 
+    // --- The recall panel (Angband's monster recall subwindow, PW_MONSTER) --------------------------
+
+    [ObservableProperty] private bool _showRecallPanel;
+    [ObservableProperty] private string _recallPanelTitle = "";
+    [ObservableProperty] private string _recallPanelText = "";
+    [ObservableProperty] private IReadOnlyList<ColoredRun>? _recallPanelRuns;
+    [ObservableProperty] private bool _hasRecallPanel;
+    private Angband.Core.Definitions.MonsterRaceDef? _recallPanelRace;
+
+    [RelayCommand]
+    private void ToggleRecallPanel() => ShowRecallPanel = !ShowRecallPanel;
+
+    partial void OnShowRecallPanelChanged(bool value)
+    {
+        _settings.ShowRecallPanel = value;
+        _saveSettings?.Invoke(_settings);
+        RefreshRecallPanel();
+    }
+
+    /// <summary>
+    /// What the recall panel shows: the monster under the look cursor, else the one tracked (last
+    /// targeted, looked at or struck: Angband's monster_race_track). Not while hallucinating.
+    /// </summary>
+    private void RefreshRecallPanel()
+    {
+        var race = !ShowRecallPanel || _game.IsHallucinating ? null
+            : LookedAt?.Race ?? (_game.HealthTracked is { IsVisible: true, Camouflaged: false } m ? m.Race : null);
+        HasRecallPanel = race is not null;
+        if (race is null)
+        {
+            _recallPanelRace = null;
+            return;
+        }
+        var text = _game.Recall(race);
+        if (race == _recallPanelRace && text == RecallPanelText) return; // unchanged (what is known can grow in a fight)
+        _recallPanelRace = race;
+        RecallPanelTitle = race.Name;
+        RecallPanelText = text;
+        RecallPanelRuns = ColoredText.FromMarked(_game.RecallMarked(race), _cells);
+    }
+
     partial void OnShowMonsterPanelChanged(bool value)
     {
         _settings.ShowMonsterPanel = value;
@@ -105,6 +146,7 @@ public sealed partial class MainWindowViewModel
         else MonsterPanelRows.Clear();
         if (ShowObjectPanel) Fill(ObjectPanelRows, _game.ObjectList());
         else ObjectPanelRows.Clear();
+        RefreshRecallPanel();
     }
 
     private void Fill(ObservableCollection<ListRow> target, IReadOnlyList<VisibleListRow> rows)

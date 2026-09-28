@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:v="using:Angband.Avalonia.Views"
         xmlns:controls="using:Angband.Avalonia.Controls"
         x:Class="Angband.Avalonia.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -72,6 +73,8 @@
                   ToggleType="CheckBox" IsChecked="{Binding ShowMonsterPanel, Mode=OneWay}" />
         <MenuItem Header="Object list in the sidebar" Command="{Binding ToggleObjectPanelCommand}"
                   ToggleType="CheckBox" IsChecked="{Binding ShowObjectPanel, Mode=OneWay}" />
+        <MenuItem Header="Monster recall in the sidebar" Command="{Binding ToggleRecallPanelCommand}"
+                  ToggleType="CheckBox" IsChecked="{Binding ShowRecallPanel, Mode=OneWay}" />
         <Separator />
         <MenuItem Header="Level _map..." Command="{Binding ShowOverviewMapCommand}" InputGesture="Shift+M" />
         <MenuItem Header="_Center map" Command="{Binding CenterMapCommand}" InputGesture="Ctrl+L" />
@@ -129,6 +132,18 @@
     <!-- Inventory panel -->
     <LayoutTransformControl DockPanel.Dock="Right" LayoutTransform="{Binding InterfaceTransform}">
     <Border Width="340" Background="#0c0c0c" BorderBrush="#222" BorderThickness="1,0,0,0">
+      <DockPanel>
+      <!-- Monster recall (Angband's recall subwindow): the monster looked at, targeted or struck. -->
+      <Border x:Name="RecallPanel" DockPanel.Dock="Bottom" IsVisible="{Binding HasRecallPanel}" MaxHeight="280"
+              BorderBrush="#222" BorderThickness="0,1,0,0" Background="#0a0a10">
+        <DockPanel Margin="10,6,10,8">
+          <TextBlock DockPanel.Dock="Top" Classes="header" Text="Monster recall" />
+          <ScrollViewer>
+            <SelectableTextBlock Text="{Binding RecallPanelText}" v:RichText.Runs="{Binding RecallPanelRuns}"
+                                 TextWrapping="Wrap" FontSize="12" Foreground="#ccc" />
+          </ScrollViewer>
+        </DockPanel>
+      </Border>
       <ScrollViewer>
         <StackPanel Margin="10" Spacing="4">
           <TextBlock Text="{Binding GoldText}" Foreground="Gold" FontWeight="SemiBold" />
@@ -158,6 +173,7 @@
                      Text="? help  F1 all commands  w wield  t take off  q quaff  r read  E eat  d drop  v throw  g pick up  F refuel  I inspect  { } inscribe  ^D ignore  K show ignored  f fire  R rest  m cast  G study  B browse  a aim  Z use staff  z zap  A activate  o/c open/close  T tunnel  D disarm  s steal (rogues)  x look  * target  [ monsters  ] objects  ~ knowledge  = options  C character  Q retire" />
         </StackPanel>
       </ScrollViewer>
+      </DockPanel>
     </Border>
     </LayoutTransformControl>
 

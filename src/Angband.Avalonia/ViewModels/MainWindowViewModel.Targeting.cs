@@ -101,6 +101,7 @@ public sealed partial class MainWindowViewModel
         LastMessage = $"{what}.  {hints}";
         OnPropertyChanged(nameof(LookedAt));
         OnPropertyChanged(nameof(Cursor));
+        RefreshRecallPanel();
         Revision++;
     }
 
@@ -186,6 +187,7 @@ public sealed partial class MainWindowViewModel
         _cursorSpots = [];
         OnPropertyChanged(nameof(LookedAt));
         OnPropertyChanged(nameof(Cursor));
+        RefreshRecallPanel();
         Revision++;
     }
 

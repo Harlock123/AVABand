@@ -121,3 +121,50 @@ public class ContextMenuUiTests
         Assert.True(game.Player.Position.DistanceTo(goal) < start.DistanceTo(goal));
     }
 }
+
+/// <summary>The sidebar's monster recall (Angband's monster recall subwindow).</summary>
+public class RecallPanelUiTests
+{
+    [AvaloniaFact]
+    public void LookingAtAMonster_ShowsItsRecall_InTheSidebar_UntilSwitchedOff()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var settings = new AppSettings();
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null);
+        vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var game = vm.Game;
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        vm.Execute(new HoldCommand());
+        Assert.False(vm.HasRecallPanel); // nothing tracked yet
+
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 3 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        var jackal = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("jackal")!, at, asleep: true)!;
+        game.UpdateView();
+
+        vm.HandleAction(InputAction.Look);
+        Assert.True(vm.HasRecallPanel);
+        Assert.Equal(jackal.Race.Name, vm.RecallPanelTitle);
+        Assert.Equal(game.Recall(jackal.Race), vm.RecallPanelText);
+        var panel = window.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "RecallPanel");
+        window.CaptureRenderedFrame();
+        Assert.True(panel.IsEffectivelyVisible);
+        TileRenderingTests.Save(window, "recall-panel");
+
+        vm.HandleAction(InputAction.Cancel); // stops looking; the jackal stays tracked
+        Assert.True(vm.HasRecallPanel);
+
+        vm.ToggleRecallPanelCommand.Execute(null);
+        Assert.False(vm.HasRecallPanel);
+        Assert.False(settings.ShowRecallPanel);
+        vm.ToggleRecallPanelCommand.Execute(null);
+        Assert.True(vm.HasRecallPanel);
+
+        game.IncreaseTimed(Angband.Core.Effects.TimedIds.Image, 50); // no recall of visions
+        vm.Execute(new HoldCommand());
+        Assert.False(vm.HasRecallPanel);
+    }
+}

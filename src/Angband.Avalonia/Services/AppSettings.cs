@@ -18,6 +18,8 @@ public sealed class AppSettings
     /// <summary>Sidebar lists (Angband's monster and object list subwindows).</summary>
     public bool ShowMonsterPanel { get; set; }
     public bool ShowObjectPanel { get; set; }
+    /// <summary>The recall of the monster looked at, targeted or struck (Angband's monster recall subwindow).</summary>
+    public bool ShowRecallPanel { get; set; } = true;
     /// <summary>Volumes 0..100.</summary>
     public double MasterVolume { get; set; } = 80;
     public double EffectsVolume { get; set; } = 80;

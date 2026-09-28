@@ -34,7 +34,9 @@ have.
 
 The monster you last targeted, looked at or hit has its health in the sidebar, `[*******---]`:
 tenths of its hit points, green when unhurt, then yellow, orange and red. Blue means asleep or
-held, light blue stunned, umber confused, violet afraid.
+held, light blue stunned, umber confused, violet afraid. Below the sidebar, **Monster recall**
+shows everything you know about that monster, and fills in as you learn more (View → *Monster
+recall in the sidebar* turns it off).
 
 ## Show damage
 
