@@ -38,6 +38,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _useTiles = settings.UseTiles && _selectedTileset is not null;
         _showMonsterPanel = settings.ShowMonsterPanel;
         _showRecallPanel = settings.ShowRecallPanel;
+        _showHotbar = settings.ShowHotbar;
         _showObjectPanel = settings.ShowObjectPanel;
         Preview = new PreviewMapSource(data, _cells);
         RefreshBindingRows();
@@ -365,6 +366,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         RefreshInventory();
         if (IsInStore) RefreshStore();
         RefreshListPanels();
+        RefreshHotbar();
         RefreshPaperDolls();
         var next = player.Level >= Angband.Core.Magic.StatTables.MaxLevel ? "max" : _game.ExperienceForLevel(player.Level).ToString(CultureInfo.InvariantCulture);
         var mana = player.MaxMana > 0 ? $"  SP {player.Mana}/{player.MaxMana}" : "";

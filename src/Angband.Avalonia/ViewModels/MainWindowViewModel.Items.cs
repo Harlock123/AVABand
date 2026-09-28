@@ -140,8 +140,12 @@ public sealed partial class MainWindowViewModel
         {
             var spellRow = SpellPromptRows.FirstOrDefault(r => r.Letter[0] == key);
             SpellPromptRows.Clear();
-            if (spellRow is null) LastMessage = "Cancelled.";
-            else ChooseSpell(spellRow);
+            if (spellRow is null)
+            {
+                _assignSlot = null;
+                LastMessage = "Cancelled.";
+            }
+            else if (!AssignChosen(null, spellRow.Spell)) ChooseSpell(spellRow);
             return true;
         }
         // A digit picks the item inscribed for it (Angband @q1, or @1 for any command).
@@ -150,19 +154,24 @@ public sealed partial class MainWindowViewModel
             : PromptRows.FirstOrDefault(r => r.Letter[0] == key)?.Item;
         if (item is null)
         {
+            _assignSlot = null;
             LastMessage = "Cancelled.";
             return true;
         }
+        if (AssignChosen(item, null)) return true; // filling a hotbar slot
+        UseItemAsked(_promptKind, item);
+        return true;
+    }
 
-        // Angband !d, !*: ask before a command uses an inscribed item.
-        var kind = _promptKind;
+    /// <summary>Uses an item as the command says — asking first if its inscription says to (Angband !d, !*).</summary>
+    private void UseItemAsked(ItemPromptKind kind, Item item)
+    {
         if (Inscription.AsksFirst(item, CommandKey(kind)))
         {
             AskFirst($"Really {CommandVerb(kind)} {_game.Describe(item)}?", () => UsePromptItem(kind, item));
-            return true;
+            return;
         }
         UsePromptItem(kind, item);
-        return true;
     }
 
     /// <summary>Whether a digit picks an item in the open prompt (by its inscription).</summary>
@@ -265,6 +274,7 @@ public sealed partial class MainWindowViewModel
         ChoiceRows.Clear();
         _ignoring = null;
         _menuActions = null;
+        _assignSlot = null;
         _game.AimAtTargetNext = false;
         _studyBooks = null;
         _spellBooks = null;

@@ -75,6 +75,8 @@
                   ToggleType="CheckBox" IsChecked="{Binding ShowObjectPanel, Mode=OneWay}" />
         <MenuItem Header="Monster recall in the sidebar" Command="{Binding ToggleRecallPanelCommand}"
                   ToggleType="CheckBox" IsChecked="{Binding ShowRecallPanel, Mode=OneWay}" />
+        <MenuItem Header="Hotbar (Alt+1 to Alt+0)" Command="{Binding ToggleHotbarCommand}"
+                  ToggleType="CheckBox" IsChecked="{Binding ShowHotbar, Mode=OneWay}" />
         <Separator />
         <MenuItem Header="Level _map..." Command="{Binding ShowOverviewMapCommand}" InputGesture="Shift+M" />
         <MenuItem Header="_Center map" Command="{Binding CenterMapCommand}" InputGesture="Ctrl+L" />
@@ -177,6 +179,32 @@
     </Border>
     </LayoutTransformControl>
 
+    <!-- The hotbar (AVABand's own): spells and items on Alt+1..Alt+0; click to use, right-click to change. -->
+    <LayoutTransformControl DockPanel.Dock="Bottom" LayoutTransform="{Binding InterfaceTransform}" IsVisible="{Binding ShowHotbar}">
+      <Border Background="#0a0a0a" BorderBrush="#222" BorderThickness="0,1,0,0" Padding="6,4">
+        <ItemsControl x:Name="Hotbar" ItemsSource="{Binding HotbarSlots}" HorizontalAlignment="Center">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:HotbarSlotRow">
+              <Border Width="84" Height="42" Margin="2" CornerRadius="3" Background="#15161c" BorderBrush="#333" BorderThickness="1"
+                      Cursor="Hand" ToolTip.Tip="{Binding Tip}" Opacity="{Binding Opacity}" PointerPressed="OnHotbarPressed">
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" Margin="4,2">
+                  <TextBlock Grid.RowSpan="2" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}" FontFamily="{StaticResource MonoFont}"
+                             FontWeight="Bold" FontSize="16" VerticalAlignment="Center" Margin="0,0,4,0" />
+                  <TextBlock Grid.Column="1" Text="{Binding Label}" Foreground="#ddd" FontSize="11" TextTrimming="CharacterEllipsis" />
+                  <DockPanel Grid.Column="1" Grid.Row="1">
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding Key}" Foreground="#667" FontSize="10" FontFamily="{StaticResource MonoFont}" />
+                    <TextBlock Text="{Binding Detail}" Foreground="#889" FontSize="10" />
+                  </DockPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    </LayoutTransformControl>
     <Panel>
     <controls:MapView x:Name="Map"
                       Source="{Binding Map}"

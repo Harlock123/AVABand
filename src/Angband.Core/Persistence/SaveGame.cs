@@ -102,6 +102,7 @@ public static class SaveGame
                 Quality = g.Ignore.Quality.ToDictionary(kv => kv.Key, kv => kv.Value.ToString()),
             },
             KilledUniques = g.KilledUniques.Order(StringComparer.Ordinal).ToList(),
+            Hotbar = [.. g.Hotbar.Select(h => h?.Code)],
             History = [.. g.History.Select(h => new HistorySave { Turn = h.Turn, Depth = h.Depth, Text = h.Text, Artifact = h.Artifact, Lost = h.Lost })],
             QuestKills = new(g.QuestKills),
             CharacterKills = new(g.CharacterKills),
@@ -260,6 +261,7 @@ public static class SaveGame
         g.RestoreIgnore(ignore);
         foreach (var u in f.KilledUniques) g.KilledUniques.Add(u);
         g.RestoreHistory(f.History.Select(h => new HistoryEntry(h.Turn, h.Depth, h.Text, h.Artifact, h.Lost)));
+        g.RestoreHotbar(f.Hotbar);
         foreach (var (q, n) in f.QuestKills) g.QuestKills[q] = n;
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,

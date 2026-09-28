@@ -523,6 +523,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     the monster under the look cursor, or else the one last targeted, looked at or struck, in a
     box at the foot of the sidebar — speed, spells, resistances, what you know of its blows —
     updated as you learn more in the fight (hidden while you hallucinate).
+  - **Hotbar** (AVABand's own, not Angband's; View → *Hotbar*, on by default): ten slots under the
+    map for spells and items. Alt+1 … Alt+9 and Alt+0 (or a click) use a slot — a spell is cast
+    as if picked from the list (asking where to aim, or whether to overexert, as usual), an item
+    is used as `X` would use it, asking first if its inscription says so (`!*`). An empty slot
+    asks what to put there; right-click or Alt+Shift+digit offers *Put a spell here*, *Put an item
+    here* or *Clear this slot*, through the usual spell and item lists. Items go by kind, so a slot
+    of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
+    "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
+    character.
   - AVABand remembers only the top object of a pile out of view, so such piles list that one item.
     While you hallucinate the monster list just says "Your hallucinations are too wild to see
     things clearly."

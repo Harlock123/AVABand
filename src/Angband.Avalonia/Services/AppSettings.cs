@@ -20,6 +20,8 @@ public sealed class AppSettings
     public bool ShowObjectPanel { get; set; }
     /// <summary>The recall of the monster looked at, targeted or struck (Angband's monster recall subwindow).</summary>
     public bool ShowRecallPanel { get; set; } = true;
+    /// <summary>The hotbar of spells and items under the map.</summary>
+    public bool ShowHotbar { get; set; } = true;
     /// <summary>Volumes 0..100.</summary>
     public double MasterVolume { get; set; } = 80;
     public double EffectsVolume { get; set; } = 80;

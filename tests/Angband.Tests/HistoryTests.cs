@@ -161,3 +161,21 @@ public class HistoryTests
         Assert.True(missed.Lost);
     }
 }
+
+/// <summary>The hotbar is part of the character.</summary>
+public class HotbarTests
+{
+    [Fact]
+    public void TheHotbar_IsSavedWithTheCharacter()
+    {
+        var game = GameSession.NewGame(TestData.Game, 1, "mage");
+        game.SetHotbar(0, HotbarEntry.ForKind("cure_light_wounds"));
+        game.SetHotbar(9, HotbarEntry.ForSpell("magic_missile"));
+        using var stream = new MemoryStream();
+        SaveGame.Save(game, stream);
+        stream.Position = 0;
+        var loaded = SaveGame.Load(TestData.Game, stream);
+        Assert.Equal(game.Hotbar, loaded.Hotbar);
+        Assert.Null(loaded.Hotbar[1]);
+    }
+}

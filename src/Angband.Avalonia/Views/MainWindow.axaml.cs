@@ -33,6 +33,15 @@ public partial class MainWindow : Window
             this.FindControl<ListBox>(name)?.AddHandler(PointerPressedEvent, OnPromptRowPressed, RoutingStrategies.Tunnel);
     }
 
+    /// <summary>A hotbar slot: left-click uses it (or fills an empty one), right-click changes it.</summary>
+    private void OnHotbarPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel vm || (sender as Control)?.DataContext is not HotbarSlotRow slot) return;
+        e.Handled = true;
+        if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed) vm.OpenHotbarMenu(slot.Index);
+        else vm.UseHotbar(slot.Index);
+    }
+
     private void OnPromptRowPressed(object? sender, PointerPressedEventArgs e)
     {
         e.Handled = true;
@@ -199,6 +208,17 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
         var ctrlOrAlt = (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt)) != 0;
+
+        // The hotbar: Alt+1 .. Alt+0 use its slots; with Shift, change them.
+        if (!vm.IsInscribing && (e.KeyModifiers & (KeyModifiers.Alt | KeyModifiers.Control)) == KeyModifiers.Alt
+            && e.Key is >= Key.D0 and <= Key.D9)
+        {
+            var slot = (e.Key - Key.D0 + 9) % 10; // 1 is the first slot, 0 the tenth
+            if ((e.KeyModifiers & KeyModifiers.Shift) != 0) vm.OpenHotbarMenu(slot);
+            else vm.UseHotbar(slot);
+            e.Handled = true;
+            return;
+        }
 
         // Writing an inscription: the text box has the keys; Enter writes it, Escape cancels.
         if (vm.IsInscribing)

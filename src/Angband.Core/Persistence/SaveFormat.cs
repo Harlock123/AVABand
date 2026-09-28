@@ -44,6 +44,8 @@ public sealed class SaveFile
     public List<LevelSave> StoredLevels { get; set; } = [];
     /// <summary>The player's history (Angband player-history.c); empty in older saves.</summary>
     public List<HistorySave> History { get; set; } = [];
+    /// <summary>The hotbar's slots ("spell:id", "item:id" or null).</summary>
+    public List<string?> Hotbar { get; set; } = [];
     public int ArenaReturnX { get; set; }
     public int ArenaReturnY { get; set; }
     /// <summary>The monster under the player's command (0 = none).</summary>
