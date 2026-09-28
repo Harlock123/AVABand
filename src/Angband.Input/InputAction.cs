@@ -64,6 +64,8 @@ public enum InputAction
     /// saved bindings keep their meaning.
     /// </summary>
     CommandCount,
+    /// <summary>The help pages (Angband '?'). Added last so saved bindings keep their meaning.</summary>
+    Help,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }

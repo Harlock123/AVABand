@@ -109,7 +109,8 @@ public sealed class InputBindings
         K(InputAction.OverviewMap, "Char:M"); // Angband's 'n' moves here (roguelike keys), so its roguelike key
         K(InputAction.MonsterList, "Char:[");
         K(InputAction.ObjectList, "Char:]");
-        K(InputAction.ShowCommands, "Char:?", "F1");
+        K(InputAction.ShowCommands, "F1");
+        K(InputAction.Help, "Char:?");
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
         K(InputAction.JumpNextLevel, "F8");

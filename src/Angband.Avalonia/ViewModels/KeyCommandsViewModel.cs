@@ -92,6 +92,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
         ("Looking and information", [
             (InputAction.Look, "Look around: step through what you can see"),
             (InputAction.Target, "Choose a target for missiles and spells"),
+            (InputAction.Help, "Help: how to play, your character, fighting, magic, the birth options"),
             (InputAction.OverviewMap, "The whole level at a glance"),
             (InputAction.MonsterList, "List the monsters you can see or sense"),
             (InputAction.ObjectList, "List the objects you know of on the level"),

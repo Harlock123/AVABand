@@ -51,7 +51,6 @@
         <MenuItem Header="_Character sheet..." Command="{Binding ShowCharacterSheetCommand}" InputGesture="Shift+C" />
         <MenuItem Header="_High scores..." Command="{Binding ShowHighScoresCommand}" InputGesture="Ctrl+H" />
         <MenuItem Header="_Knowledge..." Command="{Binding ShowKnowledgeCommand}" InputGesture="Shift+OemTilde" />
-        <MenuItem Header="Keyboard _commands..." Command="{Binding ShowKeyCommandsCommand}" InputGesture="F1" />
         <MenuItem Header="_Repeat last command" Command="{Binding RepeatLastCommandCommand}" InputGesture="Ctrl+V" />
         <MenuItem Header="_Message history..." Command="{Binding ShowMessageHistoryCommand}" InputGesture="Ctrl+P" />
         <MenuItem Header="Level _feeling" Command="{Binding ShowFeelingCommand}" InputGesture="Ctrl+F" />
@@ -76,6 +75,10 @@
         <Separator />
         <MenuItem Header="Zoom _in" Command="{Binding ZoomInCommand}" InputGesture="Ctrl+OemPlus" />
         <MenuItem Header="Zoom _out" Command="{Binding ZoomOutCommand}" InputGesture="Ctrl+OemMinus" />
+      </MenuItem>
+      <MenuItem Header="_Help">
+        <MenuItem Header="_Help topics..." Command="{Binding ShowHelpCommand}" />
+        <MenuItem Header="Keyboard _commands..." Command="{Binding ShowKeyCommandsCommand}" InputGesture="F1" />
       </MenuItem>
       <MenuItem Header="_Debug">
         <MenuItem Header="_Regenerate level" Command="{Binding RegenerateLevelCommand}" InputGesture="F5" />
@@ -125,7 +128,7 @@
           <ItemsControl x:Name="ObjectPanel" ItemsSource="{Binding ObjectPanelRows}" ItemTemplate="{StaticResource ListRowTemplate}"
                         IsVisible="{Binding ShowObjectPanel}" />
           <TextBlock Margin="0,12,0,0" Foreground="#777" FontSize="11" TextWrapping="Wrap"
-                     Text="? all commands  w wield  t take off  q quaff  r read  E eat  d drop  v throw  g pick up  F refuel  I inspect  { } inscribe  ^D ignore  K show ignored  f fire  R rest  m cast  G study  B browse  a aim  Z use staff  z zap  A activate  o/c open/close  T tunnel  D disarm  s steal (rogues)  x look  * target  [ monsters  ] objects  ~ knowledge  = options  C character  Q retire" />
+                     Text="? help  F1 all commands  w wield  t take off  q quaff  r read  E eat  d drop  v throw  g pick up  F refuel  I inspect  { } inscribe  ^D ignore  K show ignored  f fire  R rest  m cast  G study  B browse  a aim  Z use staff  z zap  A activate  o/c open/close  T tunnel  D disarm  s steal (rogues)  x look  * target  [ monsters  ] objects  ~ knowledge  = options  C character  Q retire" />
         </StackPanel>
       </ScrollViewer>
     </Border>

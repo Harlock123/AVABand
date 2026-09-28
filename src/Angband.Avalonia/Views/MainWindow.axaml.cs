@@ -44,6 +44,7 @@ public partial class MainWindow : Window
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
             _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
+            _subscribed.HelpRequested -= OnHelpRequested;
             _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
         }
@@ -58,6 +59,7 @@ public partial class MainWindow : Window
         vm.HighScoresRequested += OnHighScoresRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
         vm.KeyCommandsRequested += OnKeyCommandsRequested;
+        vm.HelpRequested += OnHelpRequested;
         vm.MessageHistoryRequested += OnMessageHistoryRequested;
         vm.OverviewRequested += OnOverviewRequested;
 
@@ -314,6 +316,8 @@ public partial class MainWindow : Window
             KeyModifiers = stroke.Ctrl ? KeyModifiers.Control : KeyModifiers.None,
         };
     }
+
+    private void OnHelpRequested(HelpViewModel help) => DialogFit.Show(new HelpWindow { DataContext = help }, this);
 
     private void OnExit(object? sender, RoutedEventArgs e) => Close();
 

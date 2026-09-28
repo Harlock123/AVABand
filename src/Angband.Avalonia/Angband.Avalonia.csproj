@@ -20,6 +20,7 @@
     <Content Include="soundpacks\**\*" CopyToOutputDirectory="PreserveNewest" />
     <!-- DejaVu Sans Mono, built in: the map's letters and every column of text use it. -->
     <AvaloniaResource Include="Assets\Fonts\*.ttf" />
+    <AvaloniaResource Include="Assets\Help\*.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Angband.Core\Angband.Core.csproj" />

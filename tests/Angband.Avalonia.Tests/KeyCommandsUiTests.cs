@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
 
 namespace Angband.Avalonia.Tests;
@@ -27,15 +28,53 @@ public class KeyCommandsUiTests
         commands.Groups.SelectMany(g => g.Rows).Single(r => r.Command == command);
 
     [AvaloniaFact]
-    public void QuestionMark_OpensTheCommands_WithTheirKeys()
+    public void QuestionMark_OpensTheHelp_AsInAngband()
     {
-        var (window, vm) = Open();
+        var (window, _) = Open();
         // Shift+/ as a real keyboard reports it: the '?' symbol (the headless keyboard doesn't shift punctuation).
         window.RaiseEvent(new KeyEventArgs
         {
             RoutedEvent = InputElement.KeyDownEvent, Key = Key.OemQuestion, PhysicalKey = PhysicalKey.Slash,
             KeyModifiers = KeyModifiers.Shift, KeySymbol = "?", Source = window,
         });
+        var help = Assert.IsType<HelpWindow>(window.OwnedWindows.Last());
+        var topics = (HelpViewModel)help.DataContext!;
+        Assert.Equal(["Getting started", "Moving and commands", "Your character", "Fighting", "Magic", "Objects",
+            "Monsters", "The dungeon", "Birth options"], topics.Topics.Select(t => t.Title));
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var shown = help.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Inlines?.Count > 0
+            ? string.Concat(t.Inlines.OfType<global::Avalonia.Controls.Documents.Run>().Select(r => r.Text)) : t.Text).ToList();
+        Assert.Contains("Getting started", shown);
+        Assert.Contains(shown, t => t?.Contains("Morgoth, Lord of Darkness") == true);
+
+        topics.Selected = topics.Topics.Single(t => t.Title == "Birth options");
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        shown = help.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Inlines?.Count > 0
+            ? string.Concat(t.Inlines.OfType<global::Avalonia.Controls.Documents.Run>().Select(r => r.Text)) : t.Text).ToList();
+        Assert.Contains(shown, t => t?.StartsWith("Persistent levels (experimental)") == true);
+        TileRenderingTests.Save(help, "help");
+        help.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+        Assert.False(help.IsVisible);
+    }
+
+    [Fact]
+    public void HelpPages_ParseIntoHeadingsParagraphsAndLists_WithKeysAndBold()
+    {
+        var page = HelpViewModel.Parse("# Title\n\nA **bold** start, then `q` to\nquaff.\n\n## Part\n- one `x`\n  continued\n- two\n");
+        Assert.Equal("Title", page.Title);
+        Assert.Equal([HelpBlockKind.Paragraph, HelpBlockKind.Heading, HelpBlockKind.Bullet, HelpBlockKind.Bullet], page.Blocks.Select(b => b.Kind));
+        Assert.Equal([new HelpSpan("A "), new HelpSpan("bold", Bold: true), new HelpSpan(" start, then "), new HelpSpan("q", Code: true),
+            new HelpSpan(" to quaff.")], page.Blocks[0].Spans);
+        Assert.Equal("one x continued", string.Concat(page.Blocks[2].Spans.Select(s => s.Text)));
+        Assert.Equal([new HelpSpan("the "), new HelpSpan("roguelike", Italic: true), new HelpSpan(" keys, 3 * 4")],
+            HelpViewModel.Spans("the *roguelike* keys, 3 * 4"));
+    }
+
+    [AvaloniaFact]
+    public void TheCommandList_IsOnF1()
+    {
+        var (window, vm) = Open();
+        window.KeyPressQwerty(PhysicalKey.F1, RawInputModifiers.None);
         var dialog = Assert.IsType<KeyCommandsWindow>(window.OwnedWindows.Last());
         var commands = (KeyCommandsViewModel)dialog.DataContext!;
 

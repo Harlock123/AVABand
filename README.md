@@ -17,7 +17,7 @@ A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 11.
 | ![The Alchemy shop's stock and prices](screenshots/store.png) | ![The monster list, over the map](screenshots/monster-list.png) |
 | The Alchemist (4.2's store stock) | Monster list (`[`) |
 | ![Monster knowledge: what you have learned about each monster seen](screenshots/knowledge.png) | ![Every keyboard command and the keys bound to it](screenshots/keyboard-commands.png) |
-| Knowledge (`~`) | Keyboard commands (`?` or F1) |
+| Knowledge (`~`) | Keyboard commands (F1) |
 | ![Settings: tilesets with a preview, tile scale and font size](screenshots/settings.png) | |
 | Settings | |
 
@@ -910,7 +910,12 @@ Arrows / numpad / `hjklyubn` move; Shift+arrow or Shift+keypad (or `H` `J` `L` `
 `I` inspect, `a` aim a wand, `Z` use a staff, `z` zap a rod, `A` activate (these open an item list: press its letter, or Esc), `m` cast, `G` study, `B` browse spells,
 Debug menu: F5 regenerate the level, F8 jump to the next level, F6 go 5 levels deeper, F9 jump straight back to town (no recall delay or message), F7 show the whole map — the jumps land on a random open square, as Word of Recall does — and a *Shops pay gold when you sell* tick that switches the "no selling" birth option for the game in progress (kept in the save; dungeon gold goes back to normal while it's on); the first debug command a character uses asks first, then marks it for good, as Angband's debug mode does: it is kept in the save, shown in the character dump ("Cheated (debug): not scored.") and Options, and never enters the high scores (`--depth` marks it too); Ctrl+T tiles/ASCII, F10 display settings, Ctrl+N new game, Ctrl+S save, Ctrl+O load, `C` character sheet, Ctrl+H high scores, `Q` retire (winners), `x` look, `*` target, `~` knowledge (monsters, objects, runes, egos, artifacts), `=` options, `{`/`}` inscribe/uninscribe, Ctrl+D ignore, `K` show ignored, Ctrl+F level feeling, `M` the level map (Angband's `M`: the whole level squeezed to fit its window, each block showing what matters most — you, then any monster, object or trap, then stairs and doors over walls over floor; View → Level map), Ctrl+V repeat the last command (Angband's `n`, which moves here: cast the same spell, fire or throw again, use another of the same item, keep digging or disarming — aimed commands aim afresh, and casting beyond your mana is asked about again), `0` a count for the next command (Angband's "Repeat:" prompt: `0`, a number up to 9999, then walk, hold, tunnel, open or disarm that many times — a badge at the right of the status bar shows the count while you type it and until a command uses it; anything that disturbs you stops it early, and opening, disarming and tunnelling already try up to 99 times by themselves while they fail), Ctrl+P message history (Angband's log of the last 2048 messages, repeats shown as `<x3>`, with a Find box; it starts afresh with each game — the message line at the top counts a repeated message the same way, so ninety failed lock picks read "You failed to pick the lock. <x90>"), Ctrl +/- zoom.
 
-**`?` or F1** (Game → Keyboard commands) lists every command by group — moving, items, fighting
+**`?`** (Help → Help topics) opens the help, as Angband's `?` does: nine pages written for AVABand —
+getting started, moving and commands, your character, fighting, magic, objects, monsters, the
+dungeon and every birth option explained — in `src/Angband.Avalonia/Assets/Help/` as simple
+Markdown, so they are easy to add to.
+
+**F1** (Help → Keyboard commands) lists every command by group — moving, items, fighting
 and devices, magic, looking and information, menus, game and display — with what it does, the
 keys and controller button bound to it right now (rebinding in Settings → Controls shows up
 there), and the keys that only work in menus, look/target mode, direction prompts and stores, and

@@ -36,6 +36,12 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     public void ShowKeyCommands() => KeyCommandsRequested?.Invoke(new KeyCommandsViewModel(Bindings));
 
+    /// <summary>'?': the help pages.</summary>
+    public event Action<HelpViewModel>? HelpRequested;
+
+    [RelayCommand]
+    public void ShowHelp() => HelpRequested?.Invoke(new HelpViewModel());
+
     /// <summary>Ctrl+P: the message history.</summary>
     public event Action<MessageHistoryViewModel>? MessageHistoryRequested;
 

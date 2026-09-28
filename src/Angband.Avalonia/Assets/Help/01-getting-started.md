@@ -1,0 +1,33 @@
+# Getting started
+
+AVABand is a game of Angband 4.2. You are an adventurer in the town above the pits of Angband.
+Far below, on level 99, waits **Sauron**; on level 100, **Morgoth, Lord of Darkness**. Kill them
+both and you have won. Die on the way and the game is over: there is one life, and the save is
+the character, as in Angband.
+
+## Your first steps
+
+- **Make a character**: Game → New character (Ctrl+N) picks a race, a class, stats and birth
+  options. If you are new, a Human or Dwarf **Warrior** is the forgiving choice.
+- **Shop in town**: walk onto a shop's number (1–8) to go in. Buy a few **Flasks of Oil** to
+  throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. The
+  Home (8) keeps whatever you leave there.
+- **Go down**: find the `>` staircase and press `>`. Each level is 50 feet deeper and a little
+  more dangerous. Take the stairs back up (`<`) whenever you like — levels are new each time
+  (unless you chose persistent levels).
+- **Come back up**: a **Scroll of Word of Recall** takes you to town and, read again, back to the
+  deepest level you reached.
+
+## Staying alive
+
+- Your hit points are on the status bar at the bottom. When they run low, **leave**: quaff a
+  potion, read Phase Door, take the stairs, or run.
+- Rest (`R`) to heal and regain spell points when nothing is about.
+- Eat when you are hungry; the status bar says so.
+- A monster you don't know is dangerous until you know it isn't. Look at it (`x` or `l`, as your
+  keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all.
+
+## Where to learn more
+
+The other pages here cover moving and commands, your character, fighting, magic, objects,
+monsters, the dungeon and the birth options. **F1** lists every command with the keys you have.

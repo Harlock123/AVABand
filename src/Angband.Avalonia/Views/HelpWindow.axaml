@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.HelpWindow"
+        x:DataType="vm:HelpViewModel"
+        Title="Help"
+        Width="900" Height="720"
+        WindowStartupLocation="CenterOwner">
+  <DockPanel Margin="14">
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+      <TextBlock Text="F1 lists every command with your keys. Esc or B closes." Opacity="0.6" VerticalAlignment="Center" />
+      <Button x:Name="CloseButton" Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" />
+    </Grid>
+    <ListBox x:Name="TopicList" DockPanel.Dock="Left" Width="210" Margin="0,0,12,0"
+             ItemsSource="{Binding Topics}" SelectedItem="{Binding Selected}" />
+    <ScrollViewer x:Name="PageScroller" Background="#111111">
+      <StackPanel x:Name="Page" Margin="18,10" Spacing="8" MaxWidth="720" HorizontalAlignment="Left" />
+    </ScrollViewer>
+  </DockPanel>
+</Window>
