@@ -385,6 +385,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
                 player.Class?.Name ?? "", player.Level, mana, next, player.Name, player.Race?.Name ?? "");
         UpdateHealthBar();
         UpdateHover();
+        UpdatePath();
         OnPropertyChanged(nameof(Map));
         Revision++;
     }

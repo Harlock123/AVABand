@@ -6,7 +6,9 @@
   keys have both). Walking into a monster attacks it; into a closed door opens it.
 - **Run** with Shift and a direction, or `.` then a direction: you keep going until something
   interesting happens — a monster appears, the corridor branches, you reach a door or an object.
-- **Click** a square to travel there along the shortest known path; **right-click** for a menu of
+- **Click** a square to travel there along the shortest known path (hovering shows the route in
+  blue first); while looking or targeting, a yellow line shows where a shot would go, ringed where it
+  would stop; **right-click** for a menu of
   what you can do there: on a monster, look, recall, attack, fire, throw or cast at it; on a door,
   trap or wall next to you, open, close, disarm or tunnel; further off, travel, walk or run there;
   on yourself, use, cast, rest, pick up, the stairs, and "Other" for the lists and screens. Click a

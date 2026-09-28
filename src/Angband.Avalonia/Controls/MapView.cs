@@ -290,11 +290,32 @@ public sealed class MapView : Control
             p.X >= offsetX && p.X < endX && p.Y >= offsetY && p.Y < endY
                 ? new Rect(originX + (p.X - offsetX) * cell.Width, originY + (p.Y - offsetY) * cell.Height, cell.Width, cell.Height)
                 : null;
+        if (source.ShownPath.Count > 0) DrawPath(context, source.ShownPath, source.PathIsAim, CellRect, cell);
         if (source.Target is { } target && CellRect(target) is { } t) DrawCorners(context, t, TargetPen);
         if (source.Cursor is { } cursor && CellRect(cursor) is { } c) context.DrawRectangle(null, CursorPen, c.Deflate(1));
         if (source.Highlight is { } highlight && CellRect(highlight) is { } h) context.DrawRectangle(null, HighlightPen, h.Deflate(0.5));
 
         if (Effects is { IsActive: true } effects) DrawEffects(context, effects, CellRect, cell);
+    }
+
+    private static readonly IBrush RouteBrush = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0x48, 0x40, 0xB0, 0xFF));
+    private static readonly IBrush AimBrush = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0x50, 0xFF, 0xC8, 0x30));
+    private static readonly IPen AimEndPen = new global::Avalonia.Media.Immutable.ImmutablePen(
+        new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0xF0, 0xFF, 0xC8, 0x30)), 2);
+
+    /// <summary>
+    /// A route (squares tinted blue) or a line of fire (tinted yellow, with a ring on the square
+    /// where the shot would stop), light enough that what is there still shows through.
+    /// </summary>
+    private static void DrawPath(DrawingContext context, IReadOnlyList<Angband.Core.Geometry.Loc> path, bool aim,
+        Func<Angband.Core.Geometry.Loc, Rect?> cellRect, Size cell)
+    {
+        for (var i = 0; i < path.Count; i++)
+        {
+            if (cellRect(path[i]) is not { } r) continue;
+            context.DrawRectangle(aim ? AimBrush : RouteBrush, null, r.Deflate(1));
+            if (aim && i == path.Count - 1) context.DrawEllipse(null, AimEndPen, r.Center, r.Width * 0.45, r.Height * 0.45);
+        }
     }
 
     private AsciiRenderer? _effectText;

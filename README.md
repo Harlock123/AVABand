@@ -947,7 +947,7 @@ the context action, or a game command.
   left trigger and press a direction (D-pad or stick) to run.
 - **Mouse**: resting the pointer on a square describes it in a small label at the foot of the map
   ("The cave orc (wounded, asleep)", "A down staircase") without touching the message line (off with
-  the option *Describe the square under the mouse*); left-click travels to a known square along the shortest known path (stopping when a
+  the option *Describe the square under the mouse*); hovering over a known square tints the route a click would travel (with *Allow mouse clicks to move the player* on; nothing when there is no known way); in look or target mode the line of fire from you to the cursor is tinted yellow up to where a shot would stop — the first wall or visible monster in the way, ringed (Angband's target path); left-click travels to a known square along the shortest known path (stopping when a
   monster comes into view or you are hurt; adjacent monsters are attacked); right-click opens Angband 4.2's
   context menus (`ui-context.c`) beside the pointer (kept inside the map; other prompts stay at the
   top), saying what is there as it opens: on yourself *Use, Cast, Go up/down,

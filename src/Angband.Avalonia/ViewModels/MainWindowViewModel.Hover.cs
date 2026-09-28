@@ -19,6 +19,42 @@ public sealed partial class MainWindowViewModel
     {
         _hoverCell = cell;
         UpdateHover();
+        UpdatePath();
+    }
+
+    // --- Showing what a click or a shot would do --------------------------------------------------
+
+    public IReadOnlyList<Loc> ShownPath { get; private set; } = [];
+    public bool PathIsAim { get; private set; }
+
+    /// <summary>The longest route a hover shows (a travel of more is still allowed).</summary>
+    public const int MaxShownPath = 120;
+
+    /// <summary>
+    /// What the map shows beyond itself: in look or target mode, the line a shot would take from you
+    /// to the cursor, up to where it would stop (Angband's target path); otherwise, with the mouse
+    /// over a known square, the route a click would travel (none if there is no known way).
+    /// </summary>
+    private void UpdatePath()
+    {
+        var old = ShownPath;
+        var player = _game.Player.Position;
+        if (IsLooking && _cursor != player)
+        {
+            var level = _game.Level;
+            ShownPath = Angband.Core.Combat.ProjectionPath.Compute(level, player, _cursor, Angband.Core.Game.GameSession.MaxRange,
+                Angband.Core.Combat.PathFlags.StopAtCreature, p => level.Monsters.At(p) is { IsVisible: true });
+            PathIsAim = true;
+        }
+        else if (!IsLooking && !IsPrompting && !IsInStore && _hoverCell is { } to && to != player
+                 && OptionValue(DisplayOptions.MouseMovement) && _game.Level.InBounds(to) && _game.Known.IsKnown(to)
+                 && _game.FindPath(player, to) is { Count: > 0 and <= MaxShownPath } route)
+        {
+            ShownPath = route;
+            PathIsAim = false;
+        }
+        else ShownPath = [];
+        if (!old.SequenceEqual(ShownPath)) Revision++;
     }
 
     /// <summary>Redescribes the hovered square (after the mouse moves, and after each turn).</summary>

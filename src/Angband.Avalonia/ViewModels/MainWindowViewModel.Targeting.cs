@@ -102,6 +102,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(LookedAt));
         OnPropertyChanged(nameof(Cursor));
         RefreshRecallPanel();
+        UpdatePath();
         Revision++;
     }
 
@@ -188,6 +189,7 @@ public sealed partial class MainWindowViewModel
         OnPropertyChanged(nameof(LookedAt));
         OnPropertyChanged(nameof(Cursor));
         RefreshRecallPanel();
+        UpdatePath();
         Revision++;
     }
 
