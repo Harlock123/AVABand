@@ -36,6 +36,13 @@ public partial class MainWindow : Window
                 else vm.ZoomOut();
             };
         }
+        // Shift held shows the travel route under the mouse: follow it from keys and pointer alike.
+        AddHandler(KeyDownEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: true), RoutingStrategies.Tunnel, handledEventsToo: true);
+        AddHandler(KeyUpEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: false), RoutingStrategies.Tunnel, handledEventsToo: true);
+        AddHandler(PointerMovedEvent, (_, e) => (DataContext as MainWindowViewModel)?.SetRouteKeyHeld((e.KeyModifiers & KeyModifiers.Shift) != 0),
+            RoutingStrategies.Tunnel, handledEventsToo: true);
+        Deactivated += (_, _) => (DataContext as MainWindowViewModel)?.SetRouteKeyHeld(false);
+
         // The stair scene ends by itself, or with a click on it.
         if (this.FindControl<StairSceneView>("StairScene") is { } scene)
         {
@@ -54,6 +61,13 @@ public partial class MainWindow : Window
         AddHandler(PointerReleasedEvent, OnPendingReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         AddHandler(DragDrop.DragOverEvent, OnHotbarDragOver);
         AddHandler(DragDrop.DropEvent, OnHotbarDrop);
+    }
+
+    private void TrackShift(KeyModifiers modifiers, Key key, bool down)
+    {
+        if (DataContext is not MainWindowViewModel vm) return;
+        var held = key is Key.LeftShift or Key.RightShift ? down : (modifiers & KeyModifiers.Shift) != 0;
+        vm.SetRouteKeyHeld(held);
     }
 
     private global::Avalonia.Point? _mapPress;

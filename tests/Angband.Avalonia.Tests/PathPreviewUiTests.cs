@@ -6,6 +6,7 @@ using Angband.Data;
 using Angband.Input;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
+using Avalonia.Input;
 
 namespace Angband.Avalonia.Tests;
 
@@ -33,11 +34,21 @@ public class PathPreviewUiTests
         var goal = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 6 && game.Level.IsEmptyFloor(l)
             && game.Known.IsKnown(l) && game.FindPath(game.Player.Position, l) is { Count: > 0 });
         vm.HoverCell(goal);
+        Assert.Empty(vm.ShownPath); // only while Shift is held
+
+        window.KeyPressQwerty(PhysicalKey.ShiftLeft, RawInputModifiers.Shift);
+        Assert.True(vm.RouteKeyHeld);
         Assert.False(vm.PathIsAim);
         Assert.Equal(game.FindPath(game.Player.Position, goal), vm.ShownPath);
         Assert.Equal(goal, vm.ShownPath[^1]);
         window.CaptureRenderedFrame();
         TileRenderingTests.Save(window, "path-travel");
+
+        window.KeyReleaseQwerty(PhysicalKey.ShiftLeft, RawInputModifiers.None); // let go: gone
+        Assert.False(vm.RouteKeyHeld);
+        Assert.Empty(vm.ShownPath);
+        vm.SetRouteKeyHeld(true);
+        Assert.NotEmpty(vm.ShownPath);
 
         vm.HoverCell(null); // the mouse left the map
         Assert.Empty(vm.ShownPath);

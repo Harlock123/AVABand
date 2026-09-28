@@ -27,13 +27,25 @@ public sealed partial class MainWindowViewModel
     public IReadOnlyList<Loc> ShownPath { get; private set; } = [];
     public bool PathIsAim { get; private set; }
 
+    /// <summary>Whether Shift is held: the travel route shows only then.</summary>
+    public bool RouteKeyHeld { get; private set; }
+
+    /// <summary>Shift pressed or let go (the view reports it, from keys and from the mouse).</summary>
+    public void SetRouteKeyHeld(bool held)
+    {
+        if (held == RouteKeyHeld) return;
+        RouteKeyHeld = held;
+        UpdatePath();
+    }
+
     /// <summary>The longest route a hover shows (a travel of more is still allowed).</summary>
     public const int MaxShownPath = 120;
 
     /// <summary>
     /// What the map shows beyond itself: in look or target mode, the line a shot would take from you
-    /// to the cursor, up to where it would stop (Angband's target path); otherwise, with the mouse
-    /// over a known square, the route a click would travel (none if there is no known way).
+    /// to the cursor, up to where it would stop (Angband's target path); otherwise, while Shift is
+    /// held with the mouse over a known square, the route a click would travel (none if there is
+    /// no known way).
     /// </summary>
     private void UpdatePath()
     {
@@ -46,7 +58,7 @@ public sealed partial class MainWindowViewModel
                 Angband.Core.Combat.PathFlags.StopAtCreature, p => level.Monsters.At(p) is { IsVisible: true });
             PathIsAim = true;
         }
-        else if (!IsLooking && !IsPrompting && !IsInStore && _hoverCell is { } to && to != player
+        else if (RouteKeyHeld && !IsLooking && !IsPrompting && !IsInStore && _hoverCell is { } to && to != player
                  && OptionValue(DisplayOptions.MouseMovement) && _game.Level.InBounds(to) && _game.Known.IsKnown(to)
                  && _game.FindPath(player, to) is { Count: > 0 and <= MaxShownPath } route)
         {
