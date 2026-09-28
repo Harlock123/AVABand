@@ -99,7 +99,39 @@ public sealed class MapCellBuilder
             under.TileKey, under.Lighting);
     }
 
-    public uint Color(string name) => _colors.TryGetValue(name, out var c) ? c : 0xFFFF00FF;
+    public uint Color(string name) =>
+        ColorBlind && ColorBlindPalette.TryGetValue(name, out var safe) ? safe
+        : _colors.TryGetValue(name, out var c) ? c : 0xFFFF00FF;
+
+    /// <summary>Use <see cref="ColorBlindPalette"/> for the colours red–green colour blindness confuses.</summary>
+    public bool ColorBlind { get; set; }
+
+    /// <summary>
+    /// Colour-blind friendly replacements (after the Okabe–Ito palette): greens lean blue, reds lean
+    /// vermilion and orange, and blues, yellows and purples are set well apart, so health (green to
+    /// red), elements and monster colours stay distinct for red–green colour blindness.
+    /// </summary>
+    public static readonly IReadOnlyDictionary<string, uint> ColorBlindPalette = new Dictionary<string, uint>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Red"] = 0xFFD55E00,
+        ["LightRed"] = 0xFFFF9966,
+        ["Orange"] = 0xFFE69F00,
+        ["Yellow"] = 0xFFF0E442,
+        ["LightYellow"] = 0xFFF8F0A8,
+        ["Green"] = 0xFF009E73,
+        ["LightGreen"] = 0xFF5CE6C8,
+        ["Teal"] = 0xFF00A6C8,
+        ["LightTeal"] = 0xFF7FDCEB,
+        ["Blue"] = 0xFF0072B2,
+        ["LightBlue"] = 0xFF56B4E9,
+        ["DeepLightBlue"] = 0xFF3A9BE0,
+        ["Violet"] = 0xFFCC79A7,
+        ["LightViolet"] = 0xFFE3B5D0,
+        ["Purple"] = 0xFF9E4F8C,
+        ["LightPurple"] = 0xFFE08FD0,
+        ["Magenta"] = 0xFFE36FB0,
+        ["LightPink"] = 0xFFF5B8C8,
+    };
 
     public static uint Dim(uint argb)
     {

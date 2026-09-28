@@ -819,6 +819,11 @@ game or in `<AppData>/AVABand/tilesets/`:
 **Interface size** (Settings → Display, 80%–200%) scales everything but the map — the sidebar,
 message and status lines, menus, the panels over the map and every dialog — with layout
 transforms, so text stays sharp and layouts reflow; the map keeps its own zoom (Ctrl +/-).
+The option **Colour-blind friendly colours (red-green)** swaps the colours red–green colour
+blindness confuses for a palette after Okabe–Ito (greens lean blue, reds lean vermilion and orange,
+blues, yellows and purples set apart) everywhere colours are drawn — map, sidebar, health bar,
+projections; a test simulates deuteranopia and protanopia (Machado et al. 2009) and checks the
+health bar's five colours stay well apart, as Angband's own do not.
 
 ## Sound
 `Angband.Audio` plays sound through OpenAL Soft (Silk.NET, which ships native libraries for

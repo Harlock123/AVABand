@@ -27,6 +27,8 @@ public static class DisplayOptions
     public const string BookFirst = "book_first_spell_menus";
     /// <summary>AVABand's own: describe the square under the mouse at the foot of the map.</summary>
     public const string HoverLook = "hover_look";
+    /// <summary>AVABand's own: a palette red–green colour blindness can tell apart.</summary>
+    public const string ColorBlind = "color_blind_friendly";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -47,6 +49,7 @@ public static class DisplayOptions
         new(EffectiveSpeed, "Show effective speed as multiplier", OptionKind.Interface, false),
         new(BookFirst, "Choose the book, then the spell (as Angband's menus)", OptionKind.Interface, false),
         new(HoverLook, "Describe the square under the mouse", OptionKind.Interface, true),
+        new(ColorBlind, "Colour-blind friendly colours (red-green)", OptionKind.Interface, false),
     ];
 }
 
@@ -165,6 +168,7 @@ public sealed partial class MainWindowViewModel
         _cells.YellowLight = OptionValue(DisplayOptions.YellowLight);
         _cells.PurpleUniques = OptionValue(DisplayOptions.PurpleUniques);
         _cells.HpChangesColor = OptionValue(DisplayOptions.HpChangesColor);
+        _cells.ColorBlind = OptionValue(DisplayOptions.ColorBlind);
         CenterPlayer = OptionValue(DisplayOptions.CenterPlayer);
     }
 
