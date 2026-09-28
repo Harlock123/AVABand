@@ -897,7 +897,8 @@ def compare_artifacts(gd, data):
 # Classes, class spells, races
 
 STAT_ORDER = ["str", "int", "wis", "dex", "con"]
-SKILL_MAP = [("disarm", "skill-disarm-phys"), ("disarm_magic", "skill-disarm-magic"), ("device", "skill-device"), ("save", "skill-save"),
+SKILL_MAP = [("disarm", "skill-disarm-phys"), ("disarm_magic", "skill-disarm-magic"), ("search", "skill-search"),
+             ("device", "skill-device"), ("save", "skill-save"),
              ("stealth", "skill-stealth"), ("melee", "skill-melee"), ("bow", "skill-shoot"),
              ("throw", "skill-throw"), ("dig", "skill-dig")]
 REV_RESIST = {v: k for k, v in OI.RESISTS.items()}
@@ -949,9 +950,6 @@ def compare_classes_and_spells(gd, data):
             base, per10 = (one(e, key, "0:0").split(":") + ["0"])[:2]
             csec.cmp(label, f"skill {ours_key} ({key})", (c.get("skills") or {}).get(ours_key, 0), int(base))
             csec.cmp(label, f"skill {ours_key} per 10 levels", (c.get("skillsPer10Levels") or {}).get(ours_key, 0), int(per10))
-        for key in ("skill-search",):
-            if one(e, key, "0:0") not in ("0:0", "0"):
-                csec.unmodelled[f"{key} (no AVABand skill)"] += 1
         csec.cmp(label, "hit die", c.get("hitDie", 0), int(one(e, "hitdie", "0")))
         # 4.2.5 has no class experience factor (only races have `exp`).
         csec.cmp(label, "experience factor (4.2.5 classes have none)", c.get("expFactor", 0), 0)
@@ -997,8 +995,8 @@ def compare_classes_and_spells(gd, data):
             csec.only_ours.append(c["id"])
     csec.notes += [
         "Skills: ours `disarm` is compared with 4.2.5 `skill-disarm-phys` and `disarm_magic` with "
-        "`skill-disarm-magic`; `bow` = `skill-shoot`; a skill missing from ours counts as 0. AVABand has no "
-        "search skill, so `skill-search` is counted as unexpressible rather than compared.",
+        "`skill-disarm-magic`; `bow` = `skill-shoot`; `search` = `skill-search`; a skill missing from ours "
+        "counts as 0.",
         "Flags: `player-flags` + `obj-flags` against ours `flags` (+ `resists`); NO_MANA is taken as implied by "
         "a class with no realm.",
         "Not compared: `max-attacks`, `min-weight`, `strength-multiplier` (AVABand's `blows` field is a "
@@ -1028,9 +1026,6 @@ def compare_classes_and_spells(gd, data):
             rsec.cmp(label, f"stat {s}", (r.get("stats") or {}).get(s, 0), v)
         for ours_key, key in SKILL_MAP:
             rsec.cmp(label, f"skill {ours_key} ({key})", (r.get("skills") or {}).get(ours_key, 0), int(one(e, key, "0")))
-        for key in ("skill-search",):
-            if one(e, key, "0") != "0":
-                rsec.unmodelled[f"{key} (no AVABand skill)"] += 1
         rsec.cmp(label, "hit die", r.get("hitDie", 0), int(one(e, "hitdie", "0")))
         rsec.cmp(label, "experience factor", r.get("expFactor", 0), int(one(e, "exp", "0")))
         rsec.cmp(label, "infravision", r.get("infravision", 0), int(one(e, "infravision", "0")))
@@ -1040,7 +1035,7 @@ def compare_classes_and_spells(gd, data):
             rsec.only_ours.append(r["id"])
     rsec.notes += [
         "Skills as for classes (disarm = `skill-disarm-phys`, disarm_magic = `skill-disarm-magic`, bow = "
-        "`skill-shoot`; `skill-search` has no AVABand skill).",
+        "`skill-shoot`, search = `skill-search`).",
         "Flags/resists: 4.2.5 `obj-flags`, `player-flags` and `values` (RES_x[1] → RES_x) against ours "
         "`resists` (mapped back to 4.2.5 names: acid → RES_ACID, sust_dex → SUST_DEX, hold_life → HOLD_LIFE, ...) "
         "and `flags` (REGENERATE → REGEN).",
@@ -1113,50 +1108,124 @@ TRAP_ALIASES = {  # AVABand id -> 4.2.5 trap (second name field)
 DICE_TOKEN = re.compile(r"(?<![\w$])(?:\d+\+)?\d*d\d+(?:[+-]\d+)?(?![\w$])")
 
 
+TRAPS_ELSEWHERE = {"decoy": "Level.Decoy (the Decoy spell)", "door lock": "a door's lock power (Square.LockPower)"}
+
+
+def trap_colour(code):
+    code = (code or "w").strip()
+    return MI.COLORS.get(code) if len(code) == 1 else "".join(w.capitalize() for w in code.split())
+
+
+def trap_dice_42(e):
+    """4.2.5's dice/dice-xtra values, each with its own DUNGEON_LEVEL variables (an expr line follows the
+    dice it belongs to) written as AVABand's {D...}."""
+    lines = e["lines"]
+    out = []
+    for i, (k, d) in enumerate(lines):
+        if k not in ("dice", "dice-xtra"):
+            continue
+        d = d.strip()
+        for k2, v2 in lines[i + 1:]:
+            if k2 in ("effect", "effect-xtra", "dice", "dice-xtra"):
+                break
+            if k2 == "expr":
+                var, _, rest = v2.partition(":")
+                base, _, ops = rest.partition(":")
+                if base == "DUNGEON_LEVEL":
+                    ops = ops.replace(" ", "")
+                    d = d.replace("$" + var, "{D" + ("" if ops in ("+0", "") else ops) + "}")
+        out.append(d)
+    return out
+
+
+def trap_radii_42(e):
+    """The radii of 4.2.5's SPOT/BALL trap effects (and EARTHQUAKE's), in order; a radius-0 spot is ours
+    `element` (it falls on you alone)."""
+    out = []
+    for k, v in e["lines"]:
+        if k in ("effect", "effect-xtra"):
+            parts = v.split(":")
+            if parts[0] in ("SPOT", "BALL") and len(parts) > 2 and int(parts[2]) > 0:
+                out.append(int(parts[2]))
+            elif parts[0] == "EARTHQUAKE" and len(parts) > 2:
+                out.append(int(parts[2]))
+    return out
+
+
+# Which argument of each AVABand trap verb is its amount (the dice), and which its radius.
+TRAP_AMOUNT_ARG = {"damage": 0, "timed": 1, "timed_nores": 1, "element": 1, "spot": 2, "teleport": 0, "summon": 0,
+                   "project_los": 1, "drain_light": 0, "drain_mana": 0}
+TRAP_RADIUS_ARG = {"spot": 1, "earthquake": 0}
+
+
+def trap_parts(effect):
+    return [p.strip().split(":") for p in (effect or "").split(";") if p.strip()]
+
+
+def trap_values(effect):
+    """The amounts (dice) in an AVABand trap effect string."""
+    return [a[TRAP_AMOUNT_ARG[a[0]] + 1] for a in trap_parts(effect)
+            if a[0] in TRAP_AMOUNT_ARG and len(a) > TRAP_AMOUNT_ARG[a[0]] + 1]
+
+
+def trap_radii(effect):
+    return [int(a[TRAP_RADIUS_ARG[a[0]] + 1]) for a in trap_parts(effect)
+            if a[0] in TRAP_RADIUS_ARG and len(a) > TRAP_RADIUS_ARG[a[0]] + 1]
+
+
 def compare_traps(gd, data):
     sec = section("traps", "Traps", "traps.json", "trap.txt")
-    ours = load(data, "traps.json")
-    theirs = {}
+    ours = {t["id"]: t for t in load(data, "traps.json")}
+    ids = {v: k for k, v in TRAP_ALIASES.items()}
+    used = set()
     for e in parse_records(os.path.join(gd, "trap.txt")):
         disp, _, tname = e["name"].partition(":")
-        theirs[tname] = (disp, e)
-    used = set()
-    for t in ours:
-        tname = TRAP_ALIASES.get(t["id"], t["name"])
-        if tname not in theirs:
-            sec.only_ours.append(f"{t['id']} ({t['name']})")
+        if tname == "no trap":
             continue
-        used.add(tname)
-        disp, e = theirs[tname]
+        if tname in TRAPS_ELSEWHERE:
+            sec.unmodelled[f"{tname} (modelled as {TRAPS_ELSEWHERE[tname]})"] += 1
+            continue
+        tid = ids.get(tname, slug(tname))
+        t = ours.get(tid)
+        if t is None:
+            sec.only_theirs.append(f"{tname} ({disp})")
+            continue
+        used.add(tid)
         sec.compared += 1
-        label = f"{t['id']} (4.2.5: {tname})"
+        label = f"{tid} (4.2.5: {tname})"
         glyph, col = graphics(e)
         sec.cmp(label, "display name", t["name"], disp)
         sec.cmp(label, "glyph", t.get("glyph", "^"), glyph)
-        sec.cmp(label, "colour", t.get("color", "White"), MI.COLORS.get((col or "w")[0]))
-        flags = set(flag_list(e, "flags"))
-        appear = (one(e, "appear") or "").split(":")
-        if "TRAP" in flags and len(appear) > 1:
-            sec.cmp(label, "min depth", t.get("minDepth", 0), int(appear[1]))
-        sec.cmp(label, "drops you a level (DOWN)", bool(t.get("isTrapDoor")), "DOWN" in flags)
-        sec.cmp(label, "warding glyph (GLYPH)", bool(t.get("warding")), "GLYPH" in flags and tname == "glyph of warding")
-        sec.cmp(label, "web (WEB)", bool(t.get("web")), "WEB" in flags)
-        tdice = sorted(canon_rv(d) for k, d in e["lines"] if k in ("dice", "dice-xtra") and "d" in d and "$" not in d)
-        odice = sorted(canon_rv(d) for d in DICE_TOKEN.findall(t.get("effect") or ""))
-        sec.cmp(label, "effect dice (all dice in the effect)", odice, tdice)
+        sec.cmp(label, "colour", t.get("color", "White"), trap_colour(col))
+        flags = flag_list(e, "flags")
+        sec.cmp_set(label, "flags", t.get("flags", []), flags)
+        rarity, min_depth = ((one(e, "appear") or "0:0").split(":") + ["0"])[:2]
+        if "TRAP" in flags:
+            sec.cmp(label, "min depth", t.get("minDepth", 0), int(min_depth))
+            sec.cmp(label, "rarity", t.get("rarity", 0), int(rarity))
+        sec.cmp_set(label, "save", t.get("save", []), flag_list(e, "save"))
+        sec.cmp(label, "visibility", canon_rv(t.get("visibility", "0")), canon_rv((one(e, "visibility") or "0").replace(" ", "")))
+        for key, line in (("message", "msg"), ("messageGood", "msg-good"), ("messageBad", "msg-bad"),
+                          ("messageExtra", "msg-xtra")):
+            sec.cmp(label, f"message ({line})", t.get(key), one(e, line))
+        ours_vals = sorted(canon_rv(v) for v in trap_values(t.get("effect")) + trap_values(t.get("extra")))
+        theirs_vals = sorted(canon_rv(v) for v in trap_dice_42(e))
+        sec.cmp(label, "effect amounts (all dice)", ours_vals, theirs_vals)
+        sec.cmp(label, "blast and earthquake radii", sorted(trap_radii(t.get("effect")) + trap_radii(t.get("extra"))),
+                sorted(trap_radii_42(e)))
         teffs = [v for k, v in e["lines"] if k in ("effect", "effect-xtra")]
         if teffs and not t.get("effect"):
             sec.diff(label, "effect", None, teffs)
-    for tname, (disp, e) in theirs.items():
-        if tname not in used and tname != "no trap":
-            sec.only_theirs.append(f"{tname} ({disp})")
+    for tid, t in ours.items():
+        if tid not in used:
+            sec.only_ours.append(f"{tid} ({t['name']})")
     sec.notes += [
-        "Traps are paired by a hand-written alias table (AVABand ids → 4.2.5 trap names: "
-        + ", ".join(f"{k} → {v}" for k, v in TRAP_ALIASES.items()) + ").",
-        "Effects: AVABand's trap effect strings have their own grammar, so only the dice appearing in them are "
-        "compared (as a multiset) with 4.2.5's `dice`/`dice-xtra` lines; dice with `$` expressions are skipped.",
-        "Not compared: 4.2.5 `appear` rarity and max number vs ours `weight` (different models), `visibility`, "
-        "`save`, messages, `desc`; min depth for non-TRAP runes (glyph, web, door lock).",
+        "Traps are paired by id: a hand-written alias table for AVABand's older ids ("
+        + ", ".join(f"{k} → {v}" for k, v in TRAP_ALIASES.items()) + "), otherwise the 4.2.5 trap name as an id.",
+        "Effects: AVABand's trap effect strings have their own grammar (GameSession.ApplyTrapEffects), so the "
+        "values in them (dice and amounts) are compared as a multiset with 4.2.5's `dice`/`dice-xtra` lines, "
+        "4.2.5's DUNGEON_LEVEL variables written as AVABand's `{D...}`.",
+        "Not compared: the `appear` max number (unused by 4.2.5's pick_trap), `desc`.",
     ]
     return sec
 

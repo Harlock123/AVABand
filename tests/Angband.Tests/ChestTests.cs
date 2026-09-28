@@ -194,7 +194,7 @@ public class ChestTests
         var damage = 0;
         game.Events.Subscribe<PlayerHurtEvent>(e => damage += e.Damage); // (5000 HP regenerate a pit's worth at once)
         game.Execute(new JumpCommand(Direction.East));
-        Assert.Contains("You set off a pit!", messages);
+        Assert.Contains("You fall into a pit!", messages); // 4.2.5's message
         Assert.InRange(damage, 2, 12);
     }
 
@@ -226,11 +226,11 @@ public class ChestTests
     public void Floor_traps_can_be_disarmed()
     {
         var game = Game();
-        game.Player.DisarmSkill = 500;
+        game.Player.DisarmMagicSkill = 500; // 4.2.5's fire trap is a rune: magical disarming
         var messages = Messages(game);
         var at = Trap(game, "fire_rune", game.Player.Position + new Loc(1, 0));
         Assert.True(game.Execute(new DisarmCommand(Direction.East)));
-        Assert.Contains("You have disarmed the fire rune.", messages);
+        Assert.Contains("You have disarmed the discolored spot.", messages);
         Assert.Equal(0, game.Level[at].Trap);
         Assert.False(game.Execute(new DisarmCommand(Direction.East)));
         Assert.Contains("You see nothing there to disarm.", messages);

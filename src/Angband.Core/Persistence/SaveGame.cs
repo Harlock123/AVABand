@@ -137,7 +137,7 @@ public static class SaveGame
                 Skills = new()
                 {
                     ["melee"] = p.SkillMelee, ["bow"] = p.SkillBow, ["throw"] = p.SkillThrow,
-                    ["save"] = p.SkillSave, ["disarm"] = p.DisarmSkill, ["disarm_magic"] = p.DisarmMagicSkill, ["device"] = p.SkillDevice,
+                    ["save"] = p.SkillSave, ["disarm"] = p.DisarmSkill, ["disarm_magic"] = p.DisarmMagicSkill, ["search"] = p.SkillSearch, ["device"] = p.SkillDevice,
                 },
                 Timed = new(p.Timed.Snapshot()),
                 Pack = p.Inventory.Pack.Select(ItemToSave).ToList(),
@@ -227,6 +227,7 @@ public static class SaveGame
             save.Flags[i] = (ushort)(sq.Flags & ~transient);
             if (sq.Trap != 0 && g.Data.TrapByIndex(sq.Trap) is { } trap) save.Traps[i] = trap.Id;
             if (sq.LockPower != 0) save.Locks[i] = sq.LockPower;
+            if (sq.TrapPower != 0) save.TrapPowers[i] = sq.TrapPower;
             save.Known[i] = known[i] == ushort.MaxValue ? -1 : known[i];
         }
         foreach (var (index, item) in knownMap.RememberedObjects) save.RememberedObjects[index] = ItemToSave(item);
@@ -359,6 +360,7 @@ public static class SaveGame
         // (Saves from before the magical skill had one disarming skill for both.)
         p.DisarmMagicSkill = ps.Skills.GetValueOrDefault("disarm_magic", p.DisarmSkill);
         p.SkillDevice = ps.Skills.GetValueOrDefault("device", p.SkillDevice);
+        p.SkillSearch = ps.Skills.GetValueOrDefault("search", p.SkillSearch);
         foreach (var (id, value) in ps.Timed)
             if (data.Timed(id) is { } def) p.Timed.Set(def, value);
         foreach (var item in ps.Pack.Select(ToItem).OfType<Item>()) p.Inventory.Add(item);
@@ -394,6 +396,7 @@ public static class SaveGame
                 if (ls.Traps.TryGetValue(i, out var trapId))
                     squares[i].Trap = data.Traps.FirstOrDefault(t => t.Id == trapId)?.Index ?? 0;
                 if (ls.Locks.TryGetValue(i, out var lockPower)) squares[i].LockPower = (byte)lockPower;
+                if (ls.TrapPowers.TryGetValue(i, out var trapPower)) squares[i].TrapPower = (byte)trapPower;
                 if (ls.Known[i] >= 0) known.RestoreFeature(i, featureMap.ElementAtOrDefault(ls.Known[i]));
             }
             foreach (var (index, saved) in ls.RememberedObjects)
@@ -470,6 +473,12 @@ public static class SaveGame
 
         g.RecalculateBonuses();
         g.UpdateView();
+        // Saves from before the search skill: skills are worked out afresh from class, race and level.
+        if (!f.Player.Skills.ContainsKey("search"))
+        {
+            g.RecomputeSkills();
+            g.RecalculateBonuses();
+        }
         return g;
     }
 }

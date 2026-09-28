@@ -212,6 +212,7 @@ public class JourneyTests
         var game = GameSession.NewGame(TestData.Game, 5, "warrior");
         Assert.Equal(0, Assert.Single(game.Visits).Depth); // the town, from the start
         game.MarkDebugUsed();
+        game.Player.MaxHp = game.Player.Hp = 100_000; // a journey, not a fight
         game.Execute(new DebugJumpCommand(2));
         for (var i = 0; i < 20; i++) game.Execute(new HoldCommand());
         var monster = Arena.AddMonster(game, "grip", game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l)));

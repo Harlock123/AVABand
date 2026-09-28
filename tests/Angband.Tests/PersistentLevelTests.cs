@@ -60,7 +60,9 @@ public class PersistentLevelTests
     [Fact]
     public void ANewLevel_MeetsItsNeighbours_Stairs()
     {
-        var game = Game();
+        // (A join that doesn't fit the new level — outside it, or in permanent rock — is dropped, so
+        // this needs a seed whose level 2 takes both of level 1's stairs.)
+        var game = Game(seed: 12);
         TakeStairs(game, down: true);                     // town -> 1
         var downs = game.Level.FindFeature(TerrainFlags.DownStair).ToHashSet();
         TakeStairs(game, down: true);                     // 1 -> 2 (new, built to meet level 1)

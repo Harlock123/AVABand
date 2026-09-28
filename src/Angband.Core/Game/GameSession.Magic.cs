@@ -80,6 +80,17 @@ public sealed partial class GameSession
         return total / 100;
     }
 
+    /// <summary>
+    /// The search skill in play (Angband SKILL_SEARCH): class, race and level, plus five for each
+    /// point of searching on your gear or shape.
+    /// </summary>
+    public int SearchSkill =>
+        Player.SkillSearch + 5 * (Player.Inventory.Equipped.Sum(i => i.Modifier(ItemModifiers.Searching))
+                                  + (PlayerShape?.Modifiers.GetValueOrDefault(ItemModifiers.Searching) ?? 0));
+
+    /// <summary>For saves from before the search skill: work it out from class, race and level.</summary>
+    internal void RecomputeSkills() => ApplySkills();
+
     /// <summary>Class skills at the current level (base + per-10-levels growth).</summary>
     private void ApplySkills()
     {
@@ -96,6 +107,7 @@ public sealed partial class GameSession
                            + StatTables.SavingThrow[StatTables.Index(Player.Stats.GetValueOrDefault("wis", 15))];
         Player.DisarmSkill = Skill("disarm", Player.DisarmSkill);
         Player.DisarmMagicSkill = Skill("disarm_magic", Player.DisarmMagicSkill);
+        Player.SkillSearch = Skill("search", Player.SkillSearch);
         Player.SkillDevice = Skill("device", Player.SkillDevice);
         if (PlayerShape is { } shape)
         {
@@ -103,6 +115,7 @@ public sealed partial class GameSession
             Player.SkillSave += shape.Skills.GetValueOrDefault("save");
             Player.DisarmSkill += shape.Skills.GetValueOrDefault("disarm");
             Player.DisarmMagicSkill += shape.Skills.GetValueOrDefault("disarm_magic");
+            Player.SkillSearch += shape.Skills.GetValueOrDefault("search");
             Player.SkillDevice += shape.Skills.GetValueOrDefault("device");
         }
         Player.BaseStealth = Skill("stealth", Player.BaseStealth);

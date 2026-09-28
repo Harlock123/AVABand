@@ -266,7 +266,15 @@ public sealed partial class GameSession : ITurnHandler
         // A necromancer's unlight lets them see nearby squares without light (Angband UNLIGHT).
         var radius = Math.Max(Player.LightRadius, UnlightRadius);
         var lights = radius > 0 ? [new LightSource(Player.Position, radius)] : Array.Empty<LightSource>();
+        Known.SearchSkill = SearchSkill;
+        Known.TrapsNoticed = 0;
         Vision.Update(Level, Known, Player.Position, Data.Constants.MaxSight, lights, Player.IsBlind);
+        if (Known.TrapsNoticed > 0)
+        {
+            Publish(new MessageEvent(Known.TrapsNoticed == 1 ? "You have found a trap." : $"You have found {Known.TrapsNoticed} traps."));
+            Disturb();
+            Known.TrapsNoticed = 0;
+        }
         Noise.Update(Level, Player.Position);
         foreach (var monster in Level.Monsters.All)
         {
@@ -364,7 +372,9 @@ public sealed partial class GameSession : ITurnHandler
         // Angband do_autopickup: each object picked up costs a tenth of a turn (at most a turn).
         var picked = Level.Objects.Any(target) ? NoticeFloorObjects() : 0;
 
-        if (Level[target].Trap != 0) HitTrap(target);
+        // Angband player_leaving: a delayed trap (the block fall) goes off as you step away.
+        if (Level[from].Trap != 0) HitTrap(from, delayed: true);
+        if (Level[target].Trap != 0 && Player.Position == target) HitTrap(target);
         if (Player.Position == target && !IsGameOver) Search(); // secret doors beside you are always found
         return MoveEnergyPerStep + Math.Min(EnergyTable.MoveEnergy, picked * EnergyTable.MoveEnergy / 10);
     }

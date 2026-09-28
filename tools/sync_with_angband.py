@@ -650,9 +650,105 @@ def sync_shapes(gd, data):
     print(f"shapes: {changed} of {len(ours)} brought into line")
 
 
+# 4.2.5's trap effects in AVABand's trap grammar (GameSession.ApplyTrapEffects): (effect, extra effect).
+# {D...} is the dungeon level (4.2.5's DUNGEON_LEVEL expressions).
+TRAP_EFFECTS = {
+    "trap door": ("damage:2d8", None),
+    "pit": ("damage:2d6", None),
+    "spiked pit": ("damage:2d6", "damage:2d6; timed:cut:4d6"),
+    "poison pit": ("damage:2d6", "timed:cut:4d6; timed:poisoned:8d6"),
+    "rune of summon foe": ("summon:1:none:5", None),
+    "rune of summoning": ("summon:2+1d3", None),
+    "rune of necromancy": ("summon:1d3M2:UNDEAD", None),
+    "rune of dragonsong": ("summon:1d3:DRAGON", None),
+    "hellhole": ("summon:1+1d3:DEMON", None),
+    "teleport rune": ("teleport:M80", None),
+    "fire trap": ("element:fire:4d{D/2}", None),
+    "acid trap": ("element:acid:4d{D/2}", None),
+    "slow dart": ("damage:1d4; timed_nores:slow:20+1d20", None),
+    "strength loss dart": ("damage:1d4; drain:str", None),
+    "dexterity loss dart": ("damage:1d4; drain:dex", None),
+    "constitution loss dart": ("damage:1d4; drain:con", None),
+    "blinding gas trap": ("timed:blind:25+1d50", None),
+    "confusion gas trap": ("timed:confused:10+1d20", None),
+    "poison gas trap": ("timed:poisoned:10+1d20", None),
+    "sleep gas trap": ("timed:paralyzed:5+1d10", None),
+    "aggravation trap": ("wake; project_los:haste:25", None),
+    "siren": ("wake", None),
+    "mine trap": ("spot:shards:2:{D*2}", None),
+    "blast trap": ("spot:light:1:2d6; spot:sound:2:{D/2}; spot:fire:2:{D}; spot:force:2:{D}", None),
+    "mind blasting trap": ("damage:8d{D/10}; timed:confused:3+1d4", None),
+    "brain smashing trap": ("damage:10d{D/5}; timed:slow:3+1d4; timed:confused:3+1d4; timed:paralyzed:3+1d4; "
+                            "timed:blind:7+1d8", None),
+    "rock fall trap": ("damage:{D/10+1}d5; timed_nores:stun:2d20; rubble", None),
+    "earthquake trap": ("damage:{D/10+1}d5; earthquake:5", None),
+    "block fall trap": ("granite", None),
+    "area blast trap": ("spot:kill_wall:2:20; spot:force:2:{D}; rubble", None),
+    "blinding flash trap": ("spot:light:4:{D/10+2}d8", None),
+    "blinding trap": ("spot:dark:4:{D/10+2}d8; drain_light:100+1d100", None),
+    "mana drain trap": ("drain_mana:1d{D/2+1}", None),
+    "knife trap": ("timed:cut:150; damage:{D/2}", None),
+    "petrifying trap": ("timed:stoneskin:20+1d20; timed:stun:20+1d20", None),
+}
+# Kept as AVABand models them elsewhere: the decoy (Level.Decoy) and door locks (a door's lock power).
+TRAPS_ELSEWHERE = {"decoy", "door lock", "no trap"}
+
+
+def trap_colour(code):
+    """An Angband colour: a letter ("s") or a name ("light yellow")."""
+    code = (code or "w").strip()
+    return mi.COLORS.get(code) if len(code) == 1 else "".join(w.capitalize() for w in code.split())
+
+
+def sync_traps(gd, data):
+    path = os.path.join(data, "traps.json")
+    ours = {t["id"]: t for t in json.load(open(path, encoding="utf-8"))}
+    ids = {v: k for k, v in cw.TRAP_ALIASES.items()}
+    out = []
+    for e in cw.parse_records(os.path.join(gd, "trap.txt")):
+        disp, _, tname = e["name"].partition(":")
+        if tname in TRAPS_ELSEWHERE:
+            continue
+        tid = ids.get(tname, cw.slug(tname))
+        old = ours.get(tid, {})
+        glyph, col = cw.graphics(e)
+        flags = cw.flag_list(e, "flags")
+        rarity, min_depth, max_num = ((cw.one(e, "appear") or "0:0:0").split(":") + ["0", "0"])[:3]
+        t = {"id": tid, "name": disp}
+        if glyph != "^":
+            t["glyph"] = glyph
+        t["color"] = trap_colour(col)
+        if "TRAP" in flags:
+            t["minDepth"] = int(min_depth)
+            t["rarity"] = int(rarity)
+        else:
+            t["minDepth"] = 999  # placed by other means (glyphs by the player, webs by spiders)
+        t["flags"] = flags
+        saves = cw.flag_list(e, "save")
+        if saves:
+            t["save"] = saves
+        vis = cw.one(e, "visibility")
+        if vis:
+            t["visibility"] = vis.strip().replace(" ", "")
+        effect, extra = TRAP_EFFECTS.get(tname, ("", None))
+        t["effect"] = effect
+        if extra:
+            t["extra"] = extra
+        for key, line in (("message", "msg"), ("messageGood", "msg-good"), ("messageBad", "msg-bad"),
+                          ("messageExtra", "msg-xtra")):
+            if cw.one(e, line):
+                t[key] = cw.one(e, line)
+        desc = " ".join(v.strip() for v in cw.get(e, "desc"))
+        t["description"] = desc or old.get("description", "")
+        out.append(t)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(t, ensure_ascii=False) for t in out) + "\n]\n")
+    print(f"traps: {len(out)} written ({len([t for t in out if t['id'] not in ours])} new)")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
-            "races": sync_races, "shapes": sync_shapes}
+            "races": sync_races, "shapes": sync_shapes, "traps": sync_traps}
 
 
 def main():

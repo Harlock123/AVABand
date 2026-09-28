@@ -380,13 +380,13 @@ public sealed partial class GameSession
     /// <summary>Places traps on the empty floor around a square (Angband TRAPS / effect_handler_TOUCH).</summary>
     private void CreateTrapsAround(Loc center)
     {
-        var eligible = Data.Traps.Where(t => t.MinDepth <= Level.Depth && t.MaxDepth >= Level.Depth).ToList();
         var made = 0;
         foreach (var p in Level.Neighbors(center))
         {
             if (!Level.Has(p, TerrainFlags.Trap) || Level[p].Trap != 0 || Level.Objects.Any(p)) continue;
-            if (Rng.PickWeighted(eligible, t => t.Weight) is not { } trap) break;
+            if (Data.PickTrap(Rng, Level.Depth, TrapDoorsAllowedHere) is not { } trap) break;
             Level[p].Trap = trap.Index;
+            Level[p].TrapPower = trap.RollPower(Rng, Level.Depth);
             made++;
         }
         if (made > 0) Publish(new MessageEvent("You hear a clicking sound nearby."));

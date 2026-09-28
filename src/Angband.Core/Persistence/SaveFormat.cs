@@ -274,6 +274,8 @@ public sealed class LevelSave
     /// <summary>Trap ids per square ("" = none), stored sparsely as index → id.</summary>
     public Dictionary<int, string> Traps { get; set; } = [];
     public Dictionary<int, int> Locks { get; set; } = [];
+    /// <summary>How hard each trap is to notice (squares with a trap power; none in older saves, so seen at once).</summary>
+    public Dictionary<int, int> TrapPowers { get; set; } = [];
     /// <summary>Remembered terrain (index into <see cref="Terrain"/>, -1 = unknown).</summary>
     public int[] Known { get; set; } = [];
     public Dictionary<int, ItemSave> RememberedObjects { get; set; } = [];

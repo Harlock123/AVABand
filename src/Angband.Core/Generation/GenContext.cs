@@ -123,13 +123,10 @@ internal sealed class GenContext(GameData data, DungeonProfileDef profile, int d
     public bool PlaceTrap(Loc p)
     {
         if (!Level.Has(p, TerrainFlags.Trap)) return false;
-        var noTrapDoor = Depth >= Data.Constants.MaxDepth;
-        var eligible = Data.Traps
-            .Where(t => t.MinDepth <= Depth && t.MaxDepth >= Depth && !(noTrapDoor && t.IsTrapDoor))
-            .ToList();
-        var trap = Rng.PickWeighted(eligible, t => t.Weight);
+        var trap = Data.PickTrap(Rng, Depth, trapDoors: Depth < Data.Constants.MaxDepth);
         if (trap is null) return false;
         Level[p].Trap = trap.Index;
+        Level[p].TrapPower = trap.RollPower(Rng, Depth);
         return true;
     }
 

@@ -501,10 +501,17 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   (wooden, iron, steel) from five levels deeper — great ones from large chests. `D` disarms a
   chest or a floor trap: success removes it (and teaches experience), a near miss can be retried,
   a bad fumble sets it off. Blindness, darkness and confusion cut the skill to a tenth.
-  Floor traps now do what they say: pits and spiked pits hurt (and cut), darts (which can miss
-  against your armour) slow or weaken, gas poisons, confuses or puts you to sleep (resistances
-  and free action protect), runes burn, corrode, teleport or summon, sirens wake the level, and
-  trap doors drop you to the next level.
+  Floor traps are 4.2.5's, all 35 (`traps.json`, from `trap.txt`, as `tools/sync_with_angband.py`
+  writes it): pits (poisoned and spiked), trap doors, strange runes that summon foes, undead,
+  dragons or demons or teleport you, darts that sap stats (they can miss against your armour),
+  gases, sirens and aggravation traps, mines and blast traps, mind blasts (a saving throw shrugs
+  them off), rock falls, earthquakes, block falls (sprung as you step away), area blasts, blinding
+  flashes, mana drains, knives and petrifaction. Each is picked by 4.2.5's rarity, rolls a power
+  from its visibility, and stays hidden until your search skill (class, race and level, plus 5
+  per point of searching on your gear) is up to it — "You have found a trap." Feather falling
+  saves you from pits and trap doors' hurt (you still fall), trap immunity from all of it; runes
+  are disarmed with the magical disarming skill, the rest with the physical one, against a fifth
+  of the depth as 4.2.5 has it. Some traps go once sprung, and any may, one time in three.
 - **Monster memory** (`Monsters/MonsterLore.cs`, `Records/MonsterRecall.cs`, `Game/GameSession.Lore.cs`):
   Angband's lore, shared by every character in `<AppData>/AVABand/lore.json` (kills per character
   travel in the save). It records sightings, kills, the characters each monster has slain, every

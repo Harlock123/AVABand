@@ -10,6 +10,8 @@ public struct Square
     public ushort Trap;
     /// <summary>Lock power for locked doors (0 = unlocked).</summary>
     public byte LockPower;
+    /// <summary>How hard the trap here is to notice (Angband trap power): seen with a search skill at least this.</summary>
+    public byte TrapPower;
     /// <summary>Slot id of the monster standing here, 0 = none (see <see cref="Monsters.MonsterRoster"/>).</summary>
     public ushort Monster;
 

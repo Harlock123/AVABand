@@ -96,6 +96,17 @@ public sealed class GameData
 
     /// <summary>Looks up a trap by its 1-based square index.</summary>
     public TrapDef? TrapByIndex(ushort index) => index == 0 || index > Traps.Count ? null : Traps[index - 1];
+
+    /// <summary>
+    /// Angband pick_trap: a player trap allowed at <paramref name="depth"/>, weighted 100 / rarity —
+    /// trap doors only where you could fall (<paramref name="trapDoors"/>).
+    /// </summary>
+    public TrapDef? PickTrap(Randomness.GameRandom rng, int depth, bool trapDoors)
+    {
+        if (depth <= 0) return null; // no traps in the town
+        var eligible = Traps.Where(t => t.Weight > 0 && t.MinDepth <= depth && t.MaxDepth >= depth && (trapDoors || !t.IsTrapDoor)).ToList();
+        return rng.PickWeighted(eligible, t => t.Weight);
+    }
 }
 
 /// <summary>An item the player starts with.</summary>

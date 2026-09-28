@@ -297,11 +297,16 @@ public static class DataLoader
             Color = t.Color,
             MinDepth = t.MinDepth,
             MaxDepth = t.MaxDepth,
-            Weight = t.Weight,
+            Rarity = t.Rarity,
+            Flags = t.Flags ?? [],
+            Save = t.Save ?? [],
+            Visibility = t.Visibility ?? "0",
             Effect = t.Effect ?? "",
-            IsTrapDoor = t.IsTrapDoor,
-            Warding = t.Warding,
-            Web = t.Web,
+            Extra = t.Extra,
+            Message = t.Message,
+            MessageGood = t.MessageGood,
+            MessageBad = t.MessageBad,
+            MessageExtra = t.MessageExtra,
             Description = t.Description ?? "",
         };
     }
@@ -599,11 +604,16 @@ public static class DataLoader
         public string Color { get; init; } = "White";
         public int MinDepth { get; init; }
         public int MaxDepth { get; init; } = 127;
-        public int Weight { get; init; } = 1;
+        public int Rarity { get; init; }
+        public List<string>? Flags { get; init; }
+        public List<string>? Save { get; init; }
+        public string? Visibility { get; init; }
         public string? Effect { get; init; }
-        public bool Warding { get; init; }
-        public bool Web { get; init; }
-        public bool IsTrapDoor { get; init; }
+        public string? Extra { get; init; }
+        public string? Message { get; init; }
+        public string? MessageGood { get; init; }
+        public string? MessageBad { get; init; }
+        public string? MessageExtra { get; init; }
         public string? Description { get; init; }
     }
 

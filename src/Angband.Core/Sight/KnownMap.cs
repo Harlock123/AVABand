@@ -28,10 +28,22 @@ public sealed class KnownMap
     /// <summary>The remembered terrain index; only meaningful when <see cref="IsKnown"/>.</summary>
     public ushort Feature(Loc p) => _features[p.Y * Width + p.X];
 
+    /// <summary>The player's search skill: a trap is noticed when seen only if it is at least the trap's power.</summary>
+    public int SearchSkill { get; set; } = int.MaxValue;
+
+    /// <summary>Traps noticed since last asked (the game says "You have found a trap.").</summary>
+    public int TrapsNoticed { get; set; }
+
     public void Remember(Level level, Loc p)
     {
         _features[p.Y * Width + p.X] = level[p].Feature;
-        if (level[p].Trap != 0) level[p].Flags |= SquareFlags.TrapVisible;
+        // Angband square_reveal_trap: a trap is seen if the player's search skill reaches its power.
+        ref var sq = ref level[p];
+        if (sq.Trap != 0 && !sq.Has(SquareFlags.TrapVisible) && sq.TrapPower <= SearchSkill)
+        {
+            sq.Flags |= SquareFlags.TrapVisible;
+            TrapsNoticed++;
+        }
     }
 
     public void Forget(Loc p) => _features[p.Y * Width + p.X] = Unknown;

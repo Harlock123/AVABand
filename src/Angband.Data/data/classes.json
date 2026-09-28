@@ -13,7 +13,8 @@
       "disarm": 25,
       "device": 18,
       "disarm_magic": 20,
-      "dig": 0
+      "dig": 0,
+      "search": 10
     },
     "skillsPer10Levels": {
       "melee": 45,
@@ -24,7 +25,8 @@
       "device": 7,
       "disarm_magic": 10,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 12
     },
     "stats": {
       "str": 3,
@@ -72,7 +74,8 @@
       "disarm": 30,
       "device": 36,
       "disarm_magic": 35,
-      "dig": 0
+      "dig": 0,
+      "search": 10
     },
     "skillsPer10Levels": {
       "melee": 15,
@@ -83,7 +86,8 @@
       "device": 13,
       "disarm_magic": 12,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 12
     },
     "stats": {
       "str": -3,
@@ -126,7 +130,8 @@
       "disarm": 25,
       "device": 30,
       "disarm_magic": 25,
-      "dig": 0
+      "dig": 0,
+      "search": 10
     },
     "skillsPer10Levels": {
       "melee": 20,
@@ -137,7 +142,8 @@
       "device": 10,
       "disarm_magic": 12,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 14
     },
     "stats": {
       "str": -1,
@@ -181,7 +187,8 @@
       "disarm": 40,
       "device": 28,
       "disarm_magic": 30,
-      "dig": 0
+      "dig": 0,
+      "search": 15
     },
     "skillsPer10Levels": {
       "melee": 40,
@@ -192,7 +199,8 @@
       "device": 10,
       "disarm_magic": 10,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 15
     },
     "stats": {
       "wis": 2,
@@ -242,7 +250,8 @@
       "disarm": 30,
       "device": 24,
       "disarm_magic": 30,
-      "dig": 0
+      "dig": 0,
+      "search": 12
     },
     "skillsPer10Levels": {
       "melee": 20,
@@ -253,7 +262,8 @@
       "device": 10,
       "disarm_magic": 10,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 12
     },
     "stats": {
       "str": -2,
@@ -300,7 +310,8 @@
       "disarm": 45,
       "device": 32,
       "disarm_magic": 45,
-      "dig": 0
+      "dig": 0,
+      "search": 20
     },
     "skillsPer10Levels": {
       "melee": 45,
@@ -311,7 +322,8 @@
       "disarm": 20,
       "device": 10,
       "disarm_magic": 20,
-      "dig": 0
+      "dig": 0,
+      "search": 16
     },
     "stats": {
       "int": 1,
@@ -362,7 +374,8 @@
       "disarm": 20,
       "device": 24,
       "disarm_magic": 20,
-      "dig": 0
+      "dig": 0,
+      "search": 10
     },
     "skillsPer10Levels": {
       "melee": 40,
@@ -373,7 +386,8 @@
       "device": 10,
       "disarm_magic": 10,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 12
     },
     "stats": {
       "str": 1,
@@ -420,7 +434,8 @@
       "disarm": 30,
       "device": 36,
       "disarm_magic": 35,
-      "dig": 0
+      "dig": 0,
+      "search": 10
     },
     "skillsPer10Levels": {
       "melee": 25,
@@ -431,7 +446,8 @@
       "device": 13,
       "disarm_magic": 12,
       "stealth": 0,
-      "dig": 0
+      "dig": 0,
+      "search": 12
     },
     "stats": {
       "str": -3,
@@ -475,7 +491,8 @@
       "disarm": 20,
       "device": 24,
       "disarm_magic": 20,
-      "dig": 0
+      "dig": 0,
+      "search": 8
     },
     "skillsPer10Levels": {
       "melee": 40,
@@ -486,7 +503,8 @@
       "disarm": 15,
       "device": 10,
       "disarm_magic": 10,
-      "dig": 0
+      "dig": 0,
+      "search": 10
     },
     "stats": {
       "str": 2,

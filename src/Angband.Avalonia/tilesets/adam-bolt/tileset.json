@@ -143,6 +143,116 @@
       "torch": "main:29,1",
       "dark": "main:28,1"
     },
+    "trap:poison_pit": {
+      "lit": "main:9,1",
+      "torch": "main:11,1",
+      "dark": "main:10,1"
+    },
+    "trap:rune_of_summon_foe": {
+      "lit": "main:15,1",
+      "torch": "main:17,1",
+      "dark": "main:16,1"
+    },
+    "trap:rune_of_necromancy": {
+      "lit": "main:15,1",
+      "torch": "main:17,1",
+      "dark": "main:16,1"
+    },
+    "trap:rune_of_dragonsong": {
+      "lit": "main:15,1",
+      "torch": "main:17,1",
+      "dark": "main:16,1"
+    },
+    "trap:hellhole": {
+      "lit": "main:15,1",
+      "torch": "main:17,1",
+      "dark": "main:16,1"
+    },
+    "trap:dexterity_loss_dart": {
+      "lit": "main:0,1",
+      "torch": "main:2,1",
+      "dark": "main:1,1"
+    },
+    "trap:constitution_loss_dart": {
+      "lit": "main:0,1",
+      "torch": "main:2,1",
+      "dark": "main:1,1"
+    },
+    "trap:blinding_gas_trap": {
+      "lit": "main:3,1",
+      "torch": "main:5,1",
+      "dark": "main:4,1"
+    },
+    "trap:aggravation_trap": {
+      "lit": "main:27,1",
+      "torch": "main:29,1",
+      "dark": "main:28,1"
+    },
+    "trap:mine_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:blast_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:mind_blasting_trap": {
+      "lit": "main:21,1",
+      "torch": "main:23,1",
+      "dark": "main:22,1"
+    },
+    "trap:brain_smashing_trap": {
+      "lit": "main:21,1",
+      "torch": "main:23,1",
+      "dark": "main:22,1"
+    },
+    "trap:rock_fall_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:earthquake_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:block_fall_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:area_blast_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:blinding_flash_trap": {
+      "lit": "main:27,1",
+      "torch": "main:29,1",
+      "dark": "main:28,1"
+    },
+    "trap:blinding_trap": {
+      "lit": "main:27,1",
+      "torch": "main:29,1",
+      "dark": "main:27,1"
+    },
+    "trap:mana_drain_trap": {
+      "lit": "main:21,1",
+      "torch": "main:23,1",
+      "dark": "main:22,1"
+    },
+    "trap:knife_trap": {
+      "lit": "main:24,1",
+      "torch": "main:26,1",
+      "dark": "main:25,1"
+    },
+    "trap:petrifying_trap": {
+      "lit": "main:21,1",
+      "torch": "main:23,1",
+      "dark": "main:22,1"
+    },
     "trap:web": "web.png",
     "trap:glyph_warding": {
       "lit": "main:21,13",

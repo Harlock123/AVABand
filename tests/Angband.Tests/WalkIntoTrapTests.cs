@@ -40,6 +40,6 @@ public class WalkIntoTrapTests
         game.Events.Subscribe<MessageEvent>(m => said.Add(m.Text));
         Assert.True(game.Execute(new JumpCommand(Direction.East)));
         Assert.Equal(trap, game.Player.Position);
-        Assert.Contains("You set off a pit!", said);
+        Assert.Contains("You fall into a pit!", said);
     }
 }

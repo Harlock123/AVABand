@@ -712,14 +712,14 @@ public sealed partial class GameSession
     }
 
     /// <summary>Monsters (of a kind) appear around the player — the cursed staff or scroll of summoning.</summary>
-    private bool SummonNearPlayer(int count, string? flag)
+    private bool SummonNearPlayer(int count, string? flag, int levelBoost = 0)
     {
         var unavailable = new HashSet<string>(KilledUniques);
         foreach (var m in Level.Monsters.All.Where(m => m.Race.IsUnique)) unavailable.Add(m.Race.Id);
         var summoned = 0;
         for (var i = 0; i < count; i++)
         {
-            var race = _spawner.PickRace(Rng, Math.Max(1, Level.Depth), unavailable, flag is null ? null : r => r.Has(flag));
+            var race = _spawner.PickRace(Rng, Math.Max(1, Level.Depth + levelBoost), unavailable, flag is null ? null : r => r.Has(flag));
             var spots = Level.Neighbors(Player.Position).Where(p => Level.IsPassable(p) && Level[p].Monster == 0).ToList();
             if (race is null || spots.Count == 0) break;
             var m = _spawner.Place(Level, Rng, race, Rng.Pick(spots), asleep: false);

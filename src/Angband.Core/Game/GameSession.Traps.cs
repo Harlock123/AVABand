@@ -19,12 +19,21 @@ public sealed partial class GameSession
     // --- Trap effects --------------------------------------------------------------------------
 
     /// <summary>
-    /// Runs a trap effect string: <c>damage:2d6</c>, <c>cut</c>, <c>timed:poisoned:10+1d20</c>,
-    /// <c>drain:str</c>, <c>element:fire:4d6</c>, <c>teleport:100</c>, <c>summon:2+1d3</c>,
-    /// <c>aggravate</c>, <c>fall_through</c> (separated by <c>;</c>).
+    /// Runs a trap effect string (Angband trap.txt effects, separated by <c>;</c>): <c>damage:2d6</c>,
+    /// <c>timed:poisoned:10+1d20</c> (unless protected), <c>timed_nores:slow:20+1d20</c>,
+    /// <c>drain:str</c>, <c>element:fire:4d6</c> (on you), <c>spot:shards:2:30</c> (a blast around the
+    /// trap: you, the monsters near it, and <c>kill_wall</c> for walls), <c>teleport:M80</c>,
+    /// <c>summon:1d3:UNDEAD:boost</c>, <c>wake</c>, <c>aggravate</c>, <c>project_los:haste:25</c>,
+    /// <c>earthquake:5</c>, <c>rubble</c>, <c>granite</c>, <c>drain_light:100+1d100</c>,
+    /// <c>drain_mana:1d10</c>, <c>cut</c>. <c>{D/2}</c> is worked out from the dungeon level
+    /// (Angband's DUNGEON_LEVEL expressions).
     /// </summary>
-    private void ApplyTrapEffects(string effects, string killer)
+    private void ApplyTrapEffects(string effects, string killer, Loc? at = null)
     {
+        var depth = Math.Max(1, Level.Depth);
+        var center = at ?? Player.Position;
+        effects = Regex.Replace(effects, @"\{([^{}]*)\}", m =>
+            Math.Max(0, Magic.SpellExpr.Eval(m.Groups[1].Value.Replace('D', 'L'), depth)).ToString(System.Globalization.CultureInfo.InvariantCulture));
         foreach (var e in ItemEffects.Parse(effects))
         {
             if (Player.IsDead) return;
@@ -37,14 +46,11 @@ public sealed partial class GameSession
                     IncreaseTimed(TimedIds.Cut, Rng.Damroll(2, 6));
                     break;
                 case "timed":
-                    var protection = e.Arg(0) switch
-                    {
-                        "poisoned" => "pois", "confused" => "conf", "paralyzed" => "free_act", "blind" => "blind",
-                        "afraid" => "fear", "slow" => "free_act", _ => null,
-                    };
-                    if (protection is not null && Player.Resists.GetValueOrDefault(protection) > 0)
-                        Publish(new MessageEvent("You are unaffected!"));
+                    if (Protected(e.Arg(0))) Publish(new MessageEvent("You are unaffected!"));
                     else IncreaseTimed(e.Arg(0), Amount(e.Arg(1)));
+                    break;
+                case "timed_nores":
+                    IncreaseTimed(e.Arg(0), Amount(e.Arg(1)));
                     break;
                 case "drain":
                     DrainStat(e.Arg(0));
@@ -52,63 +58,231 @@ public sealed partial class GameSession
                 case "element":
                     ElementalHit(e.Arg(0), Amount(e.Arg(1)), killer);
                     break;
+                case "spot":
+                    TrapBlast(e.Arg(0), e.Int(1), Amount(e.Arg(2)), killer, center);
+                    break;
                 case "teleport":
-                    TeleportPlayer(e.Int(0));
+                    TeleportPlayer(TeleportDistance(e.Arg(0)));
                     break;
                 case "summon":
-                    SummonNearPlayer(Amount(e.Arg(0)), null);
+                    SummonNearPlayer(Amount(e.Arg(0)), e.Arg(1) is "" or "none" ? null : e.Arg(1), e.Int(2));
                     break;
                 case "aggravate":
                     foreach (var m in Level.Monsters.All) m.Sleep = 0;
                     Publish(new MessageEvent("A high-pitched shriek fills the air!"));
                     break;
-                case "fall_through":
-                    if (Player.Depth <= 0 || Player.Depth >= Data.Constants.MaxDepth || QuestAt(Player.Depth) is not null) break;
-                    Publish(new MessageEvent("You fall through a trap door!"));
-                    TakeHit(Rng.Damroll(2, 8), "a trap door");
-                    if (!Player.IsDead) ChangeLevel(Player.Depth + 1, StairArrival.None);
-                    return;
+                case "wake":
+                    WakeAround(center);
+                    break;
+                case "project_los":
+                    AffectMonstersInView(e.Arg(0), Math.Max(1, e.Int(1)));
+                    break;
+                case "earthquake":
+                    Earthquake(Math.Max(1, e.Int(0)), center);
+                    break;
+                case "rubble":
+                    RubbleAround();
+                    break;
+                case "granite":
+                    Level[center].Feature = Data.Terrain.Ids.Granite;
+                    Level[center].Trap = 0;
+                    Known.Forget(center);
+                    UpdateView();
+                    break;
+                case "drain_light":
+                    DrainLight(Amount(e.Arg(0)));
+                    break;
+                case "drain_mana":
+                    DrainManaByTrap(Amount(e.Arg(0)));
+                    break;
             }
         }
     }
 
-    /// <summary>"10+1d20", "2d6", "5" → a roll.</summary>
-    private int Amount(string text)
-    {
-        var normal = Regex.Replace(text.Replace(" ", ""), @"^(\d+)\+(\d*)d(\d+)$", m => $"{(m.Groups[2].Value.Length == 0 ? "1" : m.Groups[2].Value)}d{m.Groups[3].Value}+{m.Groups[1].Value}");
-        return Math.Max(0, Dice.Parse(normal).Roll(Rng));
-    }
+    /// <summary>"10+1d20", "2d6", "1d3M2", "5" → a roll (Angband random values).</summary>
+    private int Amount(string text) => Math.Max(0, RandomValue.Parse(text).Roll(Rng, Math.Max(1, Level.Depth)));
 
-    /// <summary>The player walks onto a trap (Angband hit_trap): it becomes known and goes off.</summary>
-    private void HitTrap(Loc p)
+    /// <summary>
+    /// A trap's blast (Angband SPOT/BALL from a trap): an element over a radius around the trap,
+    /// weaker with distance, hurting you and the monsters near it; <c>kill_wall</c> turns the walls
+    /// in reach to floor.
+    /// </summary>
+    private void TrapBlast(string element, int radius, int damage, string killer, Loc center)
     {
-        ref var sq = ref Level[p];
-        if (sq.Trap == 0 || Data.TrapByIndex(sq.Trap) is not { } trap || trap.Warding || trap.Web) return;
-        sq.Flags |= SquareFlags.TrapVisible;
-
-        // Darts can miss (Angband: a 125-power attack against your armour).
-        if (trap.Id.Contains("dart") && !CombatMath.TestHit(Rng, 125, Player.Armour, visible: true))
+        var area = BallArea(center, radius);
+        if (element == "kill_wall")
         {
-            Publish(new MessageEvent($"{Capitalize(Article(trap.Name))} whizzes past you."));
+            foreach (var p in area.Where(p => p != center && Level.InBoundsFully(p)))
+            {
+                var f = Level.FeatureAt(p);
+                if (f.Has(TerrainFlags.Permanent) || f.Has(TerrainFlags.Passable) && !f.Has(TerrainFlags.Rubble)) continue;
+                if (f.HasAny(TerrainFlags.DoorAny) || f.Has(TerrainFlags.Stair) || f.Shop is not null) continue;
+                Level[p].Feature = Data.Terrain.Ids.Floor;
+                Known.Forget(p);
+            }
+            UpdateView();
             return;
         }
-        Publish(new MessageEvent($"You set off {Article(trap.Name)}!"));
+        ShowProjection(center, [], area, element, ProjectionKind.Ball);
+        foreach (var monster in Level.Monsters.All
+                     .Where(m => m.Position.DistanceTo(center) <= radius && ProjectionPath.Projectable(Level, center, m.Position, radius + 1))
+                     .OrderBy(m => m.Position.DistanceTo(center)).ThenBy(m => m.Id).ToList())
+            ProjectileHitsMonster(monster, killer, element, damage / (monster.Position.DistanceTo(center) + 1));
+        if (Player.Position.DistanceTo(center) <= radius)
+            ElementalHit(element, damage / (Player.Position.DistanceTo(center) + 1), killer);
+        DestroyFloorObjects(area, element);
+    }
+
+    /// <summary>Angband effect_handler_WAKE: sleepers within twice the sight range stir.</summary>
+    private void WakeAround(Loc origin)
+    {
+        var woken = false;
+        foreach (var m in Level.Monsters.All.Where(m => m.IsAsleep && m.Position.DistanceTo(origin) < Data.Constants.MaxSight * 2))
+        {
+            m.Sleep = 0;
+            woken = true;
+        }
+        if (woken) Publish(new MessageEvent("You hear a sudden stirring in the distance!"));
+    }
+
+    /// <summary>Angband effect_handler_RUBBLE: one to three of the empty squares around you fill with rubble.</summary>
+    private void RubbleAround()
+    {
+        var wanted = Rng.RandInt1(3);
+        for (var tries = 0; wanted > 0 && tries < 10; tries++)
+        {
+            foreach (var p in Level.Neighbors(Player.Position))
+            {
+                if (wanted == 0) break;
+                if (!Level.InBoundsFully(p) || !Level.IsFloor(p) || Level[p].Monster != 0 || Level.Objects.Any(p) || !Rng.OneIn(3)) continue;
+                Level[p].Feature = Rng.OneIn(2) ? Data.Terrain.Ids.PassableRubble : Data.Terrain.Ids.Rubble;
+                wanted--;
+            }
+        }
+        UpdateView();
+    }
+
+    /// <summary>Angband effect_handler_DRAIN_LIGHT: a light that burns fuel loses some (never all).</summary>
+    private void DrainLight(int drain)
+    {
+        if (Player.Inventory.Light is not { UsesFuel: true, Fuel: > 0 } light) return;
+        light.Fuel = Math.Max(1, light.Fuel - drain);
+        if (!Player.IsBlind) Publish(new MessageEvent("Your light dims."));
+        RecalculateBonuses();
+    }
+
+    /// <summary>Angband effect_handler_DRAIN_MANA from a trap: the mana goes, up to all of it.</summary>
+    private void DrainManaByTrap(int drain)
+    {
+        if (Player.Mana <= 0)
+        {
+            Publish(new MessageEvent("The draining fails."));
+            return;
+        }
+        Player.Mana = Math.Max(0, Player.Mana - drain);
+    }
+
+    /// <summary>Angband pick_trap: no trap doors on a quest level or the bottom one.</summary>
+    private bool TrapDoorsAllowedHere => Level.Depth < Data.Constants.MaxDepth && QuestAt(Level.Depth) is null;
+
+    /// <summary>Immune to traps (Angband player_is_trapsafe): trap-immune gear, or the eagle's shape.</summary>
+    private bool TrapSafe => Player.HasGearFlag(ItemFlags.TrapImmune);
+
+    /// <summary>
+    /// Angband hit_trap: a trap goes off — unless you are safe from traps, or saved by your gear
+    /// (feather falling), your armour (darts) or a saving throw (mind blasts). Its extra effect
+    /// follows one time in two. A trap door drops you a level, a pit pulls you in, and the trap is
+    /// gone if it only works once (and one time in three anyway). <paramref name="delayed"/>: true
+    /// when leaving the square (only DELAY traps go off), false when arriving (all others), null
+    /// for both (a failed disarm).
+    /// </summary>
+    private void HitTrap(Loc p, bool? delayed = false)
+    {
+        if (Level[p].Trap == 0 || Data.TrapByIndex(Level[p].Trap) is not { IsTrap: true } trap) return;
+        if (delayed is { } d && d != trap.Has("DELAY")) return;
+        if (TrapSafe)
+        {
+            LearnRune(RuneIds.Flag(ItemFlags.TrapImmune));
+            Level[p].Flags |= SquareFlags.TrapVisible;
+            return;
+        }
+
+        Disturb();
         Publish(new TrapSprungEvent(p, trap.Id));
-        ApplyTrapEffects(trap.Effect, Article(trap.Name));
+        if (trap.Message is { } message) Publish(new MessageEvent(message));
+        else if (trap.MessageBad is null) Publish(new MessageEvent($"You set off {Article(trap.Name)}!"));
+
+        var saved = false;
+        foreach (var flag in trap.Save.Where(Player.HasGearFlag))
+        {
+            saved = true;
+            LearnRune(RuneIds.Flag(flag));
+        }
+        if (trap.Has("SAVE_ARMOR") && !CombatMath.TestHit(Rng, 125, Player.Armour, visible: true)) saved = true;
+        if (trap.Has("SAVE_THROW") && Rng.RandInt0(100) < Player.SkillSave) saved = true;
+
+        var killer = Article(trap.Name);
+        if (saved)
+        {
+            if (trap.MessageGood is { } good) Publish(new MessageEvent(good));
+        }
+        else
+        {
+            if (trap.MessageBad is { } bad) Publish(new MessageEvent(bad));
+            ApplyTrapEffects(trap.Effect, killer, p);
+            if (Player.IsDead || Level[p].Trap == 0) return;
+            if (trap.Extra is { } extra && Rng.OneIn(2))
+            {
+                if (trap.MessageExtra is { } more) Publish(new MessageEvent(more));
+                ApplyTrapEffects(extra, killer, p);
+                if (Player.IsDead || Level[p].Trap == 0) return;
+            }
+        }
+
+        if (trap.IsTrapDoor && Player.Depth > 0 && Player.Depth < Data.Constants.MaxDepth && QuestAt(Player.Depth) is null)
+        {
+            ChangeLevel(Player.Depth + 1, StairArrival.None);
+            return;
+        }
+        if (trap.Has("PIT") && Player.Position != p && Level.IsPassable(p) && Level[p].Monster == 0)
+        {
+            var from = Player.Position;
+            Player.Position = p;
+            Publish(new PlayerMovedEvent(from, p));
+            UpdateView();
+        }
+        if (trap.Has("ONETIME") || Rng.OneIn(3))
+        {
+            Level[p].Trap = 0;
+            Level[p].TrapPower = 0;
+            Level[p].Flags &= ~SquareFlags.TrapVisible;
+        }
+        else Level[p].Flags |= SquareFlags.TrapVisible;
     }
 
     // --- Disarming -------------------------------------------------------------------------------
 
     /// <summary>The disarm skill, cut to a tenth when blind or in the dark, and again when confused or hallucinating (Angband).</summary>
-    public int EffectiveDisarmSkill
+    public int EffectiveDisarmSkill => ConditionedDisarm(Player.DisarmSkill);
+
+    /// <summary>
+    /// Angband do_cmd_disarm_aux's skill: the magical one for runes, the physical one for the rest,
+    /// cut to a tenth when blind, in the dark, confused or hallucinating.
+    /// </summary>
+    public int TrapDisarmSkill(TrapDef trap)
     {
-        get
-        {
-            var skill = Player.DisarmSkill;
-            if (Player.IsBlind || !Level[Player.Position].Has(SquareFlags.Seen)) skill /= 10;
-            if (Player.Timed.Has(TimedIds.Confused) || Player.Timed.Has(TimedIds.Image)) skill /= 10;
-            return skill;
-        }
+        var skill = trap.IsRune ? Player.DisarmMagicSkill : Player.DisarmSkill;
+        var t = Player.Timed;
+        if (Player.IsBlind || !Level[Player.Position].Has(SquareFlags.Seen) || t.Has(TimedIds.Confused) || t.Has(TimedIds.Image))
+            skill /= 10;
+        return skill;
+    }
+
+    private int ConditionedDisarm(int skill)
+    {
+        if (Player.IsBlind || !Level[Player.Position].Has(SquareFlags.Seen)) skill /= 10;
+        if (Player.Timed.Has(TimedIds.Confused) || Player.Timed.Has(TimedIds.Image)) skill /= 10;
+        return skill;
     }
 
     /// <summary>Disarm a chest or a known trap in a direction (or underfoot).</summary>
@@ -133,17 +307,22 @@ public sealed partial class GameSession
         return 0;
     }
 
-    /// <summary>Angband do_cmd_disarm_aux: skill less the trap's power; failing badly sets it off.</summary>
+    /// <summary>
+    /// Angband do_cmd_disarm_aux: the skill less the level's trap power (a fifth of the depth), at
+    /// least 2%. Success is worth 1 + that power in experience; failing twice sets it off.
+    /// </summary>
     private int DisarmTrap(Loc p)
     {
         var trap = Data.TrapByIndex(Level[p].Trap)!;
-        var chance = Math.Max(2, EffectiveDisarmSkill - trap.DisarmPower);
+        var power = Level.Depth / 5;
+        var chance = Math.Max(2, TrapDisarmSkill(trap) - power);
         if (Rng.RandInt0(100) < chance)
         {
             Publish(new MessageEvent($"You have disarmed the {trap.Name}."));
             Level[p].Trap = 0;
+            Level[p].TrapPower = 0;
             Level[p].Flags &= ~SquareFlags.TrapVisible;
-            GainExperience(trap.DisarmPower);
+            GainExperience(1 + power);
         }
         else if (Rng.RandInt0(100) < chance)
         {
@@ -153,7 +332,7 @@ public sealed partial class GameSession
         else
         {
             Publish(new MessageEvent($"You set off the {trap.Name}!"));
-            ApplyTrapEffects(trap.Effect, Article(trap.Name));
+            HitTrap(p, delayed: null);
         }
         return EnergyTable.MoveEnergy;
     }
