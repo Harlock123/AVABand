@@ -153,7 +153,10 @@ public class ContextMenuPlacementUiTests
         var right = topLeft.X + box.Bounds.Width;
         Assert.True(topLeft.X - you.X is >= 0 and <= 40 || you.X - right is >= 0 and <= 40,
             $"box {topLeft.X:0}..{right:0}, pointer {you.X:0}"); // beside the square (on the left near the right edge)
-        Assert.InRange(Math.Abs(topLeft.Y - you.Y), 0, 40); // level with it
+        // Level with it, or (near the bottom of the window) moved up just enough to fit, still beside it.
+        var bottom = topLeft.Y + box.Bounds.Height;
+        Assert.True(Math.Abs(topLeft.Y - you.Y) <= 40 || (bottom <= window.Bounds.Height && topLeft.Y <= you.Y && you.Y <= bottom),
+            $"box {topLeft.Y:0}..{bottom:0}, pointer {you.Y:0}, window {window.Bounds.Height:0}");
 
         vm.CancelPrompt();
         global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();

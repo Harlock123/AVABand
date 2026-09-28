@@ -87,6 +87,6 @@ public class InventoryTests
         var inv = new Inventory();
         inv.Add(_f.Create("iron_shot", 10));
         inv.Wield(_f.Create("soft_leather_armour"), Serial);
-        Assert.Equal(10 * 4 + 80, inv.TotalWeight);
+        Assert.Equal(10 * 5 + 80, inv.TotalWeight); // 4.2.5: a shot is half a pound
     }
 }

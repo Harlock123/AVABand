@@ -151,7 +151,8 @@ public sealed partial class GameSession
         if (Player.IsResting) percent *= 2;
         if (Player.Timed.Has(TimedIds.Regen)) percent *= 2;
         if (Player.Regenerates || Player.HasGearFlag(Definitions.ItemFlags.Regen)) percent *= 2;
-        if (ClassHas(Definitions.ClassFlags.ImpairHp)) percent /= 2; // blackguards heal slowly
+        // Blackguards heal slowly, as does anyone wearing the Ring of Open Wounds (Angband IMPAIR_HP).
+        if (ClassHas(Definitions.ClassFlags.ImpairHp) || Player.HasGearFlag(Definitions.ItemFlags.ImpairHp)) percent /= 2;
         var t = Player.Timed;
         if (t.Has(TimedIds.Paralyzed) || t.Has(TimedIds.Poisoned) || t.Has(TimedIds.Stun) || t.Has(TimedIds.Cut))
             percent = 0;

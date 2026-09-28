@@ -4,8 +4,9 @@
     "name": "Dagger~",
     "base": "sword",
     "level": 0,
-    "commonness": 40,
-    "cost": 10,
+    "commonness": 20,
+    "minDepth": 0,
+    "cost": 30,
     "weight": 12,
     "damage": "1d4",
     "flags": [
@@ -18,7 +19,8 @@
     "base": "sword",
     "level": 3,
     "commonness": 20,
-    "cost": 25,
+    "minDepth": 3,
+    "cost": 45,
     "weight": 30,
     "damage": "1d5"
   },
@@ -28,7 +30,8 @@
     "base": "sword",
     "level": 5,
     "commonness": 20,
-    "cost": 42,
+    "minDepth": 5,
+    "cost": 70,
     "weight": 40,
     "damage": "1d6"
   },
@@ -38,7 +41,8 @@
     "base": "sword",
     "level": 5,
     "commonness": 20,
-    "cost": 80,
+    "minDepth": 5,
+    "cost": 90,
     "weight": 80,
     "damage": "1d7"
   },
@@ -46,9 +50,10 @@
     "id": "cutlass",
     "name": "Cutlass~",
     "base": "sword",
-    "level": 8,
+    "level": 5,
     "commonness": 20,
-    "cost": 85,
+    "minDepth": 5,
+    "cost": 120,
     "weight": 110,
     "damage": "1d8"
   },
@@ -58,7 +63,8 @@
     "base": "sword",
     "level": 10,
     "commonness": 20,
-    "cost": 120,
+    "minDepth": 10,
+    "cost": 300,
     "weight": 130,
     "damage": "2d5"
   },
@@ -66,9 +72,10 @@
     "id": "broad_sword",
     "name": "Broad Sword~",
     "base": "sword",
-    "level": 15,
+    "level": 10,
     "commonness": 20,
-    "cost": 175,
+    "minDepth": 10,
+    "cost": 300,
     "weight": 150,
     "damage": "2d5"
   },
@@ -77,8 +84,9 @@
     "name": "Bastard Sword~",
     "base": "sword",
     "level": 15,
-    "commonness": 15,
-    "cost": 190,
+    "commonness": 20,
+    "minDepth": 15,
+    "cost": 400,
     "weight": 140,
     "damage": "3d4"
   },
@@ -87,8 +95,9 @@
     "name": "Zweihander~",
     "base": "sword",
     "level": 30,
-    "commonness": 10,
-    "cost": 1500,
+    "commonness": 20,
+    "minDepth": 30,
+    "cost": 700,
     "weight": 200,
     "damage": "3d6"
   },
@@ -96,8 +105,9 @@
     "id": "whip",
     "name": "Whip~",
     "base": "hafted",
-    "level": 1,
+    "level": 3,
     "commonness": 20,
+    "minDepth": 3,
     "cost": 30,
     "weight": 30,
     "damage": "1d3"
@@ -108,6 +118,7 @@
     "base": "hafted",
     "level": 5,
     "commonness": 20,
+    "minDepth": 5,
     "cost": 130,
     "weight": 120,
     "damage": "2d4"
@@ -118,6 +129,7 @@
     "base": "hafted",
     "level": 5,
     "commonness": 20,
+    "minDepth": 5,
     "cost": 225,
     "weight": 120,
     "damage": "3d3"
@@ -128,6 +140,7 @@
     "base": "hafted",
     "level": 10,
     "commonness": 20,
+    "minDepth": 10,
     "cost": 396,
     "weight": 150,
     "damage": "2d6"
@@ -138,6 +151,7 @@
     "base": "hafted",
     "level": 10,
     "commonness": 20,
+    "minDepth": 10,
     "cost": 353,
     "weight": 150,
     "damage": "2d6"
@@ -147,10 +161,11 @@
     "name": "Lead-Filled Mace~",
     "base": "hafted",
     "level": 15,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 15,
     "cost": 502,
     "weight": 180,
-    "damage": "3d4"
+    "damage": "4d3"
   },
   {
     "id": "spear",
@@ -158,6 +173,7 @@
     "base": "polearm",
     "level": 5,
     "commonness": 20,
+    "minDepth": 5,
     "cost": 36,
     "weight": 50,
     "damage": "1d6",
@@ -171,16 +187,18 @@
     "base": "polearm",
     "level": 10,
     "commonness": 20,
+    "minDepth": 10,
     "cost": 340,
-    "weight": 80,
+    "weight": 160,
     "damage": "1d8"
   },
   {
     "id": "trident",
     "name": "Trident~",
     "base": "polearm",
-    "level": 10,
-    "commonness": 15,
+    "level": 5,
+    "commonness": 20,
+    "minDepth": 5,
     "cost": 120,
     "weight": 70,
     "damage": "1d10"
@@ -190,7 +208,8 @@
     "name": "Pike~",
     "base": "polearm",
     "level": 15,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 15,
     "cost": 358,
     "weight": 160,
     "damage": "2d5"
@@ -200,7 +219,8 @@
     "name": "Halberd~",
     "base": "polearm",
     "level": 25,
-    "commonness": 10,
+    "commonness": 20,
+    "minDepth": 25,
     "cost": 430,
     "weight": 190,
     "damage": "3d5"
@@ -210,7 +230,8 @@
     "name": "Sling~",
     "base": "sling",
     "level": 1,
-    "commonness": 30,
+    "commonness": 20,
+    "minDepth": 1,
     "cost": 5,
     "weight": 5,
     "multiplier": 2
@@ -220,7 +241,8 @@
     "name": "Short Bow~",
     "base": "bow",
     "level": 3,
-    "commonness": 30,
+    "commonness": 20,
+    "minDepth": 3,
     "cost": 50,
     "weight": 30,
     "multiplier": 2
@@ -231,6 +253,7 @@
     "base": "bow",
     "level": 10,
     "commonness": 20,
+    "minDepth": 10,
     "cost": 120,
     "weight": 40,
     "multiplier": 3
@@ -240,21 +263,26 @@
     "name": "Light Crossbow~",
     "base": "crossbow",
     "level": 15,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 15,
     "cost": 140,
-    "weight": 60,
+    "weight": 110,
     "multiplier": 3
   },
   {
     "id": "iron_shot",
     "name": "Iron Shot~",
     "base": "shot",
-    "level": 1,
-    "commonness": 30,
-    "cost": 1,
-    "weight": 4,
+    "level": 3,
+    "commonness": 25,
+    "minDepth": 3,
+    "cost": 2,
+    "weight": 5,
     "damage": "1d4",
-    "stackSize": "2d10"
+    "stackSize": "5d7",
+    "flags": [
+      "THROWING"
+    ]
   },
   {
     "id": "arrow",
@@ -262,41 +290,34 @@
     "base": "arrow",
     "level": 3,
     "commonness": 30,
+    "minDepth": 3,
     "cost": 1,
     "weight": 2,
-    "damage": "1d6",
-    "stackSize": "2d10"
+    "damage": "1d4",
+    "stackSize": "7d7"
   },
   {
     "id": "bolt",
     "name": "Bolt~",
     "base": "bolt",
-    "level": 10,
-    "commonness": 20,
+    "level": 3,
+    "commonness": 30,
+    "minDepth": 3,
     "cost": 2,
     "weight": 3,
-    "damage": "1d8",
-    "stackSize": "2d10"
+    "damage": "1d5",
+    "stackSize": "5d7"
   },
   {
     "id": "soft_leather_armour",
     "name": "Soft Leather Armour~",
     "base": "soft_armour",
-    "level": 1,
-    "commonness": 30,
-    "cost": 18,
-    "weight": 80,
-    "armour": 8
-  },
-  {
-    "id": "soft_studded_leather",
-    "name": "Soft Studded Leather~",
-    "base": "soft_armour",
     "level": 3,
     "commonness": 20,
-    "cost": 35,
-    "weight": 90,
-    "armour": 10
+    "minDepth": 3,
+    "cost": 20,
+    "weight": 80,
+    "armour": 8
   },
   {
     "id": "hard_leather_armour",
@@ -304,49 +325,46 @@
     "base": "soft_armour",
     "level": 5,
     "commonness": 20,
+    "minDepth": 10,
     "cost": 150,
-    "weight": 100,
-    "armour": 16
-  },
-  {
-    "id": "leather_scale_mail",
-    "name": "Leather Scale Mail~",
-    "base": "hard_armour",
-    "level": 10,
-    "commonness": 20,
-    "cost": 450,
-    "weight": 140,
-    "armour": 20
+    "weight": 120,
+    "armour": 16,
+    "toHit": -1
   },
   {
     "id": "chain_mail",
     "name": "Chain Mail~",
     "base": "hard_armour",
     "level": 25,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 20,
     "cost": 750,
     "weight": 220,
-    "armour": 32
+    "armour": 32,
+    "toHit": -2
   },
   {
     "id": "metal_scale_mail",
     "name": "Metal Scale Mail~",
     "base": "hard_armour",
     "level": 25,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 25,
     "cost": 550,
     "weight": 250,
-    "armour": 38
+    "armour": 38,
+    "toHit": -2
   },
   {
     "id": "leather_shield",
     "name": "Leather Shield~",
     "base": "shield",
-    "level": 3,
+    "level": 15,
     "commonness": 20,
-    "cost": 10,
+    "minDepth": 10,
+    "cost": 200,
     "damage": "1d3",
-    "weight": 60,
+    "weight": 90,
     "armour": 8
   },
   {
@@ -355,7 +373,8 @@
     "base": "shield",
     "level": 1,
     "commonness": 20,
-    "cost": 2,
+    "minDepth": 1,
+    "cost": 20,
     "damage": "1d1",
     "weight": 30,
     "armour": 2
@@ -364,10 +383,11 @@
     "id": "hard_leather_cap",
     "name": "Hard Leather Cap~",
     "base": "helm",
-    "level": 1,
-    "commonness": 30,
+    "level": 3,
+    "commonness": 20,
+    "minDepth": 3,
     "cost": 12,
-    "weight": 15,
+    "weight": 20,
     "armour": 2
   },
   {
@@ -376,8 +396,9 @@
     "base": "helm",
     "level": 10,
     "commonness": 20,
+    "minDepth": 10,
     "cost": 30,
-    "weight": 20,
+    "weight": 25,
     "armour": 3
   },
   {
@@ -385,28 +406,31 @@
     "name": "Iron Helm~",
     "base": "helm",
     "level": 20,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 20,
     "cost": 75,
-    "weight": 75,
+    "weight": 50,
     "armour": 7
   },
   {
     "id": "leather_gloves",
     "name": "Set~ of Leather Gloves",
     "base": "gloves",
-    "level": 1,
-    "commonness": 30,
-    "cost": 1,
-    "weight": 5,
+    "level": 0,
+    "commonness": 20,
+    "minDepth": 1,
+    "cost": 5,
+    "weight": 10,
     "armour": 1
   },
   {
     "id": "gauntlets",
     "name": "Set~ of Gauntlets",
     "base": "gloves",
-    "level": 10,
+    "level": 0,
     "commonness": 20,
-    "cost": 35,
+    "minDepth": 10,
+    "cost": 45,
     "weight": 25,
     "armour": 3
   },
@@ -414,10 +438,11 @@
     "id": "leather_sandals",
     "name": "Pair~ of Leather Sandals",
     "base": "boots",
-    "level": 1,
-    "commonness": 30,
+    "level": 0,
+    "commonness": 20,
+    "minDepth": 1,
     "cost": 4,
-    "weight": 5,
+    "weight": 15,
     "armour": 1
   },
   {
@@ -426,7 +451,8 @@
     "base": "boots",
     "level": 3,
     "commonness": 20,
-    "cost": 4,
+    "minDepth": 3,
+    "cost": 7,
     "weight": 20,
     "armour": 2
   },
@@ -435,8 +461,9 @@
     "name": "Cloak~",
     "base": "cloak",
     "level": 1,
-    "commonness": 30,
-    "cost": 2,
+    "commonness": 20,
+    "minDepth": 1,
+    "cost": 3,
     "weight": 10,
     "armour": 1
   },
@@ -444,10 +471,11 @@
     "id": "fur_cloak",
     "name": "Fur Cloak~",
     "base": "cloak",
-    "level": 10,
-    "commonness": 15,
-    "cost": 50,
-    "weight": 30,
+    "level": 1,
+    "commonness": 20,
+    "minDepth": 20,
+    "cost": 600,
+    "weight": 25,
     "armour": 3
   },
   {
@@ -456,8 +484,9 @@
     "base": "light",
     "level": 1,
     "commonness": 70,
-    "cost": 1,
-    "weight": 30,
+    "minDepth": 1,
+    "cost": 2,
+    "weight": 22,
     "modifiers": {
       "light": 2
     },
@@ -468,15 +497,18 @@
   },
   {
     "id": "lantern",
-    "ignore": ["fire"],
+    "ignore": [
+      "fire"
+    ],
     "name": "Lantern~",
     "base": "light",
-    "level": 5,
-    "commonness": 20,
-    "cost": 150,
+    "level": 3,
+    "commonness": 70,
+    "minDepth": 5,
+    "cost": 35,
     "weight": 50,
     "modifiers": {
-      "light": 2
+      "light": 3
     },
     "fuel": 15000,
     "flags": [
@@ -493,7 +525,10 @@
     "weight": 10,
     "modifiers": {
       "light": 3
-    }
+    },
+    "flags": [
+      "INSTA_ART"
+    ]
   },
   {
     "id": "flask_of_oil",
@@ -501,21 +536,14 @@
     "base": "flask",
     "level": 1,
     "commonness": 50,
+    "minDepth": 1,
     "cost": 3,
-    "weight": 10,
-    "damage": "2d6",
+    "weight": 20,
+    "damage": "1d4",
     "fuel": 7500,
     "flags": [
-      "FUEL",
-      "THROWING"
-    ],
-    "brands": [
-      {
-        "element": "fire",
-        "multiplier": 3,
-        "verb": "burn",
-        "name": "fire"
-      }
+      "THROWING",
+      "EXPLODE"
     ]
   },
   {
@@ -523,7 +551,9 @@
     "name": "Ration~ of Food",
     "base": "food",
     "level": 0,
-    "commonness": 50,
+    "commonness": 40,
+    "minDepth": 0,
+    "maxDepth": 50,
     "cost": 3,
     "weight": 8,
     "effect": "nourish:6000"
@@ -533,20 +563,21 @@
     "name": "Slime Mold~",
     "base": "food",
     "level": 1,
-    "commonness": 20,
+    "commonness": 40,
+    "minDepth": 30,
     "cost": 2,
-    "weight": 5,
-    "effect": "nourish:2500"
+    "weight": 2,
+    "effect": "nourish:3000"
   },
   {
     "id": "hard_biscuit",
     "name": "Hard Biscuit~",
     "base": "food",
     "level": 0,
-    "commonness": 20,
+    "commonness": 0,
     "cost": 1,
     "weight": 2,
-    "effect": "nourish:500"
+    "effect": "nourish:2000"
   },
   {
     "id": "first_spells",
@@ -554,6 +585,7 @@
     "base": "magic_book",
     "level": 1,
     "commonness": 40,
+    "minDepth": 1,
     "cost": 25,
     "weight": 30
   },
@@ -563,6 +595,7 @@
     "base": "magic_book",
     "level": 10,
     "commonness": 40,
+    "minDepth": 10,
     "cost": 400,
     "weight": 30
   },
@@ -572,6 +605,7 @@
     "base": "magic_book",
     "level": 30,
     "commonness": 20,
+    "minDepth": 30,
     "cost": 1600,
     "weight": 30
   },
@@ -581,6 +615,7 @@
     "base": "magic_book",
     "level": 40,
     "commonness": 15,
+    "minDepth": 40,
     "cost": 30000,
     "weight": 30
   },
@@ -590,6 +625,7 @@
     "base": "magic_book",
     "level": 60,
     "commonness": 10,
+    "minDepth": 60,
     "cost": 50000,
     "weight": 30
   },
@@ -599,6 +635,7 @@
     "base": "prayer_book",
     "level": 1,
     "commonness": 40,
+    "minDepth": 1,
     "cost": 25,
     "weight": 30
   },
@@ -608,6 +645,7 @@
     "base": "prayer_book",
     "level": 5,
     "commonness": 40,
+    "minDepth": 5,
     "cost": 100,
     "weight": 30
   },
@@ -617,6 +655,7 @@
     "base": "prayer_book",
     "level": 30,
     "commonness": 20,
+    "minDepth": 30,
     "cost": 10000,
     "weight": 30
   },
@@ -626,6 +665,7 @@
     "base": "prayer_book",
     "level": 40,
     "commonness": 15,
+    "minDepth": 40,
     "cost": 30000,
     "weight": 30
   },
@@ -635,6 +675,7 @@
     "base": "prayer_book",
     "level": 60,
     "commonness": 10,
+    "minDepth": 60,
     "cost": 50000,
     "weight": 30
   },
@@ -644,6 +685,7 @@
     "base": "nature_book",
     "level": 1,
     "commonness": 40,
+    "minDepth": 1,
     "cost": 25,
     "weight": 30
   },
@@ -653,6 +695,7 @@
     "base": "nature_book",
     "level": 10,
     "commonness": 40,
+    "minDepth": 10,
     "cost": 400,
     "weight": 30
   },
@@ -662,6 +705,7 @@
     "base": "nature_book",
     "level": 30,
     "commonness": 20,
+    "minDepth": 30,
     "cost": 10000,
     "weight": 30
   },
@@ -671,6 +715,7 @@
     "base": "nature_book",
     "level": 40,
     "commonness": 15,
+    "minDepth": 40,
     "cost": 30000,
     "weight": 30
   },
@@ -680,6 +725,7 @@
     "base": "nature_book",
     "level": 60,
     "commonness": 10,
+    "minDepth": 60,
     "cost": 50000,
     "weight": 30
   },
@@ -689,6 +735,7 @@
     "base": "shadow_book",
     "level": 1,
     "commonness": 40,
+    "minDepth": 1,
     "cost": 25,
     "weight": 30
   },
@@ -698,6 +745,7 @@
     "base": "shadow_book",
     "level": 10,
     "commonness": 40,
+    "minDepth": 10,
     "cost": 400,
     "weight": 30
   },
@@ -707,6 +755,7 @@
     "base": "shadow_book",
     "level": 30,
     "commonness": 20,
+    "minDepth": 30,
     "cost": 1600,
     "weight": 30
   },
@@ -716,6 +765,7 @@
     "base": "shadow_book",
     "level": 40,
     "commonness": 15,
+    "minDepth": 40,
     "cost": 30000,
     "weight": 30
   },
@@ -725,6 +775,7 @@
     "base": "shadow_book",
     "level": 60,
     "commonness": 10,
+    "minDepth": 60,
     "cost": 50000,
     "weight": 30
   },
@@ -732,71 +783,89 @@
     "id": "cure_light_wounds",
     "name": "Cure Light Wounds",
     "base": "potion",
-    "level": 1,
-    "commonness": 60,
+    "level": 0,
+    "commonness": 80,
+    "minDepth": 1,
+    "maxDepth": 15,
     "cost": 20,
     "weight": 4,
-    "effect": "heal:20:15; cure:blind; reduce:cut"
+    "effect": "heal:20:0; cure:blind; reduce:cut; reduce:confused; nourish:200",
+    "power": 3
   },
   {
     "id": "cure_serious_wounds",
     "name": "Cure Serious Wounds",
     "base": "potion",
-    "level": 5,
-    "commonness": 40,
-    "cost": 40,
+    "level": 3,
+    "commonness": 80,
+    "minDepth": 5,
+    "maxDepth": 40,
+    "cost": 70,
     "weight": 4,
-    "effect": "heal:40:20; cure:blind; cure:confused; cure:poisoned; cure:cut"
+    "effect": "heal:40:0; cure:blind; cure:confused; cure:cut; nourish:200",
+    "power": 6
   },
   {
     "id": "neutralize_poison",
     "name": "Neutralize Poison",
     "base": "potion",
     "level": 5,
-    "commonness": 30,
+    "commonness": 60,
+    "minDepth": 1,
+    "maxDepth": 35,
     "cost": 75,
     "weight": 4,
-    "effect": "cure:poisoned"
+    "effect": "cure:poisoned",
+    "power": 1
   },
   {
     "id": "boldness",
     "name": "Boldness",
     "base": "potion",
     "level": 1,
-    "commonness": 30,
-    "cost": 10,
+    "commonness": 40,
+    "minDepth": 1,
+    "maxDepth": 90,
+    "cost": 8,
     "weight": 4,
-    "effect": "cure:afraid"
+    "effect": "cure:afraid",
+    "power": 2
   },
   {
     "id": "speed",
     "name": "Speed",
     "base": "potion",
     "level": 1,
-    "commonness": 10,
+    "commonness": 40,
+    "minDepth": 1,
     "cost": 75,
     "weight": 4,
-    "effect": "timed:fast:20+1d25"
+    "effect": "timed:fast:2d10+20",
+    "power": 10
   },
   {
     "id": "sleep",
     "name": "Sleep",
     "base": "potion",
     "level": 0,
-    "commonness": 20,
+    "commonness": 10,
+    "minDepth": 0,
+    "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:paralyzed:4+1d4"
+    "effect": "timed:paralyzed:1d5+5; nourish:200"
   },
   {
     "id": "confusion",
     "name": "Confusion",
     "base": "potion",
     "level": 0,
-    "commonness": 20,
+    "commonness": 10,
+    "minDepth": 0,
+    "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:confused:15+1d15"
+    "effect": "timed:confused:4d5+10; nourish:200"
   },
   {
     "id": "phase_door",
@@ -804,111 +873,114 @@
     "base": "scroll",
     "level": 1,
     "commonness": 50,
+    "minDepth": 1,
     "cost": 15,
     "weight": 5,
-    "effect": "teleport:10"
-  },
-  {
-    "id": "satisfy_hunger",
-    "name": "Satisfy Hunger",
-    "base": "scroll",
-    "level": 5,
-    "commonness": 30,
-    "cost": 10,
-    "weight": 5,
-    "effect": "satisfy"
+    "effect": "teleport:10",
+    "power": 5
   },
   {
     "id": "teleportation",
     "name": "Teleportation",
     "base": "scroll",
     "level": 10,
-    "commonness": 30,
+    "commonness": 40,
+    "minDepth": 10,
     "cost": 40,
     "weight": 5,
-    "effect": "teleport:100"
+    "effect": "teleport:M60",
+    "power": 6
   },
   {
     "id": "light",
     "name": "Light",
     "base": "scroll",
     "level": 0,
-    "commonness": 40,
+    "commonness": 50,
+    "minDepth": 0,
+    "maxDepth": 60,
     "cost": 15,
     "weight": 5,
-    "effect": "light_area"
+    "effect": "light_area",
+    "power": 4
   },
   {
     "id": "magic_mapping",
     "name": "Magic Mapping",
     "base": "scroll",
     "level": 5,
-    "commonness": 30,
-    "cost": 75,
+    "commonness": 50,
+    "minDepth": 5,
+    "cost": 65,
     "weight": 5,
-    "effect": "map_area:30"
+    "effect": "map_area:30",
+    "power": 10
   },
   {
     "id": "treasure_detection",
     "name": "Treasure Detection",
     "base": "scroll",
     "level": 0,
-    "commonness": 30,
-    "cost": 15,
+    "commonness": 50,
+    "minDepth": 0,
+    "maxDepth": 70,
+    "cost": 70,
     "weight": 5,
-    "effect": "detect_objects:30"
-  },
-  {
-    "id": "detect_monsters",
-    "name": "Detect Monsters",
-    "base": "scroll",
-    "level": 1,
-    "commonness": 30,
-    "cost": 15,
-    "weight": 5,
-    "effect": "detect_monsters:30"
+    "effect": "detect_objects:30",
+    "power": 6
   },
   {
     "id": "identify_rune",
     "name": "Identify Rune",
     "base": "scroll",
-    "level": 5,
-    "commonness": 40,
-    "cost": 50,
+    "level": 1,
+    "commonness": 50,
+    "minDepth": 5,
+    "cost": 200,
     "weight": 5,
-    "effect": "identify"
+    "effect": "identify",
+    "power": 6
   },
   {
     "id": "remove_curse",
     "name": "Remove Curse",
     "base": "scroll",
     "level": 10,
-    "commonness": 20,
+    "commonness": 16,
+    "minDepth": 10,
     "cost": 100,
     "weight": 5,
-    "effect": "remove_curse"
+    "effect": "remove_curse",
+    "power": 8
   },
   {
     "id": "ring_of_protection",
     "name": "Protection",
     "base": "ring",
     "level": 10,
-    "commonness": 20,
+    "commonness": 50,
+    "minDepth": 10,
+    "maxDepth": 40,
     "cost": 500,
-    "weight": 1,
-    "flags": [
-      "RANDOM_TO_A"
-    ]
+    "weight": 2,
+    "rolls": {
+      "to_a": "5+d5M10"
+    }
   },
   {
     "id": "ring_of_resist_fire_and_cold",
-    "ignore": ["cold", "fire"],
+    "ignore": [
+      "cold",
+      "fire"
+    ],
     "name": "Resist Fire and Cold",
     "base": "ring",
     "level": 10,
-    "commonness": 20,
+    "commonness": 50,
+    "minDepth": 10,
+    "maxDepth": 50,
     "cost": 250,
-    "weight": 1,
+    "weight": 2,
     "resists": [
       "fire",
       "cold"
@@ -919,9 +991,10 @@
     "name": "Resist Poison",
     "base": "ring",
     "level": 40,
-    "commonness": 10,
-    "cost": 5000,
-    "weight": 1,
+    "commonness": 50,
+    "minDepth": 40,
+    "cost": 16000,
+    "weight": 2,
     "resists": [
       "pois"
     ]
@@ -932,8 +1005,10 @@
     "base": "ring",
     "level": 5,
     "commonness": 20,
-    "cost": 250,
-    "weight": 1,
+    "minDepth": 10,
+    "maxDepth": 50,
+    "cost": 1000,
+    "weight": 2,
     "modifiers": {
       "speed": 2
     },
@@ -942,24 +1017,16 @@
     ]
   },
   {
-    "id": "ring_of_regeneration",
-    "name": "Regeneration",
-    "base": "ring",
-    "level": 20,
-    "commonness": 10,
-    "cost": 800,
-    "weight": 1,
-    "flags": [
-      "REGEN"
-    ]
-  },
-  {
     "id": "amulet_of_resist_lightning",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Resist Lightning",
     "base": "amulet",
     "level": 10,
-    "commonness": 20,
+    "commonness": 50,
+    "minDepth": 10,
+    "maxDepth": 50,
     "cost": 300,
     "weight": 3,
     "resists": [
@@ -970,24 +1037,14 @@
     "id": "amulet_of_infravision",
     "name": "Infravision",
     "base": "amulet",
-    "level": 5,
-    "commonness": 20,
-    "cost": 150,
-    "weight": 3,
-    "modifiers": {
-      "infra": 2
-    }
-  },
-  {
-    "id": "amulet_of_stealth",
-    "name": "Stealth",
-    "base": "amulet",
     "level": 10,
-    "commonness": 15,
-    "cost": 350,
+    "commonness": 30,
+    "minDepth": 10,
+    "maxDepth": 70,
+    "cost": 200,
     "weight": 3,
-    "modifiers": {
-      "stealth": 2
+    "rolls": {
+      "infra": "1+M5"
     }
   },
   {
@@ -995,7 +1052,9 @@
     "name": "Slow Digestion",
     "base": "amulet",
     "level": 15,
-    "commonness": 15,
+    "commonness": 20,
+    "minDepth": 15,
+    "maxDepth": 40,
     "cost": 200,
     "weight": 3,
     "flags": [
@@ -1007,35 +1066,99 @@
     "name": "copper",
     "base": "gold",
     "level": 1,
-    "commonness": 0
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
   },
   {
     "id": "silver",
     "name": "silver",
     "base": "gold",
     "level": 10,
-    "commonness": 0
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
+  },
+  {
+    "id": "garnets",
+    "name": "garnets",
+    "base": "gold",
+    "level": 0,
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
   },
   {
     "id": "gold",
     "name": "gold",
     "base": "gold",
     "level": 20,
-    "commonness": 0
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
+  },
+  {
+    "id": "opals",
+    "name": "opals",
+    "base": "gold",
+    "level": 0,
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
+  },
+  {
+    "id": "sapphires",
+    "name": "sapphires",
+    "base": "gold",
+    "level": 0,
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
+  },
+  {
+    "id": "rubies",
+    "name": "rubies",
+    "base": "gold",
+    "level": 0,
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
+  },
+  {
+    "id": "diamonds",
+    "name": "diamonds",
+    "base": "gold",
+    "level": 0,
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
+  },
+  {
+    "id": "emeralds",
+    "name": "emeralds",
+    "base": "gold",
+    "level": 0,
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
   },
   {
     "id": "mithril",
     "name": "mithril",
     "base": "gold",
     "level": 40,
-    "commonness": 0
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
   },
   {
     "id": "adamantite",
     "name": "adamantite",
     "base": "gold",
     "level": 60,
-    "commonness": 0
+    "commonness": 0,
+    "cost": 0,
+    "weight": 0
   },
   {
     "id": "apple",
@@ -1100,7 +1223,8 @@
     "cost": 10,
     "weight": 10,
     "description": "The Beornings are renowned as the best bakers among men, and their honey-cakes are deservedly prized. Made of wheat flour with nuts and honey and twice baked, they will sustain you through a long march.",
-    "effect": "satisfy"
+    "effect": "satisfy",
+    "power": 1
   },
   {
     "id": "piece_of_elvish_waybread",
@@ -1113,7 +1237,8 @@
     "cost": 10,
     "weight": 3,
     "description": "Food of the elves is always good; their waybread is no exception. These thin cakes are wrapped in leaves and keep their tastiness for months.",
-    "effect": "satisfy; cure:poisoned; heal:4d8:0"
+    "effect": "satisfy; cure:poisoned; heal:4d8:0",
+    "power": 4
   },
   {
     "id": "flask_of_whisky",
@@ -1190,7 +1315,8 @@
     "maxDepth": 100,
     "cost": 200,
     "weight": 1,
-    "effect": "cure:blind; timed:telepathy:7d7+50; nourish:1000"
+    "effect": "cure:blind; timed:telepathy:7d7+50; nourish:1000",
+    "power": 10
   },
   {
     "id": "mushroom_of_fast_recovery",
@@ -1202,7 +1328,8 @@
     "maxDepth": 40,
     "cost": 200,
     "weight": 1,
-    "effect": "heal:30:0; cure:stun; cure:cut; cure:poisoned; cure:blind; nourish:1000"
+    "effect": "heal:30:0; cure:stun; cure:cut; cure:poisoned; cure:blind; nourish:1000",
+    "power": 7
   },
   {
     "id": "mushroom_of_vigor",
@@ -1214,7 +1341,8 @@
     "maxDepth": 100,
     "cost": 200,
     "weight": 1,
-    "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; nourish:1000"
+    "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; nourish:1000",
+    "power": 15
   },
   {
     "id": "mushroom_of_clear_mind",
@@ -1226,7 +1354,8 @@
     "maxDepth": 40,
     "cost": 200,
     "weight": 1,
-    "effect": "restore_mana; cure:confused; cure:image; cure:afraid; timed:oppose_conf:7d7+50; nourish:1000"
+    "effect": "restore_mana; cure:confused; cure:image; cure:afraid; timed:oppose_conf:7d7+50; nourish:1000",
+    "power": 8
   },
   {
     "id": "mushroom_of_emergency",
@@ -1238,7 +1367,8 @@
     "maxDepth": 100,
     "cost": 60,
     "weight": 1,
-    "effect": "timed:image:5d5+25; timed:oppose_fire:5d5+25; timed:oppose_cold:5d5+25; heal:200:0; nourish:1000"
+    "effect": "timed:image:5d5+25; timed:oppose_fire:5d5+25; timed:oppose_cold:5d5+25; heal:200:0; nourish:1000",
+    "power": 7
   },
   {
     "id": "mushroom_of_terror",
@@ -1251,7 +1381,8 @@
     "cost": 60,
     "weight": 1,
     "description": "It allows you to run for your life.",
-    "effect": "timed:terror:5d5+25; nourish:1000"
+    "effect": "timed:terror:5d5+25; nourish:1000",
+    "power": 5
   },
   {
     "id": "mushroom_of_stoneskin",
@@ -1264,7 +1395,8 @@
     "cost": 60,
     "weight": 1,
     "description": "Its poison turns your skin to stone, albeit briefly.",
-    "effect": "timed:stoneskin:7d7+50; nourish:1000"
+    "effect": "timed:stoneskin:7d7+50; nourish:1000",
+    "power": 5
   },
   {
     "id": "mushroom_of_debility",
@@ -1276,7 +1408,8 @@
     "maxDepth": 40,
     "cost": 20,
     "weight": 1,
-    "effect": "restore_mana; nourish:1000; random:2; drain_stat:str; drain_stat:con"
+    "effect": "restore_mana; nourish:1000; random:2; drain_stat:str; drain_stat:con",
+    "power": 5
   },
   {
     "id": "mushroom_of_sprinting",
@@ -1289,7 +1422,8 @@
     "cost": 100,
     "weight": 1,
     "description": "It hastes you for a while, but then makes you slower for a while afterward.",
-    "effect": "timed:sprint:100; nourish:1000"
+    "effect": "timed:sprint:100; nourish:1000",
+    "power": 5
   },
   {
     "id": "mushroom_of_purging",
@@ -1302,7 +1436,8 @@
     "cost": 60,
     "weight": 1,
     "description": "It makes you very hungry but otherwise healthy.",
-    "effect": "set_food:1000; restore_stat:str; restore_stat:con; cure:poisoned"
+    "effect": "set_food:1000; restore_stat:str; restore_stat:con; cure:poisoned",
+    "power": 5
   },
   {
     "id": "mushroom_of_shadows",
@@ -1315,7 +1450,17 @@
     "cost": 300,
     "weight": 1,
     "description": "It makes you very stealthy for a short while.",
-    "effect": "nourish:1000; timed:stealth:1d10+10"
+    "effect": "nourish:1000; timed:stealth:1d10+10",
+    "power": 9
+  },
+  {
+    "id": "mushroom_of_turbulence",
+    "name": "Turbulence",
+    "base": "mushroom",
+    "level": 0,
+    "commonness": 0,
+    "cost": 60,
+    "weight": 1
   },
   {
     "id": "tulwar",
@@ -1477,7 +1622,15 @@
     "cost": 4300,
     "weight": 400,
     "damage": "5d8",
-    "description": "A giant's weapon, enchanted with shattering power that breaks bones, bodies, and spirit."
+    "description": "A giant's weapon, enchanted with shattering power that breaks bones, bodies, and spirit.",
+    "slays": [
+      {
+        "monsterFlag": "UNDEAD",
+        "multiplier": 3,
+        "verb": "smite",
+        "name": "undead"
+      }
+    ]
   },
   {
     "id": "throwing_axe",
@@ -1635,7 +1788,8 @@
     "maxDepth": 100,
     "cost": 300,
     "weight": 200,
-    "description": "This arbalest is so powerful it has to be reinforced with metal and requires a crank to be cocked."
+    "description": "This arbalest is so powerful it has to be reinforced with metal and requires a crank to be cocked.",
+    "multiplier": 4
   },
   {
     "id": "seeker_arrow",
@@ -1653,7 +1807,10 @@
   },
   {
     "id": "mithril_arrow",
-    "ignore": ["acid", "fire"],
+    "ignore": [
+      "acid",
+      "fire"
+    ],
     "name": "Mithril Arrow~",
     "base": "arrow",
     "level": 55,
@@ -1682,7 +1839,9 @@
   },
   {
     "id": "mithril_bolt",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Mithril Bolt~",
     "base": "bolt",
     "level": 50,
@@ -1781,7 +1940,9 @@
   },
   {
     "id": "pair_of_iron_shod_boots",
-    "ignore": ["fire"],
+    "ignore": [
+      "fire"
+    ],
     "name": "Pair~ of Iron Shod Boots",
     "base": "boots",
     "level": 5,
@@ -1795,7 +1956,9 @@
   },
   {
     "id": "pair_of_steel_shod_boots",
-    "ignore": ["fire"],
+    "ignore": [
+      "fire"
+    ],
     "name": "Pair~ of Steel Shod Boots",
     "base": "boots",
     "level": 20,
@@ -1809,7 +1972,10 @@
   },
   {
     "id": "pair_of_mithril_shod_boots",
-    "ignore": ["acid", "fire"],
+    "ignore": [
+      "acid",
+      "fire"
+    ],
     "name": "Pair~ of Mithril Shod Boots",
     "base": "boots",
     "level": 60,
@@ -1823,7 +1989,12 @@
   },
   {
     "id": "pair_of_ethereal_slippers",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Pair~ of Ethereal Slippers",
     "base": "boots",
     "level": 0,
@@ -1861,7 +2032,9 @@
   },
   {
     "id": "golden_crown",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Golden Crown~",
     "base": "crown",
     "level": 45,
@@ -1874,7 +2047,9 @@
   },
   {
     "id": "jewel_encrusted_crown",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Jewel Encrusted Crown~",
     "base": "crown",
     "level": 50,
@@ -1909,7 +2084,8 @@
     "cost": 100,
     "weight": 100,
     "armour": 12,
-    "description": "A cuirass of pliable leather studded with metal rivets."
+    "description": "A cuirass of pliable leather studded with metal rivets.",
+    "toHit": -1
   },
   {
     "id": "soft_armour_leather_scale_mail",
@@ -1922,7 +2098,8 @@
     "cost": 370,
     "weight": 140,
     "armour": 20,
-    "description": "A tunic and skirt sewn with thick, overlapping scales of hardened leather."
+    "description": "A tunic and skirt sewn with thick, overlapping scales of hardened leather.",
+    "toHit": -1
   },
   {
     "id": "augmented_chain_mail",
@@ -1935,7 +2112,8 @@
     "cost": 900,
     "weight": 270,
     "armour": 42,
-    "description": "A hauberk, leggings, and sleeves of interlocking steel rings, strategically reinforced at vital locations with a second layer of chain, all over a layer of heavy padding."
+    "description": "A hauberk, leggings, and sleeves of interlocking steel rings, strategically reinforced at vital locations with a second layer of chain, all over a layer of heavy padding.",
+    "toHit": -2
   },
   {
     "id": "bar_chain_mail",
@@ -1948,7 +2126,8 @@
     "cost": 950,
     "weight": 280,
     "armour": 45,
-    "description": "A hauberk, leggings, and sleeves of interlocking steel rings, reinforced around the shoulders with segmented plates of steel, all over a layer of heavy padding."
+    "description": "A hauberk, leggings, and sleeves of interlocking steel rings, reinforced around the shoulders with segmented plates of steel, all over a layer of heavy padding.",
+    "toHit": -2
   },
   {
     "id": "metal_brigandine_armour",
@@ -1961,7 +2140,8 @@
     "cost": 1100,
     "weight": 290,
     "armour": 48,
-    "description": "A stiff suit of armour composed of small metal plates sewn to an inner layer of heavy canvas, and covered with a second layer of cloth."
+    "description": "A stiff suit of armour composed of small metal plates sewn to an inner layer of heavy canvas, and covered with a second layer of cloth.",
+    "toHit": -3
   },
   {
     "id": "partial_plate_armour",
@@ -1974,7 +2154,8 @@
     "cost": 1200,
     "weight": 260,
     "armour": 40,
-    "description": "A steel corselet and vambraces over a skirt and leggings of chain."
+    "description": "A steel corselet and vambraces over a skirt and leggings of chain.",
+    "toHit": -3
   },
   {
     "id": "metal_lamellar_armour",
@@ -1987,7 +2168,8 @@
     "cost": 1250,
     "weight": 340,
     "armour": 58,
-    "description": "This unusual armour is a surprisingly light suit of laced and overlapping metal plates."
+    "description": "This unusual armour is a surprisingly light suit of laced and overlapping metal plates.",
+    "toHit": -3
   },
   {
     "id": "full_plate_armour",
@@ -2000,7 +2182,8 @@
     "cost": 1350,
     "weight": 360,
     "armour": 62,
-    "description": "A full suit of carefully fitted plates, with hinged joints backed by chain, and light padding underneath."
+    "description": "A full suit of carefully fitted plates, with hinged joints backed by chain, and light padding underneath.",
+    "toHit": -3
   },
   {
     "id": "ribbed_plate_armour",
@@ -2013,11 +2196,14 @@
     "cost": 1500,
     "weight": 380,
     "armour": 66,
-    "description": "A full suit of finely fitted metal armour consisting of steel plates reinforced ridging."
+    "description": "A full suit of finely fitted metal armour consisting of steel plates reinforced ridging.",
+    "toHit": -3
   },
   {
     "id": "mithril_chain_mail",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Mithril Chain Mail~",
     "base": "hard_armour",
     "level": 55,
@@ -2027,11 +2213,14 @@
     "cost": 7000,
     "weight": 150,
     "armour": 28,
-    "description": "This wondrous suit of fine-linked chain shimmers as though of pure silver."
+    "description": "This wondrous suit of fine-linked chain shimmers as though of pure silver.",
+    "toHit": -1
   },
   {
     "id": "mithril_plate_mail",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Mithril Plate Mail~",
     "base": "hard_armour",
     "level": 60,
@@ -2041,11 +2230,14 @@
     "cost": 15000,
     "weight": 300,
     "armour": 60,
-    "description": "A shimmering suit of true-silver, forged long ago by dwarven smiths of legend. It gleams with purest white as you gaze upon it."
+    "description": "A shimmering suit of true-silver, forged long ago by dwarven smiths of legend. It gleams with purest white as you gaze upon it.",
+    "toHit": -3
   },
   {
     "id": "adamantite_plate_mail",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Adamantite Plate Mail~",
     "base": "hard_armour",
     "level": 75,
@@ -2055,7 +2247,8 @@
     "cost": 20000,
     "weight": 420,
     "armour": 80,
-    "description": "An exquisite suit of nearly impenetrable adamantite."
+    "description": "An exquisite suit of nearly impenetrable adamantite.",
+    "toHit": -4
   },
   {
     "id": "elven_cloak",
@@ -2076,7 +2269,12 @@
   },
   {
     "id": "ethereal_cloak",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Ethereal Cloak~",
     "base": "cloak",
     "level": 50,
@@ -2090,7 +2288,10 @@
   },
   {
     "id": "set_of_mithril_gauntlets",
-    "ignore": ["acid", "fire"],
+    "ignore": [
+      "acid",
+      "fire"
+    ],
     "name": "Set~ of Mithril Gauntlets",
     "base": "gloves",
     "level": 0,
@@ -2118,7 +2319,12 @@
   },
   {
     "id": "set_of_alchemists_gloves",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Set~ of Alchemist's Gloves",
     "base": "gloves",
     "level": 0,
@@ -2176,7 +2382,9 @@
   },
   {
     "id": "mithril_shield",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Mithril Shield~",
     "base": "shield",
     "level": 70,
@@ -2260,7 +2468,6 @@
   },
   {
     "id": "ring_of_speed",
-    "ignore": ["elec"],
     "name": "Speed",
     "base": "ring",
     "level": 75,
@@ -2341,7 +2548,9 @@
   },
   {
     "id": "ring_of_flames",
-    "ignore": ["fire"],
+    "ignore": [
+      "fire"
+    ],
     "name": "Flames",
     "base": "ring",
     "level": 50,
@@ -2363,7 +2572,9 @@
   },
   {
     "id": "ring_of_acid",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Acid",
     "base": "ring",
     "level": 50,
@@ -2385,7 +2596,9 @@
   },
   {
     "id": "ring_of_ice",
-    "ignore": ["cold"],
+    "ignore": [
+      "cold"
+    ],
     "name": "Ice",
     "base": "ring",
     "level": 50,
@@ -2407,7 +2620,9 @@
   },
   {
     "id": "ring_of_lightning",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Lightning",
     "base": "ring",
     "level": 50,
@@ -2502,7 +2717,10 @@
     "recharge": "10+5d8",
     "activation": "heal:40:0; cure:blind; cure:cut; cure:confused",
     "activationText": "heals 40 hit points, cures blindness, heals cuts and cures confusion",
-    "power": 25
+    "power": 25,
+    "flags": [
+      "IMPAIR_HP"
+    ]
   },
   {
     "id": "ring_of_escaping",
@@ -2516,7 +2734,10 @@
     "weight": 2,
     "modifiers": {
       "speed": 2
-    }
+    },
+    "flags": [
+      "AFRAID"
+    ]
   },
   {
     "id": "ring_of_the_mouse",
@@ -2529,9 +2750,9 @@
     "cost": 100,
     "weight": 2,
     "rolls": {
-      "to_d": "-3d5",
       "dex": "d4",
-      "stealth": "d4"
+      "stealth": "d4",
+      "to_d": "-3d5"
     }
   },
   {
@@ -2574,7 +2795,10 @@
     "minDepth": 10,
     "maxDepth": 50,
     "cost": 200,
-    "weight": 2
+    "weight": 2,
+    "flags": [
+      "FEATHER"
+    ]
   },
   {
     "id": "ring_of_free_action",
@@ -2641,7 +2865,9 @@
   },
   {
     "id": "amulet_of_resist_acid",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Resist Acid",
     "base": "amulet",
     "level": 10,
@@ -2656,7 +2882,12 @@
   },
   {
     "id": "amulet_of_resistance",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Resistance",
     "base": "amulet",
     "level": 60,
@@ -2674,7 +2905,12 @@
   },
   {
     "id": "amulet_of_sustenance",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Sustenance",
     "base": "amulet",
     "level": 60,
@@ -2697,7 +2933,12 @@
   },
   {
     "id": "amulet_of_the_magi",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "the Magi",
     "base": "amulet",
     "level": 70,
@@ -2707,9 +2948,9 @@
     "cost": 30000,
     "weight": 3,
     "rolls": {
-      "to_a": "d5M5",
       "search": "1+M3",
-      "int": "1+M3"
+      "int": "1+M3",
+      "to_a": "d5M5"
     },
     "resists": [
       "free_act",
@@ -2720,7 +2961,12 @@
   },
   {
     "id": "amulet_of_esp",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "ESP",
     "base": "amulet",
     "level": 50,
@@ -2770,9 +3016,9 @@
     "cost": 30000,
     "weight": 3,
     "rolls": {
+      "str": "1+M2",
       "to_h": "1+M4",
-      "to_d": "1+M4",
-      "str": "1+M2"
+      "to_d": "1+M4"
     },
     "resists": [
       "disen",
@@ -2885,7 +3131,8 @@
     "maxDepth": 100,
     "cost": 800,
     "weight": 5,
-    "effect": "teleport_level"
+    "effect": "teleport_level",
+    "power": 15
   },
   {
     "id": "scroll_of_detect_invisible",
@@ -2897,7 +3144,8 @@
     "maxDepth": 70,
     "cost": 15,
     "weight": 5,
-    "effect": "detect_invisible:30"
+    "effect": "detect_invisible:30",
+    "power": 6
   },
   {
     "id": "scroll_of_enchant_weapon_to_hit",
@@ -2909,7 +3157,8 @@
     "maxDepth": 70,
     "cost": 125,
     "weight": 5,
-    "effect": "enchant:to_h:1"
+    "effect": "enchant:to_h:1",
+    "power": 15
   },
   {
     "id": "scroll_of_enchant_weapon_to_dam",
@@ -2921,7 +3170,8 @@
     "maxDepth": 70,
     "cost": 125,
     "weight": 5,
-    "effect": "enchant:to_d:1"
+    "effect": "enchant:to_d:1",
+    "power": 20
   },
   {
     "id": "scroll_of_enchant_armour",
@@ -2933,7 +3183,8 @@
     "maxDepth": 70,
     "cost": 125,
     "weight": 5,
-    "effect": "enchant:to_a:1"
+    "effect": "enchant:to_a:1",
+    "power": 12
   },
   {
     "id": "scroll_of_enchant_weapon",
@@ -2945,7 +3196,8 @@
     "maxDepth": 100,
     "cost": 500,
     "weight": 5,
-    "effect": "enchant:to_h:1; enchant:to_d:1"
+    "effect": "enchant:to_h:1; enchant:to_d:1",
+    "power": 22
   },
   {
     "id": "scroll_scroll_of_enchant_armour",
@@ -2957,7 +3209,8 @@
     "maxDepth": 100,
     "cost": 500,
     "weight": 5,
-    "effect": "enchant:to_a:1"
+    "effect": "enchant:to_a:1",
+    "power": 15
   },
   {
     "id": "scroll_of_remove_curse",
@@ -2969,7 +3222,8 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 5,
-    "effect": "remove_curse"
+    "effect": "remove_curse",
+    "power": 20
   },
   {
     "id": "scroll_of_summon_monster",
@@ -3005,7 +3259,8 @@
     "maxDepth": 100,
     "cost": 5000,
     "weight": 5,
-    "effect": "acquirement:1"
+    "effect": "acquirement:1",
+    "power": 20000
   },
   {
     "id": "scroll_scroll_of_acquirement",
@@ -3017,7 +3272,8 @@
     "maxDepth": 100,
     "cost": 10000,
     "weight": 5,
-    "effect": "acquirement:1"
+    "effect": "acquirement:1",
+    "power": 20000
   },
   {
     "id": "scroll_of_dispel_undead",
@@ -3029,7 +3285,8 @@
     "maxDepth": 100,
     "cost": 200,
     "weight": 5,
-    "effect": "dispel:UNDEAD:60"
+    "effect": "dispel:UNDEAD:60",
+    "power": 9
   },
   {
     "id": "scroll_of_banishment",
@@ -3041,7 +3298,8 @@
     "maxDepth": 100,
     "cost": 2500,
     "weight": 5,
-    "effect": "banish"
+    "effect": "banish",
+    "power": 20
   },
   {
     "id": "scroll_of_mass_banishment",
@@ -3053,7 +3311,8 @@
     "maxDepth": 100,
     "cost": 3000,
     "weight": 5,
-    "effect": "mass_banishment:20"
+    "effect": "mass_banishment:20",
+    "power": 25
   },
   {
     "id": "scroll_of_remove_hunger",
@@ -3065,7 +3324,8 @@
     "maxDepth": 100,
     "cost": 10,
     "weight": 5,
-    "effect": "satisfy"
+    "effect": "satisfy",
+    "power": 7
   },
   {
     "id": "scroll_of_word_of_recall",
@@ -3077,7 +3337,8 @@
     "maxDepth": 100,
     "cost": 125,
     "weight": 5,
-    "effect": "recall"
+    "effect": "recall",
+    "power": 15
   },
   {
     "id": "scroll_of_recharging",
@@ -3089,7 +3350,8 @@
     "maxDepth": 100,
     "cost": 200,
     "weight": 5,
-    "effect": "recharge:60"
+    "effect": "recharge:60",
+    "power": 11
   },
   {
     "id": "scroll_of_door_destruction",
@@ -3101,7 +3363,8 @@
     "maxDepth": 60,
     "cost": 50,
     "weight": 5,
-    "effect": "destroy_doors"
+    "effect": "destroy_doors",
+    "power": 6
   },
   {
     "id": "scroll_of_deep_descent",
@@ -3113,7 +3376,8 @@
     "maxDepth": 100,
     "cost": 250,
     "weight": 5,
-    "effect": "deep_descent"
+    "effect": "deep_descent",
+    "power": 19
   },
   {
     "id": "scroll_of_blessing",
@@ -3125,7 +3389,8 @@
     "maxDepth": 50,
     "cost": 15,
     "weight": 5,
-    "effect": "timed:blessed:1d12+6"
+    "effect": "timed:blessed:1d12+6",
+    "power": 6
   },
   {
     "id": "scroll_of_holy_chant",
@@ -3137,7 +3402,8 @@
     "maxDepth": 70,
     "cost": 40,
     "weight": 5,
-    "effect": "timed:blessed:1d24+12"
+    "effect": "timed:blessed:1d24+12",
+    "power": 7
   },
   {
     "id": "scroll_of_holy_prayer",
@@ -3149,7 +3415,8 @@
     "maxDepth": 100,
     "cost": 80,
     "weight": 5,
-    "effect": "timed:blessed:1d48+24"
+    "effect": "timed:blessed:1d48+24",
+    "power": 8
   },
   {
     "id": "scroll_of_protection_from_evil",
@@ -3161,7 +3428,8 @@
     "maxDepth": 100,
     "cost": 50,
     "weight": 5,
-    "effect": "timed:prot_evil:1d25+20"
+    "effect": "timed:prot_evil:1d25+20",
+    "power": 6
   },
   {
     "id": "scroll_of_monster_confusion",
@@ -3173,7 +3441,8 @@
     "maxDepth": 60,
     "cost": 30,
     "weight": 5,
-    "effect": "timed:att_conf:10000"
+    "effect": "timed:att_conf:10000",
+    "power": 8
   },
   {
     "id": "scroll_of_rune_of_protection",
@@ -3185,7 +3454,8 @@
     "maxDepth": 100,
     "cost": 500,
     "weight": 5,
-    "effect": "glyph"
+    "effect": "glyph",
+    "power": 20
   },
   {
     "id": "scroll_of_destruction",
@@ -3197,7 +3467,8 @@
     "maxDepth": 100,
     "cost": 1000,
     "weight": 5,
-    "effect": "destruction:15"
+    "effect": "destruction:15",
+    "power": 12
   },
   {
     "id": "scroll_of_aggravate_monster",
@@ -3269,7 +3540,8 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 4,
-    "effect": "restore_stat:str; gain_stat:str"
+    "effect": "restore_stat:str; gain_stat:str",
+    "power": 20000
   },
   {
     "id": "potion_of_intelligence",
@@ -3281,7 +3553,8 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 4,
-    "effect": "restore_stat:int; gain_stat:int"
+    "effect": "restore_stat:int; gain_stat:int",
+    "power": 20000
   },
   {
     "id": "potion_of_wisdom",
@@ -3293,7 +3566,8 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 4,
-    "effect": "restore_stat:wis; gain_stat:wis"
+    "effect": "restore_stat:wis; gain_stat:wis",
+    "power": 20000
   },
   {
     "id": "potion_of_dexterity",
@@ -3305,7 +3579,8 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 4,
-    "effect": "restore_stat:dex; gain_stat:dex"
+    "effect": "restore_stat:dex; gain_stat:dex",
+    "power": 20000
   },
   {
     "id": "potion_of_constitution",
@@ -3317,7 +3592,8 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 4,
-    "effect": "restore_stat:con; gain_stat:con"
+    "effect": "restore_stat:con; gain_stat:con",
+    "power": 20000
   },
   {
     "id": "potion_of_augmentation",
@@ -3329,7 +3605,8 @@
     "maxDepth": 100,
     "cost": 50000,
     "weight": 4,
-    "effect": "restore_stat:str; gain_stat:str; restore_stat:int; gain_stat:int; restore_stat:wis; gain_stat:wis; restore_stat:dex; gain_stat:dex; restore_stat:con; gain_stat:con"
+    "effect": "restore_stat:str; gain_stat:str; restore_stat:int; gain_stat:int; restore_stat:wis; gain_stat:wis; restore_stat:dex; gain_stat:dex; restore_stat:con; gain_stat:con",
+    "power": 20000
   },
   {
     "id": "potion_of_experience",
@@ -3341,7 +3618,8 @@
     "maxDepth": 100,
     "cost": 25000,
     "weight": 4,
-    "effect": "gain_exp:100000"
+    "effect": "gain_exp:100000",
+    "power": 20000
   },
   {
     "id": "potion_of_cure_critical_wounds",
@@ -3353,7 +3631,8 @@
     "maxDepth": 100,
     "cost": 200,
     "weight": 4,
-    "effect": "heal:60:0; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; nourish:200"
+    "effect": "heal:60:0; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; nourish:200",
+    "power": 9
   },
   {
     "id": "potion_of_healing",
@@ -3365,7 +3644,8 @@
     "maxDepth": 100,
     "cost": 800,
     "weight": 4,
-    "effect": "heal:300:35; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; nourish:200"
+    "effect": "heal:300:35; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; nourish:200",
+    "power": 12
   },
   {
     "id": "potion_potion_of_healing",
@@ -3377,7 +3657,8 @@
     "maxDepth": 100,
     "cost": 1500,
     "weight": 4,
-    "effect": "heal:1200:0; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia"
+    "effect": "heal:1200:0; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia",
+    "power": 18
   },
   {
     "id": "potion_of_life",
@@ -3389,7 +3670,8 @@
     "maxDepth": 100,
     "cost": 5000,
     "weight": 4,
-    "effect": "restore_exp; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; cure:image; restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; heal:5000:0"
+    "effect": "restore_exp; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; cure:image; restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; heal:5000:0",
+    "power": 21
   },
   {
     "id": "potion_of_restore_mana",
@@ -3401,7 +3683,8 @@
     "maxDepth": 100,
     "cost": 350,
     "weight": 4,
-    "effect": "restore_mana"
+    "effect": "restore_mana",
+    "power": 20
   },
   {
     "id": "potion_of_restore_life_levels",
@@ -3413,7 +3696,8 @@
     "maxDepth": 100,
     "cost": 400,
     "weight": 4,
-    "effect": "restore_exp"
+    "effect": "restore_exp",
+    "power": 8
   },
   {
     "id": "potion_of_brawn",
@@ -3425,7 +3709,8 @@
     "maxDepth": 40,
     "cost": 1000,
     "weight": 4,
-    "effect": "restore_stat:str; gain_stat:str; drain_stat:!str"
+    "effect": "restore_stat:str; gain_stat:str; drain_stat:!str",
+    "power": 30
   },
   {
     "id": "potion_of_intellect",
@@ -3437,7 +3722,8 @@
     "maxDepth": 40,
     "cost": 1000,
     "weight": 4,
-    "effect": "restore_stat:int; gain_stat:int; drain_stat:!int"
+    "effect": "restore_stat:int; gain_stat:int; drain_stat:!int",
+    "power": 25
   },
   {
     "id": "potion_of_contemplation",
@@ -3449,7 +3735,8 @@
     "maxDepth": 40,
     "cost": 1000,
     "weight": 4,
-    "effect": "restore_stat:wis; gain_stat:wis; drain_stat:!wis"
+    "effect": "restore_stat:wis; gain_stat:wis; drain_stat:!wis",
+    "power": 25
   },
   {
     "id": "potion_of_nimbleness",
@@ -3461,7 +3748,8 @@
     "maxDepth": 40,
     "cost": 1000,
     "weight": 4,
-    "effect": "restore_stat:dex; gain_stat:dex; drain_stat:!dex"
+    "effect": "restore_stat:dex; gain_stat:dex; drain_stat:!dex",
+    "power": 25
   },
   {
     "id": "potion_of_toughness",
@@ -3473,7 +3761,8 @@
     "maxDepth": 40,
     "cost": 1000,
     "weight": 4,
-    "effect": "restore_stat:con; gain_stat:con; drain_stat:!con"
+    "effect": "restore_stat:con; gain_stat:con; drain_stat:!con",
+    "power": 30
   },
   {
     "id": "potion_of_enlightenment",
@@ -3485,7 +3774,8 @@
     "maxDepth": 100,
     "cost": 800,
     "weight": 4,
-    "effect": "enlightenment"
+    "effect": "enlightenment",
+    "power": 22
   },
   {
     "id": "potion_potion_of_enlightenment",
@@ -3497,7 +3787,8 @@
     "maxDepth": 100,
     "cost": 12000,
     "weight": 4,
-    "effect": "enlightenment; restore_stat:int; gain_stat:int; restore_stat:wis; gain_stat:wis; detect_objects:30; detect_invisible:30; detect_monsters:30"
+    "effect": "enlightenment; restore_stat:int; gain_stat:int; restore_stat:wis; gain_stat:wis; detect_objects:30; detect_invisible:30; detect_monsters:30",
+    "power": 20000
   },
   {
     "id": "potion_of_heroism",
@@ -3509,7 +3800,8 @@
     "maxDepth": 100,
     "cost": 25,
     "weight": 4,
-    "effect": "heal:10:0; cure:afraid; timed:hero:1d25+25"
+    "effect": "heal:10:0; cure:afraid; timed:hero:1d25+25",
+    "power": 7
   },
   {
     "id": "potion_of_berserk_strength",
@@ -3521,7 +3813,8 @@
     "maxDepth": 100,
     "cost": 80,
     "weight": 4,
-    "effect": "heal:30:0; cure:afraid; timed:berserk:1d25+25"
+    "effect": "heal:30:0; cure:afraid; timed:berserk:1d25+25",
+    "power": 8
   },
   {
     "id": "potion_of_resist_heat",
@@ -3533,7 +3826,8 @@
     "maxDepth": 100,
     "cost": 30,
     "weight": 4,
-    "effect": "timed:oppose_fire:1d10+50"
+    "effect": "timed:oppose_fire:1d10+50",
+    "power": 4
   },
   {
     "id": "potion_of_resist_cold",
@@ -3545,7 +3839,8 @@
     "maxDepth": 100,
     "cost": 30,
     "weight": 4,
-    "effect": "timed:oppose_cold:1d10+50"
+    "effect": "timed:oppose_cold:1d10+50",
+    "power": 4
   },
   {
     "id": "potion_of_resist_poison",
@@ -3557,7 +3852,8 @@
     "maxDepth": 100,
     "cost": 30,
     "weight": 4,
-    "effect": "timed:oppose_pois:1d10+50; cure:poisoned"
+    "effect": "timed:oppose_pois:1d10+50; cure:poisoned",
+    "power": 4
   },
   {
     "id": "potion_of_true_seeing",
@@ -3569,7 +3865,8 @@
     "maxDepth": 40,
     "cost": 50,
     "weight": 4,
-    "effect": "cure:blind; timed:see_invisible:2d6+50"
+    "effect": "cure:blind; timed:see_invisible:2d6+50",
+    "power": 7
   },
   {
     "id": "potion_of_infravision",
@@ -3581,7 +3878,8 @@
     "maxDepth": 40,
     "cost": 20,
     "weight": 4,
-    "effect": "timed:infravision:4d25+100"
+    "effect": "timed:infravision:4d25+100",
+    "power": 5
   },
   {
     "id": "potion_of_slime_mold_juice",
@@ -3657,7 +3955,6 @@
   },
   {
     "id": "potion_of_dragon_breath",
-    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Dragon Breath",
     "base": "potion",
     "level": 0,
@@ -3666,7 +3963,8 @@
     "maxDepth": 100,
     "cost": 100,
     "weight": 4,
-    "effect": "breath:fire/cold:80"
+    "effect": "breath:fire/cold:80",
+    "power": 8
   },
   {
     "id": "wand_of_magic_missile",
@@ -3679,7 +3977,8 @@
     "cost": 200,
     "weight": 10,
     "charges": "6+d10",
-    "effect": "bolt:none:3d4"
+    "effect": "bolt:none:3d4",
+    "power": 3
   },
   {
     "id": "wand_of_lightning_bolts",
@@ -3692,7 +3991,8 @@
     "cost": 600,
     "weight": 10,
     "charges": "6+d8",
-    "effect": "beam:elec:6d6"
+    "effect": "beam:elec:6d6",
+    "power": 5
   },
   {
     "id": "wand_of_frost_bolts",
@@ -3705,7 +4005,8 @@
     "cost": 800,
     "weight": 10,
     "charges": "6+d5",
-    "effect": "bolt:cold:12d8"
+    "effect": "bolt:cold:12d8",
+    "power": 4
   },
   {
     "id": "wand_of_fire_bolts",
@@ -3718,7 +4019,8 @@
     "cost": 1000,
     "weight": 10,
     "charges": "6+d8",
-    "effect": "bolt:fire:12d8"
+    "effect": "bolt:fire:12d8",
+    "power": 7
   },
   {
     "id": "wand_of_acid_bolts",
@@ -3731,7 +4033,8 @@
     "cost": 950,
     "weight": 10,
     "charges": "6+d8",
-    "effect": "bolt:acid:10d8"
+    "effect": "bolt:acid:10d8",
+    "power": 6
   },
   {
     "id": "wand_of_stinking_cloud",
@@ -3744,11 +4047,14 @@
     "cost": 400,
     "weight": 10,
     "charges": "6+d8",
-    "effect": "ball:pois:12:3"
+    "effect": "ball:pois:12:3",
+    "power": 3
   },
   {
     "id": "wand_of_lightning_balls",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Lightning Balls",
     "base": "wand",
     "level": 35,
@@ -3758,11 +4064,14 @@
     "cost": 1200,
     "weight": 10,
     "charges": "4+d8",
-    "effect": "ball:elec:64:2"
+    "effect": "ball:elec:64:2",
+    "power": 9
   },
   {
     "id": "wand_of_cold_balls",
-    "ignore": ["cold"],
+    "ignore": [
+      "cold"
+    ],
     "name": "Cold Balls",
     "base": "wand",
     "level": 40,
@@ -3772,11 +4081,14 @@
     "cost": 1500,
     "weight": 10,
     "charges": "2+d6",
-    "effect": "ball:cold:100:2"
+    "effect": "ball:cold:100:2",
+    "power": 10
   },
   {
     "id": "wand_of_fire_balls",
-    "ignore": ["fire"],
+    "ignore": [
+      "fire"
+    ],
     "name": "Fire Balls",
     "base": "wand",
     "level": 50,
@@ -3786,11 +4098,14 @@
     "cost": 1800,
     "weight": 10,
     "charges": "2+d4",
-    "effect": "ball:fire:144:2"
+    "effect": "ball:fire:144:2",
+    "power": 11
   },
   {
     "id": "wand_of_acid_balls",
-    "ignore": ["acid"],
+    "ignore": [
+      "acid"
+    ],
     "name": "Acid Balls",
     "base": "wand",
     "level": 50,
@@ -3800,7 +4115,8 @@
     "cost": 1650,
     "weight": 10,
     "charges": "2+d5",
-    "effect": "ball:acid:120:2"
+    "effect": "ball:acid:120:2",
+    "power": 11
   },
   {
     "id": "wand_of_slow_monster",
@@ -3813,7 +4129,8 @@
     "cost": 500,
     "weight": 10,
     "charges": "2+d6",
-    "effect": "monster_status:slow:15"
+    "effect": "monster_status:slow:15",
+    "power": 3
   },
   {
     "id": "wand_of_confuse_monster",
@@ -3826,7 +4143,8 @@
     "cost": 500,
     "weight": 10,
     "charges": "2+d6",
-    "effect": "monster_status:confuse:15"
+    "effect": "monster_status:confuse:15",
+    "power": 3
   },
   {
     "id": "wand_of_hold_monster",
@@ -3839,7 +4157,8 @@
     "cost": 500,
     "weight": 10,
     "charges": "2+d6",
-    "effect": "monster_status:hold:15"
+    "effect": "monster_status:hold:15",
+    "power": 3
   },
   {
     "id": "wand_of_stun_monster",
@@ -3852,7 +4171,8 @@
     "cost": 500,
     "weight": 10,
     "charges": "2+d6",
-    "effect": "monster_status:stun:15"
+    "effect": "monster_status:stun:15",
+    "power": 3
   },
   {
     "id": "wand_of_scare_monster",
@@ -3865,7 +4185,8 @@
     "cost": 500,
     "weight": 10,
     "charges": "3+d5",
-    "effect": "monster_status:scare:20"
+    "effect": "monster_status:scare:20",
+    "power": 3
   },
   {
     "id": "wand_of_light",
@@ -3878,7 +4199,8 @@
     "cost": 200,
     "weight": 10,
     "charges": "6+d10",
-    "effect": "light_line:6d8"
+    "effect": "light_line:6d8",
+    "power": 6
   },
   {
     "id": "wand_of_stone_to_mud",
@@ -3891,7 +4213,8 @@
     "cost": 300,
     "weight": 10,
     "charges": "6+d10",
-    "effect": "stone_to_mud"
+    "effect": "stone_to_mud",
+    "power": 6
   },
   {
     "id": "wand_of_polymorph",
@@ -3904,7 +4227,8 @@
     "cost": 400,
     "weight": 10,
     "charges": "6+d8",
-    "effect": "polymorph"
+    "effect": "polymorph",
+    "power": 7
   },
   {
     "id": "wand_of_darkness",
@@ -3917,7 +4241,8 @@
     "cost": 100,
     "weight": 10,
     "charges": "6+d10",
-    "effect": "darkness"
+    "effect": "darkness",
+    "power": 4
   },
   {
     "id": "wand_of_clone_monster",
@@ -3943,7 +4268,8 @@
     "cost": 3500,
     "weight": 10,
     "charges": "6+d5",
-    "effect": "teleport_other"
+    "effect": "teleport_other",
+    "power": 11
   },
   {
     "id": "wand_of_disable_traps",
@@ -3956,11 +4282,17 @@
     "cost": 700,
     "weight": 10,
     "charges": "4+d5",
-    "effect": "disarm"
+    "effect": "disarm",
+    "power": 7
   },
   {
     "id": "wand_of_wonder",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Wonder",
     "base": "wand",
     "level": 3,
@@ -3970,11 +4302,17 @@
     "cost": 250,
     "weight": 10,
     "charges": "8+d15",
-    "effect": "wonder"
+    "effect": "wonder",
+    "power": 9
   },
   {
     "id": "wand_of_dragons_flame",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Dragon's Flame",
     "base": "wand",
     "level": 50,
@@ -3984,11 +4322,17 @@
     "cost": 2400,
     "weight": 10,
     "charges": "1+d3",
-    "effect": "breath:fire:200"
+    "effect": "breath:fire:200",
+    "power": 13
   },
   {
     "id": "wand_of_dragons_frost",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Dragon's Frost",
     "base": "wand",
     "level": 50,
@@ -3998,7 +4342,8 @@
     "cost": 2400,
     "weight": 10,
     "charges": "1+d3",
-    "effect": "breath:cold:160"
+    "effect": "breath:cold:160",
+    "power": 12
   },
   {
     "id": "wand_of_drain_life",
@@ -4011,11 +4356,17 @@
     "cost": 1200,
     "weight": 10,
     "charges": "3+d3",
-    "effect": "drain_life:150"
+    "effect": "drain_life:150",
+    "power": 11
   },
   {
     "id": "wand_of_annihilation",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Annihilation",
     "base": "wand",
     "level": 60,
@@ -4025,7 +4376,8 @@
     "cost": 3000,
     "weight": 10,
     "charges": "1+d2",
-    "effect": "drain_life:250"
+    "effect": "drain_life:250",
+    "power": 12
   },
   {
     "id": "wand_of_heal_monster",
@@ -4052,6 +4404,26 @@
     "weight": 10,
     "charges": "8+d20",
     "effect": "haste_monster"
+  },
+  {
+    "id": "wand_of_dragons_breath",
+    "name": "Dragon's Breath",
+    "base": "wand",
+    "level": 60,
+    "commonness": 20,
+    "minDepth": 60,
+    "maxDepth": 100,
+    "cost": 2400,
+    "weight": 10,
+    "charges": "1+d3",
+    "effect": "breath:acid/elec/fire/cold/pois:160",
+    "power": 12,
+    "ignore": [
+      "acid",
+      "cold",
+      "elec",
+      "fire"
+    ]
   },
   {
     "id": "staff_of_summoning",
@@ -4103,7 +4475,8 @@
     "cost": 350,
     "weight": 50,
     "charges": "3+d5",
-    "effect": "earthquake:10"
+    "effect": "earthquake:10",
+    "power": 5
   },
   {
     "id": "staff_of_destruction",
@@ -4116,7 +4489,8 @@
     "cost": 6000,
     "weight": 50,
     "charges": "1+d3",
-    "effect": "destruction:15"
+    "effect": "destruction:15",
+    "power": 12
   },
   {
     "id": "staff_of_confuse_monsters",
@@ -4129,7 +4503,8 @@
     "cost": 800,
     "weight": 50,
     "charges": "3+d3",
-    "effect": "project_los:confuse:30"
+    "effect": "project_los:confuse:30",
+    "power": 10
   },
   {
     "id": "staff_of_slow_monsters",
@@ -4142,7 +4517,8 @@
     "cost": 800,
     "weight": 50,
     "charges": "4+d4",
-    "effect": "project_los:slow:30"
+    "effect": "project_los:slow:30",
+    "power": 7
   },
   {
     "id": "staff_of_sleep_monsters",
@@ -4155,7 +4531,8 @@
     "cost": 700,
     "weight": 50,
     "charges": "6+d5",
-    "effect": "project_los:sleep:30"
+    "effect": "project_los:sleep:30",
+    "power": 8
   },
   {
     "id": "staff_of_detect_invisible",
@@ -4168,7 +4545,8 @@
     "cost": 200,
     "weight": 50,
     "charges": "8+d15",
-    "effect": "detect_invisible:30"
+    "effect": "detect_invisible:30",
+    "power": 6
   },
   {
     "id": "staff_of_detect_evil",
@@ -4181,7 +4559,8 @@
     "cost": 350,
     "weight": 50,
     "charges": "8+d15",
-    "effect": "detect_evil:30"
+    "effect": "detect_evil:30",
+    "power": 6
   },
   {
     "id": "staff_of_mapping",
@@ -4194,7 +4573,8 @@
     "cost": 600,
     "weight": 50,
     "charges": "5+d5",
-    "effect": "map_area:30"
+    "effect": "map_area:30",
+    "power": 10
   },
   {
     "id": "staff_of_curing",
@@ -4207,7 +4587,8 @@
     "cost": 500,
     "weight": 50,
     "charges": "4+d3",
-    "effect": "cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused"
+    "effect": "cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused",
+    "power": 9
   },
   {
     "id": "staff_of_cure_light_wounds",
@@ -4220,11 +4601,11 @@
     "cost": 350,
     "weight": 50,
     "charges": "6+d5",
-    "effect": "heal:20:0; cure:blind; reduce:cut; reduce:confused"
+    "effect": "heal:20:0; cure:blind; reduce:cut; reduce:confused",
+    "power": 3
   },
   {
     "id": "staff_of_healing",
-    "ignore": ["elec"],
     "name": "Healing",
     "base": "staff",
     "level": 70,
@@ -4234,7 +4615,8 @@
     "cost": 5000,
     "weight": 50,
     "charges": "1+d2",
-    "effect": "heal:300:35; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia"
+    "effect": "heal:300:35; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia",
+    "power": 12
   },
   {
     "id": "staff_of_dispel_evil",
@@ -4247,7 +4629,8 @@
     "cost": 1200,
     "weight": 50,
     "charges": "4+d3",
-    "effect": "dispel:EVIL:60"
+    "effect": "dispel:EVIL:60",
+    "power": 9
   },
   {
     "id": "staff_of_banishment",
@@ -4260,7 +4643,8 @@
     "cost": 5000,
     "weight": 50,
     "charges": "1+d2",
-    "effect": "banish"
+    "effect": "banish",
+    "power": 20
   },
   {
     "id": "staff_of_power",
@@ -4273,7 +4657,8 @@
     "cost": 4000,
     "weight": 50,
     "charges": "1+d3",
-    "effect": "dispel:none:120"
+    "effect": "dispel:none:120",
+    "power": 11
   },
   {
     "id": "staff_of_holiness",
@@ -4286,7 +4671,8 @@
     "cost": 3500,
     "weight": 50,
     "charges": "2d2",
-    "effect": "dispel:EVIL:120; heal:50:0; timed:prot_evil:1d25+20; cure:poisoned; cure:terror; cure:afraid; cure:stun; cure:cut; cure:slow; cure:blind; cure:confused; cure:amnesia; cure:image"
+    "effect": "dispel:EVIL:120; heal:50:0; timed:prot_evil:1d25+20; cure:poisoned; cure:terror; cure:afraid; cure:stun; cure:cut; cure:slow; cure:blind; cure:confused; cure:amnesia; cure:image",
+    "power": 12
   },
   {
     "id": "staff_of_light",
@@ -4299,7 +4685,8 @@
     "cost": 250,
     "weight": 50,
     "charges": "8+d20",
-    "effect": "light_area"
+    "effect": "light_area",
+    "power": 4
   },
   {
     "id": "staff_of_starlight",
@@ -4312,7 +4699,8 @@
     "cost": 800,
     "weight": 50,
     "charges": "6+d5",
-    "effect": "light_area"
+    "effect": "light_area",
+    "power": 5
   },
   {
     "id": "staff_of_teleportation",
@@ -4325,11 +4713,11 @@
     "cost": 2000,
     "weight": 50,
     "charges": "5+d4",
-    "effect": "teleport:60"
+    "effect": "teleport:M60",
+    "power": 6
   },
   {
     "id": "staff_of_speed",
-    "ignore": ["elec"],
     "name": "Speed",
     "base": "staff",
     "level": 40,
@@ -4339,7 +4727,8 @@
     "cost": 2000,
     "weight": 50,
     "charges": "4+d3",
-    "effect": "timed:fast:2d10+20"
+    "effect": "timed:fast:2d10+20",
+    "power": 10
   },
   {
     "id": "staff_of_remove_curse",
@@ -4352,11 +4741,11 @@
     "cost": 500,
     "weight": 50,
     "charges": "4+d3",
-    "effect": "remove_curse"
+    "effect": "remove_curse",
+    "power": 8
   },
   {
     "id": "staff_of_the_magi",
-    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "the Magi",
     "base": "staff",
     "level": 70,
@@ -4366,7 +4755,8 @@
     "cost": 4500,
     "weight": 50,
     "charges": "2+1d2",
-    "effect": "restore_stat:int; restore_mana"
+    "effect": "restore_stat:int; restore_mana",
+    "power": 20
   },
   {
     "id": "rod_of_treasure_location",
@@ -4379,11 +4769,14 @@
     "cost": 1000,
     "weight": 15,
     "recharge": "50",
-    "effect": "detect_objects:30"
+    "effect": "detect_objects:30",
+    "power": 6
   },
   {
     "id": "rod_of_detection",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Detection",
     "base": "rod",
     "level": 30,
@@ -4393,7 +4786,8 @@
     "cost": 3000,
     "weight": 15,
     "recharge": "100",
-    "effect": "detect_objects:30; detect_invisible:30; detect_monsters:30"
+    "effect": "detect_objects:30; detect_invisible:30; detect_monsters:30",
+    "power": 10
   },
   {
     "id": "rod_of_magic_mapping",
@@ -4406,7 +4800,8 @@
     "cost": 2000,
     "weight": 15,
     "recharge": "100",
-    "effect": "map_area:30"
+    "effect": "map_area:30",
+    "power": 10
   },
   {
     "id": "rod_of_probing",
@@ -4419,7 +4814,8 @@
     "cost": 1000,
     "weight": 15,
     "recharge": "100",
-    "effect": "probe"
+    "effect": "probe",
+    "power": 8
   },
   {
     "id": "rod_of_fire_bolts",
@@ -4432,7 +4828,8 @@
     "cost": 3000,
     "weight": 15,
     "recharge": "15",
-    "effect": "bolt:fire:12d8"
+    "effect": "bolt:fire:12d8",
+    "power": 7
   },
   {
     "id": "rod_of_frost_bolts",
@@ -4445,7 +4842,8 @@
     "cost": 2500,
     "weight": 15,
     "recharge": "13",
-    "effect": "bolt:cold:12d8"
+    "effect": "bolt:cold:12d8",
+    "power": 7
   },
   {
     "id": "rod_of_lightning_bolts",
@@ -4458,7 +4856,8 @@
     "cost": 2000,
     "weight": 15,
     "recharge": "11",
-    "effect": "beam:elec:6d6"
+    "effect": "beam:elec:6d6",
+    "power": 5
   },
   {
     "id": "rod_of_acid_bolts",
@@ -4471,11 +4870,11 @@
     "cost": 3500,
     "weight": 15,
     "recharge": "12",
-    "effect": "bolt:acid:12d8"
+    "effect": "bolt:acid:12d8",
+    "power": 7
   },
   {
     "id": "rod_of_fire_balls",
-    "ignore": ["fire"],
     "name": "Fire Balls",
     "base": "rod",
     "level": 75,
@@ -4485,11 +4884,11 @@
     "cost": 5000,
     "weight": 15,
     "recharge": "30",
-    "effect": "ball:fire:144:2"
+    "effect": "ball:fire:144:2",
+    "power": 11
   },
   {
     "id": "rod_of_cold_balls",
-    "ignore": ["cold"],
     "name": "Cold Balls",
     "base": "rod",
     "level": 60,
@@ -4499,11 +4898,14 @@
     "cost": 4500,
     "weight": 15,
     "recharge": "25",
-    "effect": "ball:cold:100:2"
+    "effect": "ball:cold:100:2",
+    "power": 10
   },
   {
     "id": "rod_of_lightning_balls",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Lightning Balls",
     "base": "rod",
     "level": 55,
@@ -4513,11 +4915,11 @@
     "cost": 4000,
     "weight": 15,
     "recharge": "23",
-    "effect": "ball:elec:64:2"
+    "effect": "ball:elec:64:2",
+    "power": 9
   },
   {
     "id": "rod_of_acid_balls",
-    "ignore": ["acid"],
     "name": "Acid Balls",
     "base": "rod",
     "level": 70,
@@ -4527,7 +4929,8 @@
     "cost": 5500,
     "weight": 15,
     "recharge": "27",
-    "effect": "ball:acid:120:2"
+    "effect": "ball:acid:120:2",
+    "power": 11
   },
   {
     "id": "rod_of_slow_monster",
@@ -4540,7 +4943,8 @@
     "cost": 1500,
     "weight": 15,
     "recharge": "40",
-    "effect": "monster_status:slow:40"
+    "effect": "monster_status:slow:40",
+    "power": 3
   },
   {
     "id": "rod_of_hold_monster",
@@ -4553,7 +4957,8 @@
     "cost": 1500,
     "weight": 15,
     "recharge": "40",
-    "effect": "monster_status:hold:40"
+    "effect": "monster_status:hold:40",
+    "power": 3
   },
   {
     "id": "rod_of_curing",
@@ -4566,11 +4971,14 @@
     "cost": 1000,
     "weight": 15,
     "recharge": "100",
-    "effect": "cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused"
+    "effect": "cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused",
+    "power": 9
   },
   {
     "id": "rod_of_healing",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Healing",
     "base": "rod",
     "level": 80,
@@ -4580,11 +4988,14 @@
     "cost": 20000,
     "weight": 15,
     "recharge": "1000",
-    "effect": "heal:500:0; cure:cut; cure:stun"
+    "effect": "heal:500:0; cure:cut; cure:stun",
+    "power": 14
   },
   {
     "id": "rod_of_restoration",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Restoration",
     "base": "rod",
     "level": 80,
@@ -4594,7 +5005,8 @@
     "cost": 25000,
     "weight": 15,
     "recharge": "1000",
-    "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; restore_exp"
+    "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; restore_exp",
+    "power": 17
   },
   {
     "id": "rod_of_polymorph",
@@ -4607,7 +5019,8 @@
     "cost": 1200,
     "weight": 15,
     "recharge": "25",
-    "effect": "polymorph"
+    "effect": "polymorph",
+    "power": 7
   },
   {
     "id": "rod_of_drain_life",
@@ -4620,7 +5033,8 @@
     "cost": 3600,
     "weight": 15,
     "recharge": "23",
-    "effect": "drain_life:150"
+    "effect": "drain_life:150",
+    "power": 11
   },
   {
     "id": "rod_of_teleport_other",
@@ -4633,7 +5047,8 @@
     "cost": 5000,
     "weight": 15,
     "recharge": "25",
-    "effect": "teleport_other"
+    "effect": "teleport_other",
+    "power": 11
   },
   {
     "id": "rod_of_disable_traps",
@@ -4646,7 +5061,8 @@
     "cost": 2100,
     "weight": 15,
     "recharge": "30",
-    "effect": "disarm"
+    "effect": "disarm",
+    "power": 7
   },
   {
     "id": "rod_of_light",
@@ -4659,7 +5075,8 @@
     "cost": 500,
     "weight": 15,
     "recharge": "9",
-    "effect": "light_line:6d8"
+    "effect": "light_line:6d8",
+    "power": 6
   },
   {
     "id": "rod_of_illumination",
@@ -4672,11 +5089,14 @@
     "cost": 1000,
     "weight": 15,
     "recharge": "30",
-    "effect": "light_area"
+    "effect": "light_area",
+    "power": 4
   },
   {
     "id": "rod_of_recall",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Recall",
     "base": "rod",
     "level": 30,
@@ -4686,11 +5106,14 @@
     "cost": 4000,
     "weight": 15,
     "recharge": "60",
-    "effect": "recall"
+    "effect": "recall",
+    "power": 15
   },
   {
     "id": "rod_of_speed",
-    "ignore": ["elec"],
+    "ignore": [
+      "elec"
+    ],
     "name": "Speed",
     "base": "rod",
     "level": 95,
@@ -4700,7 +5123,8 @@
     "cost": 25000,
     "weight": 15,
     "recharge": "100",
-    "effect": "timed:fast:2d10+20"
+    "effect": "timed:fast:2d10+20",
+    "power": 10
   },
   {
     "id": "small_wooden_chest",
@@ -4770,7 +5194,12 @@
   },
   {
     "id": "black_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Black Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4793,7 +5222,12 @@
   },
   {
     "id": "blue_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Blue Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4816,7 +5250,12 @@
   },
   {
     "id": "white_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "White Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4839,7 +5278,12 @@
   },
   {
     "id": "red_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Red Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4862,7 +5306,12 @@
   },
   {
     "id": "green_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Green Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 60,
@@ -4885,7 +5334,12 @@
   },
   {
     "id": "multi_hued_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Multi-Hued Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 90,
@@ -4912,7 +5366,12 @@
   },
   {
     "id": "shining_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Shining Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 65,
@@ -4936,7 +5395,12 @@
   },
   {
     "id": "law_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Law Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 80,
@@ -4960,7 +5424,12 @@
   },
   {
     "id": "gold_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Gold Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4983,7 +5452,12 @@
   },
   {
     "id": "chaos_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Chaos Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 80,
@@ -5007,7 +5481,12 @@
   },
   {
     "id": "balance_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Balance Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 95,
@@ -5033,7 +5512,12 @@
   },
   {
     "id": "power_dragon_scale_mail",
-    "ignore": ["acid", "elec", "fire", "cold"],
+    "ignore": [
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
     "name": "Power Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 100,
@@ -5075,7 +5559,10 @@
     "maxDepth": 0,
     "cost": 1000,
     "weight": 200,
-    "damage": "3d9"
+    "damage": "3d9",
+    "flags": [
+      "INSTA_ART"
+    ]
   },
   {
     "id": "massive_iron_crown",
@@ -5086,7 +5573,10 @@
     "minDepth": 0,
     "maxDepth": 0,
     "cost": 1000,
-    "weight": 20
+    "weight": 20,
+    "flags": [
+      "INSTA_ART"
+    ]
   },
   {
     "id": "star",

@@ -63,8 +63,15 @@ public static class ItemFlags
     public const string HoldLife = "HOLD_LIFE";
     /// <summary>Sense the minds of monsters nearby (Angband TELEPATHY / ESP).</summary>
     public const string Telepathy = "TELEPATHY";
+    /// <summary>Feather falling (Angband FEATHER): float down trapdoors and pits, lightfooted over lava.</summary>
+    public const string Feather = "FEATHER";
+    /// <summary>Permanent fear (Angband AFRAID, the Ring of Escaping): no melee, and fear's penalties.</summary>
+    public const string Afraid = "AFRAID";
+    /// <summary>Slow healing (Angband IMPAIR_HP, the Ring of Open Wounds).</summary>
+    public const string ImpairHp = "IMPAIR_HP";
 
-    public static readonly IReadOnlySet<string> Abilities = new HashSet<string>(StringComparer.Ordinal) { Regen, SlowDigest, HoldLife, Telepathy };
+    public static readonly IReadOnlySet<string> Abilities = new HashSet<string>(StringComparer.Ordinal)
+        { Regen, SlowDigest, HoldLife, Telepathy, Feather, Afraid, ImpairHp };
 
     public static string Name(string flag) => flag switch
     {
@@ -72,6 +79,9 @@ public static class ItemFlags
         SlowDigest => "slow digestion",
         HoldLife => "hold life",
         Telepathy => "telepathy",
+        Feather => "feather falling",
+        Afraid => "fear",
+        ImpairHp => "impaired healing",
         _ => flag.ToLowerInvariant().Replace('_', ' '),
     };
 }
@@ -122,7 +132,11 @@ public sealed class ObjectKindDef
     public int Level { get; init; }
     /// <summary>Relative commonness; 0 means never randomly generated.</summary>
     public int Commonness { get; init; } = 10;
-    public int MinDepth { get; init; }
+    /// <summary>
+    /// The shallowest depth it is made at (Angband object.txt alloc); without one, its level. As in
+    /// 4.2.5, a kind with an alloc range is made across that range whatever its level.
+    /// </summary>
+    public int? MinDepth { get; init; }
     public int MaxDepth { get; init; } = 127;
     public int Cost { get; init; }
     /// <summary>In tenths of a pound, as in Angband.</summary>

@@ -147,7 +147,7 @@ public sealed class SoundDirector : IDisposable
             case StairsTakenEvent st:
                 Play(st.Down ? "STAIRS_DOWN" : "STAIRS_UP");
                 break;
-            case ItemPickedUpEvent p when p.KindId is "copper" or "silver" or "gold" or "mithril" or "adamantite":
+            case ItemPickedUpEvent { Gold: true } p:
                 Play(p.Amount >= 200 ? "MONEY3" : p.Amount >= 50 ? "MONEY2" : "MONEY1");
                 break;
             case ItemDroppedEvent:

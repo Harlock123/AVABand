@@ -477,9 +477,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   regeneration (Starving stops it), Faint characters pass out now and then, Starving ones take
   damage and can die of it, and Gorged characters are slowed (−10). Changes are announced (and play
   the `HUNGRY` sound when worse); getting hungry interrupts resting. New characters start just below
-  Full. Food: rations, slime molds, biscuits; Scroll of Satisfy Hunger (alchemist) fills you to just
-  below Gorged. New gear: Amulet of Slow Digestion and Ring of Regeneration (their runes are
-  learned on wearing). The status bar shows the level whenever you're not simply Fed.
+  Full. Food: rations, slime molds, biscuits, and 4.2.5's Scroll of Remove Hunger. Gear: Amulet of
+  Slow Digestion and Amulet of Regeneration (their runes are learned on wearing). The status bar shows the level whenever you're not simply Fed.
 - **Chests & traps** (`Game/GameSession.Traps.cs`, `chest_traps.json`): Angband's six chests —
   small and large, wooden, iron and steel — with its chest traps: one in ten is merely locked,
   the rest get a trap for their level (gas, poison needles, summoning runes, paralysis gas, an

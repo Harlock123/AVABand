@@ -264,10 +264,13 @@ public sealed partial class GameSession
         // Angband: only ZERO_FAIL classes (mage, priest, druid, necromancer) can get below 5%.
         var minimum = StatTables.MinimumFail[idx];
         if (!ClassHas("ZERO_FAIL")) minimum = Math.Max(5, minimum);
-        chance = Math.Max(chance, minimum);
+        // Angband spell_chance: fear makes spells harder (before the minimum), and the chance is
+        // held between the minimum and 50% before stunning adds to it.
+        if (PlayerAfraid) chance += 20;
+        chance = Math.Clamp(chance, minimum, Math.Max(minimum, 50));
         var stun = Player.Timed[TimedIds.Stun];
-        if (stun > 50) chance += 20;
-        else if (stun > 0) chance += 10;
+        if (stun > 50) chance += 25;
+        else if (stun > 0) chance += 15;
         // Angband: amnesia makes spells very difficult.
         if (Player.Timed.Has(TimedIds.Amnesia)) chance = 50 + chance / 2;
         return Math.Clamp(chance, 0, 95);

@@ -26,9 +26,10 @@ public sealed partial class GameSession
     private int PlayerMelee(Monster monster)
     {
         var name = MonsterName(monster);
-        if (Player.Timed.Has(TimedIds.Afraid) || Player.Timed.Has("terror"))
+        if (PlayerAfraid)
         {
             Publish(new MessageEvent($"You are too afraid to attack {name}!"));
+            if (Player.HasGearFlag(ItemFlags.Afraid)) LearnRune(RuneIds.Flag(ItemFlags.Afraid));
             return EnergyTable.MoveEnergy;
         }
 

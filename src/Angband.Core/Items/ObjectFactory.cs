@@ -52,7 +52,7 @@ public sealed class ObjectFactory(GameData data)
             level = Math.Min(1 + level * MaxDepth / rng.RandInt1(MaxDepth), MaxDepth - 1);
 
         var eligible = data.Objects.Where(k =>
-                k.Commonness > 0 && k.Level <= level && k.MinDepth <= level && k.MaxDepth >= level
+                k.Commonness > 0 && (k.MinDepth ?? k.Level) <= level && k.MaxDepth >= level
                 && data.ObjectBase(k.Base) is { } b && b.Id != "gold"
                 && (filter?.Invoke(k) ?? true))
             .ToList();
@@ -127,8 +127,6 @@ public sealed class ObjectFactory(GameData data)
                 if (Math.Abs(power) == 2) item.ToAc += sign * MagicBonus(rng, 10, level);
             }
         }
-        else if (item.Kind.Has("RANDOM_TO_A"))
-            item.ToAc += 5 + MagicBonus(rng, 10, level);
 
         if (power == 2 && b.IsWearable && b.Slot != EquipSlot.Light) TryMakeEgo(rng, item, level);
         if (power == -2 && b.IsWearable) AddRandomCurses(rng, item, rng.RandRange(1, 2));
@@ -249,16 +247,21 @@ public sealed class ObjectFactory(GameData data)
         }
     }
 
-    /// <summary>Angband make_gold: value grows with depth, with rare large finds.</summary>
+    /// <summary>
+    /// Angband make_gold: value grows with depth (16 at the surface, 80 at 2000 ft), with rare large
+    /// finds; the treasure is picked by the value (money_kind): the kinds in order, copper to
+    /// adamantite, spread over values up to the largest drop at the greatest depth.
+    /// </summary>
     public Item MakeGold(GameRandom rng, int level)
     {
-        var avg = 18 * level / 10 + 18;
+        var avg = 16 * level / 10 + 16;
         var value = Math.Max(1, rng.Spread(avg, level + 10));
         while (rng.OneIn(100) && value * 10 <= short.MaxValue) value *= 10;
 
-        var golds = data.Objects.Where(k => k.Base == "gold").OrderBy(k => k.Level).ToList();
-        var kind = golds.LastOrDefault(k => k.Level <= level) ?? golds.FirstOrDefault()
-                   ?? throw new GameDataException("No gold object kinds are defined.");
+        var golds = data.Objects.Where(k => k.Base == "gold").ToList();
+        if (golds.Count == 0) throw new GameDataException("No gold object kinds are defined.");
+        var maxGoldDrop = 3 * (data.Constants.MaxDepth + 1) + 30;
+        var kind = golds[Math.Min(value * 100 / maxGoldDrop * golds.Count / 100, golds.Count - 1)];
         var gold = Create(kind);
         gold.GoldValue = value;
         return gold;

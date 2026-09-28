@@ -139,6 +139,9 @@ public sealed partial class GameSession
         if (weight > p.WeightLimit / 2) speed -= (weight - p.WeightLimit / 2) / Math.Max(1, p.WeightLimit / 10);
         if (Hunger.LevelOf(p.Food, Data.Constants) == HungerLevel.Gorged) speed -= 10;
 
+        // Angband calc_bonuses: fear (timed, or from gear such as the Ring of Escaping) spoils aim
+        // but makes you wary.
+        if (PlayerAfraid) { p.ToHit -= 20; p.Armour += 8; }
         if (timed.Has("infravision")) infravision += 5;
         if (timed.Has("berserk")) { p.ToHit += 12; p.Armour -= 10; }
         if (timed.Has("stoneskin")) { p.Armour += 40; speed -= 5; }
@@ -278,7 +281,7 @@ public sealed partial class GameSession
         Level.Objects.Remove(Player.Position, gold);
         Player.Gold += gold.GoldValue;
         Publish(new MessageEvent($"You have found {gold.GoldValue} gold pieces worth of {ItemNaming.Plain(gold.Kind.Name, false)}."));
-        Publish(new ItemPickedUpEvent(gold.Kind.Id, gold.GoldValue));
+        Publish(new ItemPickedUpEvent(gold.Kind.Id, gold.GoldValue, Gold: true));
     }
 
     /// <summary>
@@ -529,9 +532,12 @@ public sealed partial class GameSession
             {
                 damage = missile.Damage.Roll(Rng) + missile.ToDam + (launcher?.ToDam ?? 0);
                 if (launcher is null) damage *= ThrowMultiplier(missile);
-                damage *= Math.Max(1, multiplier) * bestMult;
+                // Angband ranged_damage: a slay or brand adds its multiplier to the launcher's (1 thrown).
+                damage *= Math.Max(1, multiplier) + (bestMult > 1 ? bestMult : 0);
                 damage = CombatMath.CriticalShot(Rng, missile.Weight, toHit, Player.Level, damage, out grade);
             }
+            // Angband make_ranged_throw: exploding things (flasks of oil) do three times as much.
+            if (missile.Explodes) damage *= 3;
 
             var name = MonsterName(monster);
             Publish(new PlayerAttackEvent(monster.Id, Hit: true, damage, grade, Ranged: true));
@@ -547,8 +553,10 @@ public sealed partial class GameSession
         ShowProjection(Player.Position, [.. path.Take(flown)], null, null, ProjectionKind.Missile);
 
         // Angband breakage_chance: the base's chance on a hit, its square (as a fraction) on a miss —
-        // so flasks and potions (100%) always shatter.
-        var breakChance = hitSomething ? missile.Base.BreakChance : missile.Base.BreakChance * missile.Base.BreakChance / 100;
+        // so flasks and potions (100%) always shatter; throwing weapons (not ammunition, nor
+        // things that explode) break only 1 time in 100.
+        var perc = missile.IsThrowing && !missile.Explodes && !missile.IsAmmo ? 1 : missile.Base.BreakChance;
+        var breakChance = hitSomething ? perc : perc * perc / 100;
         if (!missile.IsArtifact && Rng.Percent(breakChance))
         {
             if (Level[landing].Has(SquareFlags.Seen))
@@ -567,7 +575,7 @@ public sealed partial class GameSession
             Publish(new MessageEvent("Your light cannot be refilled."));
             return 0;
         }
-        if (!Player.Inventory.Contains(flask) || !flask.Kind.Has("FUEL"))
+        if (!Player.Inventory.Contains(flask) || !flask.IsFuel)
         {
             Publish(new MessageEvent("That is not fuel."));
             return 0;
@@ -675,7 +683,7 @@ public sealed partial class GameSession
                 SetFood(Data.Constants.FoodMax - 1);
                 return true;
             case "teleport":
-                return TeleportPlayer(e.Int(0));
+                return TeleportPlayer(TeleportDistance(e.Arg(0)));
             case "light_area":
                 LightArea();
                 return true;
@@ -699,6 +707,20 @@ public sealed partial class GameSession
     }
 
     /// <summary>Teleports the player to a random open square within <paramref name="range"/> (at least half as far if possible).</summary>
+    /// <summary>
+    /// A teleport's range: squares, or (Angband effect_handler_TELEPORT) "M60" for a share of the
+    /// level's size — 60% of its larger side, give or take up to a quarter.
+    /// </summary>
+    private int TeleportDistance(string arg)
+    {
+        if (arg.StartsWith('M') && int.TryParse(arg[1..], out var percent))
+        {
+            var dis = Math.Max(Level.Width, Level.Height) * percent / 100;
+            return Rng.OneIn(2) ? dis - Rng.RandInt0(Math.Max(1, dis / 4)) : dis + Rng.RandInt0(Math.Max(1, dis / 4));
+        }
+        return int.TryParse(arg, out var range) ? range : 0;
+    }
+
     public bool TeleportPlayer(int range)
     {
         var from = Player.Position;

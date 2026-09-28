@@ -90,7 +90,15 @@ public class ItemGenerationTests
         var shallow = Enumerable.Range(0, 2000).Average(_ => f.MakeGold(rng, 1).GoldValue);
         var deep = Enumerable.Range(0, 2000).Average(_ => f.MakeGold(rng, 50).GoldValue);
         Assert.True(deep > shallow * 2);
-        Assert.Equal("mithril", f.MakeGold(rng, 45).Kind.Id);
+
+        // Angband money_kind: the treasure goes by the value, copper to adamantite across the largest
+        // drop at the greatest depth, so shallow finds are nearly all copper and deep ones gems.
+        var shallowKinds = Enumerable.Range(0, 1000).Select(_ => f.MakeGold(rng, 1).Kind.Id).ToList();
+        Assert.True(shallowKinds.Count(k => k == "copper") > 950);
+        var deepKinds = Enumerable.Range(0, 1000).Select(_ => f.MakeGold(rng, 100).Kind.Id).ToHashSet();
+        Assert.Contains("garnets", deepKinds);
+        Assert.Contains("rubies", deepKinds);
+        Assert.DoesNotContain("copper", deepKinds);
     }
 
     [Fact]

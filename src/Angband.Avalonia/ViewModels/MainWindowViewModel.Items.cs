@@ -303,7 +303,7 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Throw => carried.Concat(floor).OrderBy(i => !i.IsThrowing ? 2 : inv.Quiver.Contains(i) ? 0 : 1)
                 .Concat(inv.Weapon is { } weapon ? [weapon] : []),
             ItemPromptKind.Pickup => floor,
-            ItemPromptKind.Refuel => inv.Pack.Where(i => i.Kind.Has("FUEL")),
+            ItemPromptKind.Refuel => inv.Pack.Where(i => i.IsFuel),
             ItemPromptKind.Inscribe => inv.Equipped.Concat(carried).Concat(floor),
             ItemPromptKind.Uninscribe => inv.Equipped.Concat(carried).Concat(floor).Where(i => i.Note is not null),
             ItemPromptKind.Ignore => inv.Equipped.Concat(carried).Concat(floor),

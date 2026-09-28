@@ -232,6 +232,9 @@ public sealed partial class GameSession
     /// <summary>Immunity (Angband player_is_immune): the highest level of resistance.</summary>
     private bool ImmuneTo(string element) => Player.Resists.GetValueOrDefault(element) >= 3;
 
+    /// <summary>Afraid (Angband OF_AFRAID): frightened or in terror, or wearing something that frightens.</summary>
+    public bool PlayerAfraid => Player.Timed.Has(TimedIds.Afraid) || Player.Timed.Has("terror") || Player.HasGearFlag(Definitions.ItemFlags.Afraid);
+
     private bool HoldsLife => Player.HasGearFlag(Definitions.ItemFlags.HoldLife) || Player.Resists.GetValueOrDefault("hold_life") > 0;
 
     /// <summary>What protects against each status (Angband player_timed.txt fail lines).</summary>

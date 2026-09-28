@@ -8,11 +8,14 @@ when 4.2.5 has none), and fields that are AVABand's own are kept, as are ids.
 Usage:
     sync_with_angband.py <angband lib/gamedata> [--data src/Angband.Data/data] [--only monsters,objects,...]
 """
-import argparse, json, os, sys
+import argparse, json, os, re, sys
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import angband_monster_import as mi  # noqa: E402
+import angband_object_import as oi  # noqa: E402
+import angband_ego_artifact_import as ea  # noqa: E402
+import compare_with_angband as cw  # noqa: E402
 
 # AVABand kept two monsters under their older Angband names; they are 4.2.5's under another name.
 MONSTER_ALIASES = {"jackal": "wild dog", "hill orc": "half-orc"}
@@ -206,7 +209,224 @@ def sync_blow_effects(gd, data):
     print(f"blow effects: {changed} of {len(ours)} brought into line")
 
 
-SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects}
+def effect_key(part):
+    a = part.strip().split(":")
+    return ":".join(a[:2 if a[0] in cw.SUBTYPED and len(a) > 1 else 1])
+
+
+def merge_effect(ours, theirs, known, keep_unknown_missing=False):
+    """Ours, part by part, brought into line with 4.2.5's translation: its parts replace ours with the
+    same key, parts the importer could produce but 4.2.5 lacks go, and AVABand's own parts stay."""
+    o = [p.strip() for p in (ours or "").split(";") if p.strip()]
+    t = [p.strip() for p in (theirs or "").split(";") if p.strip()]
+    tkeys = {}
+    for p in t:
+        tkeys.setdefault(effect_key(p), []).append(p)
+    # The importer spells TIMED_INC:BOLD as cure:afraid; AVABand as timed:bold.
+    if any(effect_key(p) == "timed:bold" for p in o) and "cure:afraid" in tkeys:
+        tkeys.pop("cure:afraid")
+    out, done = [], set()
+    for p in o:
+        k = effect_key(p)
+        if k in tkeys:
+            if k not in done:
+                out += tkeys[k]
+                done.add(k)
+        elif k not in known or keep_unknown_missing:
+            out.append(p)
+    out += [p for k, ps in tkeys.items() if k not in done for p in ps]
+    return "; ".join(out) or None
+
+
+def set_or_pop(o, key, value, default):
+    if value == default or value is None:
+        o.pop(key, None)
+    else:
+        o[key] = value
+
+
+def fixed_or_roll(o, field, roll_key, text):
+    """A to-hit/to-dam/to-ac/modifier: a plain number in `field`, or a random value in rolls."""
+    text = (text or "0").replace(" ", "")
+    rolls = dict(o.get("rolls") or {})
+    rolls.pop(roll_key, None)
+    if re.fullmatch(r"[+-]?\d+", text):
+        set_or_pop(o, field, int(text), 0)
+    else:
+        o.pop(field, None)
+        rolls[roll_key] = oi.random_value(text)
+    set_or_pop(o, "rolls", rolls or None, None)
+
+
+def slay_def(tag):
+    flag, _, mult = tag.partition("x")
+    return {"monsterFlag": flag, "multiplier": int(mult), "verb": "smite", "name": ea.SLAY_NAMES[flag]}
+
+
+def brand_def(tag):
+    elem, _, mult = tag.partition("x")
+    code = next(k for k, v in ea.BRANDS.items() if v[0] == elem)
+    return {"element": elem, "multiplier": int(mult), "verb": ea.BRANDS[code][1], "name": ea.BRANDS[code][2]}
+
+
+def sync_props(o, tp):
+    """Modifiers, resists, flags, ignores, curses, slays and brands, as 4.2.5 has them."""
+    op = cw.props_ours(o)
+    mods = dict(o.get("modifiers") or {})
+    rolls = dict(o.get("rolls") or {})
+    for m in set(op["mods"]) | set(tp["mods"]):
+        if op["mods"].get(m, "0") == tp["mods"].get(m, "0"):
+            continue
+        mods.pop(m, None)
+        rolls.pop(m, None)
+        v = tp["mods"].get(m)
+        if v is None:
+            continue
+        if re.fullmatch(r"-?\d+", v):
+            mods[m] = int(v)
+        else:
+            rolls[m] = oi.random_value(v)
+    set_or_pop(o, "modifiers", mods or None, None)
+    set_or_pop(o, "rolls", rolls or None, None)
+    for key in ("resists", "flags", "ignore", "curses"):
+        if op[key] != tp[key]:
+            kept = [x for x in (o.get(key) or []) if x in tp[key]]
+            set_or_pop(o, key, kept + sorted(tp[key] - set(kept)) or None, None)
+    if op["slays"] != tp["slays"]:
+        set_or_pop(o, "slays", [slay_def(t) for t in sorted(tp["slays"])] or None, None)
+    if op["brands"] != tp["brands"]:
+        set_or_pop(o, "brands", [brand_def(t) for t in sorted(tp["brands"])] or None, None)
+
+
+def sync_objects(gd, data):
+    path = os.path.join(data, "objects.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    idx = {}
+    for o in ours:
+        idx.setdefault((cw.family(o["base"]), cw.norm_name(o["name"])), o)
+    theirs = [(e, cw.one(e, "type")) for e in cw.parse_records(os.path.join(gd, "object.txt"))
+              if cw.one(e, "type") != "none" and not e["name"].startswith("<")]
+    for name, b in cw.class_books(gd).items():
+        if b["props"]:
+            cost, common, rng = b["props"].split(":")
+            theirs.append(({"name": name, "lines": [("type", b["tval"]), ("level", rng.split(" to ")[0].strip()),
+                                                    ("weight", "30"), ("cost", cost), ("alloc", f"{common}:{rng}")]},
+                           b["tval"]))
+    known = cw.importer_effect_keys(gd)
+    scratch = cw.Section("objects", "", "", "")
+    changed, missing = 0, []
+    for e, t in theirs:
+        base = cw.TYPE_TO_BASE.get(t)
+        if base is None:
+            continue
+        o = idx.get((cw.family(base), cw.norm_name(e["name"])))
+        if o is None:
+            missing.append((e, t, base))
+            continue
+        before = json.dumps(o, sort_keys=True)
+        ob = o["base"]
+        if t != "gold":
+            o["level"] = int(cw.one(e, "level", "0"))
+        o["cost"] = int(cw.one(e, "cost", "0"))
+        o["weight"] = int(cw.one(e, "weight", "0"))
+        alloc = cw.one(e, "alloc")
+        if alloc:
+            common, rng = alloc.split(":", 1)
+            lo, _, hi = rng.partition(" to ")
+            common, lo, hi = int(common), int(lo), int(hi or lo)
+        else:
+            common, lo, hi = 0, None, None
+        o["commonness"] = common
+        if common:
+            o["minDepth"] = lo
+            if not (o.get("maxDepth", 127) >= 100 and hi >= 100):
+                set_or_pop(o, "maxDepth", hi, 127)
+        attack = (cw.one(e, "attack") or "").split(":") + ["", "", ""]
+        armor = (cw.one(e, "armor") or "").split(":") + ["", ""]
+        if ob in cw.WEAPONY or "damage" in o:
+            set_or_pop(o, "damage", attack[0] if cw.canon_rv(attack[0]) != "0" else None, None)
+        fixed_or_roll(o, "toHit", "to_h", attack[1])
+        fixed_or_roll(o, "toDam", "to_d", attack[2])
+        set_or_pop(o, "armour", int(armor[0] or 0), 0)
+        fixed_or_roll(o, "toAc", "to_a", armor[1])
+        sync_props(o, cw.props_42(e, scratch))
+        pval = cw.one(e, "pval")
+        if base == "bow":
+            set_or_pop(o, "multiplier", int(pval or 0), 0)
+        elif base in ("flask", "light") and pval:
+            o["fuel"] = int(pval)
+        for key, line in (("charges", "charges"), ("recharge", "time")):
+            v = cw.one(e, line)
+            set_or_pop(o, key, v.replace(" ", "") if v else None, None)
+        set_or_pop(o, "power", int(cw.one(e, "power", "0")), 0)
+        pile = cw.one(e, "pile")
+        if ob in cw.AMMO or "stackSize" in o:
+            set_or_pop(o, "stackSize", pile.split(":")[1] if pile else None, None)
+        if cw.get(e, "effect") and not cw.get(e, "expr"):
+            eff, miss = oi.effects(e)
+            field = "activation" if (o.get("activation") or ob not in (
+                "potion", "scroll", "food", "mushroom", "wand", "staff", "rod", "flask")) else "effect"
+            set_or_pop(o, field, merge_effect(o.get(field), eff, known, keep_unknown_missing=bool(miss)), None)
+        changed += json.dumps(o, sort_keys=True) != before
+    # Kinds 4.2.5 doesn't have go, except the special artifact kinds it makes from artifact.txt
+    # (the Phial, the Star, the rings of power...): those are marked INSTA_ART, as 4.2.5 makes them.
+    used = {id(idx.get((cw.family(cw.TYPE_TO_BASE[t]), cw.norm_name(e["name"]))))
+            for e, t in theirs if t in cw.TYPE_TO_BASE}
+    artifact_kinds = {a["kind"] for a in json.load(open(os.path.join(data, "artifacts.json"), encoding="utf-8"))}
+    removed = []
+    for o in list(ours):
+        if id(o) in used or "INSTA_ART" in (o.get("flags") or []):
+            continue
+        if o["id"] in artifact_kinds:
+            o["flags"] = (o.get("flags") or []) + ["INSTA_ART"]
+        else:
+            ours.remove(o)
+            removed.append(o["id"])
+    if removed:
+        print(f"objects: removed (not in 4.2.5): {removed}")
+    # Kinds 4.2.5 has and we don't: made by the importer's conversion, beside their fellows.
+    for e, t, base in missing:
+        if base == "gold":
+            continue  # the treasures are placed by hand, in 4.2.5's order (MakeGold picks by it)
+        if base == "bow":
+            base = "sling" if "Sling" in e["name"] else "crossbow" if "Crossbow" in e["name"] else "bow"
+        kind = oi.convert(e, base)
+        effect, miss = oi.effects(e)
+        if effect and not miss:
+            kind["effect"] = effect
+        elif miss:
+            print(f"objects: {t}: {e['name']} left out ({', '.join(miss)} untranslatable)")
+            continue
+        if cw.one(e, "power"):
+            kind["power"] = int(cw.one(e, "power"))
+        if not kind["commonness"]:
+            kind.pop("minDepth", None)
+            kind.pop("maxDepth", None)
+        props = cw.props_42(e, scratch)
+        if props["ignore"]:
+            kind["ignore"] = sorted(props["ignore"])
+        name = kind["name"].replace("~", "")
+        kind_id = oi.slug(name)
+        if base in oi.PREFIX and not kind_id.startswith(oi.PREFIX[base].rstrip("_")):
+            kind_id = oi.PREFIX[base] + kind_id
+        kind = {"id": kind_id, **{k: v for k, v in kind.items() if k != "id"}}
+        at = max((i for i, o in enumerate(ours) if o["base"] == base), default=len(ours) - 1) + 1
+        ours.insert(at, kind)
+        print(f"objects: added {kind_id}")
+    for i, o in enumerate(ours):
+        # Depths read best beside commonness.
+        if "minDepth" in o or "maxDepth" in o:
+            items = [(k, v) for k, v in o.items() if k not in ("minDepth", "maxDepth")]
+            at = next((n + 1 for n, (k, _) in enumerate(items) if k == "commonness"), len(items))
+            depths = [(k, o[k]) for k in ("minDepth", "maxDepth") if k in o]
+            ours[i] = dict(items[:at] + depths + items[at:])
+    write_json(path, ours, 2)
+    print(f"objects: {changed} of {len(ours)} brought into line; not in ours: "
+          f"{[t + ': ' + e['name'] for e, t, _ in missing]}")
+
+
+SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
+            "objects": sync_objects}
 
 
 def main():

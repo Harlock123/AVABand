@@ -41,7 +41,7 @@ public sealed record RecalledEvent(bool Up) : IGameEvent;
 /// <summary>A unique monster seen for the very first time (its lore had no sighting).</summary>
 public sealed record UniqueFirstSeenEvent(Monsters.Monster Monster) : IGameEvent;
 public sealed record StatusChangedEvent(string EffectId, int Value) : IGameEvent;
-public sealed record ItemPickedUpEvent(string KindId, int Amount) : IGameEvent;
+public sealed record ItemPickedUpEvent(string KindId, int Amount, bool Gold = false) : IGameEvent;
 public sealed record ItemWieldedEvent(string KindId) : IGameEvent;
 public sealed record ItemUsedEvent(string KindId, string Verb) : IGameEvent;
 public sealed record RuneLearnedEvent(string Rune) : IGameEvent;

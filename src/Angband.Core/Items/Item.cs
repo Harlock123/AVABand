@@ -80,6 +80,12 @@ public sealed class Item
     /// <summary>Made for throwing (Angband THROWING): more damage thrown, and a place in the quiver.</summary>
     public bool IsThrowing => Kind.Has("THROWING") || Flags.Contains("THROWING");
 
+    /// <summary>Bursts when thrown (Angband EXPLODE, flasks of oil): three times the damage, and it always breaks.</summary>
+    public bool Explodes => Kind.Has("EXPLODE");
+
+    /// <summary>Fuel for a lantern (Angband tval_is_fuel): a flask.</summary>
+    public bool IsFuel => Base.Id == "flask";
+
     /// <summary>
     /// How many missiles it counts as in the quiver: ammunition one each, throwing weapons five
     /// (Angband thrown_quiver_mult).

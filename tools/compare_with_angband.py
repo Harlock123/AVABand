@@ -267,7 +267,7 @@ def load(data, name):
 
 FLAG_TO_RESIST = dict(OI.FLAG_RESISTS, PROT_STUN="stun")
 FLAG_TO_ABILITY = dict(OI.FLAG_ABILITIES)
-EXTRA_KIND_FLAGS = {"BURNS_OUT": "BURNS_OUT", "TAKES_FUEL": "REFUELABLE", "INSTA_ART": "INSTA_ART"}
+EXTRA_KIND_FLAGS = {"BURNS_OUT": "BURNS_OUT", "TAKES_FUEL": "REFUELABLE", "INSTA_ART": "INSTA_ART", "EXPLODE": "EXPLODE"}
 SLAY_FLAGS = set(EA.SLAY_NAMES)
 BRAND_ELEMS = {k: v[0] for k, v in EA.BRANDS.items()}
 
@@ -561,7 +561,6 @@ def compare_objects(gd, data):
         idx.setdefault((family(o["base"]), norm_name(o["name"])), o)
     used = set()
     theirs = []
-    level_gated = []
     for e in parse_records(os.path.join(gd, "object.txt")):
         t = one(e, "type")
         if t == "none" or e["name"].startswith("<"):
@@ -602,12 +601,10 @@ def compare_objects(gd, data):
             common, lo, hi = 0, None, None
         sec.cmp(label, "commonness", o.get("commonness", 10), common, "commonness" not in o)
         if common and o.get("commonness", 10):
-            # AVABand generates a kind when level <= depth and minDepth <= depth <= maxDepth;
-            # 4.2.5 uses the alloc range only.
+            # AVABand generates a kind across minDepth..maxDepth (as 4.2.5 its alloc range), or from
+            # its level when it has no minDepth.
             if "minDepth" in o:
                 sec.cmp(label, "alloc min depth (minDepth)", o["minDepth"], lo)
-                if o.get("level", 0) > max(lo, o["minDepth"]):
-                    level_gated.append(f"{o['id']} (level {o['level']}, alloc min {lo})")
             else:
                 sec.cmp(label, "alloc min depth (ours has no minDepth: level gates it)", o.get("level", 0), lo)
             omax = o.get("maxDepth", 127)
@@ -659,16 +656,11 @@ def compare_objects(gd, data):
         if o["id"] not in used:
             tag = " [INSTA_ART special kind: 4.2.5 makes these from artifact.txt]" if "INSTA_ART" in (o.get("flags") or []) else ""
             sec.only_ours.append(f"{o['id']} ({o['base']}: {o['name']}){tag}")
-    if level_gated:
-        sec.notes.append(
-            f"Engine difference, not data drift: AVABand's ObjectFactory also requires level <= depth, so these "
-            f"{len(level_gated)} kinds whose level exceeds their alloc minimum first appear at their level rather "
-            f"than their alloc minimum (4.2.5 ignores level for allocation): " + ", ".join(level_gated) + ".")
     sec.notes += [
         "Matched by (base, name) ignoring '&', '~', case and accents; sling/bow/crossbow all match 4.2.5 `bow`.",
         "Weight is in tenths of a pound on both sides, compared directly.",
-        "Allocation: AVABand generates a kind only when level <= depth and minDepth <= depth <= maxDepth, so its "
-        "effective minimum is max(level, minDepth); a missing minDepth/maxDepth is 0/127 (the C# defaults). "
+        "Allocation: AVABand generates a kind across minDepth..maxDepth, as 4.2.5 does its alloc range (level "
+        "plays no part); without a minDepth, from its level. A missing maxDepth is 127 (the C# default). "
         "A max depth of 100 or more on both sides is treated as equal. Depths aren't compared when either side's "
         "commonness is 0.",
         "Damage dice are compared for weapons, ammo, diggers, flasks and anything ours gives damage to; the 4.2.5 "

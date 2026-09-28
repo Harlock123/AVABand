@@ -96,7 +96,7 @@ public static class ObjectInfo
         "nourish" => "feeds you",
         "satisfy" => "fills your stomach",
         "set_food" => "leaves you hungry",
-        "teleport" => e.Int(0) <= 10 ? "teleports you a short distance" : "teleports you",
+        "teleport" => !e.Arg(0).StartsWith('M') && e.Int(0) <= 10 ? "teleports you a short distance" : "teleports you",
         "teleport_level" => "takes you up or down a level",
         "deep_descent" => "takes you five levels down, after a short delay",
         "recall" => "recalls you to the town or to your deepest level",

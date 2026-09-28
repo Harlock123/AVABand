@@ -42,10 +42,16 @@ public sealed partial class GameSession
         "heal_monster", "haste_monster", "clone_monster", "polymorph", "disarm", "wonder", "breath",
     ];
 
+    /// <summary>
+    /// The device skill, less a twentieth (rounded up) while afraid (Angband calc_bonuses,
+    /// adjust_skill_scale for OF_AFRAID).
+    /// </summary>
+    public int DeviceSkill => PlayerAfraid ? Player.SkillDevice - (Math.Abs(Player.SkillDevice) + 19) / 20 : Player.SkillDevice;
+
     /// <summary>Angband's device skill check (3.x use_device): harder the deeper the device.</summary>
     public int DeviceFailChance(Item item)
     {
-        var chance = Player.SkillDevice;
+        var chance = DeviceSkill;
         if (Player.Timed.Has(TimedIds.Confused)) chance /= 2;
         if (Player.Timed.Has(TimedIds.Image)) chance -= chance / 5; // Angband: hallucination costs a fifth
         if (Player.Timed.Has(TimedIds.Amnesia)) chance -= chance / 5; // and so does amnesia
@@ -88,7 +94,7 @@ public sealed partial class GameSession
         }
 
         // Angband: chance = skill - level; below USE_DEVICE it rarely works.
-        var chance = Player.SkillDevice;
+        var chance = DeviceSkill;
         if (Player.Timed.Has(TimedIds.Confused)) chance /= 2;
         if (Player.Timed.Has(TimedIds.Image)) chance -= chance / 5; // Angband: hallucination costs a fifth
         if (Player.Timed.Has(TimedIds.Amnesia)) chance -= chance / 5; // and so does amnesia
@@ -178,7 +184,7 @@ public sealed partial class GameSession
 
         // Angband: the activation's level makes it harder, as for other devices.
         var level = item.Artifact?.Level ?? item.Kind.Level;
-        var chance = Player.SkillDevice;
+        var chance = DeviceSkill;
         if (Player.Timed.Has(TimedIds.Confused)) chance /= 2;
         if (Player.Timed.Has(TimedIds.Image)) chance -= chance / 5; // Angband: hallucination costs a fifth
         if (Player.Timed.Has(TimedIds.Amnesia)) chance -= chance / 5; // and so does amnesia

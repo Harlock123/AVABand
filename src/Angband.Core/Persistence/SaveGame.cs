@@ -187,11 +187,17 @@ public static class SaveGame
         Resists = [.. i.Resists], Curses = [.. i.Curses], Flags = [.. i.Flags], OriginDepth = i.OriginDepth, Note = i.Note, Ignored = i.Ignored, Assessed = i.Assessed,
     };
 
-    /// <summary>Objects renamed since older saves: AVABand's first books became Angband 4.2's.</summary>
+    /// <summary>
+    /// Objects renamed since older saves: AVABand's first books became Angband 4.2's, and the kinds
+    /// 4.2.5 doesn't have became its nearest (a ring stays a ring, so what is worn still fits).
+    /// </summary>
     private static readonly Dictionary<string, string> RenamedKinds = new(StringComparer.Ordinal)
     {
         ["magic_for_beginners"] = "first_spells", ["conjurings_and_tricks"] = "attacks_and_knowledge",
         ["words_of_wisdom"] = "cleansing_power", ["call_of_the_wild"] = "lesser_charms",
+        ["satisfy_hunger"] = "scroll_of_remove_hunger", ["detect_monsters"] = "scroll_of_detect_invisible",
+        ["soft_studded_leather"] = "studded_leather_armour", ["leather_scale_mail"] = "soft_armour_leather_scale_mail",
+        ["ring_of_regeneration"] = "ring_of_bodykeeping", ["amulet_of_stealth"] = "amulet_of_infravision",
     };
 
     private static LevelSave LevelToSave(GameSession g, Level level, KnownMap knownMap, bool withScent)

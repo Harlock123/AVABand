@@ -61,7 +61,7 @@ public class HungerTests
 
         var normal = Eaten(_ => { });
         var slow = Eaten(g => Wear(g, "amulet_of_slow_digestion"));
-        var regen = Eaten(g => Wear(g, "ring_of_regeneration"));
+        var regen = Eaten(g => Wear(g, "amulet_of_regeneration"));
         Assert.True(slow * 4 < normal, $"slow {slow} vs normal {normal}");
         Assert.True(regen > normal * 2, $"regen {regen} vs normal {normal}");
     }
@@ -131,17 +131,6 @@ public class HungerTests
         var ration = game.Objects.Create(game.Data.Object("ration_of_food")!, 1);
         game.Execute(new UseCommand(game.Player.Inventory.Add(ration)!));
         Assert.InRange(game.Player.Food, 6900, 7000);
-    }
-
-    [Fact]
-    public void Satisfy_hunger_fills_to_just_below_gorged()
-    {
-        var game = Game();
-        game.Player.Food = 300;
-        var scroll = game.Objects.Create(game.Data.Object("satisfy_hunger")!, 1);
-        game.Execute(new UseCommand(game.Player.Inventory.Add(scroll)!));
-        Assert.InRange(game.Player.Food, C.FoodMax - 30, C.FoodMax - 1);
-        Assert.Equal(HungerLevel.Full, game.HungerLevel);
     }
 
     [Fact]

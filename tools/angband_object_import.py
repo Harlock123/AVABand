@@ -32,6 +32,7 @@ FLAG_RESISTS = {"FREE_ACT": "free_act", "SEE_INVIS": "see_invis", "PROT_FEAR": "
                 "PROT_CONF": "conf", "SUST_STR": "sust_str", "SUST_INT": "sust_int", "SUST_WIS": "sust_wis",
                 "SUST_DEX": "sust_dex", "SUST_CON": "sust_con"}
 FLAG_ABILITIES = {"REGEN": "REGEN", "SLOW_DIGEST": "SLOW_DIGEST", "HOLD_LIFE": "HOLD_LIFE", "TELEPATHY": "TELEPATHY",
+                  "FEATHER": "FEATHER", "AFRAID": "AFRAID", "IMPAIR_HP": "IMPAIR_HP",
                   "THROWING": "THROWING"}
 CURSES = {"vulnerability": "vulnerability", "teleportation": "teleportation", "dullness": None, "sickliness": None,
           "enveloping": None, "irritation": None, "weakness": "weakness", "clumsiness": "clumsiness",
@@ -125,8 +126,9 @@ def effects(e):
             select -= 1
             if select:
                 continue
-            # All the alternatives must be breaths of one strength: "breath:acid/fire/...:dice".
-            elems = [c.split(":")[1] for c in choices if c.startswith("BREATH:")]
+            # All the alternatives must be breaths (or arcs, which AVABand breathes) of one strength:
+            # "breath:acid/fire/...:dice".
+            elems = [c.split(":")[1] for c in choices if c.startswith(("BREATH:", "ARC:"))]
             if len(elems) != len(choices) or any(el not in ELEMENTS for el in elems):
                 missing.append("SELECT")
                 continue
@@ -203,7 +205,8 @@ def effects(e):
         elif name == "DARKEN_AREA" or (name == "SPOT" and arg.startswith("DARK")):
             t = "darkness"
         elif name == "TELEPORT":
-            t = f"teleport:{d if d.isdigit() else 10}"
+            # "M60": a share of the level's size (60% of its larger side), as 4.2.5 reads it.
+            t = f"teleport:{dice.strip()}" if dice and re.fullmatch(r"M\d+", dice.strip()) else f"teleport:{d if d.isdigit() else 10}"
         elif name == "TELEPORT_LEVEL":
             t = "teleport_level"
         elif name == "DEEP_DESCENT":
