@@ -651,6 +651,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     remembers it (stupid monsters never do, ordinary ones half the time), and later leaves out the
     bolts, balls and breaths you resist (25% a level of resistance, 50% for smart monsters) and the
     status spells your protections stop; one turn in twenty it forgets. It is kept in the save.
+    And **to-damage is a percentage of dice** (4.2's experimental O-combat, off by default;
+    `Game/GameSession.PercentDamage.cs`): to-dam no longer adds to every blow but enlarges each
+    damage die by a percentage (+10 is +39%, +20 is +72%, up to +255%), slays and brands multiply
+    the dice (evil ×1.8, animals ×2, the ×3 slays ×2.5, the ×5 ones ×3.5, brands ×1.5 or ×2.5) and
+    add their extra, a critical adds up to five whole dice, and everyone has two blows at least.
   - *Cheat*: peek into monster creation (uniques on the level), peek into dungeon creation (the
     level profile and its vaults), and avoid death (you are healed, cured and sent to town). Once
     one is used the character is marked as a cheater and, as in Angband, its score is not recorded.
@@ -658,7 +663,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     staircase after going down), where AVABand used to put you on a staircase leading onward.
   - Not offered: the roguelike keyset (AVABand's keys are rebindable instead), use sound (see the
     Sound tab), animate flicker, auto-more, cheat_xtra, and the birth options for floor stacking,
-    persistent levels and percentage damage, which
+    persistent levels, which
     AVABand doesn't have.
 - **Inscriptions** (`Items/Inscription.cs`, `Game/GameSession.Inscriptions.cs`,
   `ViewModels/MainWindowViewModel.Inscriptions.cs`): Angband's notes on objects. `{` picks an item

@@ -191,6 +191,7 @@ public sealed partial class GameSession
             foreach (var r in shape.Resists) resists[r] = Math.Max(resists.GetValueOrDefault(r), 1);
             foreach (var f in shape.Flags) p.GearFlags.Add(f);
         }
+        if (PercentDamage) p.Blows = Math.Max(p.Blows, 200); // Angband calc_blows: two blows at least in O-combat
         p.TotalInfravision = Math.Max(0, infravision);
         p.EquipmentSpeed = speed;
         p.LightRadius = Math.Max(0, light);
@@ -510,11 +511,18 @@ public sealed partial class GameSession
             var chance = CombatMath.MissileChance(skill, toHit, Player.Position.DistanceTo(grid));
             if (!CombatMath.TestHit(Rng, chance, monster.Race.Armour, monster.IsVisible)) continue;
 
-            var (bestMult, verb, rune) = BestMultiplier(missile, monster);
-            var damage = missile.Damage.Roll(Rng) + missile.ToDam + (launcher?.ToDam ?? 0);
-            if (launcher is null) damage *= ThrowMultiplier(missile);
-            damage *= Math.Max(1, multiplier) * bestMult;
-            damage = CombatMath.CriticalShot(Rng, missile.Weight, toHit, Player.Level, damage, out var grade);
+            var (bestMult, verb, rune, oMultiplier) = BestMultiplier(missile, monster);
+            int damage;
+            CriticalGrade grade;
+            if (PercentDamage)
+                damage = ORangedDamage(monster, missile, launcher, multiplier, oMultiplier, skill, toHit, out grade);
+            else
+            {
+                damage = missile.Damage.Roll(Rng) + missile.ToDam + (launcher?.ToDam ?? 0);
+                if (launcher is null) damage *= ThrowMultiplier(missile);
+                damage *= Math.Max(1, multiplier) * bestMult;
+                damage = CombatMath.CriticalShot(Rng, missile.Weight, toHit, Player.Level, damage, out grade);
+            }
 
             var name = MonsterName(monster);
             Publish(new PlayerAttackEvent(monster.Id, Hit: true, damage, grade, Ranged: true));

@@ -74,16 +74,26 @@ public sealed partial class GameSession
             return -1;
         }
 
-        var (multiplier, verb, rune) = weapon is null ? (1, "hit", null) : BestMultiplier(weapon, monster);
+        var (multiplier, verb, rune, oMultiplier) = weapon is null ? (1, "hit", null, 10) : BestMultiplier(weapon, monster);
         if (Player.Timed.Has("att_pois") && PoisonCoating(monster.Race) is { } venom && venom > multiplier)
-            (multiplier, verb, rune) = (venom, "poison", null);
+            (multiplier, verb, rune, oMultiplier) = (venom, "poison", null, OBrandMultiplier(3, venom > 3));
         // Smite Evil and Demon Bane (Angband ATT_EVIL: EVIL_2, ATT_DEMON: DEMON_5).
-        if (Player.Timed.Has("att_evil") && monster.Race.Has(MonsterFlags.Evil) && multiplier < 2) (multiplier, verb, rune) = (2, "smite", null);
-        if (Player.Timed.Has("att_demon") && monster.Race.Has("DEMON") && multiplier < 5) (multiplier, verb, rune) = (5, "smite", null);
-        var damage = dice.Roll(Rng) * multiplier;
-        damage = CombatMath.CriticalMelee(Rng, weapon?.Weight ?? 0, weaponToHit + Player.EffectiveToHit,
-            Player.SkillMelee, damage, out var grade);
-        damage = Math.Max(0, damage + weaponToDam + Player.EffectiveToDam);
+        if (Player.Timed.Has("att_evil") && monster.Race.Has(MonsterFlags.Evil) && multiplier < 2)
+            (multiplier, verb, rune, oMultiplier) = (2, "smite", null, OSlayMultiplier(MonsterFlags.Evil, 2));
+        if (Player.Timed.Has("att_demon") && monster.Race.Has("DEMON") && multiplier < 5)
+            (multiplier, verb, rune, oMultiplier) = (5, "smite", null, OSlayMultiplier("DEMON", 5));
+        int damage;
+        CriticalGrade grade;
+        if (PercentDamage)
+            damage = OMeleeDamage(monster, weapon, oMultiplier, weaponToHit + Player.EffectiveToHit, out grade);
+        else
+        {
+            damage = dice.Roll(Rng) * multiplier;
+            damage = CombatMath.CriticalMelee(Rng, weapon?.Weight ?? 0, weaponToHit + Player.EffectiveToHit,
+                Player.SkillMelee, damage, out grade);
+            damage += weaponToDam + Player.EffectiveToDam;
+        }
+        damage = Math.Max(0, damage);
 
         Publish(new PlayerAttackEvent(monster.Id, Hit: true, damage, grade));
         Publish(new MessageEvent($"You {ShapeBlowVerb() ?? verb} {name}{DamageNote(damage)}.{CriticalMessage(grade)}"));
@@ -216,16 +226,20 @@ public sealed partial class GameSession
     /// The best slay or brand of an object that applies to a race, with its attack verb and the rune
     /// it reveals (Angband improve_attack_modifier).
     /// </summary>
-    private (int Multiplier, string Verb, string? Rune) BestMultiplier(Item item, Monster monster)
+    private (int Multiplier, string Verb, string? Rune, int OMultiplier) BestMultiplier(Item item, Monster monster)
     {
         var race = monster.Race;
-        (int Multiplier, string Verb, string? Rune) best = (1, "hit", null);
+        (int Multiplier, string Verb, string? Rune, int OMultiplier) best = (1, "hit", null, 10);
+        // Percentage damage ranks slays and brands by their O-multipliers, as 4.2 does.
+        bool Better(int multiplier, int oMultiplier) =>
+            PercentDamage ? oMultiplier > best.OMultiplier : multiplier > best.Multiplier;
         foreach (var slay in item.Slays)
         {
             // A slay that bites tells you what the creature is (Angband learns the race flag).
             if (race.Has(slay.MonsterFlag)) Lore.For(race.Id).FlagsKnown.Add(slay.MonsterFlag);
-            if (race.Has(slay.MonsterFlag) && slay.Multiplier > best.Multiplier)
-                best = (slay.Multiplier, slay.Verb, RuneIds.Slay(slay.MonsterFlag));
+            if (race.Has(slay.MonsterFlag) && OSlayMultiplier(slay.MonsterFlag, slay.Multiplier) is var oSlay
+                && Better(slay.Multiplier, oSlay))
+                best = (slay.Multiplier, slay.Verb, RuneIds.Slay(slay.MonsterFlag), oSlay);
         }
         foreach (var brand in item.Brands)
         {
@@ -241,8 +255,10 @@ public sealed partial class GameSession
                 if (monster.IsVisible) Lore.For(race.Id).FlagsKnown.Add(immune);
                 continue;
             }
-            var multiplier = element?.VulnerabilityFlag is { } vuln && race.Has(vuln) ? brand.Multiplier * 2 : brand.Multiplier;
-            if (multiplier > best.Multiplier) best = (multiplier, brand.Verb, RuneIds.Brand(brand.Element));
+            var vulnerable = element?.VulnerabilityFlag is { } vuln && race.Has(vuln);
+            var multiplier = vulnerable ? brand.Multiplier * 2 : brand.Multiplier;
+            var oBrand = OBrandMultiplier(brand.Multiplier, vulnerable);
+            if (Better(multiplier, oBrand)) best = (multiplier, brand.Verb, RuneIds.Brand(brand.Element), oBrand);
         }
         return best;
     }
