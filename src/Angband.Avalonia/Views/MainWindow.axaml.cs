@@ -43,13 +43,13 @@ public partial class MainWindow : Window
             RoutingStrategies.Tunnel, handledEventsToo: true);
         Deactivated += (_, _) => (DataContext as MainWindowViewModel)?.SetRouteKeyHeld(false);
 
-        // The stair scene ends by itself, or with a click on it.
-        if (this.FindControl<StairSceneView>("StairScene") is { } scene)
+        // A scene ends by itself, or with a click on it (and the next, if any, follows).
+        if (this.FindControl<SceneView>("SceneView") is { } scene)
         {
-            scene.Finished += () => (DataContext as MainWindowViewModel)?.EndStairScene();
+            scene.Finished += () => (DataContext as MainWindowViewModel)?.EndScene();
             scene.PointerPressed += (_, e) =>
             {
-                (DataContext as MainWindowViewModel)?.EndStairScene();
+                (DataContext as MainWindowViewModel)?.EndScene();
                 e.Handled = true;
             };
         }
@@ -342,7 +342,7 @@ public partial class MainWindow : Window
     private void OnGameKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
-        if (vm.HasStairScene) vm.EndStairScene(); // a key cuts the stair scene short, and still does what it does
+        if (vm.HasScene) vm.SkipScenes(); // a key cuts the scenes short, and still does what it does
         var ctrlOrAlt = (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt)) != 0;
 
         // The hotbar: Alt+1 .. Alt+0 use its slots; with Shift, change them.

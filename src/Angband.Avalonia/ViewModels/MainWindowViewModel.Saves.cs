@@ -161,11 +161,16 @@ public sealed partial class MainWindowViewModel
         }
     }
 
-    private void OnLevelChanged(LevelChangedEvent e) => TrySave();
+    private void OnLevelChanged(LevelChangedEvent e)
+    {
+        TrySave();
+        SceneForArrival(e);
+    }
 
     private void OnPlayerDied(PlayerDiedEvent e)
     {
         if (TutorialDeath()) return;
+        SceneForDeath(); // shown behind the game-over menu
         var score = RecordDeath();
         try
         {

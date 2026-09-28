@@ -358,8 +358,8 @@
     </Panel>
   </DockPanel>
 
-  <!-- A moment's scene on taking the stairs (the option "Show a scene on taking the stairs"). -->
-  <controls:StairSceneView x:Name="StairScene" Scene="{Binding StairScene}" IsVisible="{Binding HasStairScene}" />
+  <!-- A moment's scene at moments of note (the option "Show scenes at moments of note"). -->
+  <controls:SceneView x:Name="SceneView" Scene="{Binding Scene}" IsVisible="{Binding HasScene}" />
   </Panel>
 
 </Window>

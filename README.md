@@ -551,14 +551,20 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
-  - **Stair scenes** (AVABand's own; the option *Show a scene on taking the stairs*, on by default):
-    taking a staircase shows a painted scene for a moment and a half — going down, a stairwell
-    falling away into the dark past two flickering torches; going up, steps climbing toward a pale
-    light, warm daylight or cold moonlight when the town is above — with the new depth ("Descending…
-    250 ft (level 5)", "Up into the town, by night"), the steps drifting past as it plays. Any key or
-    click ends it early, and a key still does what it does. Only stairs show it (not trapdoors,
-    recall or debug jumps). Put your own `stairs-down.png` and `stairs-up.png` in the `art` folder
-    beside the saves (`<AppData>/AVABand/art/`) and they are shown instead, slowly zooming.
+  - **Scenes** (AVABand's own; the option *Show scenes at moments of note*, on by default): a moment's
+    full-window scene, fading in and out, with a caption — taking the stairs down ("Descending… 250
+    ft (level 5)") or up ("Up into the town, by night"), Word of Recall taking you up or down,
+    arriving in a cavern, labyrinth or fortress, a level whose feeling is deadly ("Omens of death
+    haunt this place."), meeting a unique for the very first time (its name), and death (a tombstone,
+    behind the game-over menu). Several queue — the stairs, then the cavern you arrive in; a click
+    ends one, a key ends them all and still does what it does. Only the stairs show the stair scenes
+    (not trapdoors or debug jumps). Each has a picture: first your own, from the `art` folder beside
+    the saves (`<AppData>/AVABand/art/`), then the artwork that comes with the game (`art/` beside the
+    program; the option *Scenes use the bundled pictures* turns those off), else a painted scene (a
+    stairwell in perspective, rings of recall light, rock closing round a cavern, a unique's glyph,
+    a tombstone). The names are `stairs-down`, `stairs-up`, `stairs-up-town`, `recall-town`,
+    `recall-dungeon`, `level-cavern`, `level-labyrinth`, `level-fortress`, `danger`, `unique` and
+    `death`, as `.png`, `.jpg` or `.jpeg`.
   - **Screen reader support** (AVABand's own; the option *Screen reader support*, **off by
     default**): the map is drawn, so a screen reader can't read it; with the option on, a live
     region announces what is said — every message of a turn together, each prompt with its question

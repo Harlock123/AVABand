@@ -34,6 +34,12 @@ public sealed record MonsterDamagedEvent(int MonsterId, Loc Loc, int Damage) : I
 public sealed record MonsterKilledEvent(string RaceId, Loc Loc, int Experience, bool IsUnique = false) : IGameEvent;
 public sealed record PlayerHurtEvent(int Damage, int Hp, int MaxHp) : IGameEvent;
 public sealed record PlayerDiedEvent(string KilledBy, int Depth) : IGameEvent;
+
+/// <summary>Word of Recall took the player up to the town, or down into the dungeon.</summary>
+public sealed record RecalledEvent(bool Up) : IGameEvent;
+
+/// <summary>A unique monster seen for the very first time (its lore had no sighting).</summary>
+public sealed record UniqueFirstSeenEvent(Monsters.Monster Monster) : IGameEvent;
 public sealed record StatusChangedEvent(string EffectId, int Value) : IGameEvent;
 public sealed record ItemPickedUpEvent(string KindId, int Amount) : IGameEvent;
 public sealed record ItemWieldedEvent(string KindId) : IGameEvent;

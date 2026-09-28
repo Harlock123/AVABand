@@ -223,6 +223,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Events.Subscribe<ShopEnteredEvent>(OnShopEntered);
         _game.Events.Subscribe<LevelChangedEvent>(OnLevelChanged);
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);
+        _game.Events.Subscribe<RecalledEvent>(OnRecalled);
+        _game.Events.Subscribe<UniqueFirstSeenEvent>(OnUniqueFirstSeen);
         _game.Events.Subscribe<ProjectionEvent>(OnProjection);
         _game.Events.Subscribe<MonsterDamagedEvent>(OnMonsterDamaged);
         Effects.Clear();
@@ -244,7 +246,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
         var fromDepth = _game.Player.Depth;
         NoteForRepeat(command, _game.Execute(command));
-        ShowStairScene(command, fromDepth);
+        ShowScenes(command, fromDepth);
         _game.AimAtTargetNext = false;
         CountDownHint();
         AutosaveIfDue();

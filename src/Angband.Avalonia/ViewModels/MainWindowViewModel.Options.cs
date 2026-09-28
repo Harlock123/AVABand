@@ -35,8 +35,10 @@ public static class DisplayOptions
     public const string Hints = "hints_for_new_players";
     /// <summary>AVABand's own: announce messages, prompts and tips to a screen reader.</summary>
     public const string ScreenReader = "screen_reader_support";
-    /// <summary>AVABand's own: a moment's scene on taking the stairs, down or up.</summary>
-    public const string StairScenes = "stair_scenes";
+    /// <summary>AVABand's own: a moment's scene at moments of note (stairs, recall, uniques, danger, death, level types).</summary>
+    public const string Scenes = "stair_scenes";
+    /// <summary>AVABand's own: scenes use the bundled artwork (off: only the player's own pictures, else painted).</summary>
+    public const string ScenePictures = "scene_pictures";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -61,7 +63,8 @@ public static class DisplayOptions
         new(Autosave, "Save every five minutes while playing", OptionKind.Interface, true),
         new(Hints, "Hints for new players (each shown once)", OptionKind.Interface, true),
         new(ScreenReader, "Screen reader support (announce messages, prompts and tips)", OptionKind.Interface, false),
-        new(StairScenes, "Show a scene on taking the stairs", OptionKind.Interface, true),
+        new(Scenes, "Show scenes at moments of note (stairs, recall, uniques, danger, death)", OptionKind.Interface, true),
+        new(ScenePictures, "Scenes use the bundled pictures (off: painted scenes)", OptionKind.Interface, true),
     ];
 }
 

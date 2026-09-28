@@ -228,11 +228,13 @@ public sealed partial class GameSession
             if (Player.Depth > 0)
             {
                 Publish(new MessageEvent("You feel yourself yanked upwards!"));
+                Publish(new RecalledEvent(Up: true));
                 ChangeLevel(0, StairArrival.None);
             }
             else
             {
                 Publish(new MessageEvent("You feel yourself yanked downwards!"));
+                Publish(new RecalledEvent(Up: false));
                 // Forced descent recalls one level below the deepest reached (Angband player_set_recall_depth).
                 var depth = ForceDescend && QuestAt(Player.MaxDepth) is null ? DescentTarget(Player.MaxDepth)
                     : Player.RecallDepth > 0 ? Math.Min(Player.RecallDepth, Player.MaxDepth) : Player.MaxDepth;

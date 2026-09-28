@@ -7,21 +7,31 @@ using Avalonia.Media.Imaging;
 namespace Angband.Avalonia.Controls;
 
 /// <summary>
-/// The moment's scene on taking the stairs (<see cref="StairScene"/>), painted in one-point
+/// The moment's scene on taking the stairs (<see cref="AmbientScene"/>), painted in one-point
 /// perspective: going down, the steps fall away below the eye into the dark, lit by two flickering
 /// torches; going up, they climb toward a pale light — warm by day, cold by night when the town is
 /// above, dim grey in the dungeon. The steps drift toward you as you go, it fades in and out, and it
 /// ends by itself after <see cref="DurationMs"/>. A picture of the player's own is shown instead
 /// (slowly zooming), if the scene names one.
 /// </summary>
-public sealed class StairSceneView : Control
+public sealed class SceneView : Control
 {
     public const double DurationMs = 1500;
 
-    public static readonly StyledProperty<StairScene?> SceneProperty =
-        AvaloniaProperty.Register<StairSceneView, StairScene?>(nameof(Scene));
+    /// <summary>How long a scene lasts: death and a first unique a little longer.</summary>
+    public static double DurationFor(SceneKind kind) => kind switch
+    {
+        SceneKind.Death => 3200,
+        SceneKind.Unique => 2200,
+        _ => DurationMs,
+    };
 
-    public StairScene? Scene
+    private double Duration => Scene is { } s ? DurationFor(s.Kind) : DurationMs;
+
+    public static readonly StyledProperty<AmbientScene?> SceneProperty =
+        AvaloniaProperty.Register<SceneView, AmbientScene?>(nameof(Scene));
+
+    public AmbientScene? Scene
     {
         get => GetValue(SceneProperty);
         set => SetValue(SceneProperty, value);
@@ -67,7 +77,7 @@ public sealed class StairSceneView : Control
         if (Scene is null) return;
         Elapsed += ms;
         InvalidateVisual();
-        if (Elapsed < DurationMs) return;
+        if (Elapsed < Duration) return;
         _clock?.Stop();
         Finished?.Invoke();
     }
@@ -75,14 +85,14 @@ public sealed class StairSceneView : Control
     public override void Render(DrawingContext context)
     {
         if (Scene is not { } scene || Bounds.Width <= 0 || Bounds.Height <= 0) return;
-        var p = Math.Clamp(Elapsed / DurationMs, 0, 1);
+        var p = Math.Clamp(Elapsed / Duration, 0, 1);
         var fade = p < 0.18 ? p / 0.18 : p > 0.8 ? (1 - p) / 0.2 : 1;
         using (context.PushOpacity(Math.Clamp(fade, 0, 1)))
         {
             context.FillRectangle(Brushes.Black, new Rect(Bounds.Size));
             if (scene.Picture is { } path && Picture(path) is { } bitmap) DrawPicture(context, bitmap, p);
-            else DrawStairwell(context, scene, p);
-            DrawCaption(context, scene.Caption);
+            else Paint(context, scene, p);
+            DrawCaption(context, scene.Caption, scene.Subtitle);
         }
     }
 
@@ -112,7 +122,7 @@ public sealed class StairSceneView : Control
         context.DrawImage(bitmap, new Rect(src), dest);
     }
 
-    private void DrawCaption(DrawingContext context, string caption)
+    private void DrawCaption(DrawingContext context, string caption, string? subtitle)
     {
         var size = Math.Max(14, Bounds.Height / 22);
         var text = new FormattedText(caption, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
@@ -125,11 +135,15 @@ public sealed class StairSceneView : Control
             GradientStops = { new GradientStop(Color.FromArgb(0, 0, 0, 0), 0), new GradientStop(Color.FromArgb(210, 0, 0, 0), 0.45) },
         };
         context.FillRectangle(band, new Rect(0, Bounds.Height * 0.80, Bounds.Width, Bounds.Height * 0.20));
-        var at = new Point((Bounds.Width - text.Width) / 2, Bounds.Height * 0.89);
+        var at = new Point((Bounds.Width - text.Width) / 2, Bounds.Height * (subtitle is null ? 0.89 : 0.85));
         var shadow = new FormattedText(caption, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
             new Typeface(FontFamily.Default, FontStyle.Italic, FontWeight.SemiBold), size, Brushes.Black);
         context.DrawText(shadow, at + new Point(2, 2));
         context.DrawText(text, at);
+        if (subtitle is null) return;
+        var small = new FormattedText(subtitle, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+            new Typeface(FontFamily.Default, FontStyle.Italic), size * 0.6, Parchment);
+        context.DrawText(small, new Point((Bounds.Width - small.Width) / 2, at.Y + text.Height + 2));
     }
 
     private static readonly IBrush Parchment = new SolidColorBrush(Color.FromRgb(0xE2, 0xD3, 0xAE));
@@ -141,12 +155,12 @@ public sealed class StairSceneView : Control
     /// <summary>How far away a step is drawn (0 at the eye), given its place and how far the scene has gone.</summary>
     private static double Depth(int k, double p) => (k + 1 - (p * 2.4 % 1)) * 0.42;
 
-    private void DrawStairwell(DrawingContext context, StairScene scene, double p)
+    private void DrawStairwell(DrawingContext context, AmbientScene scene, double p)
     {
         var w = Bounds.Width;
         var h = Bounds.Height;
         var cx = w / 2;
-        var down = scene.Down;
+        var down = scene.Kind == SceneKind.StairsDown;
         var vy = h * (down ? 0.62 : 0.30);  // the vanishing point: below the eye going down, above going up
         var nearHalf = w * 0.40;
         double Scale(double d) => 1 / (1 + d);
@@ -270,6 +284,219 @@ public sealed class StairSceneView : Control
             };
             context.FillRectangle(spill, new Rect(Bounds.Size));
         }
+    }
+
+
+    // --- The painted scenes (when there is no picture) ---------------------------------------------
+
+    private void Paint(DrawingContext context, AmbientScene scene, double p)
+    {
+        switch (scene.Kind)
+        {
+            case SceneKind.StairsDown or SceneKind.StairsUp: DrawStairwell(context, scene, p); break;
+            case SceneKind.RecallUp or SceneKind.RecallDown: DrawRecall(context, scene.Kind == SceneKind.RecallUp, p); break;
+            case SceneKind.Cavern: DrawCavern(context, p); break;
+            case SceneKind.Labyrinth: DrawLabyrinth(context, p); break;
+            case SceneKind.Fortress: DrawFortress(context, p); break;
+            case SceneKind.Danger: DrawDanger(context, p); break;
+            case SceneKind.Unique: DrawUnique(context, scene, p); break;
+            case SceneKind.Death: DrawTombstone(context, p); break;
+        }
+    }
+
+    private static RadialGradientBrush Glow(Point centre, double radius, Color colour, double strength) => new()
+    {
+        Center = new RelativePoint(centre, RelativeUnit.Absolute),
+        GradientOrigin = new RelativePoint(centre, RelativeUnit.Absolute),
+        RadiusX = new RelativeScalar(radius, RelativeUnit.Absolute),
+        RadiusY = new RelativeScalar(radius, RelativeUnit.Absolute),
+        GradientStops =
+        {
+            new GradientStop(Color.FromArgb((byte)Math.Clamp(255 * strength, 0, 255), colour.R, colour.G, colour.B), 0),
+            new GradientStop(Color.FromArgb(0, colour.R, colour.G, colour.B), 1),
+        },
+    };
+
+    /// <summary>A fixed scatter of points (the same every time), 0..1 in each axis.</summary>
+    private static IEnumerable<(double X, double Y, double Z)> Scatter(int count, int seed)
+    {
+        var rng = new Random(seed);
+        for (var i = 0; i < count; i++) yield return (rng.NextDouble(), rng.NextDouble(), rng.NextDouble());
+    }
+
+    /// <summary>Recall: rings of light — widening and rising to the town, closing and sinking into the deep.</summary>
+    private void DrawRecall(DrawingContext context, bool up, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var centre = new Point(w / 2, h * 0.45);
+        var colour = up ? Color.FromRgb(255, 236, 190) : Color.FromRgb(150, 120, 255);
+        context.FillRectangle(Glow(centre, Math.Max(w, h) * (up ? 0.25 + 0.4 * p : 0.65 - 0.4 * p), colour, up ? 0.55 : 0.4), new Rect(Bounds.Size));
+        for (var i = 0; i < 7; i++)
+        {
+            var phase = (i / 7.0 + (up ? p : 1 - p) * 1.4) % 1;
+            var r = Math.Max(w, h) * 0.6 * phase;
+            var pen = new Pen(new SolidColorBrush(Color.FromArgb((byte)(200 * (1 - phase)), colour.R, colour.G, colour.B)), 2 + 6 * (1 - phase));
+            context.DrawEllipse(null, pen, centre, r, r * 0.55);
+        }
+        foreach (var (x, y, z) in Scatter(90, up ? 11 : 12))
+        {
+            var drift = (y + (up ? -p : p) * (0.4 + z)) % 1;
+            if (drift < 0) drift += 1;
+            context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(120 + 120 * z), colour.R, colour.G, colour.B)), null,
+                new Point(x * w, drift * h), 1 + 2 * z, 1 + 2 * z);
+        }
+    }
+
+    /// <summary>A cavern: rough rock closing in around a pool of torchlight, water dripping.</summary>
+    private void DrawCavern(DrawingContext context, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        context.FillRectangle(Glow(new Point(w / 2, h * 0.55), w * 0.45, Color.FromRgb(120, 90, 60), 0.9), new Rect(Bounds.Size));
+        var rock = new SolidColorBrush(Color.FromRgb(24, 20, 17));
+        foreach (var (x, y, z) in Scatter(26, 21))
+        {
+            // Boulders round the edge of the view.
+            var angle = x * Math.PI * 2;
+            var dist = 0.55 + 0.25 * z;
+            var cx = w / 2 + Math.Cos(angle) * w * dist * 0.62;
+            var cy = h * 0.5 + Math.Sin(angle) * h * dist * 0.75;
+            var r = Math.Min(w, h) * (0.14 + 0.18 * y);
+            var points = Enumerable.Range(0, 9).Select(k =>
+            {
+                var a = k / 9.0 * Math.PI * 2;
+                var rr = r * (0.75 + 0.25 * Math.Sin(a * 3 + z * 7));
+                return new Point(cx + Math.Cos(a) * rr, cy + Math.Sin(a) * rr * 0.8);
+            }).ToArray();
+            Polygon(context, rock, points);
+        }
+        foreach (var (x, y, z) in Scatter(12, 22))
+        {
+            var fall = (y + p * (1.2 + z)) % 1;
+            context.DrawEllipse(new SolidColorBrush(Color.FromArgb(180, 150, 190, 230)), null, new Point(w * (0.25 + 0.5 * x), h * (0.1 + 0.7 * fall)), 1.5, 3.5);
+        }
+    }
+
+    /// <summary>A labyrinth: walls in perspective, turning off in every direction, fading into the dark.</summary>
+    private void DrawLabyrinth(DrawingContext context, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var cx = w / 2;
+        var vy = h * 0.48;
+        var wall = Color.FromRgb(70, 64, 58);
+        for (var k = 7; k >= 0; k--)
+        {
+            var d = k * 0.55 + (1 - p) * 0.3;
+            var s = 1 / (1 + d);
+            var half = w * 0.45 * s;
+            var top = vy - h * 0.55 * s;
+            var bottom = vy + h * 0.55 * s;
+            var light = Math.Clamp(1.1 - d / 3.5, 0.05, 1);
+            // A side wall on alternate sides, as the passages turn off.
+            var side = (k % 3) switch { 0 => -1, 1 => 1, _ => 0 };
+            var brush = new SolidColorBrush(Color.FromRgb((byte)(wall.R * light), (byte)(wall.G * light), (byte)(wall.B * light)));
+            if (side != 0)
+                context.FillRectangle(brush, new Rect(side < 0 ? cx - half : cx + half * 0.35, top, half * 0.65, bottom - top));
+            context.DrawRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb((byte)(160 * light), 20, 18, 16)), 1.5),
+                new Rect(cx - half, top, 2 * half, bottom - top));
+        }
+        context.FillRectangle(Glow(new Point(cx, vy), w * 0.2, Colors.Black, 1), new Rect(Bounds.Size));
+    }
+
+    /// <summary>A fortress: a great gate of dressed stone, banners hanging either side, torchlit.</summary>
+    private void DrawFortress(DrawingContext context, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var stone = new SolidColorBrush(Color.FromRgb(48, 44, 42));
+        context.FillRectangle(stone, new Rect(0, h * 0.08, w, h * 0.8));
+        var mortar = new Pen(new SolidColorBrush(Color.FromRgb(28, 25, 24)), 1.5);
+        var row = h * 0.06;
+        for (var y = h * 0.08; y < h * 0.88; y += row)
+        {
+            context.DrawLine(mortar, new Point(0, y), new Point(w, y));
+            var offset = ((int)(y / row) % 2) * row;
+            for (var x = offset; x < w; x += row * 2) context.DrawLine(mortar, new Point(x, y), new Point(x, y + row));
+        }
+        // The gate: an arch of darkness.
+        var gate = new Rect(w * 0.38, h * 0.3, w * 0.24, h * 0.58);
+        var arch = new StreamGeometry();
+        using (var g = arch.Open())
+        {
+            g.BeginFigure(new Point(gate.Left, gate.Bottom), true);
+            g.LineTo(new Point(gate.Left, gate.Top + gate.Width / 2));
+            g.ArcTo(new Point(gate.Right, gate.Top + gate.Width / 2), new Size(gate.Width / 2, gate.Width / 2), 0, false, SweepDirection.Clockwise);
+            g.LineTo(new Point(gate.Right, gate.Bottom));
+            g.EndFigure(true);
+        }
+        context.DrawGeometry(Brushes.Black, new Pen(new SolidColorBrush(Color.FromRgb(90, 82, 74)), 4), arch);
+        foreach (var side in new[] { -1, 1 })
+        {
+            var x = w / 2 + side * w * 0.27;
+            var sway = Math.Sin(p * 6 + side) * w * 0.004;
+            Polygon(context, new SolidColorBrush(Color.FromRgb(110, 20, 24)),
+                new(x - w * 0.05, h * 0.12), new(x + w * 0.05, h * 0.12), new(x + w * 0.05 + sway, h * 0.5), new(x + sway, h * 0.45), new(x - w * 0.05 + sway, h * 0.5));
+            var flicker = 0.85 + 0.15 * Math.Sin(p * 40 + side * 2);
+            var torch = new Point(w / 2 + side * w * 0.16, h * 0.4);
+            context.FillRectangle(Glow(torch, w * 0.18 * flicker, Color.FromRgb(255, 150, 60), 0.5), new Rect(Bounds.Size));
+            context.DrawEllipse(new SolidColorBrush(Color.FromRgb(255, 210, 120)), null, torch, h * 0.01 * flicker, h * 0.02 * flicker);
+        }
+    }
+
+    /// <summary>A deadly feeling: blood-dark red closing in, pulsing like a heartbeat.</summary>
+    private void DrawDanger(DrawingContext context, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var beat = 0.5 + 0.5 * Math.Pow(Math.Abs(Math.Sin(p * Math.PI * 3)), 6);
+        context.FillRectangle(new SolidColorBrush(Color.FromRgb((byte)(40 + 50 * beat), 0, 0)), new Rect(Bounds.Size));
+        context.FillRectangle(Glow(new Point(w / 2, h / 2), Math.Max(w, h) * 0.55, Colors.Black, 1), new Rect(Bounds.Size));
+        foreach (var (x, y, z) in Scatter(14, 31))
+        {
+            var drift = (x + p * 0.15 * (z - 0.5)) % 1;
+            context.FillRectangle(Glow(new Point(drift * w, y * h), w * (0.1 + 0.15 * z), Color.FromRgb(0, 0, 0), 0.8), new Rect(Bounds.Size));
+        }
+    }
+
+    /// <summary>A unique: its glyph, large, in its colour, looming out of the dark.</summary>
+    private void DrawUnique(DrawingContext context, AmbientScene scene, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var colour = Color.FromUInt32(scene.GlyphColor);
+        var centre = new Point(w / 2, h * 0.42);
+        context.FillRectangle(Glow(centre, Math.Max(w, h) * 0.4, colour, 0.25 + 0.15 * p), new Rect(Bounds.Size));
+        var size = h * (0.35 + 0.12 * p);
+        var glyph = new FormattedText(scene.Glyph ?? "?", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+            new Typeface(new FontFamily("DejaVu Sans Mono, Consolas, Menlo, monospace"), FontStyle.Normal, FontWeight.Bold), size, new SolidColorBrush(colour));
+        context.DrawText(glyph, new Point(centre.X - glyph.Width / 2, centre.Y - glyph.Height / 2));
+    }
+
+    /// <summary>Death: a tombstone under a night sky (Angband's own ends with one).</summary>
+    private void DrawTombstone(DrawingContext context, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        foreach (var (x, y, z) in Scatter(80, 41))
+            context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(80 + 150 * z * (0.7 + 0.3 * Math.Sin(p * 8 + x * 20))), 220, 225, 255)), null,
+                new Point(x * w, y * h * 0.55), 0.8 + z, 0.8 + z);
+        context.FillRectangle(new SolidColorBrush(Color.FromRgb(16, 20, 16)), new Rect(0, h * 0.72, w, h * 0.28));
+        var stone = new Rect(w * 0.39, h * 0.22, w * 0.22, h * 0.52);
+        var slab = new StreamGeometry();
+        using (var g = slab.Open())
+        {
+            g.BeginFigure(new Point(stone.Left, stone.Bottom), true);
+            g.LineTo(new Point(stone.Left, stone.Top + stone.Width / 2));
+            g.ArcTo(new Point(stone.Right, stone.Top + stone.Width / 2), new Size(stone.Width / 2, stone.Width / 2), 0, false, SweepDirection.Clockwise);
+            g.LineTo(new Point(stone.Right, stone.Bottom));
+            g.EndFigure(true);
+        }
+        context.DrawGeometry(new SolidColorBrush(Color.FromRgb(120, 118, 112)), new Pen(new SolidColorBrush(Color.FromRgb(70, 68, 64)), 3), slab);
+        var rip = new FormattedText("R.I.P.", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+            new Typeface(FontFamily.Default, FontStyle.Normal, FontWeight.Bold), h * 0.07, new SolidColorBrush(Color.FromRgb(50, 48, 45)));
+        context.DrawText(rip, new Point(stone.Center.X - rip.Width / 2, stone.Top + stone.Height * 0.3));
     }
 
     private static IBrush Shade(Color c, double f) =>

@@ -89,6 +89,7 @@ public sealed partial class GameSession
         m.EverSeen = true;
         var lore = Lore.For(m.Race.Id);
         lore.Sights++;
+        if (lore.Sights == 1 && m.Race.Has(MonsterFlags.Unique)) Publish(new UniqueFirstSeenEvent(m));
         foreach (var flag in ObviousFlags) LearnMonsterFlag(m.Race, flag);
         if (m.Race.Has(MonsterFlags.Invisible)) lore.FlagsKnown.Add(MonsterFlags.Invisible);
     }

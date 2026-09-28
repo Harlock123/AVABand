@@ -192,7 +192,7 @@ public class ReadmeScreenshots
         game.Player.Position = game.Level.FindFeature(down ? Angband.Core.Definitions.TerrainFlags.DownStair
             : Angband.Core.Definitions.TerrainFlags.UpStair).First();
         vm.Execute(new Angband.Core.Game.TakeStairsCommand(Down: down));
-        var scene = window.GetVisualDescendants().OfType<Angband.Avalonia.Controls.StairSceneView>().Single();
+        var scene = window.GetVisualDescendants().OfType<Angband.Avalonia.Controls.SceneView>().Single();
         scene.Advance(700);
         if (Folder is null) return;
         Directory.CreateDirectory(Folder);

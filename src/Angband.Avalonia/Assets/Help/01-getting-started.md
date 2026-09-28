@@ -12,9 +12,10 @@ offers to resume from the last save and says how long ago that was.
 Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
 then read out, and **Ctrl+Shift+D** describes what is around you (Windows and macOS).
 
-Taking the stairs shows a moment's scene of the way down (or up); any key skips it, and Options →
-*Show a scene on taking the stairs* turns it off. Your own pictures, named `stairs-down.png` and
-`stairs-up.png` in the AVABand `art` folder beside your saves, replace the painted scenes.
+Moments of note — the stairs, Word of Recall, a cavern or labyrinth, a deadly level, a unique met
+for the first time, death — show a scene for a moment; any key skips it, and Options → *Show scenes
+at moments of note* turns them off. Your own pictures in the AVABand `art` folder beside your saves
+(`stairs-down.png`, `stairs-up.png`, `recall-town.png`, `unique.png`, `death.png`...) replace them.
 
 New to Angband? **Game → Tutorial** teaches the basics on a short level of its own, step by step,
 in a few minutes (it is never saved or scored). Tips also appear at the foot of the map the first time something happens (your first
