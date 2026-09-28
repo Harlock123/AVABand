@@ -352,8 +352,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
       deep descent or teleport level from the cell; a save made mid-duel keeps both levels.
   - Enchanting now rolls its dice ("1d4" was read as one try).
 - **Items** (`Angband.Core/Items`, `Game/GameSession.Items.cs`, `GameSession.Devices.cs`): 373 object
-  kinds, 89 egos and 124 artifacts (most of Angband 4.2's, imported by `tools/angband_object_import.py`
-  and `tools/angband_ego_artifact_import.py`), 11 curses, per-game flavours (potion colours, ring
+  kinds, 91 egos and 124 artifacts (most of Angband 4.2's, imported by `tools/angband_object_import.py`
+  and `tools/angband_ego_artifact_import.py`; *of Flame* and *of Frost* as in 4.2 — a weapon ego that
+  also resists and an ammunition one that doesn't, both proof against their element), 11 curses, per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to
   mithril and dragon scale mail, crowns; rings and amulets with rolled bonuses (Angband's
   `B+dXMY` values: Strength `1+M5`, Protection `5+d5M10`...); gear can raise stats and grant
@@ -873,8 +874,7 @@ creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fall
 
 ## Roadmap
 Natural next steps: amnesia (4.2's TMD_AMNESIA, from very strong darkness and some monster
-spells), and the three weapon egos *of Fury*, *of Flame* and *of Frost*, which aren't in AVABand's
-data yet.
+spells). (*of Fury* stays out: in 4.2.5 its weapon types are commented out, so it is never made.)
 
 ## Licence
 

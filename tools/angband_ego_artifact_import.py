@@ -21,8 +21,8 @@ SLAY_NAMES = {"EVIL": "evil creatures", "UNDEAD": "undead", "DEMON": "demons", "
               "GIANT": "giants", "DRAGON": "dragons", "ANIMAL": "animals"}
 BRANDS = {"ACID": ("acid", "dissolve", "acid"), "ELEC": ("elec", "shock", "lightning"),
           "FIRE": ("fire", "burn", "fire"), "COLD": ("cold", "freeze", "cold"), "POIS": ("pois", "poison", "poison")}
-# Angband ego names AVABand already has under another name.
-EGO_ALIASES = {"of Flame": "of Burning", "of Frost": "of Freezing"}
+# Angband ego names AVABand has under another name (none now: of Flame and of Frost use 4.2's names).
+EGO_ALIASES: dict[str, str] = {}
 
 
 def dice(text):

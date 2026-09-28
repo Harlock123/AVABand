@@ -178,7 +178,7 @@ public sealed class EgoItemDef
     public required string Id { get; init; }
     /// <summary>Elements the ego makes an item proof against (Angband IGNORE_*).</summary>
     public IReadOnlyList<string> Ignore { get; init; } = [];
-    /// <summary>Suffix such as <c>of Burning</c>.</summary>
+    /// <summary>Suffix such as <c>of Flame</c>.</summary>
     public required string Name { get; init; }
     public IReadOnlyList<string> Bases { get; init; } = [];
     public int Level { get; init; }
