@@ -23,16 +23,52 @@ public sealed partial class MainWindowViewModel
     {
         _saves = saves;
         OnPropertyChanged(nameof(CanSave));
+        var crashed = saves.LastSessionCrashed;
+        saves.MarkSessionOpen();
         if (!resume) return;
         foreach (var entry in saves.List().Where(e => !e.Summary.IsDead))
         {
             if (!TryLoad(entry.Path, out _)) continue;
             _loadedAtStartup = true;
+            if (crashed) _crashResume = File.GetLastWriteTimeUtc(entry.Path);
             return;
         }
         // No living character, though there was one: ask what next rather than just starting over.
         ShouldOfferStartMenu = _settings.LastCharacter is not null;
     }
+
+    /// <summary>When the save resumed after a crash was written (null: the last session closed cleanly).</summary>
+    private DateTime? _crashResume;
+
+    /// <summary>The last session crashed, and its latest save was loaded: the window asks about it.</summary>
+    public bool ShouldOfferResume => _crashResume is not null;
+
+    /// <summary>
+    /// After a crash: "Resume ... from the save made 3 minutes ago?" Yes plays on; no opens the list
+    /// of saved characters (closing it keeps this one).
+    /// </summary>
+    public void OfferResume()
+    {
+        if (_crashResume is not { } saved) return;
+        _crashResume = null;
+        var p = _game.Player;
+        AskYesNo($"AVABand didn't close properly last time. Resume {p.Name} the {p.Race?.Name} {p.Class?.Name} from the save made {Ago(DateTime.UtcNow - saved)}? (y/n)",
+            yes =>
+            {
+                if (yes) AddMessage("Resumed from the last save; anything after it was lost.");
+                else LoadRequested?.Invoke();
+            });
+    }
+
+    /// <summary>"a moment ago", "3 minutes ago", "2 hours ago", "4 days ago".</summary>
+    public static string Ago(TimeSpan span) =>
+        span.TotalMinutes < 1 ? "a moment ago"
+        : span.TotalHours < 1 ? $"{(int)span.TotalMinutes} minute{((int)span.TotalMinutes == 1 ? "" : "s")} ago"
+        : span.TotalDays < 1 ? $"{(int)span.TotalHours} hour{((int)span.TotalHours == 1 ? "" : "s")} ago"
+        : $"{(int)span.TotalDays} day{((int)span.TotalDays == 1 ? "" : "s")} ago";
+
+    /// <summary>The window is closing normally: this session did not crash.</summary>
+    public void ClosedCleanly() => _saves?.MarkSessionClosed();
 
     [RelayCommand]
     public void SaveGame()

@@ -433,7 +433,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   saves, Ctrl+O opens the list of saved characters (load or delete). The game autosaves on every
   level change, when switching characters, on exit and every five minutes of play (the option
   *Save every five minutes while playing*, on by default), and continues the most recent living
-  character on start-up. Death deletes the save (permadeath) and opens a small **game-over menu**
+  character on start-up. If the last session didn't close properly (a crash, a power cut — a small
+  `session.lock` beside the saves is left behind), it says so as it opens: "AVABand didn't close
+  properly last time. Resume Frodo the Hobbit Warrior from the save made 3 minutes ago?" — yes plays
+  on, no opens the list of saved characters. Death deletes the save (permadeath) and opens a small **game-over menu**
   — how it ended and the score, then *Play again as* the same character (name, race, class, birth
   stats and options), *Create a new character…*, *Load a saved character…* (when one is alive),
   *View the high scores*, *Look at the character sheet* or *Exit*; a letter, a click or the

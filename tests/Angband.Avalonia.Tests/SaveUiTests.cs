@@ -44,9 +44,10 @@ public sealed class SaveUiTests : IDisposable
     [AvaloniaFact]
     public void Startup_ResumesTheMostRecentCharacter()
     {
-        var (_, first, _) = Open(seed: 7);
+        var (firstWindow, first, _) = Open(seed: 7);
         first.Execute(new DebugJumpCommand(2)); // autosaves on the level change
         var position = first.Game.Player.Position;
+        firstWindow.Close(); // a clean exit (left open, the next start would take it for a crash)
 
         var (_, second, _) = Open(resume: true, seed: 99);
         Assert.Equal(7ul, second.Game.Seed);

@@ -281,7 +281,9 @@ public partial class MainWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
-        (DataContext as MainWindowViewModel)?.TrySave();
+        if (DataContext is not MainWindowViewModel vm) return;
+        vm.TrySave();
+        if (!e.Cancel) vm.ClosedCleanly();
     }
 
     /// <summary>Opens the character creation screen; pressing Start begins a new game.</summary>
@@ -298,6 +300,9 @@ public partial class MainWindow : Window
         // First run: go straight to character creation, as Angband does.
         if (DataContext is MainWindowViewModel { IsFirstRun: true } vm && !Design.IsDesignMode && ShowCreationOnFirstRun)
             vm.RequestNewCharacter();
+        // The last session crashed: offer to resume from its latest save.
+        else if (DataContext is MainWindowViewModel { ShouldOfferResume: true } crashed && !Design.IsDesignMode)
+            crashed.OfferResume();
         // The last character died: ask what next, rather than just starting over in town.
         else if (DataContext is MainWindowViewModel { ShouldOfferStartMenu: true } again && !Design.IsDesignMode && ShowCreationOnFirstRun)
             again.ShowStartMenu();
