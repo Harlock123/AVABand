@@ -46,7 +46,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.RunSouthWest, "Run south-west until something interesting happens"),
             (InputAction.RunSouthEast, "Run south-east until something interesting happens"),
             (InputAction.Run, "Run, asking which way. Runs follow corridors round bends; a monster, object, door or junction stops them"),
-            (InputAction.Hold, "Stay in place for a turn"),
+            (InputAction.Hold, "Stay in place for a turn (secret doors beside you are found, as on every step)"),
             (InputAction.Rest, "Rest until healed or disturbed"),
             (InputAction.StairsDown, "Take a staircase down"),
             (InputAction.StairsUp, "Take a staircase up"),

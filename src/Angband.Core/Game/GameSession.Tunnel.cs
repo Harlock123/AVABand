@@ -172,7 +172,7 @@ public sealed partial class GameSession
             default:
                 if (feature.Has(TerrainFlags.Secret))
                 {
-                    sq.Feature = Data.Terrain.Ids.ClosedDoor;
+                    RevealSecretDoor(p);
                     Publish(new MessageEvent("You have found a secret door."));
                     break;
                 }

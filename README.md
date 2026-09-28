@@ -507,6 +507,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   comes into view; hopeless rock just gets one futile chip. Rubble may hide an object, treasure
   veins give gold, secret doors are found, permanent rock and the level edge refuse. The General
   Store sells shovels and picks; the character sheet shows your digging skill.
+- **Secret doors** (`Game/GameSession.Search.cs`, Angband 4.2's `search()`): there is no search
+  command, as in 4.2. Any secret door beside you is found by itself after every step, when you hold
+  still (`5` / `,`) and when you arrive on a level ("You have found a secret door.", which stops a
+  run) — unless you are blind, confused or standing in the dark. It becomes an ordinary closed door,
+  locked one time in four. The rogue's *Find Traps, Doors and Stairs* reveals those within range.
 - **Object knowledge** (`Records/ObjectInfo.cs`, `ViewModels/KnowledgeViewModels.cs`): Angband's
   knowledge menu and object info. `~` (Game → Knowledge) opens one window with five tabs:
   *Monsters* (the recall browser above), *Objects* (every kind the character has seen — on the

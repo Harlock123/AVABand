@@ -297,6 +297,7 @@ public sealed partial class GameSession
         foreach (var p in Level.AllLocs().Where(p => p.ChebyshevTo(Player.Position) <= radius))
         {
             if (!Level.FeatureAt(p).HasAny(TerrainFlags.Stair | TerrainFlags.DoorAny)) continue;
+            if (Level.FeatureAt(p).Has(TerrainFlags.Secret)) RevealSecretDoor(p); // Angband DETECT_DOORS
             Known.Remember(Level, p);
             found++;
         }

@@ -145,7 +145,7 @@ public sealed partial class GameSession : ITurnHandler
         var energy = command switch
         {
             WalkCommand walk => Walk(walk.Direction),
-            HoldCommand => EnergyTable.MoveEnergy,
+            HoldCommand => Hold(),
             OpenCommand open => OpenAt(Player.Position.Step(open.Direction)),
             DisarmCommand disarm => Disarm(disarm.Direction),
             StealCommand steal => Steal(steal.Direction),
@@ -292,6 +292,7 @@ public sealed partial class GameSession : ITurnHandler
         var picked = Level.Objects.Any(target) ? NoticeFloorObjects() : 0;
 
         if (Level[target].Trap != 0) HitTrap(target);
+        if (Player.Position == target && !IsGameOver) Search(); // secret doors beside you are always found
         return EnergyTable.MoveEnergy + Math.Min(EnergyTable.MoveEnergy, picked * EnergyTable.MoveEnergy / 10);
     }
 
@@ -428,6 +429,7 @@ public sealed partial class GameSession : ITurnHandler
             _arriving = false;
         }
         if (depth > 0) ShowFeeling(); // Angband announces it in the dungeon only (Ctrl+F works in town too)
+        Search(); // Angband on_new_level: a secret door beside the arrival spot is found at once
 
         Publish(new LevelChangedEvent(depth, Level.ProfileId));
     }
