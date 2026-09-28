@@ -1,0 +1,21 @@
+using Angband.Core.Game;
+using Angband.Core.Geometry;
+using Angband.Core.Persistence;
+
+namespace Angband.Tests;
+
+public class MakeFixtureSave
+{
+    [Fact]
+    public void Make()
+    {
+        var game = GameSession.NewGame(TestData.Game, 7, "mage");
+        game.Execute(new DebugJumpCommand(3));
+        var dirs = new[] { Direction.East, Direction.South, Direction.West, Direction.North };
+        for (var i = 0; i < 60 && game.Player.Hp > game.Player.MaxHp / 2; i++)
+            game.Execute(i % 3 == 0 ? new HoldCommand() : new WalkCommand(dirs[i / 3 % 4]));
+        SaveGame.SaveToFile(game, Environment.GetEnvironmentVariable("FIXTURE_OUT")!);
+        File.WriteAllText(Environment.GetEnvironmentVariable("FIXTURE_OUT") + ".txt",
+            $"alive={!game.Player.IsDead} {game.Player.Level} {game.Player.Depth} {game.Player.Experience} {game.GameTurn}");
+    }
+}

@@ -12,6 +12,10 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Saves written by earlier versions of AVABand, which must keep loading. -->
+    <None Include="Saves\*.avasave" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Angband.Core\Angband.Core.csproj" />
     <ProjectReference Include="..\..\src\Angband.Data\Angband.Data.csproj" />
     <ProjectReference Include="..\..\src\Angband.Audio\Angband.Audio.csproj" />

@@ -65,7 +65,7 @@ AVABand.sln
 ├─ src/Angband.Audio       Sound: OpenAL engine, WAV/Ogg/MP3 decoders, sound packs, event→sound director
 ├─ src/Angband.Input       Input actions, rebindable key/button bindings, SDL2 gamepad provider
 ├─ src/Angband.Avalonia    MVVM front end (CommunityToolkit.Mvvm), DrawingContext map control
-├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter)
+├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures)
 ├─ tests/Angband.Tests          xUnit tests for the core systems
 └─ tests/Angband.Avalonia.Tests Headless UI tests (real window, simulated keyboard)
 ```
@@ -417,7 +417,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   uniques and the scheduler (including actors still due to move this game turn) — as versioned,
   gzipped JSON. Game data is referenced by id, so saves survive reordered or extended data files;
   missing ids, damaged files and saves from newer versions are rejected with a clear message. A loaded
-  game continues exactly as the original would have (tested by playing both side by side).
+  game continues exactly as the original would have (tested by playing both side by side). Saves
+  written by earlier versions keep loading: `tests/Angband.Tests/Saves/` holds one save from each
+  version that changed the save format (named by commit), and `OldSaveTests` loads each, plays on,
+  goes down a level and saves it again in today's format. `tools/old-saves/make-old-save.sh
+  <commit>` builds that commit in a scratch worktree and writes a new one.
   Saves live in `<AppData>/AVABand/saves/` (one file per character, written atomically). Ctrl+S
   saves, Ctrl+O opens the list of saved characters (load or delete). The game autosaves on every
   level change, when switching characters, on exit and every five minutes of play (the option
