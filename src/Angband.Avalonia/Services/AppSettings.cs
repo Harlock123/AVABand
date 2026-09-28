@@ -28,6 +28,9 @@ public sealed class AppSettings
     public double MasterVolume { get; set; } = 80;
     public double EffectsVolume { get; set; } = 80;
     public double MusicVolume { get; set; } = 50;
+    /// <summary>The ambience loop under the music (AVABand's own).</summary>
+    public bool AmbienceEnabled { get; set; } = true;
+    public double AmbienceVolume { get; set; } = 45;
     public string? SoundPackId { get; set; } = "angband-dubtrain";
     public string? MusicPackId { get; set; } = "cc0-dungeon-music";
     /// <summary>Audio buffer size (<see cref="Angband.Audio.AudioBuffer"/>): applied when the game starts.</summary>

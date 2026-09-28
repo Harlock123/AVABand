@@ -25,6 +25,17 @@ public interface IAudioEngine : IDisposable
     /// the next can be chosen.
     /// </summary>
     event Action? MusicEnded;
+
+    /// <summary>Starts an ambience loop under the music (fading from any current one).</summary>
+    void PlayAmbience(string path) { }
+
+    void StopAmbience() { }
+
+    /// <summary>The ambience loop now playing, if any.</summary>
+    string? CurrentAmbience => null;
+
+    /// <summary>The ambience volume, 0..1 (scaled by the master volume).</summary>
+    void SetAmbienceVolume(float volume) { }
 }
 
 /// <summary>Silent engine: used when audio is off, unavailable, or in tests.</summary>
@@ -37,6 +48,10 @@ public class NullAudioEngine : IAudioEngine
     public virtual void PlayEffect(string path, float gain = 1f) { }
     public virtual void PlayMusic(string path, bool loop = true) => CurrentMusic = path;
     public virtual void StopMusic() => CurrentMusic = null;
+    public string? CurrentAmbience { get; protected set; }
+    public virtual void PlayAmbience(string path) => CurrentAmbience = path;
+    public virtual void StopAmbience() => CurrentAmbience = null;
+    public virtual void SetAmbienceVolume(float volume) { }
 
     /// <summary>Ends the current track as if it had played out (for tests).</summary>
     public void FinishMusic()

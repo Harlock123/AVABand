@@ -22,19 +22,32 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
     private readonly Context* _context;
     private readonly uint[] _voices = new uint[EffectVoices];
     private readonly Dictionary<string, uint?> _buffers = new(StringComparer.Ordinal);
-    private readonly uint _musicSource;
-    private readonly uint[] _musicBuffers = new uint[StreamBuffers];
+    private readonly Channel _musicChannel;
+    private readonly Channel _ambienceChannel;
     private readonly short[] _chunk = new short[StreamChunkSamples];
     private readonly Timer? _pump;
     private int _nextVoice;
 
-    private float _master = 1, _effects = 1, _music = 0.6f;
-    private IAudioDecoder? _decoder;
-    private bool _loop;
-    private float _fade;          // current music fade level 0..1
-    private float _musicGain = 1; // evens out the current track's loudness
-    private string? _pendingPath; // track to start once the current one has faded out
-    private bool _pendingLoop;
+    private float _master = 1, _effects = 1, _music = 0.6f, _ambience = 0.5f;
+
+    /// <summary>
+    /// A streamed, fading channel: the music, or the ambience loop under it. Its source is fed from
+    /// a decoder through a small queue of buffers; the pump fades it and keeps the queue full.
+    /// </summary>
+    private sealed class Channel(uint source, uint[] buffers, double targetDb, double maxBoostDb)
+    {
+        public readonly uint Source = source;
+        public readonly uint[] Buffers = buffers;
+        public readonly double TargetDb = targetDb;
+        public readonly double MaxBoostDb = maxBoostDb;
+        public IAudioDecoder? Decoder;
+        public bool Loop;
+        public float Fade;             // 0..1
+        public float Gain = 1;         // evens out the track's loudness
+        public string? Current;
+        public string? PendingPath;    // to start once the current one has faded out
+        public bool PendingLoop;
+    }
 
     private OpenAlAudioEngine(AL al, ALContext alc, Device* device, Context* context)
     {
@@ -44,8 +57,8 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
         _context = context;
         IsAvailable = true;
         for (var i = 0; i < EffectVoices; i++) _voices[i] = _al.GenSource();
-        _musicSource = _al.GenSource();
-        for (var i = 0; i < StreamBuffers; i++) _musicBuffers[i] = _al.GenBuffer();
+        _musicChannel = NewChannel(Loudness.MusicTargetDb, Loudness.MusicMaxBoostDb);
+        _ambienceChannel = NewChannel(Loudness.AmbienceTargetDb, Loudness.MusicMaxBoostDb);
         _pump = new Timer(_ => Pump(), null, 40, 40);
     }
 
@@ -53,7 +66,15 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
 
     /// <summary>The mixing period asked for at start-up (0: OpenAL's default).</summary>
     public int PeriodFrames { get; private init; }
-    public string? CurrentMusic { get; private set; }
+    public string? CurrentMusic => _musicChannel.Current;
+    public string? CurrentAmbience => _ambienceChannel.Current;
+
+    private Channel NewChannel(double targetDb, double maxBoostDb)
+    {
+        var buffers = new uint[StreamBuffers];
+        for (var i = 0; i < StreamBuffers; i++) buffers[i] = _al.GenBuffer();
+        return new Channel(_al.GenSource(), buffers, targetDb, maxBoostDb);
+    }
 
     public event Action? MusicEnded;
 
@@ -94,9 +115,22 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
         lock (_lock)
         {
             (_master, _effects, _music) = (Math.Clamp(master, 0, 1), Math.Clamp(effects, 0, 1), Math.Clamp(music, 0, 1));
-            _al.SetSourceProperty(_musicSource, SourceFloat.Gain, _master * _music * _fade);
+            ApplyGain(_musicChannel);
+            ApplyGain(_ambienceChannel);
         }
     }
+
+    public void SetAmbienceVolume(float volume)
+    {
+        lock (_lock)
+        {
+            _ambience = Math.Clamp(volume, 0, 1);
+            ApplyGain(_ambienceChannel);
+        }
+    }
+
+    private void ApplyGain(Channel c) =>
+        _al.SetSourceProperty(c.Source, SourceFloat.Gain, _master * (c == _musicChannel ? _music : _ambience) * c.Fade);
 
     public void PlayEffect(string path, float gain = 1f)
     {
@@ -148,61 +182,75 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
 
     public void PlayMusic(string path, bool loop = true)
     {
-        lock (_lock)
-        {
-            if (path == CurrentMusic && _pendingPath is null) return;
-            _pendingPath = path;
-            _pendingLoop = loop;
-            if (_decoder is null) StartPending();
-        }
+        lock (_lock) Queue(_musicChannel, path, loop);
     }
 
     public void StopMusic()
     {
-        lock (_lock)
-        {
-            _pendingPath = null;
-            CurrentMusic = null; // the pump fades the old track out
-        }
+        lock (_lock) Stop(_musicChannel);
     }
 
-    /// <summary>Called under the lock: swap to the pending track and prime the stream.</summary>
-    private void StartPending()
+    public void PlayAmbience(string path)
     {
-        StopStream();
-        var path = _pendingPath;
-        _pendingPath = null;
+        lock (_lock) Queue(_ambienceChannel, path, loop: true);
+    }
+
+    public void StopAmbience()
+    {
+        lock (_lock) Stop(_ambienceChannel);
+    }
+
+    private void Queue(Channel c, string path, bool loop)
+    {
+        if (path == c.Current && c.PendingPath is null) return;
+        c.PendingPath = path;
+        c.PendingLoop = loop;
+        if (c.Decoder is null) StartPending(c);
+    }
+
+    private static void Stop(Channel c)
+    {
+        c.PendingPath = null;
+        c.Current = null; // the pump fades it out
+    }
+
+    /// <summary>Called under the lock: swap a channel to its pending track and prime the stream.</summary>
+    private void StartPending(Channel c)
+    {
+        StopStream(c);
+        var path = c.PendingPath;
+        c.PendingPath = null;
         if (path is null) return;
         try
         {
-            _decoder = AudioDecoders.Open(path);
+            c.Decoder = AudioDecoders.Open(path);
         }
         catch (Exception ex) when (ex is IOException or InvalidDataException or NotSupportedException or UnauthorizedAccessException)
         {
-            Trace.WriteLine($"Could not open music '{path}': {ex.Message}");
+            Trace.WriteLine($"Could not open '{path}': {ex.Message}");
             return;
         }
-        _loop = _pendingLoop;
-        CurrentMusic = path;
-        _musicGain = MeasureMusic(_decoder);
-        _fade = 0;
-        foreach (var buffer in _musicBuffers)
-            if (Fill(buffer)) _al.SourceQueueBuffers(_musicSource, [buffer]);
-        _al.SetSourceProperty(_musicSource, SourceFloat.Gain, 0f);
-        _al.SourcePlay(_musicSource);
+        c.Loop = c.PendingLoop;
+        c.Current = path;
+        c.Gain = MeasureMusic(c);
+        c.Fade = 0;
+        foreach (var buffer in c.Buffers)
+            if (Fill(c, buffer)) _al.SourceQueueBuffers(c.Source, [buffer]);
+        _al.SetSourceProperty(c.Source, SourceFloat.Gain, 0f);
+        _al.SourcePlay(c.Source);
     }
 
-    private void StopStream()
+    private void StopStream(Channel c)
     {
-        _al.SourceStop(_musicSource);
-        _al.GetSourceProperty(_musicSource, GetSourceInteger.BuffersQueued, out var queued);
+        _al.SourceStop(c.Source);
+        _al.GetSourceProperty(c.Source, GetSourceInteger.BuffersQueued, out var queued);
         if (queued > 0)
         {
             var done = new uint[queued];
-            _al.SourceUnqueueBuffers(_musicSource, done);
+            _al.SourceUnqueueBuffers(c.Source, done);
         }
-        _decoder?.Dispose();
-        _decoder = null;
+        c.Decoder?.Dispose();
+        c.Decoder = null;
     }
 
     /// <summary>How much music may be read to judge a track's loudness (seconds).</summary>
@@ -212,8 +260,9 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
     /// Listens to the start of a track to settle its loudness (see <see cref="Loudness"/>), then
     /// rewinds it.
     /// </summary>
-    private float MeasureMusic(IAudioDecoder decoder)
+    private float MeasureMusic(Channel c)
     {
+        var decoder = c.Decoder!;
         var limit = MusicMeasureSeconds * decoder.SampleRate * Math.Max(1, decoder.Channels);
         double sumSquares = 0;
         long count = 0;
@@ -227,69 +276,74 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
             peak = Math.Max(peak, chunkPeak);
         }
         decoder.Rewind();
-        return count == 0 ? 1f : Loudness.Gain(Math.Sqrt(sumSquares / count), peak, Loudness.MusicTargetDb, Loudness.MusicMaxBoostDb);
+        return count == 0 ? 1f : Loudness.Gain(Math.Sqrt(sumSquares / count), peak, c.TargetDb, c.MaxBoostDb);
     }
 
     /// <summary>Decodes the next chunk into a buffer; loops or ends the track at end of file.</summary>
-    private bool Fill(uint buffer)
+    private bool Fill(Channel c, uint buffer)
     {
-        if (_decoder is null) return false;
-        var read = _decoder.Read(_chunk);
-        if (read == 0 && _loop)
+        if (c.Decoder is not { } decoder) return false;
+        var read = decoder.Read(_chunk);
+        if (read == 0 && c.Loop)
         {
-            _decoder.Rewind();
-            read = _decoder.Read(_chunk);
+            decoder.Rewind();
+            read = decoder.Read(_chunk);
         }
         if (read == 0) return false;
-        Loudness.Apply(_chunk.AsSpan(0, read), _musicGain);
-        _al.BufferData(buffer, _decoder.Channels == 1 ? BufferFormat.Mono16 : BufferFormat.Stereo16,
-            _chunk.AsSpan(0, read).ToArray(), _decoder.SampleRate);
+        Loudness.Apply(_chunk.AsSpan(0, read), c.Gain);
+        _al.BufferData(buffer, decoder.Channels == 1 ? BufferFormat.Mono16 : BufferFormat.Stereo16,
+            _chunk.AsSpan(0, read).ToArray(), decoder.SampleRate);
         return true;
     }
 
-    /// <summary>Background tick: fades, and keeps the music queue topped up.</summary>
+    /// <summary>Background tick: fades, and keeps both channels' queues topped up.</summary>
     private void Pump()
     {
-        var ended = false;
+        bool ended;
         lock (_lock)
         {
-            if (_decoder is null)
-            {
-                if (_pendingPath is not null) StartPending();
-                return;
-            }
-
-            // Fade out when stopping or switching tracks, fade in otherwise.
-            var leaving = CurrentMusic is null || _pendingPath is not null;
-            _fade = Math.Clamp(_fade + (leaving ? -FadeStep : FadeStep), 0, 1);
-            _al.SetSourceProperty(_musicSource, SourceFloat.Gain, _master * _music * _fade);
-            if (leaving && _fade <= 0)
-            {
-                StopStream();
-                if (_pendingPath is not null) StartPending();
-                return;
-            }
-
-            _al.GetSourceProperty(_musicSource, GetSourceInteger.BuffersProcessed, out var processed);
-            for (var i = 0; i < processed; i++)
-            {
-                var one = new uint[1];
-                _al.SourceUnqueueBuffers(_musicSource, one);
-                if (Fill(one[0])) _al.SourceQueueBuffers(_musicSource, one);
-            }
-
-            _al.GetSourceProperty(_musicSource, GetSourceInteger.SourceState, out var state);
-            _al.GetSourceProperty(_musicSource, GetSourceInteger.BuffersQueued, out var queued);
-            if (state != (int)SourceState.Playing && queued > 0) _al.SourcePlay(_musicSource); // recover from underrun
-            if (queued == 0)
-            {
-                // The track played to its end (it wasn't looping): say so, outside the lock.
-                StopStream();
-                CurrentMusic = null;
-                ended = true;
-            }
+            ended = PumpChannel(_musicChannel);
+            PumpChannel(_ambienceChannel);
         }
         if (ended) MusicEnded?.Invoke();
+    }
+
+    /// <summary>One channel's tick (under the lock); true when a track that wasn't looping played out.</summary>
+    private bool PumpChannel(Channel c)
+    {
+        if (c.Decoder is null)
+        {
+            if (c.PendingPath is not null) StartPending(c);
+            return false;
+        }
+
+        // Fade out when stopping or switching tracks, fade in otherwise.
+        var leaving = c.Current is null || c.PendingPath is not null;
+        c.Fade = Math.Clamp(c.Fade + (leaving ? -FadeStep : FadeStep), 0, 1);
+        ApplyGain(c);
+        if (leaving && c.Fade <= 0)
+        {
+            StopStream(c);
+            if (c.PendingPath is not null) StartPending(c);
+            return false;
+        }
+
+        _al.GetSourceProperty(c.Source, GetSourceInteger.BuffersProcessed, out var processed);
+        for (var i = 0; i < processed; i++)
+        {
+            var one = new uint[1];
+            _al.SourceUnqueueBuffers(c.Source, one);
+            if (Fill(c, one[0])) _al.SourceQueueBuffers(c.Source, one);
+        }
+
+        _al.GetSourceProperty(c.Source, GetSourceInteger.SourceState, out var state);
+        _al.GetSourceProperty(c.Source, GetSourceInteger.BuffersQueued, out var queued);
+        if (state != (int)SourceState.Playing && queued > 0) _al.SourcePlay(c.Source); // recover from underrun
+        if (queued > 0) return false;
+        // The track played to its end (it wasn't looping).
+        StopStream(c);
+        c.Current = null;
+        return true;
     }
 
     public void Dispose()
@@ -297,10 +351,13 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
         _pump?.Dispose();
         lock (_lock)
         {
-            StopStream();
+            foreach (var c in new[] { _musicChannel, _ambienceChannel })
+            {
+                StopStream(c);
+                _al.DeleteSource(c.Source);
+                foreach (var b in c.Buffers) _al.DeleteBuffer(b);
+            }
             foreach (var v in _voices) { _al.SourceStop(v); _al.DeleteSource(v); }
-            _al.DeleteSource(_musicSource);
-            foreach (var b in _musicBuffers) _al.DeleteBuffer(b);
             foreach (var b in _buffers.Values.OfType<uint>()) _al.DeleteBuffer(b);
             _alc.MakeContextCurrent(null);
             _alc.DestroyContext(_context);

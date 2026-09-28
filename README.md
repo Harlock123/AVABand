@@ -551,6 +551,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Ambience** (AVABand's own; Settings → Sound: *Ambience on/off* and its own volume): a quiet loop
+    under the music for where you are — the town by day or by night, the dungeon by depth (shallow to
+    1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and fortresses their own,
+    each falling back to the one before (the abyss to the deep, a cavern to its depth's). It crossfades
+    on each change of place. Loops named `ambient-town-day`, `ambient-town-night`,
+    `ambient-dungeon-shallow`, `-deep`, `-abyss`, `ambient-cavern`, `ambient-labyrinth` and
+    `ambient-fortress` (`.ogg`, `.wav` or `.mp3`) are looked for in your `<AppData>/AVABand/ambience/`
+    folder, then in the game's own `ambience/` folder. (Angband's occasional ambient sound effects,
+    AMBIENT_DAY and AMBIENT_DNG1..5, still play on top.) The audio engine now streams two channels,
+    music and ambience, each with its own fades.
   - **Light and shadow** (AVABand's own; the option *Light and shadow on the map*, on by default):
     squares lit only by your own light darken with distance from you, warmed near you and wavering
     as a flame does; lit rooms stay steady; squares you remember but can't see now are drawn

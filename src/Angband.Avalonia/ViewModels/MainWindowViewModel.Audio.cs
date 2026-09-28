@@ -27,6 +27,15 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty] private double _masterVolume = 80;
     [ObservableProperty] private double _effectsVolume = 80;
     [ObservableProperty] private double _musicVolume = 50;
+    [ObservableProperty] private bool _ambienceEnabled = true;
+    [ObservableProperty] private double _ambienceVolume = 45;
+
+    /// <summary>Where ambience loops are found: the player's own folder, then the game's.</summary>
+    public IReadOnlyList<string> AmbienceFolders { get; set; } =
+    [
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AVABand", "ambience"),
+        Path.Combine(AppContext.BaseDirectory, "ambience"),
+    ];
 
     /// <summary>Connects audio (called once by the app); applies the saved settings.</summary>
     public void UseAudio(AudioServices audio)
@@ -40,6 +49,8 @@ public sealed partial class MainWindowViewModel
         MasterVolume = saved.MasterVolume;
         EffectsVolume = saved.EffectsVolume;
         MusicVolume = saved.MusicVolume;
+        AmbienceEnabled = saved.AmbienceEnabled;
+        AmbienceVolume = saved.AmbienceVolume;
         SelectedSoundPack = EffectPacks.FirstOrDefault(p => p.Id == saved.SoundPackId) ?? EffectPacks.FirstOrDefault();
         SelectedMusicPack = MusicPacks.FirstOrDefault(p => p.Id == saved.MusicPackId) ?? MusicPacks.FirstOrDefault();
         _loadingAudio = false;
@@ -58,6 +69,8 @@ public sealed partial class MainWindowViewModel
     partial void OnMasterVolumeChanged(double value) => AudioChanged();
     partial void OnEffectsVolumeChanged(double value) => AudioChanged();
     partial void OnMusicVolumeChanged(double value) => AudioChanged();
+    partial void OnAmbienceEnabledChanged(bool value) => AudioChanged();
+    partial void OnAmbienceVolumeChanged(double value) => AudioChanged();
 
     /// <summary>The "Audio buffer" choices, in Settings → Sound.</summary>
     public IReadOnlyList<string> AudioBufferChoices { get; } = [.. AudioBuffer.Choices.Select(c => c.Label)];
@@ -114,6 +127,8 @@ public sealed partial class MainWindowViewModel
         _settings.MasterVolume = MasterVolume;
         _settings.EffectsVolume = EffectsVolume;
         _settings.MusicVolume = MusicVolume;
+        _settings.AmbienceEnabled = AmbienceEnabled;
+        _settings.AmbienceVolume = AmbienceVolume;
         _settings.SoundPackId = SelectedSoundPack?.Id ?? _settings.SoundPackId;
         _settings.MusicPackId = SelectedMusicPack?.Id ?? _settings.MusicPackId;
         _saveSettings?.Invoke(_settings);
@@ -129,6 +144,9 @@ public sealed partial class MainWindowViewModel
         _audio.Director.EffectsEnabled = EffectsEnabled && !Muted;
         _audio.Director.MusicEnabled = MusicEnabled && !Muted;
         _audio.Director.MusicPack = SelectedMusicPack;
+        _audio.Engine.SetAmbienceVolume((float)(AmbienceVolume / 100));
+        _audio.Director.AmbienceFolders = AmbienceFolders;
+        _audio.Director.AmbienceEnabled = AmbienceEnabled && !Muted;
     }
 
     /// <summary>Re-points the sound director at a freshly started game.</summary>

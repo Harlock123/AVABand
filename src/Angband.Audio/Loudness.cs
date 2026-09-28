@@ -14,6 +14,8 @@ public static class Loudness
     public const double EffectTargetDb = -20;
     /// <summary>Average level music is settled at: 10 dB under the effects, so they stand out.</summary>
     public const double MusicTargetDb = -30;
+    /// <summary>Ambience loops sit a little under the music.</summary>
+    public const double AmbienceTargetDb = -36;
     /// <summary>Most an effect is boosted (16x).</summary>
     public const double EffectMaxBoostDb = 24;
     /// <summary>Most a music track is boosted (10x); loud tracks may be turned down any amount.</summary>

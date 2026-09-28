@@ -408,3 +408,49 @@ public class AudioTests
         Assert.DoesNotContain("HUNGRY", played);
     }
 }
+
+/// <summary>Ambience: a loop under the music for the place you are in.</summary>
+public class AmbienceTests
+{
+    [Theory]
+    [InlineData(0, true, "town", "ambient-town-day")]
+    [InlineData(0, false, "town", "ambient-town-night,ambient-town-day")]
+    [InlineData(5, true, "classic", "ambient-dungeon-shallow")]
+    [InlineData(40, true, "classic", "ambient-dungeon-deep,ambient-dungeon-shallow")]
+    [InlineData(80, true, "classic", "ambient-dungeon-abyss,ambient-dungeon-deep,ambient-dungeon-shallow")]
+    [InlineData(12, true, "cavern", "ambient-cavern,ambient-dungeon-shallow")]
+    [InlineData(30, true, "labyrinth", "ambient-labyrinth,ambient-dungeon-deep,ambient-dungeon-shallow")]
+    public void EachPlace_HasItsLoops_BestFirst(int depth, bool day, string profile, string names) =>
+        Assert.Equal(names.Split(','), SoundDirector.AmbienceNames(depth, day, profile));
+
+    [Fact]
+    public void TheLoop_FollowsYou_FromTheTown_IntoTheDungeon_PlayersOwnFirst_AndStopsWhenOff()
+    {
+        var own = Path.Combine(Path.GetTempPath(), "avaband-amb-own-" + Guid.NewGuid());
+        var game = Path.Combine(Path.GetTempPath(), "avaband-amb-game-" + Guid.NewGuid());
+        try
+        {
+            Directory.CreateDirectory(own);
+            Directory.CreateDirectory(game);
+            foreach (var n in new[] { "ambient-town-day", "ambient-dungeon-shallow" }) File.WriteAllBytes(Path.Combine(game, n + ".ogg"), []);
+            File.WriteAllBytes(Path.Combine(own, "ambient-dungeon-shallow.wav"), []);
+
+            var engine = new RecordingAudioEngine();
+            using var director = new SoundDirector(engine) { AmbienceFolders = [own, game] };
+            var session = GameSession.NewGame(TestData.Game, 1, "warrior");
+            director.Attach(session);
+            Assert.Equal(Path.Combine(game, "ambient-town-day.ogg"), engine.CurrentAmbience);
+
+            session.Execute(new DebugJumpCommand(3));
+            Assert.Equal(Path.Combine(own, "ambient-dungeon-shallow.wav"), engine.CurrentAmbience); // the player's own first
+
+            director.AmbienceEnabled = false;
+            Assert.Null(engine.CurrentAmbience);
+        }
+        finally
+        {
+            Directory.Delete(own, true);
+            Directory.Delete(game, true);
+        }
+    }
+}

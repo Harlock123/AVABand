@@ -19,6 +19,7 @@ public sealed class SoundDirector : IDisposable
     private GameEventBus? _bus;
     private int _depth;
     private bool _day = true;
+    private string _profile = "";
     private bool _warned;
 
     public SoundDirector(IAudioEngine engine)
@@ -67,9 +68,11 @@ public sealed class SoundDirector : IDisposable
         _bus = game.Events;
         _depth = game.Player.Depth;
         _day = game.IsDaytime;
+        _profile = game.Level.ProfileId;
         _warned = false;
         _subscriptions.Add(_bus.SubscribeAll(OnEvent));
         UpdateMusic();
+        UpdateAmbience();
     }
 
     public void Detach()
@@ -77,6 +80,7 @@ public sealed class SoundDirector : IDisposable
         foreach (var s in _subscriptions) s.Dispose();
         _subscriptions.Clear();
         _bus = null;
+        _engine.StopAmbience();
     }
 
     /// <summary>The music mood for the current place: town / town_night / dungeon / deep.</summary>
@@ -187,11 +191,14 @@ public sealed class SoundDirector : IDisposable
                 break;
             case LevelChangedEvent l:
                 _depth = l.Depth;
+                _profile = l.ProfileId;
                 UpdateMusic();
+                UpdateAmbience();
                 break;
             case DayNightChangedEvent d:
                 _day = d.IsDaytime;
                 UpdateMusic();
+                UpdateAmbience();
                 break;
             case WorldTickEvent w:
                 _depth = w.Depth;
@@ -199,6 +206,67 @@ public sealed class SoundDirector : IDisposable
                 if (_random.Next(AmbientChance) == 0) Play(AmbientSound(w.Depth, w.IsDaytime));
                 break;
         }
+    }
+
+    // --- Ambience: a loop under the music, for the place you are in ------------------------------
+
+    /// <summary>Where ambience loops are looked for, in order (the player's own folder, then the game's).</summary>
+    public IReadOnlyList<string> AmbienceFolders
+    {
+        get => _ambienceFolders;
+        set
+        {
+            _ambienceFolders = value;
+            UpdateAmbience();
+        }
+    }
+    private IReadOnlyList<string> _ambienceFolders = [];
+
+    public bool AmbienceEnabled
+    {
+        get => _ambienceEnabled;
+        set
+        {
+            _ambienceEnabled = value;
+            UpdateAmbience();
+        }
+    }
+    private bool _ambienceEnabled = true;
+
+    private static readonly string[] AmbienceExtensions = [".ogg", ".wav", ".mp3"];
+
+    /// <summary>
+    /// The loops for a place, best first: a cavern, labyrinth or fortress has its own; otherwise the
+    /// town by day or night, or the dungeon by depth — shallow (to 1000 ft), deep (to 3000 ft) and
+    /// the abyss below — each falling back to the one above it.
+    /// </summary>
+    public static IReadOnlyList<string> AmbienceNames(int depth, bool day, string profile)
+    {
+        var band = depth > 60 ? "ambient-dungeon-abyss" : depth > 20 ? "ambient-dungeon-deep" : "ambient-dungeon-shallow";
+        var bands = band switch
+        {
+            "ambient-dungeon-abyss" => new[] { band, "ambient-dungeon-deep", "ambient-dungeon-shallow" },
+            "ambient-dungeon-deep" => [band, "ambient-dungeon-shallow"],
+            _ => [band],
+        };
+        if (depth == 0) return day ? ["ambient-town-day"] : ["ambient-town-night", "ambient-town-day"];
+        return profile is "cavern" or "labyrinth" or "fortress" ? ["ambient-" + profile, .. bands] : bands;
+    }
+
+    /// <summary>The loop for where you are now, if there is one in the folders.</summary>
+    public string? AmbienceFile()
+    {
+        foreach (var name in AmbienceNames(_depth, _day, _profile))
+            foreach (var folder in _ambienceFolders)
+                foreach (var ext in AmbienceExtensions)
+                    if (Path.Combine(folder, name + ext) is var path && File.Exists(path)) return path;
+        return null;
+    }
+
+    private void UpdateAmbience()
+    {
+        if (!_ambienceEnabled || _bus is null || AmbienceFile() is not { } file) _engine.StopAmbience();
+        else _engine.PlayAmbience(file);
     }
 
     /// <summary>Angband AMBIENT_DAY/NITE in town, AMBIENT_DNG1..5 by depth band below.</summary>

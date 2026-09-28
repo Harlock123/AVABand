@@ -96,6 +96,7 @@
             <ToggleSwitch x:Name="MuteSwitch" OnContent="Muted" OffContent="Sound on" IsChecked="{Binding Muted}" />
             <ToggleSwitch OnContent="Effects on" OffContent="Effects off" IsChecked="{Binding EffectsEnabled}" />
             <ToggleSwitch OnContent="Music on" OffContent="Music off" IsChecked="{Binding MusicEnabled}" />
+            <ToggleSwitch OnContent="Ambience on" OffContent="Ambience off" IsChecked="{Binding AmbienceEnabled}" />
             <Button Content="Play test sound" Command="{Binding TestSoundCommand}" VerticalAlignment="Center" />
           </StackPanel>
           <StackPanel Orientation="Horizontal" Spacing="12">
@@ -103,7 +104,7 @@
             <ComboBox x:Name="AudioBufferBox" ItemsSource="{Binding AudioBufferChoices}" SelectedIndex="{Binding AudioBufferIndex}" MinWidth="360" />
             <TextBlock Text="{Binding AudioBufferNote}" VerticalAlignment="Center" Opacity="0.7" FontSize="12" TextWrapping="Wrap" MaxWidth="360" />
           </StackPanel>
-          <Grid ColumnDefinitions="110,260,Auto" RowDefinitions="Auto,Auto,Auto">
+          <Grid ColumnDefinitions="110,260,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
             <TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Master" />
             <Slider x:Name="MasterSlider" Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MasterVolume}" />
             <TextBlock Grid.Row="0" Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{Binding MasterVolume, StringFormat={}{0:0}%}" />
@@ -113,11 +114,14 @@
             <TextBlock Grid.Row="2" VerticalAlignment="Center" Text="Music" />
             <Slider Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MusicVolume}" />
             <TextBlock Grid.Row="2" Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{Binding MusicVolume, StringFormat={}{0:0}%}" />
+            <TextBlock Grid.Row="3" VerticalAlignment="Center" Text="Ambience" />
+            <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding AmbienceVolume}" />
+            <TextBlock Grid.Row="3" Grid.Column="2" Margin="8,0" VerticalAlignment="Center" Text="{Binding AmbienceVolume, StringFormat={}{0:0}%}" />
           </Grid>
         </StackPanel>
 
         <TextBlock DockPanel.Dock="Bottom" Margin="0,12,0,0" Opacity="0.7" TextWrapping="Wrap"
-                   Text="Add your own packs as folders containing a soundpack.json in the 'soundpacks' folder next to the game, or in your user AVABand/soundpacks folder. Events use Angband's names (HIT, MISS, OPENDOOR, LEVEL...); music moods are town, town_night, dungeon and deep." />
+                   Text="Add your own packs as folders containing a soundpack.json in the 'soundpacks' folder next to the game, or in your user AVABand/soundpacks folder. Events use Angband's names (HIT, MISS, OPENDOOR, LEVEL...); music moods are town, town_night, dungeon and deep. Ambience loops (ambient-town-day, ambient-town-night, ambient-dungeon-shallow, -deep, -abyss, ambient-cavern, ambient-labyrinth, ambient-fortress; .ogg, .wav or .mp3) go in your user AVABand/ambience folder, replacing the game's own." />
 
         <Grid ColumnDefinitions="*,16,*">
           <DockPanel>
