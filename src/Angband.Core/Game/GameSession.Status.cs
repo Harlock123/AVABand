@@ -66,6 +66,32 @@ public sealed partial class GameSession
         return true;
     }
 
+    /// <summary>
+    /// Angband process_world: the Black Breath (a Ringwraith's touch) may each turn sicken you (CON),
+    /// sap your strength (STR) and dim your life force (experience) — sustains and hold life don't
+    /// help — until it lifts or Herbal Curing drives it out.
+    /// </summary>
+    private void BlackBreathUpkeep()
+    {
+        if (!Player.Timed.Has("blackbreath")) return;
+        if (Rng.OneIn(2)) LoseStatToBlackBreath("con", "The Black Breath sickens you.");
+        if (Rng.OneIn(2)) LoseStatToBlackBreath("str", "The Black Breath saps your strength.");
+        if (Rng.OneIn(2))
+        {
+            Publish(new MessageEvent("The Black Breath dims your life force."));
+            LoseExperience(100 + Player.Experience / 100 * LifeDrainPercent);
+        }
+    }
+
+    /// <summary>Angband player_stat_dec: a point off the stat, sustained or not.</summary>
+    private void LoseStatToBlackBreath(string stat, string message)
+    {
+        Publish(new MessageEvent(message));
+        if (Player.Stats.GetValueOrDefault(stat, 15) <= 3) return;
+        Player.StatDrain[stat] = Player.StatDrain.GetValueOrDefault(stat) + 1;
+        RecalculateAfterStatChange();
+    }
+
     /// <summary>World upkeep every 10 game turns (Angband process_world).</summary>
     private void WorldTick(long gameTurn)
     {
@@ -90,6 +116,7 @@ public sealed partial class GameSession
         if (Player.IsDead) return;
         // Angband TMD_HEAL (Rapid Regeneration): 30 hit points a turn.
         if (timed.Has("heal") && Player.Hp < Player.MaxHp) Player.Hp = Math.Min(Player.MaxHp, Player.Hp + 30);
+        BlackBreathUpkeep();
         RegenerateHp();
         RegenerateMana();
         ItemUpkeep();

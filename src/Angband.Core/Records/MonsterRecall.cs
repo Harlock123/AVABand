@@ -402,6 +402,7 @@ public static class MonsterRecall
         "exp_10" or "exp_20" or "exp_40" or "exp_80" => "drain your life force",
         "disenchant" => "disenchant",
         "drain_charges" => "drain charges",
+        "black_breath" => "inflict the Black Breath",
         _ => effect.Replace('_', ' '),
     };
 

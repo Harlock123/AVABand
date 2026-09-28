@@ -1940,7 +1940,7 @@
     "name": "Herbal Curing",
     "realm": "nature",
     "book": "lesser_charms",
-    "effect": "cure:cut; cure:poisoned; cure:stun",
+    "effect": "cure:cut; cure:poisoned; cure:stun; cure:blackbreath",
     "description": "Cures cuts, poison and stunning.",
     "classes": {
       "ranger": {
@@ -2252,7 +2252,7 @@
     "name": "Herbal Curing",
     "realm": "nature",
     "book": "nature_craft",
-    "effect": "cure:cut; cure:poisoned; cure:stun; nourish_to:80",
+    "effect": "cure:cut; cure:poisoned; cure:stun; cure:blackbreath; nourish_to:80",
     "description": "Cures cuts, poison and stunning, and feeds you.",
     "classes": {
       "druid": {

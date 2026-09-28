@@ -411,6 +411,9 @@ public sealed partial class GameSession
             // Angband melee_effect_elemental: fire, acid, lightning and cold blows harm the pack too.
             if (effect.Element is { } harming && damage > 0) InventoryDamage(harming, Math.Min(damage * 5, 300));
             TakeHit(damage, killer);
+            // Angband BLACK_BREATH: one blow in five adds a little of the Black Breath (unresistable).
+            if (effect.Id == "black_breath" && !Player.IsDead && Rng.OneIn(5) && damage / 10 > 0)
+                IncreaseTimed("blackbreath", damage / 10);
             Publish(new MonsterAttackEvent(monster.Id, Hit: true, damage, blow.Method));
             if (Player.IsDead) break;
 

@@ -320,5 +320,12 @@
     "onEnd": "You no longer feel bold.",
     "onIncrease": "You feel even bolder!",
     "harmful": false
+  },
+  {
+    "id": "blackbreath",
+    "name": "BlkBrth",
+    "onBegin": "You are overcome by the Black Breath.",
+    "onEnd": "The Black Shadow lifts.",
+    "max": 10
   }
 ]

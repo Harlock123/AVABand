@@ -573,6 +573,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   Resisting the element (or the status — free action, protection from confusion, stunning,
   blindness) stops the side effect as in 4.2. Plasma, ice, water, gravity, inertia, force and time
   are their own kinds now, not fire and cold: no gear resists them, as in 4.2.
+- **The Black Breath** (the Ringwraiths' touch; 4.2's TMD_BLACKBREATH): one of their hits in five
+  adds a little of it (a tenth of the damage, 10 turns at most). While it lasts, each turn it may
+  sicken you (CON), sap your strength (STR) and dim your life force (experience) — sustains and
+  hold life don't help. Only the druid's and ranger's Herbal Curing drives it out; otherwise it
+  lifts in time ("The Black Shadow lifts.").
 - **Temporary protections** (4.2's flag-synonym statuses): *free action* and *resistance to
   confusion* (the blackguard's Grim Purpose gives both; the Mushroom of Clear Mind the second, for
   7d7+50 turns) and *boldness* (a Pint of Fine Wine, 79–120 turns, which also drives fear out) act
@@ -884,7 +889,9 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: the Black Breath. (*of Fury* stays out: in
+AVABand now has every monster spell and artifact in Angband 4.2's game data, every ego that 4.2
+generates, and every timed effect its items, spells and monsters use. Natural next steps are comforts: command counts ("tunnel 20 times"),
+controller shortcuts for running and repeating, and a setting to hide the Debug menu. (*of Fury* stays out: in
 4.2.5 its weapon types are commented out, so it is never made.)
 
 ## Licence

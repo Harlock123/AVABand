@@ -31021,7 +31021,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "6d9"
    },
    {
@@ -31137,7 +31137,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "6d9"
    },
    {
@@ -31260,7 +31260,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "7d9"
    },
    {
@@ -31600,7 +31600,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "7d9"
    },
    {
@@ -31745,7 +31745,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "8d9"
    },
    {
@@ -32047,7 +32047,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "8d9"
    },
    {
@@ -32122,7 +32122,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "9d9"
    },
    {
@@ -32271,7 +32271,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "9d10"
    },
    {
@@ -32499,7 +32499,7 @@
    },
    {
     "method": "hit",
-    "effect": "exp_20",
+    "effect": "black_breath",
     "damage": "10d10"
    },
    {

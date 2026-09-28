@@ -26,5 +26,6 @@
   {"id": "exp_80", "power": 5, "armourReduces": true},
   {"id": "disenchant", "power": 20, "element": "disen"},
   {"id": "drain_charges", "power": 15, "armourReduces": true},
+  {"id": "black_breath", "power": 0},
   {"id": "hallu", "power": 10, "timed": "image", "durationBase": 3, "durationScale": "half_level", "preventedBy": "chaos"}
 ]
