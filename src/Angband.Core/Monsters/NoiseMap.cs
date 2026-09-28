@@ -14,6 +14,7 @@ public sealed class NoiseMap
     public const int Unreached = int.MaxValue;
     private int[] _distance = [];
     private int _width;
+    private readonly Queue<Loc> _queue = new(); // kept between updates: this runs every player turn
 
     /// <summary>Flow limit in grids (Angband: max_flow_depth).</summary>
     public const int MaxFlow = 32;
@@ -24,7 +25,8 @@ public sealed class NoiseMap
         if (_distance.Length != level.Width * level.Height) _distance = new int[level.Width * level.Height];
         Array.Fill(_distance, Unreached);
 
-        var queue = new Queue<Loc>();
+        var queue = _queue;
+        queue.Clear();
         _distance[source.Y * _width + source.X] = 0;
         queue.Enqueue(source);
         while (queue.Count > 0)

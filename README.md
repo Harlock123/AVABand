@@ -65,7 +65,7 @@ AVABand.sln
 ├─ src/Angband.Audio       Sound: OpenAL engine, WAV/Ogg/MP3 decoders, sound packs, event→sound director
 ├─ src/Angband.Input       Input actions, rebindable key/button bindings, SDL2 gamepad provider
 ├─ src/Angband.Avalonia    MVVM front end (CommunityToolkit.Mvvm), DrawingContext map control
-├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures)
+├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures), perf/ (deep-dungeon speed check)
 ├─ tests/Angband.Tests          xUnit tests for the core systems
 └─ tests/Angband.Avalonia.Tests Headless UI tests (real window, simulated keyboard)
 ```
@@ -422,6 +422,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   version that changed the save format (named by commit), and `OldSaveTests` loads each, plays on,
   goes down a level and saves it again in today's format. `tools/old-saves/make-old-save.sh
   <commit>` builds that commit in a scratch worktree and writes a new one.
+- **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
+  for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
+  summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so
+  resting a thousand turns deep takes a quarter of a second; the screen's refresh after a turn is
+  under 0.2 ms. Profiling it (`dotnet-trace`) found monster teleports listing every square of the
+  level, the noise flow allocating each turn, and pack damage naming every item before rolling —
+  all fixed without changing a single roll, so seeded games replay exactly as before.
   Saves live in `<AppData>/AVABand/saves/` (one file per character, written atomically). Ctrl+S
   saves, Ctrl+O opens the list of saved characters (load or delete). The game autosaves on every
   level change, when switching characters, on exit and every five minutes of play (the option

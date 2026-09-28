@@ -296,8 +296,8 @@ public sealed partial class GameSession
         foreach (var item in Player.Inventory.Pack.Concat(Player.Inventory.Quiver).ToList())
         {
             if (!item.HarmedBy(element)) continue;
-            // The name without its number ("Potions of Cure Light Wounds").
-            var name = System.Text.RegularExpressions.Regex.Replace(ItemNaming.Describe(item, Knowledge, withArticle: false, full: false), @"^\d+ ", "");
+            // The name without its number ("Potions of Cure Light Wounds"), only once something is hurt.
+            string Name() => System.Text.RegularExpressions.Regex.Replace(ItemNaming.Describe(item, Knowledge, withArticle: false, full: false), @"^\d+ ", "");
             var weapon = item.Base.Slot is Definitions.EquipSlot.Weapon or Definitions.EquipSlot.Bow && !item.Base.IsAmmo;
             var armour = item.Base.Slot is Definitions.EquipSlot.Body or Definitions.EquipSlot.Cloak or Definitions.EquipSlot.Shield
                 or Definitions.EquipSlot.Head or Definitions.EquipSlot.Hands or Definitions.EquipSlot.Feet;
@@ -306,7 +306,7 @@ public sealed partial class GameSession
                 if (Rng.RandInt0(10_000) >= chance) continue;
                 if (weapon) { item.ToHit--; item.ToDam--; }
                 else item.ToAc--;
-                Publish(new MessageEvent($"{(item.Number > 1 ? "One of y" : "Y")}our {name} was damaged!"));
+                Publish(new MessageEvent($"{(item.Number > 1 ? "One of y" : "Y")}our {Name()} was damaged!"));
                 continue;
             }
             var each = item.IsRod ? chance / 4 : chance;
@@ -315,7 +315,7 @@ public sealed partial class GameSession
                 if (Rng.RandInt0(10_000) < each) lost++;
             if (lost == 0) continue;
             var who = item.Number > 1 ? lost == item.Number ? "All of y" : lost > 1 ? "Some of y" : "One of y" : "Y";
-            Publish(new MessageEvent($"{who}our {name} {(lost > 1 ? "were" : "was")} destroyed!"));
+            Publish(new MessageEvent($"{who}our {Name()} {(lost > 1 ? "were" : "was")} destroyed!"));
             Player.Inventory.Remove(item, lost, () => Objects.NextSerial++);
             destroyed += lost;
         }

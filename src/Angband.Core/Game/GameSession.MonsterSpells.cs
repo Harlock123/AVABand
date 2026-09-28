@@ -338,12 +338,19 @@ public sealed partial class GameSession
     private void TeleportMonster(Monster monster, int range)
     {
         var from = monster.Position;
-        var spots = Level.AllLocs()
-            .Where(p => p.DistanceTo(from) <= range && p.DistanceTo(from) >= range / 3 && Level.IsPassable(p)
-                        && Level[p].Monster == 0 && p != Player.Position)
-            .ToList();
-        if (spots.Count == 0) return;
-        Level.Monsters.Move(monster, Rng.Pick(spots));
+        // One of the squares in range, picked uniformly: count them, roll, then walk to that one (in
+        // the level's own order) — the same choice as picking from a list of them, without the list.
+        bool Fits(Loc p) => p.DistanceTo(from) <= range && p.DistanceTo(from) >= range / 3 && Level.IsPassable(p)
+                            && Level[p].Monster == 0 && p != Player.Position;
+        IEnumerable<Loc> InRange()
+        {
+            for (var y = Math.Max(0, from.Y - range); y <= Math.Min(Level.Height - 1, from.Y + range); y++)
+            for (var x = Math.Max(0, from.X - range); x <= Math.Min(Level.Width - 1, from.X + range); x++)
+                if (Fits(new Loc(x, y))) yield return new Loc(x, y);
+        }
+        var count = InRange().Count();
+        if (count == 0) return;
+        Level.Monsters.Move(monster, InRange().ElementAt(Rng.RandInt0(count)));
         monster.IsVisible = MonsterVisible(monster);
     }
 
