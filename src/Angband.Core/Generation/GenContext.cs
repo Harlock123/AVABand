@@ -21,6 +21,9 @@ internal sealed class GenContext(GameData data, DungeonProfileDef profile, int d
     /// <summary>Connection points of placed rooms, joined by tunnels.</summary>
     public List<Loc> RoomCenters { get; } = [];
 
+    /// <summary>Stairs a persistent level must have (<see cref="LevelRequest.Joins"/>); empty otherwise.</summary>
+    public IReadOnlyList<StairJoin> Joins { get; set; } = [];
+
     /// <summary>Where tunnels met existing corridors; candidates for doors.</summary>
     public List<Loc> Junctions { get; } = [];
 

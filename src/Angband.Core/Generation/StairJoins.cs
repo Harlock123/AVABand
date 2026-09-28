@@ -6,9 +6,10 @@ namespace Angband.Core.Generation;
 
 /// <summary>
 /// Persistent levels' connecting stairs (Angband 4.2 birth_levels_persist; gen-cave.c
-/// handle_level_stairs, gen-room.c build_staircase): each join becomes a staircase, walled round as
-/// a one-square "staircase room" where it stands in rock and tunnelled through to the level; the
-/// level's own stairs of that direction are removed, so the joins are its only way up (or down).
+/// handle_level_stairs): each join becomes a staircase. The classic generator has already built a
+/// staircase room there (gen-room.c build_staircase) that its tunnels reach; elsewhere (caverns) a
+/// join in rock is dug through to the nearest open square. The level's own stairs of that direction
+/// are removed, so the joins are its only way up (or down).
 /// </summary>
 internal static class StairJoins
 {

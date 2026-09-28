@@ -670,8 +670,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     come back — its monsters having healed and shaken off confusion, fear and the rest for the time
     you were away; uniques alive on a kept level can't turn up elsewhere meanwhile. The stairs line
     up: a new level has an up staircase under each down staircase of the level above (and a down
-    staircase over each up staircase of the level below), each dug through to the rest of the level,
-    and no others of that kind, and you arrive on the square you left from — so going back up lands
+    staircase over each up staircase of the level below), each in a little walled staircase room
+    built before the other rooms so the tunnels reach it (in caverns, dug through to the nearest
+    cave), and no others of that kind, and you arrive on the square you left from — so going back up lands
     you on the staircase you came down. No labyrinths are made for a persistent dungeon (as in 4.2);
     the debug menu's *Regenerate level* still makes a new one. Kept levels are in the save. Word
     of Recall read in town asks "Which level do you wish to return to?" (the deepest kept level

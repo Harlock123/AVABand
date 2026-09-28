@@ -47,6 +47,7 @@ internal sealed class ClassicGenerator : ILevelGenerator
         var blockCols = profile.Width / block;
         var used = new bool[blockRows, blockCols];
         var counts = new Dictionary<string, int>(StringComparer.Ordinal);
+        BuildStaircaseRooms(ctx, used);
 
         var eligible = profile.Rooms.Where(r => r.MinDepth <= ctx.Depth && r.MaxDepth >= ctx.Depth).ToList();
         for (var attempt = 0; attempt < profile.RoomAttempts; attempt++)
@@ -61,6 +62,28 @@ internal sealed class ClassicGenerator : ILevelGenerator
 
             ctx.RoomCenters.Add(plan.Draw(ctx, topLeft));
             counts[choice.Type] = counts.GetValueOrDefault(choice.Type) + 1;
+        }
+    }
+
+    /// <summary>
+    /// Angband build_staircase_rooms / build_staircase: for a persistent level, a one-square room
+    /// walled in granite at each join, built before the other rooms (whose blocks it takes) so the
+    /// tunnels reach it like any room. The staircase itself goes in with the level's other stairs.
+    /// </summary>
+    private static void BuildStaircaseRooms(GenContext ctx, bool[,] used)
+    {
+        var block = ctx.Profile.BlockSize;
+        foreach (var join in ctx.Joins)
+        {
+            var c = join.Loc;
+            if (c.X < 2 || c.Y < 2 || c.X > ctx.Level.Width - 3 || c.Y > ctx.Level.Height - 3) continue;
+            ctx.SetFloor(c, SquareFlags.Room);
+            foreach (var p in ctx.Level.Neighbors(c))
+                if (!ctx.Level.Has(p, TerrainFlags.Passable)) ctx.SetWall(p, ctx.F.Granite, SquareFlags.WallOuter, SquareFlags.Room);
+            for (var y = Math.Max(0, (c.Y - 2) / block); y <= Math.Min(used.GetLength(0) - 1, (c.Y + 2) / block); y++)
+            for (var x = Math.Max(0, (c.X - 2) / block); x <= Math.Min(used.GetLength(1) - 1, (c.X + 2) / block); x++)
+                used[y, x] = true;
+            ctx.RoomCenters.Add(c);
         }
     }
 

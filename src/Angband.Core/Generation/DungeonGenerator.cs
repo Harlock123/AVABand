@@ -80,7 +80,7 @@ public sealed class DungeonGenerator
         for (var attempt = 1; attempt <= MaxAttempts; attempt++)
         {
             var profile = ChooseProfile(rng, request.Depth, request.ProfileId, request.Persistent);
-            var ctx = new GenContext(_data, profile, request.Depth, rng);
+            var ctx = new GenContext(_data, profile, request.Depth, rng) { Joins = request.Joins ?? [] };
             if (!Generators[profile.Generator].Generate(ctx)) continue;
             if (request.Joins is { Count: > 0 } joins) StairJoins.Apply(ctx, joins);
 

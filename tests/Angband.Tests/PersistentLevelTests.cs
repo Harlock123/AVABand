@@ -137,6 +137,9 @@ public class PersistentLevelTests
             var level = generator.Generate(new LevelRequest(5, seed, ProfileId: "classic", Joins: joins, Persistent: true)).Level;
             Assert.Equal([new Loc(12, 10)], level.FindFeature(TerrainFlags.UpStair));
             Assert.Equal([new Loc(150, 50)], level.FindFeature(TerrainFlags.DownStair));
+            // Each in its own little staircase room (Angband build_staircase), reached by the tunnels.
+            Assert.True(level[new Loc(12, 10)].Has(Angband.Core.World.SquareFlags.Room));
+            Assert.True(level[new Loc(150, 50)].Has(Angband.Core.World.SquareFlags.Room));
         }
         var rng = new GameRandom(3);
         for (var i = 0; i < 300; i++) Assert.NotEqual("labyrinth", generator.ChooseProfile(rng, 20, persistent: true).Generator);
