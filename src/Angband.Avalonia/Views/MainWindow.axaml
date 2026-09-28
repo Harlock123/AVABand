@@ -287,6 +287,18 @@
         </StackPanel>
       </Border>
 
+      <!-- A hint for new players (each shown once; the option turns them off). -->
+      <Border x:Name="HintBanner" IsVisible="{Binding HasHint}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="16,0,16,14"
+              MaxWidth="720" Background="#E0142033" BorderBrush="#3b5b8a" BorderThickness="1" CornerRadius="6" Padding="12,8">
+        <DockPanel>
+          <Button DockPanel.Dock="Right" Content="×" Command="{Binding DismissHintCommand}" Focusable="False" Padding="6,0"
+                  Margin="10,0,0,0" VerticalAlignment="Top" Background="Transparent" Foreground="#9ab" ToolTip.Tip="Hide this hint" />
+          <TextBlock TextWrapping="Wrap" Foreground="#dde6f5" FontSize="13">
+            <Run Text="Tip: " FontWeight="SemiBold" Foreground="#8fc1ff" /><Run Text="{Binding HintText}" />
+          </TextBlock>
+        </DockPanel>
+      </Border>
+
       <!-- Item prompt ("Quaff which potion?") -->
       <Border IsVisible="{Binding IsPrompting}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0"
               Background="#E0101018" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10" MinWidth="420">

@@ -1,0 +1,93 @@
+using Angband.Avalonia.ViewModels;
+using Angband.Avalonia.Views;
+using Angband.Core.Game;
+using Angband.Data;
+using Angband.Input;
+using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Headless.XUnit;
+using Avalonia.VisualTree;
+
+namespace Angband.Avalonia.Tests;
+
+/// <summary>Hints for new players: shown once each, with the keys you actually have.</summary>
+public class HintsUiTests
+{
+    private static (MainWindow Window, MainWindowViewModel Vm, AppSettings Settings) Open(InputBindings? keys = null, AppSettings? settings = null)
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        settings ??= new AppSettings();
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null);
+        vm.UseInput(keys ?? InputBindings.Defaults(), null, null);
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        vm.DismissHint(); // whatever the town start brought up
+        return (window, vm, settings);
+    }
+
+    [AvaloniaFact]
+    public void ABadWound_BringsUpAHint_WithTheQuaffKey_Once()
+    {
+        var (window, vm, settings) = Open();
+        vm.Game.Player.Hp = 2;
+        vm.Execute(new HoldCommand());
+        Assert.True(vm.HasHint);
+        Assert.StartsWith("You are badly hurt! Quaff a potion of Cure Light Wounds (q)", vm.HintText);
+        Assert.Contains("hurt", settings.SeenHints);
+        window.CaptureRenderedFrame();
+        Assert.True(window.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "HintBanner").IsEffectivelyVisible);
+        TileRenderingTests.Save(window, "hint");
+
+        // It stays for a few commands, then goes; and never comes back.
+        for (var i = 0; i < MainWindowViewModel.HintCommands - 1; i++)
+        {
+            vm.Game.Player.Hp = vm.Game.Player.MaxHp;
+            vm.Execute(new HoldCommand());
+            Assert.StartsWith("You are badly hurt!", vm.HintText); // still up
+        }
+        vm.Execute(new HoldCommand());
+        Assert.DoesNotContain("badly hurt", vm.HintText);
+        vm.DismissHint();
+        vm.Game.Player.Hp = 2;
+        vm.Execute(new HoldCommand());
+        Assert.DoesNotContain("badly hurt", vm.HintText);
+    }
+
+    [AvaloniaFact]
+    public void Hints_NameTheKeysOfTheKeysetInUse()
+    {
+        var (_, vm, _) = Open(InputBindings.Preset(InputBindings.Keyset.Original));
+        vm.Game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(1));
+        vm.DismissHint();
+        var game = vm.Game;
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 2 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("jackal")!, at, asleep: true);
+        game.UpdateView();
+        vm.Execute(new HoldCommand());
+        Assert.StartsWith("A monster! Walk into it to attack. l looks at it", vm.HintText); // 'x' in AVABand's keys
+    }
+
+    [AvaloniaFact]
+    public void TheOption_TurnsHintsOff_AndSeenHintsCarryToTheNextCharacter()
+    {
+        var (_, vm, settings) = Open();
+        vm.SetOption(DisplayOptions.Hints, false);
+        vm.Game.Player.Hp = 2;
+        vm.Execute(new HoldCommand());
+        Assert.False(vm.HasHint);
+        Assert.DoesNotContain("hurt", settings.SeenHints);
+
+        vm.SetOption(DisplayOptions.Hints, true);
+        vm.Execute(new HoldCommand());
+        Assert.Contains("hurt", settings.SeenHints);
+
+        var (_, next, _) = Open(settings: settings); // same settings: a new character
+        next.Game.Player.Hp = 2;
+        next.Execute(new HoldCommand());
+        Assert.DoesNotContain("badly hurt", next.HintText);
+    }
+}

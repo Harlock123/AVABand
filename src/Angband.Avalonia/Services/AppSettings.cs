@@ -22,6 +22,8 @@ public sealed class AppSettings
     public bool ShowRecallPanel { get; set; } = true;
     /// <summary>The hotbar of spells and items under the map.</summary>
     public bool ShowHotbar { get; set; } = true;
+    /// <summary>The new-player hints already shown (each is shown once, for every character).</summary>
+    public List<string> SeenHints { get; set; } = [];
     /// <summary>Volumes 0..100.</summary>
     public double MasterVolume { get; set; } = 80;
     public double EffectsVolume { get; set; } = 80;

@@ -244,6 +244,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
         NoteForRepeat(command, _game.Execute(command));
         _game.AimAtTargetNext = false;
+        CountDownHint();
         AutosaveIfDue();
         Refresh();
     }
@@ -368,6 +369,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         RefreshListPanels();
         RefreshHotbar();
         RefreshPaperDolls();
+        CheckHints();
         var next = player.Level >= Angband.Core.Magic.StatTables.MaxLevel ? "max" : _game.ExperienceForLevel(player.Level).ToString(CultureInfo.InvariantCulture);
         var mana = player.MaxMana > 0 ? $"  SP {player.Mana}/{player.MaxMana}" : "";
         StatusText = player.IsDead && player.IsWinner

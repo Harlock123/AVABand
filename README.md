@@ -543,6 +543,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Hints for new players** (AVABand's own; the option *Hints for new players*, on by default): the
+    first time you are badly hurt, enter a shop, meet a monster in the dungeon, see a trap, stand on
+    an item, get hungry, run low on light, wear something with unknown runes, gain a level or go
+    down the stairs, a short tip appears at the foot of the map, naming the keys of the keyset in use
+    ("l looks at it" with Angband's keys, "x" with AVABand's). Each is shown once — remembered in the
+    settings, so not again for the next character — and goes after eight commands or with ×.
   - AVABand remembers only the top object of a pile out of view, so such piles list that one item.
     While you hallucinate the monster list just says "Your hallucinations are too wild to see
     things clearly."

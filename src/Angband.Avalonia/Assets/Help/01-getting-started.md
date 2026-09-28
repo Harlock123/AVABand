@@ -8,6 +8,9 @@ five minutes of play (Ctrl+S saves now; Ctrl+X saves and quits).
 
 ## Your first steps
 
+New to Angband? Tips appear at the foot of the map the first time something happens (your first
+shop, monster, trap, bad wound...), each just once. Options → *Hints for new players* turns them off.
+
 - **Make a character**: Game → New character (Ctrl+N) picks a race, a class, stats and birth
   options. If you are new, a Human or Dwarf **Warrior** is the forgiving choice.
 - **Shop in town**: walk onto a shop's number (1–8) to go in. Buy a few **Flasks of Oil** to
