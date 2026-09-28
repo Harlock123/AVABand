@@ -364,6 +364,7 @@ public sealed partial class GameSession
         var killer = race.IsUnique ? race.Name : Article(race.Name);
 
         _attacker = race.Id;
+        _actingMonster = monster;
         var blowIndex = -1;
         foreach (var blow in race.Blows)
         {
@@ -400,6 +401,7 @@ public sealed partial class GameSession
                 // Being hit by an element reveals gear that resists it.
                 foreach (var item in Player.Inventory.Equipped.Where(i => i.Resists.Contains(elementId)).ToList())
                     LearnRune(RuneIds.Resist(elementId));
+                LearnAboutPlayer(monster, elementId);
             }
             if (effect.ArmourReduces)
             {
@@ -438,10 +440,12 @@ public sealed partial class GameSession
             }
         }
         _attacker = null;
+        _actingMonster = null;
     }
 
     private void ApplyBlowStatus(BlowEffectDef effect, string timedId, int damage, int monsterLevel)
     {
+        LearnAboutPlayer(_actingMonster, effect.PreventedBy);
         if (effect.PreventedBy is { } protection && Player.Resists.GetValueOrDefault(protection) > 0)
         {
             Publish(new MessageEvent("You are unaffected!"));

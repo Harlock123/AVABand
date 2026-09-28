@@ -225,6 +225,7 @@ public sealed partial class GameSession
     private void DrainLife(int dice, int percent)
     {
         var holdLife = Player.HasGearFlag(ItemFlags.HoldLife) || Player.Resists.GetValueOrDefault("hold_life") > 0;
+        LearnAboutPlayer(_actingMonster, "hold_life");
         if (holdLife && Rng.Percent(95))
         {
             Publish(new MessageEvent("You keep hold of your life force!"));

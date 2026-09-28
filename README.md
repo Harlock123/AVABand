@@ -645,7 +645,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     and teleport level go below the deepest level reached), no recall (until Morgoth is dead), no
     artifacts, lose artifacts (otherwise an artifact left behind that you never found can turn up
     again), no selling, the starting kit (without it only one food and one light, the rest as
-    gold), know all runes, know all flavours.
+    gold), know all runes, know all flavours, and **monsters learn from their mistakes** (on by
+    default; `Game/GameSession.MonsterLearning.cs`, 4.2's `update_smart_learn` and
+    `remove_bad_spells`): a monster that sees you resist an element or shrug off a status attack
+    remembers it (stupid monsters never do, ordinary ones half the time), and later leaves out the
+    bolts, balls and breaths you resist (25% a level of resistance, 50% for smart monsters) and the
+    status spells your protections stop; one turn in twenty it forgets. It is kept in the save.
   - *Cheat*: peek into monster creation (uniques on the level), peek into dungeon creation (the
     level profile and its vaults), and avoid death (you are healed, cured and sent to town). Once
     one is used the character is marked as a cheater and, as in Angband, its score is not recorded.
@@ -653,7 +658,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     staircase after going down), where AVABand used to put you on a staircase leading onward.
   - Not offered: the roguelike keyset (AVABand's keys are rebindable instead), use sound (see the
     Sound tab), animate flicker, auto-more, cheat_xtra, and the birth options for floor stacking,
-    monster learning, persistent levels and percentage damage, which
+    persistent levels and percentage damage, which
     AVABand doesn't have.
 - **Inscriptions** (`Items/Inscription.cs`, `Game/GameSession.Inscriptions.cs`,
   `ViewModels/MainWindowViewModel.Inscriptions.cs`): Angband's notes on objects. `{` picks an item

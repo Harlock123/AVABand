@@ -35,6 +35,7 @@ public static class OptionIds
     public const string LoseArtifacts = "birth_lose_arts";
     public const string NoSelling = "birth_no_selling";
     public const string StartKit = "birth_start_kit";
+    public const string AiLearn = "birth_ai_learn";
     public const string KnowRunes = "birth_know_runes";
     public const string KnowFlavors = "birth_know_flavors";
     public const string Feelings = "birth_feelings";
@@ -67,6 +68,7 @@ public static class OptionCatalog
         new(OptionIds.Feelings, "Show level feelings", OptionKind.Birth, true),
         new(OptionIds.NoSelling, "Increase gold drops but disable selling", OptionKind.Birth, true),
         new(OptionIds.StartKit, "Start with a kit of useful gear", OptionKind.Birth, true),
+        new(OptionIds.AiLearn, "Monsters learn from their mistakes", OptionKind.Birth, true),
         new(OptionIds.KnowRunes, "Know all runes on birth", OptionKind.Birth, false),
         new(OptionIds.KnowFlavors, "Know all flavors on birth", OptionKind.Birth, false),
 

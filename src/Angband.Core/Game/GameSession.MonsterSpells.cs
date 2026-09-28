@@ -56,6 +56,7 @@ public sealed partial class GameSession
             .Where(s => s.Innate == innate)
             .Where(s => monster.Confused == 0 || s.Innate)
             .ToList();
+        usable = WithoutKnownFailures(monster, usable); // what it has learned won't work
 
         // Frightened monsters try to get away or patch themselves up.
         if (monster.IsAfraid)
@@ -95,6 +96,7 @@ public sealed partial class GameSession
             ? SpellText(tier?.Message ?? spell.Message, name, race)
             : tier?.UnseenMessage ?? spell.UnseenMessage));
         _attacker = race.Id;
+        _actingMonster = monster;
         if (seen)
         {
             var lore = Lore.For(race.Id);
@@ -251,6 +253,7 @@ public sealed partial class GameSession
                 break;
         }
         _attacker = null;
+        _actingMonster = null;
         return true;
     }
 
@@ -275,6 +278,7 @@ public sealed partial class GameSession
         {
             damage = CombatMath.ResistElement(Rng, element, damage, Player.Resists.GetValueOrDefault(elementId));
             if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(elementId))) LearnRune(RuneIds.Resist(elementId));
+            LearnAboutPlayer(_actingMonster, elementId); // the caster sees how well it worked
         }
         else if (elementId is not null && Player.Resists.GetValueOrDefault(elementId) < 0)
             damage = damage * 4 / 3; // Angband adjust_dam: vulnerable (the evil, to holy orbs)
@@ -309,6 +313,7 @@ public sealed partial class GameSession
     private void ApplySpellStatus(MonsterSpellDef spell, string? saveMessage = null)
     {
         if (spell.Timed is not { } timed) return;
+        LearnAboutPlayer(_actingMonster, spell.PreventedBy);
         if (spell.PreventedBy is { } protection && Player.Resists.GetValueOrDefault(protection) > 0)
         {
             Publish(new MessageEvent("You are unaffected!"));

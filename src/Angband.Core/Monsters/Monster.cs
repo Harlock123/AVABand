@@ -46,6 +46,12 @@ public sealed class Monster : IActor
     /// the monster is an ordinary member of its group).
     /// </summary>
     public int? BodyguardOf { get; set; }
+
+    /// <summary>
+    /// What this monster has seen of the player's resistances and protections (Angband
+    /// <c>known_pstate</c>): an element or protection id and its level as last observed.
+    /// </summary>
+    public Dictionary<string, int> KnownPlayer { get; set; } = [];
     /// <summary>Hasted (Angband mon_tmd FAST): +10 speed while it lasts.</summary>
     public int Fast { get; set; }
     /// <summary>Slowed (Angband mon_tmd SLOW): -10 speed while it lasts.</summary>

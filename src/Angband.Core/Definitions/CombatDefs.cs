@@ -196,6 +196,7 @@ public static class MonsterFlags
     public const string KillBody = "KILL_BODY";
     /// <summary>Never fails to cast (Angband SMART-ish casters skip failure checks).</summary>
     public const string Smart = "SMART";
+    public const string Stupid = "STUPID";
     /// <summary>Unseen without see invisible.</summary>
     public const string Invisible = "INVISIBLE";
     /// <summary>Moves through walls (not permanent rock).</summary>
