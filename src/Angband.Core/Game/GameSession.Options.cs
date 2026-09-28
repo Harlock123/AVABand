@@ -24,6 +24,15 @@ public sealed partial class GameSession
 
     public bool IsCheater => CheatsUsed.Count > 0;
 
+    /// <summary>What <see cref="CheatsUsed"/> records once a debug command has been used (Angband's NOSCORE_DEBUG).</summary>
+    public const string DebugCheat = "debug";
+
+    /// <summary>Whether this character has used a debug command (and so can't enter the high scores).</summary>
+    public bool UsedDebug => CheatsUsed.Contains(DebugCheat);
+
+    /// <summary>Marks the character as having used debug commands, for good, as Angband does.</summary>
+    public void MarkDebugUsed() => CheatsUsed.Add(DebugCheat);
+
     /// <summary>
     /// Changes an option during play. Birth options are fixed once the character exists; switching a
     /// cheat on marks the character. Returns false if the change isn't allowed.
@@ -71,6 +80,7 @@ public sealed partial class GameSession
     public void DebugSetShopsPay(bool pay)
     {
         if (NoSelling != pay) return;
+        MarkDebugUsed();
         Options[OptionIds.NoSelling] = !pay;
         Publish(new MessageEvent(pay
             ? "Shops now pay gold for what you sell (debug: \"no selling\" is off)."

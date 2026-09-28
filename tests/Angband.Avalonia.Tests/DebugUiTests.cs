@@ -40,6 +40,8 @@ public class DebugUiTests
         var game = vm.Game;
 
         window.KeyPressQwerty(PhysicalKey.F8, RawInputModifiers.None);
+        Assert.True(vm.IsConfirming); // the first debug command asks
+        window.KeyPressQwerty(PhysicalKey.Y, RawInputModifiers.None);
         Assert.Equal(1, game.Player.Depth);
         AssertOnAPlainSpot(game);
 
@@ -60,6 +62,7 @@ public class DebugUiTests
     {
         var (window, vm) = Open();
         var game = vm.Game;
+        game.MarkDebugUsed(); // already agreed to
         vm.JumpDeeperCommand.Execute(null);
         vm.JumpDeeperCommand.Execute(null);
         Assert.Equal(10, game.Player.Depth);
@@ -81,6 +84,7 @@ public class DebugUiTests
     public void NextLevel_StopsAtTheBottom()
     {
         var (_, vm) = Open();
+        vm.Game.MarkDebugUsed();
         vm.Execute(new DebugJumpCommand(vm.Game.Data.Constants.MaxDepth));
         vm.JumpNextLevelCommand.Execute(null);
         Assert.Equal(vm.Game.Data.Constants.MaxDepth, vm.Game.Player.Depth);
@@ -96,5 +100,39 @@ public class DebugUiTests
         Assert.Contains("Jump to _next level", headers);
         Assert.Contains("Jump back to _town", headers);
         Assert.Contains("Shops pay _gold when you sell", headers);
+    }
+
+    /// <summary>
+    /// Debug commands mark the character, as Angband's debug mode does: the first asks, "no" does
+    /// nothing, "yes" marks the character for good (kept in the save), and it is never scored.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheFirstDebugCommand_Asks_ThenMarksTheCharacter()
+    {
+        var (window, vm) = Open();
+        var game = vm.Game;
+
+        window.KeyPressQwerty(PhysicalKey.F6, RawInputModifiers.None);
+        Assert.True(vm.IsConfirming);
+        Assert.StartsWith("Debug commands mark this character", vm.LastMessage);
+        window.KeyPressQwerty(PhysicalKey.N, RawInputModifiers.None);
+        Assert.Equal(0, game.Player.Depth);
+        Assert.False(game.IsCheater);
+
+        window.KeyPressQwerty(PhysicalKey.F7, RawInputModifiers.None); // whole map: asks too
+        window.KeyPressQwerty(PhysicalKey.Y, RawInputModifiers.None);
+        Assert.True(vm.ShowWholeMap);
+        Assert.True(game.UsedDebug);
+        Assert.True(game.IsCheater);
+
+        window.KeyPressQwerty(PhysicalKey.F6, RawInputModifiers.None); // no more questions
+        Assert.False(vm.IsConfirming);
+        Assert.Equal(5, game.Player.Depth);
+
+        using var stream = new MemoryStream();
+        Angband.Core.Persistence.SaveGame.Save(game, stream);
+        stream.Position = 0;
+        Assert.True(Angband.Core.Persistence.SaveGame.Load(game.Data, stream).UsedDebug);
+        Assert.Contains("Cheated (debug): not scored.", Angband.Core.Records.CharacterDump.Build(game, []));
     }
 }

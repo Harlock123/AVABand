@@ -206,10 +206,10 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     }
 
     [RelayCommand]
-    private void RegenerateLevel() => Execute(new DebugJumpCommand(_game.Player.Depth));
+    private void RegenerateLevel() => Debug(() => Execute(new DebugJumpCommand(_game.Player.Depth)));
 
     [RelayCommand]
-    private void JumpDeeper() => Execute(new DebugJumpCommand(_game.Player.Depth + 5));
+    private void JumpDeeper() => Debug(() => Execute(new DebugJumpCommand(_game.Player.Depth + 5)));
 
     /// <summary>Debug: straight down to the next level, at a random open spot (no stairs under you).</summary>
     [RelayCommand]
@@ -221,7 +221,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
             Refresh();
             return;
         }
-        Execute(new DebugJumpCommand(_game.Player.Depth + 1));
+        Debug(() => Execute(new DebugJumpCommand(_game.Player.Depth + 1)));
     }
 
     /// <summary>Debug: back to town at once, where Word of Recall would put you — without its delay or message.</summary>
@@ -234,24 +234,51 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
             Refresh();
             return;
         }
-        Execute(new DebugJumpCommand(0));
+        Debug(() => Execute(new DebugJumpCommand(0)));
     }
 
     /// <summary>Debug: whether shops pay gold for what you sell (birth_no_selling off), switchable mid-game.</summary>
     public bool ShopsPayGold => !_game.NoSelling;
 
     [RelayCommand]
-    private void ToggleShopsPayGold()
+    private void ToggleShopsPayGold() => Debug(() =>
     {
         _game.DebugSetShopsPay(!ShopsPayGold);
         OnPropertyChanged(nameof(ShopsPayGold));
         OnPropertyChanged(nameof(StoreModeText));
         RefreshStore();
         Refresh();
+    });
+
+    /// <summary>
+    /// Runs a debug command. The first one a character uses asks first, as Angband's debug mode does:
+    /// afterwards the character is marked (<see cref="GameSession.UsedDebug"/>) and never scored.
+    /// </summary>
+    private void Debug(Action action)
+    {
+        if (_game.UsedDebug)
+        {
+            action();
+            return;
+        }
+        AskFirst("Debug commands mark this character: it won't enter the high scores. Use them anyway?", () =>
+        {
+            _game.MarkDebugUsed();
+            action();
+        });
+        Refresh();
     }
 
     [RelayCommand]
-    private void ToggleWholeMap() => ShowWholeMap = !ShowWholeMap;
+    private void ToggleWholeMap()
+    {
+        if (ShowWholeMap) ShowWholeMap = false; // hiding it again is never a question
+        else Debug(() =>
+        {
+            _game.MarkDebugUsed();
+            ShowWholeMap = true;
+        });
+    }
 
 
     private void Refresh()

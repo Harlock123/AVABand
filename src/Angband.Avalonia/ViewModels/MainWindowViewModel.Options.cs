@@ -106,7 +106,8 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty] private bool _centerPlayer = true;
 
     public string CheaterText => _game.IsCheater
-        ? "This character has cheated and will not enter the score table."
+        ? (_game.UsedDebug ? "This character has used debug commands and will not enter the score table."
+            : "This character has cheated and will not enter the score table.")
         : "Switching a cheat on keeps this character out of the score table for good.";
 
     private static OptionDef? InterfaceOption(string id) =>

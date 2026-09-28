@@ -44,7 +44,10 @@ public class KeyboardInputTests
     public void F7_TogglesWholeMap()
     {
         var (window, vm) = Open();
+        vm.Game.MarkDebugUsed(); // (the first debug command asks; see DebugUiTests)
         window.KeyPressQwerty(PhysicalKey.F7, RawInputModifiers.None);
         Assert.True(vm.ShowWholeMap);
+        window.KeyPressQwerty(PhysicalKey.F7, RawInputModifiers.None);
+        Assert.False(vm.ShowWholeMap);
     }
 }

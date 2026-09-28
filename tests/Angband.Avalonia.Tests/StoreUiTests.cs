@@ -65,6 +65,7 @@ public class StoreUiTests
     public void TheDebugToggle_MakesShopsPay_AndBackAgain()
     {
         var (window, vm, game) = OpenAt("general");
+        game.MarkDebugUsed(); // already agreed to use debug commands
         Assert.False(vm.ShopsPayGold);
         window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None); // the give/sell pane
 

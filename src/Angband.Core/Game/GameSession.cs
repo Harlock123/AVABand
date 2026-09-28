@@ -376,6 +376,7 @@ public sealed partial class GameSession : ITurnHandler
 
     private int DebugJump(int depth)
     {
+        MarkDebugUsed();
         depth = Math.Clamp(depth, 0, Data.Constants.MaxDepth);
         ChangeLevel(depth, StairArrival.None);
         return EnergyTable.MoveEnergy;

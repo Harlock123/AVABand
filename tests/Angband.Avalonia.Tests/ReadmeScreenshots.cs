@@ -48,6 +48,7 @@ public class ReadmeScreenshots
     private static void Descend(MainWindowViewModel vm, int depth = 5)
     {
         var game = vm.Game;
+        game.MarkDebugUsed(); // the jumps below are debug commands; don't stop to ask
         for (var d = 0; d < depth; d += 5) vm.HandleAction(InputAction.JumpDeeper); // debug: 5 levels at a time
         // A level where the player starts in a lit room well inside the map, so the view is centred on it.
         bool Good() => game.Player.Position is var at && at.X > 35 && at.X < game.Level.Width - 35 && at.Y > 12
