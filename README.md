@@ -551,6 +551,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Your journey** (AVABand's own; Game → *Your journey…*, or right-click yourself → Other): a
+    graph of depth over time — each level held until the next, uniques killed marked red and
+    artifacts found violet — a table of every depth visited (how often, how long, kills, uniques,
+    artifacts) and the history beside them. The levels arrived on and every kill are kept with the
+    character (saves from before this start their journey when next loaded).
   - **Replays** (AVABand's own; the option *Record every game as a replay*, on by default): every game
     is deterministic, so each is recorded as it is played — the game as it stood when recording began
     (a save, inside), then every command and every choice made outside one (targets, options,

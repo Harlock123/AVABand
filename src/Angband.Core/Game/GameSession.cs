@@ -532,6 +532,7 @@ public sealed partial class GameSession : ITurnHandler
         Search(); // Angband on_new_level: a secret door beside the arrival spot is found at once
         SenseOre();
 
+        NoteVisit();
         Publish(new LevelChangedEvent(depth, Level!.ProfileId)); // (set by either branch above)
     }
 

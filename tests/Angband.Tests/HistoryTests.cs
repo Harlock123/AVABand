@@ -202,3 +202,38 @@ public class EquipComparisonTests
         Assert.DoesNotContain(EquipComparison.Rows(game, slot: EquipSlot.Weapon), r => r.Item == ring);
     }
 }
+
+/// <summary>The journey: levels arrived on and kills, by depth, kept with the character.</summary>
+public class JourneyTests
+{
+    [Fact]
+    public void TheJourney_KeepsEachLevelAndKill_ByDepth_AndIsSaved()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5, "warrior");
+        Assert.Equal(0, Assert.Single(game.Visits).Depth); // the town, from the start
+        game.MarkDebugUsed();
+        game.Execute(new DebugJumpCommand(2));
+        for (var i = 0; i < 20; i++) game.Execute(new HoldCommand());
+        var monster = Arena.AddMonster(game, "grip", game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l)));
+        game.DamageMonster(monster, 10_000);
+        game.Execute(new DebugJumpCommand(4));
+        game.Execute(new DebugJumpCommand(2));
+
+        Assert.Equal([0, 2, 4, 2], game.Visits.Select(v => v.Depth));
+        var kill = Assert.Single(game.Kills);
+        Assert.Equal((2, "grip", true), (kill.Depth, kill.RaceId, kill.Unique));
+        var byDepth = game.JourneyByDepth();
+        var two = byDepth.Single(l => l.Depth == 2);
+        Assert.Equal(2, two.Visits);
+        Assert.Equal(1, two.Uniques);
+        Assert.True(two.Turns > 0);
+        Assert.Equal([0, 2, 4], byDepth.Select(l => l.Depth));
+
+        using var stream = new MemoryStream();
+        SaveGame.Save(game, stream);
+        stream.Position = 0;
+        var loaded = SaveGame.Load(TestData.Game, stream);
+        Assert.Equal(game.Visits, loaded.Visits);
+        Assert.Equal(game.Kills, loaded.Kills);
+    }
+}

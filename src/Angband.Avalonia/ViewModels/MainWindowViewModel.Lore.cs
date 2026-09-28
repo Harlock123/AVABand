@@ -45,6 +45,15 @@ public sealed partial class MainWindowViewModel
     /// <summary>Ctrl+P: the message history.</summary>
     public event Action<MessageHistoryViewModel>? MessageHistoryRequested;
 
+    /// <summary>Raised to show the journey window.</summary>
+    public event Action<JourneyViewModel>? JourneyRequested;
+
+    /// <summary>Game → Your journey…: depth over time, each depth's doings, and the history.</summary>
+    [RelayCommand]
+    public void ShowJourney() => JourneyRequested?.Invoke(CreateJourney());
+
+    public JourneyViewModel CreateJourney() => new(_game, HistoryText());
+
     [RelayCommand]
     public void ShowMessageHistory() => MessageHistoryRequested?.Invoke(new MessageHistoryViewModel([.. _history]));
 

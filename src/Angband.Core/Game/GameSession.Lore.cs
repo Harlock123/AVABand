@@ -99,6 +99,7 @@ public sealed partial class GameSession
         var race = m.OriginalRace ?? m.Race;
         var lore = Lore.For(race.Id);
         CharacterKills[race.Id] = CharacterKills.GetValueOrDefault(race.Id) + 1;
+        NoteJourneyKill(m);
         lore.TotalKills++;
         foreach (var flag in CorpseFlags) LearnMonsterFlag(race, flag);
         if (m.IsVisible || Level[m.Position].Has(World.SquareFlags.Seen))

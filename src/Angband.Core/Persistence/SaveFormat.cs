@@ -53,6 +53,9 @@ public sealed class SaveFile
     public List<string> KilledUniques { get; set; } = [];
     public Dictionary<string, int> QuestKills { get; set; } = [];
     public Dictionary<string, int> CharacterKills { get; set; } = [];
+    /// <summary>The journey: levels arrived on and kills, in order (absent from older saves).</summary>
+    public List<JourneyVisitSave> JourneyVisits { get; set; } = [];
+    public List<JourneyKillSave> JourneyKills { get; set; } = [];
     public KnowledgeSave Knowledge { get; set; } = new();
     public PlayerSave Player { get; set; } = new();
     public LevelSave Level { get; set; } = new();
@@ -223,6 +226,21 @@ public sealed class ObjectPileSave
     public int X { get; set; }
     public int Y { get; set; }
     public List<ItemSave> Items { get; set; } = [];
+}
+
+public sealed class JourneyVisitSave
+{
+    public long Turn { get; set; }
+    public int Depth { get; set; }
+    public string Profile { get; set; } = "";
+}
+
+public sealed class JourneyKillSave
+{
+    public long Turn { get; set; }
+    public int Depth { get; set; }
+    public string Race { get; set; } = "";
+    public bool Unique { get; set; }
 }
 
 public sealed class HistorySave

@@ -215,6 +215,7 @@ public partial class MainWindow : Window
             _subscribed.GameOverMenuRequested -= OnGameOverMenuRequested;
             _subscribed.ExitRequested -= OnExitRequested;
             _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
+            _subscribed.JourneyRequested -= OnJourneyRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
         }
         _subscribed = DataContext as MainWindowViewModel;
@@ -234,6 +235,7 @@ public partial class MainWindow : Window
         vm.GameOverMenuRequested += OnGameOverMenuRequested;
         vm.ExitRequested += OnExitRequested;
         vm.MessageHistoryRequested += OnMessageHistoryRequested;
+        vm.JourneyRequested += OnJourneyRequested;
         vm.OverviewRequested += OnOverviewRequested;
 
         // "New game as" lists the classes from the game data.
@@ -284,6 +286,9 @@ public partial class MainWindow : Window
 
     private void OnMessageHistoryRequested(MessageHistoryViewModel history) =>
         DialogFit.Show(new MessageHistoryWindow { DataContext = history }, this);
+
+    private void OnJourneyRequested(JourneyViewModel journey) =>
+        DialogFit.Show(new JourneyWindow { DataContext = journey }, this);
 
     private void OnHighScoresRequested(HighScoresViewModel scores) =>
         DialogFit.Show(new HighScoresWindow { DataContext = scores }, this);

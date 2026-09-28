@@ -96,6 +96,7 @@ public sealed partial class MainWindowViewModel
     private List<(string, Action)> OtherMenu() =>
     [
         ("Knowledge", ShowKnowledge),
+        ("Your journey", ShowJourney),
         ("Show map", ShowOverviewMap),
         ("Show messages", ShowMessageHistory),
         ("Show monster list", ShowMonsterList),
