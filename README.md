@@ -820,7 +820,8 @@ game or in `<AppData>/AVABand/tilesets/`:
 
 **Interface size** (Settings → Display, 80%–200%) scales everything but the map — the sidebar,
 message and status lines, menus, the panels over the map and every dialog — with layout
-transforms, so text stays sharp and layouts reflow; the map keeps its own zoom (Ctrl +/-).
+transforms, so text stays sharp and layouts reflow; the map keeps its own zoom (Ctrl +/-). The
+status bar wraps onto a second line between its fields when it doesn't fit.
 The option **Colour-blind friendly colours (red-green)** swaps the colours red–green colour
 blindness confuses for a palette after Okabe–Ito (greens lean blue, reds lean vermilion and orange,
 blues, yellows and purples set apart) everywhere colours are drawn — map, sidebar, health bar,

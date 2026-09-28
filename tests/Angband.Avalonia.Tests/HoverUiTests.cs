@@ -94,4 +94,27 @@ public class HoverUiTests
         Assert.Equal(2.0, vm.InterfaceScale);
         vm.InterfaceScale = 1.0;
     }
+
+    [AvaloniaFact]
+    public void TheStatusBar_WrapsBetweenFields_WhenItDoesNotFit()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
+        vm.StartGame(42, "mage");
+        var window = new MainWindow { DataContext = vm, Width = 1440, Height = 900 };
+        window.Show();
+        var bar = window.GetVisualDescendants().OfType<ItemsControl>().First(c => c.Name == "StatusBar");
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var oneLine = bar.Bounds.Height;
+        Assert.Contains(vm.StatusFields, f => f.StartsWith("HP ", StringComparison.Ordinal));
+        Assert.Equal(vm.StatusText.Split("  |  ").Length, vm.StatusFields.Count);
+
+        vm.InterfaceScale = 1.6;
+        window.Width = 1000;
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        Assert.True(bar.Bounds.Height > oneLine * 1.5, $"{bar.Bounds.Height} vs {oneLine}"); // a second line
+        var shown = bar.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+        Assert.All(vm.StatusFields, f => Assert.Contains(f, shown));                       // every field whole
+        vm.InterfaceScale = 1.0;
+    }
 }

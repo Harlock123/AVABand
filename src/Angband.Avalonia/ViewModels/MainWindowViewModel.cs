@@ -46,6 +46,19 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     /// <summary>Bumped whenever the map changes, so the map view knows to redraw.</summary>
     [ObservableProperty] private int _revision;
     [ObservableProperty] private string _statusText = "";
+
+    /// <summary>
+    /// The status line in its fields ("HP 20/20  |", "Exp 0/10  |"…), so the bar wraps between fields,
+    /// never inside one, when it doesn't fit (a big interface size, a narrow window).
+    /// </summary>
+    public IReadOnlyList<string> StatusFields { get; private set; } = [];
+
+    partial void OnStatusTextChanged(string value)
+    {
+        var fields = value.Split("  |  ");
+        StatusFields = [.. fields.Select((f, i) => i < fields.Length - 1 ? f + "  |" : f)];
+        OnPropertyChanged(nameof(StatusFields));
+    }
     [ObservableProperty] private string _lastMessage = "";
 
     public ObservableCollection<string> Messages { get; } = [];
