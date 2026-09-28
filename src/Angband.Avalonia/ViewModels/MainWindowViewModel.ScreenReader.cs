@@ -10,8 +10,8 @@ namespace Angband.Avalonia.ViewModels;
 // message, each prompt with its choices, each tip — gathered over a turn and spoken together, and
 // Ctrl+Shift+D ("Describe surroundings") reads out your hit points, where you are, the monsters and
 // objects in view with where they are, and the nearest stairs. The map, the status line, the hotbar
-// slots and the item rows carry accessible names. (Avalonia 11 speaks to screen readers on Windows
-// and macOS; not yet on Linux.)
+// slots and the item rows carry accessible names. (Avalonia 12 speaks to screen readers on Windows,
+// macOS and Linux — AT-SPI there, when the desktop's accessibility is on.)
 public sealed partial class MainWindowViewModel
 {
     /// <summary>What the live region says; it changes each time there is something new to say.</summary>

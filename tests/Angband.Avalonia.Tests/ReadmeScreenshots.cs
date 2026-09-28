@@ -51,7 +51,7 @@ public class ReadmeScreenshots
         AvaloniaHeadlessPlatform.ForceRenderTimerTick(30);
         Dispatcher();
         var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("no frame");
-        frame.Save(Path.Combine(Folder, name + ".png"));
+        frame.Save(Path.Combine(Folder, name + ".png"), global::Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
     }
 
     private static void Dispatcher() => global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
@@ -197,7 +197,7 @@ public class ReadmeScreenshots
         if (Folder is null) return;
         Directory.CreateDirectory(Folder);
         var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("no frame");
-        frame.Save(Path.Combine(Folder, name + ".png"));
+        frame.Save(Path.Combine(Folder, name + ".png"), global::Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
     }
 
     [AvaloniaFact]

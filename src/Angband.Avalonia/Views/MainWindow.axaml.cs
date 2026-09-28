@@ -127,10 +127,10 @@ public partial class MainWindow : Window
     /// <summary>How far (pixels) a press must move to become a drag.</summary>
     private const double DragThreshold = 6;
 
-    private (global::Avalonia.Point Start, string? Payload, Action? Click)? _pending;
+    private (global::Avalonia.Point Start, string? Payload, Action? Click, PointerPressedEventArgs Press)? _pending;
 
     private void BeginPending(PointerPressedEventArgs e, string? payload, Action? click) =>
-        _pending = (e.GetPosition(this), payload, click);
+        _pending = (e.GetPosition(this), payload, click, e);
 
     private async void OnPendingMoved(object? sender, PointerEventArgs e)
     {
@@ -140,7 +140,7 @@ public partial class MainWindow : Window
         _pending = null;
         var data = new DataTransfer();
         data.Add(DataTransferItem.Create(HotbarFormat, payload));
-        await DragDrop.DoDragDropAsync(e, data, DragDropEffects.Copy | DragDropEffects.Move);
+        await DragDrop.DoDragDropAsync(pending.Press, data, DragDropEffects.Copy | DragDropEffects.Move); // (a drag begins from its press)
     }
 
     private void OnPendingReleased(object? sender, PointerReleasedEventArgs e)

@@ -41,7 +41,7 @@ public class TileRenderingTests
         if (Environment.GetEnvironmentVariable("AVABAND_SCREENSHOTS") is { Length: > 0 } dir)
         {
             Directory.CreateDirectory(dir);
-            frame.Save(Path.Combine(dir, name + ".png"));
+            frame.Save(Path.Combine(dir, name + ".png"), global::Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
         }
         return frame;
     }

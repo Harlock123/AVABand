@@ -100,11 +100,27 @@ public static class DialogPad
         }
     }
 
-    /// <summary>Moves the focus to the next (or previous) control, as Tab / Shift+Tab would.</summary>
+    /// <summary>
+    /// Moves the focus to the next (or previous) control, as Tab / Shift+Tab would: every control
+    /// that takes focus and can be seen and used, in the order the dialog lays them out (only the open
+    /// tab's). Worked out here rather than asked of Avalonia, whose tab order changed between versions.
+    /// </summary>
     private static void MoveFocus(Window dialog, IInputElement from, bool forward)
     {
-        var next = KeyboardNavigationHandler.GetNext(from, forward ? NavigationDirection.Next : NavigationDirection.Previous);
-        if (next is null || next is Control c && !c.GetVisualAncestors().Contains(dialog) && !ReferenceEquals(c, dialog)) return;
+        // A list is one stop, as Tab treats it: its chosen line (else its first).
+        static bool Representative(ListBoxItem item) =>
+            item.FindAncestorOfType<ListBox>() is not { } list || item.IsSelected
+            || list.SelectedItem is null && ReferenceEquals(list.ContainerFromIndex(0), item);
+        var stops = dialog.GetVisualDescendants().OfType<Control>()
+            .Where(c => c.Focusable && c.IsEffectivelyVisible && c.IsEffectivelyEnabled && KeyboardNavigation.GetIsTabStop(c)
+                        && (c is not ListBoxItem item || Representative(item)))
+            .ToList();
+        if (stops.Count == 0) return;
+        var current = from as Control;
+        if (current is ListBoxItem line && !stops.Contains(line) && line.FindAncestorOfType<ListBox>() is { } owner)
+            current = stops.FirstOrDefault(c => c is ListBoxItem other && ReferenceEquals(other.FindAncestorOfType<ListBox>(), owner));
+        var at = current is null ? -1 : stops.IndexOf(current);
+        var next = at < 0 ? stops[forward ? 0 : ^1] : stops[((at + (forward ? 1 : -1)) % stops.Count + stops.Count) % stops.Count];
         next.Focus(NavigationMethod.Tab);
     }
 

@@ -10,7 +10,7 @@ offers to resume from the last save and says how long ago that was.
 ## Your first steps
 
 Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
-then read out, and **Ctrl+Shift+D** describes what is around you (Windows and macOS).
+then read out, and **Ctrl+Shift+D** describes what is around you (Windows, macOS and Linux).
 
 Moments of note — the stairs, Word of Recall, a cavern or labyrinth, a deadly level, a unique met
 for the first time, death — show a scene for a moment; any key skips it, and Options → *Show scenes

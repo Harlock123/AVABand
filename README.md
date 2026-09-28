@@ -1,6 +1,6 @@
 # AVABand
 
-A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 11.
+A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 12.
 
 ![Five levels down with the David Gervais tiles: Bullroarer, a kobold archer and two cave spiders, with the monster and object lists beside the map](screenshots/dungeon-tiles.png)
 
@@ -602,8 +602,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     Ctrl+Shift+D (*Describe surroundings*) reads out your hit points, where you are, the monsters and
     objects in view with where they are ("a jackal, 3 north 2 east") and the nearest stairs. The
     map (named by that description), the status line, the hotbar slots and the item rows have
-    accessible names. Avalonia 11 speaks to Narrator, NVDA or JAWS on Windows and VoiceOver on
-    macOS; Linux screen readers (Orca, through AT-SPI) need Avalonia 12, so they hear nothing yet.
+    accessible names. Avalonia 12 speaks to Narrator, NVDA or JAWS on Windows, VoiceOver on macOS
+    and Orca on Linux (through AT-SPI, switched on by itself whenever the desktop's accessibility
+    is — as it is while Orca runs).
   - **Tutorial** (AVABand's own; Game → *Tutorial*, and the first hint points to it): a short level
     made for teaching — a room with a potion to pick up, a door, a corridor with a pit trap and no
     way round, a room with a sleeping small kobold, a last door and the stairs. The hint banner says

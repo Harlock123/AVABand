@@ -42,7 +42,7 @@
             <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0" IsVisible="{Binding CanAutoInscribe}">
               <Button DockPanel.Dock="Right" Content="Set" Margin="8,0,0,0" Command="{Binding SetAutoInscriptionCommand}" />
               <TextBlock DockPanel.Dock="Left" Text="Auto-inscription" VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.8" />
-              <TextBox x:Name="AutoInscriptionBox" Text="{Binding AutoInscription}" MaxLength="80" Watermark="e.g. @q1 or =g"
+              <TextBox x:Name="AutoInscriptionBox" Text="{Binding AutoInscription}" MaxLength="80" PlaceholderText="e.g. @q1 or =g"
                        FontFamily="{StaticResource MonoFont}" />
             </DockPanel>
             <ScrollViewer Background="#111111">

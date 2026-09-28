@@ -190,7 +190,7 @@
                 <DataTemplate>
                   <Grid ColumnDefinitions="110,*,Auto" Margin="0,2">
                     <TextBlock Text="{Binding Key}" VerticalAlignment="Center" FontFamily="{StaticResource MonoFont}" />
-                    <TextBox Grid.Column="1" Text="{Binding Action}" FontFamily="{StaticResource MonoFont}" Watermark="keys to type" />
+                    <TextBox Grid.Column="1" Text="{Binding Action}" FontFamily="{StaticResource MonoFont}" PlaceholderText="keys to type" />
                     <Button Grid.Column="2" Content="Remove" Margin="8,0,0,0"
                             Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemoveKeymapCommand}"
                             CommandParameter="{Binding}" />

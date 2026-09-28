@@ -9,7 +9,7 @@
   <DockPanel Margin="14">
     <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
       <TextBlock DockPanel.Dock="Left" Text="Find" VerticalAlignment="Center" Margin="0,0,8,0" />
-      <TextBox x:Name="FilterBox" Text="{Binding Filter}" Watermark="a command, a key or a word (e.g. cast, wear, look)" />
+      <TextBox x:Name="FilterBox" Text="{Binding Filter}" PlaceholderText="a command, a key or a word (e.g. cast, wear, look)" />
     </DockPanel>
     <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
       <TextBlock Text="Keys follow your bindings in Settings → Controls. Esc or B closes." Opacity="0.6" VerticalAlignment="Center" />
