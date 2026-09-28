@@ -118,6 +118,7 @@ public sealed class InputBindings
         K(InputAction.UseItem, "Char:X"); // Angband's U runs north-east here
         K(InputAction.TakeNote, "Char::");
         K(InputAction.SaveAndQuit, "Ctrl+X");
+        K(InputAction.CenterMap, "Ctrl+L");
         K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
@@ -196,6 +197,7 @@ public sealed class InputBindings
         K(InputAction.Locate, rogue ? "Char:W" : "Char:L");
         if (!rogue) K(InputAction.WalkIntoTrap, "Char:W"); // ('-' in both)
         K(InputAction.UseItem, rogue ? "Char:X" : "Char:U");
+        if (rogue) K(InputAction.CenterMap, "Char:@"); // (and Ctrl+L, in both)
         K(InputAction.Steal, "Char:s");
         K(InputAction.Open, "Char:o"); K(InputAction.Close, "Char:c"); K(InputAction.Disarm, "Char:D");
         K(InputAction.Rest, "Char:R"); K(InputAction.Wield, "Char:w"); K(InputAction.Quaff, "Char:q");

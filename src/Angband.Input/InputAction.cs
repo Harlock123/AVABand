@@ -84,6 +84,8 @@ public enum InputAction
     TakeNote,
     /// <summary>Save and close the game (Angband Ctrl+X). Added last so saved bindings keep their meaning.</summary>
     SaveAndQuit,
+    /// <summary>Centre the map on the player once (Angband Ctrl+L / roguelike '@'). Added last so saved bindings keep their meaning.</summary>
+    CenterMap,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -179,6 +181,7 @@ public static class InputActions
         InputAction.UseItem => "Use an item",
         InputAction.TakeNote => "Take a note",
         InputAction.SaveAndQuit => "Save and quit",
+        InputAction.CenterMap => "Center map",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

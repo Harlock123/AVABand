@@ -223,6 +223,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.Help: ShowHelp(); break;
             case InputAction.IdentifySymbol: BeginIdentifySymbol(); break;
             case InputAction.Locate: BeginLocate(); break;
+            case InputAction.CenterMap: CenterMap(); break;
             case InputAction.WalkIntoTrap: AskDirection(DirectionFor.Jump); break;
             case InputAction.UseItem: BeginItemPrompt(ItemPromptKind.UseAny); break;
             case InputAction.TakeNote: BeginNote(); break;

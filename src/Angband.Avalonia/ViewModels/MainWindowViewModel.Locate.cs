@@ -18,6 +18,16 @@ public sealed partial class MainWindowViewModel
     /// <summary>The map's size on screen in squares (set by the window; a fallback before it is shown).</summary>
     public Func<(int Cols, int Rows)> ViewportCells { get; set; } = () => (66, 22);
 
+    /// <summary>Bumped to centre the map on the player once (the map view watches it).</summary>
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private int _recentreCount;
+
+    /// <summary>
+    /// Angband do_cmd_center_map (Ctrl+L, roguelike '@'): puts the player in the middle of the view
+    /// now; with "Center map continuously" off the view then scrolls by panels again as you move.
+    /// </summary>
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    public void CenterMap() => RecentreCount++;
+
     public void BeginLocate()
     {
         _centreBeforeLocate = CenterPlayer;

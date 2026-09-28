@@ -50,6 +50,18 @@ public sealed class MapView : Control
         set => SetValue(CenterPlayerProperty, value);
     }
 
+    /// <summary>Each change centres the view on the focus once (Angband's Ctrl+L, center_panel).</summary>
+    public static readonly StyledProperty<int> RecentreCountProperty =
+        AvaloniaProperty.Register<MapView, int>(nameof(RecentreCount));
+
+    public int RecentreCount
+    {
+        get => GetValue(RecentreCountProperty);
+        set => SetValue(RecentreCountProperty, value);
+    }
+
+    private bool _recentre;
+
     /// <summary>Projections and damage numbers to animate over the map.</summary>
     public static readonly StyledProperty<MapEffects?> EffectsProperty =
         AvaloniaProperty.Register<MapView, MapEffects?>(nameof(Effects));
@@ -89,6 +101,12 @@ public sealed class MapView : Control
     private IMapRenderer? _renderer;
     // Camera of the last frame, for turning clicks into map squares.
     private (int OffsetX, int OffsetY, double OriginX, double OriginY, Size Cell) _camera;
+
+    /// <summary>The top-left square of the last frame (for tests).</summary>
+    public Angband.Core.Geometry.Loc ViewOffset => new(_camera.OffsetX, _camera.OffsetY);
+
+    /// <summary>How many squares the last frame showed across and down (for tests).</summary>
+    public (int Cols, int Rows) ViewCells { get; private set; }
 
     /// <summary>A map square was clicked; the flag is true for the secondary (right) button.</summary>
     public event Action<Angband.Core.Geometry.Loc, bool>? CellClicked;
@@ -142,7 +160,7 @@ public sealed class MapView : Control
     static MapView()
     {
         AffectsRender<MapView>(SourceProperty, RevisionProperty, CellFontSizeProperty, UseTilesProperty,
-            TilesetProperty, TileScaleProperty, FitToBoundsProperty);
+            TilesetProperty, TileScaleProperty, FitToBoundsProperty, RecentreCountProperty);
     }
 
     public IMapSource? Source
@@ -204,6 +222,7 @@ public sealed class MapView : Control
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == RecentreCountProperty) _recentre = true;
         if (change.Property == EffectsProperty)
         {
             if (change.OldValue is MapEffects old) old.Started -= StartClock;
@@ -242,9 +261,12 @@ public sealed class MapView : Control
         var rows = Math.Max(1, (int)(Bounds.Height / cell.Height));
 
         // Camera: centre on the focus, clamp to the map; centre the whole map if it fits.
-        var (offsetX, originX) = Axis(source.Width, cols, source.Focus.X, Bounds.Width, cell.Width, CenterPlayer ? null : _camera.OffsetX);
-        var (offsetY, originY) = Axis(source.Height, rows, source.Focus.Y, Bounds.Height, cell.Height, CenterPlayer ? null : _camera.OffsetY);
+        var follow = CenterPlayer || _recentre;
+        _recentre = false;
+        var (offsetX, originX) = Axis(source.Width, cols, source.Focus.X, Bounds.Width, cell.Width, follow ? null : _camera.OffsetX);
+        var (offsetY, originY) = Axis(source.Height, rows, source.Focus.Y, Bounds.Height, cell.Height, follow ? null : _camera.OffsetY);
         _camera = (offsetX, offsetY, originX, originY, cell);
+        ViewCells = (cols, rows);
         var endX = Math.Min(source.Width, offsetX + cols);
         var endY = Math.Min(source.Height, offsetY + rows);
 

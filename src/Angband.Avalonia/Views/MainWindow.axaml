@@ -74,6 +74,7 @@
                   ToggleType="CheckBox" IsChecked="{Binding ShowObjectPanel, Mode=OneWay}" />
         <Separator />
         <MenuItem Header="Level _map..." Command="{Binding ShowOverviewMapCommand}" InputGesture="Shift+M" />
+        <MenuItem Header="_Center map" Command="{Binding CenterMapCommand}" InputGesture="Ctrl+L" />
         <Separator />
         <MenuItem Header="Zoom _in" Command="{Binding ZoomInCommand}" InputGesture="Ctrl+OemPlus" />
         <MenuItem Header="Zoom _out" Command="{Binding ZoomOutCommand}" InputGesture="Ctrl+OemMinus" />
@@ -169,6 +170,7 @@
                       Tileset="{Binding SelectedTileset}"
                       TileScale="{Binding TileScale}"
                       CenterPlayer="{Binding CenterPlayer}"
+                      RecentreCount="{Binding RecentreCount}"
                       Effects="{Binding Effects}"
                       ClipToBounds="True" />
 
