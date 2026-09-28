@@ -69,6 +69,23 @@ public sealed partial class GameSession
     }
 
     /// <summary>Monsters worth targeting, nearest first (Angband's "interesting" monsters).</summary>
+    /// <summary>
+    /// Angband target_set_closest: targets the nearest monster that can be shot at ("No Available
+    /// Target." if there is none), and names it unless <paramref name="quiet"/>.
+    /// </summary>
+    public bool TargetClosest(bool quiet = false)
+    {
+        ClearTarget();
+        if (TargetableMonsters().FirstOrDefault() is not { } nearest)
+        {
+            Publish(new MessageEvent("No Available Target."));
+            return false;
+        }
+        SetTarget(nearest);
+        if (!quiet) Publish(new MessageEvent($"{Capitalize(MonsterName(nearest))} is targeted."));
+        return true;
+    }
+
     public IReadOnlyList<Monster> TargetableMonsters() =>
         Level.Monsters.All
             .Where(m => m.IsVisible && ProjectionPath.Projectable(Level, Player.Position, m.Position, MaxRange))

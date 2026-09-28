@@ -111,6 +111,8 @@ public sealed class InputBindings
         K(InputAction.ObjectList, "Char:]");
         K(InputAction.ShowCommands, "F1");
         K(InputAction.Help, "Char:?");
+        K(InputAction.TargetClosest, "Char:'");
+        K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
         K(InputAction.JumpNextLevel, "F8");
@@ -184,6 +186,7 @@ public sealed class InputBindings
         K(InputAction.ToggleIgnore, rogue ? "Char:O" : "Char:K");
         if (!rogue) K(InputAction.Ignore, "Char:k");
         if (!rogue) K(InputAction.RepeatCommand, "Char:n");
+        if (!rogue) K(InputAction.FireNearest, "Char:h"); // (and Tab, in both, outside stores)
         K(InputAction.Steal, "Char:s");
         K(InputAction.Open, "Char:o"); K(InputAction.Close, "Char:c"); K(InputAction.Disarm, "Char:D");
         K(InputAction.Rest, "Char:R"); K(InputAction.Wield, "Char:w"); K(InputAction.Quaff, "Char:q");

@@ -14,7 +14,7 @@
 
 - `g` pick up, `d` drop, `w` wear or wield, `t` take off; your pack and gear are always on the right.
 - `q` quaff a potion, `r` read a scroll, `E` eat, `F` refuel your light.
-- `f` fire your launcher's missiles, `v` throw, `a` aim a wand, `Z` or `u` use a staff, `z` zap a
+- `f` fire your launcher's missiles (Tab fires at the nearest monster, `'` targets it), `v` throw, `a` aim a wand, `Z` or `u` use a staff, `z` zap a
   rod, `A` activate.
 - `m` cast a spell, `G` learn one, `B` or `b` browse your books.
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).

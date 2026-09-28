@@ -73,6 +73,8 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
         ]),
         ("Fighting and devices", [
             (InputAction.Fire, "Fire a missile from your launcher"),
+            (InputAction.FireNearest, "Fire the first missile in the quiver at the nearest monster (Tab too, outside stores)"),
+            (InputAction.TargetClosest, "Target the nearest monster"),
             (InputAction.Throw, "Throw an item (or your weapon)"),
             (InputAction.AimWand, "Aim a wand"),
             (InputAction.UseStaff, "Use a staff"),

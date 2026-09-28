@@ -176,6 +176,12 @@ public sealed partial class MainWindowViewModel
                 else Execute(new HoldCommand()); // 's' is just "hold" for everyone else
                 break;
             case InputAction.Fire: FireDefault(); break;
+            // Tab switches buying and selling in a store and, as in Angband, fires at the nearest monster elsewhere.
+            case InputAction.FireNearest or InputAction.SwitchPane: FireAtNearest(); break;
+            case InputAction.TargetClosest:
+                _game.TargetClosest();
+                Refresh();
+                break;
             case InputAction.Inscribe: BeginItemPrompt(ItemPromptKind.Inscribe); break;
             case InputAction.Ignore: BeginItemPrompt(ItemPromptKind.Ignore); break;
             case InputAction.ToggleIgnore: Execute(new ToggleUnignoreCommand()); break;

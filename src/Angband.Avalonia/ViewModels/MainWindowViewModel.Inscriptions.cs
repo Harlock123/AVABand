@@ -77,6 +77,31 @@ public sealed partial class MainWindowViewModel
     }
 
     /// <summary>'f': fire the first missile in the quiver, asking first if it says !f (or !*).</summary>
+    /// <summary>Angband do_cmd_fire_at_nearest: the first fitting missile in the quiver, at the nearest monster.</summary>
+    private void FireAtNearest()
+    {
+        var bow = _game.Player.Inventory.Bow;
+        if (bow is null)
+        {
+            AddMessage("You have nothing to fire with.");
+            return;
+        }
+        var ammo = _game.Player.Inventory.Quiver.FirstOrDefault(q => q.Base.AmmoClass == bow.Base.AmmoClass);
+        if (ammo is null)
+        {
+            AddMessage("You have no ammunition in the quiver to fire.");
+            return;
+        }
+        if (!_game.TargetClosest(quiet: true) || _game.TargetMonster is not { } foe)
+        {
+            Refresh();
+            return;
+        }
+        var fire = new FireCommand(foe.Position, ammo);
+        if (Inscription.AsksFirst(ammo, 'f')) AskFirst($"Really fire {_game.Describe(ammo)}?", () => Execute(fire));
+        else Execute(fire);
+    }
+
     private void FireDefault()
     {
         var bow = _game.Player.Inventory.Bow;

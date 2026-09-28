@@ -195,7 +195,7 @@ public class KeysetUiTests
 
         vm.SetOption(ViewModels.DisplayOptions.RoguelikeKeys, false);
         Assert.Equal(InputAction.Look, vm.Bindings.ForKey("Char:l"));
-        Assert.Equal(InputAction.None, vm.Bindings.ForKey("Char:h"));
+        Assert.Equal(InputAction.FireNearest, vm.Bindings.ForKey("Char:h")); // the original set's h
 
         // The Controls buttons do the same, and keep the option in step.
         vm.UseRoguelikeKeysCommand.Execute(null);
