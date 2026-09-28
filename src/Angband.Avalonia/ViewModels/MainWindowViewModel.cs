@@ -150,6 +150,25 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         return _cells.Terrain(feature, lighting);
     }
 
+    /// <summary>Light and shadow on the map (the option): torchlight fading from you, remembered squares dimmer.</summary>
+    public bool LightAndShadow => OptionValue(DisplayOptions.LightAndShadow) && !ShowWholeMap;
+
+    /// <summary>
+    /// How dark a square is drawn: lit rooms hardly at all; squares lit only by your own light more so
+    /// the further they are from you (they flicker, and are warmed near you); squares you remember but
+    /// can't see now, darker still. Unknown squares are black anyway.
+    /// </summary>
+    public MapShade ShadeAt(int x, int y)
+    {
+        var level = _game.Level;
+        ref var sq = ref level[x, y];
+        if (!sq.Has(SquareFlags.Seen)) return _game.Known.IsKnown(new Loc(x, y)) ? new MapShade(0.38f) : default;
+        if (sq.Has(SquareFlags.Glow) || !sq.Has(SquareFlags.Lit)) return new MapShade(0.04f);
+        var radius = Math.Max(1, _game.Player.LightRadius);
+        var near = Math.Clamp(new Loc(x, y).DistanceTo(_game.Player.Position) / (radius + 0.75), 0, 1);
+        return new MapShade((float)(0.08 + 0.5 * near * near), Torch: true, Warmth: (float)(0.16 * (1 - near)));
+    }
+
     [ObservableProperty] private bool _showWholeMap;
 
     partial void OnShowWholeMapChanged(bool value) => Revision++;

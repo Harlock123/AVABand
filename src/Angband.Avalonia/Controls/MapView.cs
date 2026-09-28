@@ -278,12 +278,24 @@ public sealed class MapView : Control
                 : BitmapInterpolationMode.None,
         });
 
+        var shading = source.LightAndShadow;
+        var anyTorch = false;
+        var flicker = Flicker();
         for (var y = offsetY; y < endY; y++)
         for (var x = offsetX; x < endX; x++)
         {
             var dest = new Rect(originX + (x - offsetX) * cell.Width, originY + (y - offsetY) * cell.Height, cell.Width, cell.Height);
-            renderer.DrawCell(context, dest, source.GetCell(x, y));
+            var mapCell = source.GetCell(x, y);
+            renderer.DrawCell(context, dest, mapCell);
+            if (!shading || mapCell.IsUnknown) continue;
+            var shade = source.ShadeAt(x, y);
+            anyTorch |= shade.Torch;
+            if (shade.Torch && shade.Warmth > 0)
+                context.FillRectangle(WarmBrushes[(byte)Math.Clamp(255 * shade.Warmth * flicker, 0, 255)], dest);
+            var amount = Math.Clamp(shade.Torch ? shade.Amount * (2 - flicker) : shade.Amount, 0, 1);
+            if (amount > 0.01) context.FillRectangle(ShadeBrushes[(byte)(255 * amount)], dest);
         }
+        UpdateFlickerClock(shading && anyTorch);
 
         // The target (red corners) and the look/target cursor (a yellow box), over the map.
         Rect? CellRect(Angband.Core.Geometry.Loc p) =>
@@ -315,6 +327,37 @@ public sealed class MapView : Control
             if (cellRect(path[i]) is not { } r) continue;
             context.DrawRectangle(aim ? AimBrush : RouteBrush, null, r.Deflate(1));
             if (aim && i == path.Count - 1) context.DrawEllipse(null, AimEndPen, r.Center, r.Width * 0.45, r.Height * 0.45);
+        }
+    }
+
+    private static readonly IBrush[] ShadeBrushes = [.. Enumerable.Range(0, 256).Select(a =>
+        (IBrush)new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb((byte)a, 0, 0, 0)))];
+    private static readonly IBrush[] WarmBrushes = [.. Enumerable.Range(0, 256).Select(a =>
+        (IBrush)new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb((byte)a, 255, 150, 50)))];
+
+    // Torchlight flicker: a slow clock (10 a second) runs only while torchlit squares are shown.
+    private global::Avalonia.Threading.DispatcherTimer? _flickerClock;
+    private readonly System.Diagnostics.Stopwatch _flickerWatch = System.Diagnostics.Stopwatch.StartNew();
+
+    /// <summary>1 give or take a little, wavering as a flame does.</summary>
+    private double Flicker()
+    {
+        var t = _flickerWatch.Elapsed.TotalSeconds;
+        return 1 + 0.07 * Math.Sin(t * 9.1) + 0.04 * Math.Sin(t * 23.7 + 1.1);
+    }
+
+    private void UpdateFlickerClock(bool needed)
+    {
+        if (needed && _flickerClock is null)
+        {
+            _flickerClock = new global::Avalonia.Threading.DispatcherTimer(TimeSpan.FromMilliseconds(100),
+                global::Avalonia.Threading.DispatcherPriority.Background, (_, _) => InvalidateVisual());
+            _flickerClock.Start();
+        }
+        else if (!needed && _flickerClock is not null)
+        {
+            _flickerClock.Stop();
+            _flickerClock = null;
         }
     }
 

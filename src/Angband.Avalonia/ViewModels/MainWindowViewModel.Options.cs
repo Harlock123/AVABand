@@ -39,6 +39,8 @@ public static class DisplayOptions
     public const string Scenes = "stair_scenes";
     /// <summary>AVABand's own: scenes use the bundled artwork (off: only the player's own pictures, else painted).</summary>
     public const string ScenePictures = "scene_pictures";
+    /// <summary>AVABand's own: torchlight fading with distance (and flickering), remembered squares dimmer.</summary>
+    public const string LightAndShadow = "light_and_shadow";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -65,6 +67,7 @@ public static class DisplayOptions
         new(ScreenReader, "Screen reader support (announce messages, prompts and tips)", OptionKind.Interface, false),
         new(Scenes, "Show scenes at moments of note (stairs, recall, uniques, danger, death)", OptionKind.Interface, true),
         new(ScenePictures, "Scenes use the bundled pictures (off: painted scenes)", OptionKind.Interface, true),
+        new(LightAndShadow, "Light and shadow on the map (torchlight fades and flickers)", OptionKind.Interface, true),
     ];
 }
 

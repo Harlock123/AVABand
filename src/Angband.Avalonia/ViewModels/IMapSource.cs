@@ -24,6 +24,12 @@ public readonly record struct MapCell(
 }
 
 /// <summary>What a map view needs to draw; implemented by view models, consumed by <c>MapView</c>.</summary>
+/// <summary>
+/// How much a square is darkened (0 none .. 1 black) with light and shadow on; <see cref="Torch"/>
+/// squares, lit by the player's own light, flicker and are tinted warm by <see cref="Warmth"/>.
+/// </summary>
+public readonly record struct MapShade(float Amount, bool Torch = false, float Warmth = 0);
+
 public interface IMapSource
 {
     int Width { get; }
@@ -41,4 +47,7 @@ public interface IMapSource
     IReadOnlyList<Loc> ShownPath => [];
     /// <summary>The shown path is a line of fire (it ends where the shot would stop), not a route.</summary>
     bool PathIsAim => false;
+    /// <summary>Light and shadow on the map, if on: how dark each square is drawn.</summary>
+    bool LightAndShadow => false;
+    MapShade ShadeAt(int x, int y) => default;
 }

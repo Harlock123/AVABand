@@ -551,6 +551,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Light and shadow** (AVABand's own; the option *Light and shadow on the map*, on by default):
+    squares lit only by your own light darken with distance from you, warmed near you and wavering
+    as a flame does; lit rooms stay steady; squares you remember but can't see now are drawn
+    darker. It shades whatever the map shows, ASCII or tiles (a slow clock, ten times a second,
+    runs the flicker while torchlit squares are on screen).
   - **Scenes** (AVABand's own; the option *Show scenes at moments of note*, on by default): a moment's
     full-window scene, fading in and out, with a caption — taking the stairs down ("Descending… 250
     ft (level 5)") or up ("Up into the town, by night"), Word of Recall taking you up or down,
