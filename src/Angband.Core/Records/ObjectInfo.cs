@@ -369,7 +369,9 @@ public static class ObjectInfo
             "Makes you resistant to");
         Adds([.. shape.Resists.Where(protections.Contains).Select(r => ProtectionName(data, r))], "Gives");
         Adds([.. shape.Resists.Where(r => r.StartsWith("sust_", StringComparison.Ordinal)).Select(r => Stat(r[5..]))], "Sustains");
-        Adds([.. shape.Flags.Select(ItemFlags.Name)], "Grants");
+        Adds([.. shape.Immunities.Select(r => ElementName(data, r))], "Makes you immune to");
+        Adds([.. shape.Flags.Where(f => f != "ROCK").Select(ItemFlags.Name)], "Grants");
+        if (shape.Flags.Contains("ROCK")) sb.Append("Its body of stone neither bleeds nor heals its cuts.\n");
         if (shape.Effect.Length > 0) sb.Append($"Changing into the shape {EffectText(data, shape.Effect).TrimEnd('.', ' ')}.\n");
         if (shape.Blows.Count > 0) sb.Append($"Its blows: {Join([.. shape.Blows.Distinct()])}.\n");
 
@@ -383,6 +385,7 @@ public static class ObjectInfo
 
     private static string SkillName(string skill) => skill switch
     {
+        "disarm_magic" => "disarming magical traps",
         "disarm" => "disarming", "device" => "magic devices", "save" => "saving throws", "melee" => "melee to hit",
         "bow" => "shooting to hit", "throw" => "throwing to hit", "dig" => "digging", "search" => "searching", _ => skill,
     };
@@ -442,7 +445,7 @@ public static class ObjectInfo
     {
         "str" => "strength", "int" => "intelligence", "wis" => "wisdom", "dex" => "dexterity", "con" => "constitution",
         "infra" => "infravision", "light" => "light", "blows" => "blows", "shots" => "shots", "tunnel" => "tunnelling",
-        "search" => "searching", _ => mod,
+        "search" => "searching", "might" => "might", "moves" => "moves", "dam_red" => "damage reduction", _ => mod,
     };
 
     private static string ProtectionName(GameData data, string id) => id switch

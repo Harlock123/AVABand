@@ -1,0 +1,50 @@
+using Angband.Core.Effects;
+using Angband.Core.Game;
+using Angband.Core.Geometry;
+
+namespace Angband.Tests;
+
+/// <summary>
+/// The shapes brought into line with Angband 4.2.5's shape.txt: extra moves (fox, eagle,
+/// werewolf), the Púkel-man's poison immunity, damage reduction and body of stone, and the
+/// werewolf's howl at the player's level.
+/// </summary>
+public class ShapeData425Tests
+{
+    [Fact]
+    public void A_fox_moves_twice_as_often()
+    {
+        var game = Arena.Create(3);
+        var normal = game.MoveEnergyPerStep;
+        game.Shapechange("fox");
+        Assert.Equal(normal / 2, game.MoveEnergyPerStep);
+        game.Shapechange("eagle");
+        Assert.Equal(normal / 4, game.MoveEnergyPerStep); // three extra moves
+    }
+
+    [Fact]
+    public void The_Pukel_man_is_stone()
+    {
+        var game = Arena.Create(4);
+        game.Shapechange("pukel_man");
+        Assert.Equal(3, game.Player.Resists["pois"]);
+        Assert.Equal(10, game.DamageReduction);
+
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        game.IncreaseTimed(TimedIds.Cut, 50);
+        for (var i = 0; i < 30; i++) game.Execute(new HoldCommand());
+        Assert.Equal(50, game.Player.Timed[TimedIds.Cut]); // neither bleeding nor healing
+        Assert.Equal(1000, game.Player.Hp);
+    }
+
+    [Fact]
+    public void A_werewolf_howls_the_monsters_into_flight()
+    {
+        var game = Arena.Create(5);
+        var orc = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(3, 0));
+        game.UpdateView();
+        Assert.Contains("project_los:scare:{L}", game.Data.Shape("werewolf")!.Effect);
+        game.Shapechange("werewolf");
+        Assert.True(orc.Fear > 0);
+    }
+}

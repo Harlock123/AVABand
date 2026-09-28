@@ -46,7 +46,7 @@ TIMED = {"FAST": "fast", "BLESSED": "blessed", "HERO": "hero", "SHERO": "berserk
          "CONFUSED": "confused", "PARALYZED": "paralyzed", "BLIND": "blind", "POISONED": "poisoned", "SLOW": "slow",
          "STUN": "stun", "CUT": "cut", "AFRAID": "afraid", "TERROR": "terror", "STONESKIN": "stoneskin",
          "SPRINT": "sprint", "STEALTH": "stealth", "ATT_CONF": "att_conf", "SCRAMBLE": "scrambled",
-         "AMNESIA": "amnesia", "IMAGE": "image", "OPP_CONF": "oppose_conf"}
+         "AMNESIA": "amnesia", "IMAGE": "image", "OPP_CONF": "oppose_conf", "ATT_VAMP": "att_vamp"}
 ELEMENTS = {"ACID": "acid", "ELEC": "elec", "FIRE": "fire", "COLD": "cold", "POIS": "pois", "LIGHT": "light",
             "DARK": "dark", "NETHER": "nether", "MISSILE": "none", "MANA": "none", "HOLY_ORB": "none",
             "WATER": "none", "PLASMA": "fire", "ICE": "cold", "SHARD": "shards", "SOUND": "sound", "CHAOS": "chaos",
@@ -108,8 +108,24 @@ def random_value(text):
     return text.replace(" ", "")
 
 
-def effects(e):
-    """Translate effect/dice lines. Returns (effect string, untranslated names)."""
+def level_dice(dice, lines):
+    """A dice string with its PLAYER_LEVEL variables as {L...} expressions ("1d$S" with S = level -> "1d{L}"),
+    for effects worked out at the player's level (shapes); None if another variable is left."""
+    for k, v in lines:
+        if k != "expr":
+            continue
+        var, _, expr = v.partition(":")
+        base, _, ops = expr.partition(":")
+        if base != "PLAYER_LEVEL":
+            continue
+        ops = ops.replace(" ", "")
+        dice = dice.replace("$" + var, "{L" + ("" if ops in ("+0", "") else ops) + "}")
+    return None if "$" in dice else dice
+
+
+def effects(e, level_exprs=False):
+    """Translate effect/dice lines. Returns (effect string, untranslated names). With level_exprs, dice that
+    depend on the player's level or hit points keep that dependence (for shapes, applied at the player's level)."""
     out, missing, dropped = [], [], 0
     lines = e["lines"]
     shared = None  # Angband SET_VALUE: one roll shared by the following effects
@@ -154,6 +170,20 @@ def effects(e):
             shared = None
             continue
         dice = dice or shared
+        if level_exprs and dice and "$" in dice:
+            hp_share = next((v2.split(":")[2].replace(" ", "") for k2, v2 in lines[i + 1:]
+                             if k2 == "expr" and v2.split(":")[1] == "PLAYER_HP"), None)
+            if name == "DAMAGE" and hp_share and hp_share.startswith("/"):
+                out.append(f"lose_hp_fraction:{hp_share[1:]}")  # a share of your hit points (the vampire's change)
+                continue
+            leveled = level_dice(dice.strip(), lines)
+            if leveled is not None:
+                if name == "DAMAGE":
+                    out.append(f"damage:{leveled}")
+                    continue
+                if name in ("PROJECT_LOS", "PROJECT_LOS_AWARE") and arg == "TURN_ALL":
+                    out.append(f"project_los:scare:{leveled}")
+                    continue
         d, pct = dice_text(dice) if dice else ("0", 0)
         t = None
         if name == "RANDOM":
@@ -299,7 +329,8 @@ def effects(e):
         elif name in ("PROJECT_LOS", "PROJECT_LOS_AWARE"):
             t = {"MON_SPEED": "project_los:haste", "MON_SLOW": "project_los:slow:30", "MON_CONF": "project_los:confuse:30",
                  "SLEEP_ALL": "project_los:sleep:30", "DISP_EVIL": f"dispel:EVIL:{d}",
-                 "DISP_UNDEAD": f"dispel:UNDEAD:{d}", "DISP_ALL": f"dispel:none:{d}"}.get(arg)
+                 "DISP_UNDEAD": f"dispel:UNDEAD:{d}", "DISP_ALL": f"dispel:none:{d}",
+                 "TURN_ALL": f"project_los:scare:{d}"}.get(arg)
         if group:
             # Inside a RANDOM group every alternative must translate, duplicates included.
             group -= 1

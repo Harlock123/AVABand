@@ -97,6 +97,9 @@ public sealed partial class GameSession
         LearnRune(Definitions.RuneIds.Flag(Definitions.ItemFlags.DrainExp));
     }
 
+    /// <summary>A body of stone (Angband player flag ROCK, from the Púkel-man's shape).</summary>
+    private bool IsRock => PlayerShape?.Flags.Contains("ROCK") == true;
+
     /// <summary>Damage reduction from gear and shape (Angband state.dam_red).</summary>
     public int DamageReduction =>
         Player.Inventory.Equipped.Sum(i => i.Modifier(Definitions.ItemModifiers.DamRed))
@@ -140,7 +143,8 @@ public sealed partial class GameSession
 
         var timed = Player.Timed;
         if (timed.Has(TimedIds.Poisoned)) TakeHit(1, "poison");
-        if (timed.Has(TimedIds.Cut))
+        // Angband PF_ROCK (the Púkel-man's shape): a stone body neither bleeds nor heals its cuts.
+        if (timed.Has(TimedIds.Cut) && !IsRock)
             TakeHit(timed[TimedIds.Cut] switch { > 200 => 3, > 100 => 2, _ => 1 }, "a fatal wound");
 
         HungerTick(gameTurn);
@@ -159,6 +163,7 @@ public sealed partial class GameSession
         foreach (var (id, _) in timed.Active.ToList())
         {
             if (Data.Timed(id) is not { } def) continue;
+            if (id == TimedIds.Cut && IsRock) continue;
             if (timed.Decrease(def, 1) is { } message)
             {
                 Publish(new MessageEvent(message));

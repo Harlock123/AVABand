@@ -664,7 +664,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   Stoneskin (+40 armour, −5 speed), Sprinting (+10 speed, then exhausted) and Shadows (+10 stealth).
   **Shapechanges**: Angband's eight player shapes (`shapes.json`, from `shape.txt`) — fox, Púkel-man,
   bear, eagle, bat, warg, vampire, werewolf — change your bonuses, protections and the verbs of
-  your blows; in a shape items and spells ask to change you back first. Druids learn *Fox Form*
+  your blows, as 4.2.5 has them: the fox and werewolf move twice to a turn and the eagle four
+  times, the Púkel-man is immune to poison, turns aside 10 of every hurt and is stone (cuts
+  neither bleed nor heal), and the werewolf's howl frightens what it can see at your level's
+  strength. In a shape items and spells ask to change you back first. Druids learn *Fox Form*
   ([Lesser Charms], level 1), *Become Pukel-man*, *Eagle's Flight* and *Bear Form*; the potion of Surprise may turn you into a bat. Monsters with the
   SHAPECHANGE spell take one of their shapes (Sauron becomes Wolf-, Serpent- or Vampire-Sauron;
   the Maiar become elementals and vortices) and later change back, dying as what they really are.

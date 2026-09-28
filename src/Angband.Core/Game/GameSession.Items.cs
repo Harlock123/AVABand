@@ -193,6 +193,7 @@ public sealed partial class GameSession
             infravision += shape.Modifiers.GetValueOrDefault(ItemModifiers.Infravision);
             light += shape.Modifiers.GetValueOrDefault(ItemModifiers.Light);
             foreach (var r in shape.Resists) resists[r] = Math.Max(resists.GetValueOrDefault(r), 1);
+            foreach (var r in shape.Immunities) resists[r] = 3;
             foreach (var f in shape.Flags) p.GearFlags.Add(f);
         }
         if (PercentDamage) p.Blows = Math.Max(p.Blows, 200); // Angband calc_blows: two blows at least in O-combat

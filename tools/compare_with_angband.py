@@ -1051,6 +1051,17 @@ def compare_classes_and_spells(gd, data):
 # ---------------------------------------------------------------------------------------------------
 # Shapes
 
+SHAPE_SKILLS = (("skill-save", "save"), ("skill-melee", "melee"), ("skill-disarm-phys", "disarm"),
+                ("skill-disarm-magic", "disarm_magic"), ("skill-stealth", "stealth"), ("skill-device", "device"))
+
+
+def shape_props(e, sec):
+    """A shape's properties: its obj-flags and values as for objects, and its player-flags (ROCK) as flags."""
+    p = props_42(e, sec, flags_key="obj-flags")
+    p["flags"] |= set(flag_list(e, "player-flags"))
+    return p
+
+
 def compare_shapes(gd, data):
     sec = section("shapes", "Shapes", "shapes.json", "shape.txt")
     ours = load(data, "shapes.json")
@@ -1070,24 +1081,21 @@ def compare_shapes(gd, data):
         combat = [int(x) for x in (one(e, "combat") or "0:0:0").split(":")]
         for key, v in zip(("toHit", "toDam", "toAc"), combat):
             sec.cmp(label, key, s.get(key, 0), v)
-        for key, skill in (("skill-save", "save"), ("skill-melee", "melee"), ("skill-disarm-phys", "disarm"),
-                           ("skill-stealth", "stealth"), ("skill-device", "device")):
+        for key, skill in SHAPE_SKILLS:
             sec.cmp(label, f"skill {skill}", (s.get("skills") or {}).get(skill, 0), int(one(e, key, "0")))
-        if one(e, "skill-disarm-magic"):
-            sec.unmodelled["skill-disarm-magic"] += 1
-        tp = props_42(e, sec, flags_key="obj-flags")
-        for f in flag_list(e, "player-flags"):
-            sec.unmodelled[f"player-flag {f}"] += 1
+        tp = shape_props(e, sec)
         op = props_ours(s)
-        cmp_props(sec, label, op, tp, keys=("mods", "resists", "flags"))
+        cmp_props(sec, label, op, tp, keys=("mods", "resists", "flags", "immunities"))
         sec.cmp(label, "blows (in order)", s.get("blows") or [], get(e, "blow"))
-        eff, missing = OI.effects(e)
+        eff, missing = OI.effects(e, level_exprs=True)
         cmp_effects(sec, gd, label, "effect", s.get("effect"), eff, missing, bool(get(e, "expr")))
     for s in ours:
         if s["id"] not in used:
             sec.only_ours.append(s["id"])
     sec.notes += ["Matched by the importer's id (Pukel-man → pukel_man). Modifiers/resists/flags as for objects "
-                  "(obj-flags and values); PROT_STUN → resist `stun`.",
+                  "(obj-flags and values; player-flags such as ROCK are flags); PROT_STUN → resist `stun`. "
+                  "Effects keep their dependence on the player's level or hit points ({L}, lose_hp_fraction), "
+                  "as shapes apply them at the player's level.",
                   "Not compared: `change-msg`, `effect-msg`, `desc`."]
     return sec
 

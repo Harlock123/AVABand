@@ -8,7 +8,8 @@
     "modifiers": {
       "str": -3,
       "stealth": 5,
-      "blows": 1
+      "blows": 1,
+      "moves": 1
     },
     "resists": [
       "free_act"
@@ -16,6 +17,9 @@
     "blows": [
       "bite",
       "claw"
+    ],
+    "flags": [
+      "FEATHER"
     ]
   },
   {
@@ -31,10 +35,10 @@
       "str": 4,
       "con": 4,
       "stealth": -2,
-      "speed": -5
+      "speed": -5,
+      "dam_red": 10
     },
     "resists": [
-      "pois",
       "shards",
       "sust_str",
       "sust_con",
@@ -42,7 +46,8 @@
     ],
     "flags": [
       "REGEN",
-      "HOLD_LIFE"
+      "HOLD_LIFE",
+      "ROCK"
     ],
     "effect": "cure:poisoned; cure:stun",
     "blows": [
@@ -50,6 +55,9 @@
       "crush",
       "thump",
       "strike"
+    ],
+    "immunities": [
+      "pois"
     ]
   },
   {
@@ -60,7 +68,8 @@
     "toAc": 5,
     "skills": {
       "melee": 10,
-      "disarm": -5
+      "disarm": -5,
+      "disarm_magic": -10
     },
     "modifiers": {
       "str": 3,
@@ -103,6 +112,12 @@
       "claw",
       "strike",
       "tear"
+    ],
+    "modifiers": {
+      "moves": 3
+    },
+    "flags": [
+      "TRAP_IMMUNE"
     ]
   },
   {
@@ -124,6 +139,9 @@
     "blows": [
       "bite",
       "scratch"
+    ],
+    "flags": [
+      "FEATHER"
     ]
   },
   {
@@ -135,7 +153,7 @@
     "modifiers": {
       "blows": 2
     },
-    "effect": "damage:1d20; cure:afraid; timed:berserk:1d20+5",
+    "effect": "damage:1d{L}; cure:afraid; timed:berserk:1d20+5",
     "blows": [
       "bite",
       "bite",
@@ -161,7 +179,7 @@
     "flags": [
       "HOLD_LIFE"
     ],
-    "effect": "lose_hp_fraction:4; timed:att_vamp:10+1d20",
+    "effect": "lose_hp_fraction:4; timed:att_vamp:1d20+10",
     "blows": [
       "bite"
     ]
@@ -173,12 +191,13 @@
     "toDam": 5,
     "toAc": 0,
     "modifiers": {
-      "blows": 1
+      "blows": 1,
+      "moves": 1
     },
     "flags": [
       "REGEN"
     ],
-    "effect": "cure:afraid; timed:berserk:1d20+5",
+    "effect": "cure:afraid; timed:berserk:1d20+5; project_los:scare:{L}",
     "blows": [
       "bite",
       "bite",

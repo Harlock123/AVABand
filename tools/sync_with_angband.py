@@ -623,9 +623,36 @@ def write_races(path, races):
         f.write("[\n" + ",\n".join(out) + "\n]\n")
 
 
+def sync_shapes(gd, data):
+    path = os.path.join(data, "shapes.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    by_id = {s["id"]: s for s in ours}
+    known = cw.importer_effect_keys(gd)
+    scratch = cw.Section("shapes", "", "", "")
+    changed = 0
+    for e in cw.parse_records(os.path.join(gd, "shape.txt")):
+        s = by_id.get(re.sub(r"[^a-z]+", "_", e["name"].lower()).strip("_"))
+        if s is None:
+            continue
+        before = json.dumps(s, sort_keys=True)
+        for key, v in zip(("toHit", "toDam", "toAc"), (int(x) for x in (cw.one(e, "combat") or "0:0:0").split(":"))):
+            s[key] = v
+        skills = {skill: int(cw.one(e, key, "0")) for key, skill in cw.SHAPE_SKILLS if int(cw.one(e, key, "0"))}
+        set_or_pop(s, "skills", skills or None, None)
+        tp = cw.shape_props(e, scratch)
+        sync_props(s, tp)
+        set_or_pop(s, "immunities", sorted(tp["immunities"]) or None, None)
+        s["blows"] = cw.get(e, "blow")
+        eff, miss = oi.effects(e, level_exprs=True)
+        set_or_pop(s, "effect", merge_effect(s.get("effect"), eff, known, keep_unknown_missing=bool(miss)), None)
+        changed += json.dumps(s, sort_keys=True) != before
+    write_json(path, ours, 2)
+    print(f"shapes: {changed} of {len(ours)} brought into line")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
-            "races": sync_races}
+            "races": sync_races, "shapes": sync_shapes}
 
 
 def main():

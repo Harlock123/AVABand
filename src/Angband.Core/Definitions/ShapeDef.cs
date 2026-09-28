@@ -15,6 +15,8 @@ public sealed class ShapeDef
     /// <summary>Stat and other modifiers (as on equipment).</summary>
     public IReadOnlyDictionary<string, int> Modifiers { get; init; } = new Dictionary<string, int>();
     public IReadOnlyList<string> Resists { get; init; } = [];
+    /// <summary>Elements the shape makes you immune to (Angband RES_x[3]: the Púkel-man and poison).</summary>
+    public IReadOnlyList<string> Immunities { get; init; } = [];
     public IReadOnlyList<string> Flags { get; init; } = [];
     /// <summary>Applied on changing into it (an effect string).</summary>
     public string Effect { get; init; } = "";

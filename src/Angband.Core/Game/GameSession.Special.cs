@@ -221,7 +221,9 @@ public sealed partial class GameSession
         Player.Shape = shape.Id;
         Publish(new MessageEvent($"You assume the shape of {Article(shape.Name)}!"));
         Publish(new PlayerShapeChangedEvent(shape.Id));
-        if (shape.Effect.Length > 0) ApplyEffects(shape.Effect);
+        // Its change effect, worked out at the player's level (the werewolf scares at level strength).
+        if (shape.Effect.Length > 0)
+            ApplyEffects(string.Join("; ", SpellEffects.Parse(shape.Effect, Player.Level).Select(e => e.ToEffectString())));
         ApplySkills();
         RecalculateBonuses();
         UpdateView();
