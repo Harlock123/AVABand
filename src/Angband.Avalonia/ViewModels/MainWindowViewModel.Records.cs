@@ -36,8 +36,14 @@ public sealed partial class MainWindowViewModel
         LastMessage = "Retire from adventuring? Your game will end. (y/n)";
     }
 
+    /// <summary>
+    /// The time the character dump is stamped with: the clock, except when the README screenshots
+    /// fix it so the pictures don't change from one run to the next.
+    /// </summary>
+    public Func<DateTime> Clock { get; set; } = () => DateTime.Now;
+
     /// <summary>The dump text, with the recent messages oldest first.</summary>
-    public string BuildDump() => CharacterDump.Build(_game, Messages.Take(20).Reverse());
+    public string BuildDump() => CharacterDump.Build(_game, Messages.Take(20).Reverse(), Clock());
 
     [RelayCommand]
     public void ShowCharacterSheet()
@@ -130,7 +136,7 @@ public sealed partial class MainWindowViewModel
             // Angband enter_score: cheaters are not scored.
             var rank = _game.IsCheater ? 0 : _records.RecordScore(entry);
             _lastDeath = entry;
-            var dump = _records.WriteDump(_game, CharacterDump.Build(_game, Messages.Take(20).Reverse()));
+            var dump = _records.WriteDump(_game, BuildDump());
             AddMessage(_game.IsCheater ? "Score not registered for cheaters."
                 : rank > 0
                 ? $"You placed #{rank} on the high-score table ({entry.Points} points). Ctrl+H shows it."

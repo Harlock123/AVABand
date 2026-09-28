@@ -23,7 +23,8 @@ A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 11.
 
 The screenshots are rendered by the real windows without a display, from fixed seeds:
 `tools/screenshots.sh` regenerates them all (`tests/Angband.Avalonia.Tests/ReadmeScreenshots.cs`
-sets up each scene).
+sets up each scene). The character dump is dated 2025-01-01 and animations are let finish, so a
+rerun gives byte-identical pictures and only a real change to the game's look shows up in git.
 
 ## Download and run
 

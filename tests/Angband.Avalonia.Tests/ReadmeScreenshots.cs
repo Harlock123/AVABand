@@ -15,18 +15,23 @@ namespace Angband.Avalonia.Tests;
 /// <summary>
 /// The README's screenshots, rendered headlessly from the real windows (no desktop is captured).
 /// Nothing is written unless AVABAND_README_SHOTS names a folder; <c>tools/screenshots.sh</c> sets it
-/// to <c>screenshots/</c> and runs these. Fixed seeds keep the pictures the same from run to run.
+/// to <c>screenshots/</c> and runs these. Fixed seeds, and a fixed date on the character dump, keep
+/// the pictures the same from run to run.
 /// </summary>
 public class ReadmeScreenshots
 {
     private static readonly string? Folder = Environment.GetEnvironmentVariable("AVABAND_README_SHOTS") is { Length: > 0 } dir ? dir : null;
+    private static readonly DateTime ShotTime = new(2025, 1, 1, 12, 0, 0);
     private static readonly IReadOnlyList<TilesetManifest> Tilesets = TilesetCatalog.Discover([TilesetCatalog.DefaultDirectory]);
 
     private static (MainWindow Window, MainWindowViewModel Vm) Open(string classId, bool tiles, string tileset = "gervais", ulong seed = 42)
     {
         MainWindow.ShowCreationOnFirstRun = false;
         var settings = new AppSettings { UseTiles = tiles, TilesetId = tileset, TileScale = 1.5, Muted = true };
-        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), Tilesets, settings, save: null);
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), Tilesets, settings, save: null)
+        {
+            Clock = () => ShotTime, // the character dump's date, fixed so the sheet looks the same every run
+        };
         vm.StartGame(seed, classId);
         var window = new MainWindow { DataContext = vm, Width = 1440, Height = 900 };
         window.Show();
@@ -37,6 +42,10 @@ public class ReadmeScreenshots
     {
         if (Folder is null) return;
         Directory.CreateDirectory(Folder);
+        Dispatcher();
+        // Let transitions (the expander's chevron turning) finish: they run on the clock.
+        Thread.Sleep(500);
+        AvaloniaHeadlessPlatform.ForceRenderTimerTick(30);
         Dispatcher();
         var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("no frame");
         frame.Save(Path.Combine(Folder, name + ".png"));
@@ -52,7 +61,7 @@ public class ReadmeScreenshots
         for (var d = 0; d < depth; d += 5) vm.HandleAction(InputAction.JumpDeeper); // debug: 5 levels at a time
         // A level where the player starts in a lit room well inside the map, so the view is centred on it.
         bool Good() => game.Player.Position is var at && at.X > 35 && at.X < game.Level.Width - 35 && at.Y > 12
-                       && at.Y < game.Level.Height - 12 && game.Level[at].Has(SquareFlags.Room);
+                       && at.Y < game.Level.Height - 12 && game.Level[at].Has(SquareFlags.Room) && game.Level[at].Has(SquareFlags.Glow);
         for (var tries = 0; tries < 40 && !Good(); tries++) vm.HandleAction(InputAction.RegenerateLevel);
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
         var p = game.Player.Position;
