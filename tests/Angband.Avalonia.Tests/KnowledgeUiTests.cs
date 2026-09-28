@@ -80,6 +80,46 @@ public sealed class KnowledgeUiTests
         Assert.Contains("It burns for up to", vm.LastMessage);
         _ = window;
     }
+
+    [AvaloniaFact]
+    public void Knowledge_HasFeatures_Traps_TheHome_AndTheHistory()
+    {
+        var (window, vm) = Open();
+        var game = vm.Game;
+        var home = game.Stores.Values.Single(s => s.IsHome);
+        var torch = game.Player.Inventory.Pack.First(i => i.Base.Id == "light");
+        home.Stock.Add(torch.Clone(game.Objects.NextSerial++, 1));
+        game.AddNote("left a torch at home");
+
+        var k = vm.CreateKnowledge();
+        var features = k.Features!;
+        var granite = Assert.Single(features.Rows, r => r.Name == "Granite wall");
+        Assert.Equal("wall", granite.Note);
+        Assert.DoesNotContain(features.Rows, r => r.Name == "Secret door"); // it only looks like granite
+        Assert.Contains(features.Rows, r => r.Name == "Up staircase" && r.Note == "stairs");
+        features.Selected = granite;
+        Assert.StartsWith("Granite wall\n\n", features.Text);
+        Assert.True(features.Text.Length > "Granite wall\n\n".Length); // with its description
+
+        var traps = k.Traps!;
+        Assert.Equal(game.Data.Traps.Count, traps.Rows.Count);
+        var trapDoor = Assert.Single(traps.Rows, r => r.Name == "Trap door");
+        traps.Selected = trapDoor;
+        Assert.Contains(game.Data.Traps.First(t => t.IsTrapDoor).Description, traps.Text);
+
+        var stored = Assert.Single(k.Home!.Rows);
+        Assert.Contains("Torch", stored.Name);
+
+        Assert.StartsWith("      Turn   Depth  Note", k.History);
+        Assert.Contains("Began the quest to destroy Morgoth.", k.History);
+        Assert.Contains("-- Note: left a torch at home", k.History);
+
+        vm.HandleAction(InputAction.MonsterKnowledge);
+        var knowledgeWindow = Assert.IsType<KnowledgeWindow>(window.OwnedWindows.Last());
+        ((KnowledgeViewModel)knowledgeWindow.DataContext!).SelectedTab = 8;
+        TileRenderingTests.Save(knowledgeWindow, "knowledge-history");
+        knowledgeWindow.Close();
+    }
 }
 
 public sealed class RandartUiTests

@@ -39,8 +39,7 @@ public sealed partial class MainWindowViewModel
         }
         AskYesNo($"{what}  Recall details?", yes =>
         {
-            if (yes) KnowledgeRequested?.Invoke(new KnowledgeViewModel(CreateMonsterKnowledge(symbol), CreateObjectKnowledge(),
-                CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge()));
+            if (yes) KnowledgeRequested?.Invoke(CreateKnowledge(CreateMonsterKnowledge(symbol)));
             else LastMessage = what;
         });
     }

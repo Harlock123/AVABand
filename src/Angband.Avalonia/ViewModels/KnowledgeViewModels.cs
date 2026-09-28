@@ -95,7 +95,10 @@ public sealed partial class KnowledgeCategoryViewModel : ObservableObject
     }
 }
 
-/// <summary>The knowledge browser (Angband '~'): monsters, objects, runes, egos and artifacts.</summary>
+/// <summary>
+/// The knowledge browser (Angband '~'): monsters, objects, runes, egos, artifacts, terrain features,
+/// traps, the contents of your home and your history.
+/// </summary>
 public sealed partial class KnowledgeViewModel : ObservableObject
 {
     public KnowledgeViewModel(MonsterKnowledgeViewModel monsters, KnowledgeCategoryViewModel objects,
@@ -113,8 +116,14 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     public KnowledgeCategoryViewModel Runes { get; }
     public KnowledgeCategoryViewModel Egos { get; }
     public KnowledgeCategoryViewModel Artifacts { get; }
+    public KnowledgeCategoryViewModel? Features { get; init; }
+    public KnowledgeCategoryViewModel? Traps { get; init; }
+    public KnowledgeCategoryViewModel? Home { get; init; }
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 egos, 4 artifacts).</summary>
+    /// <summary>The character history, as Angband's history screen and dump show it.</summary>
+    public string History { get; init; } = "";
+
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 egos, 4 artifacts, 5 features, 6 traps, 7 home, 8 history).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -123,8 +132,74 @@ public sealed partial class MainWindowViewModel
     /// <summary>Raised to show the knowledge browser.</summary>
     public event Action<KnowledgeViewModel>? KnowledgeRequested;
 
-    public KnowledgeViewModel CreateKnowledge() =>
-        new(CreateMonsterKnowledge(), CreateObjectKnowledge(), CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge());
+    public KnowledgeViewModel CreateKnowledge() => CreateKnowledge(CreateMonsterKnowledge());
+
+    private KnowledgeViewModel CreateKnowledge(MonsterKnowledgeViewModel monsters) =>
+        new(monsters, CreateObjectKnowledge(), CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge())
+        {
+            Features = CreateFeatureKnowledge(),
+            Traps = CreateTrapKnowledge(),
+            Home = CreateHomeKnowledge(),
+            History = HistoryText(),
+        };
+
+    /// <summary>
+    /// Angband do_cmd_knowledge_features: every terrain feature (not the ones that only pretend to be
+    /// another, as secret doors do), grouped as its knowledge menu groups them, with its description.
+    /// </summary>
+    public KnowledgeCategoryViewModel CreateFeatureKnowledge()
+    {
+        var rows = _data.Terrain.All
+            .Where(t => t.Mimic is null && t.Name.Length > 0 && t.Id != "none")
+            .Select(t => (Def: t, Group: FeatureGroup(t)))
+            .OrderBy(x => x.Group.Order).ThenBy(x => x.Def.Index)
+            .Select(x => new KnowledgeRow(x.Def.Glyph.ToString(), _cells.Color(x.Def.Color), Capitalize(x.Def.Name), x.Group.Name,
+                () => $"{Capitalize(x.Def.Name)}\n\n{x.Def.Description}".TrimEnd()))
+            .ToList();
+        return new KnowledgeCategoryViewModel("Features", $"{rows.Count} terrain features", "", rows);
+    }
+
+    /// <summary>Angband's feature groups (fkind): floors, doors, stairs, walls, streamers, obstructions, stores, other.</summary>
+    private static (int Order, string Name) FeatureGroup(Angband.Core.Definitions.TerrainDef t) =>
+        t.Has(Angband.Core.Definitions.TerrainFlags.Shop) ? (6, "store")
+        : t.Has(Angband.Core.Definitions.TerrainFlags.Stair) ? (2, "stairs")
+        : t.Has(Angband.Core.Definitions.TerrainFlags.DoorAny) ? (1, "door")
+        : t.HasAny(Angband.Core.Definitions.TerrainFlags.Magma | Angband.Core.Definitions.TerrainFlags.Quartz) ? (4, "mineral vein")
+        : t.Has(Angband.Core.Definitions.TerrainFlags.Rubble) ? (5, "obstruction")
+        : t.Has(Angband.Core.Definitions.TerrainFlags.Wall) ? (3, "wall")
+        : t.Has(Angband.Core.Definitions.TerrainFlags.Floor) ? (0, "floor")
+        : (7, "other");
+
+    /// <summary>Angband do_cmd_knowledge_traps: every kind of trap, rune and web, with its description.</summary>
+    public KnowledgeCategoryViewModel CreateTrapKnowledge()
+    {
+        var rows = _data.Traps
+            .OrderBy(t => t.Warding || t.Web ? 1 : 0).ThenBy(t => t.MinDepth).ThenBy(t => t.Name, StringComparer.Ordinal)
+            .Select(t => new KnowledgeRow(t.Glyph.ToString(), _cells.Color(t.Color), Capitalize(t.Name),
+                t.Warding ? "rune" : t.Web ? "web" : t.IsRune ? "magic rune" : "trap",
+                () => $"{Capitalize(t.Name)}\n\n{t.Description}".TrimEnd()))
+            .ToList();
+        return new KnowledgeCategoryViewModel("Traps", $"{rows.Count} kinds of trap", "", rows);
+    }
+
+    /// <summary>Angband's "Display contents of home": what you keep there, readable from anywhere.</summary>
+    public KnowledgeCategoryViewModel CreateHomeKnowledge()
+    {
+        var home = _game.Stores.Values.FirstOrDefault(s => s.IsHome);
+        var rows = (home?.Stock ?? []).Select(i => new KnowledgeRow(i.Base.Glyph.ToString(), _cells.Color(_game.Knowledge.Flavor(i.Kind)?.Color ?? i.Base.Color),
+                Capitalize(_game.Describe(i)), i.Number > 1 ? $"x{i.Number}" : "", () => Inspect(i)))
+            .ToList();
+        return new KnowledgeCategoryViewModel("Home", rows.Count == 1 ? "1 thing at home" : $"{rows.Count} things at home",
+            "Your home is empty.", rows);
+    }
+
+    /// <summary>Angband do_cmd_knowledge_history: the turn, depth and note of each line.</summary>
+    public string HistoryText()
+    {
+        var sb = new System.Text.StringBuilder("      Turn   Depth  Note\n");
+        foreach (var h in _game.History) sb.Append($"{h.Turn,10}{h.Depth * 50,7}'  {h.Shown}\n");
+        return sb.ToString().TrimEnd();
+    }
 
     private uint BaseColor(string baseId) => _cells.Color(_data.ObjectBase(baseId)?.Color ?? "White");
     private string BaseName(string baseId) => _data.ObjectBase(baseId) is { } b ? ItemNaming.Plain(b.Name, false) : baseId;

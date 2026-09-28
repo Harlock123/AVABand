@@ -80,6 +80,14 @@
       <TabItem Header="Runes" Content="{Binding Runes}" />
       <TabItem Header="Egos" Content="{Binding Egos}" />
       <TabItem Header="Artifacts" Content="{Binding Artifacts}" />
+      <TabItem Header="Features" Content="{Binding Features}" />
+      <TabItem Header="Traps" Content="{Binding Traps}" />
+      <TabItem Header="Home" Content="{Binding Home}" />
+      <TabItem Header="History">
+        <ScrollViewer Background="#111111">
+          <SelectableTextBlock Text="{Binding History}" FontFamily="{StaticResource MonoFont}" Margin="12" FontSize="14" />
+        </ScrollViewer>
+      </TabItem>
     </TabControl>
   </DockPanel>
 </Window>

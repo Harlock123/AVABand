@@ -21,7 +21,7 @@
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,
   `W` scroll the map (locate), Ctrl+L centre it on you (handy with *Center map continuously* off).
-- `C` character sheet, `~` knowledge, `=` options, Ctrl+P message history.
+- `C` character sheet, `~` knowledge (monsters, objects, runes, egos, artifacts, terrain, traps, your home and your history), `=` options, Ctrl+P message history.
 
 **F1** shows every command with the keys you actually have.
 
