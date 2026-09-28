@@ -11,6 +11,9 @@ public abstract record GameCommand;
 /// <summary>Step in a direction; bumping a door opens it (Angband "easy_alter").</summary>
 public sealed record WalkCommand(Direction Direction) : GameCommand;
 
+/// <summary>Walk onto a square even if you know of a trap there (Angband jump, 'W' / roguelike '-').</summary>
+public sealed record JumpCommand(Direction Direction) : GameCommand;
+
 /// <summary>Spend a turn doing nothing.</summary>
 public sealed record HoldCommand : GameCommand;
 

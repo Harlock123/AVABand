@@ -75,6 +75,11 @@ public enum InputAction
     IdentifySymbol,
     /// <summary>Scroll the map about (Angband locate, 'L' / roguelike 'W'). Added last so saved bindings keep their meaning.</summary>
     Locate,
+    /// <summary>
+    /// Walk onto a trap on purpose (Angband 'W' / roguelike '-') and use any item (Angband 'U' /
+    /// roguelike 'X'). Added last so saved bindings keep their meaning.
+    /// </summary>
+    WalkIntoTrap, UseItem,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -166,6 +171,8 @@ public static class InputActions
         InputAction.TargetClosest => "Target closest",
         InputAction.IdentifySymbol => "Identify a symbol",
         InputAction.Locate => "Locate (scroll the map)",
+        InputAction.WalkIntoTrap => "Walk into a trap",
+        InputAction.UseItem => "Use an item",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

@@ -114,6 +114,8 @@ public sealed class InputBindings
         K(InputAction.TargetClosest, "Char:'");
         K(InputAction.IdentifySymbol, "Char:/");
         K(InputAction.Locate, "Char:W"); // Angband's L runs east here
+        K(InputAction.WalkIntoTrap, "Char:-");
+        K(InputAction.UseItem, "Char:X"); // Angband's U runs north-east here
         K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
@@ -190,6 +192,8 @@ public sealed class InputBindings
         if (!rogue) K(InputAction.RepeatCommand, "Char:n");
         if (!rogue) K(InputAction.FireNearest, "Char:h"); // (and Tab, in both, outside stores)
         K(InputAction.Locate, rogue ? "Char:W" : "Char:L");
+        if (!rogue) K(InputAction.WalkIntoTrap, "Char:W"); // ('-' in both)
+        K(InputAction.UseItem, rogue ? "Char:X" : "Char:U");
         K(InputAction.Steal, "Char:s");
         K(InputAction.Open, "Char:o"); K(InputAction.Close, "Char:c"); K(InputAction.Disarm, "Char:D");
         K(InputAction.Rest, "Char:R"); K(InputAction.Wield, "Char:w"); K(InputAction.Quaff, "Char:q");

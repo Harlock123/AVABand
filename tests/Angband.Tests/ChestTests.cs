@@ -193,7 +193,7 @@ public class ChestTests
         Trap(game, "pit", game.Player.Position + new Loc(1, 0));
         var damage = 0;
         game.Events.Subscribe<PlayerHurtEvent>(e => damage += e.Damage); // (5000 HP regenerate a pit's worth at once)
-        game.Execute(new WalkCommand(Direction.East));
+        game.Execute(new JumpCommand(Direction.East));
         Assert.Contains("You set off a pit!", messages);
         Assert.InRange(damage, 2, 12);
     }
@@ -205,7 +205,7 @@ public class ChestTests
         game.Player.IntrinsicResists["pois"] = 1;
         game.RecalculateBonuses();
         Trap(game, "poison_gas", game.Player.Position + new Loc(1, 0));
-        game.Execute(new WalkCommand(Direction.East));
+        game.Execute(new JumpCommand(Direction.East));
         Assert.False(game.Player.Timed.Has("poisoned"));
     }
 
@@ -218,7 +218,7 @@ public class ChestTests
         game.Player.Hp = game.Player.MaxHp = 5000;
         var next = game.Level.Neighbors(game.Player.Position).First(p => game.Level.IsEmptyFloor(p));
         Trap(game, "trap_door", next);
-        game.Execute(new WalkCommand(DirectionExtensions.FromOffset(next.X - game.Player.Position.X, next.Y - game.Player.Position.Y)));
+        game.Execute(new JumpCommand(DirectionExtensions.FromOffset(next.X - game.Player.Position.X, next.Y - game.Player.Position.Y)));
         Assert.Equal(4, game.Player.Depth);
     }
 

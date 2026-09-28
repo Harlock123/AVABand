@@ -16,6 +16,7 @@
 - `q` quaff a potion, `r` read a scroll, `E` eat, `F` refuel your light.
 - `f` fire your launcher's missiles (Tab fires at the nearest monster, `'` targets it), `v` throw, `a` aim a wand, `Z` or `u` use a staff, `z` zap a
   rod, `A` activate.
+- `X` uses any item, whatever it is.
 - `m` cast a spell, `G` learn one, `B` or `b` browse your books.
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map.

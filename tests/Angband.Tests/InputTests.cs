@@ -33,6 +33,8 @@ public class InputTests
     [InlineData("Char:.", InputAction.Run)]
     [InlineData("Up", InputAction.MoveNorth)]
     [InlineData("Char:L", InputAction.Locate)]
+    [InlineData("Char:W", InputAction.WalkIntoTrap)]
+    [InlineData("Char:U", InputAction.UseItem)]
     [InlineData("Char:h", InputAction.FireNearest)]
     [InlineData("Char:/", InputAction.IdentifySymbol)]
     public void TheOriginalKeyset_IsAngbands(string chord, InputAction action) =>
@@ -56,6 +58,8 @@ public class InputTests
     [InlineData("Char:,", InputAction.Run)]
     [InlineData("Ctrl+V", InputAction.RepeatCommand)]
     [InlineData("Char:W", InputAction.Locate)]
+    [InlineData("Char:-", InputAction.WalkIntoTrap)]
+    [InlineData("Char:X", InputAction.UseItem)]
     public void TheRoguelikeKeyset_IsAngbands(string chord, InputAction action) =>
         Assert.Equal(action, InputBindings.Preset(InputBindings.Keyset.Roguelike).ForKey(chord));
 

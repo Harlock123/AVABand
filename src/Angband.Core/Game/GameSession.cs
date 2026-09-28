@@ -119,6 +119,8 @@ public sealed partial class GameSession : ITurnHandler
     public bool Execute(GameCommand command) => command switch
     {
         CountedCommand counted => Repeat(counted.Command, Math.Clamp(counted.Count, 1, MaxCommandCount)),
+        // Angband do_cmd_walk: walking at a trap you know of tries to disarm it (and keeps trying).
+        WalkCommand walk when WalkDisarms(walk.Direction) => Repeat(new DisarmCommand(walk.Direction), AutoRepeatCount),
         // Angband cmd-core.c: opening, disarming (and tunnelling) repeat up to 99 times by themselves.
         OpenCommand or DisarmCommand => Repeat(command, AutoRepeatCount),
         _ => ExecuteOnce(command),
@@ -153,6 +155,7 @@ public sealed partial class GameSession : ITurnHandler
         var energy = command switch
         {
             WalkCommand walk => Walk(walk.Direction),
+            JumpCommand jump => Walk(jump.Direction),
             HoldCommand => Hold(),
             OpenCommand open => OpenAt(Player.Position.Step(open.Direction)),
             DisarmCommand disarm => Disarm(disarm.Direction),
@@ -253,6 +256,17 @@ public sealed partial class GameSession : ITurnHandler
             if (day || !feature.Has(TerrainFlags.Floor)) Known.Remember(Level, p);
         }
         UpdateView();
+    }
+
+    /// <summary>
+    /// Whether a walk that way would be a disarm instead: a trap you know of, no monster in the way,
+    /// and nothing making you safe from traps (Angband player_is_trapsafe).
+    /// </summary>
+    private bool WalkDisarms(Direction dir)
+    {
+        var target = Player.Position.Step(dir);
+        return Level.InBounds(target) && Level[target].Trap != 0 && Level[target].Has(SquareFlags.TrapVisible)
+               && Level.Monsters.At(target) is null && !IsWebbed(target) && !Player.HasGearFlag("TRAP_IMMUNE");
     }
 
     private int Walk(Direction dir, bool confuse = true)

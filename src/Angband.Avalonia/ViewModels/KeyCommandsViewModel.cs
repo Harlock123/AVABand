@@ -80,6 +80,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.UseStaff, "Use a staff"),
             (InputAction.ZapRod, "Zap a rod"),
             (InputAction.Activate, "Activate a worn item"),
+            (InputAction.UseItem, "Use any item: quaff, read, eat, aim, use, zap or activate it, as it needs"),
             (InputAction.Steal, "Steal from a monster next to you (rogues)"),
         ]),
         ("Repeating", [
@@ -98,6 +99,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.IdentifySymbol, "What a symbol on the map stands for (and the monsters you have met shown with it)"),
             (InputAction.OverviewMap, "The whole level at a glance"),
             (InputAction.Locate, "Scroll the map half a screen at a time; Esc comes back"),
+            (InputAction.WalkIntoTrap, "Walk onto a trap you know of, on purpose (walking at one disarms it)"),
             (InputAction.MonsterList, "List the monsters you can see or sense"),
             (InputAction.ObjectList, "List the objects you know of on the level"),
             (InputAction.MonsterKnowledge, "Knowledge: monsters, objects, runes, egos, artifacts"),

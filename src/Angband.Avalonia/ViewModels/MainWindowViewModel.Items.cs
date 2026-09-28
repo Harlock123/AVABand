@@ -30,6 +30,8 @@ public enum ItemPromptKind
     Inscribe,
     Uninscribe,
     Ignore,
+    /// <summary>Any item that can be used (Angband 'U'): each goes to its own command.</summary>
+    UseAny,
 }
 
 /// <summary>One line in the inventory panel or an item prompt.</summary>
@@ -77,6 +79,7 @@ public sealed partial class MainWindowViewModel
                 ItemPromptKind.Inscribe => "You have nothing to inscribe.",
                 ItemPromptKind.Uninscribe => "You have nothing with an inscription.",
                 ItemPromptKind.Ignore => "You have nothing to ignore.",
+                ItemPromptKind.UseAny => "You have nothing to use.",
                 _ => "You have nothing to choose.",
             });
             return;
@@ -111,6 +114,7 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Inscribe => "Inscribe which item?",
             ItemPromptKind.Uninscribe => "Un-inscribe which item?",
             ItemPromptKind.Ignore => "Ignore which item?",
+            ItemPromptKind.UseAny => "Use which item?",
             _ => "Inspect which item?",
         };
         PromptRows.Clear();
@@ -169,7 +173,8 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Wield => 'w', ItemPromptKind.TakeOff => 't', ItemPromptKind.Quaff => 'q', ItemPromptKind.Read => 'r',
         ItemPromptKind.Eat => 'E', ItemPromptKind.Drop => 'd', ItemPromptKind.Throw => 'v', ItemPromptKind.Pickup => 'g',
         ItemPromptKind.Refuel => 'F', ItemPromptKind.Inspect => 'I', ItemPromptKind.Aim => 'a', ItemPromptKind.UseStaff => 'u',
-        ItemPromptKind.Zap => 'z', ItemPromptKind.Activate => 'A', ItemPromptKind.Inscribe => '{', ItemPromptKind.Ignore => 'k', _ => '}',
+        ItemPromptKind.Zap => 'z', ItemPromptKind.Activate => 'A', ItemPromptKind.Inscribe => '{', ItemPromptKind.Ignore => 'k',
+        ItemPromptKind.UseAny => 'U', _ => '}',
     };
 
     private static string CommandVerb(ItemPromptKind kind) => kind switch
@@ -178,11 +183,33 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Read => "read", ItemPromptKind.Eat => "eat", ItemPromptKind.Drop => "drop", ItemPromptKind.Throw => "throw",
         ItemPromptKind.Pickup => "pick up", ItemPromptKind.Refuel => "refuel with", ItemPromptKind.Inspect => "inspect",
         ItemPromptKind.Aim => "aim", ItemPromptKind.UseStaff => "use", ItemPromptKind.Zap => "zap", ItemPromptKind.Activate => "activate",
-        ItemPromptKind.Inscribe => "inscribe", ItemPromptKind.Ignore => "ignore", _ => "un-inscribe",
+        ItemPromptKind.Inscribe => "inscribe", ItemPromptKind.Ignore => "ignore", ItemPromptKind.UseAny => "use", _ => "un-inscribe",
+    };
+
+    /// <summary>The command an item is used with, for 'U' (none if it can't be used).</summary>
+    private ItemPromptKind? UseKind(Item item) => item.Base.Id switch
+    {
+        "potion" => ItemPromptKind.Quaff,
+        "scroll" => ItemPromptKind.Read,
+        "food" or "mushroom" => ItemPromptKind.Eat,
+        "wand" => ItemPromptKind.Aim,
+        "staff" => ItemPromptKind.UseStaff,
+        "rod" => ItemPromptKind.Zap,
+        _ => _game.Player.Inventory.Equipped.Contains(item) && item.CanActivate ? ItemPromptKind.Activate : null,
     };
 
     private void UsePromptItem(ItemPromptKind kind, Item item)
     {
+        if (kind == ItemPromptKind.UseAny)
+        {
+            if (UseKind(item) is not { } use) return;
+            if (use == ItemPromptKind.Read && _game.CannotRead() is { } why)
+            {
+                AddMessage(why);
+                return;
+            }
+            kind = use;
+        }
         switch (kind)
         {
             case ItemPromptKind.Inscribe:
@@ -265,6 +292,8 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Inscribe => inv.Equipped.Concat(carried).Concat(floor),
             ItemPromptKind.Uninscribe => inv.Equipped.Concat(carried).Concat(floor).Where(i => i.Note is not null),
             ItemPromptKind.Ignore => inv.Equipped.Concat(carried).Concat(floor),
+            ItemPromptKind.UseAny => carried.Concat(floor).Concat(inv.Equipped).Where(i => UseKind(i) is not null)
+                .Where(i => i.Base.Id is not ("wand" or "staff" or "rod") || inv.Pack.Contains(i)),
             _ => inv.Equipped.Concat(carried).Concat(floor),
         };
     }

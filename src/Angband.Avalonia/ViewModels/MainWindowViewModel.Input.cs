@@ -41,7 +41,7 @@ public sealed partial class BindingRow(InputAction action) : ObservableObject
 /// </summary>
 public sealed partial class MainWindowViewModel
 {
-    private enum DirectionFor { None, Open, Close, Device, Tunnel, Disarm, Steal, Run }
+    private enum DirectionFor { None, Open, Close, Device, Tunnel, Disarm, Steal, Run, Jump }
     private DirectionFor _pendingDirection;
     private Angband.Core.Items.Item? _pendingDevice;
     private bool _pendingActivation;
@@ -146,6 +146,7 @@ public sealed partial class MainWindowViewModel
                 Execute(_pendingActivation ? new ActivateCommand(device, Direction: d) : new UseCommand(device, Direction: d));
             else if (what == DirectionFor.Tunnel) Execute(new TunnelCommand(d));
             else if (what == DirectionFor.Run) Execute(new RunCommand(d));
+            else if (what == DirectionFor.Jump) Execute(new JumpCommand(d));
             else if (what == DirectionFor.Disarm) Execute(new DisarmCommand(d));
             else if (what == DirectionFor.Steal) Execute(new StealCommand(d));
             else Execute(what == DirectionFor.Open ? new OpenCommand(d) : new CloseCommand(d));
@@ -217,6 +218,8 @@ public sealed partial class MainWindowViewModel
             case InputAction.Help: ShowHelp(); break;
             case InputAction.IdentifySymbol: BeginIdentifySymbol(); break;
             case InputAction.Locate: BeginLocate(); break;
+            case InputAction.WalkIntoTrap: AskDirection(DirectionFor.Jump); break;
+            case InputAction.UseItem: BeginItemPrompt(ItemPromptKind.UseAny); break;
             case InputAction.MessageHistory: ShowMessageHistory(); break;
             case InputAction.RepeatCommand: RepeatLastCommand(); break;
             case InputAction.CommandCount: BeginCount(); break;

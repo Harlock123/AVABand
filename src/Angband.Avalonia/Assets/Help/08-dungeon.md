@@ -8,7 +8,8 @@ a little, how good its treasure is (`Ctrl+F` repeats them).
 
 ## Traps, doors and rubble
 
-Traps are hidden until you notice them (running stops at a known one); `D` disarms.
+Traps are hidden until you notice them (running stops at a known one). Walking at a trap you know
+of tries to disarm it, as `D` does; `-` walks onto it on purpose.
 Locked doors may take several tries (opening retries by itself). Rubble and walls can be
 tunnelled (`T`), faster with a digger.
 
