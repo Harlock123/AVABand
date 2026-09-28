@@ -816,6 +816,10 @@ game or in `<AppData>/AVABand/tilesets/`:
   `object:pile`, and a per-base fallback `object-base:<base>`.
 - `tools/angband_prf_to_tileset.py` converts an Angband 4.2 tileset (`graf-*.prf` + sheet).
 
+**Interface size** (Settings → Display, 80%–200%) scales everything but the map — the sidebar,
+message and status lines, menus, the panels over the map and every dialog — with layout
+transforms, so text stays sharp and layouts reflow; the map keeps its own zoom (Ctrl +/-).
+
 ## Sound
 `Angband.Audio` plays sound through OpenAL Soft (Silk.NET, which ships native libraries for
 Windows, Linux and macOS on x64 and ARM), decoding WAV itself, Ogg Vorbis with NVorbis and MP3 with
@@ -828,9 +832,6 @@ different levels — the Angband effects sit 10-30 dB under the bundled music, a
 differ by 30 dB among themselves — so each effect is brought to about -20 dB average and each music
 track, measured over its first 30 seconds, to -30 dB, putting swings, hits and deaths clearly over
 the music. Boosts stop at 16x (so faint recordings don't turn to hiss) and peaks stay under -1 dB.
-**Interface size** (Settings → Display, 80%–200%) scales everything but the map — the sidebar,
-message and status lines, menus, the panels over the map and every dialog — with layout
-transforms, so text stays sharp and layouts reflow; the map keeps its own zoom (Ctrl +/-).
 The **Audio buffer** choice (Settings → Sound) sets how much sound
 OpenAL mixes at a time: *Automatic* — the default — uses OpenAL's own small buffer, or a large
 one (2048 frames, about 43 ms) when AVABand finds it is running in a virtual machine, whose
