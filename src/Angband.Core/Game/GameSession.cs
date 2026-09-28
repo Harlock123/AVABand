@@ -196,6 +196,7 @@ public sealed partial class GameSession : ITurnHandler
             Scheduler.Advance(this);
         }
         UpdateView();
+        SenseOre(); // a dwarf's sense for treasure, at the start of each turn
     }
 
     bool ITurnHandler.NeedsInput(IActor actor) => actor is Player;
@@ -438,6 +439,7 @@ public sealed partial class GameSession : ITurnHandler
         }
         if (depth > 0) ShowFeeling(); // Angband announces it in the dungeon only (Ctrl+F works in town too)
         Search(); // Angband on_new_level: a secret door beside the arrival spot is found at once
+        SenseOre();
 
         Publish(new LevelChangedEvent(depth, Level.ProfileId));
     }

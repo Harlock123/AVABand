@@ -16,6 +16,42 @@ public sealed partial class GameSession
     /// <summary>Whether the player's class has an ability flag (<see cref="ClassFlags"/>).</summary>
     public bool ClassHas(string flag) => Player.Class?.Flags.Contains(flag) == true;
 
+    /// <summary>Whether the player's race has an ability flag (Angband player-flags: KNOW_MUSHROOM, KNOW_ZAPPER, SEE_ORE).</summary>
+    public bool RaceHas(string flag) => Player.Race?.Flags.Contains(flag) == true;
+
+    /// <summary>
+    /// Angband inven_carry: hobbits know a mushroom as soon as they pick it up ("Mushrooms for
+    /// breakfast!"), gnomes a wand, staff or rod.
+    /// </summary>
+    private void NoticeKnacks(Items.Item item)
+    {
+        if (!item.IsFlavored || Knowledge.IsAware(item.Kind)) return;
+        if (RaceHas("KNOW_MUSHROOM") && item.Base.Id == "mushroom")
+        {
+            Knowledge.LearnKind(item.Kind);
+            Publish(new MessageEvent("Mushrooms for breakfast!"));
+        }
+        else if (RaceHas("KNOW_ZAPPER") && item.Base.Id is "wand" or "staff" or "rod") Knowledge.LearnKind(item.Kind);
+    }
+
+    /// <summary>
+    /// Angband process_player (SEE_ORE): each turn a dwarf in good shape senses treasure veins close
+    /// by — 3 squares back to 2 ahead on each axis, as 4.2's detection loop runs.
+    /// </summary>
+    private void SenseOre()
+    {
+        if (!RaceHas("SEE_ORE")) return;
+        var t = Player.Timed;
+        if (t.Has(TimedIds.Image) || t.Has(TimedIds.Confused) || t.Has(TimedIds.Amnesia) || t.Has(TimedIds.Stun)
+            || t.Has(TimedIds.Paralyzed) || t.Has("terror") || t.Has(TimedIds.Afraid)) return;
+        for (var y = Player.Position.Y - 3; y < Player.Position.Y + 3; y++)
+        for (var x = Player.Position.X - 3; x < Player.Position.X + 3; x++)
+        {
+            var p = new Loc(x, y);
+            if (Level.InBounds(p) && Level.FeatureAt(p).Has(TerrainFlags.Gold)) Known.Remember(Level, p);
+        }
+    }
+
     // --- Unlight (necromancers) ---------------------------------------------------------------------
 
     /// <summary>
@@ -149,6 +185,7 @@ public sealed partial class GameSession
             }
             else
             {
+                NoticeKnacks(loot);
                 Publish(new MessageEvent($"You steal {Describe(loot)} from {name}."));
                 if (Player.Inventory.Add(loot) is null)
                 {

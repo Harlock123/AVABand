@@ -256,6 +256,7 @@ public sealed partial class GameSession
             }
             Level.Objects.Remove(Player.Position, item);
             var stack = Player.Inventory.Add(item)!;
+            NoticeKnacks(stack);
             Publish(new MessageEvent($"You have {Describe(stack)}."));
             Publish(new ItemPickedUpEvent(item.Kind.Id, item.Number));
             picked = true;
@@ -292,6 +293,7 @@ public sealed partial class GameSession
                 if (count < item.Number) taken = item.Split(Objects.NextSerial++, count);
                 else Level.Objects.Remove(Player.Position, item);
                 var stack = Player.Inventory.Add(taken)!;
+                NoticeKnacks(stack);
                 Publish(new MessageEvent($"You have {Describe(stack)}."));
                 picked++;
                 continue;

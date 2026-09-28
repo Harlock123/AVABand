@@ -329,6 +329,8 @@ public static class SaveGame
         (p.BaseSpeed, p.BaseArmour, p.BaseToHit, p.BaseToDam) = (ps.BaseSpeed, ps.BaseArmour, ps.BaseToHit, ps.BaseToDam);
         (p.BaseStealth, p.BaseBlows, p.BaseShots) = (ps.BaseStealth, ps.BaseBlows, ps.BaseShots);
         foreach (var (k, v) in ps.IntrinsicResists) p.IntrinsicResists[k] = v;
+        // Racial abilities added since the save was made (Elves' sustained DEX, a High-Elf's sight...).
+        foreach (var r in p.Race?.Resists ?? []) p.IntrinsicResists.TryAdd(r, 1);
         p.SkillMelee = ps.Skills.GetValueOrDefault("melee", p.SkillMelee);
         p.SkillBow = ps.Skills.GetValueOrDefault("bow", p.SkillBow);
         p.SkillThrow = ps.Skills.GetValueOrDefault("throw", p.SkillThrow);

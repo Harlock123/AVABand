@@ -172,9 +172,21 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         abilities.AddRange(p.IntrinsicResists.Keys.Select(r => r switch
         {
             "free_act" => "free action", "blind" => "cannot be blinded", "pois" => "resists poison",
-            "light" => "resists light", "dark" => "resists darkness", _ => Readable(r),
+            "light" => "resists light", "dark" => "resists darkness", "hold_life" => "holds on to its life force",
+            "see_invis" => "sees invisible things", _ when r.StartsWith("sust_") => "keeps its " + r[5..] switch
+            {
+                "str" => "strength", "int" => "intelligence", "wis" => "wisdom", "dex" => "dexterity", "con" => "constitution", var st => st,
+            },
+            _ => Readable(r),
         }));
         if (p.Regenerates) abilities.Add("regenerates quickly");
+        abilities.AddRange((race?.Flags ?? []).Select(f => f switch
+        {
+            "KNOW_MUSHROOM" => "knows mushrooms on sight",
+            "KNOW_ZAPPER" => "knows wands, staves and rods on sight",
+            "SEE_ORE" => "senses treasure in the rock nearby",
+            _ => null,
+        }).OfType<string>());
         abilities.AddRange((cls?.Flags ?? []).Select(f => f switch
         {
             ClassFlags.Steal => "steals from monsters",

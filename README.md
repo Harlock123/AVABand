@@ -187,7 +187,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Character creation** (`Game/Birth.cs`, `races.json`; Game → New character, Ctrl+N): name,
   11 races (Human, Half-Elf, Elf, Hobbit, Gnome, Dwarf, Half-Orc, Half-Troll, Dunadan, High-Elf,
   Kobold) with stat/skill adjustments, hit dice, experience factors, infravision and innate
-  abilities (free action, blindness/poison/light/dark resistance, regeneration); 9 classes; stats by
+  abilities as in 4.2's `p_race.txt` — Elves and Half-Elves sustain DEX, Half-Trolls STR (and
+  regenerate), Dúnedain CON; Hobbits hold on to their life force, High-Elves see invisible,
+  Gnomes have free action, Dwarves can't be blinded, and resistances to light, dark and poison —
+  and three knacks: Hobbits know a mushroom as soon as they pick it up ("Mushrooms for
+  breakfast!"), Gnomes a wand, staff or rod, and Dwarves sense veins of treasure in the rock a
+  few squares around them each turn (unless confused, stunned, afraid and the like). A character
+  saved before an ability was added gains it on loading; 9 classes; stats by
   Angband's 20-point point-buy (unspent points become gold) or Angband's rolled dice. Stats now
   matter: STR gives to-damage and carrying capacity, DEX to-hit and armour, WIS saving throw, CON
   hit points per level, INT/WIS spell points and failure rates. The screen previews the result by
