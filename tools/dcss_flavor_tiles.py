@@ -8,6 +8,11 @@ close the image's colour is to the flavour's colour, less a penalty for every fl
 using that image, so flavours look as different from one another as the pack allows. Only the
 PNGs used are copied into the tileset folder.
 
+Where the pack still has too few images (60 potion flavours, 43 potion pictures; 35 woods, 10
+staves), flavours sharing a picture are told apart by recolouring: the first keeps the original,
+each of the others gets a copy under "tinted/" — turned to its own colour when it has one that
+differs, otherwise made lighter, darker or a little shifted in hue.
+
 Usage:
     dcss_flavor_tiles.py <DCSS "Full" folder> <data/flavors.json> <data/colors.json> <tilesets/dcss>
 """
@@ -51,6 +56,21 @@ KEYWORD_BONUS = 400  # a name match beats any colour difference
 
 def png_colour(path):
     """Average colour of the opaque, coloured pixels of a PNG (RGB, RGBA or palette, 8-bit)."""
+    read = png_read(path)
+    if read is None:
+        return None
+    _, _, rgba = read
+    pixels = [(r, g, b) for r, g, b, a in rgba if a > 128]
+    if not pixels:
+        return None
+    # The colour that makes a potion or gem what it is: its saturated pixels, if it has enough.
+    vivid = [p for p in pixels if colorsys.rgb_to_hsv(*(v / 255 for v in p))[1] > 0.35 and max(p) > 40]
+    use = vivid if len(vivid) > len(pixels) // 8 else pixels
+    return tuple(sum(p[k] for p in use) / len(use) for k in range(3))
+
+
+def png_read(path):
+    """(width, height, [(r, g, b, a)...]) of an 8-bit PNG (RGB, RGBA, grey or palette); None otherwise."""
     data = open(path, "rb").read()
     i, idat, palette, trns = 8, b"", None, None
     while i < len(data):
@@ -90,15 +110,46 @@ def png_colour(path):
                 al = trns[line[x]] if trns and line[x] < len(trns) else 255
             elif ctype == 4: r = g = b_ = line[x]; al = line[x + 1]
             else: r = g = b_ = line[x]; al = 255
-            if al > 128:
-                pixels.append((r, g, b_))
+            pixels.append((r, g, b_, al))
         prev = line
-    if not pixels:
-        return None
-    # The colour that makes a potion or gem what it is: its saturated pixels, if it has enough.
-    vivid = [p for p in pixels if colorsys.rgb_to_hsv(*(v / 255 for v in p))[1] > 0.35 and max(p) > 40]
-    use = vivid if len(vivid) > len(pixels) // 8 else pixels
-    return tuple(sum(p[k] for p in use) / len(use) for k in range(3))
+    return w, h, pixels
+
+
+def png_write(path, w, h, pixels):
+    """Writes RGBA pixels as a PNG."""
+    raw = b"".join(b"\0" + bytes(v for p in pixels[y * w:(y + 1) * w] for v in p) for y in range(h))
+
+    def chunk(kind, body):
+        return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF)
+
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 6, 0, 0, 0))
+                + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
+
+
+# (hue turn in degrees, brightness factor) for flavours whose own colour doesn't set them apart.
+VARIANTS = [(0, 0.7), (0, 1.3), (25, 1.0), (-25, 1.0), (25, 0.75), (-25, 1.25), (50, 1.0), (-50, 1.0), (50, 0.8), (-50, 1.2)]
+
+
+def tint(src_path, dest_path, target, variant):
+    """A recoloured copy: its coloured pixels turned to the target's hue, or else varied by VARIANTS."""
+    w, h, pixels = png_read(src_path)
+    th, ts, _ = colorsys.rgb_to_hsv(*(v / 255 for v in target))
+    base = png_colour(src_path)
+    bh = colorsys.rgb_to_hsv(*(v / 255 for v in base))[0]
+    hue_gap = min(abs(th - bh), 1 - abs(th - bh)) * 360
+    to_target = ts >= 0.25 and hue_gap > 20
+    turn, bright = (0, 1.0) if to_target else VARIANTS[variant % len(VARIANTS)]
+    out = []
+    for r, g, b, a in pixels:
+        hh, ss, vv = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+        if a > 0 and ss > 0.2:
+            hh = th if to_target else (hh + turn / 360) % 1.0
+        vv = min(1.0, vv * bright)
+        r2, g2, b2 = colorsys.hsv_to_rgb(hh, ss, vv)
+        out.append((round(r2 * 255), round(g2 * 255), round(b2 * 255), a))
+    png_write(dest_path, w, h, out)
 
 
 def distance(a, b):
@@ -146,6 +197,29 @@ def main():
             uses[best] += 1
             tiles[key] = best
             added[key] = best
+
+    # Flavours of a kind still sharing a picture: the first keeps it, the others get tinted copies.
+    tinted = 0
+    for group in json.load(open(flavors_path, encoding="utf-8")):
+        cls = group["id"]
+        if cls not in FOLDERS:
+            continue
+        by_image = {}
+        for fl in group.get("flavors", []):
+            key = f"flavor:{cls}:{fl['name'].lower()}"
+            if isinstance(tiles.get(key), str) and "/tinted/" not in tiles[key]:
+                by_image.setdefault(tiles[key], []).append(fl)
+        for rel, sharing in by_image.items():
+            for variant, fl in enumerate(sharing[1:]):
+                slug = re.sub(r"[^a-z0-9]+", "_", fl["name"].lower()).strip("_")
+                tinted_rel = f"{os.path.dirname(rel)}/tinted/{cls}_{slug}.png"
+                source = os.path.join(src, rel) if os.path.exists(os.path.join(src, rel)) else os.path.join(tileset_dir, rel)
+                tint(source, os.path.join(tileset_dir, tinted_rel),
+                     palette.get(fl.get("color", ""), (128, 128, 128)), variant)
+                tiles[f"flavor:{cls}:{fl['name'].lower()}"] = tinted_rel
+                added.pop(f"flavor:{cls}:{fl['name'].lower()}", None)
+                tinted += 1
+    print(f"{tinted} flavours given tinted copies")
 
     for rel in sorted(set(added.values())):
         dest = os.path.join(tileset_dir, rel)
