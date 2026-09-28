@@ -271,7 +271,8 @@ public class RealmSpellTests
         Assert.Equal(decoy, game.Level.Decoy);
         game.TeleportPlayer(5);
         var messages = Messages(game);
-        var hound = Arena.AddMonster(game, "jackal", decoy + new Loc(2, 0));
+        // A cave orc, not a jackal: a level 30 ranger outclasses a jackal, which keeps well away (morale).
+        var hound = Arena.AddMonster(game, "cave_orc", decoy + new Loc(2, 0));
         for (var i = 0; i < 20 && game.Level.Decoy is not null; i++) game.Execute(new HoldCommand());
         Assert.Null(game.Level.Decoy);
         Assert.Contains("The decoy is destroyed!", messages);

@@ -40,7 +40,7 @@ public sealed partial class GameSession
         var race = monster.Race;
         if (race.Has(MonsterFlags.Multiply) && TryMultiply(monster)) return EnergyTable.MoveEnergy;
         if (monster.IsVisible) Lore.For(race.Id).TurnsWatched++;
-        if (RangedAttackKind(race) is { } innate && TryCastSpell(monster, innate)) return EnergyTable.MoveEnergy;
+        if (RangedAttackKind(monster) is { } innate && TryCastSpell(monster, innate)) return EnergyTable.MoveEnergy;
 
         var adjacent = monster.Position.ChebyshevTo(Player.Position) == 1;
         if (race.Has(MonsterFlags.NeverMove))
@@ -93,6 +93,7 @@ public sealed partial class GameSession
             .ToList();
 
         if (monster.IsAfraid) return FleeMoves(monster, candidates);
+        if (KeepsAway(monster)) return KeepAwayMoves(monster, candidates);
 
         // Angband: a monster that can see the decoy goes for it.
         if (DecoyFor(monster) is { } decoy)
@@ -143,6 +144,25 @@ public sealed partial class GameSession
             return [DirectionExtensions.FromOffset(Player.Position.X - here.X, Player.Position.Y - here.Y)];
         }
         return better.Select(c => c.Dir).ToList();
+    }
+
+    /// <summary>
+    /// Morale broken (Angband min_range = flee range, without fear): make for safety as a frightened
+    /// monster would, but — not being afraid — hit back when cornered next to the player, and stay
+    /// put once far enough away.
+    /// </summary>
+    private IEnumerable<Direction> KeepAwayMoves(Monster monster, List<(Direction Dir, Loc To)> candidates)
+    {
+        var here = monster.Position;
+        if (here.DistanceTo(Player.Position) >= FleeRange) return [];
+        int Safety(Loc p) =>
+            Math.Min(Noise[p], 100) * 4 + p.DistanceTo(Player.Position) * 2 + (Level[p].Has(World.SquareFlags.View) ? 0 : 20);
+        var better = candidates
+            .Where(c => Level.IsPassable(c.To) && Level.Monsters.At(c.To) is null && c.To != Player.Position && Safety(c.To) > Safety(here))
+            .OrderByDescending(c => Safety(c.To)).Select(c => c.Dir).ToList();
+        if (better.Count == 0 && here.ChebyshevTo(Player.Position) == 1)
+            return [DirectionExtensions.FromOffset(Player.Position.X - here.X, Player.Position.Y - here.Y)];
+        return better;
     }
 
     /// <summary>Hide from the player's view while staying close; hold still once hidden.</summary>

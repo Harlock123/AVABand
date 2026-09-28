@@ -366,7 +366,9 @@ public class ContentTests
         game.Player.Level = 40;
         var messages = Messages(game);
         game.IncreaseTimed("prot_evil", 500);
-        var orc = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(1, 0));
+        // An uruk (level 16): weaker than the player, but not so far outclassed that its morale breaks
+        // and it keeps away (a cave orc would, against a level 40 player).
+        var orc = Arena.AddMonster(game, "uruk", game.Player.Position + new Loc(1, 0));
         for (var i = 0; i < 30; i++)
         {
             game.Player.Hp = game.Player.MaxHp = 5000;

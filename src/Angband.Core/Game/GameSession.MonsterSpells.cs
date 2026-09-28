@@ -13,12 +13,15 @@ public sealed partial class GameSession
     /// <summary>
     /// Angband make_ranged_attack / monster_can_cast: first a roll against the race's spell
     /// frequency, then against its innate frequency — each a 100/N percent chance, halved while the
-    /// player taunts. Returns whether this turn is for a spell (false) or an innate attack (true),
+    /// player taunts and doubled at the monster's preferred range. Returns whether this turn is for a spell (false) or an innate attack (true),
     /// or null for neither.
     /// </summary>
-    private bool? RangedAttackKind(MonsterRaceDef race)
+    private bool? RangedAttackKind(Monster monster)
     {
-        int Chance(int oneIn) => oneIn <= 0 ? 0 : 100 / oneIn / (Player.Timed.Has("taunt") ? 2 : 1);
+        var race = monster.Race;
+        // Angband: halved while the player taunts; doubled when the monster is at its preferred range.
+        var atBest = monster.Position.DistanceTo(Player.Position) == CombatRange(monster).Best;
+        int Chance(int oneIn) => oneIn <= 0 ? 0 : 100 / oneIn / (Player.Timed.Has("taunt") ? 2 : 1) * (atBest ? 2 : 1);
         if (Chance(race.SpellFrequency) is > 0 and var spell && Rng.RandInt0(100) < spell) return false;
         if (Chance(race.InnateFrequency) is > 0 and var innate && Rng.RandInt0(100) < innate) return true;
         return null;

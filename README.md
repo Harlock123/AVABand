@@ -150,8 +150,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     then for an innate attack, and uses one of that kind (`make_ranged_attack`); taunting halves
     both chances. So a scout fires arrows 1 time in 3 but hastes itself only 1 time in 10, and a
     kobold archer shoots every other turn. Kinds with no frequency given use Angband's 1 in 4.
-    Not modelled: Angband doubles the chance when a monster is at its preferred range (AVABand's
-    monsters have none).
+    Both chances double when the monster is exactly at its preferred range (below), so a kobold
+    archer right beside you shoots every turn, as in 4.2.
+  - **Combat ranges and morale** (`Game/GameSession.MonsterRange.cs`, 4.2's `get_move_find_range`):
+    each turn a monster works out the least distance it will keep and the one it likes best. A
+    monster that judges you too strong — your level against its level + 25 (+8 for some), and when
+    close, your health against its own — keeps right away instead of closing in, though it isn't
+    afraid: cornered beside you it fights. So a high-level character sees shallow monsters scatter,
+    and a badly hurt monster of about your strength backs off. Monsters that never move, and
+    casters that never strike, want 3 more squares (unless you're within 5); archers that shoot
+    rarely and casters that cast often (over 24%) like 3 more; breathers in good health don't mind
+    point blank. Taunting cancels it all. (4.2's bodyguards never lose heart; AVABand's escorts
+    don't carry that role yet, so they follow the same rules.)
 - **Character creation** (`Game/Birth.cs`, `races.json`; Game → New character, Ctrl+N): name,
   11 races (Human, Half-Elf, Elf, Hobbit, Gnome, Dwarf, Half-Orc, Half-Troll, Dunadan, High-Elf,
   Kobold) with stat/skill adjustments, hit dice, experience factors, infravision and innate
@@ -799,8 +809,8 @@ creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fall
 
 ## Roadmap
 Natural next steps: hallucination (potions, mushrooms and monster attacks that make you see
-things), Angband's stacking of armour and devices (AVABand keeps one per slot), and monsters'
-preferred range (archers and casters keeping their distance, breathers closing in).
+things), Angband's stacking of armour and devices (AVABand keeps one per slot), and the
+bodyguard role for escorts (so they never lose heart, as in 4.2).
 
 ## Licence
 
