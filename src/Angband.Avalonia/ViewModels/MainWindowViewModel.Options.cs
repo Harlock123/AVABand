@@ -23,6 +23,8 @@ public static class DisplayOptions
     public const string ShowTarget = "show_target";
     public const string EffectiveSpeed = "effective_speed";
     public const string RoguelikeKeys = "rogue_like_commands";
+    /// <summary>AVABand's own: spell menus ask for the book first, as Angband's do (so its keymaps work unchanged).</summary>
+    public const string BookFirst = "book_first_spell_menus";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -41,6 +43,7 @@ public static class DisplayOptions
         new(HpChangesColor, "Color: Player color indicates % hit points", OptionKind.Interface, true),
         new(MouseMovement, "Allow mouse clicks to move the player", OptionKind.Interface, true),
         new(EffectiveSpeed, "Show effective speed as multiplier", OptionKind.Interface, false),
+        new(BookFirst, "Choose the book, then the spell (as Angband's menus)", OptionKind.Interface, false),
     ];
 }
 

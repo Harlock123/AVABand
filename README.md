@@ -902,7 +902,9 @@ the context action, or a game command.
   holds five turns. Written as Angband writes them: `^x` is Ctrl+x; `\e` Escape, `\n`
   Enter, `\t` Tab; `[F1]`, `[Up]` and the like name other keys. As in Angband a keymap works only
   when the game waits for a command (a key in a menu is just a key), and what it types is not
-  itself keymapped. (AVABand's spell menu has no book step, so Angband's `maa'` is `ma'` here.)
+  itself keymapped. (AVABand's spell menu lists every spell at once, so Angband's `maa'` is `ma'` here — unless you
+  tick the option *Choose the book, then the spell*, which makes the menus ask for the book first,
+  lettering its spells by their place in it, and Angband's keymaps then work as written.)
   They are saved with the key bindings and kept when you switch keysets.
 - **Rebinding**: Settings → Controls lists every action with its keys and button; *Key…*/*Button…*
   capture the next press. Bindings are saved to `<AppData>/AVABand/bindings.json`; actions added in later versions get their default keys when those keys are still free (so a saved `bindings.json` that still has `s` as hold keeps it; rebind Steal in Settings).

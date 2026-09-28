@@ -36,7 +36,8 @@ keyset* switches between those two. Any key can be rebound there too.
 - **0** then a number gives the next command a count: `0` `2` `0` `T` then a direction digs up to
   twenty times. Opening, disarming and tunnelling already try up to 99 times by themselves.
 - **Keymaps** make one key type several: Settings → Controls → *New keymap…*. `ma'` casts your
-  first spell at the nearest monster.
+  first spell at the nearest monster. With the option *Choose the book, then the spell* the menus
+  ask for the book first, as Angband's do, and its keymaps (`maa'`) work as written.
 
 ## Gamepad
 

@@ -104,6 +104,11 @@ public sealed partial class MainWindowViewModel
             _ => _game.ClassSpells.Where(_game.HasBookFor),
         };
         var list = spells.ToList();
+        if (list.Count > 0 && OptionValue(DisplayOptions.BookFirst))
+        {
+            BeginSpellBookPrompt(kind, list);
+            return;
+        }
         if (list.Count == 0)
         {
             AddMessage(kind switch
@@ -115,7 +120,58 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        ShowSpellRows(kind, list);
+    }
+
+    private List<string>? _spellBooks;
+    private List<Angband.Core.Definitions.SpellDef> _spellBookChoices = [];
+
+    /// <summary>
+    /// Book-first menus (the option): which book, then its spells lettered by their place in it, as
+    /// Angband's menus are — so its keymaps (maa') work as written.
+    /// </summary>
+    private void BeginSpellBookPrompt(SpellPromptKind kind, List<Angband.Core.Definitions.SpellDef> offered)
+    {
         _spellPromptKind = kind;
+        _spellBookChoices = offered;
+        _spellBooks = [.. offered.Select(s => s.Book).Distinct()];
+        ChoiceRows.Clear();
+        PromptRows.Clear();
+        SpellPromptRows.Clear();
+        for (var i = 0; i < _spellBooks.Count && i < 26; i++)
+            ChoiceRows.Add(new ChoiceRow(((char)('a' + i)).ToString(),
+                _data.Object(_spellBooks[i])?.Name.Replace("~", "").Replace("& ", "") ?? _spellBooks[i]));
+        PromptTitle = kind switch
+        {
+            SpellPromptKind.Cast => $"{Capitalize(_game.PlayerRealm!.Verb)} from which book?",
+            SpellPromptKind.Study => "Study from which book?",
+            _ => "Browse which book?",
+        };
+        IsPrompting = true;
+    }
+
+    /// <summary>A letter in the book menu: that book's spells, in book order (those not on offer can't be chosen).</summary>
+    private void ChooseSpellBook(char key)
+    {
+        var books = _spellBooks;
+        _spellBooks = null;
+        ChoiceRows.Clear();
+        var index = key - 'a';
+        if (books is null || index < 0 || index >= books.Count)
+        {
+            LastMessage = "Cancelled.";
+            return;
+        }
+        var offered = _spellBookChoices.Select(s => s.Id).ToHashSet();
+        ShowSpellRows(_spellPromptKind, [.. _game.ClassSpells.Where(s => s.Book == books[index])], offered);
+    }
+
+    /// <summary>The spell menu itself; with <paramref name="offered"/>, spells outside it are listed but not chosen.</summary>
+    private void ShowSpellRows(SpellPromptKind kind, List<Angband.Core.Definitions.SpellDef> list, HashSet<string>? offered = null)
+    {
+        var realm = _game.PlayerRealm!;
+        _spellPromptKind = kind;
+        _spellOffered = offered;
         PromptTitle = kind switch
         {
             SpellPromptKind.Cast => $"{Capitalize(realm.Verb)} which {realm.SpellNoun}?",
@@ -136,10 +192,19 @@ public sealed partial class MainWindowViewModel
         IsPrompting = true;
     }
 
+    private HashSet<string>? _spellOffered;
+
     /// <summary>Picks a spell from the open spell list.</summary>
     private void ChooseSpell(SpellRow row)
     {
         var spell = row.Spell;
+        if (_spellOffered is { } offered && !offered.Contains(spell.Id) && _spellPromptKind != SpellPromptKind.Browse)
+        {
+            AddMessage(_spellPromptKind == SpellPromptKind.Study
+                ? $"You cannot learn that {_game.PlayerRealm!.SpellNoun} yet."
+                : $"You don't know that {_game.PlayerRealm!.SpellNoun}.");
+            return;
+        }
         switch (_spellPromptKind)
         {
             case SpellPromptKind.Study:

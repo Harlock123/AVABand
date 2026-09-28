@@ -262,6 +262,39 @@ public class KeymapUiTests
     }
 
     [AvaloniaFact]
+    public void BookFirstMenus_AskForTheBook_SoAngbandsKeymapsWork()
+    {
+        var (window, vm) = Open("mage");
+        var game = vm.Game;
+        vm.SetOption(ViewModels.DisplayOptions.BookFirst, true);
+        game.Player.LearnedSpells.Add("magic_missile");
+        game.Player.Mana = game.Player.MaxMana = 50;
+
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.M, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.True(vm.IsPrompting);
+        Assert.StartsWith("Cast from which book?", vm.PromptTitle);
+        Assert.Contains(vm.ChoiceRows, r => r.Text.Contains("Magic for Beginners") || r.Text.Contains("First Spells"));
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.A, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.Equal("Magic Missile", vm.SpellPromptRows[0].Name); // the book's own order, known or not
+        Assert.True(vm.SpellPromptRows.Count > 1);
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.Escape, global::Avalonia.Input.RawInputModifiers.None);
+
+        // Angband's own keymap, as written.
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) is >= 2 and <= 4 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        var jackal = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("jackal")!, at, asleep: true)!;
+        jackal.Hp = jackal.MaxHp = 10_000;
+        game.UpdateView();
+        var cast = 0;
+        game.Events.Subscribe<SpellCastEvent>(_ => cast++);
+        vm.Bindings.Keymaps["F5"] = "maa'";
+        for (var i = 0; i < 10 && cast == 0; i++)
+            window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.F5, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.True(cast > 0);
+        Assert.False(vm.IsPrompting);
+    }
+
+    [AvaloniaFact]
     public void Keymaps_AreMadeAndChanged_OnTheControlsTab()
     {
         var (_, vm) = Open("warrior");
