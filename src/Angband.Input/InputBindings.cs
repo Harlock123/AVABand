@@ -95,6 +95,7 @@ public sealed class InputBindings
         K(InputAction.CharacterSheet, "Char:C");
         K(InputAction.HighScores, "Ctrl+H");
         K(InputAction.Feeling, "Ctrl+F");
+        K(InputAction.MessageHistory, "Ctrl+P");
         K(InputAction.MonsterList, "Char:[");
         K(InputAction.ObjectList, "Char:]");
         K(InputAction.ShowCommands, "Char:?", "F1");

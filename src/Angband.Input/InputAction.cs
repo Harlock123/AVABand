@@ -53,6 +53,8 @@ public enum InputAction
     RunNorth, RunNorthEast, RunEast, RunSouthEast, RunSouth, RunSouthWest, RunWest, RunNorthWest, Run,
     /// <summary>Debug: jump to the next level down / straight back to town. Added last so saved bindings keep their meaning.</summary>
     JumpNextLevel, JumpToTown,
+    /// <summary>The message history (Angband Ctrl+P). Added last so saved bindings keep their meaning.</summary>
+    MessageHistory,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }

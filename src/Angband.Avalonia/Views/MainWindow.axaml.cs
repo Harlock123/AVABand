@@ -44,6 +44,7 @@ public partial class MainWindow : Window
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
             _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
+            _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
         }
         _subscribed = DataContext as MainWindowViewModel;
         if (_subscribed is not { } vm) return;
@@ -56,6 +57,7 @@ public partial class MainWindow : Window
         vm.HighScoresRequested += OnHighScoresRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
         vm.KeyCommandsRequested += OnKeyCommandsRequested;
+        vm.MessageHistoryRequested += OnMessageHistoryRequested;
 
         // "New game as" lists the classes from the game data.
         if (this.FindControl<MenuItem>("NewGameAsMenu") is { } menu)
@@ -99,6 +101,9 @@ public partial class MainWindow : Window
 
     private void OnKeyCommandsRequested(KeyCommandsViewModel commands) =>
         DialogFit.Show(new KeyCommandsWindow { DataContext = commands }, this);
+
+    private void OnMessageHistoryRequested(MessageHistoryViewModel history) =>
+        DialogFit.Show(new MessageHistoryWindow { DataContext = history }, this);
 
     private void OnHighScoresRequested(HighScoresViewModel scores) =>
         DialogFit.Show(new HighScoresWindow { DataContext = scores }, this);

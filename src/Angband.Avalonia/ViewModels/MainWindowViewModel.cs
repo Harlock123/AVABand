@@ -177,6 +177,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         AttachAudio();
         ApplyOptions();
         Messages.Clear();
+        _history.Clear();
         Refresh();
     }
 
@@ -301,5 +302,17 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         LastMessage = text;
         Messages.Insert(0, text);
         while (Messages.Count > MaxMessages) Messages.RemoveAt(Messages.Count - 1);
+
+        // The longer log for the message history: a repeat of the last message is counted instead.
+        if (_history.Count > 0 && _history[^1].Text == text) _history[^1] = _history[^1] with { Count = _history[^1].Count + 1 };
+        else _history.Add(new LoggedMessage(text, 1, _game?.NormalTurns ?? 0));
+        if (_history.Count > MaxHistory) _history.RemoveRange(0, _history.Count - MaxHistory);
     }
+
+    /// <summary>Angband keeps 2048 messages.</summary>
+    public const int MaxHistory = 2048;
+    private readonly List<LoggedMessage> _history = [];
+
+    /// <summary>The message history, oldest first.</summary>
+    public IReadOnlyList<LoggedMessage> History => _history;
 }

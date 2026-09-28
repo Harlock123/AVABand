@@ -93,6 +93,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.MonsterKnowledge, "Knowledge: monsters, objects, runes, egos, artifacts"),
             (InputAction.CharacterSheet, "Character sheet and paper doll"),
             (InputAction.Feeling, "Repeat the level feeling"),
+            (InputAction.MessageHistory, "Message history: everything said this game, with a Find box"),
             (InputAction.HighScores, "High scores"),
             (InputAction.ShowCommands, "This list of commands"),
         ]),

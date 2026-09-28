@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.MessageHistoryWindow"
+        x:DataType="vm:MessageHistoryViewModel"
+        Title="Message history"
+        Width="860" Height="700"
+        WindowStartupLocation="CenterOwner">
+  <DockPanel Margin="14">
+    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+      <TextBlock DockPanel.Dock="Left" Text="Find" VerticalAlignment="Center" Margin="0,0,8,0" />
+      <TextBox x:Name="FilterBox" Text="{Binding Filter}" Watermark="a word from a message (e.g. resist, found, dies)" />
+    </DockPanel>
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+      <TextBlock Text="{Binding Summary, StringFormat='{}{0} · newest at the bottom · Esc or B closes'}" Opacity="0.6" VerticalAlignment="Center" />
+      <Button x:Name="CloseButton" Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" />
+    </Grid>
+    <Panel>
+      <TextBlock Text="No messages." IsVisible="{Binding IsEmpty}" Opacity="0.6"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+      <ScrollViewer x:Name="Scroller" Background="#111111">
+        <ItemsControl x:Name="MessageList" ItemsSource="{Binding Rows}" Margin="12,8">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:LoggedMessage">
+              <SelectableTextBlock Text="{Binding Display}" FontFamily="{StaticResource MonoFont}" FontSize="13"
+                                   TextWrapping="Wrap" Margin="0,1" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Panel>
+  </DockPanel>
+</Window>

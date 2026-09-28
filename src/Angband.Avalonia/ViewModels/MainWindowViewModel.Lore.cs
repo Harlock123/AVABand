@@ -36,6 +36,12 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     public void ShowKeyCommands() => KeyCommandsRequested?.Invoke(new KeyCommandsViewModel(Bindings));
 
+    /// <summary>Ctrl+P: the message history.</summary>
+    public event Action<MessageHistoryViewModel>? MessageHistoryRequested;
+
+    [RelayCommand]
+    public void ShowMessageHistory() => MessageHistoryRequested?.Invoke(new MessageHistoryViewModel([.. _history]));
+
     public MonsterKnowledgeViewModel CreateMonsterKnowledge()
     {
         var rows = _data.Monsters
