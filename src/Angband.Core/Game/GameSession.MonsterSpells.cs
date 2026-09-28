@@ -105,7 +105,7 @@ public sealed partial class GameSession
             if (spell.Innate) lore.CastsInnate++;
             else lore.CastsSpell++;
         }
-        Publish(new MonsterSpellEvent(monster.Id, spell.Id, seen));
+        Publish(new MonsterSpellEvent(monster.Id, spell.Id, seen, spell.Sound));
         var killer = race.IsUnique ? race.Name : Article(race.Name);
 
         switch (spell.Kind)

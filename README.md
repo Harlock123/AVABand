@@ -807,7 +807,9 @@ game or in `<AppData>/AVABand/tilesets/`:
 `Angband.Audio` plays sound through OpenAL Soft (Silk.NET, which ships native libraries for
 Windows, Linux and macOS on x64 and ARM), decoding WAV itself, Ogg Vorbis with NVorbis and MP3 with
 NLayer. A `SoundDirector` subscribes to the engine's event bus and turns events into sounds, so the
-engine knows nothing about audio (and sound never touches the game's RNG). Without an audio device
+engine knows nothing about audio (and sound never touches the game's RNG). Monster spells make the
+sound 4.2's `monster_spell.txt` gives them (`msgt`): a frost breath is `BR_FROST`, poison `BR_GAS`,
+a summoned demon `SUM_DEMON`; bolts and balls, as in 4.2, have none. Without an audio device
 (or with `--no-audio`) the game is silent. Sounds are **levelled** as they load (`Loudness.cs`): packs are recorded at very
 different levels — the Angband effects sit 10-30 dB under the bundled music, and the music tracks
 differ by 30 dB among themselves — so each effect is brought to about -20 dB average and each music

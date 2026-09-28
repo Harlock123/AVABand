@@ -107,7 +107,8 @@ public sealed class SoundDirector : IDisposable
                 Play(k.IsUnique ? "KILL_UNIQUE" : "KILL");
                 break;
             case MonsterSpellEvent s:
-                Play(s.SpellId, s.SpellId.StartsWith("S_") ? "SUM_MONSTER" : s.SpellId is "SCARE" ? "CAST_FEAR" : "");
+                // The spell's own sound (4.2's msgt: a frost breath is BR_FROST, not BR_COLD).
+                Play(s.Sound ?? s.SpellId, s.SpellId.StartsWith("S_") ? "SUM_MONSTER" : "");
                 break;
             case MonsterBredEvent { Seen: true }:
                 Play("MULTIPLY");

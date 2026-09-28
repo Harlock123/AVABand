@@ -324,6 +324,8 @@ public sealed class MonsterSpellDef
     public bool Escape { get; init; }
     /// <summary>Shown when the player can see the caster; <c>{name}</c> is replaced.</summary>
     public string Message { get; init; } = "{name} casts a spell.";
+    /// <summary>The sound it makes (Angband monster_spell.txt msgt: BR_FROST, SUM_UNDEAD…); bolts and balls have none.</summary>
+    public string? Sound { get; init; }
     /// <summary>Shown when the caster is unseen.</summary>
     public string UnseenMessage { get; init; } = "Something mumbles.";
     /// <summary>

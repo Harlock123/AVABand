@@ -47,6 +47,27 @@ public class AudioTests
         return (game, director, played, engine);
     }
 
+    [Fact]
+    public void EveryBreath_AndSummon_MakesItsOwnSound()
+    {
+        // 4.2's monster_spell.txt msgt: the frost breath is BR_FROST, poison BR_GAS, walls BR_FORCE…
+        // (Only the mana breath has none, in 4.2 as here.)
+        foreach (var spell in TestData.Game.MonsterSpells.Where(s => (s.Id.StartsWith("BR_") || s.Id.StartsWith("S_")) && s.Id != "BR_MANA"))
+        {
+            Assert.NotNull(spell.Sound);
+            Assert.True(Effects.Sounds.ContainsKey(spell.Sound!), $"{spell.Id}: no {spell.Sound} in the sound pack");
+        }
+
+        var game = Arena.Create(3, "#########", "#,,,@,,,#", "#########");
+        TestGames.ClearMonsters(game);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        var (_, _, played, _) = Setup(game);
+        var dragon = Arena.AddMonster(game, "baby_white_dragon", game.Player.Position + new Angband.Core.Geometry.Loc(3, 0));
+        game.UpdateView();
+        game.CastSpellForTest(dragon, "BR_COLD");
+        Assert.Contains("BR_FROST", played);
+    }
+
     // --- Decoding ---------------------------------------------------------------------------------
 
     [Fact]

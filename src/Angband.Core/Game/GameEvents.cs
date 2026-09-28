@@ -64,7 +64,7 @@ public sealed record LevelUpEvent(int Level) : IGameEvent;
 public sealed record SpellLearnedEvent(string SpellId) : IGameEvent;
 public sealed record SpellCastEvent(string SpellId, string Realm = "arcane") : IGameEvent;
 public sealed record MonsterBredEvent(string RaceId, Loc Loc, bool Seen = false) : IGameEvent;
-public sealed record MonsterSpellEvent(int MonsterId, string SpellId, bool Seen) : IGameEvent;
+public sealed record MonsterSpellEvent(int MonsterId, string SpellId, bool Seen, string? Sound = null) : IGameEvent;
 
 /// <summary>
 /// Synchronous publish/subscribe hub. Presentation concerns (sound, animations, message log)
