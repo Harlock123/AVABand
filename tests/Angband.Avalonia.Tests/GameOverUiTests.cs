@@ -103,4 +103,18 @@ public sealed class GameOverUiTests : IDisposable
         Assert.Equal("Play again as Borin the Dwarf Warrior", menu.Choices[0].Label);
         Assert.False(vm.ShouldOfferStartMenu);
     }
+
+    [AvaloniaFact]
+    public void CtrlX_SavesTheCharacter_AndClosesTheGame()
+    {
+        var (window, vm) = Open();
+        var saves = new SaveStore(Path.Combine(_dir, "saves"));
+        vm.UseSaves(saves, resume: false);
+        var closed = false;
+        window.Closed += (_, _) => closed = true;
+        window.KeyPressQwerty(PhysicalKey.X, RawInputModifiers.Control);
+        Assert.True(closed);
+        var saved = Assert.Single(saves.List());
+        Assert.False(saved.Summary.IsDead);
+    }
 }

@@ -46,6 +46,14 @@ public sealed partial class MainWindowViewModel
         if (TrySave()) AddMessage("Game saved.");
     }
 
+    /// <summary>Ctrl+X (Angband's save and quit): saves the living character, then closes the game.</summary>
+    [RelayCommand]
+    public void SaveAndQuit()
+    {
+        if (!_game.Player.IsDead && _saves is not null && !TrySave()) return; // (said why; stay rather than lose it)
+        ExitRequested?.Invoke();
+    }
+
     [RelayCommand]
     private void LoadGame()
     {

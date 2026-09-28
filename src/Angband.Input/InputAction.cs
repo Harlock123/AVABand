@@ -82,6 +82,8 @@ public enum InputAction
     WalkIntoTrap, UseItem,
     /// <summary>Write a note in the history (Angband ':'). Added last so saved bindings keep their meaning.</summary>
     TakeNote,
+    /// <summary>Save and close the game (Angband Ctrl+X). Added last so saved bindings keep their meaning.</summary>
+    SaveAndQuit,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -176,6 +178,7 @@ public static class InputActions
         InputAction.WalkIntoTrap => "Walk into a trap",
         InputAction.UseItem => "Use an item",
         InputAction.TakeNote => "Take a note",
+        InputAction.SaveAndQuit => "Save and quit",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

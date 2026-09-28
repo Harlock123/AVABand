@@ -117,6 +117,7 @@ public sealed class InputBindings
         K(InputAction.WalkIntoTrap, "Char:-");
         K(InputAction.UseItem, "Char:X"); // Angband's U runs north-east here
         K(InputAction.TakeNote, "Char::");
+        K(InputAction.SaveAndQuit, "Ctrl+X");
         K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");

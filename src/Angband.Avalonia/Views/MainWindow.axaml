@@ -56,6 +56,7 @@
         <MenuItem Header="Level _feeling" Command="{Binding ShowFeelingCommand}" InputGesture="Ctrl+F" />
         <MenuItem Header="_Retire (after winning)" Command="{Binding RetireCommand}" InputGesture="Shift+Q" />
         <Separator />
+        <MenuItem Header="Save and _quit" Command="{Binding SaveAndQuitCommand}" InputGesture="Ctrl+X" />
         <MenuItem Header="E_xit" Click="OnExit" />
       </MenuItem>
       <MenuItem Header="_View">
