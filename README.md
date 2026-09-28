@@ -402,7 +402,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     Descent, Teleport Level, enchanting, recharging, acquirement, protection from evil,
     banishment of everything nearby, summoning, aggravation and more.
   Generation ports Angband's `m_bonus` and `apply_magic` (good/great/bad rolls, egos, artifacts
-  created once per game, cursed bad items), plus depth-scaled gold and monster drops
+  created once per game, cursed bad items). Artifacts are 4.2.5's: each has its alloc chance and
+  depth range (deeper than its minimum only by luck, never past its maximum), its own weight, and
+  immunities where 4.2.5 gives them; the special artifacts (the Phial, the Star, the Arkenstone,
+  the rings of power...) turn up as themselves one object in a thousand (one good one in ten), as
+  4.2.5's `make_artifact_special` has it. The One Ring and the Iron Crown won't come off
+  (STICKY); Belegennon turns aside 5 of every hurt (DAM_RED) and Wormtongue's boots give an extra
+  move (MOVES). Plus depth-scaled gold and monster drops
   (`DROP_60/90/1/2`, `DROP_GOOD/GREAT`, `ONLY_GOLD/ITEM`).
   - 4.2 rune-based identification: properties (accuracy, slays, brands, resistances, curses,
     modifiers) are learned once and then recognised everywhere; hitting teaches a weapon's runes,

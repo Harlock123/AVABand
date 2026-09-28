@@ -62,10 +62,17 @@ public sealed class ObjectFactory(GameData data)
     /// <summary>A random object for the floor or a monster drop (Angband make_object).</summary>
     public Item? Make(GameRandom rng, int level, bool good = false, bool great = false)
     {
+        // Angband make_object: now and then a special artifact (the Phial, the Star, a ring of
+        // power...) — one time in ten for a good object; failing that, the object is good.
+        if (rng.OneIn(good ? 10 : 1000))
+        {
+            if (MakeSpecialArtifact(rng, level) is { } special) return special;
+            good = true;
+        }
         Func<ObjectKindDef, bool>? filter = good || great
             ? k => data.ObjectBase(k.Base) is { IsWearable: true } || k.Level >= level / 2
             : null;
-        var kind = PickKind(rng, level, filter);
+        var kind = PickKind(rng, good ? level + 10 : level, filter);
         if (kind is null) return null;
 
         var item = Create(kind, 1);
@@ -176,19 +183,44 @@ public sealed class ObjectFactory(GameData data)
     }
 
     /// <summary>Turns the object into an artifact of the same kind, if one is eligible and rolls its rarity.</summary>
+    /// <summary>
+    /// Angband make_artifact: the first artifact of the item's kind (not a special one) not yet made
+    /// that passes its rolls — made deeper than its minimum only by luck (one in twice the shortfall),
+    /// never below its maximum, and then with its alloc chance.
+    /// </summary>
     public bool TryMakeArtifact(GameRandom rng, Item item, int level)
     {
-        if (!AllowArtifacts) return false;
-        var candidates = Artifacts
-            .Where(a => a.Kind == item.Kind.Id && a.Level <= level + 5 && !CreatedArtifacts.Contains(a.Id))
-            .ToList();
-        foreach (var art in candidates)
+        if (!AllowArtifacts || level <= 0 || item.Number != 1 || item.Kind.IsSpecialArtifactKind) return false;
+        foreach (var art in Artifacts.Where(a => a.Kind == item.Kind.Id && !CreatedArtifacts.Contains(a.Id)))
         {
-            if (!rng.OneIn(art.Rarity)) continue;
+            if (!PassesArtifactRolls(rng, art, level)) continue;
             ApplyArtifact(item, art);
             return true;
         }
         return false;
+    }
+
+    /// <summary>Angband make_artifact_special: one of the artifacts only ever made as themselves.</summary>
+    public Item? MakeSpecialArtifact(GameRandom rng, int level)
+    {
+        if (!AllowArtifacts || level <= 0) return null;
+        foreach (var art in Artifacts.Where(a => !CreatedArtifacts.Contains(a.Id)))
+        {
+            if (data.Object(art.Kind) is not { IsSpecialArtifactKind: true } kind) continue;
+            if (!PassesArtifactRolls(rng, art, level)) continue;
+            var item = Create(kind);
+            item.OriginDepth = level;
+            ApplyArtifact(item, art);
+            return item;
+        }
+        return null;
+    }
+
+    private static bool PassesArtifactRolls(GameRandom rng, ArtifactDef art, int level)
+    {
+        if (art.Level > level && rng.RandInt0((art.Level - level) * 2) != 0) return false;
+        if (art.MaxDepth < level) return false;
+        return rng.RandInt1(100) <= art.AllocChance;
     }
 
     /// <summary>Makes an artifact directly (e.g. for tests or quest rewards).</summary>

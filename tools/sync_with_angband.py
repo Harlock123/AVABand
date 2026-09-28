@@ -489,8 +489,68 @@ def sync_egos(gd, data):
     print(f"egos: {changed} of {len(ours)} brought into line; added {added}")
 
 
+def sync_artifacts(gd, data):
+    path = os.path.join(data, "artifacts.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    kinds = {k["id"]: k for k in json.load(open(os.path.join(data, "objects.json"), encoding="utf-8"))}
+    kind_by_name = cw.kind_ids(data)
+    acts = cw.activation_table(gd)
+    known = cw.importer_effect_keys(gd)
+    scratch = cw.Section("artifacts", "", "", "")
+    by_name = {cw.norm_name(a["name"]): a for a in ours}
+    changed = 0
+    for e in cw.parse_records(os.path.join(gd, "artifact.txt")):
+        a = by_name.get(cw.norm_name(e["name"]))
+        if a is None:
+            print(f"artifacts: {e['name']} is not ours")
+            continue
+        before = json.dumps(a, sort_keys=True)
+        btype, _, bname = cw.one(e, "base-object", ":").partition(":")
+        base = cw.TYPE_TO_BASE.get(btype)
+        kid = kind_by_name.get((cw.family(base or "?"), cw.norm_name(bname)))
+        if kid and kid != a["kind"]:
+            a["kind"] = kid
+        kind = kinds[a["kind"]]
+        chance, rng = cw.one(e, "alloc", "0:0 to 127").split(":", 1)
+        lo, _, hi = rng.partition(" to ")
+        a.pop("rarity", None)
+        a["level"] = int(lo)
+        a["allocChance"] = int(chance)
+        set_or_pop(a, "maxDepth", int(hi or 127), 127)
+        weight = int(cw.one(e, "weight", "0"))
+        set_or_pop(a, "weight", weight, kind.get("weight", 0))
+        attack = (cw.one(e, "attack") or "0d0:0:0").split(":") + ["0", "0"]
+        armor = (cw.one(e, "armor") or "0:0").split(":") + ["0"]
+        if base in cw.WEAPONY or "damage" in a:
+            dmg = attack[0] if cw.canon_rv(attack[0]) != "0" else None
+            set_or_pop(a, "damage", dmg, kind.get("damage"))
+        for field, text in (("toHit", attack[1]), ("toDam", attack[2]), ("toAc", armor[1])):
+            set_or_pop(a, field, int(text or 0), 0)
+        set_or_pop(a, "armour", int(armor[0] or 0), kind.get("armour", 0))
+        tp = cw.props_42(e, scratch, abilities_skip=("THROWING",))
+        tp["ignore"] = set()
+        sync_props(a, tp)
+        set_or_pop(a, "immunities", sorted(tp["immunities"]) or None, None)
+        act = cw.one(e, "act")
+        if act and act in acts:
+            info = acts[act]
+            old = a.get("activation")
+            new = merge_effect(old, info["effect"], known, keep_unknown_missing=bool(info["missing"]))
+            if not info["expr"] and new != old:
+                a["activation"] = new
+                a["activationText"] = oi.describe(new)
+            set_or_pop(a, "activationPower", info["power"], 0)
+            set_or_pop(a, "recharge", (cw.one(e, "time") or "").replace(" ", "") or None, None)
+        changed += json.dumps(a, sort_keys=True) != before
+    # Keys in a steady order: identity, then where it's made, then what it is.
+    order = ["id", "name", "kind", "level", "allocChance", "maxDepth", "weight"]
+    ours = [dict([(k, a[k]) for k in order if k in a] + [(k, v) for k, v in a.items() if k not in order]) for a in ours]
+    write_json(path, ours, 2)
+    print(f"artifacts: {changed} of {len(ours)} brought into line")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
-            "objects": sync_objects, "egos": sync_egos}
+            "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts}
 
 
 def main():

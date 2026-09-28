@@ -91,8 +91,8 @@ public class ObjectValueTests
         Assert.True(phial.Artifact!.ActivationPower > 0);
         var withoutActivation = PowerProfile.Of(phial);
         var power = ObjectPower.Of(withoutActivation, TestData.Game);
-        // Light 3 × 3 × 3 = 27, no fuel 5, light resistance 6, ignoring the base elements 8, plus the activation.
-        Assert.Equal(27 + 5 + 6 + 8 + phial.Artifact.ActivationPower, power);
+        // 4.2.5's Phial: light 4 × 3 × 3 = 36, no fuel 5, ignoring the base elements 8, plus the activation.
+        Assert.Equal(36 + 5 + 8 + phial.Artifact.ActivationPower, power);
     }
 
     [Fact]

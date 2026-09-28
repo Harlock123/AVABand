@@ -268,7 +268,7 @@ def load(data, name):
 FLAG_TO_RESIST = dict(OI.FLAG_RESISTS, PROT_STUN="stun")
 FLAG_TO_ABILITY = dict(OI.FLAG_ABILITIES)
 EXTRA_KIND_FLAGS = {"BURNS_OUT": "BURNS_OUT", "TAKES_FUEL": "REFUELABLE", "INSTA_ART": "INSTA_ART", "EXPLODE": "EXPLODE",
-                    "BLESSED": "BLESSED", "NO_FUEL": "NO_FUEL"}
+                    "BLESSED": "BLESSED", "NO_FUEL": "NO_FUEL", "STICKY": "STICKY"}
 # Ego kind flags asking for a random extra power, in AVABand's spelling (EgoItemDef.RandomPower).
 RANDOM_POWERS = {"RAND_SUSTAIN": "sustain", "RAND_POWER": "power", "RAND_HI_RES": "high_resist",
                  "RAND_BASE_RES": "base_resist", "RAND_RES_POWER": "resist_or_power"}
@@ -280,7 +280,7 @@ def props_42(e, sec, *, abilities_skip=(), values_key="values", flags_key="flags
     """4.2.5 values/flags/slay/brand/curse lines -> AVABand's vocabulary. Properties AVABand has no
     spelling for are counted in sec.unmodelled."""
     p = {"mods": {}, "resists": set(), "flags": set(), "ignore": set(), "curses": set(), "slays": set(),
-         "brands": set()}
+         "brands": set(), "immunities": set()}
     for line in get(e, values_key):
         for part in (x.strip() for x in line.split("|")):
             m = re.fullmatch(r"([A-Z_]+)\[(.+)\]", part)
@@ -290,8 +290,7 @@ def props_42(e, sec, *, abilities_skip=(), values_key="values", flags_key="flags
             if key in OI.RESISTS:
                 lvl = int(val) if re.fullmatch(r"-?\d+", val) else 1
                 if lvl >= 3:
-                    sec.unmodelled[f"{key}[3] immunity (ours: plain resist)"] += 1
-                    p["resists"].add(OI.RESISTS[key])
+                    p["immunities"].add(OI.RESISTS[key])
                 elif lvl < 0:
                     sec.unmodelled[f"{key}[{lvl}] vulnerability"] += 1
                 else:
@@ -347,10 +346,12 @@ def props_ours(o):
     return {"mods": mods, "resists": set(o.get("resists") or []), "flags": set(o.get("flags") or []),
             "ignore": set(o.get("ignore") or []), "curses": set(o.get("curses") or []),
             "slays": {f"{s['monsterFlag']}x{s.get('multiplier', 2)}" for s in o.get("slays") or []},
-            "brands": {f"{b['element']}x{b.get('multiplier', 3)}" for b in o.get("brands") or []}}
+            "brands": {f"{b['element']}x{b.get('multiplier', 3)}" for b in o.get("brands") or []},
+            "immunities": set(o.get("immunities") or [])}
 
 
-def cmp_props(sec, entry, ours, theirs, keys=("mods", "resists", "flags", "ignore", "curses", "slays", "brands")):
+def cmp_props(sec, entry, ours, theirs, keys=("mods", "resists", "flags", "ignore", "curses", "slays", "brands",
+                                              "immunities")):
     for k in keys:
         if k == "mods":
             o, t = ours["mods"], theirs["mods"]
@@ -841,10 +842,11 @@ def compare_artifacts(gd, data):
         if a.get("level", 0) != lo:
             extra = " (= 4.2.5 `level:`)" if a.get("level", 0) == lvl else ""
             sec.diff(label, "level (alloc min)", f"{a.get('level', 0)}{extra}", f"{lo} (level: {lvl})")
-        rar = max(1, round(100 / max(1, int(chance))))
-        sec.cmp(label, "rarity (1 in N; 4.2.5 = 100/alloc chance)", a.get("rarity", 10), rar)
+        hi = int(rng.partition(" to ")[2] or 127)
+        sec.cmp(label, "alloc chance (allocChance)", a.get("allocChance", 10), int(chance))
+        sec.cmp(label, "alloc max depth (maxDepth)", a.get("maxDepth", 127), hi)
         if kind is not None:
-            sec.cmp(label, "weight (ours has no artifact weight: the kind's is used)", kind.get("weight", 0), int(one(e, "weight", "0")))
+            sec.cmp(label, "weight (its own, or its kind's)", a.get("weight", kind.get("weight", 0)), int(one(e, "weight", "0")))
         attack = (one(e, "attack") or "0d0:0:0").split(":") + ["0", "0"]
         armor = (one(e, "armor") or "0:0").split(":") + ["0"]
         if base in WEAPONY or "damage" in a:
@@ -880,7 +882,8 @@ def compare_artifacts(gd, data):
     sec.notes += [
         "Matched by name. Level is compared with the alloc minimum (the importer's convention, and what "
         "AVABand's artifact roll uses); when ours instead equals 4.2.5's `level:` line it says so.",
-        "Rarity: 4.2.5's alloc chance (percent) converted the importer's way, max(1, round(100 / chance)).",
+        "Allocation: level, allocChance and maxDepth are 4.2.5's alloc minimum, chance and maximum, as "
+        "ObjectFactory.TryMakeArtifact and MakeSpecialArtifact roll them.",
         "Damage and armour: an artifact without its own falls back to its kind's, as ObjectFactory.ApplyArtifact "
         "does, so the effective values are compared.",
         "Activations are compared against the importer's translation of activation.txt (see Objects).",

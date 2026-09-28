@@ -38,7 +38,8 @@ public class RandartTests
         {
             Assert.Matches(@"^('[A-Z][a-z]{4,9}'|of [A-Z][a-z]{4,9})$", a.Name);
             Assert.NotNull(TestData.Game.Object(a.Kind));
-            Assert.InRange(a.Rarity, 1, 100);
+            Assert.InRange(a.AllocChance, 1, 99);
+            Assert.True(a.MaxDepth >= a.Level);
             Assert.InRange(a.Level, 1, 100);
             Assert.StartsWith("Random ", a.Description);
         });

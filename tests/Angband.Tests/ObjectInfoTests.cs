@@ -108,19 +108,19 @@ public class ObjectInfoTests
     public void SeenKnowledge_IsSaved()
     {
         var game = Arena.Create(9);
-        var phial = game.Objects.CreateArtifact(TestData.Game.Artifacts.Single(a => a.Id == "galadriel"));
-        game.Player.Inventory.Add(phial);
+        var brand = game.Objects.CreateArtifact(TestData.Game.Artifacts.Single(a => a.Id == "narthanc"));
+        game.Player.Inventory.Add(brand);
         game.RecalculateBonuses();
-        Assert.DoesNotContain("galadriel", game.Knowledge.SeenArtifacts); // not until its runes are known
-        foreach (var rune in phial.Runes()) game.Knowledge.LearnRune(rune);
+        Assert.DoesNotContain("narthanc", game.Knowledge.SeenArtifacts); // not until its runes are known
+        foreach (var rune in brand.Runes()) game.Knowledge.LearnRune(rune);
         game.RecalculateBonuses();
-        Assert.Contains("galadriel", game.Knowledge.SeenArtifacts);
+        Assert.Contains("narthanc", game.Knowledge.SeenArtifacts);
 
         using var stream = new MemoryStream();
         SaveGame.Save(game, stream);
         stream.Position = 0;
         var loaded = SaveGame.Load(TestData.Game, stream);
         Assert.Equal(game.Knowledge.SeenKinds.Order(), loaded.Knowledge.SeenKinds.Order());
-        Assert.Contains("galadriel", loaded.Knowledge.SeenArtifacts);
+        Assert.Contains("narthanc", loaded.Knowledge.SeenArtifacts);
     }
 }

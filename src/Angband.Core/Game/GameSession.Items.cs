@@ -103,6 +103,7 @@ public sealed partial class GameSession
             else if (item.Kind.Has("BURNS_OUT") && item.Fuel < 100) itemLight--;
             light += itemLight;
             foreach (var r in item.Resists) resists[r] = Math.Max(resists.GetValueOrDefault(r), 1);
+            foreach (var r in item.Immunities) resists[r] = 3;
             foreach (var flag in item.Flags)
                 if (ItemFlags.Abilities.Contains(flag)) p.GearFlags.Add(flag);
             infravision += item.Modifier(ItemModifiers.Infravision);
@@ -345,6 +346,13 @@ public sealed partial class GameSession
             return 0;
         }
 
+        // Angband wield_item: what is stuck on can't make way.
+        if (Player.Inventory.SlotFor(item) is var slot and >= 0 && Player.Inventory.Equipment[slot] is { IsSticky: true } stuck)
+        {
+            Publish(new MessageEvent($"You cannot remove the {Describe(stuck, withArticle: false)} you are {(stuck.Base.Slot == EquipSlot.Weapon ? "wielding" : "wearing")}."));
+            return 0;
+        }
+
         if (onFloor)
         {
             if (item.Number > 1) item = item.Split(Objects.NextSerial++, 1);
@@ -377,6 +385,11 @@ public sealed partial class GameSession
     private int TakeOff(Item item)
     {
         if (!Player.Inventory.Equipped.Contains(item)) return 0;
+        if (item.IsSticky)
+        {
+            Publish(new MessageEvent("Hmmm, it seems to be stuck."));
+            return 0;
+        }
         if (!Player.Inventory.TakeOff(item))
         {
             Publish(new MessageEvent("You have no room in your pack."));
@@ -458,7 +471,7 @@ public sealed partial class GameSession
         if (!onFloor && !Player.Inventory.Contains(item)) return 0;
         var wielded = Player.Inventory.Equipped.Contains(item);
         // Angband obj_can_throw: of worn things, only a melee weapon (it comes off to be thrown).
-        if (wielded && !(item.Base.IsWeapon && item.Base.Slot == EquipSlot.Weapon))
+        if (wielded && (!(item.Base.IsWeapon && item.Base.Slot == EquipSlot.Weapon) || item.IsSticky))
         {
             Publish(new MessageEvent("You must take it off first."));
             return 0;

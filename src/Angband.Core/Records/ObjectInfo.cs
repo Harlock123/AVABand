@@ -268,6 +268,8 @@ public static class ObjectInfo
         if (brands.Count > 0) lines.Add($"It is branded with {Join(brands)}.");
         var resists = item.Resists.Where(r => k.KnowsRune(RuneIds.Resist(r))).Select(r => ProtectionName(data, r)).ToList();
         if (resists.Count > 0) lines.Add($"It provides {Join(resists)}.");
+        var immune = item.Immunities.Where(r => k.KnowsRune(RuneIds.Resist(r))).Select(r => ElementName(data, r)).ToList();
+        if (immune.Count > 0) lines.Add($"It makes you immune to {Join(immune)}.");
         var abilities = item.Flags.Where(f => ItemFlags.Abilities.Contains(f) && k.KnowsRune(RuneIds.Flag(f))).Select(ItemFlags.Name).ToList();
         if (abilities.Count > 0) lines.Add($"It grants {Join(abilities)}.");
         foreach (var c in item.Curses.Where(c => k.KnowsRune(RuneIds.Curse(c))))
@@ -330,6 +332,7 @@ public static class ObjectInfo
         if (item.Slays.Count > 0) sb.Append($"It slays {Join(item.Slays.Select(s => $"{s.Name} (x{s.Multiplier})").ToList())}.\n");
         if (item.Brands.Count > 0) sb.Append($"It is branded with {Join(item.Brands.Select(x => $"{x.Name} (x{x.Multiplier})").ToList())}.\n");
         if (item.Resists.Count > 0) sb.Append($"It provides {Join(item.Resists.Select(r => ProtectionName(game.Data, r)).ToList())}.\n");
+        if (item.Immunities.Count > 0) sb.Append($"It makes you immune to {Join(item.Immunities.Select(r => ElementName(game.Data, r)).ToList())}.\n");
         var abilities = item.Flags.Where(ItemFlags.Abilities.Contains).Select(ItemFlags.Name).ToList();
         if (abilities.Count > 0) sb.Append($"It grants {Join(abilities)}.\n");
         if (art.Activation is not null) sb.Append($"When activated, it {(art.ActivationText ?? EffectText(game.Data, art.Activation)).TrimEnd('.', ' ')}").Append(art.Recharge is null ? ".\n" : $" (it recharges in {art.Recharge} turns).\n");
@@ -404,8 +407,8 @@ public static class ObjectInfo
             foreach (var c in curses) runes.Add(RuneIds.Curse(c));
         }
         foreach (var k in data.Objects) Add(k.Modifiers.Keys.Concat(k.Rolls.Keys.Where(r => !r.StartsWith("to_"))), k.Slays, k.Brands, k.Resists, k.Flags, k.Curses);
-        foreach (var e in data.Egos) Add(e.Modifiers.Keys.Concat(e.Rolls.Keys), e.Slays, e.Brands, e.Resists, e.Flags, e.Curses);
-        foreach (var a in data.Artifacts) Add(a.Modifiers.Keys, a.Slays, a.Brands, a.Resists, a.Flags, a.Curses);
+        foreach (var e in data.Egos) Add(e.Modifiers.Keys.Concat(e.Rolls.Keys.Where(r => !r.StartsWith("to_"))), e.Slays, e.Brands, e.Resists, e.Flags, e.Curses);
+        foreach (var a in data.Artifacts) Add(a.Modifiers.Keys, a.Slays, a.Brands, a.Resists.Concat(a.Immunities), a.Flags, a.Curses);
         foreach (var c in data.Curses) runes.Add(RuneIds.Curse(c.Id));
         return runes.ToList();
     }

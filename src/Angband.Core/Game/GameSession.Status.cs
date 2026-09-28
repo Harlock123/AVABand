@@ -12,6 +12,8 @@ public sealed partial class GameSession
     /// <summary>Hurts the player (Angband take_hit). Death happens below zero hit points.</summary>
     public void TakeHit(int damage, string killer)
     {
+        // Angband take_hit: damage reduction (DAM_RED gear or shape) comes off every hurt.
+        damage -= DamageReduction;
         if (Player.IsDead || damage <= 0) return;
         Player.Hp -= damage;
         Disturb();
@@ -93,6 +95,25 @@ public sealed partial class GameSession
         if (Player.Experience > 0 && Rng.OneIn(10))
             LoseExperience((Rng.Damroll(10, 6) + Player.Experience / 100 * LifeDrainPercent) / 10);
         LearnRune(Definitions.RuneIds.Flag(Definitions.ItemFlags.DrainExp));
+    }
+
+    /// <summary>Damage reduction from gear and shape (Angband state.dam_red).</summary>
+    public int DamageReduction =>
+        Player.Inventory.Equipped.Sum(i => i.Modifier(Definitions.ItemModifiers.DamRed))
+        + (PlayerShape?.Modifiers.GetValueOrDefault(Definitions.ItemModifiers.DamRed) ?? 0);
+
+    /// <summary>
+    /// Energy for a step (Angband energy_per_move): extra moves from gear or shape (MOVES) make
+    /// each step take a fraction of a turn — half with one, a third with two; fewer, longer.
+    /// </summary>
+    public int MoveEnergyPerStep
+    {
+        get
+        {
+            var moves = Player.Inventory.Equipped.Sum(i => i.Modifier(Definitions.ItemModifiers.Moves))
+                        + (PlayerShape?.Modifiers.GetValueOrDefault(Definitions.ItemModifiers.Moves) ?? 0);
+            return EnergyTable.MoveEnergy * (1 + Math.Abs(moves) - moves) / (1 + Math.Abs(moves));
+        }
     }
 
     /// <summary>Angband player_stat_dec: a point off the stat, sustained or not.</summary>

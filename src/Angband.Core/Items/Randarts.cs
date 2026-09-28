@@ -151,7 +151,9 @@ public sealed class RandartGenerator
         if (_rng.OneIn(5 + power / 20)) prob = Math.Min(99, prob + _rng.RandInt1(20));
         else if (_rng.OneIn(5 + power / 20)) minDepth = Math.Max(1, minDepth / 2);
 
-        return draft.ToArtifact($"randart_{number}", name, Math.Max(1, minDepth), Math.Max(1, (int)Math.Round(100.0 / prob)),
+        // Angband: its deepest from its power, but at least twice its shallowest.
+        var maxDepth = Math.Max(Math.Min(127, ap * 3 / 5), Math.Min(Math.Max(1, minDepth) * 2, 127));
+        return draft.ToArtifact($"randart_{number}", name, Math.Max(1, minDepth), prob, maxDepth,
             $"Random {ItemNaming.Plain(draft.Base.Name, false).ToLowerInvariant()} of power {ap}.");
     }
 
@@ -496,9 +498,9 @@ public sealed class RandartGenerator
             ActivationPower = ActivationPower,
         };
 
-        public ArtifactDef ToArtifact(string id, string name, int level, int rarity, string description) => new()
+        public ArtifactDef ToArtifact(string id, string name, int level, int allocChance, int maxDepth, string description) => new()
         {
-            Id = id, Name = name, Kind = Kind.Id, Level = level, Rarity = rarity,
+            Id = id, Name = name, Kind = Kind.Id, Level = level, AllocChance = allocChance, MaxDepth = maxDepth,
             ToHit = ToHit, ToDam = ToDam, ToAc = ToAc, Armour = Armour == Kind.Armour ? 0 : Armour,
             Damage = Damage == Kind.Damage ? null : Damage,
             Modifiers = Mods.Where(kv => kv.Value != 0 && Kind.Modifiers.GetValueOrDefault(kv.Key) != kv.Value).ToDictionary(kv => kv.Key, kv => kv.Value),

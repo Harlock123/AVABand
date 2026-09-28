@@ -117,6 +117,10 @@ public static class ItemModifiers
     public const string Tunnel = "tunnel";
     /// <summary>Extra might (Angband MIGHT): added to a launcher's multiplier.</summary>
     public const string Might = "might";
+    /// <summary>Damage reduction (Angband DAM_RED): taken off every hurt.</summary>
+    public const string DamRed = "dam_red";
+    /// <summary>Extra moves (Angband MOVES): each step takes less of a turn.</summary>
+    public const string Moves = "moves";
 }
 
 public sealed class SlayDef
@@ -261,9 +265,16 @@ public sealed class ArtifactDef
     /// <summary>Full name suffix, e.g. <c>'Narthanc'</c> or <c>of Galadriel</c>.</summary>
     public required string Name { get; init; }
     public required string Kind { get; init; }
+    /// <summary>The shallowest depth it is made at (Angband artifact.txt alloc minimum; deeper than that only by luck).</summary>
     public int Level { get; init; }
-    /// <summary>1-in-N chance once eligible.</summary>
-    public int Rarity { get; init; } = 10;
+    /// <summary>The percentage chance, once its kind is being made within its depths (Angband alloc chance).</summary>
+    public int AllocChance { get; init; } = 10;
+    /// <summary>The deepest it is made at (Angband alloc maximum).</summary>
+    public int MaxDepth { get; init; } = 127;
+    /// <summary>Its own weight, in tenths of a pound (Angband artifact.txt weight); none for its kind's.</summary>
+    public int? Weight { get; init; }
+    /// <summary>Elements it makes you immune to (Angband RES_x[3]).</summary>
+    public IReadOnlyList<string> Immunities { get; init; } = [];
     public int ToHit { get; init; }
     public int ToDam { get; init; }
     public int ToAc { get; init; }

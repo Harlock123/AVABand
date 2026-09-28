@@ -24,7 +24,7 @@ PREFIX = {"ring": "ring_of_", "amulet": "amulet_of_", "wand": "wand_of_", "staff
           "mushroom": "mushroom_of_", "potion": "potion_of_", "scroll": "scroll_of_"}
 MODIFIERS = {"STR": "str", "INT": "int", "WIS": "wis", "DEX": "dex", "CON": "con", "SPEED": "speed",
              "STEALTH": "stealth", "INFRA": "infra", "LIGHT": "light", "SEARCH": "search", "BLOWS": "blows",
-             "SHOTS": "shots", "TUNNEL": "tunnel", "MIGHT": "might"}
+             "SHOTS": "shots", "TUNNEL": "tunnel", "MIGHT": "might", "DAM_RED": "dam_red", "MOVES": "moves"}
 RESISTS = {"RES_ACID": "acid", "RES_ELEC": "elec", "RES_FIRE": "fire", "RES_COLD": "cold", "RES_POIS": "pois",
            "RES_LIGHT": "light", "RES_DARK": "dark", "RES_SOUND": "sound", "RES_SHARD": "shards",
            "RES_NEXUS": "nexus", "RES_NETHER": "nether", "RES_CHAOS": "chaos", "RES_DISEN": "disen"}

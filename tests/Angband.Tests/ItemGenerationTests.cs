@@ -70,7 +70,7 @@ public class ItemGenerationTests
         var art = TestData.Game.Artifacts.Single(a => a.Id == "narthanc");
         var first = f.CreateArtifact(art);
         Assert.Equal(art, first.Artifact);
-        Assert.Equal(6, first.ToDam);
+        Assert.Equal(12, first.ToDam); // 4.2.5: (+9,+12)
         Assert.Single(first.Brands);
 
         var rng = new GameRandom(5);

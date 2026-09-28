@@ -100,7 +100,13 @@ public sealed class Item
     /// <summary>Flavoured (unknown until learned) — except special artifact-only kinds, which never are.</summary>
     public bool IsFlavored => Base.Flavor is not null && !Kind.IsSpecialArtifactKind;
     /// <summary>Weight of one, in tenths of a pound.</summary>
-    public int Weight => Kind.Weight;
+    public int Weight => Artifact?.Weight ?? Kind.Weight;
+
+    /// <summary>Elements it makes you immune to: an artifact's (Angband RES_x[3]).</summary>
+    public IReadOnlyList<string> Immunities => Artifact?.Immunities ?? [];
+
+    /// <summary>Stuck on once worn (Angband STICKY: the One Ring, the Iron Crown of Morgoth).</summary>
+    public bool IsSticky => Flags.Contains("STICKY");
     public int TotalWeight => Weight * Number;
 
     public int Modifier(string mod) => Modifiers.GetValueOrDefault(mod);
@@ -120,7 +126,7 @@ public sealed class Item
             if (value != 0) yield return RuneIds.Modifier(mod);
         foreach (var slay in Slays) yield return RuneIds.Slay(slay.MonsterFlag);
         foreach (var brand in Brands) yield return RuneIds.Brand(brand.Element);
-        foreach (var resist in Resists) yield return RuneIds.Resist(resist);
+        foreach (var resist in Resists.Concat(Immunities).Distinct()) yield return RuneIds.Resist(resist);
         foreach (var curse in Curses) yield return RuneIds.Curse(curse);
         foreach (var flag in Flags)
             if (ItemFlags.Abilities.Contains(flag)) yield return RuneIds.Flag(flag);

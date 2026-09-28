@@ -366,7 +366,7 @@ public sealed partial class GameSession : ITurnHandler
 
         if (Level[target].Trap != 0) HitTrap(target);
         if (Player.Position == target && !IsGameOver) Search(); // secret doors beside you are always found
-        return EnergyTable.MoveEnergy + Math.Min(EnergyTable.MoveEnergy, picked * EnergyTable.MoveEnergy / 10);
+        return MoveEnergyPerStep + Math.Min(EnergyTable.MoveEnergy, picked * EnergyTable.MoveEnergy / 10);
     }
 
     /// <summary>'o': a chest there (or underfoot) is opened first, otherwise a door.</summary>

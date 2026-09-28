@@ -175,7 +175,9 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     {
         var candidates = Enumerable.Range(0, Slots.Count).Where(i => Slots[i].Type == item.Base.Slot).ToList();
         if (candidates.Count == 0) return -1;
-        return candidates.FirstOrDefault(i => _equipment[i] is null, candidates[0]);
+        // An empty slot first, else one whose occupant can come off (not a STICKY ring).
+        return candidates.FirstOrDefault(i => _equipment[i] is null,
+            candidates.FirstOrDefault(i => _equipment[i] is { IsSticky: false }, candidates[0]));
     }
 
     /// <summary>Wields one of <paramref name="item"/> (from the pack, quiver or floor); returns what it replaced.</summary>
