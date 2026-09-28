@@ -18,10 +18,12 @@ A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 12.
 | The Alchemist (4.2's store stock) | Monster list (`[`) |
 | ![Monster knowledge: what you have learned about each monster seen](screenshots/knowledge.png) | ![Every keyboard command and the keys bound to it](screenshots/keyboard-commands.png) |
 | Knowledge (`~`) | Keyboard commands (F1) |
-| ![Settings: tilesets with a preview, tile scale and font size](screenshots/settings.png) | ![Going down: a torchlit stairwell falling away into the dark](screenshots/stairs-down.png) |
-| Settings | Taking the stairs down |
-| ![Going up: steps climbing toward a pale light](screenshots/stairs-up.png) | ![Up into the town: the stairs climbing toward daylight](screenshots/stairs-up-town.png) |
-| Taking the stairs up | ...and up into the town |
+| ![Settings: tilesets with a preview, tile scale and font size](screenshots/settings.png) | ![Going down: Piranesi's Imaginary Prisons, plate XIV](screenshots/stairs-down.png) |
+| Settings | Taking the stairs down (Piranesi) |
+| ![Going up: Piranesi's Imaginary Prisons, plate XII](screenshots/stairs-up.png) | ![Up into the town: Wright of Derby's Cavern, near Naples](screenshots/stairs-up-town.png) |
+| Taking the stairs up | ...and up into the town (Wright of Derby) |
+| ![Your journey: depth over time, each depth, and the history](screenshots/journey.png) | |
+| Your journey | |
 
 The screenshots are rendered by the real windows without a display, from fixed seeds:
 `tools/screenshots.sh` regenerates them all (`tests/Angband.Avalonia.Tests/ReadmeScreenshots.cs`

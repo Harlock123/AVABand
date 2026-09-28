@@ -25,11 +25,13 @@ public class ReadmeScreenshots
     private static readonly DateTime ShotTime = new(2025, 1, 1, 12, 0, 0);
     private static readonly IReadOnlyList<TilesetManifest> Tilesets = TilesetCatalog.Discover([TilesetCatalog.DefaultDirectory]);
 
-    private static (MainWindow Window, MainWindowViewModel Vm) Open(string classId, bool tiles, string tileset = "gervais", ulong seed = 42)
+    private static (MainWindow Window, MainWindowViewModel Vm) Open(string classId, bool tiles, string tileset = "gervais", ulong seed = 42,
+        bool scenes = false)
     {
         MainWindow.ShowCreationOnFirstRun = false;
         var settings = new AppSettings { UseTiles = tiles, TilesetId = tileset, TileScale = 1.5, Muted = true };
         settings.Options[DisplayOptions.Hints] = false; // no tips over the pictures
+        settings.Options[DisplayOptions.Scenes] = scenes; // (only the stair shots are of scenes)
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), Tilesets, settings, save: null)
         {
             Clock = () => ShotTime, // the character dump's date, fixed so the sheet looks the same every run
@@ -184,13 +186,14 @@ public class ReadmeScreenshots
     /// <summary>A stair scene, caught at a fixed moment (its own clock stopped, so every run matches).</summary>
     private static void StairShot(bool down, int fromDepth, string name)
     {
-        var (window, vm) = Open("warrior", tiles: true);
+        var (window, vm) = Open("warrior", tiles: true, scenes: true);
         var game = vm.Game;
         game.MarkDebugUsed();
         if (fromDepth > 0) vm.Execute(new Angband.Core.Game.DebugJumpCommand(fromDepth));
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
         game.Player.Position = game.Level.FindFeature(down ? Angband.Core.Definitions.TerrainFlags.DownStair
             : Angband.Core.Definitions.TerrainFlags.UpStair).First();
+        vm.SkipScenes(); // (whatever arriving there brought up)
         vm.Execute(new Angband.Core.Game.TakeStairsCommand(Down: down));
         var scene = window.GetVisualDescendants().OfType<Angband.Avalonia.Controls.SceneView>().Single();
         scene.Advance(700);
@@ -208,4 +211,21 @@ public class ReadmeScreenshots
 
     [AvaloniaFact]
     public void StairsUpToTown() => StairShot(down: false, fromDepth: 1, "stairs-up-town");
+
+    [AvaloniaFact]
+    public void Journey()
+    {
+        var (window, vm) = Open("warrior", tiles: true, seed: 11);
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        foreach (var depth in new[] { 1, 2, 4, 3, 5, 7, 6, 9, 12, 10, 14 })
+        {
+            vm.Execute(new Angband.Core.Game.DebugJumpCommand(depth));
+            for (var i = 0; i < 60; i++) vm.Execute(new Angband.Core.Game.HoldCommand());
+        }
+        vm.ShowJourney();
+        var journey = window.OwnedWindows.OfType<JourneyWindow>().Last();
+        Shoot(journey, "journey");
+        journey.Close();
+    }
 }
