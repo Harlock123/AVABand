@@ -101,6 +101,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.Locate, "Scroll the map half a screen at a time; Esc comes back"),
             (InputAction.CenterMap, "Centre the map on you once (when it isn't kept centred)"),
             (InputAction.ContextMenu, "The right-click menu: for the square under the look cursor, or for you"),
+            (InputAction.DescribeSurroundings, "Say what is around you: hit points, where, monsters and objects in view, stairs"),
             (InputAction.HotbarPrevious, "Hotbar: select the slot to the left"),
             (InputAction.HotbarNext, "Hotbar: select the slot to the right"),
             (InputAction.HotbarUse, "Hotbar: use the selected slot (Alt+1..Alt+0 use a slot directly)"),

@@ -10,7 +10,8 @@
         Background="Black">
   <Window.Resources>
     <DataTemplate x:Key="ItemRowTemplate" x:DataType="vm:ItemRow">
-      <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1" Background="Transparent" PointerPressed="OnItemRowPressed">
+      <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1" Background="Transparent" PointerPressed="OnItemRowPressed"
+            AutomationProperties.Name="{Binding Name}">
         <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
                    FontFamily="{StaticResource MonoFont}" FontSize="12" Margin="0,0,4,0" />
         <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
@@ -104,7 +105,13 @@
 
     <LayoutTransformControl DockPanel.Dock="Top" LayoutTransform="{Binding InterfaceTransform}">
     <Border Background="#101010" Padding="8,4">
-      <TextBlock Text="{Binding LastMessage}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
+      <Panel>
+        <TextBlock Text="{Binding LastMessage}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
+        <!-- Screen reader support: a live region, read out whenever it changes (it is not drawn). -->
+        <TextBlock x:Name="LiveRegion" Text="{Binding Announcement}" AutomationProperties.LiveSetting="Assertive"
+                   AutomationProperties.Name="{Binding Announcement}" Width="1" Height="1" Opacity="0"
+                   HorizontalAlignment="Left" ClipToBounds="True" IsHitTestVisible="False" />
+      </Panel>
     </Border>
     </LayoutTransformControl>
 
@@ -116,7 +123,7 @@
                 IsVisible="{Binding CountBadge, Converter={x:Static ObjectConverters.IsNotNull}}">
           <TextBlock Text="{Binding CountBadge}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
         </Border>
-        <ItemsControl x:Name="StatusBar" ItemsSource="{Binding StatusFields}">
+        <ItemsControl x:Name="StatusBar" ItemsSource="{Binding StatusFields}" AutomationProperties.Name="{Binding StatusText}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <WrapPanel />
@@ -190,6 +197,7 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:HotbarSlotRow">
               <Border Width="84" Height="42" Margin="2" CornerRadius="3" Background="#15161c" BorderBrush="{Binding Outline}" BorderThickness="1"
+                      AutomationProperties.Name="{Binding Tip}"
                       Cursor="Hand" ToolTip.Tip="{Binding Tip}" Opacity="{Binding Opacity}" PointerPressed="OnHotbarPressed">
                 <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" Margin="4,2">
                   <TextBlock Grid.RowSpan="2" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}" FontFamily="{StaticResource MonoFont}"
@@ -215,6 +223,7 @@
                       Tileset="{Binding SelectedTileset}"
                       TileScale="{Binding TileScale}"
                       CenterPlayer="{Binding CenterPlayer}"
+                      AutomationProperties.Name="{Binding MapSummary}"
                       RecentreCount="{Binding RecentreCount}"
                       Effects="{Binding Effects}"
                       ClipToBounds="True" />

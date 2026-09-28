@@ -88,6 +88,8 @@ public enum InputAction
     CenterMap,
     /// <summary>The hotbar and the map menu from a gamepad (AVABand's own). Added last so saved bindings keep their meaning.</summary>
     HotbarNext, HotbarPrevious, HotbarUse, ContextMenu,
+    /// <summary>Say what is around you (for screen readers; AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    DescribeSurroundings,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -188,6 +190,7 @@ public static class InputActions
         InputAction.HotbarPrevious => "Hotbar: previous slot",
         InputAction.HotbarUse => "Hotbar: use the selected slot",
         InputAction.ContextMenu => "Menu for the square (the look cursor's, or yours)",
+        InputAction.DescribeSurroundings => "Describe surroundings",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

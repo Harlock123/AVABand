@@ -549,6 +549,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Screen reader support** (AVABand's own; the option *Screen reader support*, **off by
+    default**): the map is drawn, so a screen reader can't read it; with the option on, a live
+    region announces what is said — every message of a turn together, each prompt with its question
+    and all its choices ("Quaff which potion? a, Potion of Cure Light Wounds…"), each tip — and
+    Ctrl+Shift+D (*Describe surroundings*) reads out your hit points, where you are, the monsters and
+    objects in view with where they are ("a jackal, 3 north 2 east") and the nearest stairs. The
+    map (named by that description), the status line, the hotbar slots and the item rows have
+    accessible names. Avalonia 11 speaks to Narrator, NVDA or JAWS on Windows and VoiceOver on
+    macOS; Linux screen readers (Orca, through AT-SPI) need Avalonia 12, so they hear nothing yet.
   - **Tutorial** (AVABand's own; Game → *Tutorial*, and the first hint points to it): a short level
     made for teaching — a room with a potion to pick up, a door, a corridor with a pit trap and no
     way round, a room with a sleeping small kobold, a last door and the stairs. The hint banner says

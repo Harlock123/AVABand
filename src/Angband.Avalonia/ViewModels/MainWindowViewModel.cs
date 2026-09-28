@@ -386,6 +386,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         UpdateHealthBar();
         UpdateHover();
         UpdatePath();
+        RefreshMapSummary();
         OnPropertyChanged(nameof(Map));
         Revision++;
     }

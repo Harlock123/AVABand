@@ -33,6 +33,8 @@ public static class DisplayOptions
     public const string Autosave = "autosave_every_few_minutes";
     /// <summary>AVABand's own: a short tip the first time something happens.</summary>
     public const string Hints = "hints_for_new_players";
+    /// <summary>AVABand's own: announce messages, prompts and tips to a screen reader.</summary>
+    public const string ScreenReader = "screen_reader_support";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -56,6 +58,7 @@ public static class DisplayOptions
         new(ColorBlind, "Colour-blind friendly colours (red-green)", OptionKind.Interface, false),
         new(Autosave, "Save every five minutes while playing", OptionKind.Interface, true),
         new(Hints, "Hints for new players (each shown once)", OptionKind.Interface, true),
+        new(ScreenReader, "Screen reader support (announce messages, prompts and tips)", OptionKind.Interface, false),
     ];
 }
 

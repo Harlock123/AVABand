@@ -9,6 +9,9 @@ offers to resume from the last save and says how long ago that was.
 
 ## Your first steps
 
+Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
+then read out, and **Ctrl+Shift+D** describes what is around you (Windows and macOS).
+
 New to Angband? **Game → Tutorial** teaches the basics on a short level of its own, step by step,
 in a few minutes (it is never saved or scored). Tips also appear at the foot of the map the first time something happens (your first
 shop, monster, trap, bad wound...), each just once. Options → *Hints for new players* turns them off.

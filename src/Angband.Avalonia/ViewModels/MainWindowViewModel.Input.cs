@@ -234,6 +234,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.HotbarPrevious: MoveHotbarCursor(-1); break;
             case InputAction.HotbarUse: UseHotbar(HotbarCursor); break;
             case InputAction.ContextMenu: OpenContextMenuHere(); break;
+            case InputAction.DescribeSurroundings: DescribeSurroundings(); break;
             case InputAction.WalkIntoTrap: AskDirection(DirectionFor.Jump); break;
             case InputAction.UseItem: BeginItemPrompt(ItemPromptKind.UseAny); break;
             case InputAction.TakeNote: BeginNote(); break;
@@ -312,7 +313,9 @@ public sealed partial class MainWindowViewModel
 
     partial void OnIsPromptingChanged(bool value)
     {
-        if (value) PromptSelectedIndex = 0;
+        if (!value) return;
+        PromptSelectedIndex = 0;
+        AnnouncePrompt();
     }
 
     // --- Mouse ---------------------------------------------------------------------------------------
