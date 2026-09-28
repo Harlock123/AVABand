@@ -75,7 +75,9 @@
       </MenuItem>
       <MenuItem Header="_Debug">
         <MenuItem Header="_Regenerate level" Command="{Binding RegenerateLevelCommand}" InputGesture="F5" />
+        <MenuItem Header="Jump to _next level" Command="{Binding JumpNextLevelCommand}" InputGesture="F8" />
         <MenuItem Header="_Jump 5 levels deeper" Command="{Binding JumpDeeperCommand}" InputGesture="F6" />
+        <MenuItem Header="Jump back to _town" Command="{Binding JumpToTownCommand}" InputGesture="F9" />
         <MenuItem Header="Show _whole map" Command="{Binding ToggleWholeMapCommand}" InputGesture="F7" />
       </MenuItem>
     </Menu>

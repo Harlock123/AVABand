@@ -117,6 +117,8 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.ShowWholeMap, "Show the whole map"),
             (InputAction.RegenerateLevel, "Make a new level"),
             (InputAction.JumpDeeper, "Go 5 levels deeper"),
+            (InputAction.JumpNextLevel, "Go to the next level down, at a random spot"),
+            (InputAction.JumpToTown, "Go straight back to town (Word of Recall without the wait)"),
         ]),
     ];
 

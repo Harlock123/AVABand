@@ -100,6 +100,8 @@ public sealed class InputBindings
         K(InputAction.ShowCommands, "Char:?", "F1");
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
+        K(InputAction.JumpNextLevel, "F8");
+        K(InputAction.JumpToTown, "F9");
         K(InputAction.ShowWholeMap, "F7");
 
         void P(InputAction a, string button) => b.Buttons[button] = a;

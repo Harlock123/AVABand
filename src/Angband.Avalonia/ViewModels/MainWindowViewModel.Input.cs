@@ -202,6 +202,8 @@ public sealed partial class MainWindowViewModel
             case InputAction.ShowWholeMap: ToggleWholeMap(); break;
             case InputAction.RegenerateLevel: RegenerateLevel(); break;
             case InputAction.JumpDeeper: JumpDeeper(); break;
+            case InputAction.JumpNextLevel: JumpNextLevel(); break;
+            case InputAction.JumpToTown: JumpToTown(); break;
         }
     }
 

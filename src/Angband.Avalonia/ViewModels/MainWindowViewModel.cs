@@ -209,6 +209,32 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     [RelayCommand]
     private void JumpDeeper() => Execute(new DebugJumpCommand(_game.Player.Depth + 5));
 
+    /// <summary>Debug: straight down to the next level, at a random open spot (no stairs under you).</summary>
+    [RelayCommand]
+    private void JumpNextLevel()
+    {
+        if (_game.Player.Depth >= _data.Constants.MaxDepth)
+        {
+            AddMessage("You are as deep as the dungeon goes.");
+            Refresh();
+            return;
+        }
+        Execute(new DebugJumpCommand(_game.Player.Depth + 1));
+    }
+
+    /// <summary>Debug: back to town at once, where Word of Recall would put you — without its delay or message.</summary>
+    [RelayCommand]
+    private void JumpToTown()
+    {
+        if (_game.Player.Depth == 0)
+        {
+            AddMessage("You are already in town.");
+            Refresh();
+            return;
+        }
+        Execute(new DebugJumpCommand(0));
+    }
+
     [RelayCommand]
     private void ToggleWholeMap() => ShowWholeMap = !ShowWholeMap;
 

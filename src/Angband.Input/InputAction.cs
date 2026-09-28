@@ -51,6 +51,8 @@ public enum InputAction
     /// per direction, and <see cref="Run"/> ('.') asks which way. Added last so saved bindings keep their meaning.
     /// </summary>
     RunNorth, RunNorthEast, RunEast, RunSouthEast, RunSouth, RunSouthWest, RunWest, RunNorthWest, Run,
+    /// <summary>Debug: jump to the next level down / straight back to town. Added last so saved bindings keep their meaning.</summary>
+    JumpNextLevel, JumpToTown,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -136,6 +138,8 @@ public static class InputActions
         InputAction.ShowWholeMap => "Show whole map (debug)",
         InputAction.RegenerateLevel => "Regenerate level (debug)",
         InputAction.JumpDeeper => "Jump 5 levels (debug)",
+        InputAction.JumpNextLevel => "Jump to the next level (debug)",
+        InputAction.JumpToTown => "Jump back to town (debug)",
         InputAction.ShowCommands => "Keyboard commands",
         _ => System.Text.RegularExpressions.Regex.Replace(action.ToString(), "(?<=[a-z])([A-Z])", " $1").ToLowerInvariant() is var s
             ? char.ToUpperInvariant(s[0]) + s[1..] : action.ToString(),
