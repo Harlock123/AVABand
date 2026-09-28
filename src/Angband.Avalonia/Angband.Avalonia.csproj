@@ -18,6 +18,9 @@
     <!-- Bundled tilesets ship as loose files so players can add or edit their own. -->
     <Content Include="tilesets\**\*" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="soundpacks\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Scene pictures (public domain) and ambience loops (CC0); see their CREDITS.md. -->
+    <Content Include="art\**\*" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="ambience\**\*" CopyToOutputDirectory="PreserveNewest" />
     <!-- DejaVu Sans Mono, built in: the map's letters and every column of text use it. -->
     <AvaloniaResource Include="Assets\Fonts\*.ttf" />
     <AvaloniaResource Include="Assets\Help\*.md" />

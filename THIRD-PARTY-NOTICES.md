@@ -38,6 +38,22 @@ AVABand, as those sets have none, and is CC0.
 
 See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.
 
+## Scene pictures (`src/Angband.Avalonia/art`)
+
+Eleven public-domain paintings and engravings, from scans on Wikimedia Commons: Giovanni Battista
+Piranesi (*Carceri d'invenzione*, plates XII, XIV and XVI, trimmed to the printed area), Gustave
+Doré (*Inferno*), John Martin (*Pandemonium*, *The Great Day of His Wrath*), Caspar David Friedrich
+(*Meadows near Greifswald*, *The Abbey in the Oakwood*) and Joseph Wright of Derby (*Cavern, near
+Naples*, *A Grotto in the Gulf of Salerno*). Each file's title, artist, source page and the exact
+licence tag on it are in `art/CREDITS.md`.
+
+## Ambience loops (`src/Angband.Avalonia/ambience`)
+
+Six loops released under CC0 on OpenGameArt.org (by Kresiek The Furry, Wolfgang_, JaggedStone,
+gmason, bretbernhoft and Luke.RUSTLTD); titles, source pages and licence fields in
+`ambience/CREDITS.md`. The night crickets loop was repeated three times end to end to lengthen it,
+and some were converted to Ogg Vorbis.
+
 ## Font (`src/Angband.Avalonia/Assets/Fonts`)
 
 DejaVu Sans Mono (regular and bold), built into AVABand for the map's letters and every column of

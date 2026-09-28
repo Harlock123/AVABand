@@ -1115,5 +1115,7 @@ generates, and every timed effect its items, spells and monsters use. (*of Fury*
 Copyright (c) 2026 Lonnie Watson. AVABand is free software, released under the GNU General Public
 License, version 2 (`LICENSE`) — the licence Angband itself is available under, since AVABand's
 game data is converted from Angband 4.2.5 and its rules follow Angband's source. The bundled
-tilesets and sounds carry their own (Creative Commons and similar) licences. See
+tilesets and sounds carry their own (Creative Commons and similar) licences; the scene pictures are
+public-domain works (Piranesi, Doré, John Martin, Caspar David Friedrich, Wright of Derby) and the
+ambience loops are CC0 (`art/CREDITS.md`, `ambience/CREDITS.md`). See
 `THIRD-PARTY-NOTICES.md` for the details and credits.

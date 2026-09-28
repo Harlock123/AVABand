@@ -176,4 +176,35 @@ public sealed class SceneUiTests : IDisposable
         TakeStairs(own, down: true);
         Assert.Null(own.Scene!.Picture); // the bundled one is not used: painted
     }
+
+    [AvaloniaFact]
+    public void EveryScene_HasItsBundledPicture_AndEachOneDraws()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null)
+        {
+            ArtDirectory = _art, // (no pictures of the player's own)
+        };
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var view = window.GetVisualDescendants().OfType<SceneView>().Single();
+        string[] names = ["stairs-down", "stairs-up", "stairs-up-town", "recall-town", "recall-dungeon", "unique", "danger", "death",
+            "level-cavern", "level-labyrinth", "level-fortress"];
+        foreach (var name in names)
+        {
+            var picture = vm.PictureFor(name);
+            Assert.NotNull(picture);
+            Assert.StartsWith(Path.Combine(AppContext.BaseDirectory, "art"), picture);
+            using (var bitmap = new global::Avalonia.Media.Imaging.Bitmap(picture)) Assert.True(bitmap.PixelSize.Width >= 1000);
+            vm.Scene = new AmbientScene(SceneKind.StairsDown, name, 1, true, picture);
+            Assert.True(view.IsEffectivelyVisible);
+            view.Advance(600);
+            window.CaptureRenderedFrame();
+            if (name == "unique") TileRenderingTests.Save(window, "scene-picture-unique");
+        }
+        Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "art", "CREDITS.md")));
+        Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "ambience", "CREDITS.md")));
+        Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "ambience", "ambient-dungeon-shallow.ogg")));
+    }
 }
