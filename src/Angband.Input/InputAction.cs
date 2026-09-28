@@ -59,6 +59,11 @@ public enum InputAction
     RepeatCommand,
     /// <summary>The whole level at a glance (Angband 'M'). Added last so saved bindings keep their meaning.</summary>
     OverviewMap,
+    /// <summary>
+    /// Give the next command a count (Angband '0': "Repeat: 20", then the command). Added last so
+    /// saved bindings keep their meaning.
+    /// </summary>
+    CommandCount,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -149,6 +154,7 @@ public static class InputActions
         InputAction.ShowCommands => "Keyboard commands",
         InputAction.RepeatCommand => "Repeat last command",
         InputAction.OverviewMap => "Level map",
+        InputAction.CommandCount => "Repeat count",
         _ => System.Text.RegularExpressions.Regex.Replace(action.ToString(), "(?<=[a-z])([A-Z])", " $1").ToLowerInvariant() is var s
             ? char.ToUpperInvariant(s[0]) + s[1..] : action.ToString(),
     };

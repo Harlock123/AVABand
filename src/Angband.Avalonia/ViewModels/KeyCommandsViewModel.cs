@@ -82,6 +82,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
         ]),
         ("Repeating", [
             (InputAction.RepeatCommand, "Do the last command again: cast, fire, throw, use an item, dig, disarm... (aimed ones aim afresh)"),
+            (InputAction.CommandCount, "Type a count, then walk, hold, tunnel, open or disarm that many times (until disturbed)"),
         ]),
         ("Magic", [
             (InputAction.Cast, "Cast a spell or pray"),

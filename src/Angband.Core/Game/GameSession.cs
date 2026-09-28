@@ -116,7 +116,15 @@ public sealed partial class GameSession : ITurnHandler
     /// Executes a player command. Returns true if it used game time, in which case monsters and the
     /// world advance until the player can act again. Commands that fail take no time.
     /// </summary>
-    public bool Execute(GameCommand command)
+    public bool Execute(GameCommand command) => command switch
+    {
+        CountedCommand counted => Repeat(counted.Command, Math.Clamp(counted.Count, 1, MaxCommandCount)),
+        // Angband cmd-core.c: opening, disarming (and tunnelling) repeat up to 99 times by themselves.
+        OpenCommand or DisarmCommand => Repeat(command, AutoRepeatCount),
+        _ => ExecuteOnce(command),
+    };
+
+    private bool ExecuteOnce(GameCommand command)
     {
         if (IsGameOver) return false;
         foreach (var m in Level.Monsters.All) m.IsDetected = false; // detection lasts until the next action
@@ -133,7 +141,7 @@ public sealed partial class GameSession : ITurnHandler
             ShowFeeling();
             return false;
         }
-        if (command is TunnelCommand tunnel) return Tunnel(tunnel.Direction);
+        if (command is TunnelCommand tunnel) return Tunnel(tunnel.Direction, TunnelRepeats);
         if (command is RetireCommand)
         {
             Retire();
@@ -333,6 +341,7 @@ public sealed partial class GameSession : ITurnHandler
             {
                 Publish(new LockPickFailedEvent(p));
                 Publish(new MessageEvent("You failed to pick the lock."));
+                _more = true;
                 return EnergyTable.MoveEnergy;
             }
             sq.LockPower = 0;

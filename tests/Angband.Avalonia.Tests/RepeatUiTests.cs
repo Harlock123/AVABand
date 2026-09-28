@@ -78,4 +78,50 @@ public class RepeatUiTests
         Assert.True(game.Player.Mana < mana, vm.LastMessage);
         Assert.Equal(new CastCommand("magic_missile"), vm.LastCommand);
     }
+
+    [AvaloniaFact]
+    public void Zero_TypesACount_ForTheNextCommand()
+    {
+        var (window, vm) = Open("warrior");
+        var game = vm.Game;
+        var turn = game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.Comma, RawInputModifiers.None); // hold once, to measure a turn
+        var oneTurn = game.GameTurn - turn;
+
+        window.KeyPressQwerty(PhysicalKey.Digit0, RawInputModifiers.None);
+        Assert.True(vm.IsEnteringCount);
+        window.KeyPressQwerty(PhysicalKey.Digit1, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Digit4, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Backspace, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Digit3, RawInputModifiers.None);
+        Assert.Equal("Repeat: 13", vm.LastMessage);
+        turn = game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.Comma, RawInputModifiers.None); // the command: hold 13 times
+        Assert.False(vm.IsEnteringCount);
+        Assert.Equal(13 * oneTurn, game.GameTurn - turn);
+
+        // The count is used up: the next hold is a single one.
+        turn = game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.Comma, RawInputModifiers.None);
+        Assert.Equal(oneTurn, game.GameTurn - turn);
+    }
+
+    [AvaloniaFact]
+    public void ACount_WaitsThroughTheDirectionPrompt_AndEscapeCancelsIt()
+    {
+        var (window, vm) = Open("warrior");
+        window.KeyPressQwerty(PhysicalKey.Digit0, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.T, RawInputModifiers.Shift); // tunnel: asks which way
+        Assert.Equal(5, vm.PendingCount);
+        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+        Assert.Equal(0, vm.PendingCount);
+
+        window.KeyPressQwerty(PhysicalKey.Digit0, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Digit7, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+        Assert.False(vm.IsEnteringCount);
+        Assert.Equal(0, vm.PendingCount);
+        Assert.Equal("Cancelled.", vm.LastMessage);
+    }
 }

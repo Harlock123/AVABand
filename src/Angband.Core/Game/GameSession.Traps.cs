@@ -146,7 +146,10 @@ public sealed partial class GameSession
             GainExperience(trap.DisarmPower);
         }
         else if (Rng.RandInt0(100) < chance)
+        {
             Publish(new MessageEvent($"You failed to disarm the {trap.Name}."));
+            _more = true;
+        }
         else
         {
             Publish(new MessageEvent($"You set off the {trap.Name}!"));
@@ -173,7 +176,10 @@ public sealed partial class GameSession
             chest.ChestState = -chest.ChestState;
         }
         else if (Rng.RandInt0(100) < chance)
+        {
             Publish(new MessageEvent("You failed to disarm the chest."));
+            _more = true;
+        }
         else
         {
             Publish(new MessageEvent("You set off a trap!"));
@@ -194,6 +200,7 @@ public sealed partial class GameSession
             if (Rng.RandInt0(100) >= chance)
             {
                 Publish(new MessageEvent("You failed to pick the lock."));
+                _more = true;
                 Publish(new LockPickFailedEvent(p));
                 return EnergyTable.MoveEnergy;
             }

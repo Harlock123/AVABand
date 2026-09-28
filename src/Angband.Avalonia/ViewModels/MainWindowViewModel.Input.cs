@@ -123,7 +123,11 @@ public sealed partial class MainWindowViewModel
             _pendingDirection = DirectionFor.None;
             dir ??= action.ToRunDirection(); // Shift+direction answers too
             if (dir is null && action == InputAction.Confirm) dir = _game.DirectionToTarget();
-            if (dir is not { } d) LastMessage = "Cancelled.";
+            if (dir is not { } d)
+            {
+                LastMessage = "Cancelled.";
+                ClearCount();
+            }
             else if (what == DirectionFor.Device && _pendingDevice is { } device)
                 Execute(_pendingActivation ? new ActivateCommand(device, Direction: d) : new UseCommand(device, Direction: d));
             else if (what == DirectionFor.Tunnel) Execute(new TunnelCommand(d));
@@ -150,7 +154,7 @@ public sealed partial class MainWindowViewModel
         {
             case InputAction.Hold: Execute(new HoldCommand()); break;
             case InputAction.Confirm: ContextAction(); break;
-            case InputAction.Cancel: break;
+            case InputAction.Cancel: ClearCount(); break;
             case InputAction.StairsDown: Execute(new TakeStairsCommand(Down: true)); break;
             case InputAction.StairsUp: Execute(new TakeStairsCommand(Down: false)); break;
             case InputAction.Open: AskDirection(DirectionFor.Open); break;
@@ -188,6 +192,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.ShowCommands: ShowKeyCommands(); break;
             case InputAction.MessageHistory: ShowMessageHistory(); break;
             case InputAction.RepeatCommand: RepeatLastCommand(); break;
+            case InputAction.CommandCount: BeginCount(); break;
             case InputAction.OverviewMap: ShowOverviewMap(); break;
             case InputAction.MonsterList: ShowMonsterList(); break;
             case InputAction.ObjectList: ShowObjectList(); break;

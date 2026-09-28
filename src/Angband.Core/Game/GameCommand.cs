@@ -25,6 +25,13 @@ public sealed record DisarmCommand(Direction Direction) : GameCommand;
 /// <summary>Tunnel into rubble, a vein or a wall (Angband 'T'), repeating until through or disturbed.</summary>
 public sealed record TunnelCommand(Direction Direction) : GameCommand;
 
+/// <summary>
+/// A command given a count (Angband's '0' prefix, "Repeat: 20"): walking and holding repeat that
+/// many times; tunnelling, opening and disarming try at most that many times (99 without a count).
+/// Anything that disturbs the player stops the repetition.
+/// </summary>
+public sealed record CountedCommand(GameCommand Command, int Count) : GameCommand;
+
 /// <summary>Inscribe an item (Angband '{'); an empty text removes the inscription. Takes no time.</summary>
 public sealed record InscribeCommand(Items.Item Item, string Text) : GameCommand;
 

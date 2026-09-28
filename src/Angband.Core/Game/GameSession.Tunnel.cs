@@ -78,7 +78,7 @@ public sealed partial class GameSession
     }
 
     /// <summary>Tunnel in a direction, repeating until through, disturbed or out of attempts.</summary>
-    private bool Tunnel(Direction dir)
+    private bool Tunnel(Direction dir, int attempts)
     {
         if (Player.Timed.Has(TimedIds.Confused) && Rng.RandInt0(100) < 40)
         {
@@ -128,7 +128,7 @@ public sealed partial class GameSession
         var hp = Player.Hp;
         var seen = VisibleMonsters();
         Publish(new DigEvent(target, Done: false));
-        for (var attempt = 0; attempt < TunnelRepeats && !Player.IsDead; attempt++)
+        for (var attempt = 0; attempt < attempts && !Player.IsDead; attempt++)
         {
             var done = Rng.RandInt0(1600) < chance;
             if (done) FinishTunnel(target, kind);

@@ -219,6 +219,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     /// <summary>Runs a command from any input device.</summary>
     public void Execute(GameCommand command)
     {
+        command = WithCount(command);
         NoteForRepeat(command, _game.Execute(command));
         Refresh();
     }
