@@ -130,7 +130,8 @@ public sealed partial class MainWindowViewModel
         IsPrompting = false;
         if (ChoiceRows.Count > 0)
         {
-            if (_studyBooks is not null) ChooseStudyBook(key);
+            if (_menuActions is not null) ChooseMenu(key);
+            else if (_studyBooks is not null) ChooseStudyBook(key);
             else if (_spellBooks is not null) ChooseSpellBook(key);
             else ChooseIgnore(key);
             return true;
@@ -263,6 +264,8 @@ public sealed partial class MainWindowViewModel
         SpellPromptRows.Clear();
         ChoiceRows.Clear();
         _ignoring = null;
+        _menuActions = null;
+        _game.AimAtTargetNext = false;
         _studyBooks = null;
         _spellBooks = null;
         LastMessage = "Cancelled.";

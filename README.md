@@ -910,8 +910,14 @@ the context action, or a game command.
 - **Mouse**: resting the pointer on a square describes it in a small label at the foot of the map
   ("The cave orc (wounded, asleep)", "A down staircase") without touching the message line (off with
   the option *Describe the square under the mouse*); left-click travels to a known square along the shortest known path (stopping when a
-  monster comes into view or you are hurt; adjacent monsters are attacked); right-click shoots a
-  monster or describes the square; the wheel zooms.
+  monster comes into view or you are hurt; adjacent monsters are attacked); right-click opens Angband 4.2's
+  context menus (`ui-context.c`), saying what is there as it opens: on yourself *Use, Cast, Go up/down,
+  Look, Rest, Pick up, Character, Center map* and *Other* (knowledge, map, messages, the monster and
+  object lists, ignoring, options, commands); on any other square *Look at, Recall info, Use item
+  on, Cast on*, next to you *Attack, Open chest, Steal, Disarm, Jump onto, Open/Close, Tunnel, Walk
+  towards*, further off *Pathfind to, Walk towards, Run towards*, then *Fire on* and *Throw to* —
+  the aimed ones go at that square even with "use old target" off, as 4.2's do. The lines of every
+  prompt (items, spells, menus) can be clicked as well as picked by letter; the wheel zooms.
 - **Gamepad** (SDL2 via Silk.NET, native libraries for Windows/Linux/macOS; `--no-gamepad` disables):
   D-pad or left stick move in eight directions with hold-to-repeat and navigate menus; A confirms
   (or takes the stairs / picks up), B cancels, X fires, Y casts, LB quaffs, RB reads, LT throws,

@@ -316,9 +316,7 @@ public sealed partial class MainWindowViewModel
 
         if (secondary)
         {
-            if (_game.Level.Monsters.At(loc) is { IsVisible: true } target)
-                Execute(new FireCommand(target.Position));
-            else AddMessage(DescribeSquare(loc));
+            OpenContextMenu(loc); // Angband's right-click menus
             return;
         }
         // Angband mouse_movement: clicks may be kept from moving the player.

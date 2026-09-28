@@ -62,7 +62,13 @@ public sealed partial class GameSession
     /// valid target) the nearest monster in a clear line.
     /// </summary>
     public Loc? AimPoint(int range = MaxRange) =>
-        (Options[OptionIds.UseOldTarget] ? TargetPosition() : null) ?? NearestTarget(range)?.Position;
+        (Options[OptionIds.UseOldTarget] || AimAtTargetNext ? TargetPosition() : null) ?? NearestTarget(range)?.Position;
+
+    /// <summary>
+    /// The next aimed command goes at the target even with "use old target" off (the map menu's
+    /// "Fire on", "Cast on": Angband gives such commands DIR_TARGET). The interface clears it.
+    /// </summary>
+    public bool AimAtTargetNext { get; set; }
 
     /// <summary>The direction from the player toward the target (for bolts of stone to mud and the like).</summary>
     public Direction? DirectionToTarget()

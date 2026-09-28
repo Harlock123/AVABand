@@ -241,6 +241,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         command = WithCount(command);
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
         NoteForRepeat(command, _game.Execute(command));
+        _game.AimAtTargetNext = false;
         AutosaveIfDue();
         Refresh();
     }

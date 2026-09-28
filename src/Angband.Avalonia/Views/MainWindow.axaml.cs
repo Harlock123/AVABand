@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace Angband.Avalonia.Views;
 
@@ -27,6 +28,18 @@ public partial class MainWindow : Window
                 else vm.ZoomOut();
             };
         }
+        // A click on a prompt's line picks it, as its letter does (caught before the list selects it).
+        foreach (var name in new[] { "PromptList", "SpellPromptList", "ChoiceList" })
+            this.FindControl<ListBox>(name)?.AddHandler(PointerPressedEvent, OnPromptRowPressed, RoutingStrategies.Tunnel);
+    }
+
+    private void OnPromptRowPressed(object? sender, PointerPressedEventArgs e)
+    {
+        e.Handled = true;
+        if (DataContext is not MainWindowViewModel vm) return;
+        var row = (e.Source as global::Avalonia.Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext;
+        var letter = row switch { ItemRow r => r.Letter, SpellRow s => s.Letter, ChoiceRow c => c.Letter, _ => null };
+        if (letter is { Length: > 0 }) vm.PromptKey(letter[0]);
     }
 
     private MainWindowViewModel? _subscribed;

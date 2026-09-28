@@ -248,11 +248,11 @@
               Background="#E0101018" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10" MinWidth="420">
         <StackPanel Spacing="6">
           <TextBlock Text="{Binding PromptTitle}" FontWeight="SemiBold" Foreground="White" />
-          <ListBox ItemsSource="{Binding PromptRows}" IsVisible="{Binding !!PromptRows.Count}" ItemTemplate="{StaticResource ItemRowTemplate}"
-                   SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}" Focusable="False" IsHitTestVisible="False"
+          <ListBox x:Name="PromptList" ItemsSource="{Binding PromptRows}" IsVisible="{Binding !!PromptRows.Count}" ItemTemplate="{StaticResource ItemRowTemplate}"
+                   SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}" Focusable="False" Cursor="Hand"
                    Background="Transparent" Padding="0" />
-          <ListBox ItemsSource="{Binding SpellPromptRows}" IsVisible="{Binding !!SpellPromptRows.Count}" SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}"
-                   Focusable="False" IsHitTestVisible="False" Background="Transparent" Padding="0">
+          <ListBox x:Name="SpellPromptList" ItemsSource="{Binding SpellPromptRows}" IsVisible="{Binding !!SpellPromptRows.Count}" SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}"
+                   Focusable="False" Cursor="Hand" Background="Transparent" Padding="0">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:SpellRow">
                 <Grid ColumnDefinitions="Auto,200,Auto,Auto" Margin="0,1" ToolTip.Tip="{Binding Description}">
@@ -265,8 +265,14 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <ListBox ItemsSource="{Binding ChoiceRows}" IsVisible="{Binding !!ChoiceRows.Count}" SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}"
-                   Focusable="False" IsHitTestVisible="False" Background="Transparent" Padding="0">
+          <ListBox x:Name="ChoiceList" ItemsSource="{Binding ChoiceRows}" IsVisible="{Binding !!ChoiceRows.Count}" SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}"
+                   Focusable="False" Cursor="Hand" Background="Transparent" Padding="0">
+            <ListBox.Styles>
+              <Style Selector="ListBoxItem">
+                <Setter Property="Padding" Value="8,3" />
+                <Setter Property="MinHeight" Value="0" />
+              </Style>
+            </ListBox.Styles>
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:ChoiceRow">
                 <StackPanel Orientation="Horizontal" Margin="0,1">
@@ -277,7 +283,7 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <TextBlock Text="Press a letter (or move and confirm), Esc to cancel." Foreground="#888" FontSize="11" />
+          <TextBlock Text="Press a letter or click (or move and confirm), Esc to cancel." Foreground="#888" FontSize="11" />
         </StackPanel>
       </Border>
       </Panel>
