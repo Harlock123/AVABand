@@ -71,4 +71,25 @@ public class MessageHistoryUiTests
         vm.ShowMessageHistoryCommand.Execute(null);
         Assert.NotNull(shown);
     }
+
+    [AvaloniaFact]
+    public void TheMessageLine_CountsARepeatedMessage_UntilSomethingElseIsShown()
+    {
+        var (_, vm) = Open();
+        Say(vm, "You failed to pick the lock.");
+        Assert.Equal("You failed to pick the lock.", vm.LastMessage);
+        Say(vm, "You failed to pick the lock.");
+        Say(vm, "You failed to pick the lock.");
+        Assert.Equal("You failed to pick the lock. <x3>", vm.LastMessage);
+        Assert.Equal("You failed to pick the lock.", vm.Messages[0]); // the recent list keeps the words alone
+
+        Say(vm, "You have picked the lock.");
+        Assert.Equal("You have picked the lock.", vm.LastMessage);
+        Say(vm, "You failed to pick the lock.");
+        Assert.Equal("You failed to pick the lock.", vm.LastMessage); // a new run starts at one
+
+        vm.HandleAction(Angband.Input.InputAction.CommandCount); // the line shows something else...
+        Say(vm, "You failed to pick the lock.");
+        Assert.Equal("You failed to pick the lock.", vm.LastMessage); // ...so the count starts again
+    }
 }

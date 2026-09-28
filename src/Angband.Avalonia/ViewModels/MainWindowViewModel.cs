@@ -360,9 +360,18 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Revision++;
     }
 
+    // The message line's last message and how many times in a row it has been said.
+    private string? _lineText;
+    private int _lineCount;
+
     private void AddMessage(string text)
     {
-        LastMessage = text;
+        // A message said again straight away is counted on the line, as the history does ("<x5>"),
+        // unless something else has been shown there since.
+        var repeat = _lineText == text && LastMessage == LineDisplay(_lineText, _lineCount);
+        _lineCount = repeat ? _lineCount + 1 : 1;
+        _lineText = text;
+        LastMessage = LineDisplay(text, _lineCount);
         Messages.Insert(0, text);
         while (Messages.Count > MaxMessages) Messages.RemoveAt(Messages.Count - 1);
 
@@ -371,6 +380,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         else _history.Add(new LoggedMessage(text, 1, _game?.NormalTurns ?? 0));
         if (_history.Count > MaxHistory) _history.RemoveRange(0, _history.Count - MaxHistory);
     }
+
+    private static string LineDisplay(string text, int count) => count > 1 ? $"{text} <x{count}>" : text;
 
     /// <summary>Angband keeps 2048 messages.</summary>
     public const int MaxHistory = 2048;
