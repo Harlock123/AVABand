@@ -102,6 +102,11 @@ public sealed partial class MainWindowViewModel
         }
 
         if (HandleLookAction(action)) return;
+        if (IsLocating)
+        {
+            LocateAction(action);
+            return;
+        }
 
         if (IsPrompting)
         {
@@ -211,6 +216,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.ShowCommands: ShowKeyCommands(); break;
             case InputAction.Help: ShowHelp(); break;
             case InputAction.IdentifySymbol: BeginIdentifySymbol(); break;
+            case InputAction.Locate: BeginLocate(); break;
             case InputAction.MessageHistory: ShowMessageHistory(); break;
             case InputAction.RepeatCommand: RepeatLastCommand(); break;
             case InputAction.CommandCount: BeginCount(); break;
@@ -454,7 +460,7 @@ public sealed partial class MainWindowViewModel
     /// </summary>
     public bool IsAtCommandPrompt => !IsPrompting && !IsConfirming && !IsLooking && !IsInStore && !IsShowingList
                                      && !IsEnteringCount && !IsEnteringNumber && !IsAwaitingDirection && !IsInscribing
-                                     && !IsChoosingGlyph && PendingSpellDirection is null;
+                                     && !IsChoosingGlyph && !IsLocating && PendingSpellDirection is null;
 
     /// <summary>Stops waiting for a key or controller button; true if it was waiting.</summary>
     public bool CancelCapture()

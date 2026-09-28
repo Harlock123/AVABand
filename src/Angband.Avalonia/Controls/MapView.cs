@@ -164,6 +164,17 @@ public sealed class MapView : Control
         set => SetValue(FitToBoundsProperty, value);
     }
 
+    /// <summary>How many whole squares the view shows across and down.</summary>
+    public (int Cols, int Rows) VisibleCells
+    {
+        get
+        {
+            var cell = Renderer.CellSize;
+            return cell.Width <= 0 || Bounds.Width <= 0 ? (66, 22)
+                : (Math.Max(1, (int)(Bounds.Width / cell.Width)), Math.Max(1, (int)(Bounds.Height / cell.Height)));
+        }
+    }
+
     /// <summary>The renderer currently in use (exposed for tests and diagnostics).</summary>
     public IMapRenderer Renderer => _renderer ??= CreateRenderer();
 

@@ -49,6 +49,7 @@ public partial class MainWindow : Window
             _subscribed.OverviewRequested -= OnOverviewRequested;
         }
         _subscribed = DataContext as MainWindowViewModel;
+        if (_subscribed is { } viewModel) viewModel.ViewportCells = () => Map.VisibleCells;
         if (_subscribed is not { } vm) return;
         vm.SettingsRequested += OnSettingsRequested;
         vm.OptionsRequested += OnOptionsRequested;

@@ -25,4 +25,5 @@ level to the next, and Word of Recall asks which kept level to return to.
 
 ## The level map
 
-`M` shows the whole level squeezed into a window; the map on screen scrolls to follow you.
+`M` shows the whole level squeezed into a window; the map on screen scrolls to follow you. `W`
+(or `L` with Angband's keys) scrolls the view half a screen at a time to look about; Esc comes back.

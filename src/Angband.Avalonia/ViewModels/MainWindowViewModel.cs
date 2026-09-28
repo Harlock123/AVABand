@@ -53,7 +53,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     public int Width => _game.Level.Width;
     public int Height => _game.Level.Height;
     /// <summary>The camera follows the player, or a free-roaming cursor.</summary>
-    public Loc Focus => IsLooking && _cursorFree ? _cursor : _game.Player.Position;
+    public Loc Focus => IsLocating ? _locateCentre : IsLooking && _cursorFree ? _cursor : _game.Player.Position;
 
     public MapCell GetCell(int x, int y)
     {
