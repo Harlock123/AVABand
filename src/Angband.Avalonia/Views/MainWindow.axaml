@@ -40,6 +40,7 @@
     </Style>
   </Window.Styles>
 
+  <Panel>
   <DockPanel>
     <LayoutTransformControl DockPanel.Dock="Top" LayoutTransform="{Binding InterfaceTransform}">
     <Menu>
@@ -356,5 +357,9 @@
       </LayoutTransformControl>
     </Panel>
   </DockPanel>
+
+  <!-- A moment's scene on taking the stairs (the option "Show a scene on taking the stairs"). -->
+  <controls:StairSceneView x:Name="StairScene" Scene="{Binding StairScene}" IsVisible="{Binding HasStairScene}" />
+  </Panel>
 
 </Window>

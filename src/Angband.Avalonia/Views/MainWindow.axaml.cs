@@ -36,6 +36,16 @@ public partial class MainWindow : Window
                 else vm.ZoomOut();
             };
         }
+        // The stair scene ends by itself, or with a click on it.
+        if (this.FindControl<StairSceneView>("StairScene") is { } scene)
+        {
+            scene.Finished += () => (DataContext as MainWindowViewModel)?.EndStairScene();
+            scene.PointerPressed += (_, e) =>
+            {
+                (DataContext as MainWindowViewModel)?.EndStairScene();
+                e.Handled = true;
+            };
+        }
         // A click on a prompt's line picks it, as its letter does (caught before the list selects it).
         foreach (var name in new[] { "PromptList", "SpellPromptList", "ChoiceList" })
             this.FindControl<ListBox>(name)?.AddHandler(PointerPressedEvent, OnPromptRowPressed, RoutingStrategies.Tunnel);
@@ -318,6 +328,7 @@ public partial class MainWindow : Window
     private void OnGameKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
+        if (vm.HasStairScene) vm.EndStairScene(); // a key cuts the stair scene short, and still does what it does
         var ctrlOrAlt = (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt)) != 0;
 
         // The hotbar: Alt+1 .. Alt+0 use its slots; with Shift, change them.

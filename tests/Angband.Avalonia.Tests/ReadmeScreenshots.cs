@@ -1,3 +1,4 @@
+using Avalonia.VisualTree;
 using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Game;
@@ -179,4 +180,32 @@ public class ReadmeScreenshots
         window.OpenCharacterCreation();
         Shoot(window.OwnedWindows.Last(), "character-creation");
     }
+
+    /// <summary>A stair scene, caught at a fixed moment (its own clock stopped, so every run matches).</summary>
+    private static void StairShot(bool down, int fromDepth, string name)
+    {
+        var (window, vm) = Open("warrior", tiles: true);
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        if (fromDepth > 0) vm.Execute(new Angband.Core.Game.DebugJumpCommand(fromDepth));
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        game.Player.Position = game.Level.FindFeature(down ? Angband.Core.Definitions.TerrainFlags.DownStair
+            : Angband.Core.Definitions.TerrainFlags.UpStair).First();
+        vm.Execute(new Angband.Core.Game.TakeStairsCommand(Down: down));
+        var scene = window.GetVisualDescendants().OfType<Angband.Avalonia.Controls.StairSceneView>().Single();
+        scene.Advance(700);
+        if (Folder is null) return;
+        Directory.CreateDirectory(Folder);
+        var frame = window.CaptureRenderedFrame() ?? throw new InvalidOperationException("no frame");
+        frame.Save(Path.Combine(Folder, name + ".png"));
+    }
+
+    [AvaloniaFact]
+    public void StairsDown() => StairShot(down: true, fromDepth: 4, "stairs-down");
+
+    [AvaloniaFact]
+    public void StairsUp() => StairShot(down: false, fromDepth: 6, "stairs-up");
+
+    [AvaloniaFact]
+    public void StairsUpToTown() => StairShot(down: false, fromDepth: 1, "stairs-up-town");
 }

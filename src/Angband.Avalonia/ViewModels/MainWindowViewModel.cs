@@ -242,7 +242,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         if (AskAboutRecall(command) || TutorialStairs(command)) return;
         command = WithCount(command);
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
+        var fromDepth = _game.Player.Depth;
         NoteForRepeat(command, _game.Execute(command));
+        ShowStairScene(command, fromDepth);
         _game.AimAtTargetNext = false;
         CountDownHint();
         AutosaveIfDue();
