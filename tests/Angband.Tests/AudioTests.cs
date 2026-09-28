@@ -142,11 +142,12 @@ public class AudioTests
         var (game, _, played, _) = Setup(Arena.Create());
         game.Player.Hp = game.Player.MaxHp = 1000;
         var mold = Arena.AddMonster(game, "grey_mold", new Loc(6, 2));
+        mold.Hp = mold.MaxHp = 30; // (4.2.5's has 2: long enough to answer back)
         for (var i = 0; i < 40 && mold.IsActive; i++) game.Execute(new WalkCommand(Direction.East));
 
         Assert.Contains("HIT", played);
         Assert.Contains("KILL", played);
-        Assert.Contains("MON_HIT", played); // grey molds "hit"
+        Assert.Contains(played, p => p is "MON_SPORE" or "MON_HIT"); // grey molds release spores (the pack's own sound, or a hit)
     }
 
     [Fact]

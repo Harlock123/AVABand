@@ -216,7 +216,7 @@ public class CombatTests
             game.RecalculateBonuses();
             var hurt = 0;
             using var _ = game.Events.Subscribe<PlayerHurtEvent>(e => hurt += e.Damage);
-            var giant = Arena.AddMonster(game, "fire_giant", Start.Step(Direction.East));
+            var giant = Arena.AddMonster(game, "fire_spirit", Start.Step(Direction.East)); // fire blows, no spells
             for (var i = 0; i < 50; i++) game.Execute(new HoldCommand());
             return hurt;
         }

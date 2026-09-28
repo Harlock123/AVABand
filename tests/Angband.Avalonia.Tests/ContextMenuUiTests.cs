@@ -140,8 +140,8 @@ public class ContextMenuPlacementUiTests
 
         var map = window.GetVisualDescendants().OfType<Angband.Avalonia.Controls.MapView>().First(m => m.Name == "Map");
         var cell = map.Renderer.CellSize;
-        var (cols, rows) = map.ViewCells;
-        var you = map.TranslatePoint(new Point((cols / 2 + 0.5) * cell.Width, (rows / 2 + 0.5) * cell.Height), window)!.Value;
+        var me = vm.Game.Player.Position - map.ViewOffset; // your square, wherever the view has put it
+        var you = map.TranslatePoint(new Point((me.X + 0.5) * cell.Width, (me.Y + 0.5) * cell.Height), window)!.Value;
         window.MouseDown(you, MouseButton.Right);
         window.MouseUp(you, MouseButton.Right);
         Assert.Contains("Rest", vm.MenuLabels); // your own menu
@@ -150,7 +150,9 @@ public class ContextMenuPlacementUiTests
 
         var box = window.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "PromptBox");
         var topLeft = box.TranslatePoint(new Point(0, 0), window)!.Value;
-        Assert.InRange(topLeft.X - you.X, 0, 40);          // just to the right of the square
+        var right = topLeft.X + box.Bounds.Width;
+        Assert.True(topLeft.X - you.X is >= 0 and <= 40 || you.X - right is >= 0 and <= 40,
+            $"box {topLeft.X:0}..{right:0}, pointer {you.X:0}"); // beside the square (on the left near the right edge)
         Assert.InRange(Math.Abs(topLeft.Y - you.Y), 0, 40); // level with it
 
         vm.CancelPrompt();

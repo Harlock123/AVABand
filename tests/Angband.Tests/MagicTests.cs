@@ -195,8 +195,8 @@ public class MagicTests
         game.Player.LearnedSpells.Add("stinking_cloud");
         game.Player.Mana = game.Player.MaxMana = 50;
         game.Player.NaturalStats["wis"] = game.Player.Stats["wis"] = 40; // never fail
-        var centre = Arena.AddMonster(game, "kobold", new Loc(10, 2));
-        var side = Arena.AddMonster(game, "kobold", new Loc(11, 2));
+        var centre = Arena.AddMonster(game, "soldier_ant", new Loc(10, 2)); // (4.2.5's kobolds resist poison)
+        var side = Arena.AddMonster(game, "soldier_ant", new Loc(11, 2));
         var immune = Arena.AddMonster(game, "grey_mold", new Loc(10, 3)); // IM_POIS
         foreach (var m in new[] { centre, side, immune }) m.Hp = m.MaxHp = 10_000;
         var hits = new Dictionary<int, int>();

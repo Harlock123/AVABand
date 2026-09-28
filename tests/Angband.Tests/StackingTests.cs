@@ -78,6 +78,7 @@ public class StackingTests
         var game = Game();
         var rod = Carry(game, "rod_of_treasure_location");
         Carry(game, "rod_of_treasure_location");
+        game.Player.SkillDevice = 1000; // never fails to zap (this is about recharging)
         Assert.Equal(2, rod.Number);
         var time = rod.RechargeTime;
         Assert.True(time > 0);

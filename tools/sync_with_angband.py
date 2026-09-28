@@ -1,0 +1,123 @@
+#!/usr/bin/env python3
+"""Brings AVABand's game data back into line with Angband 4.2.5's (see compare_with_angband.py).
+
+Each entry AVABand already has is rebuilt from 4.2.5 by the same conversion the importers use, then
+merged into ours: every field the importer knows how to produce takes 4.2.5's value (or is removed
+when 4.2.5 has none), and fields that are AVABand's own are kept, as are ids.
+
+Usage:
+    sync_with_angband.py <angband lib/gamedata> [--data src/Angband.Data/data] [--only monsters,objects,...]
+"""
+import argparse, json, os, sys
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import angband_monster_import as mi  # noqa: E402
+
+# AVABand kept two monsters under their older Angband names; they are 4.2.5's under another name.
+MONSTER_ALIASES = {"jackal": "wild dog", "hill orc": "half-orc"}
+
+
+def merge(ours, fresh, producible, keep=("id",)):
+    """4.2.5's value for every field the importer can produce; ours for the rest."""
+    out = dict(ours)
+    for key in producible:
+        if key in keep:
+            continue
+        if key in fresh:
+            out[key] = fresh[key]
+        else:
+            out.pop(key, None)
+    return out
+
+
+def write_json(path, data, indent):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=indent, ensure_ascii=False)
+        f.write("\n")
+
+
+def sync_monsters(gd, data):
+    path = os.path.join(data, "monsters.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    bases = {b["name"]: {"glyph": mi.one(b, "glyph", "?"), "flags": mi.flag_list(b, "flags")}
+             for b in mi.parse(os.path.join(gd, "monster_base.txt"))}
+    entries = [e for e in mi.parse(os.path.join(gd, "monster.txt")) if not e["name"].startswith("<")]
+    all_names = [e["name"] for e in entries]
+    by_name = {e["name"].lower(): e for e in entries}
+    kinds = {(k["base"], k["name"].replace("~", "").replace("& ", "").lower()): k["id"]
+             for k in json.load(open(os.path.join(data, "objects.json"), encoding="utf-8"))}
+
+    fresh_all = {}
+    for m in ours:
+        e = by_name.get(MONSTER_ALIASES.get(m["name"].lower(), m["name"].lower()))
+        if e is None:
+            continue
+        fresh = mi.convert(e, bases, all_names)
+        mimic_lines = mi.values(e, "mimic")
+        if mimic_lines:
+            poses = [kinds.get((t.strip(), n.strip().lower())) for t, _, n in (l.partition(":") for l in mimic_lines)]
+            fresh["mimics"] = [p for p in poses if p]
+        fresh_all[m["id"]] = fresh
+    producible = set().union(*(f.keys() for f in fresh_all.values())) - {"shapeNames"} | {"shapes"}
+
+    # Shapes, as the importer resolves them: a monster by name, or kin of a base near the right depth.
+    by_our_name = {m["name"].lower(): m for m in ours}
+    base_of = {mi.slug(e["name"]): mi.one(e, "base") for e in entries}
+    changed = 0
+    result = []
+    for m in ours:
+        fresh = fresh_all.get(m["id"])
+        if fresh is None:
+            result.append(m)
+            continue
+        names = fresh.pop("shapeNames", None)
+        if names:
+            ids = []
+            for n in names:
+                if n.lower() in by_our_name:
+                    ids.append(by_our_name[n.lower()]["id"])
+                else:
+                    ids += [x["id"] for x in ours if base_of.get(x["id"]) == n and "UNIQUE" not in x["flags"]
+                            and abs(x["depth"] - fresh["depth"]) <= 15]
+            ids = list(dict.fromkeys(i for i in ids if i != m["id"]))
+            if ids:
+                fresh["shapes"] = ids
+            elif "spells" in fresh:
+                fresh["spells"] = [s for s in fresh["spells"] if s != "SHAPECHANGE"]
+        merged = merge(m, fresh, producible, keep=("id", "name"))
+        changed += merged != m
+        result.append(merged)
+    # Escorts name races by the importer's ids (slugs of 4.2.5 names): point them at ours.
+    our_id = {mi.slug(e["name"]): None for e in entries}
+    for m in result:
+        our_id[mi.slug(m["name"])] = m["id"]
+        alias = MONSTER_ALIASES.get(m["name"].lower())
+        if alias:
+            our_id[mi.slug(alias)] = m["id"]
+    for m in result:
+        for f in m.get("friends", []):
+            if f.get("race") not in (None, "same") and our_id.get(f["race"]):
+                f["race"] = our_id[f["race"]]
+    # Monsters 4.2.5 doesn't have go.
+    extra = [m["name"] for m in result if m["id"] not in fresh_all]
+    result = [m for m in result if m["id"] in fresh_all]
+    write_json(path, result, 1)
+    print(f"monsters: {changed} of {len(ours)} brought into line; removed (not in 4.2.5): {extra}")
+
+
+SECTIONS = {"monsters": sync_monsters}
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("gamedata")
+    ap.add_argument("--data", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "Angband.Data", "data"))
+    ap.add_argument("--only", default=",".join(SECTIONS))
+    args = ap.parse_args()
+    for name in args.only.split(","):
+        SECTIONS[name](args.gamedata, args.data)
+
+
+if __name__ == "__main__":
+    main()

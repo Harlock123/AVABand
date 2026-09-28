@@ -128,7 +128,7 @@ public class SecretDoorTests
         var game = GameSession.NewGame(TestData.Game, 11, CharacterSpec.Default("human", "warrior"));
         var found = 0;
         game.Events.Subscribe<MessageEvent>(m => found += m.Text == "You have found a secret door." ? 1 : 0);
-        for (var i = 0; i < 60; i++)
+        for (var i = 0; i < 200; i++)
         {
             game.Execute(new DebugJumpCommand(1 + i % 30));
             if (game.Player.LightRadius == 0) continue;

@@ -159,7 +159,7 @@ def convert(entry, bases, names=()):
         "armour": int(one(entry, "armor-class", "0")),
         "sleep": int(one(entry, "sleepiness", "0")),
         "hearing": int(one(entry, "hearing", "20")),
-        "smell": int(one(entry, "smell", "20")),
+        "smell": int(one(entry, "smell", "0")),  # 4.2.5: none unless given
         "experience": int(one(entry, "experience", "0")),
         "blows": blows,
         "flags": flags,

@@ -3,14 +3,14 @@
   "id": "scruffy_dog",
   "name": "scruffy little dog",
   "glyph": "C",
-  "color": "Umber",
+  "color": "LightUmber",
   "depth": 0,
-  "rarity": 1,
+  "rarity": 3,
   "speed": 0,
   "hitPoints": 2,
   "armour": 1,
-  "sleep": 10,
-  "hearing": 5,
+  "sleep": 5,
+  "hearing": 20,
   "experience": 0,
   "blows": [
    {
@@ -21,40 +21,41 @@
   ],
   "flags": [
    "ANIMAL",
+   "CLEAR_WEB",
    "RAND_25"
   ],
   "description": "A thin flea-ridden mutt, growling as you get close.",
-  "smell": 20
+  "smell": 50
  },
  {
   "id": "village_idiot",
   "name": "village idiot",
   "glyph": "t",
-  "color": "Mud",
+  "color": "LightGreen",
   "depth": 0,
   "rarity": 1,
-  "speed": 0,
-  "hitPoints": 4,
+  "speed": 10,
+  "hitPoints": 10,
   "armour": 1,
-  "sleep": 0,
-  "hearing": 4,
+  "sleep": 50,
+  "hearing": 6,
   "experience": 0,
   "blows": [
    {
-    "method": "touch",
-    "effect": "hurt",
-    "damage": "1d1"
+    "method": "drool",
+    "effect": "none",
+    "damage": "0"
    }
   ],
   "flags": [
+   "SPIRIT",
+   "CLEAR_WEB",
    "MALE",
    "RAND_25",
-   "RAND_50",
-   "OPEN_DOOR",
-   "DROP_60",
-   "ONLY_GOLD"
+   "TAKE_ITEM"
   ],
-  "description": "Drooling and harmless, mostly."
+  "description": "Drooling and comical, but then, what do you expect?",
+  "smell": 0
  },
  {
   "id": "grey_mold",
@@ -64,42 +65,45 @@
   "depth": 1,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 28,
+  "hitPoints": 2,
   "armour": 1,
   "sleep": 0,
   "hearing": 2,
   "experience": 3,
   "blows": [
    {
-    "method": "hit",
+    "method": "spore",
     "effect": "hurt",
     "damage": "1d4"
    },
    {
-    "method": "hit",
+    "method": "spore",
     "effect": "hurt",
     "damage": "1d4"
    }
   ],
   "flags": [
    "NEVER_MOVE",
+   "IM_POIS",
+   "HURT_FIRE",
    "NO_FEAR",
    "NO_CONF",
    "NO_SLEEP",
-   "IM_POIS"
+   "EMPTY_MIND",
+   "STUPID"
   ],
-  "description": "A small strange grey growth."
+  "description": "A small strange grey growth.",
+  "smell": 0
  },
  {
   "id": "jackal",
   "name": "jackal",
-  "plural": "jackals",
   "glyph": "C",
   "color": "LightUmber",
   "depth": 1,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 7,
+  "hitPoints": 3,
   "armour": 3,
   "sleep": 10,
   "hearing": 10,
@@ -108,11 +112,12 @@
    {
     "method": "bite",
     "effect": "hurt",
-    "damage": "1d3"
+    "damage": "1d1"
    }
   ],
   "flags": [
    "ANIMAL",
+   "CLEAR_WEB",
    "GROUP_AI"
   ],
   "friends": [
@@ -122,18 +127,18 @@
     "race": "same"
    }
   ],
-  "description": "A yapping snarling dog, dangerous when in a pack.",
-  "smell": 20
+  "description": "It is a yapping snarling dog, dangerous when in a pack.",
+  "smell": 50
  },
  {
   "id": "rock_lizard",
   "name": "rock lizard",
   "glyph": "R",
-  "color": "Umber",
+  "color": "LightUmber",
   "depth": 1,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 3,
+  "hitPoints": 8,
   "armour": 4,
   "sleep": 15,
   "hearing": 20,
@@ -146,21 +151,24 @@
    }
   ],
   "flags": [
-   "ANIMAL"
+   "ANIMAL",
+   "HURT_COLD",
+   "CLEAR_WEB"
   ],
-  "description": "A small lizard with a hardened hide."
+  "description": "It is a small lizard with a hardened hide.",
+  "smell": 20
  },
  {
   "id": "soldier_ant",
   "name": "soldier ant",
   "glyph": "a",
-  "color": "Umber",
+  "color": "LightSlate",
   "depth": 1,
   "rarity": 1,
   "speed": 0,
   "hitPoints": 6,
   "armour": 4,
-  "sleep": 10,
+  "sleep": 40,
   "hearing": 10,
   "experience": 3,
   "blows": [
@@ -171,9 +179,12 @@
    }
   ],
   "flags": [
-   "ANIMAL"
+   "ANIMAL",
+   "WEIRD_MIND",
+   "BASH_DOOR"
   ],
-  "description": "A large ant with powerful mandibles."
+  "description": "A large ant with powerful mandibles.",
+  "smell": 20
  },
  {
   "id": "floating_eye",
@@ -191,15 +202,18 @@
   "blows": [
    {
     "method": "gaze",
-    "effect": "paralyze"
+    "effect": "paralyze",
+    "damage": "0"
    }
   ],
   "flags": [
+   "CLEAR_WEB",
    "NEVER_MOVE",
    "HURT_LIGHT",
    "NO_FEAR"
   ],
-  "description": "A disembodied eye, floating a few feet above the ground."
+  "description": "A disembodied eye, floating a few feet above the ground.",
+  "smell": 0
  },
  {
   "id": "small_kobold",
@@ -225,9 +239,12 @@
    "EVIL",
    "OPEN_DOOR",
    "BASH_DOOR",
+   "SPIRIT",
+   "CLEAR_WEB",
+   "IM_POIS",
    "DROP_60"
   ],
-  "description": "It is a squat and ugly humanoid figure.",
+  "description": "It is a squat and ugly humanoid figure with a canine face.",
   "smell": 20
  },
  {
@@ -238,65 +255,40 @@
   "depth": 1,
   "rarity": 1,
   "speed": -10,
-  "hitPoints": 5,
+  "hitPoints": 10,
   "armour": 1,
-  "sleep": 10,
+  "sleep": 14,
   "hearing": 7,
-  "experience": 1,
+  "experience": 2,
   "blows": [
    {
-    "method": "bite",
+    "method": "crawl",
     "effect": "poison",
     "damage": "1d2"
    }
   ],
   "flags": [
    "ANIMAL",
-   "RAND_50",
+   "WEIRD_MIND",
+   "MULTIPLY",
+   "STUPID",
    "RAND_25",
-   "IM_POIS",
+   "RAND_50",
    "HURT_LIGHT",
-   "NO_FEAR",
-   "MULTIPLY"
+   "IM_POIS",
+   "NO_FEAR"
   ],
-  "description": "It is a large slimy mass of worms."
+  "description": "It is a large slimy mass of worms.",
+  "smell": 0
  },
  {
   "id": "fang",
   "name": "Fang, Farmer Maggot's Dog",
   "glyph": "C",
-  "color": "Umber",
-  "depth": 5,
+  "color": "Yellow",
+  "depth": 2,
   "rarity": 1,
-  "speed": 20,
-  "hitPoints": 28,
-  "armour": 36,
-  "sleep": 0,
-  "hearing": 30,
-  "experience": 30,
-  "blows": [
-   {
-    "method": "bite",
-    "effect": "hurt",
-    "damage": "1d8"
-   }
-  ],
-  "flags": [
-   "UNIQUE",
-   "ANIMAL",
-   "MALE"
-  ],
-  "description": "A rather vicious dog belonging to Farmer Maggot.",
-  "smell": 30
- },
- {
-  "id": "grip",
-  "name": "Grip, Farmer Maggot's Dog",
-  "glyph": "C",
-  "color": "Umber",
-  "depth": 5,
-  "rarity": 1,
-  "speed": 20,
+  "speed": 10,
   "hitPoints": 25,
   "armour": 36,
   "sleep": 0,
@@ -306,22 +298,60 @@
    {
     "method": "bite",
     "effect": "hurt",
-    "damage": "1d6"
+    "damage": "1d4"
    }
   ],
   "flags": [
-   "UNIQUE",
    "ANIMAL",
-   "MALE"
+   "CLEAR_WEB",
+   "UNIQUE",
+   "NAME_COMMA",
+   "RAND_25",
+   "BASH_DOOR",
+   "NO_CONF",
+   "NO_SLEEP"
   ],
-  "description": "A rather vicious dog belonging to Farmer Maggot.",
-  "smell": 30
+  "description": "A rather vicious dog belonging to Farmer Maggot. It thinks you are stealing mushrooms.",
+  "smell": 50
+ },
+ {
+  "id": "grip",
+  "name": "Grip, Farmer Maggot's Dog",
+  "glyph": "C",
+  "color": "Yellow",
+  "depth": 2,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 25,
+  "armour": 36,
+  "sleep": 0,
+  "hearing": 30,
+  "experience": 30,
+  "blows": [
+   {
+    "method": "bite",
+    "effect": "hurt",
+    "damage": "1d4"
+   }
+  ],
+  "flags": [
+   "ANIMAL",
+   "CLEAR_WEB",
+   "UNIQUE",
+   "NAME_COMMA",
+   "RAND_25",
+   "BASH_DOOR",
+   "NO_CONF",
+   "NO_SLEEP"
+  ],
+  "description": "A rather vicious dog belonging to Farmer Maggot. It thinks you are stealing mushrooms.",
+  "smell": 50
  },
  {
   "id": "kobold",
   "name": "kobold",
   "glyph": "k",
-  "color": "Green",
+  "color": "LightGreen",
   "depth": 2,
   "rarity": 1,
   "speed": 0,
@@ -341,6 +371,9 @@
    "EVIL",
    "OPEN_DOOR",
    "BASH_DOOR",
+   "SPIRIT",
+   "CLEAR_WEB",
+   "IM_POIS",
    "DROP_60"
   ],
   "description": "It is a small, dog-headed humanoid.",
@@ -350,15 +383,15 @@
   "id": "cave_spider",
   "name": "cave spider",
   "glyph": "S",
-  "color": "Slate",
+  "color": "Purple",
   "depth": 2,
   "rarity": 1,
   "speed": 10,
-  "hitPoints": 2,
+  "hitPoints": 7,
   "armour": 19,
   "sleep": 80,
   "hearing": 8,
-  "experience": 1,
+  "experience": 7,
   "blows": [
    {
     "method": "bite",
@@ -367,7 +400,10 @@
    }
   ],
   "flags": [
+   "BASH_DOOR",
+   "PASS_WEB",
    "ANIMAL",
+   "WEIRD_MIND",
    "GROUP_AI"
   ],
   "friends": [
@@ -377,7 +413,8 @@
     "race": "same"
    }
   ],
-  "description": "It is a black spider that moves in fits and starts."
+  "description": "It is a black spider that moves in fits and starts.",
+  "smell": 0
  },
  {
   "id": "green_naga",
@@ -387,7 +424,7 @@
   "depth": 5,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 30,
+  "hitPoints": 41,
   "armour": 48,
   "sleep": 120,
   "hearing": 18,
@@ -396,7 +433,7 @@
    {
     "method": "crush",
     "effect": "hurt",
-    "damage": "1d6"
+    "damage": "1d8"
    },
    {
     "method": "spit",
@@ -407,26 +444,31 @@
   "flags": [
    "FEMALE",
    "EVIL",
-   "RAND_25",
+   "HURT_COLD",
+   "SPIRIT",
    "BASH_DOOR",
+   "CLEAR_WEB",
    "DROP_60",
-   "ONLY_GOLD"
+   "RAND_25",
+   "TAKE_ITEM",
+   "IM_ACID"
   ],
-  "description": "A large green serpent with a woman's head."
+  "description": "A large green serpent with a female's torso. Her green skin glistens with acid.",
+  "smell": 0
  },
  {
   "id": "cave_orc",
   "name": "cave orc",
   "glyph": "o",
-  "color": "Green",
+  "color": "LightGreen",
   "depth": 7,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 11,
-  "armour": 43,
-  "sleep": 30,
+  "hitPoints": 55,
+  "armour": 48,
+  "sleep": 70,
   "hearing": 20,
-  "experience": 30,
+  "experience": 20,
   "blows": [
    {
     "method": "hit",
@@ -436,12 +478,14 @@
   ],
   "flags": [
    "MALE",
-   "EVIL",
    "ORC",
+   "EVIL",
+   "SPIRIT",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "HURT_LIGHT",
-   "DROP_60"
+   "CLEAR_WEB",
+   "DROP_20",
+   "HURT_LIGHT"
   ],
   "friends": [
    {
@@ -455,22 +499,26 @@
     "race": "same"
    }
   ],
-  "description": "A squat, strong orc that lives in the caves, and comes out in groups.",
-  "smell": 20
+  "description": "He is often found in huge numbers in deep caves.",
+  "smell": 20,
+  "spells": [
+   "ARROW"
+  ],
+  "innateFrequency": 13
  },
  {
   "id": "snaga",
   "name": "snaga",
   "glyph": "o",
-  "color": "Umber",
-  "depth": 9,
+  "color": "LightUmber",
+  "depth": 6,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 8,
-  "armour": 38,
-  "sleep": 30,
+  "hitPoints": 36,
+  "armour": 48,
+  "sleep": 70,
   "hearing": 20,
-  "experience": 10,
+  "experience": 15,
   "blows": [
    {
     "method": "hit",
@@ -480,12 +528,14 @@
   ],
   "flags": [
    "MALE",
-   "EVIL",
    "ORC",
+   "EVIL",
+   "SPIRIT",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "HURT_LIGHT",
-   "DROP_60"
+   "CLEAR_WEB",
+   "DROP_20",
+   "HURT_LIGHT"
   ],
   "friends": [
    {
@@ -499,43 +549,48 @@
     "race": "same"
    }
   ],
-  "description": "One of the lesser orcs, weak and prone to fear.",
-  "smell": 20
+  "description": "He is one of the many weaker 'slave' orcs, often mistakenly known as a goblin.",
+  "smell": 20,
+  "spells": [
+   "ARROW"
+  ],
+  "innateFrequency": 15
  },
  {
   "id": "bullroarer",
   "name": "Bullroarer the Hobbit",
   "glyph": "h",
-  "color": "Blue",
-  "depth": 10,
+  "color": "LightUmber",
+  "depth": 5,
   "rarity": 3,
   "speed": 10,
-  "hitPoints": 200,
+  "hitPoints": 60,
   "armour": 12,
-  "sleep": 10,
+  "sleep": 30,
   "hearing": 16,
   "experience": 90,
   "blows": [
    {
     "method": "hit",
     "effect": "hurt",
-    "damage": "1d10"
+    "damage": "1d8"
    },
    {
     "method": "hit",
     "effect": "hurt",
-    "damage": "1d10"
+    "damage": "1d8"
    }
   ],
   "flags": [
-   "UNIQUE",
-   "MALE",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "DROP_90",
-   "DROP_1",
+   "SPIRIT",
+   "CLEAR_WEB",
+   "UNIQUE",
+   "MALE",
+   "DROP_2",
    "DROP_GOOD",
-   "MOVE_BODY"
+   "ONLY_ITEM"
   ],
   "friends": [
    {
@@ -544,27 +599,23 @@
     "race": "scruffy_looking_hobbit"
    }
   ],
-  "description": "A sturdy hobbit who is renowned for his unusual strength."
+  "description": "He is a sturdy hobbit who is renowned for his unusual strength and vigour. He can prove a troublesome opponent.",
+  "smell": 0
  },
  {
   "id": "wolf",
   "name": "wolf",
   "glyph": "C",
   "color": "Umber",
-  "depth": 13,
+  "depth": 10,
   "rarity": 1,
   "speed": 10,
   "hitPoints": 21,
-  "armour": 36,
-  "sleep": 20,
+  "armour": 45,
+  "sleep": 10,
   "hearing": 30,
   "experience": 30,
   "blows": [
-   {
-    "method": "bite",
-    "effect": "hurt",
-    "damage": "1d6"
-   },
    {
     "method": "bite",
     "effect": "hurt",
@@ -573,6 +624,9 @@
   ],
   "flags": [
    "ANIMAL",
+   "CLEAR_WEB",
+   "RAND_25",
+   "BASH_DOOR",
    "GROUP_AI"
   ],
   "friends": [
@@ -583,19 +637,20 @@
    }
   ],
   "description": "It howls and snaps at you.",
-  "smell": 30
+  "smell": 50,
+  "plural": "wolves"
  },
  {
   "id": "ghoul",
   "name": "ghoul",
   "glyph": "z",
-  "color": "Umber",
-  "depth": 25,
-  "rarity": 1,
+  "color": "LightUmber",
+  "depth": 26,
+  "rarity": 2,
   "speed": 0,
-  "hitPoints": 60,
+  "hitPoints": 83,
   "armour": 36,
-  "sleep": 30,
+  "sleep": 20,
   "hearing": 30,
   "experience": 95,
   "blows": [
@@ -605,22 +660,31 @@
     "damage": "1d4"
    },
    {
+    "method": "claw",
+    "effect": "paralyze",
+    "damage": "1d4"
+   },
+   {
     "method": "bite",
-    "effect": "hurt",
+    "effect": "poison",
     "damage": "1d6"
    }
   ],
   "flags": [
    "UNDEAD",
    "EVIL",
+   "COLD_BLOOD",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "IM_POIS",
+   "CLEAR_WEB",
    "IM_COLD",
+   "IM_POIS",
+   "HURT_FIRE",
    "NO_CONF",
    "NO_SLEEP",
-   "DROP_60",
-   "DROP_90"
+   "NO_STUN",
+   "DROP_40",
+   "HURT_LIGHT"
   ],
   "friends": [
    {
@@ -629,7 +693,13 @@
     "race": "same"
    }
   ],
-  "description": "Flesh is falling off in chunks from this decaying abomination."
+  "description": "Flesh is falling off in chunks from this decaying abomination.",
+  "smell": 0,
+  "spells": [
+   "HOLD",
+   "SCARE"
+  ],
+  "spellFrequency": 9
  },
  {
   "id": "fire_giant",
@@ -637,13 +707,13 @@
   "glyph": "P",
   "color": "Red",
   "depth": 30,
-  "rarity": 2,
+  "rarity": 1,
   "speed": 0,
-  "hitPoints": 150,
+  "hitPoints": 289,
   "armour": 72,
   "sleep": 50,
   "hearing": 20,
-  "experience": 450,
+  "experience": 220,
   "blows": [
    {
     "method": "hit",
@@ -657,16 +727,14 @@
    }
   ],
   "flags": [
-   "MALE",
+   "GIANT",
    "EVIL",
-   "IM_FIRE",
-   "HURT_COLD",
-   "OPEN_DOOR",
+   "SPIRIT",
    "BASH_DOOR",
-   "DROP_1",
-   "DROP_60",
-   "ONLY_ITEM",
-   "MOVE_BODY"
+   "CLEAR_WEB",
+   "DROP_40",
+   "OPEN_DOOR",
+   "IM_FIRE"
   ],
   "friends": [
    {
@@ -680,22 +748,27 @@
     "race": "same"
    }
   ],
-  "description": "A glowing fourteen foot tall giant, with flames in its hair."
+  "description": "A glowing fourteen foot tall giant. Flames drip from its red skin.",
+  "smell": 0,
+  "spells": [
+   "BOULDER"
+  ],
+  "innateFrequency": 8
  },
  {
   "id": "kobold_archer",
   "name": "kobold archer",
   "glyph": "k",
-  "color": "LightGreen",
-  "depth": 3,
+  "color": "LightSlate",
+  "depth": 4,
   "rarity": 1,
   "speed": 0,
-  "hitPoints": 12,
+  "hitPoints": 24,
   "armour": 24,
-  "sleep": 20,
+  "sleep": 70,
   "hearing": 20,
   "smell": 20,
-  "experience": 12,
+  "experience": 20,
   "innateFrequency": 2,
   "spells": [
    "ARROW"
@@ -711,7 +784,10 @@
    "EVIL",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "DROP_60"
+   "SPIRIT",
+   "CLEAR_WEB",
+   "IM_POIS",
+   "DROP_40"
   ],
   "friends": [
    {
@@ -727,26 +803,28 @@
     "glyph": "k"
    }
   ],
-  "description": "A kobold with a short bow, who prefers to fight from a distance."
+  "description": "It is an ugly dog-headed humanoid wielding a bow."
  },
  {
   "id": "kobold_shaman",
   "name": "kobold shaman",
   "glyph": "k",
-  "color": "LightBlue",
-  "depth": 4,
+  "color": "Red",
+  "depth": 3,
   "rarity": 1,
   "speed": 0,
   "hitPoints": 11,
   "armour": 24,
-  "sleep": 20,
+  "sleep": 50,
   "hearing": 20,
   "smell": 20,
-  "experience": 30,
+  "experience": 15,
   "spellFrequency": 5,
   "spells": [
-   "MISSILE",
-   "WOUND"
+   "WOUND",
+   "CONF",
+   "HEAL",
+   "MISSILE"
   ],
   "blows": [
    {
@@ -758,7 +836,11 @@
   "flags": [
    "EVIL",
    "OPEN_DOOR",
-   "DROP_60"
+   "BASH_DOOR",
+   "SPIRIT",
+   "CLEAR_WEB",
+   "IM_POIS",
+   "DROP_40"
   ],
   "friends": [
    {
@@ -774,37 +856,43 @@
     "glyph": "k"
    }
   ],
-  "description": "A kobold wrapped in charms and bones, muttering to itself."
+  "description": "It is a kobold dressed in skins and gesturing wildly."
  },
  {
   "id": "hill_orc",
   "name": "hill orc",
   "glyph": "o",
-  "color": "Yellow",
-  "depth": 8,
-  "rarity": 1,
+  "color": "Slate",
+  "depth": 15,
+  "rarity": 2,
   "speed": 0,
-  "hitPoints": 13,
-  "armour": 43,
-  "sleep": 30,
+  "hitPoints": 88,
+  "armour": 60,
+  "sleep": 50,
   "hearing": 20,
   "smell": 20,
-  "experience": 25,
+  "experience": 50,
   "blows": [
    {
     "method": "hit",
     "effect": "hurt",
-    "damage": "1d10"
+    "damage": "3d4"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "3d4"
    }
   ],
   "flags": [
    "MALE",
-   "EVIL",
    "ORC",
+   "EVIL",
+   "SPIRIT",
    "OPEN_DOOR",
    "BASH_DOOR",
-   "HURT_LIGHT",
-   "DROP_60"
+   "CLEAR_WEB",
+   "DROP_20"
   ],
   "friends": [
    {
@@ -823,7 +911,11 @@
     "race": "same"
    }
   ],
-  "description": "A hardy, well-armed orc from the hills."
+  "description": "He is a hideous deformed cross-breed with man and orc, combining man's strength and cunning with orcish evil. The traitorous wizard Saruman is generally believed to be responsible for this abomination.",
+  "spells": [
+   "ARROW"
+  ],
+  "innateFrequency": 10
  },
  {
   "id": "baby_blue_dragon",
@@ -846,70 +938,34 @@
    {
     "method": "claw",
     "effect": "hurt",
-    "damage": "1d4"
+    "damage": "1d3"
    },
    {
     "method": "claw",
     "effect": "hurt",
-    "damage": "1d4"
+    "damage": "1d3"
    },
    {
     "method": "bite",
     "effect": "hurt",
-    "damage": "1d6"
+    "damage": "1d5"
    }
   ],
   "flags": [
    "DRAGON",
    "EVIL",
-   "IM_ELEC",
-   "BASH_DOOR",
-   "DROP_60",
-   "DROP_GOOD"
-  ],
-  "description": "A dragon hatchling, crackling with static."
- },
- {
-  "id": "dark_elven_priest",
-  "name": "dark elven priest",
-  "glyph": "h",
-  "color": "Green",
-  "depth": 10,
-  "rarity": 1,
-  "speed": 0,
-  "hitPoints": 39,
-  "armour": 36,
-  "sleep": 30,
-  "hearing": 20,
-  "experience": 50,
-  "spellFrequency": 5,
-  "spells": [
-   "BLIND",
-   "WOUND",
-   "CONF",
-   "SCARE",
-   "BLINK"
-  ],
-  "blows": [
-   {
-    "method": "hit",
-    "effect": "hurt",
-    "damage": "1d9"
-   },
-   {
-    "method": "hit",
-    "effect": "hurt",
-    "damage": "1d9"
-   }
-  ],
-  "flags": [
-   "MALE",
-   "EVIL",
+   "SPIRIT",
+   "FORCE_SLEEP",
+   "CLEAR_WEB",
+   "DROP_40",
+   "DROP_1",
+   "ONLY_GOLD",
    "OPEN_DOOR",
-   "HURT_LIGHT",
-   "DROP_60"
+   "BASH_DOOR",
+   "IM_ELEC"
   ],
-  "description": "A dark elven figure in priestly robes, calling on dark powers."
+  "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a pale blue.",
+  "smell": 0
  },
  {
   "id": "orfax",
@@ -926,11 +982,11 @@
   "experience": 80,
   "spellFrequency": 4,
   "spells": [
-   "HEAL",
    "BLINK",
-   "TELE_TO",
-   "SLOW",
    "CONF",
+   "HEAL",
+   "SLOW",
+   "TELE_TO",
    "S_MONSTER"
   ],
   "blows": [
@@ -943,16 +999,34 @@
     "method": "hit",
     "effect": "hurt",
     "damage": "1d8"
+   },
+   {
+    "method": "insult",
+    "effect": "none",
+    "damage": "0"
+   },
+   {
+    "method": "insult",
+    "effect": "none",
+    "damage": "0"
    }
   ],
   "flags": [
+   "ANIMAL",
+   "SPIRIT",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "CLEAR_WEB",
+   "IM_ACID",
    "UNIQUE",
    "MALE",
+   "NAME_COMMA",
    "EVIL",
    "SMART",
-   "OPEN_DOOR",
-   "DROP_90",
-   "DROP_GOOD"
+   "DROP_1",
+   "DROP_GOOD",
+   "ONLY_ITEM",
+   "FORCE_SLEEP"
   ],
   "friends": [
    {
@@ -971,29 +1045,29 @@
     "race": "master_yeek"
    }
   ],
-  "description": "The self-proclaimed king of the yeeks, and a fair spellcaster."
+  "description": "He's just like his daddy! He knows mighty spells, but fortunately he is a yeek.",
+  "smell": 20
  },
  {
   "id": "wormtongue",
   "name": "Wormtongue, Agent of Saruman",
   "glyph": "p",
-  "color": "Blue",
-  "depth": 16,
-  "rarity": 2,
-  "speed": 10,
-  "hitPoints": 150,
-  "armour": 30,
-  "sleep": 20,
+  "color": "LightBlue",
+  "depth": 8,
+  "rarity": 1,
+  "speed": 0,
+  "hitPoints": 250,
+  "armour": 45,
+  "sleep": 10,
   "hearing": 20,
   "experience": 150,
   "spellFrequency": 5,
   "spells": [
    "HEAL",
    "SLOW",
-   "BO_COLD",
+   "TRAPS",
    "BA_POIS",
-   "TPORT",
-   "SCARE"
+   "BO_COLD"
   ],
   "blows": [
    {
@@ -1005,18 +1079,36 @@
     "method": "hit",
     "effect": "hurt",
     "damage": "1d5"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_gold",
+    "damage": "0"
+   },
+   {
+    "method": "insult",
+    "effect": "none",
+    "damage": "0"
    }
   ],
   "flags": [
+   "BASH_DOOR",
+   "SPIRIT",
+   "CLEAR_WEB",
    "UNIQUE",
    "MALE",
+   "NAME_COMMA",
    "EVIL",
-   "SMART",
-   "OPEN_DOOR",
    "DROP_1",
-   "DROP_GOOD"
+   "DROP_GOOD",
+   "DROP_GREAT",
+   "ONLY_ITEM",
+   "OPEN_DOOR",
+   "TAKE_ITEM",
+   "FORCE_SLEEP"
   ],
-  "description": "A cowardly counsellor, as dangerous with poison as with spells."
+  "description": "He's been spying for Saruman. He is a snivelling wretch with no morals and disgusting habits.",
+  "smell": 0
  },
  {
   "id": "filthy_street_urchin",
@@ -1030,7 +1122,7 @@
   "armour": 1,
   "sleep": 40,
   "hearing": 4,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1111,7 +1203,7 @@
   "armour": 12,
   "sleep": 3,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1152,7 +1244,7 @@
   "armour": 1,
   "sleep": 50,
   "hearing": 6,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1182,7 +1274,7 @@
   "armour": 1,
   "sleep": 50,
   "hearing": 6,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1215,7 +1307,7 @@
   "armour": 1,
   "sleep": 40,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1246,7 +1338,7 @@
   "armour": 1,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1277,7 +1369,7 @@
   "armour": 9,
   "sleep": 99,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1319,7 +1411,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1353,7 +1445,7 @@
   "armour": 1,
   "sleep": 255,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1394,7 +1486,7 @@
   "armour": 24,
   "sleep": 250,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1429,7 +1521,7 @@
   "armour": 36,
   "sleep": 250,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1462,7 +1554,7 @@
   "armour": 12,
   "sleep": 3,
   "hearing": 80,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -1500,7 +1592,7 @@
   "armour": 12,
   "sleep": 3,
   "hearing": 80,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [],
   "flags": [
@@ -1535,7 +1627,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 1,
   "blows": [
    {
@@ -1635,7 +1727,7 @@
   "armour": 8,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 1,
   "blows": [
    {
@@ -1663,7 +1755,7 @@
   "armour": 7,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 2,
   "blows": [
    {
@@ -1723,7 +1815,7 @@
   "armour": 36,
   "sleep": 99,
   "hearing": 4,
-  "smell": 20,
+  "smell": 0,
   "experience": 2,
   "blows": [
    {
@@ -1758,7 +1850,7 @@
   "armour": 3,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1,
   "blows": [
    {
@@ -1785,7 +1877,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 4,
-  "smell": 20,
+  "smell": 0,
   "experience": 1,
   "blows": [],
   "flags": [
@@ -1819,7 +1911,7 @@
   "armour": 4,
   "sleep": 10,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 8,
   "blows": [
    {
@@ -1888,7 +1980,7 @@
   "armour": 24,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -1949,7 +2041,7 @@
   "armour": 18,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -2012,7 +2104,7 @@
   "armour": 15,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -2074,7 +2166,7 @@
   "armour": 9,
   "sleep": 15,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -2138,7 +2230,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 2,
   "blows": [
    {
@@ -2172,7 +2264,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 10,
   "blows": [
    {
@@ -2370,7 +2462,7 @@
   "armour": 3,
   "sleep": 10,
   "hearing": 7,
-  "smell": 20,
+  "smell": 0,
   "experience": 3,
   "blows": [
    {
@@ -2437,7 +2529,7 @@
   "armour": 14,
   "sleep": 0,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 8,
   "blows": [
    {
@@ -2469,7 +2561,7 @@
   "armour": 14,
   "sleep": 5,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -2509,7 +2601,7 @@
   "armour": 19,
   "sleep": 80,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -2546,7 +2638,7 @@
   "armour": 18,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 8,
   "blows": [
    {
@@ -2658,7 +2750,7 @@
   "armour": 60,
   "sleep": 180,
   "hearing": 16,
-  "smell": 20,
+  "smell": 0,
   "experience": 20,
   "blows": [
    {
@@ -2691,7 +2783,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 3,
   "blows": [
    {
@@ -2725,7 +2817,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 12,
   "blows": [
    {
@@ -2769,7 +2861,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 12,
   "blows": [
    {
@@ -2809,7 +2901,7 @@
   "armour": 9,
   "sleep": 10,
   "hearing": 16,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -2882,7 +2974,7 @@
   "armour": 12,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 9,
   "blows": [
    {
@@ -2949,7 +3041,7 @@
   "armour": 4,
   "sleep": 10,
   "hearing": 7,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -2982,7 +3074,7 @@
   "armour": 1,
   "sleep": 13,
   "hearing": 7,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -3018,7 +3110,7 @@
   "armour": 7,
   "sleep": 10,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -3079,7 +3171,7 @@
   "armour": 12,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -3147,7 +3239,7 @@
   "armour": 24,
   "sleep": 100,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -3213,7 +3305,7 @@
   "armour": 20,
   "sleep": 100,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 13,
   "blows": [
    {
@@ -3279,7 +3371,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 14,
   "blows": [
    {
@@ -3315,7 +3407,7 @@
   "armour": 28,
   "sleep": 10,
   "hearing": 3,
-  "smell": 20,
+  "smell": 0,
   "experience": 9,
   "blows": [
    {
@@ -3390,7 +3482,7 @@
   "armour": 14,
   "sleep": 10,
   "hearing": 7,
-  "smell": 20,
+  "smell": 0,
   "experience": 5,
   "blows": [
    {
@@ -3425,7 +3517,7 @@
   "armour": 61,
   "sleep": 100,
   "hearing": 6,
-  "smell": 20,
+  "smell": 0,
   "experience": 14,
   "blows": [
    {
@@ -3490,7 +3582,7 @@
   "armour": 19,
   "sleep": 80,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 7,
   "blows": [
    {
@@ -3525,7 +3617,7 @@
   "armour": 24,
   "sleep": 10,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -3565,7 +3657,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -3647,7 +3739,7 @@
   "armour": 39,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 12,
   "blows": [
    {
@@ -3685,7 +3777,7 @@
   "armour": 14,
   "sleep": 15,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 10,
   "blows": [
    {
@@ -3712,7 +3804,7 @@
   "armour": 7,
   "sleep": 10,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 20,
   "blows": [
    {
@@ -3747,7 +3839,7 @@
   "armour": 14,
   "sleep": 10,
   "hearing": 7,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -3782,7 +3874,7 @@
   "armour": 30,
   "sleep": 10,
   "hearing": 6,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -3813,7 +3905,7 @@
   "armour": 30,
   "sleep": 1,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -3849,7 +3941,7 @@
   "armour": 30,
   "sleep": 1,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 16,
   "blows": [
    {
@@ -3886,7 +3978,7 @@
   "armour": 36,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -3927,7 +4019,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -3970,7 +4062,7 @@
   "armour": 14,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 20,
   "blows": [
    {
@@ -4003,7 +4095,7 @@
   "armour": 18,
   "sleep": 30,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 10,
   "blows": [
    {
@@ -4030,7 +4122,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 4,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -4076,7 +4168,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 6,
-  "smell": 20,
+  "smell": 0,
   "experience": 20,
   "blows": [
    {
@@ -4107,7 +4199,7 @@
   "armour": 30,
   "sleep": 1,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [],
   "flags": [
@@ -4139,7 +4231,7 @@
   "armour": 30,
   "sleep": 1,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -4178,7 +4270,7 @@
   "armour": 14,
   "sleep": 0,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 10,
   "blows": [
    {
@@ -4215,7 +4307,7 @@
   "armour": 19,
   "sleep": 80,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -4258,7 +4350,7 @@
   "armour": 7,
   "sleep": 10,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 15,
   "blows": [
    {
@@ -4291,7 +4383,7 @@
   "armour": 48,
   "sleep": 120,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -4330,7 +4422,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 26,
   "blows": [
    {
@@ -4395,7 +4487,7 @@
   "armour": 14,
   "sleep": 20,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -4467,7 +4559,7 @@
   "armour": 12,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -4518,7 +4610,7 @@
   "armour": 24,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 25,
   "blows": [
    {
@@ -4801,7 +4893,7 @@
   "armour": 16,
   "sleep": 75,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 28,
   "blows": [
    {
@@ -4835,7 +4927,7 @@
   "armour": 54,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 26,
   "blows": [
    {
@@ -4874,7 +4966,7 @@
   "armour": 48,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 16,
   "blows": [
    {
@@ -4952,7 +5044,7 @@
   "armour": 28,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 26,
   "blows": [
    {
@@ -4995,7 +5087,7 @@
   "armour": 8,
   "sleep": 10,
   "hearing": 6,
-  "smell": 20,
+  "smell": 0,
   "experience": 3,
   "blows": [
    {
@@ -5067,7 +5159,7 @@
   "armour": 21,
   "sleep": 20,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 24,
   "blows": [
    {
@@ -5219,7 +5311,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "blows": [
    {
@@ -5269,7 +5361,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "blows": [
    {
@@ -5319,7 +5411,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "blows": [
    {
@@ -5369,7 +5461,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "blows": [
    {
@@ -5452,7 +5544,7 @@
   "armour": 37,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -5502,7 +5594,7 @@
   "armour": 45,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 28,
   "blows": [
    {
@@ -5542,7 +5634,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "blows": [
    {
@@ -5631,7 +5723,7 @@
   "armour": 24,
   "sleep": 40,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "spells": [
    "WEAVE"
@@ -5680,7 +5772,7 @@
   "armour": 24,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -5727,7 +5819,7 @@
   "armour": 24,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -5764,7 +5856,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 4,
-  "smell": 20,
+  "smell": 0,
   "experience": 3,
   "blows": [
    {
@@ -5900,7 +5992,7 @@
   "armour": 22,
   "sleep": 0,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 32,
   "blows": [
    {
@@ -5933,7 +6025,7 @@
   "armour": 30,
   "sleep": 10,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -5972,7 +6064,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 150,
   "blows": [
    {
@@ -6022,7 +6114,7 @@
   "armour": 38,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -6061,7 +6153,7 @@
   "armour": 43,
   "sleep": 10,
   "hearing": 5,
-  "smell": 20,
+  "smell": 0,
   "experience": 32,
   "blows": [
    {
@@ -6108,7 +6200,7 @@
   "armour": 16,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -6172,7 +6264,7 @@
   "armour": 48,
   "sleep": 5,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35,
   "blows": [
    {
@@ -6236,7 +6328,7 @@
   "armour": 36,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 45,
   "blows": [
    {
@@ -6328,7 +6420,7 @@
   "armour": 36,
   "sleep": 90,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 30,
   "blows": [
    {
@@ -6378,7 +6470,7 @@
   "armour": 30,
   "sleep": 20,
   "hearing": 18,
-  "smell": 20,
+  "smell": 0,
   "experience": 48,
   "blows": [
    {
@@ -6423,7 +6515,7 @@
   "armour": 50,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -6470,7 +6562,7 @@
   "armour": 48,
   "sleep": 10,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -6549,7 +6641,7 @@
   "armour": 1,
   "sleep": 99,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -6589,7 +6681,7 @@
   "armour": 22,
   "sleep": 10,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -6751,7 +6843,7 @@
   "armour": 26,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 36,
   "blows": [
    {
@@ -6820,7 +6912,7 @@
   "armour": 45,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -6868,7 +6960,7 @@
   "armour": 48,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -6906,7 +6998,7 @@
   "armour": 45,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 38,
   "blows": [
    {
@@ -6944,7 +7036,7 @@
   "armour": 36,
   "sleep": 100,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 34,
   "blows": [
    {
@@ -7026,7 +7118,7 @@
   "armour": 24,
   "sleep": 10,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 44,
   "blows": [
    {
@@ -7077,7 +7169,7 @@
   "armour": 51,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -7177,7 +7269,7 @@
   "armour": 27,
   "sleep": 0,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 33,
   "blows": [
    {
@@ -7225,7 +7317,7 @@
   "armour": 72,
   "sleep": 30,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 45,
   "blows": [
    {
@@ -7253,7 +7345,7 @@
   "armour": 21,
   "sleep": 1,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -7430,7 +7522,7 @@
   "armour": 60,
   "sleep": 10,
   "hearing": 5,
-  "smell": 20,
+  "smell": 0,
   "experience": 45,
   "blows": [
    {
@@ -7477,7 +7569,7 @@
   "armour": 15,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -7544,7 +7636,7 @@
   "armour": 15,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -7645,7 +7737,7 @@
   "armour": 30,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -7745,7 +7837,7 @@
   "armour": 30,
   "sleep": 10,
   "hearing": 15,
-  "smell": 20,
+  "smell": 0,
   "experience": 20,
   "blows": [
    {
@@ -7798,7 +7890,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -7874,7 +7966,7 @@
   "armour": 30,
   "sleep": 10,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 80,
   "blows": [
    {
@@ -8012,7 +8104,7 @@
   "armour": 12,
   "sleep": 0,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 10,
   "blows": [
    {
@@ -8068,7 +8160,7 @@
   "armour": 78,
   "sleep": 120,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 80,
   "blows": [
    {
@@ -8215,7 +8307,7 @@
   "armour": 48,
   "sleep": 20,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 70,
   "blows": [
    {
@@ -8323,7 +8415,7 @@
   "armour": 48,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 40,
   "blows": [
    {
@@ -8410,7 +8502,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -8453,7 +8545,7 @@
   "armour": 30,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 18,
   "blows": [
    {
@@ -8498,7 +8590,7 @@
   "armour": 75,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 75,
   "blows": [
    {
@@ -8549,7 +8641,7 @@
   "armour": 21,
   "sleep": 1,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 80,
   "blows": [
    {
@@ -8600,7 +8692,7 @@
   "armour": 48,
   "sleep": 5,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -8728,7 +8820,7 @@
   "armour": 36,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 50,
   "blows": [
    {
@@ -8898,7 +8990,7 @@
   "armour": 14,
   "sleep": 0,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 20,
   "blows": [
    {
@@ -8943,7 +9035,7 @@
   "armour": 36,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 55,
   "blows": [
    {
@@ -9047,7 +9139,7 @@
   "armour": 84,
   "sleep": 25,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -9112,7 +9204,7 @@
   "armour": 90,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 80,
   "blows": [
    {
@@ -9154,7 +9246,7 @@
   "armour": 42,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 58,
   "blows": [
    {
@@ -9196,7 +9288,7 @@
   "armour": 52,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 62,
   "blows": [
    {
@@ -9236,7 +9328,7 @@
   "armour": 60,
   "sleep": 20,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 64,
   "blows": [
    {
@@ -9280,7 +9372,7 @@
   "armour": 16,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -9398,7 +9490,7 @@
   "armour": 85,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 180,
   "blows": [
    {
@@ -9465,7 +9557,7 @@
   "armour": 36,
   "sleep": 20,
   "hearing": 16,
-  "smell": 20,
+  "smell": 0,
   "experience": 75,
   "blows": [
    {
@@ -9664,7 +9756,7 @@
   "armour": 36,
   "sleep": 0,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -9768,7 +9860,7 @@
   "armour": 19,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 75,
   "blows": [
    {
@@ -9820,7 +9912,7 @@
   "armour": 7,
   "sleep": 10,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 80,
   "blows": [
    {
@@ -10018,7 +10110,7 @@
   "armour": 90,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -10061,7 +10153,7 @@
   "armour": 19,
   "sleep": 70,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 64,
   "blows": [
    {
@@ -10094,7 +10186,7 @@
   "armour": 100,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [
    {
@@ -10188,7 +10280,7 @@
   "armour": 30,
   "sleep": 80,
   "hearing": 15,
-  "smell": 20,
+  "smell": 0,
   "experience": 25,
   "spells": [
    "WEAVE"
@@ -10322,7 +10414,7 @@
   "armour": 97,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 350,
   "blows": [
    {
@@ -10626,7 +10718,7 @@
   "armour": 1,
   "sleep": 2,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [],
   "flags": [
@@ -10743,7 +10835,7 @@
   "armour": 48,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -10813,7 +10905,7 @@
   "armour": 60,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 55,
   "blows": [
    {
@@ -10886,7 +10978,7 @@
   "armour": 48,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 55,
   "blows": [
    {
@@ -11029,7 +11121,7 @@
   "armour": 39,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 54,
   "blows": [
    {
@@ -11063,7 +11155,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 70,
   "blows": [
    {
@@ -11130,7 +11222,7 @@
   "armour": 36,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -11174,7 +11266,7 @@
   "armour": 36,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -11218,7 +11310,7 @@
   "armour": 36,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -11262,7 +11354,7 @@
   "armour": 33,
   "sleep": 75,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 56,
   "blows": [
    {
@@ -11308,7 +11400,7 @@
   "armour": 21,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -11430,7 +11522,7 @@
   "armour": 86,
   "sleep": 30,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 80,
   "blows": [
    {
@@ -11464,7 +11556,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 160,
   "blows": [
    {
@@ -11506,7 +11598,7 @@
   "armour": 45,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -11546,7 +11638,7 @@
   "armour": 79,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -11593,7 +11685,7 @@
   "armour": 30,
   "sleep": 80,
   "hearing": 15,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -11648,7 +11740,7 @@
   "armour": 7,
   "sleep": 1,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 7,
   "blows": [
    {
@@ -11690,7 +11782,7 @@
   "armour": 60,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -11840,7 +11932,7 @@
   "armour": 45,
   "sleep": 5,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 110,
   "blows": [
    {
@@ -11914,7 +12006,7 @@
   "armour": 42,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -11986,7 +12078,7 @@
   "armour": 36,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 140,
   "blows": [
    {
@@ -12044,7 +12136,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -12106,7 +12198,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -12168,7 +12260,7 @@
   "armour": 105,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 450,
   "blows": [
    {
@@ -12222,7 +12314,7 @@
   "armour": 51,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 70,
   "blows": [
    {
@@ -12268,7 +12360,7 @@
   "armour": 60,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 150,
   "blows": [
    {
@@ -12309,7 +12401,7 @@
   "armour": 96,
   "sleep": 25,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 400,
   "blows": [
    {
@@ -12378,7 +12470,7 @@
   "armour": 96,
   "sleep": 25,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 400,
   "blows": [
    {
@@ -12447,7 +12539,7 @@
   "armour": 28,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -12545,7 +12637,7 @@
   "armour": 16,
   "sleep": 8,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 75,
   "blows": [
    {
@@ -12599,7 +12691,7 @@
   "armour": 55,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 330,
   "blows": [
    {
@@ -12656,7 +12748,7 @@
   "armour": 54,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 150,
   "blows": [
    {
@@ -12709,7 +12801,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 600,
   "blows": [
    {
@@ -12859,7 +12951,7 @@
   "armour": 90,
   "sleep": 30,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 90,
   "blows": [
    {
@@ -12893,7 +12985,7 @@
   "armour": 25,
   "sleep": 10,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 6,
   "blows": [
    {
@@ -12931,7 +13023,7 @@
   "armour": 21,
   "sleep": 10,
   "hearing": 8,
-  "smell": 20,
+  "smell": 0,
   "experience": 4,
   "blows": [
    {
@@ -12997,7 +13089,7 @@
   "armour": 48,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -13100,7 +13192,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 90,
   "blows": [
    {
@@ -13189,7 +13281,7 @@
   "armour": 42,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 75,
   "blows": [
    {
@@ -13294,7 +13386,7 @@
   "armour": 96,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -13374,7 +13466,7 @@
   "armour": 64,
   "sleep": 30,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 95,
   "blows": [
    {
@@ -13412,7 +13504,7 @@
   "armour": 60,
   "sleep": 10,
   "hearing": 5,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -13807,7 +13899,7 @@
   "armour": 36,
   "sleep": 0,
   "hearing": 2,
-  "smell": 20,
+  "smell": 0,
   "experience": 140,
   "blows": [
    {
@@ -13847,7 +13939,7 @@
   "armour": 60,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 180,
   "blows": [
    {
@@ -13901,7 +13993,7 @@
   "armour": 90,
   "sleep": 120,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 60,
   "blows": [
    {
@@ -13962,7 +14054,7 @@
   "armour": 120,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 650,
   "blows": [
    {
@@ -14022,7 +14114,7 @@
   "armour": 105,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 240,
   "blows": [
    {
@@ -14099,7 +14191,7 @@
   "armour": 84,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 600,
   "blows": [
    {
@@ -14154,7 +14246,7 @@
   "armour": 48,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 150,
   "blows": [
    {
@@ -14212,7 +14304,7 @@
   "armour": 72,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 200,
   "blows": [
    {
@@ -14262,7 +14354,7 @@
   "armour": 75,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 750,
   "blows": [
    {
@@ -14476,7 +14568,7 @@
   "armour": 36,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 100,
   "blows": [
    {
@@ -14528,7 +14620,7 @@
   "armour": 1,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 150,
   "blows": [
    {
@@ -14700,7 +14792,7 @@
   "armour": 112,
   "sleep": 20,
   "hearing": 15,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -14751,7 +14843,7 @@
   "armour": 60,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 425,
   "blows": [
    {
@@ -14796,7 +14888,7 @@
   "armour": 78,
   "sleep": 30,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 400,
   "blows": [
    {
@@ -14882,7 +14974,7 @@
   "armour": 72,
   "sleep": 100,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 200,
   "blows": [
    {
@@ -14951,7 +15043,7 @@
   "armour": 60,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -15001,7 +15093,7 @@
   "armour": 60,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -15051,7 +15143,7 @@
   "armour": 60,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -15101,7 +15193,7 @@
   "armour": 36,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 140,
   "blows": [
    {
@@ -15147,7 +15239,7 @@
   "armour": 150,
   "sleep": 30,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -15202,7 +15294,7 @@
   "armour": 82,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 225,
   "blows": [
    {
@@ -15385,7 +15477,7 @@
   "armour": 60,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 325,
   "blows": [
    {
@@ -15444,7 +15536,7 @@
   "armour": 92,
   "sleep": 30,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -15555,7 +15647,7 @@
   "armour": 60,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 130,
   "blows": [
    {
@@ -15847,7 +15939,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 350,
   "blows": [
    {
@@ -15910,7 +16002,7 @@
   "armour": 72,
   "sleep": 30,
   "hearing": 16,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -15948,7 +16040,7 @@
   "armour": 72,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 700,
   "blows": [
    {
@@ -15998,7 +16090,7 @@
   "armour": 72,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 700,
   "blows": [
    {
@@ -16048,7 +16140,7 @@
   "armour": 72,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 700,
   "blows": [
    {
@@ -16098,7 +16190,7 @@
   "armour": 80,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1200,
   "blows": [
    {
@@ -16157,7 +16249,7 @@
   "armour": 90,
   "sleep": 99,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -16266,7 +16358,7 @@
   "armour": 1,
   "sleep": 1,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [],
   "flags": [
@@ -16300,7 +16392,7 @@
   "armour": 72,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -16361,7 +16453,7 @@
   "armour": 1,
   "sleep": 5,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 150,
   "blows": [
    {
@@ -16403,7 +16495,7 @@
   "armour": 72,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 900,
   "blows": [
    {
@@ -16462,7 +16554,7 @@
   "armour": 112,
   "sleep": 20,
   "hearing": 16,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -16559,7 +16651,7 @@
   "armour": 90,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -16613,7 +16705,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1100,
   "blows": [
    {
@@ -16735,7 +16827,7 @@
   "armour": 60,
   "sleep": 5,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -16803,7 +16895,7 @@
   "armour": 60,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 375,
   "blows": [
    {
@@ -16868,7 +16960,7 @@
   "armour": 75,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 325,
   "blows": [
    {
@@ -16923,7 +17015,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1400,
   "blows": [
    {
@@ -16981,7 +17073,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1400,
   "blows": [
    {
@@ -17038,7 +17130,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -17099,7 +17191,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1200,
   "blows": [
    {
@@ -17154,7 +17246,7 @@
   "armour": 60,
   "sleep": 50,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 350,
   "blows": [
    {
@@ -17204,7 +17296,7 @@
   "armour": 48,
   "sleep": 50,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 325,
   "blows": [
    {
@@ -17260,7 +17352,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1350,
   "blows": [
    {
@@ -17374,7 +17466,7 @@
   "armour": 81,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -17502,7 +17594,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 350,
   "blows": [
    {
@@ -17560,7 +17652,7 @@
   "armour": 45,
   "sleep": 5,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 350,
   "blows": [
    {
@@ -17633,7 +17725,7 @@
   "armour": 108,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1200,
   "blows": [
    {
@@ -17711,7 +17803,7 @@
   "armour": 72,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -17790,7 +17882,7 @@
   "armour": 90,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 375,
   "blows": [
    {
@@ -17845,7 +17937,7 @@
   "armour": 60,
   "sleep": 50,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 390,
   "blows": [
    {
@@ -17900,7 +17992,7 @@
   "armour": 187,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 1200,
   "blows": [
    {
@@ -17954,7 +18046,7 @@
   "armour": 105,
   "sleep": 40,
   "hearing": 15,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -18133,7 +18225,7 @@
   "armour": 69,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -18451,7 +18543,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -18518,7 +18610,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 42,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -18640,7 +18732,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 900,
   "blows": [
    {
@@ -18687,7 +18779,7 @@
   "armour": 90,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -18810,7 +18902,7 @@
   "armour": 120,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 300,
   "blows": [
    {
@@ -18866,7 +18958,7 @@
   "armour": 120,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 375,
   "blows": [
    {
@@ -18915,7 +19007,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 650,
   "blows": [
    {
@@ -18967,7 +19059,7 @@
   "armour": 180,
   "sleep": 10,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 850,
   "blows": [
    {
@@ -19020,7 +19112,7 @@
   "armour": 90,
   "sleep": 10,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 580,
   "blows": [
    {
@@ -19068,7 +19160,7 @@
   "armour": 81,
   "sleep": 90,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 750,
   "blows": [
    {
@@ -19121,7 +19213,7 @@
   "armour": 75,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 630,
   "blows": [
    {
@@ -19181,7 +19273,7 @@
   "armour": 120,
   "sleep": 10,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 1200,
   "blows": [
    {
@@ -19260,7 +19352,7 @@
   "armour": 75,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 700,
   "blows": [
    {
@@ -19325,7 +19417,7 @@
   "armour": 75,
   "sleep": 25,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 600,
   "blows": [
    {
@@ -19379,7 +19471,7 @@
   "armour": 90,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 650,
   "blows": [
    {
@@ -19436,7 +19528,7 @@
   "armour": 75,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 420,
   "blows": [
    {
@@ -19482,7 +19574,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 380,
   "blows": [
    {
@@ -19540,7 +19632,7 @@
   "armour": 105,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 950,
   "blows": [
    {
@@ -19596,7 +19688,7 @@
   "armour": 90,
   "sleep": 30,
   "hearing": 16,
-  "smell": 20,
+  "smell": 0,
   "experience": 850,
   "blows": [
    {
@@ -19640,7 +19732,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -19684,7 +19776,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -19785,7 +19877,7 @@
   "armour": 14,
   "sleep": 0,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -19826,7 +19918,7 @@
   "armour": 48,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -19898,7 +19990,7 @@
   "armour": 102,
   "sleep": 90,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -19996,7 +20088,7 @@
   "armour": 180,
   "sleep": 0,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 500,
   "blows": [
    {
@@ -20054,7 +20146,7 @@
   "armour": 120,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -20115,7 +20207,7 @@
   "armour": 108,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -20177,7 +20269,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -20220,7 +20312,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -20270,7 +20362,7 @@
   "armour": 48,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 355,
   "blows": [
    {
@@ -20383,7 +20475,7 @@
   "armour": 54,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 250,
   "blows": [
    {
@@ -20440,7 +20532,7 @@
   "armour": 114,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 700,
   "blows": [
    {
@@ -20500,7 +20592,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1400,
   "blows": [
    {
@@ -20563,7 +20655,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1400,
   "blows": [
    {
@@ -20626,7 +20718,7 @@
   "armour": 84,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1400,
   "blows": [
    {
@@ -20689,7 +20781,7 @@
   "armour": 135,
   "sleep": 35,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2000,
   "blows": [
    {
@@ -20809,7 +20901,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 6000,
   "blows": [
    {
@@ -20871,7 +20963,7 @@
   "armour": 6,
   "sleep": 10,
   "hearing": 7,
-  "smell": 20,
+  "smell": 0,
   "experience": 30,
   "blows": [
    {
@@ -20906,7 +20998,7 @@
   "armour": 108,
   "sleep": 5,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 900,
   "blows": [
    {
@@ -20957,7 +21049,7 @@
   "armour": 36,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 400,
   "blows": [
    {
@@ -21016,7 +21108,7 @@
   "armour": 114,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [
    {
@@ -21090,7 +21182,7 @@
   "armour": 72,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2100,
   "blows": [
    {
@@ -21171,7 +21263,7 @@
   "armour": 72,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2150,
   "blows": [
    {
@@ -21255,7 +21347,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1200,
   "blows": [
    {
@@ -21309,7 +21401,7 @@
   "armour": 84,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -21391,7 +21483,7 @@
   "armour": 75,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2000,
   "blows": [
    {
@@ -21451,7 +21543,7 @@
   "armour": 96,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -21510,7 +21602,7 @@
   "armour": 90,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1800,
   "blows": [
    {
@@ -21673,7 +21765,7 @@
   "armour": 96,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -21737,7 +21829,7 @@
   "armour": 96,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -21801,7 +21893,7 @@
   "armour": 96,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -21864,7 +21956,7 @@
   "armour": 84,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [
    {
@@ -21928,7 +22020,7 @@
   "armour": 96,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 10000,
   "blows": [
    {
@@ -22013,7 +22105,7 @@
   "armour": 144,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 7000,
   "blows": [
    {
@@ -22078,7 +22170,7 @@
   "armour": 72,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1600,
   "blows": [
    {
@@ -22161,7 +22253,7 @@
   "armour": 102,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [
    {
@@ -22289,7 +22381,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2900,
   "blows": [
    {
@@ -22529,7 +22621,7 @@
   "armour": 81,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 1900,
   "blows": [
    {
@@ -22601,7 +22693,7 @@
   "armour": 81,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 1900,
   "blows": [
    {
@@ -22672,7 +22764,7 @@
   "armour": 96,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1950,
   "blows": [
    {
@@ -22746,7 +22838,7 @@
   "armour": 75,
   "sleep": 30,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 4000,
   "blows": [
    {
@@ -22810,7 +22902,7 @@
   "armour": 120,
   "sleep": 30,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 4250,
   "blows": [
    {
@@ -22877,7 +22969,7 @@
   "armour": 60,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [
    {
@@ -22926,7 +23018,7 @@
   "armour": 145,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 4500,
   "blows": [
    {
@@ -22992,7 +23084,7 @@
   "armour": 75,
   "sleep": 30,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 4750,
   "blows": [
    {
@@ -23126,7 +23218,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 6000,
   "blows": [
    {
@@ -23205,7 +23297,7 @@
   "armour": 36,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 600,
   "blows": [
    {
@@ -23272,7 +23364,7 @@
   "armour": 106,
   "sleep": 30,
   "hearing": 14,
-  "smell": 20,
+  "smell": 0,
   "experience": 850,
   "blows": [
    {
@@ -23315,7 +23407,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [],
   "flags": [
@@ -23349,7 +23441,7 @@
   "armour": 60,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 5000,
   "blows": [
    {
@@ -23406,7 +23498,7 @@
   "armour": 120,
   "sleep": 10,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 8000,
   "blows": [
    {
@@ -23477,7 +23569,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [],
   "flags": [
@@ -23511,7 +23603,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [],
   "flags": [
@@ -23606,7 +23698,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2500,
   "blows": [
    {
@@ -23678,7 +23770,7 @@
   "armour": 144,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1500,
   "blows": [
    {
@@ -23726,7 +23818,7 @@
   "armour": 60,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1700,
   "blows": [
    {
@@ -23786,7 +23878,7 @@
   "armour": 90,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2100,
   "blows": [
    {
@@ -23941,7 +24033,7 @@
   "armour": 112,
   "sleep": 60,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 7000,
   "blows": [
    {
@@ -24001,7 +24093,7 @@
   "armour": 72,
   "sleep": 0,
   "hearing": 200,
-  "smell": 20,
+  "smell": 0,
   "experience": 1000,
   "blows": [
    {
@@ -24053,7 +24145,7 @@
   "armour": 78,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2500,
   "blows": [
    {
@@ -24122,7 +24214,7 @@
   "armour": 96,
   "sleep": 5,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 4000,
   "blows": [
    {
@@ -24173,7 +24265,7 @@
   "armour": 120,
   "sleep": 5,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 6000,
   "blows": [
    {
@@ -24241,7 +24333,7 @@
   "armour": 110,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 1400,
   "blows": [
    {
@@ -24289,13 +24381,13 @@
   "innateFrequency": 40,
   "spellFrequency": 8,
   "spells": [
-   "STORM",
    "BLINK",
    "CONF",
    "SCARE",
    "TELE_TO",
    "BA_ELEC",
    "BO_ELEC",
+   "STORM",
    "BOULDER"
   ]
  },
@@ -24311,7 +24403,7 @@
   "armour": 75,
   "sleep": 50,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 10000,
   "blows": [
    {
@@ -24374,7 +24466,7 @@
   "armour": 66,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2700,
   "blows": [
    {
@@ -24439,7 +24531,7 @@
   "armour": 150,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 25000,
   "blows": [
    {
@@ -24514,7 +24606,7 @@
   "armour": 108,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2500,
   "blows": [
    {
@@ -24571,7 +24663,7 @@
   "armour": 108,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2500,
   "blows": [
    {
@@ -24628,7 +24720,7 @@
   "armour": 108,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2500,
   "blows": [
    {
@@ -24685,7 +24777,7 @@
   "armour": 120,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 11000,
   "blows": [
    {
@@ -24747,7 +24839,7 @@
   "armour": 120,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 11000,
   "blows": [
    {
@@ -24806,7 +24898,7 @@
   "armour": 120,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 11000,
   "blows": [
    {
@@ -24864,7 +24956,7 @@
   "armour": 72,
   "sleep": 5,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 6000,
   "blows": [
    {
@@ -24935,7 +25027,7 @@
   "armour": 36,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 800,
   "blows": [
    {
@@ -24996,7 +25088,7 @@
   "armour": 150,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 30000,
   "blows": [
    {
@@ -25075,7 +25167,7 @@
   "armour": 108,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2800,
   "blows": [
    {
@@ -25132,7 +25224,7 @@
   "armour": 108,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2800,
   "blows": [
    {
@@ -25189,7 +25281,7 @@
   "armour": 108,
   "sleep": 80,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 2800,
   "blows": [
    {
@@ -25431,7 +25523,7 @@
   "armour": 108,
   "sleep": 0,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -25496,7 +25588,7 @@
   "armour": 96,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 2500,
   "blows": [
    {
@@ -25569,7 +25661,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3500,
   "blows": [
    {
@@ -25631,7 +25723,7 @@
   "armour": 144,
   "sleep": 70,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -25696,7 +25788,7 @@
   "armour": 60,
   "sleep": 70,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 7000,
   "blows": [
    {
@@ -25763,7 +25855,7 @@
   "armour": 120,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 14000,
   "blows": [
    {
@@ -25830,7 +25922,7 @@
   "armour": 96,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 4000,
   "blows": [
    {
@@ -25889,7 +25981,7 @@
   "armour": 156,
   "sleep": 70,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 18000,
   "blows": [
    {
@@ -25954,7 +26046,7 @@
   "armour": 156,
   "sleep": 0,
   "hearing": 60,
-  "smell": 20,
+  "smell": 0,
   "experience": 40000,
   "blows": [
    {
@@ -26022,7 +26114,7 @@
   "armour": 195,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 12000,
   "blows": [
    {
@@ -26086,7 +26178,7 @@
   "armour": 150,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 12500,
   "blows": [
    {
@@ -26161,7 +26253,7 @@
   "armour": 120,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 8000,
   "blows": [
    {
@@ -26230,7 +26322,7 @@
   "armour": 66,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 3900,
   "blows": [
    {
@@ -26297,7 +26389,7 @@
   "armour": 180,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 27000,
   "blows": [
    {
@@ -26358,13 +26450,13 @@
   "innateFrequency": 20,
   "spellFrequency": 4,
   "spells": [
-   "WEAVE",
    "BLIND",
    "WOUND",
    "CONF",
    "HEAL",
    "SCARE",
    "SLOW",
+   "WEAVE",
    "BR_DARK",
    "BR_POIS",
    "S_KIN"
@@ -26382,7 +26474,7 @@
   "armour": 144,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 18000,
   "blows": [
    {
@@ -26447,7 +26539,7 @@
   "armour": 144,
   "sleep": 80,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 18000,
   "blows": [
    {
@@ -26513,7 +26605,7 @@
   "armour": 54,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 32500,
   "blows": [
    {
@@ -26579,7 +26671,7 @@
   "armour": 90,
   "sleep": 70,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 3000,
   "blows": [
    {
@@ -26645,7 +26737,7 @@
   "armour": 96,
   "sleep": 15,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 6000,
   "blows": [
    {
@@ -26705,7 +26797,7 @@
   "armour": 96,
   "sleep": 5,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 15000,
   "blows": [
    {
@@ -26779,7 +26871,7 @@
   "armour": 132,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 12000,
   "blows": [],
   "flags": [
@@ -26828,7 +26920,7 @@
   "armour": 168,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 7000,
   "blows": [
    {
@@ -27064,7 +27156,7 @@
   "armour": 234,
   "sleep": 10,
   "hearing": 25,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -27133,7 +27225,7 @@
   "armour": 96,
   "sleep": 15,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 6000,
   "blows": [
    {
@@ -27180,9 +27272,9 @@
   "innateFrequency": 6,
   "spellFrequency": 3,
   "spells": [
-   "STORM",
    "BOULDER",
    "BO_ICE",
+   "STORM",
    "S_MONSTERS"
   ]
  },
@@ -27198,7 +27290,7 @@
   "armour": 90,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 3600,
   "blows": [
    {
@@ -27246,9 +27338,9 @@
   "plural": "Maiar of Yavanna",
   "spellFrequency": 3,
   "spells": [
-   "S_AINU",
    "BO_MANA",
    "BO_WATE",
+   "S_AINU",
    "S_ANIMAL",
    "SHAPECHANGE"
   ],
@@ -27268,7 +27360,7 @@
   "armour": 120,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 3600,
   "blows": [
    {
@@ -27339,7 +27431,7 @@
   "armour": 145,
   "sleep": 50,
   "hearing": 10,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -27400,7 +27492,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 5000,
   "blows": [
    {
@@ -27484,7 +27576,7 @@
   "armour": 120,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 35000,
   "blows": [
    {
@@ -27543,7 +27635,6 @@
   "description": "Originally known as the White, Saruman fell prey to Sauron's wiles. He seeks to emulate him and breeds orcs and trolls to fight for him. He searches forever for the One Ring, to become a mighty Sorcerer-King of the world.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "WOUND",
    "FORGET",
@@ -27561,6 +27652,7 @@
    "BO_ICE",
    "S_ANIMAL",
    "S_DEMON",
+   "S_HI_DRAGON",
    "S_MONSTERS",
    "S_UNDEAD"
   ]
@@ -27577,7 +27669,7 @@
   "armour": 144,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 10000,
   "blows": [
    {
@@ -27647,7 +27739,7 @@
   "armour": 135,
   "sleep": 40,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 12000,
   "blows": [
    {
@@ -27707,7 +27799,7 @@
   "armour": 180,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -27784,7 +27876,7 @@
   "armour": 195,
   "sleep": 120,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 30000,
   "blows": [
    {
@@ -27924,7 +28016,7 @@
   "armour": 180,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 30000,
   "blows": [
    {
@@ -27979,13 +28071,13 @@
   "innateFrequency": 20,
   "spellFrequency": 5,
   "spells": [
-   "WEAVE",
    "BLIND",
    "WOUND",
    "CONF",
    "HEAL",
    "SCARE",
    "SLOW",
+   "WEAVE",
    "BR_DARK",
    "BR_POIS",
    "S_KIN"
@@ -28063,7 +28155,7 @@
   "armour": 180,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -28111,7 +28203,6 @@
   "plural": "archliches",
   "spellFrequency": 3,
   "spells": [
-   "S_HI_UNDEAD",
    "BLINK",
    "WOUND",
    "DRAIN_MANA",
@@ -28123,7 +28214,8 @@
    "TELE_TO",
    "TPORT",
    "BA_NETH",
-   "S_DEMON"
+   "S_DEMON",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -28138,7 +28230,7 @@
   "armour": 90,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 5000,
   "blows": [
    {
@@ -28188,10 +28280,10 @@
   "plural": "Maiar of Ulmo",
   "spellFrequency": 3,
   "spells": [
-   "S_AINU",
    "BA_WATE",
    "BO_MANA",
    "BO_WATE",
+   "S_AINU",
    "SHAPECHANGE"
   ],
   "shapes": [
@@ -28212,7 +28304,7 @@
   "armour": 120,
   "sleep": 30,
   "hearing": 12,
-  "smell": 20,
+  "smell": 0,
   "experience": 4250,
   "blows": [
    {
@@ -28274,7 +28366,7 @@
   "armour": 120,
   "sleep": 10,
   "hearing": 60,
-  "smell": 20,
+  "smell": 0,
   "experience": 38000,
   "blows": [
    {
@@ -28322,8 +28414,6 @@
   "description": "The Mouth of Sauron is a mighty spell caster. So old that even he cannot remember his own name, his power and evil are undeniable. He believes unshakably that he is unbeatable and laughs as he weaves his awesome spells.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_UNDEAD",
    "WOUND",
    "HOLD",
    "TELE_TO",
@@ -28333,7 +28423,9 @@
    "BA_MANA",
    "BA_NETH",
    "BA_WATE",
-   "BO_PLAS"
+   "BO_PLAS",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -28348,7 +28440,7 @@
   "armour": 112,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 13000,
   "blows": [
    {
@@ -28416,7 +28508,7 @@
   "armour": 110,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 11000,
   "blows": [
    {
@@ -28472,7 +28564,7 @@
   "armour": 108,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 18000,
   "blows": [],
   "flags": [
@@ -28516,7 +28608,7 @@
   "armour": 150,
   "sleep": 15,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 23500,
   "blows": [
    {
@@ -28706,12 +28798,12 @@
   "description": "Chief messenger between Sauron and Morgoth, she is surely the most deadly of her vampire race. At first she is charming to meet, but her wings and eyes give away her true form.",
   "spellFrequency": 3,
   "spells": [
-   "S_HI_UNDEAD",
    "BLIND",
    "BRAIN_SMASH",
    "WOUND",
    "DRAIN_MANA",
    "BA_NETH",
+   "S_HI_UNDEAD",
    "S_KIN",
    "HOLD",
    "SCARE"
@@ -28729,7 +28821,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 17000,
   "blows": [
    {
@@ -28850,7 +28942,7 @@
   "armour": 180,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 35000,
   "blows": [
    {
@@ -28898,12 +28990,12 @@
   "description": "This huge affront to existence twists and tears at the fabric of space. A master of mighty magic, Tselakus hungers for your tender flesh. Darkness itself recoils from the touch of Tselakus as he leaves a trail of death and destruction. Tselakus is a being of sneering contempt, laughing at your pitiful efforts to defy him. Mighty claws rend reality as he annihilates all in his path to your soul!",
   "spellFrequency": 3,
   "spells": [
-   "S_HI_UNDEAD",
    "BLIND",
    "CONF",
    "HOLD",
    "BA_DARK",
    "BA_NETH",
+   "S_HI_UNDEAD",
    "S_KIN"
   ]
  },
@@ -28919,7 +29011,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 23000,
   "blows": [
    {
@@ -29050,7 +29142,7 @@
   "armour": 150,
   "sleep": 15,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 23500,
   "blows": [
    {
@@ -29114,7 +29206,7 @@
   "armour": 192,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 15000,
   "blows": [
    {
@@ -29188,7 +29280,7 @@
   "armour": 150,
   "sleep": 30,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 14000,
   "blows": [
    {
@@ -29233,14 +29325,14 @@
   "innateFrequency": 20,
   "spellFrequency": 8,
   "spells": [
-   "S_HI_DEMON",
    "HOLD",
    "SCARE",
    "SLOW",
    "BA_COLD",
    "BO_ICE",
    "BR_COLD",
-   "BR_SHAR"
+   "BR_SHAR",
+   "S_HI_DEMON"
   ]
  },
  {
@@ -29255,7 +29347,7 @@
   "armour": 225,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 25000,
   "blows": [
    {
@@ -29319,7 +29411,7 @@
   "armour": 225,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 25000,
   "blows": [
    {
@@ -29383,7 +29475,7 @@
   "armour": 225,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -29447,7 +29539,7 @@
   "armour": 120,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 7000,
   "blows": [
    {
@@ -29498,8 +29590,8 @@
   "spellFrequency": 3,
   "spells": [
    "STORM",
-   "S_AINU",
    "BA_ELEC",
+   "S_AINU",
    "SHAPECHANGE"
   ],
   "shapes": [
@@ -29520,7 +29612,7 @@
   "armour": 110,
   "sleep": 255,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 12000,
   "blows": [
    {
@@ -29569,9 +29661,9 @@
   "plural": "Maiar of Varda",
   "spellFrequency": 3,
   "spells": [
-   "S_AINU",
    "BA_LIGHT",
    "BO_MANA",
+   "S_AINU",
    "SHAPECHANGE"
   ],
   "shapes": [
@@ -29592,7 +29684,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 10500,
   "blows": [],
   "flags": [
@@ -29610,9 +29702,9 @@
   "description": "A massive pulsating mound of flesh, strongly reeking of sulfur.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DEMON",
    "BLINK",
-   "TELE_TO"
+   "TELE_TO",
+   "S_HI_DEMON"
   ]
  },
  {
@@ -29627,7 +29719,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 10500,
   "blows": [],
   "flags": [
@@ -29645,9 +29737,9 @@
   "description": "A massive mound of multi-hued scaled flesh, throbbing and pulsating.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DRAGON",
    "BLINK",
-   "TELE_TO"
+   "TELE_TO",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -29662,7 +29754,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 10500,
   "blows": [],
   "flags": [
@@ -29680,9 +29772,9 @@
   "description": "A massive pile of rotting flesh. A disgusting stench fills the air as it throbs and writhes.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_UNDEAD",
    "BLINK",
-   "TELE_TO"
+   "TELE_TO",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -29697,7 +29789,7 @@
   "armour": 180,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 18000,
   "blows": [
    {
@@ -29745,10 +29837,10 @@
   "description": "A giant humanoid demon wielding a massive, heavy and sharp scythe. Feared by foes and friends alike when it flies into one of its berserk rages, the Horned Reaper will cut down anything in its path between it and you - even the minions it has just summoned.",
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DEMON",
    "HASTE",
    "SCARE",
-   "SLOW"
+   "SLOW",
+   "S_HI_DEMON"
   ]
  },
  {
@@ -29763,7 +29855,7 @@
   "armour": 204,
   "sleep": 10,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 30000,
   "blows": [
    {
@@ -29818,15 +29910,15 @@
   "innateFrequency": 4,
   "spellFrequency": 2,
   "spells": [
-   "STORM",
-   "S_AINU",
    "BLIND",
    "TELE_TO",
    "WHIP",
    "BA_WATE",
+   "STORM",
    "BO_MANA",
    "BO_WATE",
-   "BR_DISE"
+   "BR_DISE",
+   "S_AINU"
   ]
  },
  {
@@ -29841,7 +29933,7 @@
   "armour": 225,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 25000,
   "blows": [
    {
@@ -29905,7 +29997,7 @@
   "armour": 225,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 23000,
   "blows": [
    {
@@ -29969,7 +30061,7 @@
   "armour": 225,
   "sleep": 30,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 23000,
   "blows": [
    {
@@ -30034,7 +30126,7 @@
   "armour": 170,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [
    {
@@ -30105,7 +30197,7 @@
   "armour": 96,
   "sleep": 10,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 25000,
   "blows": [
    {
@@ -30176,7 +30268,7 @@
   "armour": 144,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 23000,
   "blows": [],
   "flags": [
@@ -30222,7 +30314,7 @@
   "armour": 255,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 23000,
   "blows": [
    {
@@ -30382,7 +30474,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 29000,
   "blows": [
    {
@@ -30430,13 +30522,13 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
    "BR_CHAO",
    "BR_DISE",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -30451,7 +30543,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 29000,
   "blows": [
    {
@@ -30499,13 +30591,13 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
    "BR_SHAR",
    "BR_SOUN",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -30520,7 +30612,7 @@
   "armour": 240,
   "sleep": 10,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 35000,
   "blows": [
    {
@@ -30569,11 +30661,11 @@
   "innateFrequency": 11,
   "spellFrequency": 4,
   "spells": [
-   "WEAVE",
    "BLIND",
    "CONF",
    "HEAL",
    "SCARE",
+   "WEAVE",
    "BA_DARK",
    "BR_DARK",
    "BR_POIS",
@@ -30592,7 +30684,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 26000,
   "blows": [
    {
@@ -30657,7 +30749,7 @@
   "armour": 210,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 55000,
   "blows": [
    {
@@ -30708,12 +30800,12 @@
   "innateFrequency": 5,
   "spellFrequency": 3,
   "spells": [
-   "S_HI_DRAGON",
    "BRAIN_SMASH",
    "FORGET",
    "SCARE",
    "BR_FIRE",
-   "BR_POIS"
+   "BR_POIS",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -30728,7 +30820,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 15000,
   "blows": [],
   "flags": [
@@ -30746,12 +30838,12 @@
   "description": "A giant seething mass of flesh, overwhelming you with monster after monster.",
   "spellFrequency": 1,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_DRAGON",
-   "S_HI_UNDEAD",
    "BLINK",
    "TELE_TO",
    "S_ANIMAL",
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
    "S_MONSTERS"
   ]
  },
@@ -30767,7 +30859,7 @@
   "armour": 192,
   "sleep": 15,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 37000,
   "blows": [
    {
@@ -30831,7 +30923,7 @@
   "armour": 127,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 30000,
   "blows": [
    {
@@ -30942,7 +31034,7 @@
   "armour": 180,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 22000,
   "blows": [
    {
@@ -30989,14 +31081,14 @@
   "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_DRAGON",
    "WOUND",
    "SCARE",
    "BA_FIRE",
    "BR_CHAO",
    "BR_FIRE",
-   "BR_POIS"
+   "BR_POIS",
+   "S_HI_DEMON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -31060,7 +31152,6 @@
   "description": "A tall black cloaked Ringwraith, he is a master of horsemanship. He longs to taste your blood.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "FORGET",
@@ -31068,7 +31159,8 @@
    "SCARE",
    "BO_COLD",
    "BO_NETH",
-   "S_MONSTER"
+   "S_MONSTER",
+   "S_WRAITH"
   ]
  },
  {
@@ -31083,7 +31175,7 @@
   "armour": 145,
   "sleep": 30,
   "hearing": 5,
-  "smell": 20,
+  "smell": 0,
   "experience": 17000,
   "blows": [
    {
@@ -31177,7 +31269,6 @@
   "description": "A sorceress in life, Adunaphel quickly fell under Sauron's sway and the power of the rings.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "FORGET",
@@ -31187,7 +31278,8 @@
    "BO_COLD",
    "BO_FIRE",
    "BO_NETH",
-   "S_MONSTER"
+   "S_MONSTER",
+   "S_WRAITH"
   ]
  },
  {
@@ -31202,7 +31294,7 @@
   "armour": 1,
   "sleep": 0,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 20000,
   "blows": [],
   "flags": [
@@ -31226,16 +31318,16 @@
   "spellFrequency": 1,
   "spells": [
    "S_AINU",
+   "S_ANIMAL",
    "S_HI_DEMON",
    "S_HI_DRAGON",
    "S_HI_UNDEAD",
-   "S_UNIQUE",
-   "S_ANIMAL",
    "S_HOUND",
    "S_HYDRA",
    "S_KIN",
    "S_MONSTERS",
-   "S_SPIDER"
+   "S_SPIDER",
+   "S_UNIQUE"
   ]
  },
  {
@@ -31300,7 +31392,6 @@
   "description": "A mighty sorcerer King, Akhorahil was blind in life. With powerful enchantments, he created jewelled eyes that enabled him to see better than any ordinary man ever could.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "DARKNESS",
@@ -31309,7 +31400,8 @@
    "BO_COLD",
    "BO_FIRE",
    "BO_NETH",
-   "S_MONSTERS"
+   "S_MONSTERS",
+   "S_WRAITH"
   ]
  },
  {
@@ -31324,7 +31416,7 @@
   "armour": 120,
   "sleep": 20,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 23000,
   "blows": [
    {
@@ -31371,12 +31463,12 @@
   "plural": "furies",
   "spellFrequency": 4,
   "spells": [
-   "S_HI_DEMON",
    "WOUND",
    "SCARE",
    "BRAIN_SMASH",
    "BLINK",
-   "TELE_SELF_TO"
+   "TELE_SELF_TO",
+   "S_HI_DEMON"
   ]
  },
  {
@@ -31391,7 +31483,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 31000,
   "blows": [
    {
@@ -31438,7 +31530,6 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31447,7 +31538,8 @@
    "BR_NETH",
    "BR_CHAO",
    "BR_TIME",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -31462,7 +31554,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 31000,
   "blows": [
    {
@@ -31509,7 +31601,6 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31518,7 +31609,8 @@
    "BR_GRAV",
    "BR_PLAS",
    "BR_WALL",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -31533,7 +31625,7 @@
   "armour": 10,
   "sleep": 10,
   "hearing": 50,
-  "smell": 20,
+  "smell": 0,
   "experience": 18000,
   "blows": [
    {
@@ -31642,7 +31734,6 @@
   "description": "Ren was an insane eastern king who believed himself to be the son of a volcano god. At an early age his sanity was destroyed by a plague that wiped out his family, and he never recovered.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "HOLD",
@@ -31650,7 +31741,8 @@
    "BA_FIRE",
    "BO_FIRE",
    "BO_NETH",
-   "S_MONSTER"
+   "S_MONSTER",
+   "S_WRAITH"
   ]
  },
  {
@@ -31665,7 +31757,7 @@
   "armour": 144,
   "sleep": 20,
   "hearing": 70,
-  "smell": 20,
+  "smell": 0,
   "experience": 35000,
   "blows": [
    {
@@ -31715,12 +31807,12 @@
   "description": "The son of Eöl the Dark Elf, Maeglin is every bit as evil as his father and more. His greed for gold led him to betray the Hidden Kingdom of Gondolin to Morgoth's forces. He is a mighty warrior himself, and some of Morgoth's greatest servants answer to his call.",
   "spellFrequency": 6,
   "spells": [
+   "S_ANIMAL",
    "S_HI_DEMON",
    "S_HI_DRAGON",
    "S_HI_UNDEAD",
-   "S_UNIQUE",
-   "S_ANIMAL",
-   "S_MONSTERS"
+   "S_MONSTERS",
+   "S_UNIQUE"
   ]
  },
  {
@@ -31787,7 +31879,6 @@
   "description": "This Ringwraith was a weak-minded sorcerer-king who fell easily under Sauron's power.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "HOLD",
@@ -31797,7 +31888,8 @@
    "BA_ELEC",
    "BA_FIRE",
    "BA_NETH",
-   "S_UNDEAD"
+   "S_UNDEAD",
+   "S_WRAITH"
   ]
  },
  {
@@ -31812,7 +31904,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 33000,
   "blows": [
    {
@@ -31862,7 +31954,6 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31870,7 +31961,8 @@
    "BR_DISE",
    "BR_SHAR",
    "BR_SOUN",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -31885,7 +31977,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 33000,
   "blows": [
    {
@@ -31936,7 +32028,6 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
-   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31945,7 +32036,8 @@
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DRAGON"
   ]
  },
  {
@@ -31960,7 +32052,7 @@
   "armour": 150,
   "sleep": 10,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 30000,
   "blows": [
    {
@@ -32018,11 +32110,11 @@
   "description": "A winged humanoid demon, Pazuzu grins inhumanely at you as he decides your fate.",
   "spellFrequency": 3,
   "spells": [
-   "S_HI_DEMON",
    "MIND_BLAST",
    "BA_ELEC",
    "BO_ELEC",
-   "BO_MANA"
+   "BO_MANA",
+   "S_HI_DEMON"
   ]
  },
  {
@@ -32089,7 +32181,6 @@
   "description": "Dwar had a special affinity for dogs in life, and can still command them at will. He howls maniacally as he reaches out to destroy you.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "HOLD",
@@ -32097,7 +32188,8 @@
    "BA_FIRE",
    "BA_NETH",
    "S_HOUND",
-   "S_UNDEAD"
+   "S_UNDEAD",
+   "S_WRAITH"
   ]
  },
  {
@@ -32163,7 +32255,6 @@
   "description": "A Ringwraith powerful in fell sorcery, he yearns for the life he has lost for an unlife of everlasting torment.",
   "spellFrequency": 3,
   "spells": [
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "HOLD",
@@ -32172,7 +32263,8 @@
    "BA_COLD",
    "BA_NETH",
    "BE_NETH",
-   "S_UNDEAD"
+   "S_UNDEAD",
+   "S_WRAITH"
   ]
  },
  {
@@ -32315,8 +32407,6 @@
   "description": "A warrior-king of the East. Khamûl is a powerful opponent, his skill in combat awesome and his form twisted by evil cunning.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_UNDEAD",
-   "S_WRAITH",
    "BLIND",
    "WOUND",
    "HOLD",
@@ -32325,7 +32415,9 @@
    "BA_COLD",
    "BA_FIRE",
    "BA_NETH",
-   "BO_MANA"
+   "BO_MANA",
+   "S_HI_UNDEAD",
+   "S_WRAITH"
   ]
  },
  {
@@ -32341,7 +32433,7 @@
   "armour": 180,
   "sleep": 40,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 45000,
   "blows": [
    {
@@ -32394,7 +32486,6 @@
   "description": "A legion of evil undead druj animating the skeleton of a once mighty sorcerer. His power is devastating and his speed unmatched in the underworld. Flee his wrath!",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_UNDEAD",
    "BRAIN_SMASH",
    "WOUND",
    "SCARE",
@@ -32402,7 +32493,8 @@
    "BA_NETH",
    "BA_WATE",
    "BO_ICE",
-   "BO_MANA"
+   "BO_MANA",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -32417,7 +32509,7 @@
   "armour": 210,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 25000,
   "blows": [
    {
@@ -32466,7 +32558,6 @@
   "innateFrequency": 5,
   "spellFrequency": 4,
   "spells": [
-   "S_HI_DEMON",
    "CONF",
    "BA_FIRE",
    "BO_PLAS",
@@ -32474,6 +32565,7 @@
    "WHIP",
    "BR_FIRE",
    "BR_PLAS",
+   "S_HI_DEMON",
    "S_UNDEAD"
   ]
  },
@@ -32548,10 +32640,6 @@
   "description": "The most fell of all Sauron's captains: King of Angmar, Sorcerer, Ringwraith, Lord of the Nazgûl, a spear of terror in the hand of Sauron, shadow of despair. His spells are lethal and his combat blows crushingly hard. He moves at speed, and commands legions of evil to do his bidding. It is said that he is fated never to die by the hand of mortal man.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_DRAGON",
-   "S_HI_UNDEAD",
-   "S_WRAITH",
    "BLIND",
    "BRAIN_SMASH",
    "WOUND",
@@ -32560,8 +32648,12 @@
    "TELE_AWAY",
    "BA_NETH",
    "BO_MANA",
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
    "S_KIN",
-   "S_MONSTERS"
+   "S_MONSTERS",
+   "S_WRAITH"
   ]
  },
  {
@@ -32576,7 +32668,7 @@
   "armour": 255,
   "sleep": 20,
   "hearing": 40,
-  "smell": 20,
+  "smell": 0,
   "experience": 45000,
   "blows": [
    {
@@ -32656,12 +32748,12 @@
   "innateFrequency": 4,
   "spellFrequency": 10,
   "spells": [
-   "S_HI_DRAGON",
    "BR_ACID",
    "BR_COLD",
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS",
+   "S_HI_DRAGON",
    "S_KIN"
   ]
  },
@@ -32741,7 +32833,7 @@
   "armour": 180,
   "sleep": 15,
   "hearing": 30,
-  "smell": 20,
+  "smell": 0,
   "experience": 42000,
   "blows": [
    {
@@ -32843,7 +32935,7 @@
   "armour": 187,
   "sleep": 10,
   "hearing": 20,
-  "smell": 20,
+  "smell": 0,
   "experience": 37000,
   "blows": [
    {
@@ -32910,12 +33002,12 @@
   "innateFrequency": 12,
   "spellFrequency": 6,
   "spells": [
-   "S_HI_DEMON",
    "BLIND",
    "CONF",
    "SCARE",
    "BR_FIRE",
    "BR_PLAS",
+   "S_HI_DEMON",
    "S_UNDEAD"
   ]
  },
@@ -33070,7 +33162,7 @@
   "armour": 120,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 45000,
   "blows": [
    {
@@ -33175,8 +33267,6 @@
   "description": "The greatest of all undead sorcerers, even the gods once feared him. This ancient shadow of death wilts every living thing it passes.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_UNDEAD",
    "BLIND",
    "WOUND",
    "SCARE",
@@ -33186,6 +33276,8 @@
    "BA_MANA",
    "BA_NETH",
    "BO_MANA",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
    "S_KIN",
    "S_MONSTERS"
   ]
@@ -33202,7 +33294,7 @@
   "armour": 48,
   "sleep": 0,
   "hearing": 50,
-  "smell": 20,
+  "smell": 0,
   "experience": 17000,
   "blows": [
    {
@@ -33264,7 +33356,7 @@
   "armour": 168,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 43000,
   "blows": [
    {
@@ -33354,13 +33446,13 @@
   "innateFrequency": 8,
   "spellFrequency": 4,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_UNDEAD",
    "BLIND",
    "CONF",
    "SCARE",
    "BR_FIRE",
-   "BR_PLAS"
+   "BR_PLAS",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -33376,7 +33468,7 @@
   "armour": 192,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 50000,
   "blows": [
    {
@@ -33445,11 +33537,6 @@
   "description": "Greatest and most terrible of the servants of Morgoth, creator of the One Ring. A sorcerer of dreadful powers, master of shadows and of phantoms, foul in wisdom, cruel in strength, misshaping what he rules, lord of werewolves; his dominion is torment. He has many servants, and rarely fights without them.",
   "spellFrequency": 2,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_DRAGON",
-   "S_HI_UNDEAD",
-   "S_UNIQUE",
-   "S_WRAITH",
    "BRAIN_SMASH",
    "WOUND",
    "TELE_LEVEL",
@@ -33460,7 +33547,12 @@
    "BO_ICE",
    "BO_MANA",
    "BO_PLAS",
-   "SHAPECHANGE"
+   "SHAPECHANGE",
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_UNIQUE",
+   "S_WRAITH"
   ],
   "shapes": [
    "wolf_sauron",
@@ -33481,7 +33573,7 @@
   "armour": 164,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -33531,8 +33623,6 @@
   "innateFrequency": 3,
   "spellFrequency": 3,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_UNDEAD",
    "BLINK",
    "TPORT",
    "TELE_LEVEL",
@@ -33545,7 +33635,9 @@
    "BR_NETH",
    "BA_DARK",
    "S_HOUND",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -33561,7 +33653,7 @@
   "armour": 164,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -33611,8 +33703,6 @@
   "innateFrequency": 4,
   "spellFrequency": 4,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_UNDEAD",
    "BLINK",
    "TPORT",
    "TELE_LEVEL",
@@ -33626,7 +33716,9 @@
    "BR_POIS",
    "BR_CHAO",
    "BR_ACID",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -33642,7 +33734,7 @@
   "armour": 164,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 0,
   "blows": [
    {
@@ -33693,9 +33785,6 @@
   "description": "Sauron's form as a vampire, great as a dark cloud across the moon.",
   "spellFrequency": 2,
   "spells": [
-   "STORM",
-   "S_HI_DEMON",
-   "S_HI_UNDEAD",
    "BLINK",
    "TPORT",
    "TELE_LEVEL",
@@ -33707,10 +33796,13 @@
    "BO_PLAS",
    "BE_NETH",
    "BA_NETH",
+   "STORM",
    "BA_DARK",
    "BA_POIS",
    "BA_ACID",
-   "S_DRAGON"
+   "S_DRAGON",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD"
   ]
  },
  {
@@ -33725,7 +33817,7 @@
   "armour": 180,
   "sleep": 0,
   "hearing": 100,
-  "smell": 20,
+  "smell": 0,
   "experience": 60000,
   "blows": [
    {
@@ -33780,15 +33872,15 @@
   "description": "He is the Master of the Pits of Angband. His figure is like a black mountain crowned with lightning. He rages with everlasting anger, his body scarred by Fingolfin's eight mighty wounds. He can never rest from his pain, but seeks forever to dominate all that is light and good in the world. He is the origin of man's fear of darkness and created many foul creatures with his evil powers. Orcs, Dragons, and Trolls are his most foul corruptions, causing much pain and suffering in the world to please him. His disgusting visage, twisted with evil, is crowned with iron, the two remaining Silmarils forever burning him. Grond, the mighty Hammer of the Underworld, cries defiance as he strides towards you to crush you to a pulp!",
   "spellFrequency": 3,
   "spells": [
-   "S_HI_DEMON",
-   "S_HI_DRAGON",
-   "S_HI_UNDEAD",
-   "S_UNIQUE",
    "BRAIN_SMASH",
    "BA_MANA",
    "BA_NETH",
    "BO_MANA",
-   "S_MONSTERS"
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_MONSTERS",
+   "S_UNIQUE"
   ]
  }
 ]

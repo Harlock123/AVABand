@@ -75,7 +75,7 @@ public class MonsterAiTests
     public void WithoutSmell_TheSameMonsterJustWanders()
     {
         var game = WalkTheCorridor(1);
-        var lizard = Arena.AddMonster(game, "rock_lizard", new Loc(1, 1)); // no smell
+        var lizard = Arena.AddMonster(game, "green_naga", new Loc(1, 1)); // no smell
         Assert.False(game.CanSmell(lizard));
         Hold(game, 15);
         Assert.True(lizard.Position.ChebyshevTo(game.Player.Position) > 1);
@@ -207,7 +207,7 @@ public class MonsterAiTests
             "#@.......,,,#",
             "#############");
         game.Player.Hp = game.Player.MaxHp = 100_000;
-        var giant = Arena.AddMonster(game, "fire_giant", new Loc(10, 1));
+        var giant = Arena.AddMonster(game, "mughash_the_kobold_lord", new Loc(10, 1)); // MOVE_BODY
         var mold = Arena.AddMonster(game, "rock_lizard", new Loc(8, 1));
         mold.Sleep = 10_000;
 
@@ -226,11 +226,11 @@ public class MonsterAiTests
         game.Player.Hp = game.Player.MaxHp = 100_000;
         var door = new Loc(4, 1);
         game.Level[door].LockPower = 1;
-        Arena.AddMonster(game, "baby_blue_dragon", new Loc(6, 1)); // BASH_DOOR only
+        Arena.AddMonster(game, "green_naga", new Loc(6, 1)); // BASH_DOOR only, and strong enough to break a lock
         var messages = new List<string>();
         game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
 
-        Hold(game, 30);
+        Hold(game, 80);
 
         Assert.False(game.Level.Has(door, TerrainFlags.DoorClosed));
         Assert.Contains(messages, m => m.Contains("burst open"));
@@ -311,11 +311,11 @@ public class MonsterAiTests
         var game = Arena.Create(12, Hall);
         game.Player.Hp = game.Player.MaxHp = 100_000;
         game.Player.SkillSave = 1000; // always saves
-        var priest = Arena.AddMonster(game, "dark_elven_priest", new Loc(12, 2));
+        var priest = Arena.AddMonster(game, "apprentice", new Loc(12, 2)); // BLIND, CONF (and no darkness, which blinds unsaved)
         priest.Hp = priest.MaxHp = 100_000;
         var spells = Collect<MonsterSpellEvent>(game);
 
-        Hold(game, 80);
+        Hold(game, 160);
 
         Assert.Contains(spells, s => s.SpellId is "BLIND" or "CONF" or "SCARE");
         Assert.False(game.Player.Timed.Has(TimedIds.Blind));

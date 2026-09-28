@@ -144,9 +144,9 @@ public class SpellLoreTests
     public void Frequencies_BecomeExact_AfterFiftyCasts()
     {
         var game = Game();
-        var priest = game.Data.Monster("dark_elven_priest")!; // 1_IN_5
+        var priest = game.Data.Monster("kobold_shaman")!; // 1_IN_5
         var lore = game.Lore.For(priest.Id);
-        lore.SpellsSeen.Add("BLINK");
+        lore.SpellsSeen.Add("MISSILE");
         lore.CastsSpell = 50;
         Assert.Contains("about 1 time in 5", game.Recall(priest));
         lore.CastsSpell = 51;

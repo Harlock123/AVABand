@@ -138,7 +138,7 @@ public class MonsterSpell42Tests
         var web = game.Data.Traps.Single(t => t.Web);
         void Webbed(Monster m) { game.Level[m.Position].Trap = web.Index; }
 
-        var jackal = Arena.AddMonster(game, "jackal", new Loc(3, 2)); // no CLEAR_WEB: stuck
+        var jackal = Arena.AddMonster(game, "soldier_ant", new Loc(3, 2)); // no CLEAR_WEB: stuck
         var uruk = Arena.AddMonster(game, "uruk", new Loc(3, 6));     // CLEAR_WEB: a turn to clear it
         var spider = Arena.AddMonster(game, "giant_spider", new Loc(14, 6)); // PASS_WEB
         foreach (var m in new[] { jackal, uruk, spider }) Webbed(m);
