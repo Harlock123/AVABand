@@ -819,7 +819,7 @@ public sealed partial class GameSession
     private void Earthquake(int radius, Loc? center = null)
     {
         var at = center ?? Player.Position;
-        foreach (var p in Level.AllLocs().Where(p => p.DistanceTo(at) <= radius && p != Player.Position))
+        foreach (var p in Level.AllLocs().Where(p => p.DistanceTo(at) <= radius && p != Player.Position && p != at))
         {
             if (!Level.InBoundsFully(p) || Level.FeatureAt(p).Has(TerrainFlags.Permanent) || Level.FeatureAt(p).Has(TerrainFlags.Stair)) continue;
             if (!Rng.OneIn(4)) continue;

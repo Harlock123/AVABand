@@ -189,7 +189,24 @@ def sync_monster_spells(gd, data):
     print(f"monster spells: {changed} of {len(ours)} brought into line")
 
 
-SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells}
+def sync_blow_effects(gd, data):
+    path = os.path.join(data, "blow_effects.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    by_id = {b["id"]: b for b in ours}
+    changed = 0
+    for name, lines in records(os.path.join(gd, "blow_effects.txt")):
+        b = by_id.get(name.lower())
+        power = int(first(lines, "power") or 0)
+        if b is None:
+            print(f"blow effects: {name} is not modelled")
+        elif b.get("power") != power:
+            b["power"] = power
+            changed += 1
+    write_json(path, ours, None)
+    print(f"blow effects: {changed} of {len(ours)} brought into line")
+
+
+SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects}
 
 
 def main():

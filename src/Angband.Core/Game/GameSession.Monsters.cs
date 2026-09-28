@@ -416,6 +416,7 @@ public sealed partial class GameSession
             // Angband BLACK_BREATH: one blow in five adds a little of the Black Breath (unresistable).
             if (effect.Id == "black_breath" && !Player.IsDead && Rng.OneIn(5) && damage / 10 > 0)
                 IncreaseTimed("blackbreath", damage / 10);
+            if (effect.Id == "shatter" && !Player.IsDead) Shatter(monster, damage);
             Publish(new MonsterAttackEvent(monster.Id, Hit: true, damage, blow.Method));
             if (Player.IsDead) break;
 
@@ -441,6 +442,19 @@ public sealed partial class GameSession
         }
         _attacker = null;
         _actingMonster = null;
+    }
+
+    /// <summary>
+    /// Angband melee_effect_handler_SHATTER: a blow hard enough (over 23) sets off an earthquake
+    /// around the monster, radius damage / 12; one over 100 may throw you back, 1 + (damage - 100) / 40
+    /// squares, when a roll up to damage - 100 comes to more than 40.
+    /// </summary>
+    private void Shatter(Monster monster, int damage)
+    {
+        if (damage > 23) Earthquake(damage / 12, monster.Position);
+        if (damage <= 100) return;
+        var value = damage - 100;
+        if (Rng.RandInt1(value) > 40) ThrustAway(monster.Position, 1 + value / 40);
     }
 
     private void ApplyBlowStatus(BlowEffectDef effect, string timedId, int damage, int monsterLevel)

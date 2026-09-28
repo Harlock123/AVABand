@@ -23038,7 +23038,7 @@
    },
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "10d10"
    }
   ],
@@ -27380,7 +27380,7 @@
    },
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "10d10"
    }
   ],
@@ -27451,7 +27451,7 @@
    },
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "10d10"
    }
   ],
@@ -30864,7 +30864,7 @@
   "blows": [
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "13d13"
    },
    {
@@ -30874,7 +30874,7 @@
    },
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "13d13"
    },
    {
@@ -33822,12 +33822,12 @@
   "blows": [
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "20d10"
    },
    {
     "method": "hit",
-    "effect": "hurt",
+    "effect": "shatter",
     "damage": "20d10"
    },
    {

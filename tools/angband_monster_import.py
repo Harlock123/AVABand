@@ -30,9 +30,7 @@ EFFECTS = {
     "EAT_LIGHT": "eat_light", "LOSE_STR": "lose_str", "LOSE_INT": "lose_int", "LOSE_WIS": "lose_wis",
     "LOSE_DEX": "lose_dex", "LOSE_CON": "lose_con", "LOSE_ALL": "lose_all", "EXP_10": "exp_10", "EXP_20": "exp_20",
     "EXP_40": "exp_40", "EXP_80": "exp_80", "HALLU": "hallu",
-    "BLACK_BREATH": "black_breath",
-    # Not modelled: plain (heavy) damage.
-    "SHATTER": "hurt",
+    "BLACK_BREATH": "black_breath", "SHATTER": "shatter",
 }
 
 # Angband spell -> AVABand monster spell (None = dropped). Every 4.2 spell is modelled now.

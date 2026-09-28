@@ -324,6 +324,32 @@ public class MonsterAiTests
     }
 
     [Fact]
+    public void Shattering_blows_shake_the_ground_when_they_hit_hard()
+    {
+        // Angband 4.2.5 SHATTER: a blow doing more than 23 sets off an earthquake around the monster.
+        var game = Arena.Create(21, Hall);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        var elemental = Arena.AddMonster(game, "great_earth_elemental", new Loc(4, 2));
+        elemental.Hp = elemental.MaxHp = 100_000;
+        var shook = false;
+        var hits = new List<(int Damage, bool Shook)>();
+        game.Events.Subscribe<MessageEvent>(e => { if (e.Text == "The ground shakes!") shook = true; });
+        game.Events.Subscribe<MonsterAttackEvent>(e =>
+        {
+            if (e.Hit) hits.Add((e.Damage, shook));
+            shook = false;
+        });
+        for (var i = 0; i < 300 && hits.Count < 12; i++) Hold(game, 1);
+
+        Assert.NotEmpty(hits);
+        // Its three 6d6 blows (36 at most) never shake anything; its 10d10 shattering blow does above 23.
+        Assert.All(hits.Where(h => h.Damage <= 23), h => Assert.False(h.Shook));
+        Assert.All(hits.Where(h => h.Damage > 36), h => Assert.True(h.Shook));
+        Assert.Contains(hits, h => h.Shook);
+        Assert.Equal(60, game.Data.BlowEffect("shatter")!.Power);
+    }
+
+    [Fact]
     public void Breath_ScalesWithTheCastersHealth_AndIsResisted()
     {
         int BreathDamage(int resist, int hp)
