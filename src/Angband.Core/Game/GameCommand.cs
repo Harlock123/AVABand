@@ -77,7 +77,11 @@ public sealed record RefuelCommand(Items.Item Fuel) : GameCommand;
 public sealed record RestCommand : GameCommand;
 
 /// <summary>Learn a new spell (a specific one, or the first available).</summary>
-public sealed record StudyCommand(string? SpellId = null) : GameCommand;
+/// <summary>
+/// Learn a spell. Classes that choose (Angband CHOOSE_SPELLS) name it; the others name a
+/// <paramref name="Book"/> and are given one of its spells at random, as 4.2's priests and paladins are.
+/// </summary>
+public sealed record StudyCommand(string? SpellId = null, string? Book = null) : GameCommand;
 
 /// <summary>
 /// Cast a learned spell at a target (or the nearest visible monster), or in a direction for spells

@@ -54,6 +54,33 @@ public class MagicUiTests
     }
 
     [AvaloniaFact]
+    public void Priest_StudyingWithOneBook_IsGrantedAPrayerWithoutAMenu()
+    {
+        var (window, vm) = Open("priest");
+        window.KeyPressQwerty(PhysicalKey.G, RawInputModifiers.Shift);
+        Assert.False(vm.IsPrompting);
+        Assert.Contains(vm.Messages, m => m.StartsWith("You have learned the prayer of "));
+        Assert.Single(vm.Game.Player.LearnedSpells);
+    }
+
+    [AvaloniaFact]
+    public void Priest_WithTwoBooks_ChoosesTheBook()
+    {
+        var (window, vm) = Open("priest");
+        var game = vm.Game;
+        game.GainExperience(game.ExperienceForLevel(9) - game.Player.Experience); // level 10: prayers in both
+        game.Player.Inventory.Add(game.Objects.Create("cleansing_power"));
+        window.KeyPressQwerty(PhysicalKey.G, RawInputModifiers.Shift);
+        Assert.True(vm.IsPrompting);
+        Assert.Equal("Study which book?", vm.PromptTitle);
+        Assert.Equal(2, vm.ChoiceRows.Count);
+        window.KeyPressQwerty(PhysicalKey.B, RawInputModifiers.None);
+        Assert.False(vm.IsPrompting);
+        var spell = Assert.Single(game.Player.LearnedSpells);
+        Assert.Equal("cleansing_power", game.Data.Spell(spell)!.Book);
+    }
+
+    [AvaloniaFact]
     public void Warriors_AreToldTheyCannotUseMagic()
     {
         var (window, vm) = Open("warrior");

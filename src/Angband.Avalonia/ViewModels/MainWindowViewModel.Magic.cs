@@ -39,12 +39,61 @@ public sealed partial class MainWindowViewModel
         StartCharacter(CharacterSpec.Default(_data.Race(race) is null ? "human" : race, classId, name));
     }
 
+    private IReadOnlyList<string>? _studyBooks;
+
+    /// <summary>
+    /// Priests and paladins (no CHOOSE_SPELLS) pick a book and are granted one of its spells at
+    /// random (Angband do_cmd_study_book); with a single book there's nothing to ask.
+    /// </summary>
+    private void BeginStudyBookPrompt(string spellNoun)
+    {
+        var books = _game.StudyableBooks();
+        if (books.Count == 0)
+        {
+            AddMessage($"You cannot learn any new {spellNoun}s right now.");
+            return;
+        }
+        if (books.Count == 1)
+        {
+            Execute(new StudyCommand(Book: books[0]));
+            return;
+        }
+        _studyBooks = books;
+        ChoiceRows.Clear();
+        PromptRows.Clear();
+        SpellPromptRows.Clear();
+        for (var i = 0; i < books.Count; i++)
+            ChoiceRows.Add(new ChoiceRow(((char)('a' + i)).ToString(), _data.Object(books[i])?.Name.Replace("~", "").Replace("& ", "") ?? books[i]));
+        PromptTitle = "Study which book?";
+        IsPrompting = true;
+    }
+
+    /// <summary>A letter in the book menu; anything else cancels.</summary>
+    private void ChooseStudyBook(char key)
+    {
+        var books = _studyBooks;
+        _studyBooks = null;
+        ChoiceRows.Clear();
+        var index = key - 'a';
+        if (books is null || index < 0 || index >= books.Count)
+        {
+            LastMessage = "Cancelled.";
+            return;
+        }
+        Execute(new StudyCommand(Book: books[index]));
+    }
+
     public void BeginSpellPrompt(SpellPromptKind kind)
     {
         var realm = _game.PlayerRealm;
         if (realm is null)
         {
             AddMessage("You cannot use magic.");
+            return;
+        }
+        if (kind == SpellPromptKind.Study && !_game.ChoosesSpells)
+        {
+            BeginStudyBookPrompt(realm.SpellNoun);
             return;
         }
 

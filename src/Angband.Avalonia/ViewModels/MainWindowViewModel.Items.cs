@@ -126,7 +126,8 @@ public sealed partial class MainWindowViewModel
         IsPrompting = false;
         if (ChoiceRows.Count > 0)
         {
-            ChooseIgnore(key);
+            if (_studyBooks is not null) ChooseStudyBook(key);
+            else ChooseIgnore(key);
             return true;
         }
         if (SpellPromptRows.Count > 0)
@@ -234,6 +235,7 @@ public sealed partial class MainWindowViewModel
         SpellPromptRows.Clear();
         ChoiceRows.Clear();
         _ignoring = null;
+        _studyBooks = null;
         LastMessage = "Cancelled.";
     }
 

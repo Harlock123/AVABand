@@ -169,7 +169,7 @@ public sealed partial class GameSession : ITurnHandler
             LeaveStoreCommand => LeaveStore(),
             BuyCommand buy => Buy(buy.Item, buy.Count),
             SellCommand sell => Sell(sell.Item, sell.Count),
-            StudyCommand study => Study(study.SpellId),
+            StudyCommand study => Study(study.SpellId, study.Book),
             CastCommand cast => Cast(cast.SpellId, cast.Target, cast.Direction, cast.AllowOverexert),
             DebugJumpCommand jump => DebugJump(jump.Depth),
             _ => 0,

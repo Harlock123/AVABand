@@ -272,7 +272,13 @@ public sealed partial class GameSession
         return Math.Clamp(chance, 0, 95);
     }
 
-    private int Study(string? spellId)
+    /// <summary>Whether the class chooses the spells it learns (Angband CHOOSE_SPELLS); priests and paladins don't.</summary>
+    public bool ChoosesSpells => ClassHas("CHOOSE_SPELLS");
+
+    /// <summary>The books (object kinds) holding a spell the player could learn now.</summary>
+    public IReadOnlyList<string> StudyableBooks() => [.. StudyableSpells().Select(s => s.Book).Distinct()];
+
+    private int Study(string? spellId, string? book = null)
     {
         if (PlayerRealm is null)
         {
@@ -286,10 +292,22 @@ public sealed partial class GameSession
         }
 
         var options = StudyableSpells().ToList();
-        var spell = spellId is null ? options.FirstOrDefault() : options.FirstOrDefault(s => s.Id == spellId);
+        SpellDef? spell;
+        if (spellId is not null) spell = options.FirstOrDefault(s => s.Id == spellId);
+        else if (!ChoosesSpells || book is not null)
+        {
+            // Angband do_cmd_study_book: a spell of the book, each learnable one equally likely.
+            spell = null;
+            var seen = 0;
+            foreach (var s in options.Where(s => s.Book == (book ?? options.FirstOrDefault()?.Book)))
+                if (++seen == 1 || Rng.RandInt0(seen) == 0) spell = s;
+        }
+        else spell = options.FirstOrDefault();
         if (spell is null)
         {
-            Publish(new MessageEvent($"You cannot learn any new {RealmNoun()}s."));
+            Publish(new MessageEvent(book is not null && spellId is null
+                ? $"You cannot learn any {RealmNoun()}s in that book."
+                : $"You cannot learn any new {RealmNoun()}s."));
             return 0;
         }
 

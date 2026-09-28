@@ -101,8 +101,7 @@
     "expFactor": 30,
     "flags": [
       "BEAM",
-      "ZERO_FAIL"
-    ]
+      "ZERO_FAIL", "CHOOSE_SPELLS"]
   },
   {
     "id": "priest",
@@ -210,8 +209,7 @@
     "description": "A hunter and archer of the wilds, with a little nature magic.",
     "expFactor": 30,
     "flags": [
-      "FAST_SHOT"
-    ]
+      "FAST_SHOT", "CHOOSE_SPELLS"]
   },
   {
     "id": "druid",
@@ -265,8 +263,7 @@
     "expFactor": 30,
     "flags": [
       "ZERO_FAIL",
-      "CHARM"
-    ]
+      "CHARM", "CHOOSE_SPELLS"]
   },
   {
     "id": "rogue",
@@ -301,8 +298,7 @@
       "con": -1
     },
     "flags": [
-      "STEAL"
-    ],
+      "STEAL", "CHOOSE_SPELLS"],
     "startingKit": [
       {
         "kind": "dagger",
@@ -414,8 +410,7 @@
     },
     "flags": [
       "UNLIGHT",
-      "ZERO_FAIL"
-    ],
+      "ZERO_FAIL", "CHOOSE_SPELLS"],
     "startingKit": [
       {
         "kind": "main_gauche",
@@ -467,8 +462,7 @@
     "flags": [
       "SHIELD_BASH",
       "COMBAT_REGEN",
-      "IMPAIR_HP"
-    ],
+      "IMPAIR_HP", "CHOOSE_SPELLS"],
     "startingKit": [
       {
         "kind": "tulwar",
