@@ -110,14 +110,43 @@ public class InputTests
     public void LeftTrigger_WithADirection_Runs_Once()
     {
         var (pad, actions) = Pad();
+        var grace = GamepadMapper.RunGrace;
         pad.Trigger("LeftTrigger", 0.9, T0);
         pad.ButtonDown("DPadLeft", T0);
-        pad.Tick(TimeSpan.FromSeconds(2)); // no hold-to-repeat for a run
-        pad.ButtonUp("DPadLeft", T0);
-        pad.LeftStick(0.7, 0.7, T0);       // the stick runs too
-        pad.LeftStick(0, 0, T0);
-        pad.Trigger("LeftTrigger", 0.0, T0);
+        Assert.Empty(actions);                 // a moment's grace for a second button
+        pad.Tick(grace);
+        pad.Tick(TimeSpan.FromSeconds(2));     // no hold-to-repeat for a run
+        pad.ButtonUp("DPadLeft", TimeSpan.FromSeconds(2));
+        var t = TimeSpan.FromSeconds(3);
+        pad.LeftStick(0.7, 0.7, t);            // the stick runs too
+        pad.Tick(t + grace);
+        pad.LeftStick(0, 0, t + grace);
+        pad.Trigger("LeftTrigger", 0.0, t + grace);
         Assert.Equal([InputAction.RunWest, InputAction.RunSouthEast], actions); // and no throw
+    }
+
+    [Fact]
+    public void TwoDPadButtons_AMomentApart_RunDiagonally()
+    {
+        var (pad, actions) = Pad();
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        pad.ButtonDown("DPadUp", T0);
+        pad.Tick(TimeSpan.FromMilliseconds(30));
+        pad.ButtonDown("DPadRight", TimeSpan.FromMilliseconds(40));
+        pad.Tick(GamepadMapper.RunGrace);
+        pad.Tick(TimeSpan.FromSeconds(1));
+        Assert.Equal([InputAction.RunNorthEast], actions);
+    }
+
+    [Fact]
+    public void ADirectionLetGoWithinTheGrace_DoesNotRun()
+    {
+        var (pad, actions) = Pad();
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        pad.ButtonDown("DPadUp", T0);
+        pad.ButtonUp("DPadUp", TimeSpan.FromMilliseconds(20));
+        pad.Tick(TimeSpan.FromSeconds(1));
+        Assert.Empty(actions);
     }
 
     [Fact]

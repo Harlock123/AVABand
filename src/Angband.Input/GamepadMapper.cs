@@ -19,6 +19,11 @@ public sealed class GamepadMapper(InputBindings bindings)
     public const double TriggerThreshold = 0.5;
     public static readonly TimeSpan RepeatDelay = TimeSpan.FromMilliseconds(320);
     public static readonly TimeSpan RepeatInterval = TimeSpan.FromMilliseconds(140);
+    /// <summary>
+    /// How long a run waits for a second D-pad button, so pressing two a moment apart runs
+    /// diagonally rather than straight first.
+    /// </summary>
+    public static readonly TimeSpan RunGrace = TimeSpan.FromMilliseconds(60);
 
     private readonly HashSet<string> _held = [];
     private double _stickX, _stickY;
@@ -26,6 +31,8 @@ public sealed class GamepadMapper(InputBindings bindings)
     private TimeSpan _nextRepeat;
     /// <summary>Whether the shift button now held has been used in a chord (so its own action is skipped).</summary>
     private bool _chordUsed;
+    /// <summary>When a run waiting out <see cref="RunGrace"/> starts (null: none waiting).</summary>
+    private TimeSpan? _runAt;
 
     /// <summary>The key of a binding for a shift button held with a direction.</summary>
     public const string DirectionChord = "DPad";
@@ -100,6 +107,13 @@ public sealed class GamepadMapper(InputBindings bindings)
     /// <summary>Call regularly (e.g. every frame) so held directions repeat.</summary>
     public void Tick(TimeSpan now)
     {
+        if (_runAt is { } runAt && now >= runAt)
+        {
+            // The grace is over: run whichever way is held now (let go by now, and it's off).
+            _runAt = null;
+            if (CurrentDirection() is { } runDir) ActionTriggered?.Invoke(InputActions.RunFromDirection(runDir));
+            return;
+        }
         if (_heldDirection is not { } dir || now < _nextRepeat) return;
         _nextRepeat = now + RepeatInterval;
         ActionTriggered?.Invoke(InputActions.FromDirection(dir));
@@ -144,15 +158,17 @@ public sealed class GamepadMapper(InputBindings bindings)
         var dir = CurrentDirection();
         if (dir == _heldDirection) return;
         _heldDirection = dir;
-        if (dir is not { } d) return;
+        if (dir is null) return;
         if (HeldShift() is { } shift && Bindings.ForButton(shift + "+" + DirectionChord) == InputAction.Run)
         {
-            // Shift and a direction: run that way, once (the run goes on by itself).
+            // Shift and a direction: run, once (the run goes on by itself), after a moment's grace
+            // for a second D-pad button; a change of direction meanwhile doesn't restart the wait.
             _chordUsed = true;
-            ActionTriggered?.Invoke(InputActions.RunFromDirection(d));
+            _runAt ??= now + RunGrace;
             _nextRepeat = TimeSpan.MaxValue;
             return;
         }
+        if (dir is not { } d) return;
         ActionTriggered?.Invoke(InputActions.FromDirection(d));
         _nextRepeat = now + RepeatDelay;
     }

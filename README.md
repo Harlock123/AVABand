@@ -856,7 +856,8 @@ the context action, or a game command.
   D-pad or left stick move in eight directions with hold-to-repeat and navigate menus; A confirms
   (or takes the stairs / picks up), B cancels, X fires, Y casts, LB quaffs, RB reads, LT throws,
   RT wields, Back rests, Start opens settings, left stick click holds, right stick click toggles tiles.
-  The left trigger is also a shift: LT + direction runs, LT + A repeats the last command, and LT
+  The left trigger is also a shift: LT + direction runs (after a 60 ms grace, so two D-pad
+  buttons pressed a moment apart run diagonally rather than straight first), LT + A repeats the last command, and LT
   tapped on its own throws when let go. (Chords are ordinary bindings — `LeftTrigger+A`,
   `LeftTrigger+DPad` for running — so any button can be made a shift in `bindings.json`.)
 - **Rebinding**: Settings → Controls lists every action with its keys and button; *Key…*/*Button…*
