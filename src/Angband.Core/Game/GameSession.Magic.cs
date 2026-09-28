@@ -491,6 +491,7 @@ public sealed partial class GameSession
         ShowProjection(Player.Position, path, null, element, ProjectionKind.Bolt);
         if (path.Count > 0 && Level.Monsters.At(path[^1]) is { } monster)
         {
+            TrackHealth(monster); // a bolt affects it and nobody else
             hit(monster);
             return true;
         }

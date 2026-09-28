@@ -361,6 +361,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
                 level.ProfileId, _game.NormalTurns, ammo, _game.Seed,
                 effects.Length > 0 ? "  |  " + effects : "",
                 player.Class?.Name ?? "", player.Level, mana, next, player.Name, player.Race?.Name ?? "");
+        UpdateHealthBar();
         OnPropertyChanged(nameof(Map));
         Revision++;
     }

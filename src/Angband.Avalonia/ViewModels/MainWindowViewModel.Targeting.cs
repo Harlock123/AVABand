@@ -92,6 +92,8 @@ public sealed partial class MainWindowViewModel
         string what;
         if (LookedAt is { } m)
         {
+            _game.TrackHealth(m); // Angband: looking at a monster tracks its health
+            UpdateHealthBar();
             var text = _game.LookDescription(m);
             what = char.ToUpperInvariant(text[0]) + text[1..];
         }

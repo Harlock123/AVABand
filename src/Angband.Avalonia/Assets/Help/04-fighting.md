@@ -30,6 +30,12 @@ have.
 - **Poisoned** or **cut**: you lose hit points over time; potions cure them.
 - **Paralysed**: very dangerous — Free Action protects you.
 
+## The health bar
+
+The monster you last targeted, looked at or hit has its health in the sidebar, `[*******---]`:
+tenths of its hit points, green when unhurt, then yellow, orange and red. Blue means asleep or
+held, light blue stunned, umber confused, violet afraid.
+
 ## Show damage
 
 The option *Show damage player deals to monsters* adds the damage to each hit's message and

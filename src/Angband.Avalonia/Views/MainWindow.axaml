@@ -113,6 +113,13 @@
         <StackPanel Margin="10" Spacing="4">
           <TextBlock Text="{Binding GoldText}" Foreground="Gold" FontWeight="SemiBold" />
           <TextBlock Text="{Binding BurdenText}" Foreground="#aaa" FontSize="12" TextWrapping="Wrap" />
+          <!-- The monster health bar (Angband): the monster last targeted, looked at or struck. -->
+          <StackPanel x:Name="HealthBar" Orientation="Horizontal" Spacing="8" IsVisible="{Binding HealthVisible}" Margin="0,4,0,0">
+            <TextBlock FontFamily="{StaticResource MonoFont}" FontSize="14">
+              <Run Text="[" Foreground="White" /><Run Text="{Binding HealthStars}" Foreground="{Binding HealthBrush}" /><Run Text="{Binding HealthRest}" Foreground="White" /><Run Text="]" Foreground="White" />
+            </TextBlock>
+            <TextBlock Text="{Binding HealthName}" Foreground="#ccc" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="200" />
+          </StackPanel>
           <TextBlock Classes="header" Text="Equipment" />
           <ItemsControl ItemsSource="{Binding EquipmentRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="Inventory" />

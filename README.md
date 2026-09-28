@@ -498,6 +498,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   the objects you remember, and the doors, stairs, shops, rubble and treasure veins — with space or
   `x` for the next, `-` the previous, a direction to roam freely, and Esc to stop (with nothing of
   interest about it starts on your own square); the Monsters tab of `~` (Game → Knowledge) lists everything met, with kills.
+- **Monster health bar** (`Game/GameSession.Health.cs`; Angband's `prt_health`): the sidebar shows
+  the monster you last targeted, looked at, struck, or hit with a bolt or missile as
+  `[*******---]` with its name — tenths of its health, green when unhurt through yellow, orange and
+  red, or its state: blue asleep or held, light blue stunned, umber confused, violet afraid; only
+  dashes while it can't be seen. It goes when the monster dies.
 - **Monster and object lists** (`Game/GameSession.Lists.cs`, `ViewModels/MainWindowViewModel.Lists.cs`;
   Angband 4.2's `mon-list.c`/`ui-mon-list.c` and `obj-list.c`/`ui-obj-list.c`):
   - `[` lists the monsters you can see — "You can see 3 monsters:" — one line per race: "[U]" for

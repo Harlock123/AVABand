@@ -57,6 +57,7 @@ public sealed partial class GameSession
     private int PlayerBlow(Monster monster)
     {
         var name = MonsterName(monster);
+        TrackHealth(monster); // Angband py_attack_real: health_track
         var weapon = Player.Inventory.Weapon;
         var dice = weapon?.Damage ?? BareHands.Damage;
         var weaponToHit = weapon?.ToHit ?? 0;

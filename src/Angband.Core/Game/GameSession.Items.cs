@@ -519,6 +519,7 @@ public sealed partial class GameSession
             var chance = CombatMath.MissileChance(skill, toHit, Player.Position.DistanceTo(grid));
             if (!CombatMath.TestHit(Rng, chance, monster.Race.Armour, monster.IsVisible)) continue;
 
+            TrackHealth(monster);
             var (bestMult, verb, rune, oMultiplier) = BestMultiplier(missile, monster);
             int damage;
             CriticalGrade grade;

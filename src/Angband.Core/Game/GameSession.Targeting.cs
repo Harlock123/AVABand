@@ -19,6 +19,7 @@ public sealed partial class GameSession
     public void SetTarget(Monster monster)
     {
         TargetMonster = monster;
+        TrackHealth(monster);
         TargetLocation = null;
     }
 
