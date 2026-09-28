@@ -75,8 +75,25 @@ public sealed partial class GameSession
             if (seen) Publish(new MessageEvent($"{name} tries to cast a spell, but fails."));
             return true;
         }
+        return CastSpell(monster, spell);
+    }
 
-        Publish(new MessageEvent(seen ? spell.Message.Replace("{name}", name) : spell.UnseenMessage));
+    /// <summary>A monster casts this spell (never failing): for tests.</summary>
+    internal bool CastSpellForTest(Monster monster, string spellId) => CastSpell(monster, Data.MonsterSpell(spellId)!);
+
+    /// <summary>The spell takes effect: its message, the monster's lore, then what it does.</summary>
+    private bool CastSpell(Monster monster, MonsterSpellDef spell)
+    {
+        var race = monster.Race;
+        var here = monster.Position;
+        var seen = monster.IsVisible;
+        var name = Capitalize(MonsterName(monster));
+
+        // Some spells say something different at higher power (Angband's power-cutoff message levels).
+        var tier = spell.LoreFor(race.Power);
+        Publish(new MessageEvent(seen
+            ? SpellText(tier?.Message ?? spell.Message, name, race)
+            : tier?.UnseenMessage ?? spell.UnseenMessage));
         _attacker = race.Id;
         if (seen)
         {
@@ -93,15 +110,42 @@ public sealed partial class GameSession
         {
             case MonsterSpellKind.Bolt:
             case MonsterSpellKind.Ball:
-                ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Depth, monster.Position);
+                ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Power, monster.Position);
                 break;
             case MonsterSpellKind.Breath:
                 ElementalHit(spell.Element, Math.Min(spell.BreathCap, Math.Max(1, monster.Hp / Math.Max(1, spell.BreathDivisor))), killer,
-                    race.Depth, monster.Position);
+                    race.Power, monster.Position);
                 break;
+            case MonsterSpellKind.Wound when spell.PowerScaled:
+            {
+                // Angband 4.2 WOUND: (power/3*2)d5 damage and (power/5-10)d10 cuts, unless saved against.
+                if (Rng.RandInt0(100) < Player.SkillSave)
+                {
+                    Publish(new MessageEvent(tier?.SaveMessage ?? "You resist the effects!"));
+                    break;
+                }
+                TakeHit(Rng.Damroll(Math.Max(1, race.Power / 3 * 2), 5), killer);
+                if (race.Power / 5 - 10 is > 0 and var cutDice && !Player.IsDead)
+                    IncreaseTimed(TimedIds.Cut, Rng.Damroll(cutDice, 10));
+                break;
+            }
             case MonsterSpellKind.Wound:
                 if (Rng.RandInt0(100) < Player.SkillSave) Publish(new MessageEvent("You resist the effects!"));
                 else TakeHit(SpellDamage(spell, race), killer);
+                break;
+            case MonsterSpellKind.Storm:
+            {
+                // Angband STORM: balls of water, lightning and ice, each (power/3)d5 on a base.
+                var dice = Math.Max(1, race.Power / 3);
+                foreach (var (element, basis) in new[] { ("water", 30), ("elec", 20), ("ice", 20) })
+                {
+                    if (Player.IsDead) break;
+                    ElementalHit(element, basis + Rng.Damroll(dice, 5), killer, race.Power, monster.Position);
+                }
+                break;
+            }
+            case MonsterSpellKind.Web:
+                SpinWebs(monster);
                 break;
             case MonsterSpellKind.Status:
                 ApplySpellStatus(spell);
@@ -351,6 +395,42 @@ public sealed partial class GameSession
         UpdateView();
     }
 
+    private static Func<MonsterRaceDef, bool> Both(Func<MonsterRaceDef, bool>? a, Func<MonsterRaceDef, bool> b) =>
+        a is null ? b : r => a(r) && b(r);
+
+    /// <summary>A spell's message with the caster's name, "you" as its target and its pronoun (his / her / its).</summary>
+    private static string SpellText(string message, string name, MonsterRaceDef race) =>
+        message.Replace("{name}", name).Replace("{target}", "you")
+            .Replace("{pronoun}", race.Has("MALE") ? "his" : race.Has("FEMALE") ? "her" : "its");
+
+    /// <summary>
+    /// Angband effect_handler_WEB: webs on every open floor square around the weaver without a trap
+    /// already — within 1 square, 2 for a spell power over 40, 3 over 80.
+    /// </summary>
+    private void SpinWebs(Monster weaver)
+    {
+        if (Data.Traps.FirstOrDefault(t => t.Web) is not { } web) return;
+        var radius = 1 + (weaver.Race.Power > 40 ? 1 : 0) + (weaver.Race.Power > 80 ? 1 : 0);
+        foreach (var p in Level.AllLocs().Where(p => p.DistanceTo(weaver.Position) <= radius))
+        {
+            ref var sq = ref Level[p];
+            if (sq.Trap != 0 || !Level.FeatureAt(p).Has(TerrainFlags.Floor)) continue;
+            sq.Trap = web.Index;
+            sq.Flags |= World.SquareFlags.TrapVisible;
+        }
+        UpdateView();
+    }
+
+    /// <summary>Whether a spider web covers the square.</summary>
+    public bool IsWebbed(Loc p) => Level[p].Trap != 0 && Data.TrapByIndex(Level[p].Trap) is { Web: true };
+
+    /// <summary>Clears a web (Angband square_destroy_trap).</summary>
+    private void ClearWeb(Loc p)
+    {
+        Level[p].Trap = 0;
+        Level[p].Flags &= ~World.SquareFlags.TrapVisible;
+    }
+
     /// <summary>Summons monsters of the level's depth (or the caster's kin) next to the player.</summary>
     private void SummonMonsters(Monster caster, MonsterSpellDef spell)
     {
@@ -365,7 +445,15 @@ public sealed partial class GameSession
                 : spell.SummonGlyphs is { } glyphs ? r => glyphs.Contains(r.Glyph)
                 : spell.SummonFlag is { } flag ? r => r.Has(flag)
                 : null;
-            var race = _spawner.PickRace(Rng, Math.Max(1, (Level.Depth + caster.Race.Depth) / 2), unavailable, filter);
+            // Angband summon.txt: some summon no uniques, some nothing but uniques.
+            if (spell.SummonNoUniques) filter = Both(filter, r => !r.IsUnique);
+            if (spell.SummonUniquesOnly) filter = Both(filter, r => r.IsUnique);
+            var level = Math.Max(1, (Level.Depth + caster.Race.Depth) / 2 + 5); // Angband summon_specific
+
+            var race = _spawner.PickRace(Rng, level, unavailable, filter);
+            // ...falling back on another kind when there is none (the Ringwraiths → greater undead).
+            if (race is null && spell.SummonFallbackGlyphs is { } fallback)
+                race = _spawner.PickRace(Rng, level, unavailable, r => fallback.Contains(r.Glyph));
             var spot = Level.Neighbors(Player.Position)
                 .Where(p => Level.IsPassable(p) && Level[p].Monster == 0)
                 .OrderBy(_ => Rng.RandInt0(1000))

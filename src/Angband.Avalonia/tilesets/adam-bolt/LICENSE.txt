@@ -7,3 +7,6 @@ Licence (from Angband's docs/copying.rst):
 
 tileset.json was generated from Angband's graf-new.prf and xtra-new.prf by
 tools/angband_prf_to_tileset.py.
+
+web.png (the spider web) was drawn for AVABand, which the Adam Bolt set has no
+web for; it is released under CC0 (public domain).

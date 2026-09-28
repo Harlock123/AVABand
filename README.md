@@ -124,8 +124,25 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     pass through walls, tunnellers that bore through them, creatures of rock hurt by stone to mud.
     Spells: breaths of all thirteen elements and more, bolts, balls and beams (damage grows with
     the caster's level), wounds, mind blast and brain smash, drain mana, haste-self, forget,
-    create traps, teleport away / level / to, darkness, heal kin, and summons of kin, animals,
-    spiders, hounds, hydras, undead, demons and dragons. Vault letters place monsters of that kind.
+    create traps, teleport away / level / to, darkness, heal kin, storms, webs, and summons of kin,
+    animals, spiders, hounds, hydras, undead, demons and dragons — and the greater summons: an
+    Ainu, greater demons, greater undead, ancient dragons, the Ringwraiths and uniques. All 91 of
+    Angband 4.2's monster spells are there. Vault letters place monsters of that kind.
+  - **The last of 4.2's monster spells** (`GameSession.MonsterSpells.cs`):
+    - *WOUND*, as in 4.2 one spell (not four) that grows with the caster's spell power — (power/3×2)d5
+      damage, cuts from power 55, and words from "points at you and curses!" to "screams the word
+      'DIE!'" (and "Your body tingles/shudders/spasms briefly" when you save). A dozen monsters'
+      spell power differs from their level (Sauron's is 130), as in `monster.txt`.
+    - *STORM* (storm giants, Ossë, Sauron's vampire form…): water, lightning and ice at once.
+    - *WEAVE* (giant, Mirkwood and phase spiders, Ungoliant…): webs on the open floor around the
+      spider (wider for the strongest), your square included. A web (`%`) is a trap that does
+      nothing but hold: trying to move out of one clears it instead ("You clear the web.", a
+      turn); a run stops at one; monsters in a web pass through (`PASS_WEB`, ghosts), tear it
+      down (wall-borers), spend a turn clearing it (`CLEAR_WEB`) or are stuck.
+    - The greater summons follow `summon.txt`: an Ainu (never a unique), greater demons (`U`),
+      greater undead (`V`, `W`, `L`), ancient dragons (`D`), the Ringwraiths (unique `W`) and
+      uniques — the last two falling back on greater undead when none can come. Summons are drawn
+      for (depth + caster level) / 2 + 5, as in 4.2 (the +5 was missing before).
   - **Mimics & lurkers** (`GameSession.Mimics.cs`, Angband `UNAWARE`): creeping coins look like a
     pile of gold, potion/scroll/ring/chest mimics like a tempting potion, scroll, ring or chest (drawn with that
     object's tile, named by look, remembered on the map and found by object detection), and lurkers

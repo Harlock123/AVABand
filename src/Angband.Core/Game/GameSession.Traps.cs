@@ -83,7 +83,7 @@ public sealed partial class GameSession
     private void HitTrap(Loc p)
     {
         ref var sq = ref Level[p];
-        if (sq.Trap == 0 || Data.TrapByIndex(sq.Trap) is not { } trap || trap.Warding) return;
+        if (sq.Trap == 0 || Data.TrapByIndex(sq.Trap) is not { } trap || trap.Warding || trap.Web) return;
         sq.Flags |= SquareFlags.TrapVisible;
 
         // Darts can miss (Angband: a 125-power attack against your armour).
@@ -117,6 +117,12 @@ public sealed partial class GameSession
         var p = Player.Position.Step(dir);
         if (!Level.InBounds(p)) return 0;
         if (ChestAt(p, trapped: true) is { } chest) return DisarmChest(chest, p);
+        if (IsWebbed(p))
+        {
+            ClearWeb(p);
+            Publish(new MessageEvent("You clear the web."));
+            return EnergyTable.MoveEnergy;
+        }
         if (Level[p].Trap != 0 && Level[p].Has(SquareFlags.TrapVisible)) return DisarmTrap(p);
         if (ChestAt(p, trapped: false) is not null)
         {

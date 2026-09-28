@@ -16,6 +16,8 @@ public sealed class TrapDef
     public bool IsTrapDoor { get; init; }
     /// <summary>A glyph of warding (Angband rune of protection): harmless to the player, blocks monsters.</summary>
     public bool Warding { get; init; }
+    /// <summary>A spider web (Angband's web trap): blocks until cleared; nothing is set off.</summary>
+    public bool Web { get; init; }
     public string Description { get; init; } = "";
     /// <summary>How hard it is to disarm (Angband trap power); 0 means 5 + twice its minimum depth.</summary>
     public int Power { get; init; }

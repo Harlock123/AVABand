@@ -107,6 +107,11 @@
     "trap:teleport_rune": "main:40,7",
     "trap:summon_rune": "main:39,7",
     "trap:alarm": "main:64,7",
+    "trap:web": {
+      "lit": "main:20,27",
+      "torch": "main:19,27",
+      "dark": "main:21,27"
+    },
     "trap:glyph_warding": {
       "lit": "main:53,22",
       "torch": "main:52,22",

@@ -26,7 +26,8 @@ and is available under either of the following (AVABand uses the first):
 | David Gervais (32×32) | David Gervais | Creative Commons Attribution 3.0 (https://creativecommons.org/licenses/by/3.0/) | https://github.com/angband/angband/tree/master/lib/tiles/gervais |
 | Dungeon Crawl Stone Soup (32×32) | Dungeon Crawl Stone Soup tile artists | CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/) | https://opengameart.org/content/dungeon-crawl-32x32-tiles |
 
-Each tileset folder carries its own `LICENSE.txt`.
+Each tileset folder carries its own `LICENSE.txt`. The spider-web tile in the Adam Bolt and Dungeon Crawl sets (`web.png`, `avaband_web.png`) was drawn for
+AVABand, as those sets have none, and is CC0.
 
 ## Sound packs (`src/Angband.Avalonia/soundpacks`)
 

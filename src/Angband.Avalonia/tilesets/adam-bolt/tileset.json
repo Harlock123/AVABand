@@ -143,6 +143,7 @@
       "torch": "main:29,1",
       "dark": "main:28,1"
     },
+    "trap:web": "web.png",
     "trap:glyph_warding": {
       "lit": "main:21,13",
       "torch": "main:23,13",

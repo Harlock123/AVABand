@@ -209,6 +209,7 @@ public sealed partial class GameSession
     {
         var grid = from.Step(FromKeypad(dir));
         if (!Level.InBounds(grid)) return false;
+        if (IsWebbed(grid)) return true; // webs are enough like walls (Angband)
         return Level.FeatureAt(grid).Has(TerrainFlags.Rock) && Known.IsKnown(grid);
     }
 

@@ -248,6 +248,13 @@ public sealed partial class GameSession : ITurnHandler
 
     private int Walk(Direction dir, bool confuse = true)
     {
+        // Angband: in a web, trying to move clears it instead (and takes the turn).
+        if (IsWebbed(Player.Position))
+        {
+            ClearWeb(Player.Position);
+            Publish(new MessageEvent("You clear the web."));
+            return EnergyTable.MoveEnergy;
+        }
         if (confuse && Player.Timed.Has(Effects.TimedIds.Confused) && Rng.RandInt0(100) < 40)
         {
             dir = Rng.Pick(DirectionExtensions.Compass);

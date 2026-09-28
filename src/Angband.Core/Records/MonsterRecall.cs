@@ -273,7 +273,7 @@ public static class MonsterRecall
     private static string SpellClause(GameData data, MonsterRaceDef race, IReadOnlyList<MonsterSpellDef> spells, bool knowHp, RecallViewer viewer) =>
         Clause(spells.Select(s =>
         {
-            var level = s.LoreFor(race.Depth);
+            var level = s.LoreFor(race.Power);
             var color = SpellColor(data, s, level, viewer);
             var damage = LoreDamage(s, race, knowHp);
             var text = level?.Text is { Length: > 0 } t ? t : SpellPhrase(data, s);
@@ -288,6 +288,8 @@ public static class MonsterRecall
     {
         if (spell.Kind == MonsterSpellKind.Breath)
             return knowHp ? Math.Min(spell.BreathCap, race.HitPoints / Math.Max(1, spell.BreathDivisor)) : 0;
+        if (spell.PowerScaled) return Math.Max(1, race.Power / 3 * 2) * 5;       // WOUND: (power/3*2)d5
+        if (spell.Kind == MonsterSpellKind.Storm) return 70 + 3 * Math.Max(1, race.Power / 3) * 5; // three balls
         if (spell.Damage.Max <= 0) return 0;
         return spell.Damage.Max + (spell.LevelDivisor > 0 ? race.Depth / spell.LevelDivisor : 0) + race.Depth * spell.LevelPercent / 100;
     }
@@ -438,6 +440,8 @@ public static class MonsterRecall
             MonsterSpellKind.Forget => "cause amnesia",
             MonsterSpellKind.Traps => "create traps",
             MonsterSpellKind.Darkness => "create darkness",
+            MonsterSpellKind.Web => "weave webs",
+            MonsterSpellKind.Storm => "create storms",
             _ => s.Id.ToLowerInvariant(),
         };
     }

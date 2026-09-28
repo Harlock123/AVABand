@@ -123,6 +123,10 @@ public sealed class MonsterRaceDef
     public string Color { get; init; } = "White";
     /// <summary>Native dungeon level.</summary>
     public int Depth { get; init; }
+    /// <summary>Angband spell-power, where it differs from the level (a dozen monsters).</summary>
+    public int? SpellPower { get; init; }
+    /// <summary>The power of its spells: the spell power, or else its level (Angband race->spell_power).</summary>
+    public int Power => SpellPower ?? Depth;
     /// <summary>1-in-N commonness; higher is rarer.</summary>
     public int Rarity { get; init; } = 1;
     /// <summary>Speed relative to normal (+10 = fast).</summary>
@@ -247,6 +251,10 @@ public enum MonsterSpellKind
     Shriek,
     /// <summary>Drains the player's spell points to heal the caster.</summary>
     DrainMana,
+    /// <summary>Spins webs around the caster (Angband WEAVE).</summary>
+    Web,
+    /// <summary>A storm: balls of water, lightning and ice at once (Angband STORM).</summary>
+    Storm,
     /// <summary>Psychic attack: damage plus a status (confusion...), negated by a saving throw.</summary>
     Mind,
     /// <summary>The caster speeds itself up.</summary>
@@ -289,6 +297,17 @@ public sealed class MonsterSpellDef
     public Dice Duration { get; init; } = Dice.Zero;
     /// <summary>Player saving throw negates it.</summary>
     public bool Save { get; init; }
+    /// <summary>
+    /// Angband 4.2 WOUND: damage and cuts grow with the caster's spell power instead of fixed dice
+    /// (<see cref="Damage"/> is unused).
+    /// </summary>
+    public bool PowerScaled { get; init; }
+    /// <summary>For summons: no uniques (Angband summon.txt <c>uniques:0</c>).</summary>
+    public bool SummonNoUniques { get; init; }
+    /// <summary>For summons: uniques only (the Ringwraiths, "summon uniques").</summary>
+    public bool SummonUniquesOnly { get; init; }
+    /// <summary>For summons: glyphs to fall back on when nothing suitable is found (Angband <c>fallback</c>).</summary>
+    public string? SummonFallbackGlyphs { get; init; }
     /// <summary>Resist/protection id that negates the status (e.g. <c>free_act</c>, <c>conf</c>).</summary>
     public string? PreventedBy { get; init; }
     /// <summary>For summons: same glyph as the caster ("kin").</summary>
@@ -325,6 +344,10 @@ public sealed class MonsterSpellLore
     /// <summary>Spell power from which this level applies (Angband power-cutoff).</summary>
     public int Power { get; init; }
     public string Text { get; init; } = "";
+    /// <summary>What is said when a caster of this power uses it (seen / unseen / saved against), if not the spell's own.</summary>
+    public string? Message { get; init; }
+    public string? UnseenMessage { get; init; }
+    public string? SaveMessage { get; init; }
     public string Color { get; init; } = "White";
     public string? ResistColor { get; init; }
     public string? ImmuneColor { get; init; }

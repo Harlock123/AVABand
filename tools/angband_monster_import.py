@@ -34,7 +34,7 @@ EFFECTS = {
     "SHATTER": "hurt", "BLACK_BREATH": "exp_20",
 }
 
-# Angband spell -> AVABand monster spell (None = dropped). WOUND is chosen by depth below.
+# Angband spell -> AVABand monster spell (None = dropped). Every 4.2 spell is modelled now.
 SPELLS = {s: s for s in [
     "SHRIEK", "ARROW", "BOULDER", "SHOT", "BOLT", "WHIP", "SPIT", "MISSILE",
     "BR_ACID", "BR_ELEC", "BR_FIRE", "BR_COLD", "BR_POIS", "BR_NETH", "BR_LIGHT", "BR_DARK", "BR_SOUN", "BR_CHAO",
@@ -47,15 +47,8 @@ SPELLS = {s: s for s in [
     "BLINK", "TPORT", "TELE_TO", "TELE_SELF_TO", "TELE_AWAY", "TELE_LEVEL", "DARKNESS", "TRAPS", "FORGET",
     "S_KIN", "S_MONSTER", "S_MONSTERS", "S_ANIMAL", "S_SPIDER", "S_HOUND", "S_HYDRA", "S_DEMON", "S_UNDEAD",
     "S_DRAGON", "SHAPECHANGE",
+    "WOUND", "WEAVE", "STORM", "S_AINU", "S_HI_DEMON", "S_HI_UNDEAD", "S_HI_DRAGON", "S_WRAITH", "S_UNIQUE",
 ]}
-SPELLS.update({
-    "S_HI_UNDEAD": "S_UNDEAD", "S_HI_DEMON": "S_DEMON", "S_HI_DRAGON": "S_DRAGON", "S_WRAITH": "S_UNDEAD",
-    "S_AINU": "S_MONSTER", "S_UNIQUE": "S_MONSTERS", "BA_STORM": "BA_ELEC",
-})
-
-
-def wound_for(depth):
-    return "CAUSE_1" if depth < 20 else "CAUSE_2" if depth < 35 else "CAUSE_3" if depth < 50 else "CAUSE_4"
 
 
 def slug(name):
@@ -114,10 +107,13 @@ def friends_of(entry, bases, names):
             continue
         parts = value.split(":")
         chance, dice, target = int(parts[0]), parts[1], parts[2]
+        role = parts[3] if len(parts) > 3 else None
         if key == "friends":
             race = friend_race(target, names)
             if race:
-                out.append({"chance": chance, "number": dice, "race": race})
+                friend = {"chance": chance, "number": dice, "race": race}
+                if role == "bodyguard": friend["role"] = "bodyguard"
+                out.append(friend)
         else:
             out.append({"chance": chance, "number": dice, "base": target, "glyph": bases.get(target, {}).get("glyph", "?")})
     return out
@@ -140,7 +136,7 @@ def convert(entry, bases, names=()):
 
     spells = []
     for s in flag_list(entry, "spells"):
-        mapped = wound_for(depth) if s == "WOUND" else SPELLS.get(s)
+        mapped = SPELLS.get(s)
         if mapped and mapped not in spells:
             spells.append(mapped)
     # Angband 4.2 keeps two frequencies (1 in N): innate-freq for innate attacks, spell-freq for
@@ -155,6 +151,7 @@ def convert(entry, bases, names=()):
         "glyph": one(entry, "glyph", base.get("glyph", "?")),
         "color": COLORS.get(color[0], "White"),
         "depth": depth,
+        **({"spellPower": int(one(entry, "spell-power"))} if one(entry, "spell-power", str(depth)) != str(depth) else {}),
         "rarity": int(one(entry, "rarity", "1")),
         "speed": int(one(entry, "speed", "110")) - 110,
         "hitPoints": int(one(entry, "hit-points", "1")),

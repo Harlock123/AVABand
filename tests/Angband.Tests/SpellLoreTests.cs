@@ -207,8 +207,14 @@ public class SpellLoreTests
     [Fact]
     public void WoundSpells_AreDescribedByTheirPower()
     {
-        Assert.Equal("cause light wounds", TestData.Game.MonsterSpell("CAUSE_1")!.LoreFor(1)!.Text);
-        Assert.Equal("cause critical wounds", TestData.Game.MonsterSpell("CAUSE_4")!.LoreFor(1)!.Text);
+        // Angband 4.2's one WOUND spell, worded by the caster's spell power (power-cutoff 16, 32, 50, 80).
+        var wound = TestData.Game.MonsterSpell("WOUND")!;
+        Assert.Equal("cause light wounds", wound.LoreFor(1)!.Text);
+        Assert.Equal("cause medium wounds", wound.LoreFor(16)!.Text);
+        Assert.Equal("cause serious wounds", wound.LoreFor(40)!.Text);
+        Assert.Equal("cause critical wounds", wound.LoreFor(50)!.Text);
+        Assert.Equal("cause mortal wounds", wound.LoreFor(99)!.Text);
+        Assert.Null(TestData.Game.MonsterSpell("CAUSE_1")); // the 4.1 spells it replaced are gone
     }
 
     [Fact]

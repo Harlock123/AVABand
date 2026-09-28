@@ -791,6 +791,7 @@
     "monster:ring_mimic": "monster/abyss/wretched_star.png",
     "monster:trapper": "monster/aberration/unseen_horror_new.png",
     "object-base:chest": "dungeon/chest_2_closed.png",
+    "trap:web": "avaband_web.png",
     "trap:glyph_warding": "dungeon/floor/sigil_circle.png",
     "object-base:shadow_book": "item/book/purple_new.png"
   }

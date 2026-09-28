@@ -3,3 +3,6 @@ A selection of the Dungeon Crawl Stone Soup 32x32 tiles, released as CC0
 https://opengameart.org/content/dungeon-crawl-32x32-tiles
 Courtesy links: http://code.google.com/p/crawl-tiles/ and http://rltiles.sourceforge.net/
 Files keep their original names and folders.
+
+avaband_web.png (the spider web) was drawn for AVABand, as the pack has none;
+it is released under CC0 (public domain) like the rest.

@@ -33,6 +33,7 @@ public sealed partial class GameSession
             return EnergyTable.MoveEnergy;
         }
         if (monster.Held > 0) return EnergyTable.MoveEnergy;
+        if (StuckInWeb(monster)) return EnergyTable.MoveEnergy;
         if (monster.Camouflaged) return LurkingTurn(monster);
         MaybeRevertMonsterShape(monster);
         if (monster.Stun > 0 && Rng.OneIn(10)) return EnergyTable.MoveEnergy; // dazed
@@ -63,6 +64,25 @@ public sealed partial class GameSession
             if (TryMonsterStep(monster, target)) return EnergyTable.MoveEnergy;
         }
         return EnergyTable.MoveEnergy;
+    }
+
+    /// <summary>
+    /// Angband monster_turn: a monster in a web passes through it (PASS_WEB, or passing walls), tears
+    /// it down on the way (tunnelling through walls), spends its turn clearing it (CLEAR_WEB), or is
+    /// stuck. True when the turn is used up.
+    /// </summary>
+    private bool StuckInWeb(Monster monster)
+    {
+        if (!IsWebbed(monster.Position)) return false;
+        var race = monster.Race;
+        if (race.Has("PASS_WEB") || race.Has("PASS_WALL")) return false;
+        if (race.Has("KILL_WALL"))
+        {
+            ClearWeb(monster.Position);
+            return false;
+        }
+        if (race.Has("CLEAR_WEB")) ClearWeb(monster.Position);
+        return true;
     }
 
     /// <summary>Whether the monster can hear the player (Angband monster_can_hear).</summary>

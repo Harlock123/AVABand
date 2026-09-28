@@ -297,6 +297,7 @@ public static class DataLoader
             Effect = t.Effect ?? "",
             IsTrapDoor = t.IsTrapDoor,
             Warding = t.Warding,
+            Web = t.Web,
             Description = t.Description ?? "",
         };
     }
@@ -347,6 +348,7 @@ public static class DataLoader
             Smell = m.Smell,
             SpellFrequency = m.SpellFrequency,
             InnateFrequency = m.InnateFrequency,
+            SpellPower = m.SpellPower,
             Spells = m.Spells ?? [],
             Experience = m.Experience,
             Blows = m.Blows ?? [],
@@ -596,6 +598,7 @@ public static class DataLoader
         public int Weight { get; init; } = 1;
         public string? Effect { get; init; }
         public bool Warding { get; init; }
+        public bool Web { get; init; }
         public bool IsTrapDoor { get; init; }
         public string? Description { get; init; }
     }
@@ -629,6 +632,7 @@ public static class DataLoader
         public int Smell { get; init; }
         public int SpellFrequency { get; init; }
         public int InnateFrequency { get; init; }
+        public int? SpellPower { get; init; }
         public List<string>? Spells { get; init; }
         public int Experience { get; init; }
         public List<MonsterBlowDef>? Blows { get; init; }

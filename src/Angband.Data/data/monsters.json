@@ -746,7 +746,7 @@
   "spellFrequency": 5,
   "spells": [
    "MISSILE",
-   "CAUSE_1"
+   "WOUND"
   ],
   "blows": [
    {
@@ -885,7 +885,7 @@
   "spellFrequency": 5,
   "spells": [
    "BLIND",
-   "CAUSE_1",
+   "WOUND",
    "CONF",
    "SCARE",
    "BLINK"
@@ -4171,6 +4171,7 @@
   "glyph": "B",
   "color": "LightDark",
   "depth": 7,
+  "spellPower": 4,
   "rarity": 3,
   "speed": 10,
   "hitPoints": 12,
@@ -4199,7 +4200,7 @@
   "plural": "crows of Durthang",
   "spellFrequency": 9,
   "spells": [
-   "CAUSE_1"
+   "WOUND"
   ]
  },
  {
@@ -5202,7 +5203,7 @@
   "spellFrequency": 8,
   "spells": [
    "BLINK",
-   "CAUSE_1",
+   "WOUND",
    "MISSILE"
   ]
  },
@@ -5632,6 +5633,10 @@
   "hearing": 8,
   "smell": 20,
   "experience": 35,
+  "spells": [
+   "WEAVE"
+  ],
+  "innateFrequency": 10,
   "blows": [
    {
     "method": "bite",
@@ -6214,7 +6219,7 @@
   "spellFrequency": 8,
   "spells": [
    "WHIP",
-   "CAUSE_1",
+   "WOUND",
    "SCARE",
    "DARKNESS"
   ]
@@ -6739,6 +6744,7 @@
   "glyph": "p",
   "color": "Green",
   "depth": 12,
+  "spellPower": 6,
   "rarity": 1,
   "speed": 0,
   "hitPoints": 54,
@@ -6844,7 +6850,7 @@
   "spellFrequency": 5,
   "spells": [
    "BLIND",
-   "CAUSE_1",
+   "WOUND",
    "CONF",
    "DARKNESS",
    "HEAL"
@@ -7582,6 +7588,7 @@
   "glyph": "o",
   "color": "Mud",
   "depth": 13,
+  "spellPower": 16,
   "rarity": 1,
   "speed": 0,
   "hitPoints": 66,
@@ -7938,7 +7945,7 @@
   "spellFrequency": 9,
   "spells": [
    "BLINK",
-   "CAUSE_1",
+   "WOUND",
    "BA_POIS",
    "BO_COLD"
   ]
@@ -9087,7 +9094,7 @@
   "spellFrequency": 6,
   "spells": [
    "BLIND",
-   "CAUSE_1",
+   "WOUND",
    "CONF",
    "HEAL",
    "MIND_BLAST"
@@ -9693,7 +9700,7 @@
   "spells": [
    "BO_COLD",
    "BLIND",
-   "CAUSE_1",
+   "WOUND",
    "CONF",
    "SCARE"
   ],
@@ -10183,6 +10190,10 @@
   "hearing": 15,
   "smell": 20,
   "experience": 25,
+  "spells": [
+   "WEAVE"
+  ],
+  "innateFrequency": 10,
   "blows": [
    {
     "method": "bite",
@@ -11094,7 +11105,7 @@
    "BO_FIRE",
    "S_MONSTER",
    "BLIND",
-   "CAUSE_2",
+   "WOUND",
    "CONF",
    "SCARE"
   ],
@@ -12527,6 +12538,7 @@
   "glyph": "u",
   "color": "LightRed",
   "depth": 25,
+  "spellPower": 10,
   "rarity": 2,
   "speed": 10,
   "hitPoints": 50,
@@ -12570,7 +12582,7 @@
    "TELE_SELF_TO",
    "BLIND",
    "SLOW",
-   "CAUSE_2",
+   "WOUND",
    "WHIP",
    "BO_FIRE"
   ]
@@ -12625,7 +12637,7 @@
   "spellFrequency": 5,
   "spells": [
    "BLIND",
-   "CAUSE_2",
+   "WOUND",
    "DARKNESS",
    "SCARE",
    "BO_NETH",
@@ -13678,7 +13690,7 @@
   "description": "It is a humanoid with an aura of power. You notice a sharp set of front teeth.",
   "spellFrequency": 9,
   "spells": [
-   "CAUSE_2",
+   "WOUND",
    "DARKNESS",
    "MIND_BLAST",
    "TELE_TO",
@@ -13774,7 +13786,7 @@
   "description": "It is an ogre wrapped in furs and covered in grotesque body paints.",
   "spellFrequency": 5,
   "spells": [
-   "CAUSE_2",
+   "WOUND",
    "HOLD",
    "SCARE",
    "TPORT",
@@ -14070,7 +14082,7 @@
   "spellFrequency": 8,
   "spells": [
    "BLIND",
-   "CAUSE_2",
+   "WOUND",
    "DARKNESS",
    "SCARE"
   ]
@@ -14546,7 +14558,7 @@
   "description": "A lesser relative of the beholder: a globular body with a large toothy mouth, a large central eye, and four smaller eyes on stalks protruding from the top of its body.",
   "spellFrequency": 6,
   "spells": [
-   "CAUSE_2",
+   "WOUND",
    "FORGET",
    "HOLD",
    "SLOW"
@@ -14914,7 +14926,7 @@
    "BO_FIRE",
    "S_MONSTER",
    "BLIND",
-   "CAUSE_2",
+   "WOUND",
    "CONF",
    "SCARE"
   ],
@@ -15415,7 +15427,7 @@
   "description": "It is a ghostly form with eyes that haunt you.",
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_2",
+   "WOUND",
    "DARKNESS",
    "SCARE"
   ]
@@ -16838,7 +16850,7 @@
   "description": "It is a ghostly nightmare of an entity.",
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_2",
+   "WOUND",
    "DARKNESS",
    "HOLD",
    "SCARE"
@@ -17345,7 +17357,7 @@
   "spellFrequency": 5,
   "spells": [
    "BLINK",
-   "CAUSE_2",
+   "WOUND",
    "DARKNESS",
    "SCARE"
   ]
@@ -17756,7 +17768,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_2",
+   "WOUND",
    "DRAIN_MANA",
    "HOLD",
    "BRAIN_SMASH",
@@ -18481,7 +18493,7 @@
    "BA_POIS",
    "S_MONSTER",
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "SCARE"
   ],
@@ -18621,6 +18633,7 @@
   "glyph": "g",
   "color": "Blue",
   "depth": 36,
+  "spellPower": 20,
   "rarity": 2,
   "speed": 10,
   "hitPoints": 520,
@@ -18775,7 +18788,7 @@
   "description": "It is a humanoid form dressed in robes. Power emanates from its chilling frame.",
   "spellFrequency": 6,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "DARKNESS",
    "MIND_BLAST",
@@ -19147,7 +19160,7 @@
   "spellFrequency": 3,
   "spells": [
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "DARKNESS",
    "HOLD",
    "SCARE",
@@ -19346,7 +19359,7 @@
   "description": "Another lesser relative of the beholder, this six-eyed creature feeds on magic.",
   "spellFrequency": 5,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "DRAIN_MANA",
    "HOLD",
    "TELE_AWAY",
@@ -19867,7 +19880,7 @@
   "description": "Your life force is torn from your body as this powerful unearthly being approaches.",
   "spellFrequency": 6,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BO_NETH"
@@ -19957,7 +19970,7 @@
   "spells": [
    "SHRIEK",
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "DARKNESS",
    "DRAIN_MANA",
    "FORGET",
@@ -20024,7 +20037,7 @@
   "spellFrequency": 2,
   "spells": [
    "BLINK",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "TPORT"
   ]
@@ -20084,7 +20097,7 @@
   "spellFrequency": 5,
   "spells": [
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "SCARE",
    "BO_NETH",
    "S_MONSTERS"
@@ -20302,7 +20315,7 @@
   "description": "It is a tangible but ghostly form made of white fog.",
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "DARKNESS",
    "SCARE"
   ]
@@ -20363,6 +20376,7 @@
   "glyph": "S",
   "color": "LightGreen",
   "depth": 38,
+  "spellPower": 10,
   "rarity": 3,
   "speed": 10,
   "hitPoints": 264,
@@ -20406,6 +20420,7 @@
   "innateFrequency": 6,
   "spellFrequency": 5,
   "spells": [
+   "WEAVE",
    "CONF",
    "SLOW",
    "BLIND",
@@ -21216,7 +21231,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "TELE_TO",
    "TRAPS",
@@ -21477,7 +21492,7 @@
   "spellFrequency": 10,
   "spells": [
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "SCARE",
    "S_DEMON"
@@ -21888,7 +21903,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "DARKNESS",
    "HEAL",
@@ -21976,7 +21991,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "BRAIN_SMASH",
    "DRAIN_MANA",
@@ -22046,7 +22061,7 @@
   "description": "This sad creature - once a mighty warrior - betrayed his former friends to Morgoth's army in return for, he thought, safety for himself and his wife. And so he fell under Morgoth's power and became little more than a mindless servant of evil, even though the other side of his \"bargain\" was not kept.",
   "spellFrequency": 2,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "BO_MANA",
    "BO_WATE"
   ]
@@ -23436,7 +23451,7 @@
   "spellFrequency": 2,
   "spells": [
    "BRAIN_SMASH",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "DRAIN_MANA",
    "FORGET",
@@ -23752,7 +23767,7 @@
   "description": "A tangible but ghostly form, made of grey fog. The air around it feels deathly cold.",
   "spellFrequency": 7,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "DARKNESS",
    "HOLD",
    "SCARE",
@@ -23832,7 +23847,7 @@
   "spellFrequency": 2,
   "spells": [
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "HEAL",
    "HOLD",
    "S_MONSTER",
@@ -23906,7 +23921,7 @@
   "spells": [
    "BLIND",
    "BRAIN_SMASH",
-   "CAUSE_3",
+   "WOUND",
    "DARKNESS",
    "DRAIN_MANA",
    "BO_NETH",
@@ -23970,7 +23985,7 @@
   "spellFrequency": 9,
   "spells": [
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "S_DEMON"
   ]
  },
@@ -24085,7 +24100,7 @@
   "innateFrequency": 20,
   "spellFrequency": 6,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "DRAIN_MANA",
    "HEAL",
    "HOLD",
@@ -24204,7 +24219,7 @@
   "description": "This creature of legend has not just a serpent's body, but snakes for hair. Her scales rattle as she slithers towards you, eyes blazing, venom dripping from her ghastly mouth.",
   "spellFrequency": 4,
   "spells": [
-   "CAUSE_3",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BA_ACID",
@@ -24274,6 +24289,7 @@
   "innateFrequency": 40,
   "spellFrequency": 8,
   "spells": [
+   "STORM",
    "BLINK",
    "CONF",
    "SCARE",
@@ -24405,7 +24421,7 @@
   "spellFrequency": 7,
   "spells": [
    "BLIND",
-   "CAUSE_3",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BO_NETH"
@@ -24469,7 +24485,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_3",
+   "WOUND",
    "CONF",
    "DARKNESS",
    "HEAL",
@@ -25663,7 +25679,7 @@
   "innateFrequency": 8,
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "BR_FIRE"
   ]
@@ -25921,7 +25937,7 @@
   "innateFrequency": 8,
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "BR_COLD"
   ]
@@ -26119,7 +26135,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "BRAIN_SMASH",
    "DRAIN_MANA",
@@ -26193,7 +26209,7 @@
   "spellFrequency": 9,
   "spells": [
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "DRAIN_MANA",
    "HOLD",
@@ -26261,7 +26277,7 @@
   "spellFrequency": 6,
   "spells": [
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "DARKNESS",
    "MIND_BLAST",
    "SCARE",
@@ -26342,8 +26358,9 @@
   "innateFrequency": 20,
   "spellFrequency": 4,
   "spells": [
+   "WEAVE",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "HEAL",
    "SCARE",
@@ -26787,7 +26804,7 @@
   "spellFrequency": 1,
   "spells": [
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "DARKNESS",
    "FORGET",
@@ -27026,7 +27043,7 @@
   "spellFrequency": 5,
   "spells": [
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "DARKNESS",
    "DRAIN_MANA",
    "BO_NETH",
@@ -27096,7 +27113,7 @@
   "spells": [
    "BLIND",
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "HEAL",
    "SCARE",
@@ -27163,6 +27180,7 @@
   "innateFrequency": 6,
   "spellFrequency": 3,
   "spells": [
+   "STORM",
    "BOULDER",
    "BO_ICE",
    "S_MONSTERS"
@@ -27228,9 +27246,9 @@
   "plural": "Maiar of Yavanna",
   "spellFrequency": 3,
   "spells": [
+   "S_AINU",
    "BO_MANA",
    "BO_WATE",
-   "S_MONSTER",
    "S_ANIMAL",
    "SHAPECHANGE"
   ],
@@ -27525,8 +27543,9 @@
   "description": "Originally known as the White, Saruman fell prey to Sauron's wiles. He seeks to emulate him and breeds orcs and trolls to fight for him. He searches forever for the One Ring, to become a mighty Sorcerer-King of the world.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "FORGET",
    "HASTE",
    "HEAL",
@@ -27542,7 +27561,6 @@
    "BO_ICE",
    "S_ANIMAL",
    "S_DEMON",
-   "S_DRAGON",
    "S_MONSTERS",
    "S_UNDEAD"
   ]
@@ -27609,7 +27627,7 @@
   "spells": [
    "BLIND",
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "SCARE",
    "BA_NETH",
    "BO_MANA",
@@ -27814,7 +27832,7 @@
   "innateFrequency": 5,
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "BR_FIRE"
   ]
@@ -27961,8 +27979,9 @@
   "innateFrequency": 20,
   "spellFrequency": 5,
   "spells": [
+   "WEAVE",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "HEAL",
    "SCARE",
@@ -28092,8 +28111,9 @@
   "plural": "archliches",
   "spellFrequency": 3,
   "spells": [
+   "S_HI_UNDEAD",
    "BLINK",
-   "CAUSE_4",
+   "WOUND",
    "DRAIN_MANA",
    "FORGET",
    "HEAL",
@@ -28103,8 +28123,7 @@
    "TELE_TO",
    "TPORT",
    "BA_NETH",
-   "S_DEMON",
-   "S_UNDEAD"
+   "S_DEMON"
   ]
  },
  {
@@ -28169,10 +28188,10 @@
   "plural": "Maiar of Ulmo",
   "spellFrequency": 3,
   "spells": [
+   "S_AINU",
    "BA_WATE",
    "BO_MANA",
    "BO_WATE",
-   "S_MONSTER",
    "SHAPECHANGE"
   ],
   "shapes": [
@@ -28303,7 +28322,9 @@
   "description": "The Mouth of Sauron is a mighty spell caster. So old that even he cannot remember his own name, his power and evil are undeniable. He believes unshakably that he is unbeatable and laughs as he weaves his awesome spells.",
   "spellFrequency": 2,
   "spells": [
-   "CAUSE_4",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
+   "WOUND",
    "HOLD",
    "TELE_TO",
    "TRAPS",
@@ -28312,9 +28333,7 @@
    "BA_MANA",
    "BA_NETH",
    "BA_WATE",
-   "BO_PLAS",
-   "S_DEMON",
-   "S_UNDEAD"
+   "BO_PLAS"
   ]
  },
  {
@@ -28687,12 +28706,12 @@
   "description": "Chief messenger between Sauron and Morgoth, she is surely the most deadly of her vampire race. At first she is charming to meet, but her wings and eyes give away her true form.",
   "spellFrequency": 3,
   "spells": [
+   "S_HI_UNDEAD",
    "BLIND",
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "DRAIN_MANA",
    "BA_NETH",
-   "S_UNDEAD",
    "S_KIN",
    "HOLD",
    "SCARE"
@@ -28815,7 +28834,7 @@
   "innateFrequency": 9,
   "spellFrequency": 10,
   "spells": [
-   "CAUSE_4",
+   "WOUND",
    "BR_CHAO"
   ]
  },
@@ -28879,12 +28898,12 @@
   "description": "This huge affront to existence twists and tears at the fabric of space. A master of mighty magic, Tselakus hungers for your tender flesh. Darkness itself recoils from the touch of Tselakus as he leaves a trail of death and destruction. Tselakus is a being of sneering contempt, laughing at your pitiful efforts to defy him. Mighty claws rend reality as he annihilates all in his path to your soul!",
   "spellFrequency": 3,
   "spells": [
+   "S_HI_UNDEAD",
    "BLIND",
    "CONF",
    "HOLD",
    "BA_DARK",
    "BA_NETH",
-   "S_UNDEAD",
    "S_KIN"
   ]
  },
@@ -28946,7 +28965,7 @@
   "spellFrequency": 8,
   "spells": [
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "DRAIN_MANA",
    "TELE_TO",
    "BA_NETH",
@@ -29024,6 +29043,7 @@
   "glyph": "P",
   "color": "Orange",
   "depth": 69,
+  "spellPower": 85,
   "rarity": 3,
   "speed": 10,
   "hitPoints": 3344,
@@ -29213,14 +29233,14 @@
   "innateFrequency": 20,
   "spellFrequency": 8,
   "spells": [
+   "S_HI_DEMON",
    "HOLD",
    "SCARE",
    "SLOW",
    "BA_COLD",
    "BO_ICE",
    "BR_COLD",
-   "BR_SHAR",
-   "S_DEMON"
+   "BR_SHAR"
   ]
  },
  {
@@ -29477,8 +29497,9 @@
   "plural": "Maiar of Manwë",
   "spellFrequency": 3,
   "spells": [
+   "STORM",
+   "S_AINU",
    "BA_ELEC",
-   "S_MONSTER",
    "SHAPECHANGE"
   ],
   "shapes": [
@@ -29548,9 +29569,9 @@
   "plural": "Maiar of Varda",
   "spellFrequency": 3,
   "spells": [
+   "S_AINU",
    "BA_LIGHT",
    "BO_MANA",
-   "S_MONSTER",
    "SHAPECHANGE"
   ],
   "shapes": [
@@ -29589,9 +29610,9 @@
   "description": "A massive pulsating mound of flesh, strongly reeking of sulfur.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_DEMON",
    "BLINK",
-   "TELE_TO",
-   "S_DEMON"
+   "TELE_TO"
   ]
  },
  {
@@ -29624,9 +29645,9 @@
   "description": "A massive mound of multi-hued scaled flesh, throbbing and pulsating.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_DRAGON",
    "BLINK",
-   "TELE_TO",
-   "S_DRAGON"
+   "TELE_TO"
   ]
  },
  {
@@ -29659,9 +29680,9 @@
   "description": "A massive pile of rotting flesh. A disgusting stench fills the air as it throbs and writhes.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_UNDEAD",
    "BLINK",
-   "TELE_TO",
-   "S_UNDEAD"
+   "TELE_TO"
   ]
  },
  {
@@ -29724,10 +29745,10 @@
   "description": "A giant humanoid demon wielding a massive, heavy and sharp scythe. Feared by foes and friends alike when it flies into one of its berserk rages, the Horned Reaper will cut down anything in its path between it and you - even the minions it has just summoned.",
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DEMON",
    "HASTE",
    "SCARE",
-   "SLOW",
-   "S_DEMON"
+   "SLOW"
   ]
  },
  {
@@ -29797,14 +29818,15 @@
   "innateFrequency": 4,
   "spellFrequency": 2,
   "spells": [
+   "STORM",
+   "S_AINU",
    "BLIND",
    "TELE_TO",
    "WHIP",
    "BA_WATE",
    "BO_MANA",
    "BO_WATE",
-   "BR_DISE",
-   "S_MONSTER"
+   "BR_DISE"
   ]
  },
  {
@@ -30180,7 +30202,7 @@
   "spellFrequency": 1,
   "spells": [
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "TRAPS",
    "BA_WATE",
    "BO_NETH",
@@ -30249,7 +30271,7 @@
   "spellFrequency": 3,
   "spells": [
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "CONF",
    "DRAIN_MANA",
    "BRAIN_SMASH",
@@ -30408,6 +30430,7 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -30476,6 +30499,7 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -30545,6 +30569,7 @@
   "innateFrequency": 11,
   "spellFrequency": 4,
   "spells": [
+   "WEAVE",
    "BLIND",
    "CONF",
    "HEAL",
@@ -30683,12 +30708,12 @@
   "innateFrequency": 5,
   "spellFrequency": 3,
   "spells": [
+   "S_HI_DRAGON",
    "BRAIN_SMASH",
    "FORGET",
    "SCARE",
    "BR_FIRE",
-   "BR_POIS",
-   "S_DRAGON"
+   "BR_POIS"
   ]
  },
  {
@@ -30721,12 +30746,12 @@
   "description": "A giant seething mass of flesh, overwhelming you with monster after monster.",
   "spellFrequency": 1,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
    "BLINK",
    "TELE_TO",
    "S_ANIMAL",
-   "S_DEMON",
-   "S_DRAGON",
-   "S_UNDEAD",
    "S_MONSTERS"
   ]
  },
@@ -30891,7 +30916,7 @@
   "spells": [
    "BLIND",
    "BLINK",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BRAIN_SMASH",
@@ -30964,14 +30989,14 @@
   "innateFrequency": 12,
   "spellFrequency": 8,
   "spells": [
-   "CAUSE_4",
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "WOUND",
    "SCARE",
    "BA_FIRE",
    "BR_CHAO",
    "BR_FIRE",
-   "BR_POIS",
-   "S_DEMON",
-   "S_DRAGON"
+   "BR_POIS"
   ]
  },
  {
@@ -31035,15 +31060,15 @@
   "description": "A tall black cloaked Ringwraith, he is a master of horsemanship. He longs to taste your blood.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "FORGET",
    "HOLD",
    "SCARE",
    "BO_COLD",
    "BO_NETH",
-   "S_MONSTER",
-   "S_UNDEAD"
+   "S_MONSTER"
   ]
  },
  {
@@ -31152,8 +31177,9 @@
   "description": "A sorceress in life, Adunaphel quickly fell under Sauron's sway and the power of the rings.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "FORGET",
    "HOLD",
    "SCARE",
@@ -31161,8 +31187,7 @@
    "BO_COLD",
    "BO_FIRE",
    "BO_NETH",
-   "S_MONSTER",
-   "S_UNDEAD"
+   "S_MONSTER"
   ]
  },
  {
@@ -31200,11 +31225,12 @@
   "description": "A gigantic seething mass of flesh, Qlzqqlzuup changes colours in front of your eyes. Pulsating first one colour then the next, it knows only it must bring help to protect itself.",
   "spellFrequency": 1,
   "spells": [
-   "S_MONSTER",
+   "S_AINU",
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_UNIQUE",
    "S_ANIMAL",
-   "S_DEMON",
-   "S_DRAGON",
-   "S_UNDEAD",
    "S_HOUND",
    "S_HYDRA",
    "S_KIN",
@@ -31274,16 +31300,16 @@
   "description": "A mighty sorcerer King, Akhorahil was blind in life. With powerful enchantments, he created jewelled eyes that enabled him to see better than any ordinary man ever could.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "DARKNESS",
    "HOLD",
    "SCARE",
    "BO_COLD",
    "BO_FIRE",
    "BO_NETH",
-   "S_MONSTERS",
-   "S_UNDEAD"
+   "S_MONSTERS"
   ]
  },
  {
@@ -31345,12 +31371,12 @@
   "plural": "furies",
   "spellFrequency": 4,
   "spells": [
-   "CAUSE_4",
+   "S_HI_DEMON",
+   "WOUND",
    "SCARE",
    "BRAIN_SMASH",
    "BLINK",
-   "TELE_SELF_TO",
-   "S_DEMON"
+   "TELE_SELF_TO"
   ]
  },
  {
@@ -31412,6 +31438,7 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31482,6 +31509,7 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31614,15 +31642,15 @@
   "description": "Ren was an insane eastern king who believed himself to be the son of a volcano god. At an early age his sanity was destroyed by a plague that wiped out his family, and he never recovered.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BA_FIRE",
    "BO_FIRE",
    "BO_NETH",
-   "S_MONSTER",
-   "S_UNDEAD"
+   "S_MONSTER"
   ]
  },
  {
@@ -31687,10 +31715,11 @@
   "description": "The son of Eöl the Dark Elf, Maeglin is every bit as evil as his father and more. His greed for gold led him to betray the Hidden Kingdom of Gondolin to Morgoth's forces. He is a mighty warrior himself, and some of Morgoth's greatest servants answer to his call.",
   "spellFrequency": 6,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_UNIQUE",
    "S_ANIMAL",
-   "S_DEMON",
-   "S_DRAGON",
-   "S_UNDEAD",
    "S_MONSTERS"
   ]
  },
@@ -31758,8 +31787,9 @@
   "description": "This Ringwraith was a weak-minded sorcerer-king who fell easily under Sauron's power.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BA_ACID",
@@ -31832,6 +31862,7 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31905,6 +31936,7 @@
   "innateFrequency": 5,
   "spellFrequency": 5,
   "spells": [
+   "S_HI_DRAGON",
    "BLIND",
    "CONF",
    "SCARE",
@@ -31986,11 +32018,11 @@
   "description": "A winged humanoid demon, Pazuzu grins inhumanely at you as he decides your fate.",
   "spellFrequency": 3,
   "spells": [
+   "S_HI_DEMON",
    "MIND_BLAST",
    "BA_ELEC",
    "BO_ELEC",
-   "BO_MANA",
-   "S_DEMON"
+   "BO_MANA"
   ]
  },
  {
@@ -32057,8 +32089,9 @@
   "description": "Dwar had a special affinity for dogs in life, and can still command them at will. He howls maniacally as he reaches out to destroy you.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "SCARE",
    "BA_FIRE",
@@ -32130,8 +32163,9 @@
   "description": "A Ringwraith powerful in fell sorcery, he yearns for the life he has lost for an unlife of everlasting torment.",
   "spellFrequency": 3,
   "spells": [
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "MIND_BLAST",
    "SCARE",
@@ -32281,16 +32315,17 @@
   "description": "A warrior-king of the East. Khamûl is a powerful opponent, his skill in combat awesome and his form twisted by evil cunning.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_UNDEAD",
+   "S_WRAITH",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "SCARE",
    "TELE_LEVEL",
    "BA_COLD",
    "BA_FIRE",
    "BA_NETH",
-   "BO_MANA",
-   "S_UNDEAD"
+   "BO_MANA"
   ]
  },
  {
@@ -32299,6 +32334,7 @@
   "glyph": "s",
   "color": "LightSlate",
   "depth": 84,
+  "spellPower": 110,
   "rarity": 2,
   "speed": 30,
   "hitPoints": 7500,
@@ -32358,15 +32394,15 @@
   "description": "A legion of evil undead druj animating the skeleton of a once mighty sorcerer. His power is devastating and his speed unmatched in the underworld. Flee his wrath!",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_UNDEAD",
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "SCARE",
    "TELE_TO",
    "BA_NETH",
    "BA_WATE",
    "BO_ICE",
-   "BO_MANA",
-   "S_UNDEAD"
+   "BO_MANA"
   ]
  },
  {
@@ -32430,6 +32466,7 @@
   "innateFrequency": 5,
   "spellFrequency": 4,
   "spells": [
+   "S_HI_DEMON",
    "CONF",
    "BA_FIRE",
    "BO_PLAS",
@@ -32437,7 +32474,6 @@
    "WHIP",
    "BR_FIRE",
    "BR_PLAS",
-   "S_DEMON",
    "S_UNDEAD"
   ]
  },
@@ -32512,17 +32548,18 @@
   "description": "The most fell of all Sauron's captains: King of Angmar, Sorcerer, Ringwraith, Lord of the Nazgûl, a spear of terror in the hand of Sauron, shadow of despair. His spells are lethal and his combat blows crushingly hard. He moves at speed, and commands legions of evil to do his bidding. It is said that he is fated never to die by the hand of mortal man.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_WRAITH",
    "BLIND",
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "HOLD",
    "SCARE",
    "TELE_AWAY",
    "BA_NETH",
    "BO_MANA",
-   "S_DEMON",
-   "S_DRAGON",
-   "S_UNDEAD",
    "S_KIN",
    "S_MONSTERS"
   ]
@@ -32619,12 +32656,12 @@
   "innateFrequency": 4,
   "spellFrequency": 10,
   "spells": [
+   "S_HI_DRAGON",
    "BR_ACID",
    "BR_COLD",
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS",
-   "S_DRAGON",
    "S_KIN"
   ]
  },
@@ -32873,12 +32910,12 @@
   "innateFrequency": 12,
   "spellFrequency": 6,
   "spells": [
+   "S_HI_DEMON",
    "BLIND",
    "CONF",
    "SCARE",
    "BR_FIRE",
    "BR_PLAS",
-   "S_DEMON",
    "S_UNDEAD"
   ]
  },
@@ -33138,8 +33175,10 @@
   "description": "The greatest of all undead sorcerers, even the gods once feared him. This ancient shadow of death wilts every living thing it passes.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
    "BLIND",
-   "CAUSE_4",
+   "WOUND",
    "SCARE",
    "TPORT",
    "BRAIN_SMASH",
@@ -33147,8 +33186,6 @@
    "BA_MANA",
    "BA_NETH",
    "BO_MANA",
-   "S_DEMON",
-   "S_UNDEAD",
    "S_KIN",
    "S_MONSTERS"
   ]
@@ -33317,13 +33354,13 @@
   "innateFrequency": 8,
   "spellFrequency": 4,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
    "BLIND",
    "CONF",
    "SCARE",
    "BR_FIRE",
-   "BR_PLAS",
-   "S_DEMON",
-   "S_UNDEAD"
+   "BR_PLAS"
   ]
  },
  {
@@ -33332,6 +33369,7 @@
   "glyph": "A",
   "color": "Purple",
   "depth": 99,
+  "spellPower": 130,
   "rarity": 1,
   "speed": 20,
   "hitPoints": 8000,
@@ -33407,8 +33445,13 @@
   "description": "Greatest and most terrible of the servants of Morgoth, creator of the One Ring. A sorcerer of dreadful powers, master of shadows and of phantoms, foul in wisdom, cruel in strength, misshaping what he rules, lord of werewolves; his dominion is torment. He has many servants, and rarely fights without them.",
   "spellFrequency": 2,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_UNIQUE",
+   "S_WRAITH",
    "BRAIN_SMASH",
-   "CAUSE_4",
+   "WOUND",
    "TELE_LEVEL",
    "TPORT",
    "BA_DARK",
@@ -33417,11 +33460,7 @@
    "BO_ICE",
    "BO_MANA",
    "BO_PLAS",
-   "SHAPECHANGE",
-   "S_DEMON",
-   "S_DRAGON",
-   "S_UNDEAD",
-   "S_MONSTERS"
+   "SHAPECHANGE"
   ],
   "shapes": [
    "wolf_sauron",
@@ -33435,6 +33474,7 @@
   "glyph": "C",
   "color": "Purple",
   "depth": 99,
+  "spellPower": 105,
   "rarity": 0,
   "speed": 30,
   "hitPoints": 1,
@@ -33491,6 +33531,8 @@
   "innateFrequency": 3,
   "spellFrequency": 3,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
    "BLINK",
    "TPORT",
    "TELE_LEVEL",
@@ -33498,14 +33540,12 @@
    "BLIND",
    "CONF",
    "SCARE",
-   "CAUSE_4",
+   "WOUND",
    "BR_FIRE",
    "BR_NETH",
    "BA_DARK",
    "S_HOUND",
-   "S_DRAGON",
-   "S_DEMON",
-   "S_UNDEAD"
+   "S_DRAGON"
   ]
  },
  {
@@ -33514,6 +33554,7 @@
   "glyph": "J",
   "color": "Purple",
   "depth": 99,
+  "spellPower": 108,
   "rarity": 0,
   "speed": 20,
   "hitPoints": 1,
@@ -33570,6 +33611,8 @@
   "innateFrequency": 4,
   "spellFrequency": 4,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
    "BLINK",
    "TPORT",
    "TELE_LEVEL",
@@ -33577,15 +33620,13 @@
    "BLIND",
    "CONF",
    "SCARE",
-   "CAUSE_4",
+   "WOUND",
    "BRAIN_SMASH",
    "FORGET",
    "BR_POIS",
    "BR_CHAO",
    "BR_ACID",
-   "S_DRAGON",
-   "S_DEMON",
-   "S_UNDEAD"
+   "S_DRAGON"
   ]
  },
  {
@@ -33594,6 +33635,7 @@
   "glyph": "V",
   "color": "Purple",
   "depth": 99,
+  "spellPower": 130,
   "rarity": 0,
   "speed": 20,
   "hitPoints": 1,
@@ -33651,6 +33693,9 @@
   "description": "Sauron's form as a vampire, great as a dark cloud across the moon.",
   "spellFrequency": 2,
   "spells": [
+   "STORM",
+   "S_HI_DEMON",
+   "S_HI_UNDEAD",
    "BLINK",
    "TPORT",
    "TELE_LEVEL",
@@ -33665,9 +33710,7 @@
    "BA_DARK",
    "BA_POIS",
    "BA_ACID",
-   "S_DRAGON",
-   "S_DEMON",
-   "S_UNDEAD"
+   "S_DRAGON"
   ]
  },
  {
@@ -33737,13 +33780,14 @@
   "description": "He is the Master of the Pits of Angband. His figure is like a black mountain crowned with lightning. He rages with everlasting anger, his body scarred by Fingolfin's eight mighty wounds. He can never rest from his pain, but seeks forever to dominate all that is light and good in the world. He is the origin of man's fear of darkness and created many foul creatures with his evil powers. Orcs, Dragons, and Trolls are his most foul corruptions, causing much pain and suffering in the world to please him. His disgusting visage, twisted with evil, is crowned with iron, the two remaining Silmarils forever burning him. Grond, the mighty Hammer of the Underworld, cries defiance as he strides towards you to crush you to a pulp!",
   "spellFrequency": 3,
   "spells": [
+   "S_HI_DEMON",
+   "S_HI_DRAGON",
+   "S_HI_UNDEAD",
+   "S_UNIQUE",
    "BRAIN_SMASH",
    "BA_MANA",
    "BA_NETH",
    "BO_MANA",
-   "S_DEMON",
-   "S_DRAGON",
-   "S_UNDEAD",
    "S_MONSTERS"
   ]
  }

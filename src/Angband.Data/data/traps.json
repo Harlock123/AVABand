@@ -26,5 +26,7 @@
   { "id": "alarm", "name": "siren", "color": "Yellow", "minDepth": 10, "weight": 4,
     "effect": "aggravate", "description": "A shrieking alarm that wakes the level." },
   { "id": "glyph_warding", "name": "glyph of warding", "color": "Yellow", "minDepth": 999, "weight": 0, "warding": true,
-    "effect": "", "description": "A rune of protection: monsters must break it to reach it." }
+    "effect": "", "description": "A rune of protection: monsters must break it to reach it." },
+  { "id": "web", "name": "web", "glyph": "%", "color": "Yellow", "minDepth": 999, "weight": 0, "web": true,
+    "effect": "", "description": "A tangle of sticky spider webs." }
 ]
