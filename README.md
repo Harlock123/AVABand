@@ -352,7 +352,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
       deep descent or teleport level from the cell; a save made mid-duel keeps both levels.
   - Enchanting now rolls its dice ("1d4" was read as one try).
 - **Items** (`Angband.Core/Items`, `Game/GameSession.Items.cs`, `GameSession.Devices.cs`): 373 object
-  kinds, 91 egos and all 138 of 4.2's artifacts (most of Angband 4.2's, imported by `tools/angband_object_import.py`
+  kinds, 91 egos and all 138 of 4.2's artifacts (imported by `tools/angband_object_import.py`
   and `tools/angband_ego_artifact_import.py`; *of Flame* and *of Frost* as in 4.2 — a weapon ego that
   also resists and an ammunition one that doesn't, both proof against their element), 11 curses, per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to
@@ -573,6 +573,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   Resisting the element (or the status — free action, protection from confusion, stunning,
   blindness) stops the side effect as in 4.2. Plasma, ice, water, gravity, inertia, force and time
   are their own kinds now, not fire and cold: no gear resists them, as in 4.2.
+- **Amnesia** (`amnesia`, Angband's TMD_AMNESIA): the monster spell *forget* ("tries to make you
+  forget things"; a saving throw — "You retain your presence of mind." — keeps it off) and very
+  strong darkness bring it on. While it lasts you can't read ("You can't remember how to read!"),
+  spells fail far more often (50% plus half the usual chance), and devices are a fifth harder. Cure
+  Critical Wounds, Healing, \*Healing\*, Life, the Staves of Healing and Holiness and the Healing
+  prayer cure it. (AVABand's *forget* used to wipe your map, as older Angbands did.)
 - **Hallucination** (`image`, Angband's TMD_IMAGE; `Game/GameSession.Search.cs` and the map view):
   the Mushroom of Emergency, monster blows that "cause hallucinations" (a magic mushroom patch's
   spores, a silent watcher's gaze…), chaos (which also confuses and drains experience) and a
@@ -873,8 +879,9 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: amnesia (4.2's TMD_AMNESIA, from very strong darkness and some monster
-spells). (*of Fury* stays out: in 4.2.5 its weapon types are commented out, so it is never made.)
+Natural next steps: 4.2's timed free action, protection from confusion, infravision and
+boldness from potions, mushrooms and activations, and the Black Breath. (*of Fury* stays out: in
+4.2.5 its weapon types are commented out, so it is never made.)
 
 ## Licence
 

@@ -388,6 +388,11 @@ public sealed partial class GameSession
             Publish(new MessageEvent(Player.IsBlind ? "You can't see anything." : "You have no light to read by."));
             return 0;
         }
+        if (item.Base.Id == "scroll" && Player.Timed.Has(TimedIds.Amnesia)) // Angband player_can_read
+        {
+            Publish(new MessageEvent("You can't remember how to read!"));
+            return 0;
+        }
 
         var verb = item.Base.Id switch { "potion" => "quaff", "scroll" => "read", "food" => "eat", _ => "use" };
         var wasAware = Knowledge.KnowsKind(item);

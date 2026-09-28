@@ -11,6 +11,8 @@ public static class TimedIds
     public const string Confused = "confused";
     /// <summary>Hallucination (Angband TMD_IMAGE).</summary>
     public const string Image = "image";
+    /// <summary>Amnesia (Angband TMD_AMNESIA): no reading, spells and devices much harder.</summary>
+    public const string Amnesia = "amnesia";
     public const string Afraid = "afraid";
     public const string Paralyzed = "paralyzed";
     public const string Blind = "blind";

@@ -1540,7 +1540,7 @@
     "name": "Healing",
     "realm": "divine",
     "book": "healing_and_sanctuary",
-    "effect": "heal:2000; cure:cut; cure:poisoned; cure:stun",
+    "effect": "heal:2000; cure:cut; cure:poisoned; cure:stun; cure:amnesia",
     "description": "Heals 2000 hit points and cures cuts, poison and stunning.",
     "classes": {
       "priest": {

@@ -37,6 +37,12 @@
     "onIncrease": "You feel more drugged!"
   },
   {
+    "id": "amnesia",
+    "name": "Amnesiac",
+    "onBegin": "You feel your memories fade.",
+    "onEnd": "Your memories come flooding back."
+  },
+  {
     "id": "afraid",
     "name": "Afraid",
     "onBegin": "You are terrified!",

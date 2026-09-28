@@ -103,7 +103,11 @@ public sealed partial class GameSession
                         Publish(new MessageEvent("You feel unsure of yourself in the darkness."));
                         Afflict(TimedIds.Slow, damage / 100);
                     }
-                    // (4.2's amnesia from very strong darkness is left out: AVABand has no amnesia yet.)
+                    if (Rng.RandInt0(Math.Max(1, damage)) > 300)
+                    {
+                        Publish(new MessageEvent("Darkness penetrates your mind!"));
+                        IncreaseTimed(TimedIds.Amnesia, damage / 100);
+                    }
                 }
                 break;
             case "sound":

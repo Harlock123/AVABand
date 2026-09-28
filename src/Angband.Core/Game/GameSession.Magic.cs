@@ -267,6 +267,8 @@ public sealed partial class GameSession
         var stun = Player.Timed[TimedIds.Stun];
         if (stun > 50) chance += 20;
         else if (stun > 0) chance += 10;
+        // Angband: amnesia makes spells very difficult.
+        if (Player.Timed.Has(TimedIds.Amnesia)) chance = 50 + chance / 2;
         return Math.Clamp(chance, 0, 95);
     }
 

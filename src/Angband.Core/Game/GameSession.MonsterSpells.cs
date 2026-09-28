@@ -153,7 +153,7 @@ public sealed partial class GameSession
                 SpinWebs(monster);
                 break;
             case MonsterSpellKind.Status:
-                ApplySpellStatus(spell);
+                ApplySpellStatus(spell, tier?.SaveMessage);
                 break;
             case MonsterSpellKind.Blink:
                 TeleportMonster(monster, 10);
@@ -304,7 +304,7 @@ public sealed partial class GameSession
     /// <summary>Angband mon-play:life-drain (percent).</summary>
     private const int LifeDrainPercent = 2;
 
-    private void ApplySpellStatus(MonsterSpellDef spell)
+    private void ApplySpellStatus(MonsterSpellDef spell, string? saveMessage = null)
     {
         if (spell.Timed is not { } timed) return;
         if (spell.PreventedBy is { } protection && Player.Resists.GetValueOrDefault(protection) > 0)
@@ -315,7 +315,7 @@ public sealed partial class GameSession
         }
         if (spell.Save && Rng.RandInt0(100) < Player.SkillSave)
         {
-            Publish(new MessageEvent("You resist the effects!"));
+            Publish(new MessageEvent(saveMessage ?? "You resist the effects!"));
             return;
         }
         IncreaseTimed(timed, Math.Max(1, spell.Duration.Roll(Rng)));
