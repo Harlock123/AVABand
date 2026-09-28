@@ -1360,11 +1360,18 @@ def compare_monster_spells(gd, data):
             theirs_avg = []
             for pw in powers:
                 t = spell_avg_42(e, pw)
-                oa = rv_avg(s.get("damage") or "0")
+                if s.get("damageFormula"):
+                    # Ours in 4.2.5's own terms: evaluated the same way.
+                    mine = {"name": label, "lines": [("dice", s["damageFormula"])]
+                            + [("expr", f"{k}:{v}") for k, v in (s.get("formulaTerms") or {}).items()]}
+                    oa = spell_avg_42(mine, pw)
+                else:
+                    oa = rv_avg(s.get("damage") or "0")
+                    if oa is not None:
+                        div = s.get("levelDivisor") or 0
+                        oa += (pw // div if div else 0) + pw * (s.get("levelPercent") or 0) // 100
                 if t is None or oa is None:
                     break
-                div = s.get("levelDivisor") or 0
-                oa += (pw // div if div else 0) + pw * (s.get("levelPercent") or 0) // 100
                 ours_avg.append(round(oa, 1))
                 theirs_avg.append(round(t, 1))
             if ours_avg and any(abs(a - b) > max(1.0, 0.03 * b) for a, b in zip(ours_avg, theirs_avg)):

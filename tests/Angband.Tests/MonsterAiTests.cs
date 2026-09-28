@@ -342,9 +342,9 @@ public class MonsterAiTests
             return hurt;
         }
 
-        Assert.Equal(600 / 6, BreathDamage(0, 600));
-        Assert.Equal(60 / 6, BreathDamage(0, 60));
-        Assert.Equal(600 / 6 / 3, BreathDamage(1, 600));
+        Assert.Equal(600 / 3, BreathDamage(0, 600)); // 4.2.5: hit points / 3 (projection.txt)
+        Assert.Equal(60 / 3, BreathDamage(0, 60));
+        Assert.Equal(600 / 3 / 3, BreathDamage(1, 600));
     }
 
     [Fact]

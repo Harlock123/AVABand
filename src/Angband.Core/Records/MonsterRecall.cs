@@ -1,3 +1,4 @@
+using Angband.Core.Randomness;
 using System.Globalization;
 using System.Text;
 using Angband.Core.Combat;
@@ -290,6 +291,7 @@ public static class MonsterRecall
             return knowHp ? Math.Min(spell.BreathCap, race.HitPoints / Math.Max(1, spell.BreathDivisor)) : 0;
         if (spell.PowerScaled) return Math.Max(1, race.Power / 3 * 2) * 5;       // WOUND: (power/3*2)d5
         if (spell.Kind == MonsterSpellKind.Storm) return 70 + 3 * Math.Max(1, race.Power / 3) * 5; // three balls
+        if (spell.DamageFormula is { } formula) return DiceFormula.Max(formula, spell.FormulaTerms, race.Power);
         if (spell.Damage.Max <= 0) return 0;
         return spell.Damage.Max + (spell.LevelDivisor > 0 ? race.Depth / spell.LevelDivisor : 0) + race.Depth * spell.LevelPercent / 100;
     }

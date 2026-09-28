@@ -1,3 +1,4 @@
+using Angband.Core.Randomness;
 using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Core.Geometry;
@@ -131,7 +132,7 @@ public class SpellLoreTests
         lore.CastsSpell = 1;
         var arrow = game.Data.MonsterSpell("ARROW")!;
         var max = MonsterRecall.LoreDamage(arrow, scout, knowHp: false);
-        Assert.Equal(arrow.Damage.Max + scout.Depth / arrow.LevelDivisor, max);
+        Assert.Equal(DiceFormula.Max(arrow.DamageFormula!, arrow.FormulaTerms, scout.Power), max); // 4.2.5: $Dd6
         var text = game.Recall(scout);
         // Each sentence has its own frequency. 1 in 3 is a 33% chance, which Angband's guess rounds up
         // to 40%: "about 1 time in 2"; 1 in 10 is 10%, "about 1 time in 10".

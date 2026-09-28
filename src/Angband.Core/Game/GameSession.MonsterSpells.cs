@@ -1,3 +1,4 @@
+using Angband.Core.Randomness;
 using Angband.Core.Combat;
 using Angband.Core.Definitions;
 using Angband.Core.Effects;
@@ -271,8 +272,9 @@ public sealed partial class GameSession
         return path.Count > 0 && path[^1] == Player.Position;
     }
 
-    private int SpellDamage(MonsterSpellDef spell, MonsterRaceDef race) =>
-        spell.Damage.Roll(Rng) + (spell.LevelDivisor > 0 ? race.Depth / spell.LevelDivisor : 0) + race.Depth * spell.LevelPercent / 100;
+    private int SpellDamage(MonsterSpellDef spell, MonsterRaceDef race) => spell.DamageFormula is { } formula
+        ? DiceFormula.Roll(formula, spell.FormulaTerms, race.Power, Rng) // Angband 4.2: from the spell power
+        : spell.Damage.Roll(Rng) + (spell.LevelDivisor > 0 ? race.Depth / spell.LevelDivisor : 0) + race.Depth * spell.LevelPercent / 100;
 
     /// <summary>
     /// Damage of an element (or plain damage when <paramref name="elementId"/> is null), reduced by the

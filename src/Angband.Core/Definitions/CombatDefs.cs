@@ -294,6 +294,13 @@ public sealed class MonsterSpellDef
     /// <summary>Innate attacks (arrows, breath, spit) never fail and work while confused.</summary>
     public bool Innate { get; init; }
     public string? Element { get; init; }
+    /// <summary>
+    /// Angband 4.2's own damage, when given: a dice string with <c>$</c> variables (<see cref="Randomness.DiceFormula"/>)
+    /// worked out from the caster's spell power by <see cref="FormulaTerms"/>. It takes the place of
+    /// <see cref="Damage"/>, <see cref="LevelDivisor"/> and <see cref="LevelPercent"/>.
+    /// </summary>
+    public string? DamageFormula { get; init; }
+    public IReadOnlyDictionary<string, string> FormulaTerms { get; init; } = new Dictionary<string, string>();
     public Dice Damage { get; init; } = Dice.Zero;
     /// <summary>Adds <c>monster level / LevelDivisor</c> to the damage (0 = no scaling).</summary>
     public int LevelDivisor { get; init; }

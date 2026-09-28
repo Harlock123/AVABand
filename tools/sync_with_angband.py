@@ -32,9 +32,13 @@ def merge(ours, fresh, producible, keep=("id",)):
 
 
 def write_json(path, data, indent):
+    """indent=None: one entry to a line (as monster_spells.json and egos.json are kept)."""
     with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=indent, ensure_ascii=False)
-        f.write("\n")
+        if indent is None:
+            f.write("[\n" + ",\n".join("  " + json.dumps(x, ensure_ascii=False) for x in data) + "\n]\n")
+        else:
+            json.dump(data, f, indent=indent, ensure_ascii=False)
+            f.write("\n")
 
 
 def sync_monsters(gd, data):
@@ -106,7 +110,86 @@ def sync_monsters(gd, data):
     print(f"monsters: {changed} of {len(ours)} brought into line; removed (not in 4.2.5): {extra}")
 
 
-SECTIONS = {"monsters": sync_monsters}
+def records(path, start="name"):
+    """Angband's key:value records, as (name, [(key, value)...])."""
+    out, cur = [], None
+    for raw in open(path, encoding="utf-8"):
+        line = raw.rstrip("\n").rstrip("\r")
+        if not line or line.startswith("#"):
+            continue
+        key, _, value = line.partition(":")
+        if key == start:
+            cur = (value, [])
+            out.append(cur)
+        elif cur is not None:
+            cur[1].append((key, value))
+    return out
+
+
+def first(lines, key):
+    return next((v for k, v in lines if k == key), None)
+
+
+def plain_dice(text):
+    """4.2.5's "11+1d4" in our order, "1d4+11"; a constant stays as it is."""
+    text = text.strip()
+    if "d" not in text:
+        return text
+    base, _, dice = text.rpartition("+") if "+" in text.split("d")[0] or text.index("+") < text.index("d") else ("", "", text)
+    dice = dice if not dice.startswith("d") else "1" + dice
+    return f"{dice}+{base}" if base else dice
+
+
+DAMAGING = ("BOLT", "BALL", "SHORT_BEAM", "ARC", "LASH", "DAMAGE", "STAR", "SPOT")
+
+
+def sync_monster_spells(gd, data):
+    path = os.path.join(data, "monster_spells.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    by_id = {s["id"]: s for s in ours}
+    proj = {name: lines for name, lines in records(os.path.join(gd, "projection.txt"), start="code")}
+    changed = 0
+    for name, lines in records(os.path.join(gd, "monster_spell.txt")):
+        s = by_id.get(name)
+        if s is None:
+            continue
+        before = json.dumps(s, sort_keys=True)
+        effects = [v for k, v in lines if k == "effect"]
+        kind, _, arg = (effects[0] if effects else "").partition(":")
+        arg = arg.split(":")[0]
+        dice = first(lines, "dice")
+        if kind == "BREATH" and arg in proj:
+            divisor = int(first(proj[arg], "divisor") or 3)
+            cap = int(first(proj[arg], "damage-cap") or 1600)
+            s.pop("breathDivisor", None)
+            s.pop("breathCap", None)
+            if divisor != 3:
+                s["breathDivisor"] = divisor
+            if cap != 1600:
+                s["breathCap"] = cap
+        elif (kind in DAMAGING and dice and not s.get("powerScaled")
+              and len([e for e in effects if e.split(":")[0] in DAMAGING]) == 1):
+            # 4.2.5's damage exactly: its dice string and expressions, worked out from spell power.
+            s["damageFormula"] = dice
+            terms = {}
+            for k, v in lines:
+                if k == "expr":
+                    var, _, expr = v.partition(":")
+                    terms[var] = expr
+            if terms:
+                s["formulaTerms"] = terms
+            else:
+                s.pop("formulaTerms", None)
+            for old in ("damage", "levelDivisor", "levelPercent"):
+                s.pop(old, None)
+        elif kind == "TIMED_INC" and s.get("timed") and dice and "$" not in dice:
+            s["duration"] = plain_dice(dice)
+        changed += json.dumps(s, sort_keys=True) != before
+    write_json(path, ours, None)
+    print(f"monster spells: {changed} of {len(ours)} brought into line")
+
+
+SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells}
 
 
 def main():
