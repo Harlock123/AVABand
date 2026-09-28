@@ -83,6 +83,11 @@ public sealed partial class MainWindowViewModel
     public void HandleAction(InputAction action)
     {
         if (action == InputAction.None) return;
+        if (IsEnteringNumber)
+        {
+            NumberAction(action);
+            return;
+        }
         // A question comes first, even in a store (Enter/A must answer it, not buy or sell).
         if (IsConfirming)
         {

@@ -1,4 +1,5 @@
 using Angband.Core.Game;
+using Angband.Input;
 
 namespace Angband.Avalonia.ViewModels;
 
@@ -12,7 +13,7 @@ public sealed partial class MainWindowViewModel
     private bool _recallAnswered;
 
     // A number typed in answer to a question (the recall level), shown on the message line.
-    private (string Question, int Default, Action<int> Done)? _numberPrompt;
+    private (string Question, int Default, Action<int> Done, int Most)? _numberPrompt;
     private string _numberText = "";
 
     [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private bool _isEnteringNumber;
@@ -66,9 +67,9 @@ public sealed partial class MainWindowViewModel
         });
 
     /// <summary>Asks for a number: digits, Backspace, Enter (the suggestion if nothing is typed), Escape.</summary>
-    private void BeginNumberPrompt(string question, int suggested, Action<int> done)
+    private void BeginNumberPrompt(string question, int suggested, Action<int> done, int most = 999)
     {
-        _numberPrompt = (question, suggested, done);
+        _numberPrompt = (question, suggested, done, most);
         _numberText = "";
         IsEnteringNumber = true;
         ShowNumberPrompt();
@@ -102,5 +103,28 @@ public sealed partial class MainWindowViewModel
         if (backspace && _numberText.Length > 0) _numberText = _numberText[..^1];
         else if (symbol is { Length: 1 } s && char.IsAsciiDigit(s[0]) && _numberText.Length < 3) _numberText += s;
         ShowNumberPrompt();
+    }
+
+    /// <summary>
+    /// The controller (or arrow keys) with a number asked for: up and down change it by one, right
+    /// and left by ten, A confirms, B cancels. Always taken.
+    /// </summary>
+    private void NumberAction(InputAction action)
+    {
+        if (_numberPrompt is not { } prompt) return;
+        var current = _numberText.Length > 0 ? int.Parse(_numberText, System.Globalization.CultureInfo.InvariantCulture) : prompt.Default;
+        var step = action switch
+        {
+            InputAction.MoveNorth => 1, InputAction.MoveSouth => -1,
+            InputAction.MoveEast => 10, InputAction.MoveWest => -10,
+            _ => 0,
+        };
+        if (step != 0)
+        {
+            _numberText = Math.Clamp(current + step, 1, prompt.Most).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            ShowNumberPrompt();
+        }
+        else if (action == InputAction.Confirm) NumberKey(null, false, false, enter: true);
+        else if (action == InputAction.Cancel) NumberKey(null, false, escape: true, false);
     }
 }

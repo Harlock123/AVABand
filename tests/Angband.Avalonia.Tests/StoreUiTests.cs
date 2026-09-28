@@ -56,6 +56,7 @@ public class StoreUiTests
 
         var gold = game.Player.Gold;
         window.KeyPressQwerty(Enum.Parse<PhysicalKey>(food.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        if (vm.IsEnteringNumber) window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None); // "Quantity (1-N)?": one
         Assert.Equal(gold, game.Player.Gold);
         Assert.Contains("shops pay nothing", vm.LastMessage);
     }
@@ -79,6 +80,7 @@ public class StoreUiTests
 
         var gold = game.Player.Gold;
         window.KeyPressQwerty(Enum.Parse<PhysicalKey>(flask.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        if (vm.IsEnteringNumber) window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None); // "Quantity (1-N)?": one
         Assert.True(game.Player.Gold > gold, vm.LastMessage);
         Assert.StartsWith("You sold", vm.LastMessage);
 
@@ -150,6 +152,7 @@ public class StoreUiTests
         var first = vm.StoreRows[0];
 
         window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        if (vm.IsEnteringNumber) window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None); // "Quantity (1-N)?": one
         Assert.True(game.Player.Gold < gold);
         Assert.Contains(game.Player.Inventory.All, i => i.Kind == first.Item.Kind);
 
@@ -187,5 +190,39 @@ public class StoreUiTests
         vm.HandleAction(InputAction.SwitchPane);
         Assert.Contains(vm.StoreRows, r => r.Item.Kind.Id == "wooden_torch");
         Assert.Equal(5000, game.Player.Gold);
+    }
+
+    [AvaloniaFact]
+    public void ALetter_AsksHowMany_AsAngbandDoes()
+    {
+        var (window, vm, game) = OpenAt("general");
+        game.Player.Gold = 100_000;
+        var flasks = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
+        var had = game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number);
+
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(flasks.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        Assert.True(vm.IsEnteringNumber);
+        Assert.StartsWith("Quantity (1-", vm.LastMessage);
+        Assert.EndsWith(")? 1", vm.LastMessage);                       // one, unless you say otherwise
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.Equal(had + 5, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
+
+        // The controller: up and down change it, A confirms.
+        flasks = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(flasks.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        vm.HandleAction(InputAction.MoveNorth);
+        vm.HandleAction(InputAction.MoveNorth);
+        Assert.EndsWith(")? 3", vm.LastMessage);
+        vm.HandleAction(InputAction.Confirm);
+        Assert.Equal(had + 8, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
+
+        // Escape (or 0) buys nothing.
+        flasks = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(flasks.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+        Assert.False(vm.IsEnteringNumber);
+        Assert.True(vm.IsInStore);
+        Assert.Equal(had + 8, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
     }
 }

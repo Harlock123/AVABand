@@ -230,8 +230,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     the store asks first (y/n, or Enter / controller A). Debug → *Shops pay gold when you sell*
     turns selling on mid-game.
   - Bought items are fully known. The home stores up to 24 stacks.
-  Walk onto an entrance (or press `_` / Confirm on it) to open the store screen: letters buy or sell
-  one, Shift+letter the whole stack, Tab (pad X) switches buying/selling, Esc (pad B) leaves.
+  Walk onto an entrance (or press `_` / Confirm on it) to open the store screen: a letter buys or
+  sells, asking "Quantity (1-N)?" as Angband does when there is more than one to have (Enter for
+  one, or type a number; on the controller up/down change it by one, right/left by ten, A takes
+  it), Shift+letter the whole stack at once, Tab (pad X) switches buying/selling, Esc (pad B) leaves.
 - **Object values** (`Items/ObjectPower.cs`, `Items/ItemValue.cs`; Angband 4.2 `obj-power.c`): what
   things are worth, for store prices, level feelings and the like.
   - Wearables and ammunition are priced by their *power* (`object_power`): damage dice, to-damage

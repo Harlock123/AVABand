@@ -88,18 +88,36 @@ public sealed partial class MainWindowViewModel
             });
             return;
         }
-        if (StoreSellMode) Execute(new SellCommand(item, all ? item.Number : 1));
+        // The most that can change hands: the whole stack sold; bought, as many as are there and you can pay for.
+        int most;
+        if (StoreSellMode) most = item.Number;
         else
         {
-            var count = 1;
-            if (all)
-            {
-                var price = _game.BuyPrice(store, item);
-                var affordable = price == 0 ? item.Number : (int)Math.Min(int.MaxValue, _game.Player.Gold / price);
-                count = Math.Max(1, Math.Min(store.IsAlways(item) ? item.Base.MaxStack : item.Number, affordable));
-            }
-            Execute(new BuyCommand(item, count));
+            var price = _game.BuyPrice(store, item);
+            var affordable = price == 0 ? item.Number : (int)Math.Min(int.MaxValue, _game.Player.Gold / price);
+            most = Math.Max(1, Math.Min(store.IsAlways(item) ? item.Base.MaxStack : item.Number, affordable));
         }
+        if (all || most <= 1)
+        {
+            Trade(item, all ? most : 1);
+            return;
+        }
+        // Angband store_purchase / store_sell: "Quantity (1-N):", one unless you say otherwise.
+        BeginNumberPrompt($"Quantity (1-{most})?", 1, n =>
+        {
+            if (n <= 0)
+            {
+                LastMessage = "Cancelled.";
+                return;
+            }
+            Trade(item, Math.Min(n, most));
+        }, most);
+    }
+
+    private void Trade(Angband.Core.Items.Item item, int count)
+    {
+        if (StoreSellMode) Execute(new SellCommand(item, count));
+        else Execute(new BuyCommand(item, count));
         RefreshStore();
     }
 
