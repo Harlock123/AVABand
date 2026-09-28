@@ -220,7 +220,7 @@
 
       <!-- Everything over the map scales with the interface size; the map itself has its own zoom. -->
       <LayoutTransformControl LayoutTransform="{Binding InterfaceTransform}">
-      <Panel>
+      <Panel x:Name="Overlay">
 
       <!-- Hover to look: what is under the mouse, at the foot of the map. -->
       <Border x:Name="HoverLabel" IsVisible="{Binding HoverText, Converter={x:Static ObjectConverters.IsNotNull}}"
@@ -300,7 +300,7 @@
       </Border>
 
       <!-- Item prompt ("Quaff which potion?") -->
-      <Border IsVisible="{Binding IsPrompting}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0"
+      <Border x:Name="PromptBox" IsVisible="{Binding IsPrompting}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0"
               Background="#E0101018" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10" MinWidth="420">
         <StackPanel Spacing="6">
           <TextBlock Text="{Binding PromptTitle}" FontWeight="SemiBold" Foreground="White" />

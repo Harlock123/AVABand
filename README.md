@@ -949,7 +949,8 @@ the context action, or a game command.
   ("The cave orc (wounded, asleep)", "A down staircase") without touching the message line (off with
   the option *Describe the square under the mouse*); left-click travels to a known square along the shortest known path (stopping when a
   monster comes into view or you are hurt; adjacent monsters are attacked); right-click opens Angband 4.2's
-  context menus (`ui-context.c`), saying what is there as it opens: on yourself *Use, Cast, Go up/down,
+  context menus (`ui-context.c`) beside the pointer (kept inside the map; other prompts stay at the
+  top), saying what is there as it opens: on yourself *Use, Cast, Go up/down,
   Look, Rest, Pick up, Character, Center map* and *Other* (knowledge, map, messages, the monster and
   object lists, ignoring, options, commands); on any other square *Look at, Recall info, Use item
   on, Cast on*, next to you *Attack, Open chest, Steal, Disarm, Jump onto, Open/Close, Tunnel, Walk

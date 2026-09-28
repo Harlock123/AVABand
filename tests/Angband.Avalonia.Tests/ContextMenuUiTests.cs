@@ -122,6 +122,44 @@ public class ContextMenuUiTests
     }
 }
 
+/// <summary>The right-click menu opens beside the pointer, as Angband's context menus do.</summary>
+public class ContextMenuPlacementUiTests
+{
+    [AvaloniaFact]
+    public void ARightClick_OpensTheMenuBesideThePointer_AndItGoesBackToTheTopAfterwards()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
+        vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        vm.Game.MarkDebugUsed();
+        vm.HandleAction(InputAction.JumpNextLevel); // a level bigger than the view, so you are in the middle
+        window.CaptureRenderedFrame();
+
+        var map = window.GetVisualDescendants().OfType<Angband.Avalonia.Controls.MapView>().First(m => m.Name == "Map");
+        var cell = map.Renderer.CellSize;
+        var (cols, rows) = map.ViewCells;
+        var you = map.TranslatePoint(new Point((cols / 2 + 0.5) * cell.Width, (rows / 2 + 0.5) * cell.Height), window)!.Value;
+        window.MouseDown(you, MouseButton.Right);
+        window.MouseUp(you, MouseButton.Right);
+        Assert.Contains("Rest", vm.MenuLabels); // your own menu
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "context-menu-at-pointer");
+
+        var box = window.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "PromptBox");
+        var topLeft = box.TranslatePoint(new Point(0, 0), window)!.Value;
+        Assert.InRange(topLeft.X - you.X, 0, 40);          // just to the right of the square
+        Assert.InRange(Math.Abs(topLeft.Y - you.Y), 0, 40); // level with it
+
+        vm.CancelPrompt();
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        Assert.Equal(global::Avalonia.Layout.HorizontalAlignment.Center, box.HorizontalAlignment);
+        Assert.Equal(420, box.MinWidth);
+    }
+}
+
 /// <summary>The sidebar's monster recall (Angband's monster recall subwindow).</summary>
 public class RecallPanelUiTests
 {

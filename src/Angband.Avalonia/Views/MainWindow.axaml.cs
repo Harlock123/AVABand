@@ -19,7 +19,15 @@ public partial class MainWindow : Window
         AddHandler(KeyDownEvent, OnGameKeyDown, RoutingStrategies.Tunnel);
         if (this.FindControl<MapView>("Map") is { } map)
         {
-            map.CellClicked += (loc, secondary) => (DataContext as MainWindowViewModel)?.ClickCell(loc, secondary);
+            map.CellClicked += (loc, secondary) =>
+            {
+                if (DataContext is not MainWindowViewModel vm) return;
+                vm.ClickCell(loc, secondary);
+                if (secondary) AnchorMenuAtPointer(vm);
+            };
+            // Where the last press on the map was, for the right-click menu to open beside it.
+            map.AddHandler(PointerPressedEvent, (_, e) => _mapPress = e.GetPosition(this.FindControl<Panel>("Overlay")),
+                RoutingStrategies.Tunnel, handledEventsToo: true);
             map.CellHovered += loc => (DataContext as MainWindowViewModel)?.HoverCell(loc);
             map.Zoom += delta =>
             {
@@ -36,6 +44,44 @@ public partial class MainWindow : Window
         AddHandler(PointerReleasedEvent, OnPendingReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
         AddHandler(DragDrop.DragOverEvent, OnHotbarDragOver);
         AddHandler(DragDrop.DropEvent, OnHotbarDrop);
+    }
+
+    private global::Avalonia.Point? _mapPress;
+
+    /// <summary>
+    /// Angband opens its context menus where you click: the right-click menu (the prompt box) moves
+    /// beside the pointer, kept inside the map, and goes back to the top of the map when it closes.
+    /// </summary>
+    private void AnchorMenuAtPointer(MainWindowViewModel vm)
+    {
+        if (!vm.IsPrompting || vm.MenuLabels.Count == 0 || _mapPress is not { } at
+            || this.FindControl<Border>("PromptBox") is not { } box || this.FindControl<Panel>("Overlay") is not { } overlay) return;
+        box.MinWidth = 0;
+        box.HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Left;
+        box.VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Top;
+        box.Measure(global::Avalonia.Size.Infinity);
+        var size = box.DesiredSize;
+        const double gap = 14; // beside the square, not over it
+        var x = at.X + gap + size.Width <= overlay.Bounds.Width ? at.X + gap : Math.Max(0, at.X - gap - size.Width);
+        var y = Math.Clamp(at.Y - 10, 0, Math.Max(0, overlay.Bounds.Height - size.Height));
+        box.Margin = new global::Avalonia.Thickness(x, y, 0, 0);
+        vm.PropertyChanged -= ResetMenuWhenClosed;
+        vm.PropertyChanged += ResetMenuWhenClosed;
+    }
+
+    private void ResetMenuWhenClosed(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(MainWindowViewModel.IsPrompting) || sender is not MainWindowViewModel vm) return;
+        // Checked a moment later: a menu that opens another (Other, or "Use item on" then the list) stays put.
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (vm.IsPrompting || this.FindControl<Border>("PromptBox") is not { } box) return;
+            vm.PropertyChanged -= ResetMenuWhenClosed;
+            box.MinWidth = 420;
+            box.HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center;
+            box.VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Top;
+            box.Margin = new global::Avalonia.Thickness(0, 24, 0, 0);
+        });
     }
 
     /// <summary>Hotbar drags carry "item:serial", "spell:id" or "slot:n" (in this process only).</summary>
