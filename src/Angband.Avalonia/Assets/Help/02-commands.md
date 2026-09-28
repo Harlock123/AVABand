@@ -52,4 +52,7 @@ keyset* switches between those two. Any key can be rebound there too.
 ## Gamepad
 
 The D-pad or left stick moves; A confirms (or takes stairs, picks up), B cancels, X fires, Y
-casts. Hold the left trigger with a direction to run, or with A to repeat the last command.
+casts. Hold the left trigger with a direction to run, or with A to repeat the last command. With
+the left trigger held, the shoulder buttons step through the hotbar and Y uses the slot chosen; X
+opens the right-click menu for the square under the look cursor (or for you), and the D-pad and A
+pick from it.

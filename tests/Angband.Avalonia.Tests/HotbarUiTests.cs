@@ -156,4 +156,40 @@ public class HotbarUiTests
         var unknown = game.ClassSpells.First(s => !game.Player.LearnedSpells.Contains(s.Id));
         Assert.False(vm.DropOnHotbar(0, MainWindowViewModel.DragPayload(unknown)));
     }
+
+    [AvaloniaFact]
+    public void AGamepad_StepsThroughTheHotbar_UsesASlot_AndOpensTheMapMenu()
+    {
+        var (window, vm) = Open("warrior");
+        var game = vm.Game;
+        game.SetHotbar(1, HotbarEntry.ForKind("cure_light_wounds"));
+        vm.Execute(new HoldCommand());
+        Assert.DoesNotContain(vm.HotbarSlots, s => s.Selected); // no cursor until the gamepad moves it
+
+        vm.HandleAction(InputAction.HotbarNext);
+        Assert.True(vm.HotbarSlots[1].Selected);
+        Assert.StartsWith("Hotbar slot 2: ", vm.LastMessage);
+        vm.HandleAction(InputAction.HotbarPrevious);
+        vm.HandleAction(InputAction.HotbarPrevious); // wraps round to the tenth
+        Assert.True(vm.HotbarSlots[9].Selected);
+        vm.HandleAction(InputAction.HotbarNext);
+        vm.HandleAction(InputAction.HotbarNext);
+        vm.HandleAction(InputAction.HotbarUse);
+        Assert.Equal("x1", vm.HotbarSlots[1].Detail);
+
+        vm.HandleAction(InputAction.ContextMenu); // not looking: the menu for you
+        Assert.Contains("Rest", vm.MenuLabels);
+        vm.CancelPrompt();
+
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 2 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("jackal")!, at, asleep: true);
+        game.UpdateView();
+        vm.HandleAction(InputAction.Look); // the cursor on the jackal
+        Assert.Equal(at, vm.Cursor);
+        vm.HandleAction(InputAction.ContextMenu);
+        Assert.False(vm.IsLooking);
+        Assert.Contains("Recall info", vm.MenuLabels);
+        Assert.Contains("Throw to", vm.MenuLabels);
+    }
 }

@@ -119,6 +119,11 @@ public sealed class InputBindings
         K(InputAction.TakeNote, "Char::");
         K(InputAction.SaveAndQuit, "Ctrl+X");
         K(InputAction.CenterMap, "Ctrl+L");
+        // The map menu and the hotbar cursor, for keyboards too (Alt+digit uses a slot directly).
+        K(InputAction.ContextMenu, "Char:&");
+        K(InputAction.HotbarPrevious, "Alt+Left");
+        K(InputAction.HotbarNext, "Alt+Right");
+        K(InputAction.HotbarUse, "Alt+Enter");
         K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");
@@ -147,6 +152,11 @@ public sealed class InputBindings
         // (a tap on its own still throws).
         P(InputAction.Run, "LeftTrigger+DPad");
         P(InputAction.RepeatCommand, "LeftTrigger+A");
+        // ...with the shoulders it steps through the hotbar, with Y uses the slot, with X opens the map menu.
+        P(InputAction.HotbarPrevious, "LeftTrigger+LeftShoulder");
+        P(InputAction.HotbarNext, "LeftTrigger+RightShoulder");
+        P(InputAction.HotbarUse, "LeftTrigger+Y");
+        P(InputAction.ContextMenu, "LeftTrigger+X");
         return b;
     }
 

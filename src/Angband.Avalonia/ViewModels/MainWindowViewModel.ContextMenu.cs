@@ -34,6 +34,17 @@ public sealed partial class MainWindowViewModel
         LastMessage = what;
     }
 
+    /// <summary>From a gamepad (or a key bound to it): the menu for the square under the look cursor, or for you.</summary>
+    public void OpenContextMenuHere()
+    {
+        if (IsLooking && Cursor is { } at)
+        {
+            StopLooking();
+            OpenContextMenu(at);
+        }
+        else OpenContextMenu(_game.Player.Position);
+    }
+
     private void ShowMenu(string title, List<(string Label, Action Act)> entries)
     {
         PromptRows.Clear();

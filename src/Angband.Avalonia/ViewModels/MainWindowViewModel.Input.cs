@@ -106,6 +106,12 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
+        // The map menu from look mode is for the square under the cursor (so before look mode ends).
+        if (action == InputAction.ContextMenu && IsLooking)
+        {
+            OpenContextMenuHere();
+            return;
+        }
         if (HandleLookAction(action)) return;
         if (IsLocating)
         {
@@ -224,6 +230,10 @@ public sealed partial class MainWindowViewModel
             case InputAction.IdentifySymbol: BeginIdentifySymbol(); break;
             case InputAction.Locate: BeginLocate(); break;
             case InputAction.CenterMap: CenterMap(); break;
+            case InputAction.HotbarNext: MoveHotbarCursor(+1); break;
+            case InputAction.HotbarPrevious: MoveHotbarCursor(-1); break;
+            case InputAction.HotbarUse: UseHotbar(HotbarCursor); break;
+            case InputAction.ContextMenu: OpenContextMenuHere(); break;
             case InputAction.WalkIntoTrap: AskDirection(DirectionFor.Jump); break;
             case InputAction.UseItem: BeginItemPrompt(ItemPromptKind.UseAny); break;
             case InputAction.TakeNote: BeginNote(); break;

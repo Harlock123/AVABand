@@ -198,6 +198,24 @@ public class InputTests
     }
 
     [Fact]
+    public void LeftTrigger_WithTheShoulders_Y_AndX_WorkTheHotbarAndTheMapMenu()
+    {
+        var (pad, actions) = Pad();
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        foreach (var button in new[] { "RightShoulder", "LeftShoulder", "Y", "X" })
+        {
+            pad.ButtonDown(button, T0);
+            pad.ButtonUp(button, T0);
+        }
+        pad.Trigger("LeftTrigger", 0.0, T0);
+        Assert.Equal([InputAction.HotbarNext, InputAction.HotbarPrevious, InputAction.HotbarUse, InputAction.ContextMenu], actions);
+
+        actions.Clear();
+        pad.ButtonDown("LeftShoulder", T0); // alone, the shoulder still quaffs
+        Assert.Equal([InputAction.Quaff], actions);
+    }
+
+    [Fact]
     public void TheLeftTrigger_TappedAlone_StillThrows_OnRelease()
     {
         var (pad, actions) = Pad();

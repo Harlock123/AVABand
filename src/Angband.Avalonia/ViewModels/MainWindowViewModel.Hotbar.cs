@@ -11,9 +11,13 @@ namespace Angband.Avalonia.ViewModels;
 
 /// <summary>One hotbar slot as shown: its key, what it holds and whether it can be used now.</summary>
 public sealed record HotbarSlotRow(int Index, string Key, string Glyph, IBrush GlyphBrush, string Label, string Detail,
-    bool Available, string Tip)
+    bool Available, string Tip, bool Selected = false)
 {
     public double Opacity => Available ? 1.0 : 0.45;
+    public IBrush Outline => Selected ? SelectedOutline : PlainOutline;
+
+    private static readonly IBrush SelectedOutline = new ImmutableSolidColorBrush(Color.FromRgb(0x8f, 0xc1, 0xff));
+    private static readonly IBrush PlainOutline = new ImmutableSolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33));
 }
 
 // The hotbar (AVABand's own): ten slots under the map for spells and items, used with Alt+1..Alt+0
@@ -28,6 +32,19 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>The slot being filled from an item or spell prompt.</summary>
     private int? _assignSlot;
+
+    /// <summary>The slot a gamepad's "use" works on; highlighted once the gamepad has moved it.</summary>
+    public int HotbarCursor { get; private set; }
+    private bool _hotbarCursorShown;
+
+    private void MoveHotbarCursor(int delta)
+    {
+        HotbarCursor = ((HotbarCursor + delta) % GameSession.HotbarSize + GameSession.HotbarSize) % GameSession.HotbarSize;
+        _hotbarCursorShown = true;
+        var slot = HotbarSlots.ElementAtOrDefault(HotbarCursor);
+        LastMessage = slot is null || slot.Label.Length == 0 ? $"Hotbar slot {HotbarKey(HotbarCursor)}: empty." : $"Hotbar slot {HotbarKey(HotbarCursor)}: {slot.Label} ({slot.Detail}).";
+        RefreshHotbar();
+    }
 
     /// <summary>The key a slot answers to: Alt+1 .. Alt+9, then Alt+0.</summary>
     public static string HotbarKey(int slot) => ((slot + 1) % 10).ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -46,7 +63,7 @@ public sealed partial class MainWindowViewModel
     private void RefreshHotbar()
     {
         var rows = new List<HotbarSlotRow>();
-        for (var i = 0; i < GameSession.HotbarSize; i++) rows.Add(SlotRow(i));
+        for (var i = 0; i < GameSession.HotbarSize; i++) rows.Add(SlotRow(i) with { Selected = _hotbarCursorShown && i == HotbarCursor });
         if (HotbarSlots.SequenceEqual(rows)) return;
         HotbarSlots.Clear();
         foreach (var r in rows) HotbarSlots.Add(r);

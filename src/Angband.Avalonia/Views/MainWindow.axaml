@@ -188,7 +188,7 @@
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:HotbarSlotRow">
-              <Border Width="84" Height="42" Margin="2" CornerRadius="3" Background="#15161c" BorderBrush="#333" BorderThickness="1"
+              <Border Width="84" Height="42" Margin="2" CornerRadius="3" Background="#15161c" BorderBrush="{Binding Outline}" BorderThickness="1"
                       Cursor="Hand" ToolTip.Tip="{Binding Tip}" Opacity="{Binding Opacity}" PointerPressed="OnHotbarPressed">
                 <Grid ColumnDefinitions="Auto,*" RowDefinitions="*,*" Margin="4,2">
                   <TextBlock Grid.RowSpan="2" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}" FontFamily="{StaticResource MonoFont}"

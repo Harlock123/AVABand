@@ -86,6 +86,8 @@ public enum InputAction
     SaveAndQuit,
     /// <summary>Centre the map on the player once (Angband Ctrl+L / roguelike '@'). Added last so saved bindings keep their meaning.</summary>
     CenterMap,
+    /// <summary>The hotbar and the map menu from a gamepad (AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    HotbarNext, HotbarPrevious, HotbarUse, ContextMenu,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -182,6 +184,10 @@ public static class InputActions
         InputAction.TakeNote => "Take a note",
         InputAction.SaveAndQuit => "Save and quit",
         InputAction.CenterMap => "Center map",
+        InputAction.HotbarNext => "Hotbar: next slot",
+        InputAction.HotbarPrevious => "Hotbar: previous slot",
+        InputAction.HotbarUse => "Hotbar: use the selected slot",
+        InputAction.ContextMenu => "Menu for the square (the look cursor's, or yours)",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

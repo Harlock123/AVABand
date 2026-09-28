@@ -961,8 +961,11 @@ the context action, or a game command.
   (or takes the stairs / picks up), B cancels, X fires, Y casts, LB quaffs, RB reads, LT throws,
   RT wields, Back rests, Start opens settings, left stick click holds, right stick click toggles tiles.
   The left trigger is also a shift: LT + direction runs (after a 60 ms grace, so two D-pad
-  buttons pressed a moment apart run diagonally rather than straight first), LT + A repeats the last command, and LT
-  tapped on its own throws when let go. (Chords are ordinary bindings — `LeftTrigger+A`,
+  buttons pressed a moment apart run diagonally rather than straight first), LT + A repeats the last command, LT + the
+  shoulders step a cursor through the hotbar (highlighted once used) and LT + Y uses that slot,
+  LT + X opens the map's right-click menu — for the square under the look cursor, or for you — whose
+  lines the D-pad and A pick; and LT tapped on its own throws when let go. (On a keyboard: `&` for
+  that menu, Alt+←/→ and Alt+Enter for the hotbar cursor.) (Chords are ordinary bindings — `LeftTrigger+A`,
   `LeftTrigger+DPad` for running — so any button can be made a shift in `bindings.json`.)
 - **Keysets**: AVABand's own keys are the default (arrows, the keypad and `hjklyubn` move; the
   commands are mostly Angband's original letters). Angband 4.2's two keysets are a click away —
