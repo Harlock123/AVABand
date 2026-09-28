@@ -156,7 +156,12 @@
           <TextBlock Text="Keyboard, mouse and gamepad all trigger the same actions. Mouse: left-click travels (or attacks), right-click shoots or looks, the wheel zooms. Gamepad: D-pad or left stick moves and navigates menus; A confirms (or takes stairs / picks up), B cancels."
                      TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
           <StackPanel Orientation="Horizontal" Spacing="12">
-            <Button Content="Reset to defaults" Command="{Binding ResetBindingsCommand}" />
+            <Button Content="Reset to defaults" Command="{Binding ResetBindingsCommand}"
+                    ToolTip.Tip="AVABand's own keys: arrows and hjkl move, with Angband's original command letters" />
+            <Button Content="Angband keys" Command="{Binding UseOriginalKeysCommand}"
+                    ToolTip.Tip="Angband 4.2's original keyset: arrows or keypad move, l looks, t takes off, T tunnels" />
+            <Button Content="Roguelike keys" Command="{Binding UseRoguelikeKeysCommand}"
+                    ToolTip.Tip="Angband 4.2's roguelike keyset: hjklyubn move, Shift runs, x looks, Ctrl+T tunnels" />
             <TextBlock Text="{Binding CaptureHint}" VerticalAlignment="Center" Foreground="#e6c35c" />
           </StackPanel>
         </StackPanel>

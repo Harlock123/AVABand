@@ -683,8 +683,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     one is used the character is marked as a cheater and, as in Angband, its score is not recorded.
   - Connected stairs now work as in 4.2.5 (`gen-util.c`): you arrive on a way *back* (an up
     staircase after going down), where AVABand used to put you on a staircase leading onward.
-  - Not offered: the roguelike keyset (AVABand's keys are rebindable instead), use sound (see the
-    Sound tab), animate flicker, auto-more and cheat_xtra.
+  - Not offered: use sound (see the Sound tab), animate flicker, auto-more and cheat_xtra.
 - **Inscriptions** (`Items/Inscription.cs`, `Game/GameSession.Inscriptions.cs`,
   `ViewModels/MainWindowViewModel.Inscriptions.cs`): Angband's notes on objects. `{` picks an item
   (carried, worn or underfoot) and asks for the text; `}` removes one; neither takes game time.
@@ -887,6 +886,14 @@ the context action, or a game command.
   buttons pressed a moment apart run diagonally rather than straight first), LT + A repeats the last command, and LT
   tapped on its own throws when let go. (Chords are ordinary bindings — `LeftTrigger+A`,
   `LeftTrigger+DPad` for running — so any button can be made a shift in `bindings.json`.)
+- **Keysets**: AVABand's own keys are the default (arrows, the keypad and `hjklyubn` move; the
+  commands are mostly Angband's original letters). Angband 4.2's two keysets are a click away —
+  Settings → Controls → *Angband keys* (the original set: `l` look, `t` take off, `T` tunnel, `z`
+  zap, `a` aim, `u` use a staff, `b` browse, `k` ignore, `n` repeat, `,` hold, `.` run) or
+  *Roguelike keys* (`hjklyubn` move and Shift+letter runs, `x` look, `T` take off, Ctrl+T tunnel —
+  tiles/ASCII moves to Ctrl+Shift+T — `t` fire, `a` zap, `z` aim, `Z` use a staff, `P` browse, `O`
+  show ignored, `.` hold, `,` run) — or by ticking 4.2's *Use the roguelike command keyset* option
+  (unticking puts the original set in). *Reset to defaults* brings back AVABand's own.
 - **Rebinding**: Settings → Controls lists every action with its keys and button; *Key…*/*Button…*
   capture the next press. Bindings are saved to `<AppData>/AVABand/bindings.json`; actions added in later versions get their default keys when those keys are still free (so a saved `bindings.json` that still has `s` as hold keeps it; rebind Steal in Settings).
 

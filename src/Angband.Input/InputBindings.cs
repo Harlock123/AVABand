@@ -134,6 +134,60 @@ public sealed class InputBindings
         return b;
     }
 
+    /// <summary>The keyboard layouts on offer: AVABand's own, and Angband 4.2's two command keysets.</summary>
+    public enum Keyset { Avaband, Original, Roguelike }
+
+    /// <summary>
+    /// A keyboard layout (gamepad buttons as in <see cref="Defaults"/>): AVABand's defaults, or one of
+    /// Angband 4.2's keysets (ui-game.c's command table, original key / roguelike key). Arrows, the
+    /// keypad, Enter, Escape, the function keys and the menus' Ctrl keys work in all of them.
+    /// </summary>
+    public static InputBindings Preset(Keyset keyset)
+    {
+        var b = Defaults();
+        if (keyset == Keyset.Avaband) return b;
+        // Drop the letters and the few symbols the keysets use differently; keep everything else.
+        foreach (var chord in b.Keys.Keys.Where(k => k.StartsWith("Char:", StringComparison.Ordinal)
+                     && (char.IsLetter(k[5]) || k[5..] is "." or "," or ";")).ToList())
+            b.Keys.Remove(chord);
+        void K(InputAction a, params string[] chords) { foreach (var c in chords) b.Keys[c] = a; }
+        var rogue = keyset == Keyset.Roguelike;
+        if (rogue)
+        {
+            K(InputAction.MoveWest, "Char:h"); K(InputAction.MoveSouth, "Char:j"); K(InputAction.MoveNorth, "Char:k");
+            K(InputAction.MoveEast, "Char:l"); K(InputAction.MoveNorthWest, "Char:y"); K(InputAction.MoveNorthEast, "Char:u");
+            K(InputAction.MoveSouthWest, "Char:b"); K(InputAction.MoveSouthEast, "Char:n");
+            K(InputAction.RunWest, "Char:H"); K(InputAction.RunSouth, "Char:J"); K(InputAction.RunNorth, "Char:K");
+            K(InputAction.RunEast, "Char:L"); K(InputAction.RunNorthWest, "Char:Y"); K(InputAction.RunNorthEast, "Char:U");
+            K(InputAction.RunSouthWest, "Char:B"); K(InputAction.RunSouthEast, "Char:N");
+            b.Keys.Remove("Ctrl+T");
+            K(InputAction.Tunnel, "Ctrl+T");
+            K(InputAction.ToggleTiles, "Ctrl+Shift+T"); // Ctrl+T digs in the roguelike keys
+        }
+        else K(InputAction.Tunnel, "Char:T");
+        K(InputAction.Run, rogue ? "Char:," : "Char:.");
+        K(InputAction.Hold, rogue ? "Char:." : "Char:,");
+        K(InputAction.Look, rogue ? "Char:x" : "Char:l");
+        K(InputAction.TakeOff, rogue ? "Char:T" : "Char:t");
+        K(InputAction.Fire, rogue ? "Char:t" : "Char:f");
+        K(InputAction.AimWand, rogue ? "Char:z" : "Char:a");
+        K(InputAction.ZapRod, rogue ? "Char:a" : "Char:z");
+        K(InputAction.UseStaff, rogue ? "Char:Z" : "Char:u");
+        K(InputAction.Browse, rogue ? "Char:P" : "Char:b");
+        K(InputAction.ToggleIgnore, rogue ? "Char:O" : "Char:K");
+        if (!rogue) K(InputAction.Ignore, "Char:k");
+        if (!rogue) K(InputAction.RepeatCommand, "Char:n");
+        K(InputAction.Steal, "Char:s");
+        K(InputAction.Open, "Char:o"); K(InputAction.Close, "Char:c"); K(InputAction.Disarm, "Char:D");
+        K(InputAction.Rest, "Char:R"); K(InputAction.Wield, "Char:w"); K(InputAction.Quaff, "Char:q");
+        K(InputAction.Read, "Char:r"); K(InputAction.Eat, "Char:E"); K(InputAction.Drop, "Char:d");
+        K(InputAction.Throw, "Char:v"); K(InputAction.Activate, "Char:A"); K(InputAction.Pickup, "Char:g");
+        K(InputAction.Refuel, "Char:F"); K(InputAction.Inspect, "Char:I"); K(InputAction.Cast, "Char:m");
+        K(InputAction.Study, "Char:G"); K(InputAction.Retire, "Char:Q"); K(InputAction.CharacterSheet, "Char:C");
+        K(InputAction.OverviewMap, "Char:M");
+        return b;
+    }
+
     public InputAction ForKey(string chord) => Keys.GetValueOrDefault(chord);
     public InputAction ForButton(string button) => Buttons.GetValueOrDefault(button);
 

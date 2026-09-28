@@ -170,6 +170,42 @@ public class OptionsUiTests
     }
 }
 
+public class KeysetUiTests
+{
+    [AvaloniaFact]
+    public void TheRoguelikeOption_PutsInTheWholeKeyset_AndBack()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var settings = new AppSettings();
+        var saved = new List<InputBindings>();
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null);
+        vm.UseInput(InputBindings.Defaults(), null, saved.Add);
+        vm.StartGame(42);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+
+        vm.SetOption(ViewModels.DisplayOptions.RoguelikeKeys, true);
+        Assert.Equal(InputAction.Look, vm.Bindings.ForKey("Char:x"));
+        Assert.Equal(InputAction.MoveWest, vm.Bindings.ForKey("Char:h"));
+        Assert.NotEmpty(saved);                       // kept for next time
+        var before = vm.Game.Player.Position;
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.X, global::Avalonia.Input.RawInputModifiers.None);
+        Assert.True(vm.IsLooking || vm.LastMessage == "You see no monsters."); // 'x' looks
+        window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.Escape, global::Avalonia.Input.RawInputModifiers.None);
+
+        vm.SetOption(ViewModels.DisplayOptions.RoguelikeKeys, false);
+        Assert.Equal(InputAction.Look, vm.Bindings.ForKey("Char:l"));
+        Assert.Equal(InputAction.None, vm.Bindings.ForKey("Char:h"));
+
+        // The Controls buttons do the same, and keep the option in step.
+        vm.UseRoguelikeKeysCommand.Execute(null);
+        Assert.True(vm.OptionValue(ViewModels.DisplayOptions.RoguelikeKeys));
+        vm.ResetBindingsCommand.Execute(null);
+        Assert.Equal(InputAction.MoveEast, vm.Bindings.ForKey("Char:l")); // AVABand's own again
+        Assert.Equal(before, vm.Game.Player.Position);
+    }
+}
+
 public class FeelingUiTests
 {
     [AvaloniaFact]

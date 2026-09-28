@@ -17,6 +17,55 @@ public class InputTests
         return (mapper, actions);
     }
 
+    // --- Keysets ------------------------------------------------------------------------------
+
+    [Theory]
+    [InlineData("Char:l", InputAction.Look)]
+    [InlineData("Char:t", InputAction.TakeOff)]
+    [InlineData("Char:T", InputAction.Tunnel)]
+    [InlineData("Char:k", InputAction.Ignore)]
+    [InlineData("Char:z", InputAction.ZapRod)]
+    [InlineData("Char:a", InputAction.AimWand)]
+    [InlineData("Char:u", InputAction.UseStaff)]
+    [InlineData("Char:b", InputAction.Browse)]
+    [InlineData("Char:n", InputAction.RepeatCommand)]
+    [InlineData("Char:,", InputAction.Hold)]
+    [InlineData("Char:.", InputAction.Run)]
+    [InlineData("Up", InputAction.MoveNorth)]
+    public void TheOriginalKeyset_IsAngbands(string chord, InputAction action) =>
+        Assert.Equal(action, InputBindings.Preset(InputBindings.Keyset.Original).ForKey(chord));
+
+    [Theory]
+    [InlineData("Char:h", InputAction.MoveWest)]
+    [InlineData("Char:y", InputAction.MoveNorthWest)]
+    [InlineData("Char:L", InputAction.RunEast)]
+    [InlineData("Char:x", InputAction.Look)]
+    [InlineData("Char:T", InputAction.TakeOff)]
+    [InlineData("Ctrl+T", InputAction.Tunnel)]
+    [InlineData("Ctrl+Shift+T", InputAction.ToggleTiles)]
+    [InlineData("Char:t", InputAction.Fire)]
+    [InlineData("Char:a", InputAction.ZapRod)]
+    [InlineData("Char:z", InputAction.AimWand)]
+    [InlineData("Char:Z", InputAction.UseStaff)]
+    [InlineData("Char:P", InputAction.Browse)]
+    [InlineData("Char:O", InputAction.ToggleIgnore)]
+    [InlineData("Char:.", InputAction.Hold)]
+    [InlineData("Char:,", InputAction.Run)]
+    [InlineData("Ctrl+V", InputAction.RepeatCommand)]
+    public void TheRoguelikeKeyset_IsAngbands(string chord, InputAction action) =>
+        Assert.Equal(action, InputBindings.Preset(InputBindings.Keyset.Roguelike).ForKey(chord));
+
+    [Fact]
+    public void EveryKeyset_LeavesNoActionWithoutAKey_ThatHadOne()
+    {
+        var had = InputBindings.Defaults().Keys.Values.ToHashSet();
+        foreach (var keyset in Enum.GetValues<InputBindings.Keyset>())
+        {
+            var bound = InputBindings.Preset(keyset).Keys.Values.ToHashSet();
+            Assert.Empty(had.Except(bound));
+        }
+    }
+
     // --- Gamepad mapping ----------------------------------------------------------------------
 
     [Fact]

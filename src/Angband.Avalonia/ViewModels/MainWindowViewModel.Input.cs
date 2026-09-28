@@ -348,10 +348,31 @@ public sealed partial class MainWindowViewModel
     }
 
     [RelayCommand]
-    private void ResetBindings()
+    private void ResetBindings() => UseKeyset(InputBindings.Keyset.Avaband);
+
+    [RelayCommand]
+    private void UseOriginalKeys() => UseKeyset(InputBindings.Keyset.Original);
+
+    [RelayCommand]
+    private void UseRoguelikeKeys() => UseKeyset(InputBindings.Keyset.Roguelike);
+
+    /// <summary>Replaces the keyboard layout with a preset (the gamepad buttons as they were).</summary>
+    public void UseKeyset(InputBindings.Keyset keyset)
     {
-        Bindings = InputBindings.Defaults();
+        var preset = InputBindings.Preset(keyset);
+        if (keyset != InputBindings.Keyset.Avaband)
+        {
+            preset.Buttons.Clear();
+            foreach (var (button, action) in Bindings.Buttons) preset.Buttons[button] = action;
+        }
+        Bindings = preset;
         _gamepad?.UseBindings(Bindings);
+        if (keyset != InputBindings.Keyset.Avaband && OptionValue(DisplayOptions.RoguelikeKeys) != (keyset == InputBindings.Keyset.Roguelike))
+        {
+            _settings.Options[DisplayOptions.RoguelikeKeys] = keyset == InputBindings.Keyset.Roguelike;
+            SaveSettings();
+            RefreshOptionRows();
+        }
         FinishCapture();
     }
 

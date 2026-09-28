@@ -3,6 +3,7 @@ using Angband.Core.Game;
 using Angband.Core.Items;
 using Angband.Core.Geometry;
 using Angband.Core.Time;
+using Angband.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -21,6 +22,7 @@ public static class DisplayOptions
     public const string HighlightPlayer = "highlight_player";
     public const string ShowTarget = "show_target";
     public const string EffectiveSpeed = "effective_speed";
+    public const string RoguelikeKeys = "rogue_like_commands";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -28,6 +30,7 @@ public static class DisplayOptions
     /// </summary>
     public static readonly IReadOnlyList<OptionDef> All =
     [
+        new(RoguelikeKeys, "Use the roguelike command keyset", OptionKind.Interface, false),
         new(ShowTarget, "Highlight target with cursor", OptionKind.Interface, true),
         new(HighlightPlayer, "Highlight player with cursor between turns", OptionKind.Interface, false),
         new(SolidWalls, "Show walls as solid blocks", OptionKind.Interface, false),
@@ -133,6 +136,9 @@ public sealed partial class MainWindowViewModel
             SaveSettings();
             _game.SetOption(id, value); // ignored for display-only options
             ApplyDisplayOptions();
+            // Angband rogue_like_commands: switching it puts in the whole keyset.
+            if (id == DisplayOptions.RoguelikeKeys)
+                UseKeyset(value ? InputBindings.Keyset.Roguelike : InputBindings.Keyset.Original);
         }
         RefreshInventory();
         Refresh();
