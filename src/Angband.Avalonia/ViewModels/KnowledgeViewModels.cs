@@ -95,6 +95,94 @@ public sealed partial class KnowledgeCategoryViewModel : ObservableObject
     }
 }
 
+/// <summary>One line of the equipment comparison, as shown (a monospaced row) with its item.</summary>
+public sealed record EquipLine(string Text, Item Item);
+
+/// <summary>
+/// Angband 4.2's equippable comparison: every wearable item you have, side by side, filtered by
+/// slot, with or without the shops' goods. Picking a line describes the item.
+/// </summary>
+public sealed partial class EquipComparisonViewModel : ObservableObject
+{
+    private readonly Angband.Core.Game.GameSession _game;
+    private readonly Func<Item, string> _describe;
+
+    public EquipComparisonViewModel(Angband.Core.Game.GameSession game, Func<Item, string> describe)
+    {
+        _game = game;
+        _describe = describe;
+        Slots = ["All", .. Enum.GetValues<Angband.Core.Definitions.EquipSlot>()
+            .Where(s => s != Angband.Core.Definitions.EquipSlot.None).Select(s => s.ToString())];
+        Fill();
+    }
+
+    public IReadOnlyList<string> Slots { get; }
+    public ObservableCollection<EquipLine> Lines { get; } = [];
+    public string Groups { get; } = GroupLine();
+    public string Headings { get; } = HeadingLine();
+    public string Legend { get; } = string.Join(";  ", EquipComparison.Columns.Select(c => $"{c.Heading} {c.Meaning}").Distinct());
+
+    [ObservableProperty] private string _slot = "All";
+    [ObservableProperty] private bool _includeShops;
+    [ObservableProperty] private EquipLine? _selected;
+    [ObservableProperty] private string _text = "";
+    [ObservableProperty] private string _summary = "";
+
+    partial void OnSlotChanged(string value) => Fill();
+    partial void OnIncludeShopsChanged(bool value) => Fill();
+    partial void OnSelectedChanged(EquipLine? value) => Text = value is null ? "" : _describe(value.Item);
+
+    private void Fill()
+    {
+        var slot = Enum.TryParse<Angband.Core.Definitions.EquipSlot>(Slot, out var s) ? s : (Angband.Core.Definitions.EquipSlot?)null;
+        var rows = EquipComparison.Rows(_game, IncludeShops, slot);
+        Lines.Clear();
+        foreach (var r in rows) Lines.Add(new EquipLine(Line(r), r.Item));
+        Summary = rows.Count == 1 ? "1 item" : $"{rows.Count} items";
+        Selected = Lines.FirstOrDefault();
+    }
+
+    private const int SourceWidth = 8, NameWidth = 30, CombatWidth = 14;
+
+    private static string Cells(Func<EquipColumn, int, string> cell)
+    {
+        var sb = new System.Text.StringBuilder();
+        for (var i = 0; i < EquipComparison.Columns.Count; i++)
+        {
+            if (EquipComparison.Groups.Any(g => g.Start == i && i > 0)) sb.Append(' ');
+            var c = EquipComparison.Columns[i];
+            sb.Append(cell(c, i).PadLeft(c.Width));
+        }
+        return sb.ToString();
+    }
+
+    private static string Fit(string s, int width) => s.Length > width ? s[..(width - 1)] + "~" : s.PadRight(width);
+
+    public static string Line(EquipComparisonRow r) =>
+        $"{Fit(r.Source, SourceWidth)} {Fit(r.Name, NameWidth)} {Fit(r.Combat, CombatWidth)} {Cells((_, i) => r.Cells[i])}";
+
+    private static string HeadingLine() => $"{"Where",-SourceWidth} {"Item",-NameWidth} {"",-CombatWidth} {Cells((c, _) => c.Heading)}";
+
+    private static string GroupLine()
+    {
+        var pad = new string(' ', SourceWidth + NameWidth + CombatWidth + 3);
+        var sb = new System.Text.StringBuilder(pad);
+        var cells = Cells((c, _) => new string(' ', c.Width));
+        var at = new List<int>();
+        for (int i = 0, x = 0; i < EquipComparison.Columns.Count; i++)
+        {
+            if (EquipComparison.Groups.Any(g => g.Start == i && i > 0)) x++;
+            at.Add(x);
+            x += EquipComparison.Columns[i].Width;
+        }
+        var line = new char[cells.Length + 12];
+        Array.Fill(line, ' ');
+        foreach (var (start, name) in EquipComparison.Groups)
+            for (var j = 0; j < name.Length && at[start] + j < line.Length; j++) line[at[start] + j] = name[j];
+        return (sb.Append(line).ToString()).TrimEnd();
+    }
+}
+
 /// <summary>
 /// The knowledge browser (Angband '~'): monsters, objects, runes, egos, artifacts, terrain features,
 /// traps, the contents of your home and your history.
@@ -119,11 +207,13 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     public KnowledgeCategoryViewModel? Features { get; init; }
     public KnowledgeCategoryViewModel? Traps { get; init; }
     public KnowledgeCategoryViewModel? Home { get; init; }
+    public KnowledgeCategoryViewModel? Shapes { get; init; }
+    public EquipComparisonViewModel? Equipment { get; init; }
 
     /// <summary>The character history, as Angband's history screen and dump show it.</summary>
     public string History { get; init; } = "";
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 egos, 4 artifacts, 5 features, 6 traps, 7 home, 8 history).</summary>
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 egos, 4 artifacts, 5 features, 6 traps, 7 shapes, 8 equipment, 9 home, 10 history).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -140,6 +230,8 @@ public sealed partial class MainWindowViewModel
             Features = CreateFeatureKnowledge(),
             Traps = CreateTrapKnowledge(),
             Home = CreateHomeKnowledge(),
+            Shapes = CreateShapeKnowledge(),
+            Equipment = new EquipComparisonViewModel(_game, Inspect),
             History = HistoryText(),
         };
 
@@ -180,6 +272,16 @@ public sealed partial class MainWindowViewModel
                 () => $"{Capitalize(t.Name)}\n\n{t.Description}".TrimEnd()))
             .ToList();
         return new KnowledgeCategoryViewModel("Traps", $"{rows.Count} kinds of trap", "", rows);
+    }
+
+    /// <summary>Angband do_cmd_knowledge_shapechange: every shape (not "normal"), by name, with what it does.</summary>
+    public KnowledgeCategoryViewModel CreateShapeKnowledge()
+    {
+        var rows = _data.Shapes.Where(s => s.Id != "normal").OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase)
+            .Select(s => new KnowledgeRow("@", _cells.Color("White"), Capitalize(s.Name), s.Blows.Count > 0 ? "shape" : "",
+                () => ObjectInfo.DescribeShape(_data, s)))
+            .ToList();
+        return new KnowledgeCategoryViewModel("Shapes", $"{rows.Count} shapes", "", rows);
     }
 
     /// <summary>Angband's "Display contents of home": what you keep there, readable from anywhere.</summary>

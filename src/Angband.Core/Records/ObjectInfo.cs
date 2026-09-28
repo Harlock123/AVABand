@@ -322,6 +322,56 @@ public static class ObjectInfo
         return sb.ToString().TrimEnd();
     }
 
+    // --- Shapes (Angband do_cmd_knowledge_shapechange, shape_lore) ----------------------------------
+
+    /// <summary>What a shape does, as 4.2's shape knowledge says it, and which spells change you into it.</summary>
+    public static string DescribeShape(GameData data, ShapeDef shape)
+    {
+        var sb = new StringBuilder();
+        sb.Append(Capitalize(shape.Name)).Append("\n\n");
+        sb.Append("Like all shapes, the equipment at the time of the shapechange sets the base attributes, including "
+                  + "damage per blow, number of blows and resistances. While changed, items in your pack or on the floor "
+                  + "(except for pickup or eating) are inaccessible. To switch back to your normal shape, cast a spell or "
+                  + "use an item command other than eat (drop, for instance).\n\n");
+        void Adds(IReadOnlyList<string> parts, string lead = "Adds")
+        {
+            if (parts.Count > 0) sb.Append(lead).Append(' ').Append(Join(parts)).Append(".\n");
+        }
+        var combat = new List<string>();
+        if (shape.ToAc != 0) combat.Add($"{shape.ToAc:+0;-0} to AC");
+        if (shape.ToHit != 0) combat.Add($"{shape.ToHit:+0;-0} to hit");
+        if (shape.ToDam != 0) combat.Add($"{shape.ToDam:+0;-0} to damage");
+        Adds(combat);
+        Adds([.. shape.Skills.Where(kv => kv.Value != 0).Select(kv => $"{kv.Value:+0;-0} to {SkillName(kv.Key)}")]);
+        var stats = new[] { "str", "int", "wis", "dex", "con" };
+        Adds([.. shape.Modifiers.Where(kv => kv.Value != 0 && !stats.Contains(kv.Key)).Select(kv => $"{kv.Value:+0;-0} to {ModifierName(kv.Key)}")]);
+        Adds([.. stats.Where(st => shape.Modifiers.GetValueOrDefault(st) != 0).Select(st => $"{shape.Modifiers[st]:+0;-0} to {ModifierName(st)}")]);
+        var protections = new[] { "free_act", "see_invis", "blind", "conf", "fear", "stun", "hold_life" };
+        Adds([.. shape.Resists.Where(r => !protections.Contains(r) && !r.StartsWith("sust_", StringComparison.Ordinal)).Select(r => ElementName(data, r))],
+            "Makes you resistant to");
+        Adds([.. shape.Resists.Where(protections.Contains).Select(r => ProtectionName(data, r))], "Gives");
+        Adds([.. shape.Resists.Where(r => r.StartsWith("sust_", StringComparison.Ordinal)).Select(r => Stat(r[5..]))], "Sustains");
+        Adds([.. shape.Flags.Select(ItemFlags.Name)], "Grants");
+        if (shape.Effect.Length > 0) sb.Append($"Changing into the shape {EffectText(data, shape.Effect).TrimEnd('.', ' ')}.\n");
+        if (shape.Blows.Count > 0) sb.Append($"Its blows: {Join([.. shape.Blows.Distinct()])}.\n");
+
+        var triggers = data.Spells.Where(sp => sp.Effect.Split(';').Any(e => e.Trim() == $"shapechange:{shape.Id}")).ToList();
+        if (triggers.Count > 0) sb.Append('\n');
+        foreach (var spell in triggers)
+            foreach (var cls in spell.Classes.Keys.Select(c => data.Classes.FirstOrDefault(x => x.Id == c)?.Name ?? c))
+                sb.Append($"The {cls} spell, {spell.Name}, from {BookName(data, spell.Book)} triggers the shapechange.\n");
+        return sb.ToString().TrimEnd();
+    }
+
+    private static string SkillName(string skill) => skill switch
+    {
+        "disarm" => "disarming", "device" => "magic devices", "save" => "saving throws", "melee" => "melee to hit",
+        "bow" => "shooting to hit", "throw" => "throwing to hit", "dig" => "digging", "search" => "searching", _ => skill,
+    };
+
+    private static string BookName(GameData data, string book) =>
+        data.Object(book) is { } kind ? "[" + ItemNaming.Plain(kind.Name, false).TrimStart('[').TrimEnd(']') + "]" : book;
+
     // --- Runes ------------------------------------------------------------------------------------
 
     /// <summary>Every rune that appears on some object, ego or artifact in the game data.</summary>

@@ -662,7 +662,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   run) — unless you are blind, confused or standing in the dark. It becomes an ordinary closed door,
   locked one time in four. The rogue's *Find Traps, Doors and Stairs* reveals those within range.
 - **Object knowledge** (`Records/ObjectInfo.cs`, `ViewModels/KnowledgeViewModels.cs`): Angband's
-  knowledge menu and object info. `~` (Game → Knowledge) opens one window with nine tabs:
+  knowledge menu and object info. `~` (Game → Knowledge) opens one window with eleven tabs:
   *Monsters* (the recall browser above), *Objects* (every kind the character has seen — on the
   floor, carried or in a shop — grouped by type; unidentified flavours are listed by appearance
   and say only whether you have tried them), *Runes* (those learned, out of every rune in the game,
@@ -670,8 +670,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   (identified artifacts, with their full properties, activation and story), and, as in 4.2's
   knowledge menu, *Features* (every terrain feature, grouped as floors, doors, stairs, walls, veins,
   obstructions and stores, with 4.2's `terrain.txt` descriptions), *Traps* (every trap, rune and
-  web), *Home* (what you keep at home, readable from anywhere) and *History* (the player history,
-  as in the character dump, "(LOST)" marks included). Each line opens a
+  web), *Shapes* (4.2's shapechange knowledge: each shape's bonuses, skills, resistances, what
+  changing into it does and which spells cast it), *Equipment* (4.2's equippable comparison: every
+  wearable thing you have — worn, in the pack, underfoot, at home, and the shops' goods if ticked —
+  in one table of combat numbers, modifiers, resistances, protections, sustains and abilities,
+  filtered by slot; as in 4.2 a property whose rune you haven't learned reads "?"), *Home* (what
+  you keep at home, readable from anywhere) and *History* (the player history, as in the character
+  dump, "(LOST)" marks included). Each line opens a
   description built from what the character knows: damage or armour, launcher multiplier, light
   fuel, charges and recharge time, the effect in plain English ("When quaffed, it heals 20 hit
   points or 15% of your hit points, whichever is more, cures blindness and reduces cuts" — written

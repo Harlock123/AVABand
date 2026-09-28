@@ -5,8 +5,15 @@
         x:Class="Angband.Avalonia.Views.KnowledgeWindow"
         x:DataType="vm:KnowledgeViewModel"
         Title="Knowledge"
-        Width="980" Height="660"
+        Width="1160" Height="680"
         WindowStartupLocation="CenterOwner">
+  <Window.Styles>
+    <!-- Eleven tabs: a little smaller than the theme's, so they fit on one line. -->
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="17" />
+      <Setter Property="Padding" Value="10,0" />
+    </Style>
+  </Window.Styles>
   <Window.DataTemplates>
     <!-- Objects, runes, egos and artifacts: a list on the left, what is known on the right. -->
     <DataTemplate DataType="vm:KnowledgeCategoryViewModel">
@@ -82,6 +89,37 @@
       <TabItem Header="Artifacts" Content="{Binding Artifacts}" />
       <TabItem Header="Features" Content="{Binding Features}" />
       <TabItem Header="Traps" Content="{Binding Traps}" />
+      <TabItem Header="Shapes" Content="{Binding Shapes}" />
+      <TabItem Header="Equipment">
+        <DockPanel DataContext="{Binding Equipment}" x:DataType="vm:EquipComparisonViewModel">
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12" Margin="0,0,0,6">
+            <TextBlock Text="Slot" VerticalAlignment="Center" Opacity="0.8" />
+            <ComboBox x:Name="EquipSlot" ItemsSource="{Binding Slots}" SelectedItem="{Binding Slot}" MinWidth="120" />
+            <CheckBox Content="Include the shops' goods" IsChecked="{Binding IncludeShops}" />
+            <TextBlock Text="{Binding Summary}" VerticalAlignment="Center" Opacity="0.7" />
+          </StackPanel>
+          <TextBlock DockPanel.Dock="Bottom" Text="{Binding Legend}" TextWrapping="Wrap" FontSize="11" Opacity="0.6" Margin="0,6,0,0" />
+          <ScrollViewer DockPanel.Dock="Bottom" Height="150" Background="#111111" Margin="0,6,0,0">
+            <SelectableTextBlock Text="{Binding Text}" TextWrapping="Wrap" Margin="10" FontSize="13" />
+          </ScrollViewer>
+          <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Top" Text="{Binding Groups}" FontFamily="{StaticResource MonoFont}" FontSize="12" Opacity="0.6" />
+              <TextBlock DockPanel.Dock="Top" Text="{Binding Headings}" FontFamily="{StaticResource MonoFont}" FontSize="12" Foreground="#8fc1ff" />
+              <ListBox x:Name="EquipLines" ItemsSource="{Binding Lines}" SelectedItem="{Binding Selected}">
+                <ListBox.Styles>
+                  <Style Selector="ListBoxItem"><Setter Property="Padding" Value="0,1" /><Setter Property="MinHeight" Value="0" /></Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:EquipLine">
+                    <TextBlock Text="{Binding Text}" FontFamily="{StaticResource MonoFont}" FontSize="12" />
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </DockPanel>
+          </ScrollViewer>
+        </DockPanel>
+      </TabItem>
       <TabItem Header="Home" Content="{Binding Home}" />
       <TabItem Header="History">
         <ScrollViewer Background="#111111">

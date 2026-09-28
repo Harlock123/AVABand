@@ -179,3 +179,26 @@ public class HotbarTests
         Assert.Null(loaded.Hotbar[1]);
     }
 }
+
+/// <summary>Angband 4.2's equippable comparison.</summary>
+public class EquipComparisonTests
+{
+    [Fact]
+    public void AModifier_Shows_OnceItsRuneIsKnown_AndUnknownRunesReadAsQuestionMarks()
+    {
+        var game = GameSession.NewGame(TestData.Game, 1, "warrior");
+        var ring = game.Objects.Create("ring_of_protection");
+        ring.Modifiers["str"] = 2;
+        game.Player.Inventory.Add(ring);
+        var column = EquipComparison.Columns.ToList().FindIndex(c => c.Heading == "St");
+
+        var row = EquipComparison.Rows(game).Single(r => r.Item == ring);
+        Assert.Equal("pack", row.Source);
+        Assert.Equal("?", row.Cells[column]);
+
+        game.Knowledge.LearnRune(RuneIds.Modifier("str"));
+        row = EquipComparison.Rows(game).Single(r => r.Item == ring);
+        Assert.Equal("+2", row.Cells[column]);
+        Assert.DoesNotContain(EquipComparison.Rows(game, slot: EquipSlot.Weapon), r => r.Item == ring);
+    }
+}

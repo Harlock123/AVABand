@@ -116,8 +116,44 @@ public sealed class KnowledgeUiTests
 
         vm.HandleAction(InputAction.MonsterKnowledge);
         var knowledgeWindow = Assert.IsType<KnowledgeWindow>(window.OwnedWindows.Last());
-        ((KnowledgeViewModel)knowledgeWindow.DataContext!).SelectedTab = 8;
+        ((KnowledgeViewModel)knowledgeWindow.DataContext!).SelectedTab = 10;
         TileRenderingTests.Save(knowledgeWindow, "knowledge-history");
+        knowledgeWindow.Close();
+    }
+
+    [AvaloniaFact]
+    public void Knowledge_HasShapes_AndTheEquipmentComparison()
+    {
+        var (window, vm) = Open();
+        var game = vm.Game;
+        var k = vm.CreateKnowledge();
+
+        var shapes = k.Shapes!;
+        Assert.Equal(game.Data.Shapes.Count(s => s.Id != "normal"), shapes.Rows.Count);
+        shapes.Selected = shapes.Rows.Single(r => r.Name == "Bear");
+        Assert.Contains("Adds +5 to AC, +15 to hit and +15 to damage.", shapes.Text);
+        Assert.Contains("Gives protection from fear.", shapes.Text);
+        Assert.Contains("triggers the shapechange.", shapes.Text);
+
+        var equipment = k.Equipment!;
+        Assert.Contains(equipment.Lines, l => l.Text.StartsWith("worn ", StringComparison.Ordinal) && l.Text.Contains("Dagger"));
+        Assert.Contains("Where", equipment.Headings);
+        Assert.Contains("resistances", equipment.Groups);
+        equipment.Slot = "Weapon";
+        Assert.All(equipment.Lines, l => Assert.Equal(Angband.Core.Definitions.EquipSlot.Weapon, l.Item.Base.Slot));
+        var ownWeapons = equipment.Lines.Count;
+        equipment.IncludeShops = true;
+        Assert.True(equipment.Lines.Count > ownWeapons); // the weaponsmith's stock
+        Assert.Contains(equipment.Lines, l => l.Text.StartsWith("Weapon", StringComparison.Ordinal));
+        equipment.Selected = equipment.Lines.First();
+        Assert.NotEmpty(equipment.Text);
+
+        vm.HandleAction(InputAction.MonsterKnowledge);
+        var knowledgeWindow = Assert.IsType<KnowledgeWindow>(window.OwnedWindows.Last());
+        var shown = (KnowledgeViewModel)knowledgeWindow.DataContext!;
+        shown.SelectedTab = 8;
+        shown.Equipment!.IncludeShops = true;
+        TileRenderingTests.Save(knowledgeWindow, "knowledge-equipment");
         knowledgeWindow.Close();
     }
 }
