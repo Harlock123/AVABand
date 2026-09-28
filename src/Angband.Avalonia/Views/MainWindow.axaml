@@ -94,7 +94,14 @@
     </Border>
 
     <Border DockPanel.Dock="Bottom" Background="#101010" Padding="8,4">
-      <TextBlock Text="{Binding StatusText}" Foreground="#C0C0C0" FontFamily="{StaticResource MonoFont}" />
+      <DockPanel>
+        <!-- The count typed with '0', while it is typed and until a command uses it. -->
+        <Border Name="CountBadge" DockPanel.Dock="Right" Background="#804000" CornerRadius="3" Padding="6,0"
+                IsVisible="{Binding CountBadge, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <TextBlock Text="{Binding CountBadge}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
+        </Border>
+        <TextBlock Text="{Binding StatusText}" Foreground="#C0C0C0" FontFamily="{StaticResource MonoFont}" />
+      </DockPanel>
     </Border>
 
     <!-- Inventory panel -->

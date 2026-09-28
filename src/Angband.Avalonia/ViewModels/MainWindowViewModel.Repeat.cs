@@ -37,12 +37,22 @@ public sealed partial class MainWindowViewModel
     /// <summary>The count waiting for a command, if any.</summary>
     public int PendingCount => _commandCount;
 
+    /// <summary>
+    /// The status bar's badge while a count is typed ("Repeat 13_") or waits for its command
+    /// ("Repeat 13"); null (hidden) otherwise.
+    /// </summary>
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private string? _countBadge;
+
+    private void UpdateCountBadge() =>
+        CountBadge = IsEnteringCount ? $"Repeat {_commandCount}_" : _commandCount > 0 ? $"Repeat {_commandCount}" : null;
+
     /// <summary>'0': start typing a count (Angband textui_get_count).</summary>
     public void BeginCount()
     {
         _commandCount = 0;
         IsEnteringCount = true;
         LastMessage = "Repeat: 0";
+        UpdateCountBadge();
     }
 
     /// <summary>
@@ -66,9 +76,11 @@ public sealed partial class MainWindowViewModel
         {
             IsEnteringCount = false;
             if (enter) LastMessage = $"Repeat: {_commandCount} (now the command)";
+            UpdateCountBadge();
             return enter;
         }
         LastMessage = $"Repeat: {_commandCount}";
+        UpdateCountBadge();
         return true;
     }
 
@@ -76,6 +88,7 @@ public sealed partial class MainWindowViewModel
     {
         _commandCount = 0;
         IsEnteringCount = false;
+        UpdateCountBadge();
     }
 
     /// <summary>The command with the typed count, if it takes one; either way the count is used up.</summary>

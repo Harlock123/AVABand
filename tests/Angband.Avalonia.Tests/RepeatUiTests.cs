@@ -5,6 +5,7 @@ using Angband.Data;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 
 namespace Angband.Avalonia.Tests;
 
@@ -95,10 +96,15 @@ public class RepeatUiTests
         window.KeyPressQwerty(PhysicalKey.Backspace, RawInputModifiers.None);
         window.KeyPressQwerty(PhysicalKey.Digit3, RawInputModifiers.None);
         Assert.Equal("Repeat: 13", vm.LastMessage);
+        Assert.Equal("Repeat 13_", vm.CountBadge);
+        var badge = window.GetLogicalDescendants().OfType<global::Avalonia.Controls.Border>().Single(b => b.Name == "CountBadge");
+        Assert.True(badge.IsVisible);
         turn = game.GameTurn;
         window.KeyPressQwerty(PhysicalKey.Comma, RawInputModifiers.None); // the command: hold 13 times
         Assert.False(vm.IsEnteringCount);
         Assert.Equal(13 * oneTurn, game.GameTurn - turn);
+        Assert.Null(vm.CountBadge); // used up
+        Assert.False(badge.IsVisible);
 
         // The count is used up: the next hold is a single one.
         turn = game.GameTurn;
@@ -114,6 +120,7 @@ public class RepeatUiTests
         window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
         window.KeyPressQwerty(PhysicalKey.T, RawInputModifiers.Shift); // tunnel: asks which way
         Assert.Equal(5, vm.PendingCount);
+        Assert.Equal("Repeat 5", vm.CountBadge); // waiting for the direction
         window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
         Assert.Equal(0, vm.PendingCount);
 
