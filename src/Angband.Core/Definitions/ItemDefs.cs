@@ -164,6 +164,11 @@ public sealed class ObjectKindDef
     /// <summary>Stack size when generated, e.g. <c>5d4</c> for arrows.</summary>
     public Dice StackSize { get; init; } = Dice.Constant(1);
     /// <summary>
+    /// The percentage chance a generated one comes as a pile of <see cref="StackSize"/> (Angband
+    /// object.txt pile, e.g. <c>pile:25:2</c>: a quarter of the time, two); otherwise it is one.
+    /// </summary>
+    public int PileChance { get; init; } = 100;
+    /// <summary>
     /// Values rolled when the object is made, in Angband's random-value syntax (<see cref="Items.RandomValue"/>):
     /// modifiers by id, plus <c>to_h</c>, <c>to_d</c> and <c>to_a</c>.
     /// </summary>

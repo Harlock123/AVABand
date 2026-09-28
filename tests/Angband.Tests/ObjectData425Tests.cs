@@ -132,6 +132,24 @@ public class ObjectData425Tests
     }
 
     [Fact]
+    public void Potions_come_in_piles_as_often_as_4_2_5_says()
+    {
+        // Cure Light Wounds: pile:90:2d3 — nine times in ten a pile of 2 to 6, else one.
+        var data = TestData.Game;
+        var clw = data.Object("cure_light_wounds")!;
+        Assert.Equal(90, clw.PileChance);
+        var factory = new ObjectFactory(data);
+        var rng = new GameRandom(17);
+        var numbers = Enumerable.Range(0, 2000)
+            .Select(_ => factory.Make(rng, 5, good: false, great: false))
+            .Where(i => i?.Kind == clw).Select(i => i!.Number).ToList();
+        Assert.True(numbers.Count > 20, $"{numbers.Count} made");
+        Assert.All(numbers, n => Assert.InRange(n, 1, 6));
+        var ones = numbers.Count(n => n == 1);
+        Assert.InRange(ones, 1, numbers.Count / 3);
+    }
+
+    [Fact]
     public void Gems_are_treasure_in_4_2_5s_order()
     {
         var golds = TestData.Game.Objects.Where(k => k.Base == "gold").Select(k => k.Id).ToList();

@@ -586,10 +586,7 @@ def compare_objects(gd, data):
         sec.compared += 1
         label = f"{o['id']} ({t}: {norm_name(e['name'])})"
         ob = o["base"]
-        if t == "gold":
-            sec.unmodelled["gold level (4.2.5 gold kinds have none; AVABand's picks the treasure by depth)"] += 1
-        else:
-            sec.cmp(label, "level", o.get("level", 0), int(one(e, "level", "0")))
+        sec.cmp(label, "level", o.get("level", 0), int(one(e, "level", "0")))
         sec.cmp(label, "cost", o.get("cost", 0), int(one(e, "cost", "0")), "cost" not in o)
         sec.cmp(label, "weight (1/10 lb)", o.get("weight", 0), int(one(e, "weight", "0")), "weight" not in o)
         alloc = one(e, "alloc")
@@ -637,11 +634,9 @@ def compare_objects(gd, data):
         sec.cmp(label, "recharge time", canon_rv(o.get("recharge")), canon_rv(one(e, "time")))
         sec.cmp(label, "power", o.get("power", 0), int(one(e, "power", "0")), "power" not in o)
         pile = one(e, "pile")
-        if ob in AMMO or "stackSize" in o:
-            sec.cmp(label, "pile number (stackSize)", canon_rv(o.get("stackSize", "1")),
-                    canon_rv(pile.split(":")[1]) if pile else "1")
-        elif pile:
-            sec.unmodelled["pile on non-ammo (ours has no stackSize)"] += 1
+        chance, _, stack = (pile or "100:1").partition(":")
+        sec.cmp(label, "pile number (stackSize)", canon_rv(o.get("stackSize", "1")), canon_rv(stack))
+        sec.cmp(label, "pile chance (pileChance)", o.get("pileChance", 100), int(chance))
 
         # Effects / activation, via the importer's translation of the effect lines.
         if get(e, "effect"):
@@ -674,7 +669,7 @@ def compare_objects(gd, data):
         "Book kinds come from class.txt `book`/`book-properties` (level = alloc minimum, weight 30, as 4.2.5's "
         "init.c sets them).",
         "Not compared: `graphics` (AVABand colours objects per base/flavour), `desc`, `msg`, `effect-yx`, "
-        "the pile *chance*, `pile` on non-ammo, `pval` other than launcher multiplier and fuel.",
+        "`pval` other than launcher multiplier and fuel.",
     ]
     return sec
 

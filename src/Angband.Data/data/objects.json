@@ -556,7 +556,8 @@
     "maxDepth": 50,
     "cost": 3,
     "weight": 8,
-    "effect": "nourish:6000"
+    "effect": "nourish:6000",
+    "stackSize": "1d5"
   },
   {
     "id": "slime_mold",
@@ -567,7 +568,8 @@
     "minDepth": 30,
     "cost": 2,
     "weight": 2,
-    "effect": "nourish:3000"
+    "effect": "nourish:3000",
+    "stackSize": "2d3"
   },
   {
     "id": "hard_biscuit",
@@ -790,7 +792,9 @@
     "cost": 20,
     "weight": 4,
     "effect": "heal:20:0; cure:blind; reduce:cut; reduce:confused; nourish:200",
-    "power": 3
+    "power": 3,
+    "stackSize": "2d3",
+    "pileChance": 90
   },
   {
     "id": "cure_serious_wounds",
@@ -803,7 +807,9 @@
     "cost": 70,
     "weight": 4,
     "effect": "heal:40:0; cure:blind; cure:confused; cure:cut; nourish:200",
-    "power": 6
+    "power": 6,
+    "stackSize": "2d3",
+    "pileChance": 80
   },
   {
     "id": "neutralize_poison",
@@ -816,7 +822,9 @@
     "cost": 75,
     "weight": 4,
     "effect": "cure:poisoned",
-    "power": 1
+    "power": 1,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "boldness",
@@ -829,7 +837,9 @@
     "cost": 8,
     "weight": 4,
     "effect": "cure:afraid",
-    "power": 2
+    "power": 2,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "speed",
@@ -841,7 +851,9 @@
     "cost": 75,
     "weight": 4,
     "effect": "timed:fast:2d10+20",
-    "power": 10
+    "power": 10,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "sleep",
@@ -853,7 +865,9 @@
     "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:paralyzed:1d5+5; nourish:200"
+    "effect": "timed:paralyzed:1d5+5; nourish:200",
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "confusion",
@@ -865,7 +879,9 @@
     "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:confused:4d5+10; nourish:200"
+    "effect": "timed:confused:4d5+10; nourish:200",
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "phase_door",
@@ -877,7 +893,8 @@
     "cost": 15,
     "weight": 5,
     "effect": "teleport:10",
-    "power": 5
+    "power": 5,
+    "stackSize": "2d3"
   },
   {
     "id": "teleportation",
@@ -889,7 +906,9 @@
     "cost": 40,
     "weight": 5,
     "effect": "teleport:M60",
-    "power": 6
+    "power": 6,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "light",
@@ -902,7 +921,9 @@
     "cost": 15,
     "weight": 5,
     "effect": "light_area",
-    "power": 4
+    "power": 4,
+    "stackSize": "2d3",
+    "pileChance": 35
   },
   {
     "id": "magic_mapping",
@@ -914,7 +935,9 @@
     "cost": 65,
     "weight": 5,
     "effect": "map_area:30",
-    "power": 10
+    "power": 10,
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "treasure_detection",
@@ -927,7 +950,9 @@
     "cost": 70,
     "weight": 5,
     "effect": "detect_objects:30",
-    "power": 6
+    "power": 6,
+    "stackSize": "1d5",
+    "pileChance": 40
   },
   {
     "id": "identify_rune",
@@ -939,7 +964,9 @@
     "cost": 200,
     "weight": 5,
     "effect": "identify",
-    "power": 6
+    "power": 6,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "remove_curse",
@@ -951,7 +978,9 @@
     "cost": 100,
     "weight": 5,
     "effect": "remove_curse",
-    "power": 8
+    "power": 8,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "ring_of_protection",
@@ -1065,7 +1094,7 @@
     "id": "copper",
     "name": "copper",
     "base": "gold",
-    "level": 1,
+    "level": 0,
     "commonness": 0,
     "cost": 0,
     "weight": 0
@@ -1074,7 +1103,7 @@
     "id": "silver",
     "name": "silver",
     "base": "gold",
-    "level": 10,
+    "level": 0,
     "commonness": 0,
     "cost": 0,
     "weight": 0
@@ -1092,7 +1121,7 @@
     "id": "gold",
     "name": "gold",
     "base": "gold",
-    "level": 20,
+    "level": 0,
     "commonness": 0,
     "cost": 0,
     "weight": 0
@@ -1146,7 +1175,7 @@
     "id": "mithril",
     "name": "mithril",
     "base": "gold",
-    "level": 40,
+    "level": 0,
     "commonness": 0,
     "cost": 0,
     "weight": 0
@@ -1155,7 +1184,7 @@
     "id": "adamantite",
     "name": "adamantite",
     "base": "gold",
-    "level": 60,
+    "level": 0,
     "commonness": 0,
     "cost": 0,
     "weight": 0
@@ -1171,7 +1200,9 @@
     "cost": 3,
     "weight": 4,
     "description": "Wrinkled, but sound and sweet.",
-    "effect": "nourish:2000"
+    "effect": "nourish:2000",
+    "stackSize": "1d2",
+    "pileChance": 10
   },
   {
     "id": "handful_of_dried_fruits",
@@ -1197,7 +1228,9 @@
     "cost": 0,
     "weight": 5,
     "description": "A grey-looking piece of dried flesh of you dare not guess what creature. You would have to be desperate to eat this.",
-    "effect": "random:5; nourish:4000; nourish:4000; nourish:2000; set_food:200; set_food:200"
+    "effect": "random:5; nourish:4000; nourish:4000; nourish:2000; set_food:200; set_food:200",
+    "stackSize": "1d3",
+    "pileChance": 50
   },
   {
     "id": "slice_of_meat",
@@ -1210,7 +1243,9 @@
     "cost": 3,
     "weight": 10,
     "description": "A thick slice of pork, salted to keep it from spoiling. It is very filling.",
-    "effect": "nourish:8000"
+    "effect": "nourish:8000",
+    "stackSize": "1d3",
+    "pileChance": 50
   },
   {
     "id": "honey_cake",
@@ -1224,7 +1259,9 @@
     "weight": 10,
     "description": "The Beornings are renowned as the best bakers among men, and their honey-cakes are deservedly prized. Made of wheat flour with nuts and honey and twice baked, they will sustain you through a long march.",
     "effect": "satisfy",
-    "power": 1
+    "power": 1,
+    "stackSize": "1d3",
+    "pileChance": 40
   },
   {
     "id": "piece_of_elvish_waybread",
@@ -1238,7 +1275,9 @@
     "weight": 3,
     "description": "Food of the elves is always good; their waybread is no exception. These thin cakes are wrapped in leaves and keep their tastiness for months.",
     "effect": "satisfy; cure:poisoned; heal:4d8:0",
-    "power": 4
+    "power": 4,
+    "stackSize": "1d3",
+    "pileChance": 10
   },
   {
     "id": "flask_of_whisky",
@@ -1290,7 +1329,9 @@
     "cost": 1,
     "weight": 2,
     "description": "This is a dirty brown color; you don't trust it.",
-    "effect": "nourish:1000; timed:stun:1d3+2; timed:slow:1d3+2"
+    "effect": "nourish:1000; timed:stun:1d3+2; timed:slow:1d3+2",
+    "stackSize": "1d3",
+    "pileChance": 10
   },
   {
     "id": "draught_of_the_ents",
@@ -1316,7 +1357,9 @@
     "cost": 200,
     "weight": 1,
     "effect": "cure:blind; timed:telepathy:7d7+50; nourish:1000",
-    "power": 10
+    "power": 10,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_fast_recovery",
@@ -1329,7 +1372,9 @@
     "cost": 200,
     "weight": 1,
     "effect": "heal:30:0; cure:stun; cure:cut; cure:poisoned; cure:blind; nourish:1000",
-    "power": 7
+    "power": 7,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_vigor",
@@ -1342,7 +1387,9 @@
     "cost": 200,
     "weight": 1,
     "effect": "restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; nourish:1000",
-    "power": 15
+    "power": 15,
+    "stackSize": "1d3",
+    "pileChance": 13
   },
   {
     "id": "mushroom_of_clear_mind",
@@ -1355,7 +1402,9 @@
     "cost": 200,
     "weight": 1,
     "effect": "restore_mana; cure:confused; cure:image; cure:afraid; timed:oppose_conf:7d7+50; nourish:1000",
-    "power": 8
+    "power": 8,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_emergency",
@@ -1368,7 +1417,9 @@
     "cost": 60,
     "weight": 1,
     "effect": "timed:image:5d5+25; timed:oppose_fire:5d5+25; timed:oppose_cold:5d5+25; heal:200:0; nourish:1000",
-    "power": 7
+    "power": 7,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_terror",
@@ -1382,7 +1433,9 @@
     "weight": 1,
     "description": "It allows you to run for your life.",
     "effect": "timed:terror:5d5+25; nourish:1000",
-    "power": 5
+    "power": 5,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_stoneskin",
@@ -1396,7 +1449,9 @@
     "weight": 1,
     "description": "Its poison turns your skin to stone, albeit briefly.",
     "effect": "timed:stoneskin:7d7+50; nourish:1000",
-    "power": 5
+    "power": 5,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_debility",
@@ -1409,7 +1464,9 @@
     "cost": 20,
     "weight": 1,
     "effect": "restore_mana; nourish:1000; random:2; drain_stat:str; drain_stat:con",
-    "power": 5
+    "power": 5,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_sprinting",
@@ -1423,7 +1480,9 @@
     "weight": 1,
     "description": "It hastes you for a while, but then makes you slower for a while afterward.",
     "effect": "timed:sprint:100; nourish:1000",
-    "power": 5
+    "power": 5,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_purging",
@@ -1437,7 +1496,9 @@
     "weight": 1,
     "description": "It makes you very hungry but otherwise healthy.",
     "effect": "set_food:1000; restore_stat:str; restore_stat:con; cure:poisoned",
-    "power": 5
+    "power": 5,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_shadows",
@@ -1451,7 +1512,9 @@
     "weight": 1,
     "description": "It makes you very stealthy for a short while.",
     "effect": "nourish:1000; timed:stealth:1d10+10",
-    "power": 9
+    "power": 9,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "mushroom_of_turbulence",
@@ -1460,7 +1523,9 @@
     "level": 0,
     "commonness": 0,
     "cost": 60,
-    "weight": 1
+    "weight": 1,
+    "stackSize": "1d4",
+    "pileChance": 70
   },
   {
     "id": "tulwar",
@@ -3132,7 +3197,9 @@
     "cost": 800,
     "weight": 5,
     "effect": "teleport_level",
-    "power": 15
+    "power": 15,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "scroll_of_detect_invisible",
@@ -3145,7 +3212,9 @@
     "cost": 15,
     "weight": 5,
     "effect": "detect_invisible:30",
-    "power": 6
+    "power": 6,
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_enchant_weapon_to_hit",
@@ -3158,7 +3227,9 @@
     "cost": 125,
     "weight": 5,
     "effect": "enchant:to_h:1",
-    "power": 15
+    "power": 15,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_enchant_weapon_to_dam",
@@ -3171,7 +3242,9 @@
     "cost": 125,
     "weight": 5,
     "effect": "enchant:to_d:1",
-    "power": 20
+    "power": 20,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_enchant_armour",
@@ -3184,7 +3257,9 @@
     "cost": 125,
     "weight": 5,
     "effect": "enchant:to_a:1",
-    "power": 12
+    "power": 12,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_enchant_weapon",
@@ -3197,7 +3272,9 @@
     "cost": 500,
     "weight": 5,
     "effect": "enchant:to_h:1; enchant:to_d:1",
-    "power": 22
+    "power": 22,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_scroll_of_enchant_armour",
@@ -3210,7 +3287,9 @@
     "cost": 500,
     "weight": 5,
     "effect": "enchant:to_a:1",
-    "power": 15
+    "power": 15,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_remove_curse",
@@ -3223,7 +3302,9 @@
     "cost": 8000,
     "weight": 5,
     "effect": "remove_curse",
-    "power": 20
+    "power": 20,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_summon_monster",
@@ -3235,7 +3316,9 @@
     "maxDepth": 100,
     "cost": 0,
     "weight": 5,
-    "effect": "summon:1d3"
+    "effect": "summon:1d3",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_summon_undead",
@@ -3247,7 +3330,9 @@
     "maxDepth": 100,
     "cost": 0,
     "weight": 5,
-    "effect": "summon:1d3:UNDEAD"
+    "effect": "summon:1d3:UNDEAD",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_acquirement",
@@ -3286,7 +3371,9 @@
     "cost": 200,
     "weight": 5,
     "effect": "dispel:UNDEAD:60",
-    "power": 9
+    "power": 9,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_banishment",
@@ -3325,7 +3412,8 @@
     "cost": 10,
     "weight": 5,
     "effect": "satisfy",
-    "power": 7
+    "power": 7,
+    "stackSize": "2d3"
   },
   {
     "id": "scroll_of_word_of_recall",
@@ -3338,7 +3426,9 @@
     "cost": 125,
     "weight": 5,
     "effect": "recall",
-    "power": 15
+    "power": 15,
+    "stackSize": "2d3",
+    "pileChance": 35
   },
   {
     "id": "scroll_of_recharging",
@@ -3351,7 +3441,9 @@
     "cost": 200,
     "weight": 5,
     "effect": "recharge:60",
-    "power": 11
+    "power": 11,
+    "stackSize": "2d3",
+    "pileChance": 12
   },
   {
     "id": "scroll_of_door_destruction",
@@ -3364,7 +3456,9 @@
     "cost": 50,
     "weight": 5,
     "effect": "destroy_doors",
-    "power": 6
+    "power": 6,
+    "stackSize": "2d3",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_deep_descent",
@@ -3377,7 +3471,9 @@
     "cost": 250,
     "weight": 5,
     "effect": "deep_descent",
-    "power": 19
+    "power": 19,
+    "stackSize": "2",
+    "pileChance": 20
   },
   {
     "id": "scroll_of_blessing",
@@ -3390,7 +3486,9 @@
     "cost": 15,
     "weight": 5,
     "effect": "timed:blessed:1d12+6",
-    "power": 6
+    "power": 6,
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_holy_chant",
@@ -3403,7 +3501,9 @@
     "cost": 40,
     "weight": 5,
     "effect": "timed:blessed:1d24+12",
-    "power": 7
+    "power": 7,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_holy_prayer",
@@ -3416,7 +3516,9 @@
     "cost": 80,
     "weight": 5,
     "effect": "timed:blessed:1d48+24",
-    "power": 8
+    "power": 8,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_protection_from_evil",
@@ -3429,7 +3531,9 @@
     "cost": 50,
     "weight": 5,
     "effect": "timed:prot_evil:1d25+20",
-    "power": 6
+    "power": 6,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_monster_confusion",
@@ -3442,7 +3546,9 @@
     "cost": 30,
     "weight": 5,
     "effect": "timed:att_conf:10000",
-    "power": 8
+    "power": 8,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "scroll_of_rune_of_protection",
@@ -3480,7 +3586,9 @@
     "maxDepth": 70,
     "cost": 0,
     "weight": 5,
-    "effect": "aggravate; project_los:haste"
+    "effect": "aggravate; project_los:haste",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_curse_weapon",
@@ -3492,7 +3600,9 @@
     "maxDepth": 0,
     "cost": 0,
     "weight": 5,
-    "effect": "curse_weapon"
+    "effect": "curse_weapon",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_curse_armour",
@@ -3504,7 +3614,9 @@
     "maxDepth": 0,
     "cost": 0,
     "weight": 5,
-    "effect": "curse_armour"
+    "effect": "curse_armour",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_darkness",
@@ -3516,7 +3628,9 @@
     "maxDepth": 70,
     "cost": 0,
     "weight": 5,
-    "effect": "darkness"
+    "effect": "darkness",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "scroll_of_trap_creation",
@@ -3528,7 +3642,9 @@
     "maxDepth": 70,
     "cost": 0,
     "weight": 5,
-    "effect": "trap_creation"
+    "effect": "trap_creation",
+    "stackSize": "1d3",
+    "pileChance": 70
   },
   {
     "id": "potion_of_strength",
@@ -3541,7 +3657,9 @@
     "cost": 8000,
     "weight": 4,
     "effect": "restore_stat:str; gain_stat:str",
-    "power": 20000
+    "power": 20000,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_intelligence",
@@ -3554,7 +3672,9 @@
     "cost": 8000,
     "weight": 4,
     "effect": "restore_stat:int; gain_stat:int",
-    "power": 20000
+    "power": 20000,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_wisdom",
@@ -3567,7 +3687,9 @@
     "cost": 8000,
     "weight": 4,
     "effect": "restore_stat:wis; gain_stat:wis",
-    "power": 20000
+    "power": 20000,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_dexterity",
@@ -3580,7 +3702,9 @@
     "cost": 8000,
     "weight": 4,
     "effect": "restore_stat:dex; gain_stat:dex",
-    "power": 20000
+    "power": 20000,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_constitution",
@@ -3593,7 +3717,9 @@
     "cost": 8000,
     "weight": 4,
     "effect": "restore_stat:con; gain_stat:con",
-    "power": 20000
+    "power": 20000,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_augmentation",
@@ -3632,7 +3758,9 @@
     "cost": 200,
     "weight": 4,
     "effect": "heal:60:0; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; nourish:200",
-    "power": 9
+    "power": 9,
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "potion_of_healing",
@@ -3645,7 +3773,9 @@
     "cost": 800,
     "weight": 4,
     "effect": "heal:300:35; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:amnesia; nourish:200",
-    "power": 12
+    "power": 12,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_potion_of_healing",
@@ -3684,7 +3814,9 @@
     "cost": 350,
     "weight": 4,
     "effect": "restore_mana",
-    "power": 20
+    "power": 20,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_restore_life_levels",
@@ -3697,7 +3829,9 @@
     "cost": 400,
     "weight": 4,
     "effect": "restore_exp",
-    "power": 8
+    "power": 8,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_brawn",
@@ -3710,7 +3844,9 @@
     "cost": 1000,
     "weight": 4,
     "effect": "restore_stat:str; gain_stat:str; drain_stat:!str",
-    "power": 30
+    "power": 30,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_intellect",
@@ -3723,7 +3859,9 @@
     "cost": 1000,
     "weight": 4,
     "effect": "restore_stat:int; gain_stat:int; drain_stat:!int",
-    "power": 25
+    "power": 25,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_contemplation",
@@ -3736,7 +3874,9 @@
     "cost": 1000,
     "weight": 4,
     "effect": "restore_stat:wis; gain_stat:wis; drain_stat:!wis",
-    "power": 25
+    "power": 25,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_nimbleness",
@@ -3749,7 +3889,9 @@
     "cost": 1000,
     "weight": 4,
     "effect": "restore_stat:dex; gain_stat:dex; drain_stat:!dex",
-    "power": 25
+    "power": 25,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_toughness",
@@ -3762,7 +3904,9 @@
     "cost": 1000,
     "weight": 4,
     "effect": "restore_stat:con; gain_stat:con; drain_stat:!con",
-    "power": 30
+    "power": 30,
+    "stackSize": "2",
+    "pileChance": 10
   },
   {
     "id": "potion_of_enlightenment",
@@ -3775,7 +3919,9 @@
     "cost": 800,
     "weight": 4,
     "effect": "enlightenment",
-    "power": 22
+    "power": 22,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_potion_of_enlightenment",
@@ -3801,7 +3947,9 @@
     "cost": 25,
     "weight": 4,
     "effect": "heal:10:0; cure:afraid; timed:hero:1d25+25",
-    "power": 7
+    "power": 7,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_berserk_strength",
@@ -3814,7 +3962,9 @@
     "cost": 80,
     "weight": 4,
     "effect": "heal:30:0; cure:afraid; timed:berserk:1d25+25",
-    "power": 8
+    "power": 8,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_resist_heat",
@@ -3827,7 +3977,9 @@
     "cost": 30,
     "weight": 4,
     "effect": "timed:oppose_fire:1d10+50",
-    "power": 4
+    "power": 4,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_resist_cold",
@@ -3840,7 +3992,9 @@
     "cost": 30,
     "weight": 4,
     "effect": "timed:oppose_cold:1d10+50",
-    "power": 4
+    "power": 4,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_resist_poison",
@@ -3853,7 +4007,9 @@
     "cost": 30,
     "weight": 4,
     "effect": "timed:oppose_pois:1d10+50; cure:poisoned",
-    "power": 4
+    "power": 4,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_true_seeing",
@@ -3866,7 +4022,9 @@
     "cost": 50,
     "weight": 4,
     "effect": "cure:blind; timed:see_invisible:2d6+50",
-    "power": 7
+    "power": 7,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_infravision",
@@ -3879,7 +4037,9 @@
     "cost": 20,
     "weight": 4,
     "effect": "timed:infravision:4d25+100",
-    "power": 5
+    "power": 5,
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_slime_mold_juice",
@@ -3891,7 +4051,9 @@
     "maxDepth": 10,
     "cost": 2,
     "weight": 4,
-    "effect": "nourish:2000"
+    "effect": "nourish:2000",
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "potion_of_blindness",
@@ -3903,7 +4065,9 @@
     "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:blind:4d25+75"
+    "effect": "timed:blind:4d25+75",
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "potion_of_poison",
@@ -3915,7 +4079,9 @@
     "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:poisoned:2d7+10"
+    "effect": "timed:poisoned:2d7+10",
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "potion_of_slowness",
@@ -3927,7 +4093,9 @@
     "maxDepth": 10,
     "cost": 0,
     "weight": 4,
-    "effect": "timed:slow:1d25+15; nourish:200"
+    "effect": "timed:slow:1d25+15; nourish:200",
+    "stackSize": "2d3",
+    "pileChance": 70
   },
   {
     "id": "potion_of_surprise",
@@ -3939,7 +4107,9 @@
     "maxDepth": 15,
     "cost": 0,
     "weight": 4,
-    "effect": "random:5; timed:scrambled:1d20+20; shapechange:bat; drain_stat:int; drain_stat:wis; timed:stoneskin:1d20+20"
+    "effect": "random:5; timed:scrambled:1d20+20; shapechange:bat; drain_stat:int; drain_stat:wis; timed:stoneskin:1d20+20",
+    "stackSize": "2",
+    "pileChance": 25
   },
   {
     "id": "potion_of_salt_water",
@@ -3951,7 +4121,8 @@
     "maxDepth": 15,
     "cost": 0,
     "weight": 4,
-    "effect": "set_food:400; cure:poisoned; timed:paralyzed:4"
+    "effect": "set_food:400; cure:poisoned; timed:paralyzed:4",
+    "stackSize": "1d2"
   },
   {
     "id": "potion_of_dragon_breath",
@@ -3964,7 +4135,8 @@
     "cost": 100,
     "weight": 4,
     "effect": "breath:fire/cold:80",
-    "power": 8
+    "power": 8,
+    "stackSize": "1d2"
   },
   {
     "id": "wand_of_magic_missile",

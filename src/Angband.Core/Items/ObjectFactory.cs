@@ -68,9 +68,12 @@ public sealed class ObjectFactory(GameData data)
         var kind = PickKind(rng, level, filter);
         if (kind is null) return null;
 
-        var item = Create(kind, Math.Max(1, kind.StackSize.Roll(rng)));
+        var item = Create(kind, 1);
         item.OriginDepth = level;
         ApplyMagic(rng, item, level, good, great);
+        // Angband make_object: then, unless it became an artifact, perhaps a pile of them.
+        if (!item.IsArtifact && kind.PileChance >= rng.RandInt1(100))
+            item.Number = Math.Max(1, kind.StackSize.Roll(rng));
         return item;
     }
 

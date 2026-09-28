@@ -325,8 +325,7 @@ def sync_objects(gd, data):
             continue
         before = json.dumps(o, sort_keys=True)
         ob = o["base"]
-        if t != "gold":
-            o["level"] = int(cw.one(e, "level", "0"))
+        o["level"] = int(cw.one(e, "level", "0"))
         o["cost"] = int(cw.one(e, "cost", "0"))
         o["weight"] = int(cw.one(e, "weight", "0"))
         alloc = cw.one(e, "alloc")
@@ -360,8 +359,9 @@ def sync_objects(gd, data):
             set_or_pop(o, key, v.replace(" ", "") if v else None, None)
         set_or_pop(o, "power", int(cw.one(e, "power", "0")), 0)
         pile = cw.one(e, "pile")
-        if ob in cw.AMMO or "stackSize" in o:
-            set_or_pop(o, "stackSize", pile.split(":")[1] if pile else None, None)
+        chance, _, stack = (pile or "100:1").partition(":")
+        set_or_pop(o, "stackSize", stack if stack != "1" else None, None)
+        set_or_pop(o, "pileChance", int(chance), 100)
         if cw.get(e, "effect") and not cw.get(e, "expr"):
             eff, miss = oi.effects(e)
             field = "activation" if (o.get("activation") or ob not in (

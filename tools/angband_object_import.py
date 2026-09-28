@@ -44,7 +44,8 @@ TIMED = {"FAST": "fast", "BLESSED": "blessed", "HERO": "hero", "SHERO": "berserk
          "PROTEVIL": "prot_evil", "SINVIS": "see_invisible", "SINFRA": "infravision", "TELEPATHY": "telepathy",
          "CONFUSED": "confused", "PARALYZED": "paralyzed", "BLIND": "blind", "POISONED": "poisoned", "SLOW": "slow",
          "STUN": "stun", "CUT": "cut", "AFRAID": "afraid", "TERROR": "terror", "STONESKIN": "stoneskin",
-         "SPRINT": "sprint", "STEALTH": "stealth", "ATT_CONF": "att_conf", "SCRAMBLE": "scrambled"}
+         "SPRINT": "sprint", "STEALTH": "stealth", "ATT_CONF": "att_conf", "SCRAMBLE": "scrambled",
+         "AMNESIA": "amnesia", "IMAGE": "image", "OPP_CONF": "oppose_conf"}
 ELEMENTS = {"ACID": "acid", "ELEC": "elec", "FIRE": "fire", "COLD": "cold", "POIS": "pois", "LIGHT": "light",
             "DARK": "dark", "NETHER": "nether", "MISSILE": "none", "MANA": "none", "HOLY_ORB": "none",
             "WATER": "none", "PLASMA": "fire", "ICE": "cold", "SHARD": "shards", "SOUND": "sound", "CHAOS": "chaos",
