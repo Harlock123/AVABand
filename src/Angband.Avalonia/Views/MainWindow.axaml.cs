@@ -31,6 +31,65 @@ public partial class MainWindow : Window
         // A click on a prompt's line picks it, as its letter does (caught before the list selects it).
         foreach (var name in new[] { "PromptList", "SpellPromptList", "ChoiceList" })
             this.FindControl<ListBox>(name)?.AddHandler(PointerPressedEvent, OnPromptRowPressed, RoutingStrategies.Tunnel);
+        // A press becomes a click on release, or a drag (onto the hotbar) once it moves.
+        AddHandler(PointerMovedEvent, OnPendingMoved, RoutingStrategies.Tunnel, handledEventsToo: true);
+        AddHandler(PointerReleasedEvent, OnPendingReleased, RoutingStrategies.Tunnel, handledEventsToo: true);
+        AddHandler(DragDrop.DragOverEvent, OnHotbarDragOver);
+        AddHandler(DragDrop.DropEvent, OnHotbarDrop);
+    }
+
+    /// <summary>Hotbar drags carry "item:serial", "spell:id" or "slot:n" (in this process only).</summary>
+    public static readonly DataFormat<string> HotbarFormat = DataFormat.CreateStringApplicationFormat("avaband-hotbar");
+
+    /// <summary>How far (pixels) a press must move to become a drag.</summary>
+    private const double DragThreshold = 6;
+
+    private (global::Avalonia.Point Start, string? Payload, Action? Click)? _pending;
+
+    private void BeginPending(PointerPressedEventArgs e, string? payload, Action? click) =>
+        _pending = (e.GetPosition(this), payload, click);
+
+    private async void OnPendingMoved(object? sender, PointerEventArgs e)
+    {
+        if (_pending is not { Payload: { } payload } pending) return;
+        var at = e.GetPosition(this);
+        if (Math.Abs(at.X - pending.Start.X) < DragThreshold && Math.Abs(at.Y - pending.Start.Y) < DragThreshold) return;
+        _pending = null;
+        var data = new DataTransfer();
+        data.Add(DataTransferItem.Create(HotbarFormat, payload));
+        await DragDrop.DoDragDropAsync(e, data, DragDropEffects.Copy | DragDropEffects.Move);
+    }
+
+    private void OnPendingReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_pending is not { } pending) return;
+        _pending = null;
+        pending.Click?.Invoke();
+    }
+
+    private static HotbarSlotRow? HotbarSlotAt(object? source) =>
+        (source as global::Avalonia.Visual)?.GetSelfAndVisualAncestors().OfType<Control>()
+            .Select(c => c.DataContext).OfType<HotbarSlotRow>().FirstOrDefault();
+
+    private void OnHotbarDragOver(object? sender, DragEventArgs e)
+    {
+        var ours = e.DataTransfer.TryGetValue(HotbarFormat) is not null && HotbarSlotAt(e.Source) is not null;
+        e.DragEffects = ours ? DragDropEffects.Copy : DragDropEffects.None;
+    }
+
+    private void OnHotbarDrop(object? sender, DragEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel vm || HotbarSlotAt(e.Source) is not { } slot
+            || e.DataTransfer.TryGetValue(HotbarFormat) is not { } payload) return;
+        vm.DropOnHotbar(slot.Index, payload);
+        e.Handled = true;
+    }
+
+    /// <summary>An item row in the sidebar: pressing and moving drags it onto the hotbar.</summary>
+    private void OnItemRowPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if ((sender as Control)?.DataContext is ItemRow row && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            BeginPending(e, MainWindowViewModel.DragPayload(row.Item), null);
     }
 
     /// <summary>A hotbar slot: left-click uses it (or fills an empty one), right-click changes it.</summary>
@@ -39,7 +98,7 @@ public partial class MainWindow : Window
         if (DataContext is not MainWindowViewModel vm || (sender as Control)?.DataContext is not HotbarSlotRow slot) return;
         e.Handled = true;
         if (e.GetCurrentPoint(this).Properties.IsRightButtonPressed) vm.OpenHotbarMenu(slot.Index);
-        else vm.UseHotbar(slot.Index);
+        else BeginPending(e, vm.Game.Hotbar[slot.Index] is null ? null : MainWindowViewModel.DragPayload(slot.Index), () => vm.UseHotbar(slot.Index));
     }
 
     private void OnPromptRowPressed(object? sender, PointerPressedEventArgs e)
@@ -48,7 +107,8 @@ public partial class MainWindow : Window
         if (DataContext is not MainWindowViewModel vm) return;
         var row = (e.Source as global::Avalonia.Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext;
         var letter = row switch { ItemRow r => r.Letter, SpellRow s => s.Letter, ChoiceRow c => c.Letter, _ => null };
-        if (letter is { Length: > 0 }) vm.PromptKey(letter[0]);
+        var payload = row switch { ItemRow r => MainWindowViewModel.DragPayload(r.Item), SpellRow s => MainWindowViewModel.DragPayload(s.Spell), _ => null };
+        if (letter is { Length: > 0 }) BeginPending(e, payload, () => vm.PromptKey(letter[0])); // picked on release
     }
 
     private MainWindowViewModel? _subscribed;

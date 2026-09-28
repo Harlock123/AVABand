@@ -109,4 +109,51 @@ public class HotbarUiTests
         Assert.Equal("Hotbar slot 2:", vm.PromptTitle);
         Assert.True(vm.IsPrompting);
     }
+
+    private static Point SlotCentre(MainWindow window, int index)
+    {
+        window.CaptureRenderedFrame();
+        var slot = window.GetVisualDescendants().OfType<Border>().First(b => b.DataContext is HotbarSlotRow r && r.Index == index);
+        return slot.TranslatePoint(new Point(slot.Bounds.Width / 2, slot.Bounds.Height / 2), window)!.Value;
+    }
+
+    private static void Drop(MainWindow window, int slot, string payload)
+    {
+        var data = new DataTransfer();
+        data.Add(DataTransferItem.Create(MainWindow.HotbarFormat, payload));
+        var at = SlotCentre(window, slot);
+        window.DragDrop(at, global::Avalonia.Input.Raw.RawDragEventType.DragEnter, data, DragDropEffects.Copy, RawInputModifiers.None);
+        window.DragDrop(at, global::Avalonia.Input.Raw.RawDragEventType.DragOver, data, DragDropEffects.Copy, RawInputModifiers.None);
+        window.DragDrop(at, global::Avalonia.Input.Raw.RawDragEventType.Drop, data, DragDropEffects.Copy, RawInputModifiers.None);
+    }
+
+    [AvaloniaFact]
+    public void DroppingAnItem_OrASpell_OnASlot_FillsIt_AndSlotsSwapByDragging()
+    {
+        var (window, vm) = Open("mage");
+        var game = vm.Game;
+        var potion = game.Player.Inventory.Pack.First(i => i.Kind.Id == "cure_light_wounds");
+        Drop(window, 2, MainWindowViewModel.DragPayload(potion));
+        Assert.Equal(HotbarEntry.ForKind("cure_light_wounds"), game.Hotbar[2]);
+        Assert.Equal("x2", vm.HotbarSlots[2].Detail);
+
+        var spell = game.ClassSpells.First(s => game.HasBookFor(s));
+        if (!game.Player.LearnedSpells.Contains(spell.Id)) game.Player.LearnedSpells.Add(spell.Id);
+        vm.BeginSpellPrompt(SpellPromptKind.Cast); // dragged out of the spell list: the list closes
+        Drop(window, 5, MainWindowViewModel.DragPayload(spell));
+        Assert.False(vm.IsPrompting);
+        Assert.Equal(HotbarEntry.ForSpell(spell.Id), game.Hotbar[5]);
+
+        Drop(window, 5, MainWindowViewModel.DragPayload(2)); // slot 3 onto slot 6: they swap
+        Assert.Equal(HotbarEntry.ForKind("cure_light_wounds"), game.Hotbar[5]);
+        Assert.Equal(HotbarEntry.ForSpell(spell.Id), game.Hotbar[2]);
+
+        // Armour can't be used from the hotbar; a spell not learned isn't taken.
+        var armour = game.Player.Inventory.Equipped.First(i => i.Base.Slot == Angband.Core.Definitions.EquipSlot.Body);
+        Drop(window, 0, MainWindowViewModel.DragPayload(armour));
+        Assert.Null(game.Hotbar[0]);
+        Assert.EndsWith("can't be used from the hotbar.", vm.LastMessage);
+        var unknown = game.ClassSpells.First(s => !game.Player.LearnedSpells.Contains(s.Id));
+        Assert.False(vm.DropOnHotbar(0, MainWindowViewModel.DragPayload(unknown)));
+    }
 }

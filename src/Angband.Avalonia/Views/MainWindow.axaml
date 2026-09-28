@@ -10,7 +10,7 @@
         Background="Black">
   <Window.Resources>
     <DataTemplate x:Key="ItemRowTemplate" x:DataType="vm:ItemRow">
-      <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1">
+      <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1" Background="Transparent" PointerPressed="OnItemRowPressed">
         <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
                    FontFamily="{StaticResource MonoFont}" FontSize="12" Margin="0,0,4,0" />
         <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
@@ -182,7 +182,7 @@
     <!-- The hotbar (AVABand's own): spells and items on Alt+1..Alt+0; click to use, right-click to change. -->
     <LayoutTransformControl DockPanel.Dock="Bottom" LayoutTransform="{Binding InterfaceTransform}" IsVisible="{Binding ShowHotbar}">
       <Border Background="#0a0a0a" BorderBrush="#222" BorderThickness="0,1,0,0" Padding="6,4">
-        <ItemsControl x:Name="Hotbar" ItemsSource="{Binding HotbarSlots}" HorizontalAlignment="Center">
+        <ItemsControl x:Name="Hotbar" ItemsSource="{Binding HotbarSlots}" HorizontalAlignment="Center" DragDrop.AllowDrop="True">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate><WrapPanel Orientation="Horizontal" /></ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>

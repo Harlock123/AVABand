@@ -539,7 +539,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     as if picked from the list (asking where to aim, or whether to overexert, as usual), an item
     is used as `X` would use it, asking first if its inscription says so (`!*`). An empty slot
     asks what to put there; right-click or Alt+Shift+digit offers *Put a spell here*, *Put an item
-    here* or *Clear this slot*, through the usual spell and item lists. Items go by kind, so a slot
+    here* or *Clear this slot*, through the usual spell and item lists. Or drag: an item from the
+    sidebar (or from any item list), a spell from the spell list, dropped on a slot, fills it; a
+    slot dragged onto another swaps the two (a click still uses a slot, and still picks a line from
+    a list — a press only becomes a drag once it moves). Items go by kind, so a slot
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.

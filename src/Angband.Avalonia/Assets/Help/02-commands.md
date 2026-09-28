@@ -27,7 +27,9 @@
 - `C` character sheet, `~` knowledge (monsters, objects, runes, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home and your history), `=` options, Ctrl+P message history.
 
 **The hotbar** under the map holds ten spells or items: **Alt+1** to **Alt+0**, or a click, uses
-one. Click an empty slot to fill it; right-click (or Alt+Shift+digit) to change or clear it. Items
+one. Click an empty slot to fill it, or drag an item from the sidebar or a spell from the spell
+list onto a slot; drag a slot onto another to swap them; right-click (or Alt+Shift+digit) to change
+or clear it. Items
 go by kind, so the slot keeps working as you find more.
 
 **F1** shows every command with the keys you actually have.

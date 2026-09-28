@@ -114,6 +114,50 @@ public sealed partial class MainWindowViewModel
         UseItemAsked(ItemPromptKind.UseAny, item);
     }
 
+    /// <summary>What a drag carries to the hotbar: "item:serial", "spell:id" or "slot:n".</summary>
+    public static string DragPayload(Item item) => $"item:{item.Serial}";
+    public static string DragPayload(Angband.Core.Definitions.SpellDef spell) => $"spell:{spell.Id}";
+    public static string DragPayload(int slot) => $"slot:{slot}";
+
+    /// <summary>
+    /// Something dropped on a hotbar slot: an item (by its kind, if it is one that can be used), a
+    /// spell you know, or another slot (the two swap). True if the slot took it.
+    /// </summary>
+    public bool DropOnHotbar(int slot, string payload)
+    {
+        if (slot is < 0 or >= GameSession.HotbarSize || IsConfirming || _game.Player.IsDead) return false;
+        if (IsPrompting) CancelPrompt(); // dragged out of an item or spell list
+        var (kind, value) = payload.IndexOf(':') is var i and > 0 ? (payload[..i], payload[(i + 1)..]) : ("", "");
+        switch (kind)
+        {
+            case "slot" when int.TryParse(value, out var from) && from is >= 0 and < GameSession.HotbarSize && from != slot:
+                var moved = _game.Hotbar[from];
+                _game.SetHotbar(from, _game.Hotbar[slot]);
+                _game.SetHotbar(slot, moved);
+                LastMessage = $"Hotbar slots {HotbarKey(from)} and {HotbarKey(slot)} swapped.";
+                break;
+            case "item" when long.TryParse(value, out var serial)
+                             && _game.Player.Inventory.All.Concat(_game.Level.Objects.At(_game.Player.Position))
+                                 .FirstOrDefault(it => it.Serial == serial) is { } item:
+                if (UseKind(item) is null)
+                {
+                    AddMessage($"{Capitalize(_game.Describe(item))} can't be used from the hotbar.");
+                    return false;
+                }
+                _game.SetHotbar(slot, HotbarEntry.ForKind(item.Kind.Id));
+                LastMessage = $"Alt+{HotbarKey(slot)} now uses {ObjectInfo.KindName(_game, item.Kind)}.";
+                break;
+            case "spell" when _data.Spell(value) is { } spell && _game.Player.LearnedSpells.Contains(spell.Id):
+                _game.SetHotbar(slot, HotbarEntry.ForSpell(spell.Id));
+                LastMessage = $"Alt+{HotbarKey(slot)} now casts {spell.Name}.";
+                break;
+            default:
+                return false;
+        }
+        Refresh();
+        return true;
+    }
+
     /// <summary>Right-click or Alt+Shift+digit: put a spell or an item in the slot, or clear it.</summary>
     public void OpenHotbarMenu(int slot)
     {
