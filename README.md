@@ -69,7 +69,7 @@ AVABand.sln
 ├─ src/Angband.Audio       Sound: OpenAL engine, WAV/Ogg/MP3 decoders, sound packs, event→sound director
 ├─ src/Angband.Input       Input actions, rebindable key/button bindings, SDL2 gamepad provider
 ├─ src/Angband.Avalonia    MVVM front end (CommunityToolkit.Mvvm), DrawingContext map control
-├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures), perf/ (deep-dungeon speed check)
+├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures), perf/ (deep-dungeon speed check), compare_with_angband.py (data drift from 4.2.5)
 ├─ tests/Angband.Tests          xUnit tests for the core systems
 └─ tests/Angband.Avalonia.Tests Headless UI tests (real window, simulated keyboard)
 ```
@@ -426,6 +426,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   version that changed the save format (named by commit), and `OldSaveTests` loads each, plays on,
   goes down a level and saves it again in today's format. `tools/old-saves/make-old-save.sh
   <commit>` builds that commit in a scratch worktree and writes a new one.
+- **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
+  compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
+  spells), race, shape, trap, terrain feature and store with 4.2.5's own files, reusing the
+  importers' parsing, and writes a Markdown report of every field that differs
+  (`docs/angband-4.2.5-data-drift.md` is its latest run). The class spells all match; most monster
+  differences are one importer default (smell 20 where 4.2.5 has none); the rest — hand-made
+  early monsters, several monster spells' damage, blow effects' to-hit, some egos and artifacts,
+  class skills and experience factors — are listed there to be put right.
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so
