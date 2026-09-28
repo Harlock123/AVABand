@@ -169,6 +169,7 @@ public static class ObjectInfo
     {
         "cut" => "cuts", "confused" => "confusion", "poisoned" => "poison", "stun" => "stunning", "blind" => "blindness",
         "afraid" => "fear", "slow" => "slowness", "paralyzed" => "paralysis", "image" => "hallucination",
+        "free_act" => "free action", "oppose_conf" => "resistance to confusion", "bold" => "boldness", "amnesia" => "amnesia",
         _ => (data.Timed(id)?.Name ?? id).ToLowerInvariant(),
     };
 

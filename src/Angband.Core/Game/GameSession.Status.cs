@@ -46,7 +46,7 @@ public sealed partial class GameSession
             if (Player.Inventory.Equipped.Any(i => i.Resists.Contains("chaos"))) LearnRune(Definitions.RuneIds.Resist("chaos"));
             return false;
         }
-        if (id == TimedIds.Afraid && (Player.Timed.Has(TimedIds.Hero) || Player.Timed.Has("berserk")))
+        if (id == TimedIds.Afraid && (Player.Timed.Has(TimedIds.Hero) || Player.Timed.Has("berserk") || Player.Timed.Has("bold")))
         {
             Publish(new MessageEvent("You feel bold."));
             return true;
@@ -59,7 +59,7 @@ public sealed partial class GameSession
             Publish(new MessageEvent(message));
             Publish(new StatusChangedEvent(id, Player.Timed[id]));
         }
-        if (id is TimedIds.Hero or "berserk" && Player.Timed.Has(TimedIds.Afraid) && Data.Timed(TimedIds.Afraid) is { } fear
+        if (id is TimedIds.Hero or "berserk" or "bold" && Player.Timed.Has(TimedIds.Afraid) && Data.Timed(TimedIds.Afraid) is { } fear
             && Player.Timed.Set(fear, 0) is { } bold)
             Publish(new MessageEvent(bold));
         RecalculateBonuses();

@@ -296,5 +296,29 @@
     "onBegin": "You feel your body mending!",
     "onEnd": "Your body stops mending so quickly.",
     "harmful": false
+  },
+  {
+    "id": "free_act",
+    "name": "FrAct",
+    "onBegin": "Your limbs fill with energy!",
+    "onEnd": "Your limbs return to normal.",
+    "onIncrease": "Your limbs feel more energetic!",
+    "harmful": false
+  },
+  {
+    "id": "oppose_conf",
+    "name": "RConf",
+    "onBegin": "You feel resistant to confusion!",
+    "onEnd": "You are no longer resistant to confusion.",
+    "onIncrease": "You feel more resistant to confusion!",
+    "harmful": false
+  },
+  {
+    "id": "bold",
+    "name": "Bold",
+    "onBegin": "You feel bold.",
+    "onEnd": "You no longer feel bold.",
+    "onIncrease": "You feel even bolder!",
+    "harmful": false
   }
 ]

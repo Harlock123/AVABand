@@ -156,10 +156,14 @@ public sealed partial class GameSession
         }
         if (timed.Has("grim_purpose"))
         {
-            // Too focused to be slowed, paralyzed or confused.
+            // (An older AVABand status for Grim Purpose, kept so saves with it still load.)
             resists["free_act"] = Math.Max(resists.GetValueOrDefault("free_act"), 1);
             resists["conf"] = Math.Max(resists.GetValueOrDefault("conf"), 1);
         }
+        // Angband player_timed.txt flag-synonyms: while these last they are the protection itself.
+        if (timed.Has("free_act")) resists["free_act"] = Math.Max(resists.GetValueOrDefault("free_act"), 1);
+        if (timed.Has("oppose_conf")) resists["conf"] = Math.Max(resists.GetValueOrDefault("conf"), 1);
+        if (timed.Has("bold")) resists["fear"] = Math.Max(resists.GetValueOrDefault("fear"), 1);
         if (ClassHas(ClassFlags.Unlight)) resists["dark"] = Math.Max(resists.GetValueOrDefault("dark"), 1);
         if (ClassHas(ClassFlags.BlessWeapon) && weapon is not null && (weapon.Base.Id == "hafted" || weapon.Flags.Contains("BLESSED")))
         {

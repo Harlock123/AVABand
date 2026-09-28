@@ -421,7 +421,7 @@
     "name": "Grim Purpose",
     "realm": "shadow",
     "book": "into_the_shadows",
-    "effect": "timed:grim_purpose:12+1d12",
+    "effect": "timed:oppose_conf:12+1d12; timed:free_act:12+1d12",
     "description": "Makes your mind too focused to be slowed, paralyzed or confused.",
     "classes": {
       "blackguard": {

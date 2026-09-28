@@ -573,6 +573,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   Resisting the element (or the status — free action, protection from confusion, stunning,
   blindness) stops the side effect as in 4.2. Plasma, ice, water, gravity, inertia, force and time
   are their own kinds now, not fire and cold: no gear resists them, as in 4.2.
+- **Temporary protections** (4.2's flag-synonym statuses): *free action* and *resistance to
+  confusion* (the blackguard's Grim Purpose gives both; the Mushroom of Clear Mind the second, for
+  7d7+50 turns) and *boldness* (a Pint of Fine Wine, 79–120 turns, which also drives fear out) act
+  as the matching protection while they last; temporary infravision comes from the Potion of
+  Infravision.
 - **Amnesia** (`amnesia`, Angband's TMD_AMNESIA): the monster spell *forget* ("tries to make you
   forget things"; a saving throw — "You retain your presence of mind." — keeps it off) and very
   strong darkness bring it on. While it lasts you can't read ("You can't remember how to read!"),
@@ -879,8 +884,7 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: 4.2's timed free action, protection from confusion, infravision and
-boldness from potions, mushrooms and activations, and the Black Breath. (*of Fury* stays out: in
+Natural next steps: the Black Breath. (*of Fury* stays out: in
 4.2.5 its weapon types are commented out, so it is never made.)
 
 ## Licence

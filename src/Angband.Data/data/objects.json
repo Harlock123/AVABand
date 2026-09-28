@@ -1139,7 +1139,7 @@
     "cost": 2,
     "weight": 10,
     "description": "A fine way to wash down some otherwise unappetising rations.",
-    "effect": "nourish:600; cure:afraid"
+    "effect": "nourish:600; timed:bold:1d41+79"
   },
   {
     "id": "sip_of_miruvor",
@@ -1226,7 +1226,7 @@
     "maxDepth": 40,
     "cost": 200,
     "weight": 1,
-    "effect": "restore_mana; cure:confused; cure:image; cure:afraid; nourish:1000"
+    "effect": "restore_mana; cure:confused; cure:image; cure:afraid; timed:oppose_conf:7d7+50; nourish:1000"
   },
   {
     "id": "mushroom_of_emergency",
