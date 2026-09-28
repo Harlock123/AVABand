@@ -273,7 +273,7 @@ public sealed partial class GameSession
     }
 
     /// <summary>Whether the class chooses the spells it learns (Angband CHOOSE_SPELLS); priests and paladins don't.</summary>
-    public bool ChoosesSpells => ClassHas("CHOOSE_SPELLS");
+    public bool ChoosesSpells => ClassHas(ClassFlags.ChooseSpells);
 
     /// <summary>The books (object kinds) holding a spell the player could learn now.</summary>
     public IReadOnlyList<string> StudyableBooks() => [.. StudyableSpells().Select(s => s.Book).Distinct()];

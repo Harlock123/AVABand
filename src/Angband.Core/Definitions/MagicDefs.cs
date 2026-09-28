@@ -89,6 +89,10 @@ public static class ClassFlags
     public const string ZeroFail = "ZERO_FAIL";
     public const string FastShot = "FAST_SHOT";
     public const string Charm = "CHARM";
+    /// <summary>Picks the spells it learns; without it a book's spell is granted at random.</summary>
+    public const string ChooseSpells = "CHOOSE_SPELLS";
+    /// <summary>Resists nether, but holy attacks hurt more (Angband 4.2 player-calcs.c).</summary>
+    public const string Evil = "EVIL";
 }
 
 /// <summary>A player race (Angband p_race.txt).</summary>

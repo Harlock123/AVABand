@@ -276,6 +276,8 @@ public sealed partial class GameSession
             damage = CombatMath.ResistElement(Rng, element, damage, Player.Resists.GetValueOrDefault(elementId));
             if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(elementId))) LearnRune(RuneIds.Resist(elementId));
         }
+        else if (elementId is not null && Player.Resists.GetValueOrDefault(elementId) < 0)
+            damage = damage * 4 / 3; // Angband adjust_dam: vulnerable (the evil, to holy orbs)
         TakeHit(damage, killer);
         // Then what the element does besides (Angband project_player's handlers).
         if (elementId is not null && !Player.IsDead) ElementSideEffects(elementId, damage, power, source);

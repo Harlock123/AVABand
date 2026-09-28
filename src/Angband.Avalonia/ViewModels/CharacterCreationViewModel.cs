@@ -201,6 +201,8 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             ClassFlags.ZeroFail => "spells can reach 0% failure",
             ClassFlags.FastShot => "shoots faster with a bow as levels rise",
             ClassFlags.Charm => "extra persuasive to animals",
+            ClassFlags.ChooseSpells => "chooses which spells to learn",
+            ClassFlags.Evil => "resists nether, but holy attacks hurt more",
             _ => Readable(f),
         }));
         var realm = cls?.Realm is { } r ? _data.Realm(r) : null;

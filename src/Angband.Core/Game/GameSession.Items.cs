@@ -165,6 +165,12 @@ public sealed partial class GameSession
         if (timed.Has("oppose_conf")) resists["conf"] = Math.Max(resists.GetValueOrDefault("conf"), 1);
         if (timed.Has("bold")) resists["fear"] = Math.Max(resists.GetValueOrDefault("fear"), 1);
         if (ClassHas(ClassFlags.Unlight)) resists["dark"] = Math.Max(resists.GetValueOrDefault("dark"), 1);
+        if (ClassHas(ClassFlags.Evil))
+        {
+            // Angband calc_bonuses: the evil resist nether and are vulnerable to holy orbs.
+            resists["nether"] = Math.Max(resists.GetValueOrDefault("nether"), 1);
+            resists["holy_orb"] = -1;
+        }
         if (ClassHas(ClassFlags.BlessWeapon) && weapon is not null && (weapon.Base.Id == "hafted" || weapon.Flags.Contains("BLESSED")))
         {
             // Angband: a paladin fights better with a blessed or hafted weapon.

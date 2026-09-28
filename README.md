@@ -316,7 +316,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     — [Into the Shadows], [Dark Rituals] and [Fear and Torment] in the Bookseller, [Deadly Powers]
     in the dungeon): **unlight** — they start with the torch in the pack, see squares within
     1 + level/6 without light, resist darkness, get one less light from lamps, and fail 25% more
-    often on a lit square. Rituals: nether bolt, sense invisible, create darkness, bat form, read
+    often on a lit square; and **evil** (4.2's EVIL flag) — they resist nether but holy orbs hurt
+    them a third more. Rituals: nether bolt, sense invisible, create darkness, bat form, read
     minds (detect minds and map around them), tap unlife (drain an undead into mana), crush (kill
     everything in view under 4× your level in HP, at a cost), sleep evil, shadow shift,
     disenchant, frighten, vampire strike (leap to a living monster and drink), dispel life, dark

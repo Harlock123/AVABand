@@ -410,7 +410,7 @@
     },
     "flags": [
       "UNLIGHT",
-      "ZERO_FAIL", "CHOOSE_SPELLS"],
+      "ZERO_FAIL", "CHOOSE_SPELLS", "EVIL"],
     "startingKit": [
       {
         "kind": "main_gauche",
