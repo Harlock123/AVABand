@@ -40,4 +40,5 @@ it returns when you regain it, or with a Potion of Restore Life Levels.
 `C` shows everything: stats, skills, resistances, and a paper doll of what you wear. **Save to
 file** writes it to a text file, as Angband's character dumps. At the end is your **history** — when
 you set out, each level reached, each unique killed, each artifact found — and `:` adds a note of
-your own to it.
+your own to it. An artifact gone for good (left on a level, or sold off by a shop) is marked
+**(LOST)**, and one you never found but lost anyway reads "Missed the ...".

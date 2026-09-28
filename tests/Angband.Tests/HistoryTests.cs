@@ -1,3 +1,4 @@
+using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Core.Geometry;
 using Angband.Core.Persistence;
@@ -69,5 +70,94 @@ public class HistoryTests
         Assert.Contains("[Player history]", dump);
         Assert.Contains("      Turn   Depth  Note", dump);
         Assert.Contains("0'  -- Note: remember the ring", dump);
+    }
+
+    // --- Artifacts missed and lost (history_lose_artifact) ---------------------------------------
+
+    private static GameSession Born(bool loseArts)
+    {
+        var spec = CharacterSpec.Default("human", "warrior") with
+        {
+            Options = new Dictionary<string, bool> { [OptionIds.LoseArtifacts] = loseArts },
+        };
+        return GameSession.NewGame(TestData.Game, 21, spec);
+    }
+
+    private static void TakeStairsDown(GameSession game)
+    {
+        game.Player.Position = game.Level.FindFeature(TerrainFlags.DownStair).First();
+        game.Execute(new TakeStairsCommand(Down: true));
+    }
+
+    /// <summary>Leaves the Phial on this level, somewhere the player has never seen.</summary>
+    private static void HideThePhial(GameSession game)
+    {
+        var phial = game.Objects.CreateArtifact(TestData.Game.Artifacts.Single(a => a.Id == "galadriel"));
+        var far = game.Level.AllLocs().First(p => game.Level.IsEmptyFloor(p)
+            && !game.Level[p].Has(Angband.Core.World.SquareFlags.Seen) && !game.Known.IsKnown(p));
+        game.Level.Objects.Add(far, phial);
+    }
+
+    [Fact]
+    public void AnArtifactNeverFound_IsMissed_WhenLeftBehindForGood()
+    {
+        var game = Born(loseArts: true);
+        TakeStairsDown(game);
+        HideThePhial(game);
+        TakeStairsDown(game);
+
+        var missed = Assert.Single(game.History, h => h.Artifact == "galadriel");
+        Assert.Equal("Missed the Phial of Galadriel", missed.Text);
+        Assert.True(missed.Lost);
+        Assert.Contains("Missed the Phial of Galadriel (LOST)", CharacterDump.Build(game));
+    }
+
+    [Fact]
+    public void AnArtifactNeverFound_IsNotMissed_WhenItMayComeBack()
+    {
+        var game = Born(loseArts: false);
+        TakeStairsDown(game);
+        HideThePhial(game);
+        TakeStairsDown(game);
+        Assert.DoesNotContain(game.History, h => h.Artifact == "galadriel");
+    }
+
+    [Fact]
+    public void AnArtifactFound_ThenLeftBehind_IsMarkedLost_AndStaysSoInTheSave()
+    {
+        var game = Born(loseArts: false);
+        TakeStairsDown(game);
+        var phial = game.Objects.CreateArtifact(TestData.Game.Artifacts.Single(a => a.Id == "galadriel"));
+        game.Knowledge.LearnKind(phial.Kind);
+        foreach (var rune in phial.Runes()) game.Knowledge.LearnRune(rune);
+        game.Level.Objects.Add(game.Player.Position, phial);
+        game.UpdateView();
+        var found = Assert.Single(game.History, h => h.Artifact == "galadriel");
+        Assert.StartsWith("Found ", found.Text, StringComparison.Ordinal);
+        Assert.False(found.Lost);
+
+        TakeStairsDown(game);
+        var lost = Assert.Single(game.History, h => h.Artifact == "galadriel");
+        Assert.True(lost.Lost);
+        Assert.Equal(found.Text + " (LOST)", lost.Shown);
+
+        using var stream = new MemoryStream();
+        SaveGame.Save(game, stream);
+        stream.Position = 0;
+        Assert.Equal(game.History, SaveGame.Load(TestData.Game, stream).History);
+    }
+
+    [Fact]
+    public void AnArtifactSoldOffByAShop_IsLost()
+    {
+        var game = Born(loseArts: false);
+        var store = game.Stores["general"];
+        var phial = game.Objects.CreateArtifact(TestData.Game.Artifacts.Single(a => a.Id == "galadriel"));
+        store.Stock.Add(phial);
+        for (var i = 0; i < 1000 && store.Stock.Contains(phial); i++) game.Maintain(store);
+
+        Assert.DoesNotContain(phial, store.Stock);
+        var missed = Assert.Single(game.History, h => h.Artifact == "galadriel");
+        Assert.True(missed.Lost);
     }
 }

@@ -134,15 +134,19 @@ public sealed partial class GameSession
 
     /// <summary>
     /// Leaving a level (Angband generate.c): an artifact left lying there that the player never found
-    /// may be generated again later — unless birth_lose_arts is set, when everything left is lost.
+    /// may be generated again later; one the player found is lost for good, as is everything left
+    /// when birth_lose_arts is set (and the history says so: history_lose_artifact).
     /// </summary>
     private void PreserveUnfoundArtifacts()
     {
-        if (Options[OptionIds.LoseArtifacts]) return;
         var left = Level.Objects.All.Select(o => (o.Loc, o.Item))
             .Concat(Level.Monsters.All.SelectMany(m => m.Carried.Select(i => (Loc: m.Position, Item: i))));
         foreach (var (loc, item) in left)
-            if (item.Artifact is { } art && !ArtifactFound(item, loc)) Objects.CreatedArtifacts.Remove(art.Id);
+        {
+            if (item.Artifact is not { } art) continue;
+            if (Options[OptionIds.LoseArtifacts] || ArtifactFound(item, loc)) LoseArtifact(art);
+            else Objects.CreatedArtifacts.Remove(art.Id);
+        }
     }
 
     /// <summary>Whether the player has come across an artifact (seen it, or known it for what it is).</summary>

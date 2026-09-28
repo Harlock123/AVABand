@@ -228,6 +228,8 @@ public sealed class HistorySave
     public long Turn { get; set; }
     public int Depth { get; set; }
     public string Text { get; set; } = "";
+    public string? Artifact { get; set; }
+    public bool Lost { get; set; }
 }
 
 public sealed class LevelSave

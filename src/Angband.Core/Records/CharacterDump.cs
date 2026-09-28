@@ -170,7 +170,7 @@ public static class CharacterDump
             Section("Player history");
             Line("      Turn   Depth  Note");
             foreach (var h in game.History)
-                Line($"{h.Turn,10}{h.Depth * 50,7}'  {h.Text}");
+                Line($"{h.Turn,10}{h.Depth * 50,7}'  {h.Shown}");
         }
 
         var messages = recentMessages?.ToList();

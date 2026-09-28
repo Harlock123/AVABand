@@ -432,7 +432,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Character dumps and scores** (`Angband.Core/Records`): `C` opens the character sheet, a
   plain-text dump in the style of Angband's (summary, stats with race/class adjustments, skills,
   a per-slot resistance grid that shows unknown runes as `?`, equipment, pack, quiver, home, spells
-  with failure rates, uniques slain, the player history — the start of the quest, levels reached, uniques killed, artifacts found and your notes (`:`) — last messages), under a **paper doll**: your character in
+  with failure rates, uniques slain, the player history — the start of the quest, levels reached, uniques killed, artifacts found and your notes (`:`); an artifact gone for good — left behind on a level, or sold off by a shop — is marked "(LOST)", and one never found reads "Missed the Phial of Galadriel", as Angband 4.2's history does — last messages), under a **paper doll**: your character in
   the middle and each piece of equipment where it is worn — head, amulet, body armour and boots
   down the centre, light, weapon, left ring and gloves on one side, bow, shield, right ring and
   cloak on the other — drawn with the map's own tiles (or coloured letters in ASCII mode), named,

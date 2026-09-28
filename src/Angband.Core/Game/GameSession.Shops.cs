@@ -106,7 +106,8 @@ public sealed partial class GameSession
         var def = store.Def;
         if (def.Home) return;
 
-        if (def.BlackMarket) store.Stock.RemoveAll(i => !BlackMarketOk(i));
+        if (def.BlackMarket)
+            foreach (var item in store.Stock.Where(i => !BlackMarketOk(i)).ToList()) RemoveStock(store, item);
 
         if (def.Turnover > 0)
         {
@@ -156,8 +157,15 @@ public sealed partial class GameSession
                 if (item.Kind.Charges is not null) item.Charges -= num * item.Charges / item.Number;
             }
         }
-        if (num >= item.Number) store.Stock.Remove(item);
+        if (num >= item.Number) RemoveStock(store, item);
         else item.Number -= num;
+    }
+
+    /// <summary>A shop gets rid of a pile; an artifact among them is lost for good (Angband store_delete).</summary>
+    private void RemoveStock(Store store, Item item)
+    {
+        store.Stock.Remove(item);
+        if (item.Artifact is { } art) LoseArtifact(art);
     }
 
     /// <summary>Angband store_create_item: a plain staple (no magic, no stack yet).</summary>
@@ -457,7 +465,7 @@ public sealed partial class GameSession
             // Everything about it becomes known to the store (and the player: Angband learns the runes on a sale).
             Knowledge.LearnKind(sold.Kind);
             foreach (var rune in sold.Runes()) Knowledge.LearnRune(rune);
-            StoreCarry(store, sold);
+            if (StoreCarry(store, sold) is null && sold.Artifact is { } art) LoseArtifact(art); // the store threw it away
         }
         SortStock(store);
         Player.Gold += price;
