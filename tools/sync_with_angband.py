@@ -746,9 +746,60 @@ def sync_traps(gd, data):
     print(f"traps: {len(out)} written ({len([t for t in out if t['id'] not in ours])} new)")
 
 
+def sync_terrain(gd, data):
+    path = os.path.join(data, "terrain.json")
+    raw = open(path, encoding="utf-8").read()
+    ours = json.loads(raw)
+    by_name = {t["name"].lower(): t for t in ours}
+    records = cw.parse_records(os.path.join(gd, "terrain.txt"), start="code")
+    vocab = {f.lower().replace("_", "") for r in records for f in cw.flag_list(r, "flags")}
+    hdr = os.path.normpath(os.path.join(gd, "..", "..", "src", "list-terrain-flags.h"))
+    if os.path.exists(hdr):
+        vocab |= {m.lower().replace("_", "") for m in re.findall(r"^TF\((\w+)", open(hdr, encoding="utf-8").read(), re.M)}
+    enum = open(os.path.join(data, "..", "..", "Angband.Core", "Definitions", "TerrainFlags.cs"), encoding="utf-8").read()
+    ours_names = {n.lower(): n for n in re.findall(r"^\s+(\w+) = ", enum, re.M)}
+    name_to_id = {}
+    for r in records:
+        t = by_name.get(cw.TERRAIN_ALIASES.get(cw.one(r, "name").lower(), cw.one(r, "name").lower()))
+        if t:
+            name_to_id[r["name"]] = t["id"]
+    changed = 0
+    for r in records:
+        t = by_name.get(cw.TERRAIN_ALIASES.get(cw.one(r, "name").lower(), cw.one(r, "name").lower()))
+        if t is None:
+            continue
+        before = json.dumps(t, sort_keys=True)
+        glyph, col = cw.graphics(r)
+        t["color"] = trap_colour(col)
+        set_or_pop(t, "priority", int(cw.one(r, "priority", "0")), 0)
+        theirs = []
+        for f in cw.flag_list(r, "flags"):
+            n = ours_names.get(f.lower().replace("_", ""))
+            if n is None:
+                print(f"terrain: {t['id']}: 4.2.5 flag {f} has no AVABand name")
+            else:
+                theirs.append(n)
+        kept = [f for f in t.get("flags", []) if f.lower().replace("_", "") not in vocab]
+        t["flags"] = [f for f in t.get("flags", []) if f in theirs] + [f for f in theirs if f not in t.get("flags", [])] + kept
+        set_or_pop(t, "digDifficulty", int(cw.one(r, "digging", "0")), 0)
+        m = cw.one(r, "mimic")
+        set_or_pop(t, "mimic", name_to_id.get(m, m) if m else None, None)
+        changed += json.dumps(t, sort_keys=True) != before
+    # terrain.json keeps its own layout: the entry, then its flags on a line of their own.
+    out = []
+    for t in ours:
+        head = {k: v for k, v in t.items() if k != "flags"}
+        line = "  { " + json.dumps(head, ensure_ascii=False)[1:-1]
+        line += ",\n    \"flags\": " + json.dumps(t.get("flags", []), ensure_ascii=False) + " }" if "flags" in t else " }"
+        out.append(line)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join(out) + "\n]\n")
+    print(f"terrain: {changed} of {len(ours)} brought into line")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
-            "races": sync_races, "shapes": sync_shapes, "traps": sync_traps}
+            "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain}
 
 
 def main():

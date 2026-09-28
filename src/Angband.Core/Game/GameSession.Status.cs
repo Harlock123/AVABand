@@ -97,6 +97,23 @@ public sealed partial class GameSession
         LearnRune(Definitions.RuneIds.Flag(Definitions.ItemFlags.DrainExp));
     }
 
+    /// <summary>
+    /// Angband player_take_terrain_damage: standing in lava burns — 100 + 1d100 fire, resisted as
+    /// fire and halved by feather falling (lightfooted) — and may burn what you carry.
+    /// </summary>
+    private void TerrainDamage()
+    {
+        if (Player.IsDead || !Level.Has(Player.Position, Definitions.TerrainFlags.Fiery)) return;
+        var damage = 100 + Rng.RandInt1(100);
+        if (Player.HasGearFlag(Definitions.ItemFlags.Feather))
+        {
+            damage /= 2;
+            LearnRune(Definitions.RuneIds.Flag(Definitions.ItemFlags.Feather));
+        }
+        Publish(new MessageEvent("The lava burns you!"));
+        ElementalHit("fire", damage, "burning to a cinder in lava");
+    }
+
     /// <summary>A body of stone (Angband player flag ROCK, from the Púkel-man's shape).</summary>
     private bool IsRock => PlayerShape?.Flags.Contains("ROCK") == true;
 

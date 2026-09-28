@@ -442,10 +442,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
   spells), race, shape, trap, terrain feature and store with 4.2.5's own files, reusing the
   importers' parsing, and writes a Markdown report of every field that differs
-  (`docs/angband-4.2.5-data-drift.md` is its latest run). The class spells all match; most monster
-  differences are one importer default (smell 20 where 4.2.5 has none); the rest — hand-made
-  early monsters, several monster spells' damage, blow effects' to-hit, some egos and artifacts,
-  class skills and experience factors — are listed there to be put right.
+  (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category now matches: 0 field
+  differences across 1,697 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
+  conversions while keeping ids and AVABand's own fields. What remains is listed there too: the 14
+  special artifact kinds (4.2.5 makes those from artifact.txt), and 4.2.5 properties AVABand
+  models another way (the decoy and door locks aren't traps; EASY_KNOW; the "air swing" curse).
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so

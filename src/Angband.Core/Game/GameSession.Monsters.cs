@@ -98,6 +98,10 @@ public sealed partial class GameSession
     public bool CanSmell(Monster monster) =>
         monster.Race.Smell > 0 && Scent.Age(monster.Position) <= monster.Race.Smell;
 
+    /// <summary>Angband monster_hates_grid: lava, for a monster that isn't immune to fire.</summary>
+    private bool HatesGrid(Monster monster, Loc p) =>
+        Level.Has(p, TerrainFlags.Fiery) && !monster.Race.Has("IM_FIRE");
+
     /// <summary>Directions to try, best first.</summary>
     private IEnumerable<Direction> ChooseMove(Monster monster)
     {
@@ -109,7 +113,7 @@ public sealed partial class GameSession
         var here = monster.Position;
         var candidates = DirectionExtensions.Compass
             .Select(d => (Dir: d, To: here.Step(d)))
-            .Where(c => Level.InBounds(c.To))
+            .Where(c => Level.InBounds(c.To) && !HatesGrid(monster, c.To))
             .ToList();
 
         if (monster.IsAfraid) return FleeMoves(monster, candidates);

@@ -239,6 +239,8 @@ public sealed partial class GameSession : ITurnHandler
     private void SpendAndAdvance(int energy)
     {
         Player.Energy -= energy;
+        TerrainDamage();
+        if (Player.IsDead) return;
         if (!Player.Timed.Has("covertracks")) Scent.Lay(Level, Player.Position); // Angband: no scent while covering tracks
         UpdateView(); // monsters react to where the player is now
         Scheduler.Advance(this);

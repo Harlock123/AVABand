@@ -14,7 +14,8 @@ trap you know of tries to disarm it, as `D` does; `-` walks onto it on purpose. 
 magical, disarmed with your magical disarming skill; the rest with the physical one. Feather
 falling lets you float down pits and trap doors unhurt, and trap immunity keeps you safe from all.
 Locked doors may take several tries (opening retries by itself). Rubble and walls can be
-tunnelled (`T`), faster with a digger.
+tunnelled (`T`), faster with a digger. Lava burns whoever stands in it (fire resistance and
+feather falling soften it); most monsters won't set foot in it.
 
 ## Stairs
 
