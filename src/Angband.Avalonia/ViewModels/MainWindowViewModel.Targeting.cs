@@ -15,7 +15,7 @@ public enum CursorMode { None, Look, Target }
 // Firing, throwing, aimed spells and devices then use the target while it stays valid.
 public sealed partial class MainWindowViewModel
 {
-    private List<Monster> _cursorMonsters = [];
+    private List<Loc> _cursorSpots = [];
     private int _cursorIndex;
     private bool _cursorFree;
     private Loc _cursor;
@@ -55,28 +55,24 @@ public sealed partial class MainWindowViewModel
             StepCursor(+1);
             return;
         }
-        _cursorMonsters = mode == CursorMode.Target
-            ? _game.TargetableMonsters().ToList()
-            : _game.Level.Monsters.All.Where(m => m.IsVisible)
-                .OrderBy(m => m.Position.DistanceTo(_game.Player.Position)).ThenBy(m => m.Id).ToList();
-        if (_cursorMonsters.Count == 0 && mode == CursorMode.Look)
-        {
-            AddMessage("You see no monsters.");
-            return;
-        }
+        // Target mode steps through the monsters that can be shot; look mode through everything of
+        // interest nearby (Angband target_set_interactive), and with nothing there it starts free.
+        _cursorSpots = mode == CursorMode.Target
+            ? [.. _game.TargetableMonsters().Select(m => m.Position)]
+            : [.. _game.LookSpots()];
         CursorMode = mode;
         _cursorIndex = 0;
-        _cursorFree = _cursorMonsters.Count == 0;
-        _cursor = _cursorFree ? _game.Player.Position : _cursorMonsters[0].Position;
+        _cursorFree = _cursorSpots.Count == 0;
+        _cursor = _cursorFree ? _game.Player.Position : _cursorSpots[0];
         ShowCursor();
     }
 
     private void StepCursor(int delta)
     {
-        if (_cursorMonsters.Count == 0) return;
+        if (_cursorSpots.Count == 0) return;
         _cursorFree = false;
-        _cursorIndex = ((_cursorIndex + delta) % _cursorMonsters.Count + _cursorMonsters.Count) % _cursorMonsters.Count;
-        _cursor = _cursorMonsters[_cursorIndex].Position;
+        _cursorIndex = ((_cursorIndex + delta) % _cursorSpots.Count + _cursorSpots.Count) % _cursorSpots.Count;
+        _cursor = _cursorSpots[_cursorIndex];
         ShowCursor();
     }
 
@@ -90,7 +86,9 @@ public sealed partial class MainWindowViewModel
 
     private void ShowCursor()
     {
-        var hints = IsTargeting ? "[t] target, [space] next, [p] free, [Esc] done" : "[r] recall, [t] target, [x] next, [Esc] done";
+        var hints = IsTargeting ? "[t] target, [space] next, [p] free, [Esc] done"
+            : LookedAt is not null ? "[r] recall, [t] target, [space] next, [-] back, [Esc] done"
+            : "[t] target, [space] next, [-] back, [Esc] done";
         string what;
         if (LookedAt is { } m)
         {
@@ -183,7 +181,7 @@ public sealed partial class MainWindowViewModel
     private void StopLooking()
     {
         CursorMode = CursorMode.None;
-        _cursorMonsters = [];
+        _cursorSpots = [];
         OnPropertyChanged(nameof(LookedAt));
         OnPropertyChanged(nameof(Cursor));
         Revision++;

@@ -487,8 +487,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     given the resistances, protections and saving throw you know you have (gear whose rune you
     haven't learned doesn't count), as Angband's `spell_color` does; resistances are umber and
     weaknesses violet. The recall window (now wrapped) and the Monsters tab of `~` both show them.
-  `x` looks at visible monsters in turn — "The cave orc (wounded, asleep)" — with `r` for the
-  recall and Esc to stop; the Monsters tab of `~` (Game → Knowledge) lists everything met, with kills.
+  `x` looks at everything of interest nearby in turn, nearest first, as Angband's look does — the
+  monsters in view ("The cave orc (wounded, asleep)", `r` for the recall), the traps you know of,
+  the objects you remember, and the doors, stairs, shops, rubble and treasure veins — with space or
+  `x` for the next, `-` the previous, a direction to roam freely, and Esc to stop (with nothing of
+  interest about it starts on your own square); the Monsters tab of `~` (Game → Knowledge) lists everything met, with kills.
 - **Monster and object lists** (`Game/GameSession.Lists.cs`, `ViewModels/MainWindowViewModel.Lists.cs`;
   Angband 4.2's `mon-list.c`/`ui-mon-list.c` and `obj-list.c`/`ui-obj-list.c`):
   - `[` lists the monsters you can see — "You can see 3 monsters:" — one line per race: "[U]" for

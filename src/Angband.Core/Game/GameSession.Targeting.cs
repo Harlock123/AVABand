@@ -1,4 +1,6 @@
 using Angband.Core.Combat;
+using Angband.Core.Definitions;
+using Angband.Core.World;
 using Angband.Core.Geometry;
 using Angband.Core.Monsters;
 
@@ -85,6 +87,38 @@ public sealed partial class GameSession
         if (!quiet) Publish(new MessageEvent($"{Capitalize(MonsterName(nearest))} is targeted."));
         return true;
     }
+
+    /// <summary>
+    /// Angband look mode's stops (target.c target_accept / target_get_monsters): within range, the
+    /// monsters in view, the traps you know of, the objects you remember and the features worth a look
+    /// (doors, stairs, shops, rubble, treasure veins), nearest first. Your own square counts only when
+    /// something is there. While hallucinating there is nothing to look at.
+    /// </summary>
+    public IReadOnlyList<Loc> LookSpots()
+    {
+        if (IsHallucinating) return [];
+        var spots = new List<Loc>();
+        var me = Player.Position;
+        for (var y = me.Y - MaxRange; y <= me.Y + MaxRange; y++)
+        for (var x = me.X - MaxRange; x <= me.X + MaxRange; x++)
+        {
+            var p = new Loc(x, y);
+            if (!Level.InBoundsFully(p) || p.DistanceTo(me) > MaxRange) continue;
+            if (p != me && Level.Monsters.At(p) is { IsVisible: true, Camouflaged: false })
+                spots.Add(p);
+            else if (Level[p].Trap != 0 && Level[p].Has(SquareFlags.TrapVisible))
+                spots.Add(p);
+            else if (Known.RememberedObject(p) is { } seen && !IsIgnored(seen))
+                spots.Add(p);
+            else if (Known.IsKnown(p) && Data.Terrain[Known.Feature(p)].Has(TerrainFlags.Interesting))
+                spots.Add(p);
+        }
+        return [.. spots.OrderBy(p => p.DistanceTo(me)).ThenBy(p => p.Y).ThenBy(p => p.X)];
+    }
+
+    /// <summary>The trap the player knows of at a square, if any.</summary>
+    public TrapDef? VisibleTrapAt(Loc p) =>
+        Level.InBounds(p) && Level[p].Trap != 0 && Level[p].Has(SquareFlags.TrapVisible) ? Data.TrapByIndex(Level[p].Trap) : null;
 
     public IReadOnlyList<Monster> TargetableMonsters() =>
         Level.Monsters.All

@@ -65,15 +65,75 @@ public sealed class LoreUiTests : IDisposable
         Assert.False(vm.IsLooking);
     }
 
+    /// <summary>A lit, empty room of granite with the player's spot in it.</summary>
+    private static (Angband.Core.World.Level Level, Angband.Core.Geometry.Loc Eye) Room(Angband.Core.Game.GameSession game, int width, int height)
+    {
+        var t = game.Data.Terrain;
+        var level = new Angband.Core.World.Level(t, width, height, 3);
+        foreach (var p in level.AllLocs())
+        {
+            var edge = p.X == 0 || p.Y == 0 || p.X == width - 1 || p.Y == height - 1;
+            level[p].Feature = edge ? t.Ids.Granite : t.Ids.Floor;
+            if (!edge) level[p].Flags |= Angband.Core.World.SquareFlags.Glow | Angband.Core.World.SquareFlags.Room;
+        }
+        return (level, new Angband.Core.Geometry.Loc(3, height / 2));
+    }
+
     [AvaloniaFact]
-    public void X_WithNothingInView_SaysSo()
+    public void X_LooksAtEverythingOfInterest_NotJustMonsters()
     {
         var (window, vm, _) = Open();
-        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
-        vm.Game.UpdateView();
+        var game = vm.Game;
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        game.UpdateView();
+        // In town, with no monsters about, the shops and the stairs are still worth a look.
+        var spots = game.LookSpots();
+        Assert.NotEmpty(spots);
+        Assert.All(spots, p => Assert.True(game.Level.FeatureAt(p).Has(Angband.Core.Definitions.TerrainFlags.Interesting)
+                                           || game.Known.RememberedObject(p) is not null));
         window.KeyPressQwerty(PhysicalKey.X, RawInputModifiers.None);
+        Assert.True(vm.IsLooking);
+        Assert.StartsWith("You see", vm.LastMessage);
+        Assert.Equal(spots[0], vm.Cursor);
+        window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None);
+        if (spots.Count > 1) Assert.Equal(spots[1], vm.Cursor);
+        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
         Assert.False(vm.IsLooking);
-        Assert.Equal("You see no monsters.", vm.LastMessage);
+    }
+
+    [AvaloniaFact]
+    public void X_WithNothingOfInterest_StartsOnYourOwnSquare()
+    {
+        var (window, vm, _) = Open();
+        var game = vm.Game;
+        // A bare room: nothing to look at, so the cursor starts free where you stand (Angband).
+        var (level, eye) = Room(game, 7, 5);
+        game.UseLevel(level, eye);
+        window.KeyPressQwerty(PhysicalKey.X, RawInputModifiers.None);
+        Assert.True(vm.IsLooking);
+        Assert.Equal(game.Player.Position, vm.Cursor);
+        Assert.StartsWith("You are on", vm.LastMessage);
+    }
+
+    [AvaloniaFact]
+    public void Look_DescribesATrapYouKnowOf_AndAnObject()
+    {
+        var (window, vm, _) = Open();
+        var game = vm.Game;
+        var (level, eye) = Room(game, 9, 5);
+        game.UseLevel(level, eye);
+        var trapAt = eye + new Angband.Core.Geometry.Loc(2, 0);
+        game.Level[trapAt].Trap = game.Data.Traps.First(t => !t.Web).Index;
+        game.Level[trapAt].Flags |= Angband.Core.World.SquareFlags.TrapVisible;
+        var daggerAt = eye + new Angband.Core.Geometry.Loc(-1, 1);
+        game.Level.Objects.Add(daggerAt, game.Objects.Create("dagger"));
+        game.UpdateView();
+        Assert.Equal([daggerAt, trapAt], game.LookSpots());
+        window.KeyPressQwerty(PhysicalKey.X, RawInputModifiers.None);
+        Assert.StartsWith("You see a Dagger", vm.LastMessage);
+        window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None);
+        Assert.StartsWith("You see a", vm.LastMessage);
+        Assert.Contains(game.VisibleTrapAt(trapAt)!.Name, vm.LastMessage);
     }
 
     [AvaloniaFact]

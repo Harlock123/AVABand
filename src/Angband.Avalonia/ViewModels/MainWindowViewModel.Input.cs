@@ -311,6 +311,13 @@ public sealed partial class MainWindowViewModel
     {
         if (!_game.Known.IsKnown(p)) return "You know nothing about that place.";
         if (_game.IsHallucinating) return "You see something strange."; // Angband aux_hallucinate
+        if (p == _game.Player.Position && _game.ObjectShownAt(p) is null && _game.VisibleTrapAt(p) is null)
+        {
+            var here = _data.Terrain[_game.Level[p].Feature];
+            return $"You are on {(("aeiou".Contains(here.Name[0])) ? "an" : "a")} {here.Name}.";
+        }
+        if (_game.VisibleTrapAt(p) is { } trap)
+            return $"You see {(("aeiou".Contains(char.ToLowerInvariant(trap.Name[0]))) ? "an" : "a")} {trap.Name}.";
         if (_game.ObjectShownAt(p) is { } shown && _game.Level[p].Has(Angband.Core.World.SquareFlags.Seen))
             return $"You see {_game.Describe(shown)}.";
         var feature = _data.Terrain[_game.Known.Feature(p)];
