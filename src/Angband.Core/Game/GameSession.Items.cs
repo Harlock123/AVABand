@@ -315,7 +315,7 @@ public sealed partial class GameSession
     {
         if (!Player.Inventory.Contains(item)) return 0;
         var dropped = Player.Inventory.Remove(item, Math.Clamp(count, 1, item.Number), () => Objects.NextSerial++);
-        Level.Objects.Add(Player.Position, dropped);
+        DropUnderfoot(dropped);
         Publish(new MessageEvent($"You drop {Describe(dropped)}."));
         Publish(new ItemDroppedEvent(dropped.Kind.Id));
         RecalculateBonuses();
@@ -342,7 +342,7 @@ public sealed partial class GameSession
         {
             if (Player.Inventory.Add(previous) is null)
             {
-                Level.Objects.Add(Player.Position, previous);
+                DropUnderfoot(previous);
                 Publish(new MessageEvent($"You have no room for {Describe(previous)}, so it drops to the floor."));
             }
             else Publish(new MessageEvent($"You were wearing {Describe(previous)}."));
@@ -574,6 +574,20 @@ public sealed partial class GameSession
     }
 
     /// <summary>Drops an object on or near a square, like Angband drop_near.</summary>
+    /// <summary>
+    /// Whether a square takes another object: always, unless birth_stacking is off, when a square
+    /// holds one object (or one stack of like ones) at most (Angband floor_carry / drop_near).
+    /// </summary>
+    private bool FloorAccepts(Loc p, Item item) =>
+        Options[OptionIds.Stacking] || Level.Objects.At(p) is var here && (!here.Any() || here.Any(o => o.CanStackWith(item)));
+
+    /// <summary>Puts something the player lets go of underfoot — or, if that square is full, nearby.</summary>
+    private void DropUnderfoot(Item item)
+    {
+        if (FloorAccepts(Player.Position, item)) Level.Objects.Add(Player.Position, item);
+        else DropNear(item, Player.Position);
+    }
+
     public void DropNear(Item item, Loc near)
     {
         for (var r = 0; r <= 3; r++)
@@ -582,7 +596,7 @@ public sealed partial class GameSession
         {
             if (Math.Max(Math.Abs(dx), Math.Abs(dy)) != r) continue;
             var p = new Loc(near.X + dx, near.Y + dy);
-            if (!Level.InBounds(p) || !Level.Has(p, TerrainFlags.Object)) continue;
+            if (!Level.InBounds(p) || !Level.Has(p, TerrainFlags.Object) || !FloorAccepts(p, item)) continue;
             if (r > 0 && !ProjectionPath.Projectable(Level, near, p, 5)) continue;
             Level.Objects.Add(p, item);
             return;

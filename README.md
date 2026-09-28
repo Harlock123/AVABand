@@ -651,7 +651,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - *Birth* (chosen on the creation screen, fixed for the character's life, saved with it, listed
     in the character dump): random artifacts (below), connected stairs, forced descent (up stairs do nothing; stairs, recall
     and teleport level go below the deepest level reached), no recall (until Morgoth is dead), no
-    artifacts, lose artifacts (otherwise an artifact left behind that you never found can turn up
+    artifacts, stack objects on the floor (off: a square holds one object, or one stack of like
+    ones, so what you drop or what falls rolls to the nearest free square), lose artifacts (otherwise an artifact left behind that you never found can turn up
     again), no selling, the starting kit (without it only one food and one light, the rest as
     gold), know all runes, know all flavours, and **monsters learn from their mistakes** (on by
     default; `Game/GameSession.MonsterLearning.cs`, 4.2's `update_smart_learn` and
@@ -683,8 +684,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - Connected stairs now work as in 4.2.5 (`gen-util.c`): you arrive on a way *back* (an up
     staircase after going down), where AVABand used to put you on a staircase leading onward.
   - Not offered: the roguelike keyset (AVABand's keys are rebindable instead), use sound (see the
-    Sound tab), animate flicker, auto-more, cheat_xtra, and the birth option for floor stacking,
-    which AVABand doesn't have.
+    Sound tab), animate flicker, auto-more and cheat_xtra.
 - **Inscriptions** (`Items/Inscription.cs`, `Game/GameSession.Inscriptions.cs`,
   `ViewModels/MainWindowViewModel.Inscriptions.cs`): Angband's notes on objects. `{` picks an item
   (carried, worn or underfoot) and asks for the text; `}` removes one; neither takes game time.

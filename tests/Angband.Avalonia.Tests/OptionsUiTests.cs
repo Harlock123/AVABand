@@ -143,7 +143,7 @@ public class OptionsUiTests
     public void TheNewBirthOptions_AreInCharacterCreation_AndShownInSettings_AndTakeEffect()
     {
         var (window, vm, _, _) = Open();
-        string[] added = [OptionIds.AiLearn, OptionIds.LevelsPersist, OptionIds.PercentDamage];
+        string[] added = [OptionIds.AiLearn, OptionIds.LevelsPersist, OptionIds.PercentDamage, OptionIds.Stacking];
 
         // Character creation: every birth option, each one to choose.
         var creation = vm.CreateCharacterCreation();

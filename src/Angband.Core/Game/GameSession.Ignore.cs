@@ -164,7 +164,7 @@ public sealed partial class GameSession
         {
             if (Inscription.AsksFirst(item, 'd')) continue;
             inv.Remove(item, item.Number, () => Objects.NextSerial++);
-            Level.Objects.Add(Player.Position, item);
+            DropUnderfoot(item);
             Publish(new MessageEvent($"You drop {Describe(item)}."));
             dropped = true;
         }

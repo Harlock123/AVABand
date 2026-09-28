@@ -33,6 +33,7 @@ public static class OptionIds
     public const string NoRecall = "birth_no_recall";
     public const string NoArtifacts = "birth_no_artifacts";
     public const string LoseArtifacts = "birth_lose_arts";
+    public const string Stacking = "birth_stacking";
     public const string NoSelling = "birth_no_selling";
     public const string StartKit = "birth_start_kit";
     public const string AiLearn = "birth_ai_learn";
@@ -66,6 +67,7 @@ public static class OptionCatalog
         new(OptionIds.ForceDescend, "Force player descent (never make up stairs)", OptionKind.Birth, false),
         new(OptionIds.NoRecall, "Word of Recall has no effect", OptionKind.Birth, false),
         new(OptionIds.NoArtifacts, "Restrict creation of artifacts", OptionKind.Birth, false),
+        new(OptionIds.Stacking, "Stack objects on the floor", OptionKind.Birth, true),
         new(OptionIds.LoseArtifacts, "Lose artifacts when leaving level", OptionKind.Birth, false),
         new(OptionIds.Feelings, "Show level feelings", OptionKind.Birth, true),
         new(OptionIds.NoSelling, "Increase gold drops but disable selling", OptionKind.Birth, true),
