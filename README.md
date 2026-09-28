@@ -563,6 +563,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   energy); chaos hallucinates, confuses and drains; disenchantment dulls your gear; water confuses
   and stuns; ice cuts, stuns and chills the pack; gravity warps you a few squares, slows and stuns;
   inertia slows; force stuns and throws you back; time drains experience or stats; plasma stuns.
+  Balls and breaths reach the floor too (4.2's `project_o`): everything in a ball's radius, or a
+  breath's 30° cone (out to 20 squares), that hates the element is destroyed outright — "The
+  Scrolls of Phase Door burn up!", potions and flasks shatter under cold, ice, sound, shards and
+  force, plasma burns and blasts as fire and lightning, mana destroys anything but artifacts —
+  while artifacts and things proof against it are "unaffected". Your own balls, spheres and arcs
+  do the same, so a fire ball into a pile of scrolls costs you them.
   Resisting the element (or the status — free action, protection from confusion, stunning,
   blindness) stops the side effect as in 4.2. Plasma, ice, water, gravity, inertia, force and time
   are their own kinds now, not fire and cold: no gear resists them, as in 4.2.

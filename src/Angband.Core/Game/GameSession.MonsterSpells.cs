@@ -109,12 +109,16 @@ public sealed partial class GameSession
         switch (spell.Kind)
         {
             case MonsterSpellKind.Bolt:
+                ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Power, monster.Position);
+                break;
             case MonsterSpellKind.Ball:
                 ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Power, monster.Position);
+                DestroyFloorObjects(BallArea(Player.Position, 2), spell.Element); // balls and breaths reach the floor too
                 break;
             case MonsterSpellKind.Breath:
                 ElementalHit(spell.Element, Math.Min(spell.BreathCap, Math.Max(1, monster.Hp / Math.Max(1, spell.BreathDivisor))), killer,
                     race.Power, monster.Position);
+                DestroyFloorObjects(BreathArc(monster.Position, Player.Position), spell.Element);
                 break;
             case MonsterSpellKind.Wound when spell.PowerScaled:
             {
@@ -141,6 +145,7 @@ public sealed partial class GameSession
                 {
                     if (Player.IsDead) break;
                     ElementalHit(element, basis + Rng.Damroll(dice, 5), killer, race.Power, monster.Position);
+                    DestroyFloorObjects(BallArea(Player.Position, 3), element);
                 }
                 break;
             }

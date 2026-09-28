@@ -223,7 +223,7 @@ public static class MonsterFlags
 public static class Projections
 {
     public static readonly IReadOnlySet<string> Unresistable =
-        new HashSet<string>(["water", "ice", "gravity", "inertia", "force", "time", "plasma"], StringComparer.Ordinal);
+        new HashSet<string>(["water", "ice", "gravity", "inertia", "force", "time", "plasma", "mana"], StringComparer.Ordinal);
 }
 
 /// <summary>What a monster spell does.</summary>

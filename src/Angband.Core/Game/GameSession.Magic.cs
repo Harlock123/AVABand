@@ -502,6 +502,7 @@ public sealed partial class GameSession
                      .Where(m => m.Position.DistanceTo(center) <= radius && ProjectionPath.Projectable(Level, center, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(center)).ThenBy(m => m.Id).ToList())
             ProjectileHitsMonster(monster, name, element, damage / (monster.Position.DistanceTo(center) + 1));
+        DestroyFloorObjects(BallArea(center, radius), element);
     }
 
     private void SpellHitsMonster(Monster monster, SpellDef spell, string? element, int damage) =>

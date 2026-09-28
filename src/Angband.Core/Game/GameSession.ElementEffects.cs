@@ -293,7 +293,7 @@ public sealed partial class GameSession
         {
             if (!item.HarmedBy(element)) continue;
             // The name without its number ("Potions of Cure Light Wounds").
-            var name = System.Text.RegularExpressions.Regex.Replace(Describe(item, withArticle: false), @"^\d+ ", "");
+            var name = System.Text.RegularExpressions.Regex.Replace(ItemNaming.Describe(item, Knowledge, withArticle: false, full: false), @"^\d+ ", "");
             var weapon = item.Base.Slot is Definitions.EquipSlot.Weapon or Definitions.EquipSlot.Bow && !item.Base.IsAmmo;
             var armour = item.Base.Slot is Definitions.EquipSlot.Body or Definitions.EquipSlot.Cloak or Definitions.EquipSlot.Shield
                 or Definitions.EquipSlot.Head or Definitions.EquipSlot.Hands or Definitions.EquipSlot.Feet;
@@ -318,4 +318,94 @@ public sealed partial class GameSession
         if (destroyed > 0) RecalculateBonuses();
         return destroyed;
     }
+
+    // --- Things on the floor (Angband project-obj.c project_o) -------------------------------------
+
+    /// <summary>The squares a ball covers: within its radius of the centre, and in the blast's line of fire.</summary>
+    public IEnumerable<Loc> BallArea(Loc centre, int radius)
+    {
+        for (var y = centre.Y - radius; y <= centre.Y + radius; y++)
+        for (var x = centre.X - radius; x <= centre.X + radius; x++)
+        {
+            var p = new Loc(x, y);
+            if (Level.InBounds(p) && p.DistanceTo(centre) <= radius && Combat.ProjectionPath.Projectable(Level, centre, p, radius + 1))
+                yield return p;
+        }
+    }
+
+    /// <summary>
+    /// The squares a breath covers (Angband effect_handler_BREATH): a cone from the breather toward
+    /// its target, <paramref name="degrees"/> wide, out to the full range, in the breath's line of fire.
+    /// </summary>
+    public IEnumerable<Loc> BreathArc(Loc source, Loc target, int degrees = 30, int radius = 0)
+    {
+        if (radius <= 0) radius = MaxRange;
+        var aim = Math.Atan2(target.Y - source.Y, target.X - source.X);
+        var half = degrees / 2.0 * Math.PI / 180;
+        for (var y = source.Y - radius; y <= source.Y + radius; y++)
+        for (var x = source.X - radius; x <= source.X + radius; x++)
+        {
+            var p = new Loc(x, y);
+            if (p == source || !Level.InBounds(p) || p.DistanceTo(source) > radius) continue;
+            var off = Math.Abs(Math.IEEERemainder(Math.Atan2(p.Y - source.Y, p.X - source.X) - aim, 2 * Math.PI));
+            // Squares right beside the breather are always caught (Angband's diameter of source).
+            if (off > half && p.DistanceTo(source) > 1) continue;
+            if (Combat.ProjectionPath.Projectable(Level, source, p, radius + 1)) yield return p;
+        }
+    }
+
+    /// <summary>What a kind of blast destroys on the floor: those that hate these (plasma is fire and lightning).</summary>
+    private static string[] FloorHazards(string element) => element switch
+    {
+        "plasma" => ["fire", "elec"],
+        "acid" or "elec" or "fire" or "cold" or "sound" or "shards" or "ice" or "force" => [element],
+        _ => [],
+    };
+
+    /// <summary>
+    /// Angband project_o: a ball or breath destroys every object in its area that hates its element —
+    /// potions shatter, scrolls burn up — unless it is an artifact or proof against it ("The Mithril
+    /// Arrows are unaffected!"); mana destroys anything but artifacts. What you see go is reported.
+    /// Returns how many objects (stacks) were destroyed.
+    /// </summary>
+    public int DestroyFloorObjects(IEnumerable<Loc> area, string? element)
+    {
+        if (element is null) return 0;
+        var mana = element == "mana";
+        var hazards = FloorHazards(element);
+        if (!mana && hazards.Length == 0) return 0;
+        var destroyed = 0;
+        foreach (var p in area.ToList())
+        {
+            foreach (var item in Level.Objects.At(p).ToList())
+            {
+                var hated = mana || hazards.Any(h => item.Base.Hates.Contains(h));
+                if (!hated) continue;
+                var seen = Level[p].Has(World.SquareFlags.Seen) && !IsIgnored(item);
+                var name = System.Text.RegularExpressions.Regex.Replace(ItemNaming.Describe(item, Knowledge, withArticle: false, full: false), @"^\d+ ", "");
+                var many = item.Number > 1;
+                var proof = !mana && hazards.All(h => !item.Base.Hates.Contains(h) || !item.HarmedBy(h));
+                if (item.Artifact is not null || proof)
+                {
+                    if (seen) Publish(new MessageEvent($"The {name} {(many ? "are" : "is")} unaffected!"));
+                    continue;
+                }
+                var verb = mana ? (many ? "are destroyed" : "is destroyed") : FloorVerb(hazards.First(h => item.HarmedBy(h)), many);
+                if (seen) Publish(new MessageEvent($"The {name} {verb}!"));
+                Level.Objects.Remove(p, item);
+                destroyed++;
+            }
+            if (Level[p].Has(World.SquareFlags.Seen)) Known.RememberObject(p, ObjectShownAt(p));
+        }
+        return destroyed;
+    }
+
+    /// <summary>Angband's words for each element's work on the floor.</summary>
+    private static string FloorVerb(string element, bool many) => element switch
+    {
+        "acid" => many ? "melt" : "melts",
+        "fire" => many ? "burn up" : "burns up",
+        "elec" => many ? "are destroyed" : "is destroyed",
+        _ => many ? "shatter" : "shatters", // cold, sound, shards, ice, force: potions and flasks
+    };
 }

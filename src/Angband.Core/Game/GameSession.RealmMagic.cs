@@ -133,6 +133,7 @@ public sealed partial class GameSession
             if (off > degrees / 2.0) continue;
             ProjectileHitsMonster(m, _effectSource, element, d <= source / 2 ? damage : damage * source / (2 * d));
         }
+        DestroyFloorObjects(BreathArc(Player.Position, aim, degrees, radius), element);
     }
 
     /// <summary>Angband STRIKE: an explosion right at the target (which must be in line of sight).</summary>
@@ -158,6 +159,7 @@ public sealed partial class GameSession
                      .Where(m => m.Position.DistanceTo(Player.Position) <= radius && ProjectionPath.Projectable(Level, Player.Position, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(Player.Position)).ThenBy(m => m.Id).ToList())
             ProjectileHitsMonster(m, _effectSource, element, damage / (m.Position.DistanceTo(Player.Position) + 1));
+        DestroyFloorObjects(BallArea(Player.Position, radius), element);
     }
 
     // --- Knowledge and the lay of the land ------------------------------------------------------------
