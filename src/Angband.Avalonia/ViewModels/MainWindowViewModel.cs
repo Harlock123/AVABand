@@ -96,6 +96,26 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         return all[(int)((uint)hash % (uint)all.Count)];
     }
 
+    /// <summary>
+    /// Angband display_map's priority for a square in the overview map: the player above all, then
+    /// anything drawn over the terrain, then the terrain's own display priority.
+    /// </summary>
+    public int OverviewPriority(Loc p, MapCell cell)
+    {
+        if (p == _game.Player.Position) return int.MaxValue;
+        var level = _game.Level;
+        var seen = ShowWholeMap || level[p].Has(SquareFlags.Seen);
+        var feature = level.Terrain[seen ? level[p].Feature : _game.Known.Feature(p)];
+        if (feature.Mimic is { } mimic) feature = level.Terrain[mimic];
+        return cell.UnderKey is not null ? Math.Max(OverviewMapSource.OnTopPriority, feature.Priority) : feature.Priority;
+    }
+
+    /// <summary>'M': the whole level at a glance.</summary>
+    public event Action<OverviewMapSource>? OverviewRequested;
+
+    [RelayCommand]
+    public void ShowOverviewMap() => OverviewRequested?.Invoke(new OverviewMapSource(this));
+
     /// <summary>What the player knows of the terrain: live when seen, memory otherwise, blank if unknown.</summary>
     private MapCell TerrainCell(Loc p)
     {

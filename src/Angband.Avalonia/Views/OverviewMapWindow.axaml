@@ -1,0 +1,18 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:controls="using:Angband.Avalonia.Controls"
+        x:Class="Angband.Avalonia.Views.OverviewMapWindow"
+        x:DataType="vm:OverviewMapSource"
+        Title="Level map"
+        Width="1180" Height="620"
+        WindowStartupLocation="CenterOwner">
+  <DockPanel Margin="12">
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+      <TextBlock x:Name="Legend" Opacity="0.6" VerticalAlignment="Center" TextWrapping="Wrap" />
+      <Button x:Name="CloseButton" Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" />
+    </Grid>
+    <controls:MapView x:Name="Map" Source="{Binding}" FitToBounds="True" CenterPlayer="True"
+                      UseTiles="{Binding UseTiles}" Tileset="{Binding Tileset}" CellFontSize="{Binding FontSize}" />
+  </DockPanel>
+</Window>

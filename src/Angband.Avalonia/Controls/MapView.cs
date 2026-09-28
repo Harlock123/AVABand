@@ -217,7 +217,7 @@ public sealed class MapView : Control
     {
         if (Source is not { } source || Bounds.Width <= 0 || Bounds.Height <= 0) return 1;
         var fit = Math.Min(Bounds.Width / (source.Width * manifest.TileWidth), Bounds.Height / (source.Height * manifest.TileHeight));
-        return Math.Clamp(Math.Floor(fit * 2) / 2, 0.5, 8);
+        return fit >= 0.5 ? Math.Min(8, Math.Floor(fit * 2) / 2) : Math.Max(0.25, Math.Floor(fit * 4) / 4); // quarter steps below half size (the level map)
     }
 
     /// <param name="panel">The last offset, for panel scrolling (null: always centre on the focus).</param>

@@ -72,6 +72,8 @@
         <MenuItem Header="Object list in the sidebar" Command="{Binding ToggleObjectPanelCommand}"
                   ToggleType="CheckBox" IsChecked="{Binding ShowObjectPanel, Mode=OneWay}" />
         <Separator />
+        <MenuItem Header="Level _map..." Command="{Binding ShowOverviewMapCommand}" InputGesture="Shift+M" />
+        <Separator />
         <MenuItem Header="Zoom _in" Command="{Binding ZoomInCommand}" InputGesture="Ctrl+OemPlus" />
         <MenuItem Header="Zoom _out" Command="{Binding ZoomOutCommand}" InputGesture="Ctrl+OemMinus" />
       </MenuItem>
