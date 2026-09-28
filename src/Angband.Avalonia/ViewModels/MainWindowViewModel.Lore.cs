@@ -48,10 +48,12 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     public void ShowMessageHistory() => MessageHistoryRequested?.Invoke(new MessageHistoryViewModel([.. _history]));
 
-    public MonsterKnowledgeViewModel CreateMonsterKnowledge()
+    /// <param name="symbol">Only the monsters shown with this symbol ('/' then "Recall details?").</param>
+    public MonsterKnowledgeViewModel CreateMonsterKnowledge(char? symbol = null)
     {
         var rows = _data.Monsters
             .Where(r => _lore.Find(r.Id) is { } l && (l.Sights > 0 || l.TotalKills > 0 || l.Deaths > 0))
+            .Where(r => symbol is null || r.Glyph == symbol)
             .OrderBy(r => r.Depth).ThenBy(r => r.Name, StringComparer.Ordinal)
             .Select(r => new MonsterKnowledgeRow(r, r.Glyph.ToString(), _cells.Color(r.Color),
                 _game.CharacterKills.GetValueOrDefault(r.Id), _lore.Find(r.Id)!.TotalKills))

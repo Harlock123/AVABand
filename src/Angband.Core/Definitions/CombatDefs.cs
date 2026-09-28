@@ -227,6 +227,14 @@ public static class Projections
         new HashSet<string>(["water", "ice", "gravity", "inertia", "force", "time", "plasma", "mana"], StringComparer.Ordinal);
 }
 
+/// <summary>A kind of monster and its symbol (Angband monster_base.txt): "o", "Orc".</summary>
+public sealed class MonsterBaseDef
+{
+    public required string Id { get; init; }
+    public required string Glyph { get; init; }
+    public string Description { get; init; } = "";
+}
+
 /// <summary>What a monster spell does.</summary>
 public enum MonsterSpellKind
 {

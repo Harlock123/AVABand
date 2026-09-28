@@ -137,6 +137,29 @@ public sealed class LoreUiTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void Slash_IdentifiesASymbol_AndOffersTheRecallOfThoseMet()
+    {
+        var (window, vm, _) = Open();
+        var game = vm.Game;
+        vm.HandleAction(InputAction.IdentifySymbol);
+        Assert.True(vm.IsChoosingGlyph);
+        Assert.True(vm.ChooseGlyph("Z"));
+        Assert.Equal("Z - Zephyr Hound.", vm.LastMessage); // none met: just the name
+
+        game.Lore.For("cave_orc").Sights++;
+        game.Lore.For("snaga").Sights++;
+        vm.HandleAction(InputAction.IdentifySymbol);
+        vm.ChooseGlyph("o");
+        Assert.Equal("o - Orc.  Recall details? (y/n)", vm.LastMessage);
+        KnowledgeViewModel? shown = null;
+        vm.KnowledgeRequested += k => shown = k;
+        window.KeyPressQwerty(PhysicalKey.Y, RawInputModifiers.None);
+        Assert.NotNull(shown);
+        var met = new[] { "cave_orc", "snaga" }.Select(id => game.Data.Monster(id)!).OrderBy(r => r.Depth).Select(r => r.Id);
+        Assert.Equal(met, shown!.Monsters.Rows.Select(r => r.Race.Id)); // only the orcs met, shallowest first
+    }
+
+    [AvaloniaFact]
     public void Knowledge_ListsWhatYouHaveMet_AndMemoryIsSaved()
     {
         var (window, vm, records) = Open();

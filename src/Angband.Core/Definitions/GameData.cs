@@ -61,6 +61,8 @@ public sealed class GameData
 
     /// <summary>Forms the player can take (Angband shape.txt).</summary>
     public IReadOnlyList<ShapeDef> Shapes { get; init; } = [];
+    /// <summary>The kinds of monster and their symbols (Angband monster_base.txt), for identifying a symbol.</summary>
+    public IReadOnlyList<MonsterBaseDef> MonsterBases { get; init; } = [];
     /// <summary>Words for random names (random artifacts).</summary>
     public IReadOnlyList<string> NameWords { get; init; } = [];
     public ShapeDef? Shape(string id) => Shapes.FirstOrDefault(s => s.Id == id);

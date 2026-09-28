@@ -18,6 +18,7 @@ public static class DataLoader
     public const string ChestTrapsFile = "chest_traps.json";
     public const string QuestsFile = "quests.json";
     public const string ShapesFile = "shapes.json";
+    public const string MonsterBasesFile = "monster_bases.json";
     /// <summary>Words the random artifact namer learns from (Angband names.txt, the Tolkien section).</summary>
     public const string NamesFile = "names.json";
     public const string ProfilesFile = "dungeon_profiles.json";
@@ -98,6 +99,7 @@ public static class DataLoader
         var chestTraps = new Merged<ChestTrapDef>(t => t.Id);
         var quests = new Merged<QuestDef>(q => q.Id);
         var shapes = new Merged<ShapeDef>(s => s.Id);
+        var monsterBases = new Merged<MonsterBaseDef>(b => b.Id);
         List<StartItemDef>? startingKit = null;
         var nameWords = new List<string>();
         var colors = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -129,6 +131,7 @@ public static class DataLoader
             chestTraps.AddRange(Read<List<ChestTrapDef>>(dir, ChestTrapsFile, errors));
             quests.AddRange(Read<List<QuestDef>>(dir, QuestsFile, errors));
             shapes.AddRange(Read<List<ShapeDef>>(dir, ShapesFile, errors));
+            monsterBases.AddRange(Read<List<MonsterBaseDef>>(dir, MonsterBasesFile, errors));
             startingKit = Read<List<StartItemDef>>(dir, StartingKitFile, errors) ?? startingKit;
             nameWords.AddRange(Read<List<string>>(dir, NamesFile, errors) ?? []);
             town = Read<TownJson>(dir, TownFile, errors) ?? town;
@@ -230,6 +233,7 @@ public static class DataLoader
             ChestTraps = chestTraps.Items,
             Quests = quests.Items.OrderBy(q => q.Level).ToList(),
             Shapes = shapes.Items,
+            MonsterBases = monsterBases.Items,
             NameWords = nameWords.Distinct(StringComparer.OrdinalIgnoreCase).ToList(),
             StartingKit = startingKit ?? [],
         };

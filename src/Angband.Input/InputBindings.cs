@@ -112,6 +112,7 @@ public sealed class InputBindings
         K(InputAction.ShowCommands, "F1");
         K(InputAction.Help, "Char:?");
         K(InputAction.TargetClosest, "Char:'");
+        K(InputAction.IdentifySymbol, "Char:/");
         K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");

@@ -116,6 +116,26 @@ public sealed partial class GameSession
         return [.. spots.OrderBy(p => p.DistanceTo(me)).ThenBy(p => p.Y).ThenBy(p => p.X)];
     }
 
+    /// <summary>
+    /// Angband lookup_symbol ('/'): what a symbol stands for — an object, then a feature, then a
+    /// kind of monster — as "o - Orc.".
+    /// </summary>
+    public string IdentifySymbol(char symbol)
+    {
+        if (Data.ObjectBases.FirstOrDefault(b => b.Glyph == symbol) is { } objectBase)
+            return $"{symbol} - {Items.ItemNaming.Plain(objectBase.Name, false)}.";
+        if (Data.Terrain.All.Skip(1).FirstOrDefault(t => t.Glyph == symbol) is { } feature)
+            return $"{symbol} - {feature.Name}.";
+        if (Data.MonsterBases.FirstOrDefault(b => b.Glyph.Length == 1 && b.Glyph[0] == symbol && b.Id != "Morgoth") is { } kind)
+            return $"{symbol} - {kind.Description}.";
+        return $"{symbol} - Unknown Symbol.";
+    }
+
+    /// <summary>The monsters drawn with a symbol that the player has met, weakest first (for recall).</summary>
+    public IReadOnlyList<MonsterRaceDef> KnownMonstersWithSymbol(char symbol) =>
+        [.. Data.Monsters.Where(r => r.Glyph == symbol && Lore.Find(r.Id) is { } l && l.Sights > 0)
+            .OrderBy(r => r.Depth).ThenBy(r => r.Name, StringComparer.Ordinal)];
+
     /// <summary>The trap the player knows of at a square, if any.</summary>
     public TrapDef? VisibleTrapAt(Loc p) =>
         Level.InBounds(p) && Level[p].Trap != 0 && Level[p].Has(SquareFlags.TrapVisible) ? Data.TrapByIndex(Level[p].Trap) : null;

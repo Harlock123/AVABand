@@ -12,8 +12,38 @@ public sealed partial class MainWindowViewModel
     private bool _banishByActivation;
     private bool _confirmResumeShape;
 
-    /// <summary>Waiting for the monster letter to banish.</summary>
-    public bool IsChoosingGlyph => _banishItem is not null;
+    private bool _identifyingSymbol;
+
+    /// <summary>Waiting for a symbol: the monster letter to banish, or the symbol to identify ('/').</summary>
+    public bool IsChoosingGlyph => _banishItem is not null || _identifyingSymbol;
+
+    /// <summary>'/': asks for a symbol to identify (Angband do_cmd_query_symbol).</summary>
+    public void BeginIdentifySymbol()
+    {
+        _identifyingSymbol = true;
+        LastMessage = "Enter character to be identified:";
+    }
+
+    /// <summary>
+    /// Says what a symbol stands for; if you have met monsters shown with it, offers their recall
+    /// ("Recall details?"), which opens the monster knowledge narrowed to them.
+    /// </summary>
+    private void IdentifySymbol(char symbol)
+    {
+        var what = _game.IdentifySymbol(symbol);
+        var known = _game.KnownMonstersWithSymbol(symbol);
+        if (known.Count == 0)
+        {
+            AddMessage(what);
+            return;
+        }
+        AskYesNo($"{what}  Recall details?", yes =>
+        {
+            if (yes) KnowledgeRequested?.Invoke(new KnowledgeViewModel(CreateMonsterKnowledge(symbol), CreateObjectKnowledge(),
+                CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge()));
+            else LastMessage = what;
+        });
+    }
 
     private void BeginGlyphChoice(Item item, bool activate)
     {
@@ -25,6 +55,13 @@ public sealed partial class MainWindowViewModel
     /// <summary>The key typed after a banishment prompt: a monster letter, or Escape to cancel.</summary>
     public bool ChooseGlyph(string symbol)
     {
+        if (_identifyingSymbol)
+        {
+            _identifyingSymbol = false;
+            if (symbol.Length != 1 || char.IsWhiteSpace(symbol[0])) LastMessage = "Cancelled.";
+            else IdentifySymbol(symbol[0]);
+            return true;
+        }
         if (_banishItem is not { } item) return false;
         _banishItem = null;
         if (symbol.Length != 1 || char.IsWhiteSpace(symbol[0]))

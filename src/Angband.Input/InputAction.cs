@@ -71,6 +71,8 @@ public enum InputAction
     /// monster (Angband apostrophe). Added last so saved bindings keep their meaning.
     /// </summary>
     FireNearest, TargetClosest,
+    /// <summary>Identify a symbol (Angband '/'). Added last so saved bindings keep their meaning.</summary>
+    IdentifySymbol,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -160,6 +162,7 @@ public static class InputActions
         InputAction.SwitchPane => "Buy / sell (stores); fire at nearest",
         InputAction.FireNearest => "Fire at nearest",
         InputAction.TargetClosest => "Target closest",
+        InputAction.IdentifySymbol => "Identify a symbol",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

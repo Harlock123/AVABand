@@ -6,7 +6,8 @@ Every monster is a letter (or a tile): `o` orcs, `k` kobolds, `D` dragons, `Z` h
 `h` people. **Uniques** — named foes like Grip, Farmer Maggot's Dog, or Bullroarer — are one of a
 kind: kill one and it never comes back.
 
-Look at a monster (`x` or `l`) to read its **recall**: what you have seen it do, how hard it hits,
+Not sure what a letter is? `/` then the letter says ("o - Orc.") and offers the recall of those
+you have met. Look at a monster (`x` or `l`) to read its **recall**: what you have seen it do, how hard it hits,
 what it resists. You learn more each time you meet or kill one. `~` keeps all of it.
 
 ## How monsters behave
