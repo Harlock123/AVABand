@@ -153,6 +153,13 @@
                       Effects="{Binding Effects}"
                       ClipToBounds="True" />
 
+      <!-- Hover to look: what is under the mouse, at the foot of the map. -->
+      <Border x:Name="HoverLabel" IsVisible="{Binding HoverText, Converter={x:Static ObjectConverters.IsNotNull}}"
+              HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8" Padding="8,3"
+              Background="#CC101218" BorderBrush="#556" BorderThickness="1" CornerRadius="4" IsHitTestVisible="False">
+        <TextBlock Text="{Binding HoverText}" Foreground="#ddd" FontSize="13" />
+      </Border>
+
       <!-- Monster / object list ('[' and ']'), at the top right of the map as in Angband -->
       <Border IsVisible="{Binding IsShowingList}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,12,0"
               MinWidth="360" MaxWidth="560" Background="#101218" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10">

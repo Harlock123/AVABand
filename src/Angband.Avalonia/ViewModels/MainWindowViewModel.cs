@@ -362,6 +362,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
                 effects.Length > 0 ? "  |  " + effects : "",
                 player.Class?.Name ?? "", player.Level, mana, next, player.Name, player.Race?.Name ?? "");
         UpdateHealthBar();
+        UpdateHover();
         OnPropertyChanged(nameof(Map));
         Revision++;
     }

@@ -96,6 +96,27 @@ public sealed class MapView : Control
     /// <summary>Mouse wheel: positive to zoom in, negative to zoom out.</summary>
     public event Action<int>? Zoom;
 
+    /// <summary>The square under the pointer changed (null when it left the map).</summary>
+    public event Action<Angband.Core.Geometry.Loc?>? CellHovered;
+
+    private Angband.Core.Geometry.Loc? _hovered;
+
+    /// <summary>The map square at a point in the view, if it is on the map.</summary>
+    private Angband.Core.Geometry.Loc? CellAt(Point p)
+    {
+        if (Source is null || _camera.Cell.Width <= 0) return null;
+        var x = _camera.OffsetX + (int)Math.Floor((p.X - _camera.OriginX) / _camera.Cell.Width);
+        var y = _camera.OffsetY + (int)Math.Floor((p.Y - _camera.OriginY) / _camera.Cell.Height);
+        return x < 0 || y < 0 || x >= Source.Width || y >= Source.Height ? null : new Angband.Core.Geometry.Loc(x, y);
+    }
+
+    private void Hover(Angband.Core.Geometry.Loc? cell)
+    {
+        if (cell == _hovered) return;
+        _hovered = cell;
+        CellHovered?.Invoke(cell);
+    }
+
     public MapView()
     {
         PointerPressed += (_, e) =>
@@ -109,6 +130,8 @@ public sealed class MapView : Control
             CellClicked?.Invoke(new Angband.Core.Geometry.Loc(x, y), secondary);
             e.Handled = true;
         };
+        PointerMoved += (_, e) => Hover(CellAt(e.GetPosition(this)));
+        PointerExited += (_, _) => Hover(null);
         PointerWheelChanged += (_, e) =>
         {
             Zoom?.Invoke(Math.Sign(e.Delta.Y));

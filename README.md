@@ -889,7 +889,9 @@ the context action, or a game command.
   attacked, a closed door opened), and only that step can be sent astray by confusion. In menus,
   stores, lists and look mode Shift+direction moves like the plain direction. On a gamepad, hold the
   left trigger and press a direction (D-pad or stick) to run.
-- **Mouse**: left-click travels to a known square along the shortest known path (stopping when a
+- **Mouse**: resting the pointer on a square describes it in a small label at the foot of the map
+  ("The cave orc (wounded, asleep)", "A down staircase") without touching the message line (off with
+  the option *Describe the square under the mouse*); left-click travels to a known square along the shortest known path (stopping when a
   monster comes into view or you are hurt; adjacent monsters are attacked); right-click shoots a
   monster or describes the square; the wheel zooms.
 - **Gamepad** (SDL2 via Silk.NET, native libraries for Windows/Linux/macOS; `--no-gamepad` disables):

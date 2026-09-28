@@ -19,6 +19,7 @@ public partial class MainWindow : Window
         if (this.FindControl<MapView>("Map") is { } map)
         {
             map.CellClicked += (loc, secondary) => (DataContext as MainWindowViewModel)?.ClickCell(loc, secondary);
+            map.CellHovered += loc => (DataContext as MainWindowViewModel)?.HoverCell(loc);
             map.Zoom += delta =>
             {
                 if (DataContext is not MainWindowViewModel vm) return;
