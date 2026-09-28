@@ -30,6 +30,13 @@
     "onIncrease": "You are more confused!"
   },
   {
+    "id": "image",
+    "name": "Halluc",
+    "onBegin": "You feel drugged!",
+    "onEnd": "You can see clearly again.",
+    "onIncrease": "You feel more drugged!"
+  },
+  {
     "id": "afraid",
     "name": "Afraid",
     "onBegin": "You are terrified!",

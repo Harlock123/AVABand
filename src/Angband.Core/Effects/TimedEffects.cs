@@ -9,6 +9,8 @@ public static class TimedIds
     public const string Cut = "cut";
     public const string Stun = "stun";
     public const string Confused = "confused";
+    /// <summary>Hallucination (Angband TMD_IMAGE).</summary>
+    public const string Image = "image";
     public const string Afraid = "afraid";
     public const string Paralyzed = "paralyzed";
     public const string Blind = "blind";

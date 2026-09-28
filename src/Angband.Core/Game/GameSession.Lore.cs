@@ -67,6 +67,7 @@ public sealed partial class GameSession
     /// <summary>Angband look_mon_desc: "the cave orc (wounded, asleep)".</summary>
     public string LookDescription(Monster m)
     {
+        if (IsHallucinating) return "something strange"; // Angband aux_hallucinate
         var pct = m.MaxHp <= 0 ? 100 : Math.Max(0, m.Hp) * 100 / m.MaxHp;
         var states = new List<string>
         {

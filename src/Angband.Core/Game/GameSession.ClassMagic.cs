@@ -135,7 +135,7 @@ public sealed partial class GameSession
         var guard = monster.Race.Depth * (monster.Race.IsUnique ? 4 : 3) / 4 + ((IActor)monster).Speed - Player.Speed;
         var dex = Magic.StatTables.ToHit[Magic.StatTables.Index(Player.Stats.GetValueOrDefault("dex", 15))];
         var skill = Player.Stealth + dex;
-        if (Player.IsBlind || Player.Timed.Has(TimedIds.Confused) || Player.Timed.Has("image")) skill /= 4;
+        if (Player.IsBlind || Player.Timed.Has(TimedIds.Confused) || Player.Timed.Has(TimedIds.Image)) skill /= 4;
         if (monster.Sleep > 0) guard /= 2;
         var reaction = guard / 2 + Rng.RandInt1(Math.Max(guard, 1)) + loot.Weight / 20;
 

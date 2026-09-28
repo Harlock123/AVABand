@@ -17,7 +17,7 @@ public sealed partial class GameSession
     /// </summary>
     private void Search()
     {
-        if (Player.IsBlind || Player.Timed.Has(Effects.TimedIds.Confused) || Player.Timed.Has("image") || !StandingInLight)
+        if (Player.IsBlind || Player.Timed.Has(Effects.TimedIds.Confused) || Player.Timed.Has(Effects.TimedIds.Image) || !StandingInLight)
             return;
         foreach (var p in Level.Neighbors(Player.Position))
         {
@@ -45,6 +45,9 @@ public sealed partial class GameSession
     /// room. (A necromancer's unlight lets them see in the dark, but it isn't light to search by.)
     /// </summary>
     private bool StandingInLight => Player.LightRadius > 0 || Level[Player.Position].Has(SquareFlags.Glow);
+
+    /// <summary>Whether the player is hallucinating (Angband TMD_IMAGE): monsters and objects look like anything.</summary>
+    public bool IsHallucinating => Player.Timed.Has(Effects.TimedIds.Image);
 
     /// <summary>Angband do_cmd_hold: stay put for a turn, searching.</summary>
     private int Hold()

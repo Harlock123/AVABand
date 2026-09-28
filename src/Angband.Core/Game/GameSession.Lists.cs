@@ -38,6 +38,7 @@ public sealed partial class GameSession
     /// </summary>
     public IReadOnlyList<VisibleListRow> MonsterList(bool byExperience = false)
     {
+        if (IsHallucinating) return [new VisibleListRow("Your hallucinations are too wild to see things clearly.", "Orange")];
         var entries = new List<MonsterListEntry>();
         foreach (var m in Level.Monsters.All)
         {

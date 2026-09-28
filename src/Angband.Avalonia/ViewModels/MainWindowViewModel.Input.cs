@@ -278,6 +278,7 @@ public sealed partial class MainWindowViewModel
     private string DescribeSquare(Loc p)
     {
         if (!_game.Known.IsKnown(p)) return "You know nothing about that place.";
+        if (_game.IsHallucinating) return "You see something strange."; // Angband aux_hallucinate
         if (_game.ObjectShownAt(p) is { } shown && _game.Level[p].Has(Angband.Core.World.SquareFlags.Seen))
             return $"You see {_game.Describe(shown)}.";
         var feature = _data.Terrain[_game.Known.Feature(p)];

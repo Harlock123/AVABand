@@ -1223,7 +1223,7 @@
     "maxDepth": 40,
     "cost": 200,
     "weight": 1,
-    "effect": "restore_mana; cure:confused; cure:afraid; nourish:1000"
+    "effect": "restore_mana; cure:confused; cure:image; cure:afraid; nourish:1000"
   },
   {
     "id": "mushroom_of_emergency",
@@ -1235,7 +1235,7 @@
     "maxDepth": 100,
     "cost": 60,
     "weight": 1,
-    "effect": "timed:oppose_fire:5d5+25; timed:oppose_cold:5d5+25; heal:200:0; nourish:1000"
+    "effect": "timed:image:5d5+25; timed:oppose_fire:5d5+25; timed:oppose_cold:5d5+25; heal:200:0; nourish:1000"
   },
   {
     "id": "mushroom_of_terror",
@@ -3361,7 +3361,7 @@
     "maxDepth": 100,
     "cost": 5000,
     "weight": 4,
-    "effect": "restore_exp; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; heal:5000:0"
+    "effect": "restore_exp; cure:blind; cure:cut; cure:poisoned; cure:stun; cure:confused; cure:image; restore_stat:str; restore_stat:int; restore_stat:wis; restore_stat:dex; restore_stat:con; heal:5000:0"
   },
   {
     "id": "potion_of_restore_mana",
@@ -4248,7 +4248,7 @@
     "cost": 3500,
     "weight": 50,
     "charges": "2d2",
-    "effect": "dispel:EVIL:120; heal:50:0; timed:prot_evil:1d25+20; cure:poisoned; cure:terror; cure:afraid; cure:stun; cure:cut; cure:slow; cure:blind; cure:confused"
+    "effect": "dispel:EVIL:120; heal:50:0; timed:prot_evil:1d25+20; cure:poisoned; cure:terror; cure:afraid; cure:stun; cure:cut; cure:slow; cure:blind; cure:confused; cure:image"
   },
   {
     "id": "staff_of_light",

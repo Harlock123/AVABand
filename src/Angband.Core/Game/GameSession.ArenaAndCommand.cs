@@ -118,7 +118,7 @@ public sealed partial class GameSession
 
     /// <summary>Angband player_over_exert: a chance (in %) of each harm, of up to <paramref name="amount"/>.</summary>
     private void OverExert(int chance, int amount, bool hp = false, bool cut = false, bool slow = false, bool confuse = false,
-        bool scramble = false, bool con = false)
+        bool scramble = false, bool con = false, bool hallucinate = false)
     {
         if (chance <= 0) return;
         amount = Math.Max(1, amount);
@@ -134,6 +134,7 @@ public sealed partial class GameSession
             IncreaseTimed(TimedIds.Cut, Rng.RandInt1(amount));
         }
         if (confuse && Rng.RandInt0(100) < chance) IncreaseTimed(TimedIds.Confused, Rng.RandInt1(amount));
+        if (hallucinate && Rng.RandInt0(100) < chance) IncreaseTimed(TimedIds.Image, Rng.RandInt1(amount));
         if (slow && Rng.RandInt0(100) < chance)
         {
             Publish(new MessageEvent("You feel suddenly lethargic."));
@@ -152,6 +153,7 @@ public sealed partial class GameSession
         if (Bloodlust <= 0) return;
         IncreaseTimed("bloodlust", 10);
         OverExert(5, 3, confuse: true);
+        OverExert(5, 10, hallucinate: true);
     }
 
     /// <summary>Angband process_world: as the bloodlust fades, the body pays (more, the lower it is).</summary>

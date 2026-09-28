@@ -63,7 +63,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
 
         if (_game.Player.Position == p) return _cells.Player(terrain, _game.Player.Hp, _game.Player.MaxHp);
         if (level.Monsters.At(p) is { } monster && (monster.IsVisible || monster.IsDetected || ShowWholeMap))
-            return _cells.Monster(monster.Race, terrain);
+            return _cells.Monster(_game.IsHallucinating ? Hallucination(_data.Monsters, p) : monster.Race, terrain);
         if (terrain.IsUnknown) return terrain;
 
         ref var sq = ref level[x, y];
@@ -71,6 +71,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         {
             // Ignored objects aren't shown (Angband); 'K' brings them back.
             var pile = level.Objects.At(p).Where(i => !Hidden(i)).ToList();
+            if (pile.Count > 0 && _game.IsHallucinating && Hallucination(_data.Objects, p) is var fake
+                && _data.ObjectBase(fake.Base) is { } fakeBase)
+                return _cells.ObjectKind(fake, fakeBase, terrain);
             if (pile.Count > 0) return _cells.Object(pile[0], pile.Count, _game.Knowledge, terrain);
             if (_game.ObjectShownAt(p) is { } disguise && !Hidden(disguise)) return _cells.Object(disguise, 1, _game.Knowledge, terrain); // a mimic
         }
@@ -80,6 +83,17 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         if (sq.Trap != 0 && (ShowWholeMap || sq.Has(SquareFlags.TrapVisible)) && _data.TrapByIndex(sq.Trap) is { } trap)
             return _cells.Trap(trap, terrain);
         return terrain;
+    }
+
+    /// <summary>
+    /// Angband hallucinatory_monster / hallucinatory_object: while hallucinating, each monster and
+    /// object seen looks like a random one — a new one every turn (not every repaint), and chosen
+    /// without touching the game's random numbers.
+    /// </summary>
+    private T Hallucination<T>(IReadOnlyList<T> all, Loc p)
+    {
+        var hash = HashCode.Combine(p.X, p.Y, _game.NormalTurns);
+        return all[(int)((uint)hash % (uint)all.Count)];
     }
 
     /// <summary>What the player knows of the terrain: live when seen, memory otherwise, blank if unknown.</summary>

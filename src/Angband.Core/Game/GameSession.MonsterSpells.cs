@@ -227,7 +227,31 @@ public sealed partial class GameSession
             if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(elementId))) LearnRune(RuneIds.Resist(elementId));
         }
         TakeHit(damage, killer);
+        if (elementId == "chaos" && !Player.IsDead) ChaosSideEffects();
     }
+
+    /// <summary>
+    /// Angband project_player_handler_CHAOS: unless resisted, chaos makes you hallucinate and
+    /// confuses you, and drains experience (hold life protects).
+    /// </summary>
+    private void ChaosSideEffects()
+    {
+        if (Player.Resists.GetValueOrDefault("chaos") > 0)
+        {
+            Publish(new MessageEvent("You resist the effect!"));
+            return;
+        }
+        IncreaseTimed(TimedIds.Image, Rng.RandInt1(10));
+        if (Player.Resists.GetValueOrDefault("conf") <= 0)
+            IncreaseTimed(TimedIds.Confused, 10 + Rng.RandInt0(20));
+        if (Player.HasGearFlag(ItemFlags.HoldLife) || Player.Resists.GetValueOrDefault("hold_life") > 0) return;
+        var drain = Player.Experience * 3 / (100 * 2) * LifeDrainPercent;
+        Publish(new MessageEvent("You feel your life force draining away!"));
+        LoseExperience(drain);
+    }
+
+    /// <summary>Angband mon-play:life-drain (percent).</summary>
+    private const int LifeDrainPercent = 2;
 
     private void ApplySpellStatus(MonsterSpellDef spell)
     {

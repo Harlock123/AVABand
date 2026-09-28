@@ -404,7 +404,7 @@ public sealed partial class GameSession
             Publish(new MessageEvent("You resist the effects!"));
             return;
         }
-        var scale = effect.DurationScale == "damage" ? damage : monsterLevel;
+        var scale = effect.DurationScale switch { "damage" => damage, "half_level" => monsterLevel / 2, _ => monsterLevel };
         IncreaseTimed(timedId, effect.DurationBase + Rng.RandInt1(Math.Max(1, scale)));
     }
 

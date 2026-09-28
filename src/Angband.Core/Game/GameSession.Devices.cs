@@ -47,6 +47,7 @@ public sealed partial class GameSession
     {
         var chance = Player.SkillDevice;
         if (Player.Timed.Has(TimedIds.Confused)) chance /= 2;
+        if (Player.Timed.Has(TimedIds.Image)) chance -= chance / 5; // Angband: hallucination costs a fifth
         chance -= Math.Min(50, item.Kind.Level);
         if (chance < UseDevice) return 100 - 100 / (UseDevice - chance + 1) + 1;
         return Math.Clamp(UseDevice * 100 / chance, 1, 99);
@@ -88,6 +89,7 @@ public sealed partial class GameSession
         // Angband: chance = skill - level; below USE_DEVICE it rarely works.
         var chance = Player.SkillDevice;
         if (Player.Timed.Has(TimedIds.Confused)) chance /= 2;
+        if (Player.Timed.Has(TimedIds.Image)) chance -= chance / 5; // Angband: hallucination costs a fifth
         chance -= Math.Min(50, item.Kind.Level);
         if (chance < UseDevice && Rng.OneIn(UseDevice - chance + 1)) chance = UseDevice;
         if (chance < UseDevice || Rng.RandInt1(chance) < UseDevice)
@@ -175,6 +177,7 @@ public sealed partial class GameSession
         var level = item.Artifact?.Level ?? item.Kind.Level;
         var chance = Player.SkillDevice;
         if (Player.Timed.Has(TimedIds.Confused)) chance /= 2;
+        if (Player.Timed.Has(TimedIds.Image)) chance -= chance / 5; // Angband: hallucination costs a fifth
         chance -= Math.Min(50, level);
         if (chance < UseDevice && Rng.OneIn(UseDevice - chance + 1)) chance = UseDevice;
         if (chance < UseDevice || Rng.RandInt1(chance) < UseDevice)

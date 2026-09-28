@@ -40,6 +40,12 @@ public sealed partial class GameSession
     public bool IncreaseTimed(string id, int amount)
     {
         if (Data.Timed(id) is not { } def) return false;
+        // Angband player_timed.txt fail:2:CHAOS — resisting chaos keeps the mind clear.
+        if (id == TimedIds.Image && Player.Resists.GetValueOrDefault("chaos") > 0)
+        {
+            if (Player.Inventory.Equipped.Any(i => i.Resists.Contains("chaos"))) LearnRune(Definitions.RuneIds.Resist("chaos"));
+            return false;
+        }
         if (id == TimedIds.Afraid && (Player.Timed.Has(TimedIds.Hero) || Player.Timed.Has("berserk")))
         {
             Publish(new MessageEvent("You feel bold."));

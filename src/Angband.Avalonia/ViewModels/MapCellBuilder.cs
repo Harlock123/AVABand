@@ -64,6 +64,15 @@ public sealed class MapCellBuilder
         new(race.Glyph, Color(PurpleUniques && race.IsUnique ? "Violet" : race.Color), Black, "monster:" + race.Id, TileLighting.Lit,
             "monster-name:" + race.Name.ToLowerInvariant(), under.TileKey, under.Lighting);
 
+    /// <summary>An object of this kind, unidentified by any flavour (what a hallucinating player "sees").</summary>
+    public MapCell ObjectKind(ObjectKindDef kind, ObjectBaseDef objectBase, MapCell under)
+    {
+        var fg = Color(objectBase.Color);
+        if (under.Lighting == TileLighting.Dark) fg = Dim(fg);
+        return new MapCell(objectBase.Glyph, fg, Black, "object:" + kind.Id, under.Lighting, "object-base:" + objectBase.Id,
+            under.TileKey, under.Lighting);
+    }
+
     public MapCell Trap(TrapDef trap, MapCell under)
     {
         var fg = under.Lighting == TileLighting.Dark ? Dim(Color(trap.Color)) : Color(trap.Color);

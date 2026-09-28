@@ -74,6 +74,7 @@ public sealed class BlowEffectDef
     /// <summary>Duration is <c>DurationBase + randint1(damage or level)</c>.</summary>
     public int DurationBase { get; init; }
     /// <summary><c>damage</c> or <c>level</c>: what the random part of the duration scales with.</summary>
+    /// <summary>What the random part of the duration scales with: <c>level</c>, <c>half_level</c> or <c>damage</c>.</summary>
     public string DurationScale { get; init; } = "level";
     /// <summary>Whether the player's saving throw can shrug the status off.</summary>
     public bool Save { get; init; }

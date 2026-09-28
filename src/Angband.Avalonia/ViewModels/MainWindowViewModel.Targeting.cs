@@ -142,7 +142,7 @@ public sealed partial class MainWindowViewModel
                 ShowCursor();
                 return true;
             case "r":
-                if (LookedAt is { } m) ShowRecall(m.Race);
+                if (LookedAt is { } m && !_game.IsHallucinating) ShowRecall(m.Race);
                 return true;
             default:
                 return false;
@@ -165,7 +165,7 @@ public sealed partial class MainWindowViewModel
                 StepCursor(+1);
                 return true;
             case InputAction.Read:
-                if (LookedAt is { } m) ShowRecall(m.Race);
+                if (LookedAt is { } m && !_game.IsHallucinating) ShowRecall(m.Race);
                 return true;
             case InputAction.Confirm or InputAction.Hold:
                 TargetUnderCursor();

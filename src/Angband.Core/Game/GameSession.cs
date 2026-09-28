@@ -320,7 +320,7 @@ public sealed partial class GameSession : ITurnHandler
         if (sq.LockPower > 0)
         {
             // Angband: chance = disarm skill - 4 * lock power, at least 2%.
-            var chance = Math.Max(2, Player.DisarmSkill - 4 * sq.LockPower);
+            var chance = Math.Max(2, EffectiveDisarmSkill - 4 * sq.LockPower); // hurt by blindness, dark, confusion, hallucination
             if (!Rng.Percent(chance))
             {
                 Publish(new LockPickFailedEvent(p));

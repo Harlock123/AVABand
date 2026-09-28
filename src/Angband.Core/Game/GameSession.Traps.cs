@@ -99,14 +99,14 @@ public sealed partial class GameSession
 
     // --- Disarming -------------------------------------------------------------------------------
 
-    /// <summary>The disarm skill, cut to a tenth when blind, in the dark or confused (Angband).</summary>
+    /// <summary>The disarm skill, cut to a tenth when blind or in the dark, and again when confused or hallucinating (Angband).</summary>
     public int EffectiveDisarmSkill
     {
         get
         {
             var skill = Player.DisarmSkill;
             if (Player.IsBlind || !Level[Player.Position].Has(SquareFlags.Seen)) skill /= 10;
-            if (Player.Timed.Has(TimedIds.Confused)) skill /= 10;
+            if (Player.Timed.Has(TimedIds.Confused) || Player.Timed.Has(TimedIds.Image)) skill /= 10;
             return skill;
         }
     }

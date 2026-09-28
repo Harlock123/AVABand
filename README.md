@@ -310,8 +310,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     - *Bloodlust* (blackguard, 30): +1 to-dam per 2 points and +1 blow per 20; each kill adds 10 (to
       50) and may confuse you; blows sometimes scramble your stats or drain CON; as it fades you may
       cry out in pain, bleed or slow; and while hit points + bloodlust + level stay non-negative
-      "your lust for blood keeps you alive". (Angband's hallucination side effect is left out —
-      AVABand has no hallucination.)
+      "your lust for blood keeps you alive"; a kill may also bring on a few turns of hallucination.
     - [Corruption of Spirit] (a new dungeon necromantic tome): *Power Sacrifice* (50 hit points for
       50 mana), *Zone of Unmagic* (disenchantment around you, you included), *Vampire Form* (a quarter
       of your hit points, then your bite heals you as it drains the living — the vampire shape now
@@ -459,8 +458,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     red), then the rest by type, nearest first; worthless things are slate.
   - Angband's subwindows: View → *Monster list in the sidebar* / *Object list in the sidebar* keeps
     either list below the inventory, updated every turn (remembered in the settings).
-  - AVABand remembers only the top object of a pile out of view, so such piles list that one item;
-    there is no hallucination yet, so its "too wild to see" message never appears.
+  - AVABand remembers only the top object of a pile out of view, so such piles list that one item.
+    While you hallucinate the monster list just says "Your hallucinations are too wild to see
+    things clearly."
 - **Targeting** (`Game/GameSession.Targeting.cs`, `ViewModels/MainWindowViewModel.Targeting.cs`):
   Angband's look/target cursor. `*` (or numpad `*`) steps through the monsters you could shoot,
   nearest first (space/`+` next, `-` back); `x` does the same for every visible monster. A yellow
@@ -517,6 +517,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   comes into view; hopeless rock just gets one futile chip. Rubble may hide an object, treasure
   veins give gold, secret doors are found, permanent rock and the level edge refuse. The General
   Store sells shovels and picks; the character sheet shows your digging skill.
+- **Hallucination** (`image`, Angband's TMD_IMAGE; `Game/GameSession.Search.cs` and the map view):
+  the Mushroom of Emergency, monster blows that "cause hallucinations" (a magic mushroom patch's
+  spores, a silent watcher's gaze…), chaos (which also confuses and drains experience) and a
+  blackguard's bloodlust bring it on; resisting chaos keeps the mind clear. While it lasts every
+  monster and object you see looks like a random one, a new one each turn; looking or clicking says
+  only "something strange" (and monster recall is refused); the monster list is "too wild to see";
+  disarming and picking locks are ten times harder, stealing four times, devices a fifth; and
+  secret doors aren't noticed. The Mushroom of Clear Mind, the Potion of Life and the Staff of
+  Holiness cure it; resting waits it out.
 - **Secret doors** (`Game/GameSession.Search.cs`, Angband 4.2's `search()`): there is no search
   command, as in 4.2. Any secret door beside you is found by itself after every step, when you hold
   still (`5` / `,`) and when you arrive on a level ("You have found a secret door.", which stops a
@@ -808,9 +817,10 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: hallucination (potions, mushrooms and monster attacks that make you see
-things), Angband's stacking of armour and devices (AVABand keeps one per slot), and the
-bodyguard role for escorts (so they never lose heart, as in 4.2).
+Natural next steps: Angband's stacking of armour and devices (AVABand keeps one per slot), the
+bodyguard role for escorts (so they never lose heart, as in 4.2), and the side effects of the
+other elements' breaths and balls (nexus teleporting you, sound stunning, and so on — only chaos's
+are modelled).
 
 ## Licence
 
