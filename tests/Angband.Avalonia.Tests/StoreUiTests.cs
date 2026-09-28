@@ -60,6 +60,32 @@ public class StoreUiTests
         Assert.Contains("shops pay nothing", vm.LastMessage);
     }
 
+    /// <summary>Debug → "Shops pay gold when you sell": switched on mid-game, even inside a shop, selling pays at once.</summary>
+    [AvaloniaFact]
+    public void TheDebugToggle_MakesShopsPay_AndBackAgain()
+    {
+        var (window, vm, game) = OpenAt("general");
+        Assert.False(vm.ShopsPayGold);
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None); // the give/sell pane
+
+        vm.ToggleShopsPayGoldCommand.Execute(null);
+        Assert.True(vm.ShopsPayGold);
+        Assert.False(game.NoSelling);
+        Assert.Equal("Sell (letter to sell, Tab to buy)", vm.StoreModeText);
+        Assert.DoesNotContain("Shops pay nothing", vm.StoreSubtitle);
+        var flask = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
+        Assert.EndsWith(" gold", flask.Price);
+
+        var gold = game.Player.Gold;
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(flask.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        Assert.True(game.Player.Gold > gold, vm.LastMessage);
+        Assert.StartsWith("You sold", vm.LastMessage);
+
+        vm.ToggleShopsPayGoldCommand.Execute(null);
+        Assert.False(vm.ShopsPayGold);
+        Assert.StartsWith("Give", vm.StoreModeText);
+    }
+
     [AvaloniaFact]
     public void Letters_Buy_Tab_Switches_AndEscapeLeaves()
     {

@@ -235,12 +235,26 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Execute(new DebugJumpCommand(0));
     }
 
+    /// <summary>Debug: whether shops pay gold for what you sell (birth_no_selling off), switchable mid-game.</summary>
+    public bool ShopsPayGold => !_game.NoSelling;
+
+    [RelayCommand]
+    private void ToggleShopsPayGold()
+    {
+        _game.DebugSetShopsPay(!ShopsPayGold);
+        OnPropertyChanged(nameof(ShopsPayGold));
+        OnPropertyChanged(nameof(StoreModeText));
+        RefreshStore();
+        Refresh();
+    }
+
     [RelayCommand]
     private void ToggleWholeMap() => ShowWholeMap = !ShowWholeMap;
 
 
     private void Refresh()
     {
+        OnPropertyChanged(nameof(ShopsPayGold)); // a new or loaded game may differ
         var level = _game.Level;
         var player = _game.Player;
         var depth = player.Depth;

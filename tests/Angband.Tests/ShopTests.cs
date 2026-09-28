@@ -227,4 +227,25 @@ public class ShopTests
         Assert.Equal(Stock(12), Stock(12));
         Assert.NotEqual(Stock(12), Stock(13));
     }
+
+    /// <summary>The debug switch for birth_no_selling is kept in the save, and says what it did.</summary>
+    [Fact]
+    public void DebugShopsPay_IsSaved_AndAnnounced()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5);
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        Assert.True(game.NoSelling);
+
+        game.DebugSetShopsPay(true);
+        Assert.False(game.NoSelling);
+        Assert.Contains(messages, m => m.StartsWith("Shops now pay gold"));
+        game.DebugSetShopsPay(true); // already so: nothing more said
+        Assert.Single(messages, m => m.StartsWith("Shops now pay gold"));
+
+        using var stream = new MemoryStream();
+        Angband.Core.Persistence.SaveGame.Save(game, stream);
+        stream.Position = 0;
+        Assert.False(Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream).NoSelling);
+    }
 }

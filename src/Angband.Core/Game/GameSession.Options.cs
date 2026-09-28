@@ -63,6 +63,20 @@ public sealed partial class GameSession
     /// <summary>Angband birth_no_selling: stores pay nothing, and dungeon gold is increased.</summary>
     public bool NoSelling => Options[OptionIds.NoSelling];
 
+    /// <summary>
+    /// Debug: switches birth_no_selling in the middle of a game (birth options are otherwise fixed).
+    /// With shops paying, dungeon gold goes back to normal too, as with the option off at birth.
+    /// Kept in the save like the other birth options.
+    /// </summary>
+    public void DebugSetShopsPay(bool pay)
+    {
+        if (NoSelling != pay) return;
+        Options[OptionIds.NoSelling] = !pay;
+        Publish(new MessageEvent(pay
+            ? "Shops now pay gold for what you sell (debug: \"no selling\" is off)."
+            : "Shops now pay nothing again, and dungeon gold is increased (debug: \"no selling\" is on)."));
+    }
+
     // --- Birth: the starting kit and knowledge -----------------------------------------------------------
 
     /// <summary>

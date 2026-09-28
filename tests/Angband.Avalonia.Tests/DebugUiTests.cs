@@ -95,5 +95,6 @@ public class DebugUiTests
             .Select(m => m.Header as string).ToList();
         Assert.Contains("Jump to _next level", headers);
         Assert.Contains("Jump back to _town", headers);
+        Assert.Contains("Shops pay _gold when you sell", headers);
     }
 }

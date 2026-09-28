@@ -79,6 +79,9 @@
         <MenuItem Header="_Jump 5 levels deeper" Command="{Binding JumpDeeperCommand}" InputGesture="F6" />
         <MenuItem Header="Jump back to _town" Command="{Binding JumpToTownCommand}" InputGesture="F9" />
         <MenuItem Header="Show _whole map" Command="{Binding ToggleWholeMapCommand}" InputGesture="F7" />
+        <Separator />
+        <MenuItem Header="Shops pay _gold when you sell" Command="{Binding ToggleShopsPayGoldCommand}"
+                  ToggleType="CheckBox" IsChecked="{Binding ShopsPayGold, Mode=OneWay}" />
       </MenuItem>
     </Menu>
 
