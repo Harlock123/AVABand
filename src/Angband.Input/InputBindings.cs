@@ -240,6 +240,7 @@ public sealed class InputBindings
                 Buttons = new Dictionary<string, InputAction>(loaded.Buttons, StringComparer.Ordinal),
                 Keymaps = new Dictionary<string, string>(loaded.Keymaps ?? [], StringComparer.Ordinal),
             };
+            bindings.MoveHelpToQuestionMark();
             bindings.AddMissingDefaults();
             return bindings;
         }
@@ -247,6 +248,17 @@ public sealed class InputBindings
         {
             return Defaults();
         }
+    }
+
+    /// <summary>
+    /// Bindings saved before the help existed have '?' on the command list (with F1). As long as
+    /// that is still so — nobody chose it — '?' goes to the help, as in Angband, and F1 keeps the list.
+    /// </summary>
+    public void MoveHelpToQuestionMark()
+    {
+        if (Keys.GetValueOrDefault("Char:?") == InputAction.ShowCommands && Keys.GetValueOrDefault("F1") == InputAction.ShowCommands
+            && !Keys.ContainsValue(InputAction.Help))
+            Keys["Char:?"] = InputAction.Help;
     }
 
     /// <summary>

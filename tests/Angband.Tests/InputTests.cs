@@ -91,6 +91,25 @@ public class InputTests
         Assert.Null(loaded.KeymapFor(["F3"]));
     }
 
+    [Fact]
+    public void OldSavedBindings_GetTheHelpOnQuestionMark_UnlessSomeoneChoseOtherwise()
+    {
+        var dir = Directory.CreateTempSubdirectory("avaband-keys-").FullName;
+        var old = InputBindings.Defaults();
+        old.Keys["Char:?"] = InputAction.ShowCommands; // as saved before the help existed
+        old.Save(Path.Combine(dir, "old.json"));
+        var loaded = InputBindings.Load(Path.Combine(dir, "old.json"));
+        Assert.Equal(InputAction.Help, loaded.ForKey("Char:?"));
+        Assert.Equal(InputAction.ShowCommands, loaded.ForKey("F1"));
+
+        // Someone who moved the command list off F1 chose '?' for it: leave it be.
+        var chosen = InputBindings.Defaults();
+        chosen.Keys["Char:?"] = InputAction.ShowCommands;
+        chosen.Keys.Remove("F1");
+        chosen.Save(Path.Combine(dir, "chosen.json"));
+        Assert.Equal(InputAction.ShowCommands, InputBindings.Load(Path.Combine(dir, "chosen.json")).ForKey("Char:?"));
+    }
+
     // --- Gamepad mapping ----------------------------------------------------------------------
 
     [Fact]
