@@ -549,6 +549,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Tutorial** (AVABand's own; Game → *Tutorial*, and the first hint points to it): a short level
+    made for teaching — a room with a potion to pick up, a door, a corridor with a pit trap and no
+    way round, a room with a sleeping small kobold, a last door and the stairs. The hint banner says
+    what to do at each step, in the keys you have, and stays until the step is done (× hides it
+    until the next). Played as Pupil the Human Warrior, it is never saved and never scored; dying
+    costs nothing, and the stairs finish it with a menu: *Play the tutorial again*, *Create a new
+    character…* and the rest.
   - **Hints for new players** (AVABand's own; the option *Hints for new players*, on by default): the
     first time you are badly hurt, enter a shop, meet a monster in the dungeon, see a trap, stand on
     an item, get hungry, run low on light, wear something with unknown runes, gain a level or go

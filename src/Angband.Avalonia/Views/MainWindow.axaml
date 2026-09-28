@@ -46,6 +46,7 @@
         <MenuItem Header="_New character..." Command="{Binding NewGameCommand}" InputGesture="Ctrl+N" />
         <MenuItem Header="_Quick start (same character)" Command="{Binding QuickStartCommand}" />
         <MenuItem x:Name="NewGameAsMenu" Header="Quick start _as" />
+        <MenuItem Header="_Tutorial (learn the basics)" Command="{Binding StartTutorialCommand}" />
         <Separator />
         <MenuItem Header="_Save" Command="{Binding SaveGameCommand}" InputGesture="Ctrl+S" IsEnabled="{Binding CanSave}" />
         <MenuItem Header="_Load character..." Command="{Binding LoadGameCommand}" InputGesture="Ctrl+O" IsEnabled="{Binding CanSave}" />

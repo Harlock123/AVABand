@@ -128,7 +128,7 @@ public sealed partial class MainWindowViewModel
     public bool TrySave()
     {
         SaveLore();
-        if (_saves is null || _game.Player.IsDead) return false;
+        if (_saves is null || _game.Player.IsDead || _game.IsTutorial) return false; // (the tutorial is never saved)
         try
         {
             _saves.Save(_game);
@@ -165,6 +165,7 @@ public sealed partial class MainWindowViewModel
 
     private void OnPlayerDied(PlayerDiedEvent e)
     {
+        if (TutorialDeath()) return;
         var score = RecordDeath();
         try
         {

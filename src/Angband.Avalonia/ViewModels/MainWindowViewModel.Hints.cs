@@ -29,6 +29,7 @@ public sealed partial class MainWindowViewModel
     {
         HintText = "";
         _hintLeft = 0;
+        if (_game.IsTutorial) _tutorialDismissed = true; // until the next step
     }
 
     /// <summary>The key (or keys) bound to an action, as the player would press it.</summary>
@@ -41,12 +42,14 @@ public sealed partial class MainWindowViewModel
     /// <summary>After each command: the hint showing has one command fewer to go.</summary>
     private void CountDownHint()
     {
+        if (_game.IsTutorial) return; // the tutorial's steps stay up until done
         if (HasHint && --_hintLeft <= 0) DismissHint();
     }
 
     /// <summary>After each refresh: shows the next hint due, if none is up.</summary>
     private void CheckHints()
     {
+        if (CheckTutorial()) return;
         if (HasHint || !OptionValue(DisplayOptions.Hints) || _game.Player.IsDead) return;
         foreach (var (id, due, text) in Hints())
         {
@@ -73,6 +76,8 @@ public sealed partial class MainWindowViewModel
     {
         var game = _game;
         var player = game.Player;
+        yield return ("tutorial", () => player.Depth == 0 && !game.IsTutorial,
+            () => "New to Angband? Game → Tutorial teaches the basics on a short level of its own, in a few minutes.");
         yield return ("hurt", () => player.Hp * 10 < player.MaxHp * 3 && player.MaxHp > 0,
             () => $"You are badly hurt! Quaff a potion of Cure Light Wounds ({KeyName(InputAction.Quaff)}), read Phase Door ({KeyName(InputAction.Read)}) to get away, or take the stairs.");
         yield return ("shop", () => IsInStore,

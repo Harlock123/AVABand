@@ -62,6 +62,9 @@ public sealed partial class GameSession : ITurnHandler
 
     public GameData Data { get; }
     public ulong Seed { get; }
+
+    /// <summary>A tutorial game (<see cref="Tutorial"/>): never saved, never scored.</summary>
+    public bool IsTutorial { get; internal set; }
     /// <summary>The town layout seed, fixed for the whole game.</summary>
     public ulong TownSeed { get; }
     public GameRandom Rng { get; }
