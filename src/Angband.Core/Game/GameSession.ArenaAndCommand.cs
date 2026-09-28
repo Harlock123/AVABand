@@ -249,7 +249,11 @@ public sealed partial class GameSession
         victim.Hp -= damage;
         if (victim.Hp >= 0) return;
         if (victim.IsVisible) Publish(new MessageEvent($"{Capitalize(MonsterName(victim))} dies."));
-        if (victim.Race.IsUnique) KilledUniques.Add(victim.Race.Id);
+        if (victim.Race.IsUnique)
+        {
+            KilledUniques.Add(victim.Race.Id);
+            AddHistory($"Killed {victim.Race.Name}");
+        }
         Level.Monsters.Remove(victim);
         DropCarried(victim);
         DropMonsterLoot(victim);

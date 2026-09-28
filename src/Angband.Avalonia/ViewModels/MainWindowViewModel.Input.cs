@@ -220,6 +220,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.Locate: BeginLocate(); break;
             case InputAction.WalkIntoTrap: AskDirection(DirectionFor.Jump); break;
             case InputAction.UseItem: BeginItemPrompt(ItemPromptKind.UseAny); break;
+            case InputAction.TakeNote: BeginNote(); break;
             case InputAction.MessageHistory: ShowMessageHistory(); break;
             case InputAction.RepeatCommand: RepeatLastCommand(); break;
             case InputAction.CommandCount: BeginCount(); break;

@@ -64,4 +64,18 @@ public class UseItemUiTests
         vm.HandleAction(InputActions.FromDirection(dir));
         Assert.Equal(at, game.Player.Position);
     }
+
+    [AvaloniaFact]
+    public void Colon_TakesANote_ForTheHistory()
+    {
+        var (window, vm) = Open();
+        vm.HandleAction(InputAction.TakeNote);
+        Assert.True(vm.IsInscribing);
+        Assert.Equal("Note:", vm.InscriptionTitle);
+        vm.InscriptionText = "the shop sells Speed";
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.False(vm.IsInscribing);
+        Assert.Equal("-- Note: the shop sells Speed", vm.Game.History[^1].Text);
+        Assert.Contains("Note: the shop sells Speed", vm.Messages);
+    }
 }

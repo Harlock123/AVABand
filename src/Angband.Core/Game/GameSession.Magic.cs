@@ -175,6 +175,7 @@ public sealed partial class GameSession
             Player.Hp += gain;
             // Angband 4.2: gaining a level restores drained stats.
             foreach (var stat in Player.StatDrain.Keys.ToList()) Player.StatDrain[stat] = 0;
+            AddHistory($"Reached level {Player.Level}");
             Publish(new MessageEvent($"Welcome to level {Player.Level}."));
             Publish(new LevelUpEvent(Player.Level));
             ApplySkills();

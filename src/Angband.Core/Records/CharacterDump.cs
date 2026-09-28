@@ -164,6 +164,15 @@ public static class CharacterDump
                 Line($" {data.Monster(id)?.Name ?? id}");
         }
 
+        if (game.History.Count > 0)
+        {
+            // Angband dump_history.
+            Section("Player history");
+            Line("      Turn   Depth  Note");
+            foreach (var h in game.History)
+                Line($"{h.Turn,10}{h.Depth * 50,7}'  {h.Text}");
+        }
+
         var messages = recentMessages?.ToList();
         if (messages is { Count: > 0 })
         {

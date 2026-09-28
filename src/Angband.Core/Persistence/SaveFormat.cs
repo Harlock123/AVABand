@@ -42,6 +42,8 @@ public sealed class SaveFile
     public LevelSave? ArenaReturn { get; set; }
     /// <summary>A persistent dungeon's other levels (birth_levels_persist); empty otherwise and in older saves.</summary>
     public List<LevelSave> StoredLevels { get; set; } = [];
+    /// <summary>The player's history (Angband player-history.c); empty in older saves.</summary>
+    public List<HistorySave> History { get; set; } = [];
     public int ArenaReturnX { get; set; }
     public int ArenaReturnY { get; set; }
     /// <summary>The monster under the player's command (0 = none).</summary>
@@ -219,6 +221,13 @@ public sealed class ObjectPileSave
     public int X { get; set; }
     public int Y { get; set; }
     public List<ItemSave> Items { get; set; } = [];
+}
+
+public sealed class HistorySave
+{
+    public long Turn { get; set; }
+    public int Depth { get; set; }
+    public string Text { get; set; } = "";
 }
 
 public sealed class LevelSave

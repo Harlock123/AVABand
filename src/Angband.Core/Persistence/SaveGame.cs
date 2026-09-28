@@ -102,6 +102,7 @@ public static class SaveGame
                 Quality = g.Ignore.Quality.ToDictionary(kv => kv.Key, kv => kv.Value.ToString()),
             },
             KilledUniques = g.KilledUniques.Order(StringComparer.Ordinal).ToList(),
+            History = [.. g.History.Select(h => new HistorySave { Turn = h.Turn, Depth = h.Depth, Text = h.Text })],
             QuestKills = new(g.QuestKills),
             CharacterKills = new(g.CharacterKills),
             Knowledge = new KnowledgeSave
@@ -258,6 +259,7 @@ public static class SaveGame
             if (Enum.TryParse<IgnoreLevel>(quality, out var l)) ignore.Quality[type] = l;
         g.RestoreIgnore(ignore);
         foreach (var u in f.KilledUniques) g.KilledUniques.Add(u);
+        g.RestoreHistory(f.History.Select(h => new HistoryEntry(h.Turn, h.Depth, h.Text)));
         foreach (var (q, n) in f.QuestKills) g.QuestKills[q] = n;
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,

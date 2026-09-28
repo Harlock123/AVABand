@@ -16,6 +16,17 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty] private string _inscriptionText = "";
     [ObservableProperty] private string _inscriptionTitle = "";
 
+    private bool _noting;
+
+    /// <summary>':' (Angband do_cmd_note): the text box asks for a note for the history.</summary>
+    public void BeginNote()
+    {
+        _noting = true;
+        InscriptionText = "";
+        InscriptionTitle = "Note:";
+        IsInscribing = true;
+    }
+
     private void BeginInscription(Item item)
     {
         _inscribing = item;
@@ -27,6 +38,14 @@ public sealed partial class MainWindowViewModel
     /// <summary>Enter: writes the inscription (an empty one removes it).</summary>
     public void CommitInscription()
     {
+        if (IsInscribing && _noting)
+        {
+            IsInscribing = false;
+            _noting = false;
+            _game.AddNote(InscriptionText);
+            Refresh();
+            return;
+        }
         if (!IsInscribing || _inscribing is not { } item) return;
         IsInscribing = false;
         _inscribing = null;
@@ -39,6 +58,7 @@ public sealed partial class MainWindowViewModel
         if (!IsInscribing) return;
         IsInscribing = false;
         _inscribing = null;
+        _noting = false;
         LastMessage = "Cancelled.";
     }
 

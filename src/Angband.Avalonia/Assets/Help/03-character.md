@@ -37,5 +37,7 @@ it returns when you regain it, or with a Potion of Restore Life Levels.
 
 ## The character sheet
 
-`C` shows everything: stats, skills, resistances, and a paper doll of what you wear. **Save
-dump** writes it to a text file, as Angband's character dumps.
+`C` shows everything: stats, skills, resistances, and a paper doll of what you wear. **Save to
+file** writes it to a text file, as Angband's character dumps. At the end is your **history** — when
+you set out, each level reached, each unique killed, each artifact found — and `:` adds a note of
+your own to it.

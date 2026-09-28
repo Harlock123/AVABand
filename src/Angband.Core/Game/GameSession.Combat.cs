@@ -309,7 +309,11 @@ public sealed partial class GameSession
         }
         GainExperience(whole);
 
-        if (race.IsUnique) KilledUniques.Add(race.Id);
+        if (race.IsUnique)
+        {
+            KilledUniques.Add(race.Id);
+            AddHistory($"Killed {race.Name}");
+        }
         QuestKill(monster);
         Level.Monsters.Remove(monster);
         DropCarried(monster);

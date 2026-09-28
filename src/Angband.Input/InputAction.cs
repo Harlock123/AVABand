@@ -80,6 +80,8 @@ public enum InputAction
     /// roguelike 'X'). Added last so saved bindings keep their meaning.
     /// </summary>
     WalkIntoTrap, UseItem,
+    /// <summary>Write a note in the history (Angband ':'). Added last so saved bindings keep their meaning.</summary>
+    TakeNote,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -173,6 +175,7 @@ public static class InputActions
         InputAction.Locate => "Locate (scroll the map)",
         InputAction.WalkIntoTrap => "Walk into a trap",
         InputAction.UseItem => "Use an item",
+        InputAction.TakeNote => "Take a note",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

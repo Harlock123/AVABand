@@ -108,6 +108,7 @@ public sealed partial class GameSession : ITurnHandler
             game.ApplyCharacter(spec, race, cls);
         }
         game.ChangeLevel(0, StairArrival.None);
+        game.AddHistory("Began the quest to destroy Morgoth."); // Angband player_birth
         game.Publish(new MessageEvent("Welcome to AVABand. Find the stairs down ('>') to enter the dungeon."));
         return game;
     }
@@ -235,7 +236,7 @@ public sealed partial class GameSession : ITurnHandler
             {
                 if (Level.FeelSquares.Count > 0) NoticeFeelingSquare(p);
                 Known.RememberObject(p, ObjectShownAt(p));
-                foreach (var item in Level.Objects.At(p)) Knowledge.See(item);
+                foreach (var item in Level.Objects.At(p)) SeeObject(item);
             }
     }
 

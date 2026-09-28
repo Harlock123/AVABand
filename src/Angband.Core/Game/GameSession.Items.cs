@@ -51,7 +51,7 @@ public sealed partial class GameSession
         var p = Player;
         foreach (var carried in p.Inventory.All)
         {
-            Knowledge.See(carried); // what you carry, you have seen
+            SeeObject(carried); // what you carry, you have seen
             carried.Assessed = true;
         }
         var gear = p.Inventory.Equipped.ToList();
