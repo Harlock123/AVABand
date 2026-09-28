@@ -17,6 +17,20 @@ public sealed record PlayerAttackEvent(int MonsterId, bool Hit, int Damage, Comb
 /// <summary>A monster blow; <see cref="Method"/> is the blow method id (hit, bite, claw...).</summary>
 public sealed record MonsterAttackEvent(int MonsterId, bool Hit, int Damage, string Method = "hit") : IGameEvent;
 public sealed record MissileFiredEvent(string Missile, Loc From, IReadOnlyList<Loc> Path) : IGameEvent;
+
+/// <summary>What kind of thing a <see cref="ProjectionEvent"/> shows.</summary>
+public enum ProjectionKind { Missile, Bolt, Beam, Ball, Breath }
+
+/// <summary>
+/// Something flew and struck (Angband's projection animation): along <see cref="Path"/> from
+/// <see cref="From"/>, then bursting over <see cref="Burst"/> (balls, breaths). The UI plays these
+/// after the turn; <see cref="Element"/> colours them (null for plain missiles).
+/// </summary>
+public sealed record ProjectionEvent(Loc From, IReadOnlyList<Loc> Path, IReadOnlyList<Loc> Burst, string? Element,
+    ProjectionKind Kind) : IGameEvent;
+
+/// <summary>A monster took damage (for Angband's show_damage numbers).</summary>
+public sealed record MonsterDamagedEvent(int MonsterId, Loc Loc, int Damage) : IGameEvent;
 public sealed record MonsterKilledEvent(string RaceId, Loc Loc, int Experience, bool IsUnique = false) : IGameEvent;
 public sealed record PlayerHurtEvent(int Damage, int Hp, int MaxHp) : IGameEvent;
 public sealed record PlayerDiedEvent(string KilledBy, int Depth) : IGameEvent;

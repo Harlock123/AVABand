@@ -627,11 +627,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   known runes (modifiers, slays and brands with multipliers, protections, abilities, curses) and
   the kind's description. `I` (Inspect) now uses the same text. What has been seen is saved with
   the character; browsing never creates objects or uses up artifacts.
+- **Projection animation** (`ViewModels/MapEffects.cs`, drawn by `Controls/MapView.cs`): as in
+  Angband, what flies is shown — arrows, bolts and thrown weapons square by square (a line pointing
+  the way they go), beams leaving a trail, balls and breaths bursting ring by ring, in the element's
+  colour from 4.2's `projection.txt` (fire red, cold white, lightning blue, poison green…), only on
+  squares you can see, over tiles as well as ASCII. The game resolves a turn at once, so its
+  projections (yours, then the monsters') are played back in order right after it; a crowd of
+  archers plays faster, and pressing the next key cuts the show short, so it never slows play.
 - **Options** (`Game/GameOptions.cs`, `Game/GameSession.Options.cs`,
   `ViewModels/MainWindowViewModel.Options.cs`; `=` or Game → Options, the last tab of Settings):
   Angband 4.2.5's options menu (`list-options.h`), each behaving as in its source.
   - *User interface* (kept in `settings.json`, for every character): show damage ("You hit the
-    orc (12)."), use old target (off: aimed commands take the nearest monster), always pick up /
+    orc (12).", and the number floats up from the monster on the map), use old target (off: aimed commands take the nearest monster), always pick up /
     pick up items matching the pack (each object picked up costs a tenth of a turn), show flavours
     ("an Icky Green Potion of Speed"), disturb whenever a viewable monster moves (a monster coming
     into view always stops running, travel and tunnelling; with this on, one in view moving does too), notify

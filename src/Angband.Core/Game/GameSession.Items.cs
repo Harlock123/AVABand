@@ -502,10 +502,12 @@ public sealed partial class GameSession
 
         var landing = Player.Position;
         var hitSomething = false;
+        var flown = 0;
         foreach (var grid in path)
         {
             if (!Level.Has(grid, TerrainFlags.Project)) break;
             landing = grid;
+            flown++;
             if (Level.Monsters.At(grid) is not { } monster) continue;
 
             var chance = CombatMath.MissileChance(skill, toHit, Player.Position.DistanceTo(grid));
@@ -534,6 +536,8 @@ public sealed partial class GameSession
             hitSomething = true;
             break;
         }
+
+        ShowProjection(Player.Position, [.. path.Take(flown)], null, null, ProjectionKind.Missile);
 
         // Angband breakage_chance: the base's chance on a hit, its square (as a fraction) on a miss —
         // so flasks and potions (100%) always shatter.

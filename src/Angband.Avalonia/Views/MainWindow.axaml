@@ -139,6 +139,7 @@
                       Tileset="{Binding SelectedTileset}"
                       TileScale="{Binding TileScale}"
                       CenterPlayer="{Binding CenterPlayer}"
+                      Effects="{Binding Effects}"
                       ClipToBounds="True" />
 
       <!-- Monster / object list ('[' and ']'), at the top right of the map as in Angband -->

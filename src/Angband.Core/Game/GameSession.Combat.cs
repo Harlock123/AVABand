@@ -269,6 +269,7 @@ public sealed partial class GameSession
     /// </summary>
     public bool DamageMonster(Monster monster, int damage)
     {
+        Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage));
         Reveal(monster);
         WakeMonster(monster);
         monster.Hp -= damage;

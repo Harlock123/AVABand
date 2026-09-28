@@ -42,6 +42,7 @@ public class ReadmeScreenshots
     {
         if (Folder is null) return;
         Directory.CreateDirectory(Folder);
+        (window.DataContext as MainWindowViewModel)?.Effects.Clear(); // no half-played bolt in the picture
         Dispatcher();
         // Let transitions (the expander's chevron turning) finish: they run on the clock.
         Thread.Sleep(500);

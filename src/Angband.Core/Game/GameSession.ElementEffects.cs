@@ -325,6 +325,10 @@ public sealed partial class GameSession
 
     // --- Things on the floor (Angband project-obj.c project_o) -------------------------------------
 
+    /// <summary>Announces a projection for the UI to animate (Angband's bolt and ball graphics).</summary>
+    private void ShowProjection(Loc from, IReadOnlyList<Loc> path, IEnumerable<Loc>? burst, string? element, ProjectionKind kind) =>
+        Publish(new ProjectionEvent(from, [.. path], burst is null ? [] : [.. burst], element, kind));
+
     /// <summary>The squares a ball covers: within its radius of the centre, and in the blast's line of fire.</summary>
     public IEnumerable<Loc> BallArea(Loc centre, int radius)
     {

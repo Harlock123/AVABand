@@ -106,6 +106,7 @@ public sealed partial class GameSession
         if (SpellTarget(_effectTarget) is not { } aim) return;
         var path = ProjectionPath.Compute(Level, Player.Position, aim, range, PathFlags.Through);
         Publish(new MissileFiredEvent(_effectSource, Player.Position, path));
+        ShowProjection(Player.Position, path, null, element, ProjectionKind.Beam);
         foreach (var p in path)
         {
             if (!Level.Has(p, TerrainFlags.Project)) break;
@@ -124,6 +125,7 @@ public sealed partial class GameSession
         var source = Math.Min(25, degrees < 60 ? 4 * 60 / degrees : 4); // Angband's "diameter of source"
         var dir = Math.Atan2(aim.Y - Player.Position.Y, aim.X - Player.Position.X);
         Publish(new MessageEvent($"You unleash {Article(_effectSource.ToLowerInvariant())}."));
+        ShowProjection(Player.Position, [], BreathArc(Player.Position, aim, degrees, radius), element, ProjectionKind.Breath);
         foreach (var m in Level.Monsters.All.ToList())
         {
             var d = m.Position.DistanceTo(Player.Position);
@@ -145,6 +147,7 @@ public sealed partial class GameSession
             Publish(new MessageEvent("You have no target."));
             return;
         }
+        ShowProjection(at, [], BallArea(at, radius), element, ProjectionKind.Ball);
         foreach (var m in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(at) <= radius && ProjectionPath.Projectable(Level, at, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(at)).ThenBy(m => m.Id).ToList())
@@ -155,6 +158,7 @@ public sealed partial class GameSession
     private void Sphere(string? element, int damage, int radius)
     {
         Publish(new MessageEvent($"{Capitalize(_effectSource)} erupts around you!"));
+        ShowProjection(Player.Position, [], BallArea(Player.Position, radius), element, ProjectionKind.Ball);
         foreach (var m in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(Player.Position) <= radius && ProjectionPath.Projectable(Level, Player.Position, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(Player.Position)).ThenBy(m => m.Id).ToList())

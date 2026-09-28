@@ -50,6 +50,39 @@ public sealed class MapView : Control
         set => SetValue(CenterPlayerProperty, value);
     }
 
+    /// <summary>Projections and damage numbers to animate over the map.</summary>
+    public static readonly StyledProperty<MapEffects?> EffectsProperty =
+        AvaloniaProperty.Register<MapView, MapEffects?>(nameof(Effects));
+
+    public MapEffects? Effects
+    {
+        get => GetValue(EffectsProperty);
+        set => SetValue(EffectsProperty, value);
+    }
+
+    // The animation clock: runs only while there is something to animate.
+    private global::Avalonia.Threading.DispatcherTimer? _clock;
+    private readonly System.Diagnostics.Stopwatch _clockWatch = new();
+
+    private void StartClock()
+    {
+        _clock ??= new global::Avalonia.Threading.DispatcherTimer(TimeSpan.FromMilliseconds(16),
+            global::Avalonia.Threading.DispatcherPriority.Render, (_, _) => Tick());
+        _clockWatch.Restart();
+        _clock.Start();
+        InvalidateVisual();
+    }
+
+    private void Tick()
+    {
+        var effects = Effects;
+        var ms = _clockWatch.Elapsed.TotalMilliseconds;
+        _clockWatch.Restart();
+        effects?.Advance(ms);
+        InvalidateVisual();
+        if (effects is null || !effects.IsActive) _clock?.Stop();
+    }
+
     /// <summary>Atlases are shared across views and kept while the app runs (tilesets are small).</summary>
     private static readonly Dictionary<string, TileAtlas> Atlases = new(StringComparer.Ordinal);
 
@@ -137,6 +170,15 @@ public sealed class MapView : Control
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+        if (change.Property == EffectsProperty)
+        {
+            if (change.OldValue is MapEffects old) old.Started -= StartClock;
+            if (change.NewValue is MapEffects now)
+            {
+                now.Started += StartClock;
+                if (now.IsActive) StartClock();
+            }
+        }
         if (change.Property == CellFontSizeProperty || change.Property == UseTilesProperty
             || change.Property == TilesetProperty || change.Property == TileScaleProperty
             || change.Property == FitToBoundsProperty || (change.Property == BoundsProperty && FitToBounds))
@@ -195,7 +237,42 @@ public sealed class MapView : Control
         if (source.Target is { } target && CellRect(target) is { } t) DrawCorners(context, t, TargetPen);
         if (source.Cursor is { } cursor && CellRect(cursor) is { } c) context.DrawRectangle(null, CursorPen, c.Deflate(1));
         if (source.Highlight is { } highlight && CellRect(highlight) is { } h) context.DrawRectangle(null, HighlightPen, h.Deflate(0.5));
+
+        if (Effects is { IsActive: true } effects) DrawEffects(context, effects, CellRect, cell);
     }
+
+    private AsciiRenderer? _effectText;
+
+    /// <summary>
+    /// Bolts, beams and bursts as Angband draws them (coloured glyphs), over tiles too, with a
+    /// shadow so they read on any background; then damage numbers rising and fading.
+    /// </summary>
+    private void DrawEffects(DrawingContext context, MapEffects effects, Func<Angband.Core.Geometry.Loc, Rect?> cellRect, Size cell)
+    {
+        var size = Math.Max(8, Math.Floor(cell.Height * 0.8));
+        if (_effectText is null || Math.Abs(_effectText.FontSize - size) > 0.1) _effectText = new AsciiRenderer(size);
+        foreach (var g in effects.Glyphs)
+        {
+            if (cellRect(g.Loc) is not { } r) continue;
+            _effectText.DrawGlyph(context, r.Translate(new Vector(1, 1)), g.Glyph, 0xFF000000);
+            _effectText.DrawGlyph(context, r, g.Glyph, g.Argb);
+        }
+        foreach (var n in effects.Numbers)
+        {
+            if (cellRect(n.Loc) is not { } r) continue;
+            var alpha = (byte)(255 * Math.Clamp(1 - n.Age * n.Age, 0, 1));
+            var rise = n.Age * cell.Height * 0.9;
+            var text = new FormattedText(n.Text, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+                NumberFace, Math.Max(9, cell.Height * 0.6), new SolidColorBrush(Color.FromArgb(alpha, 0xFF, 0xE0, 0x40)));
+            var at = new Point(r.X + (r.Width - text.Width) / 2, r.Y - rise - text.Height / 3);
+            var shadow = new FormattedText(n.Text, System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+                NumberFace, Math.Max(9, cell.Height * 0.6), new SolidColorBrush(Color.FromArgb(alpha, 0, 0, 0)));
+            context.DrawText(shadow, at + new Vector(1, 1));
+            context.DrawText(text, at);
+        }
+    }
+
+    private static readonly Typeface NumberFace = new(new FontFamily(AsciiRenderer.MonoFontUri), FontStyle.Normal, FontWeight.Bold);
 
     private static readonly IPen HighlightPen = new Pen(new SolidColorBrush(Color.FromRgb(0xFF, 0xE0, 0x40)), 1);
 

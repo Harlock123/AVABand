@@ -111,13 +111,18 @@ public sealed partial class GameSession
         switch (spell.Kind)
         {
             case MonsterSpellKind.Bolt:
+                ShowProjection(here, ProjectionPath.Compute(Level, here, Player.Position, MaxRange, PathFlags.None), null,
+                    spell.Element, ProjectionKind.Bolt);
                 ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Power, monster.Position);
                 break;
             case MonsterSpellKind.Ball:
+                ShowProjection(here, ProjectionPath.Compute(Level, here, Player.Position, MaxRange, PathFlags.None),
+                    BallArea(Player.Position, 2), spell.Element, ProjectionKind.Ball);
                 ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Power, monster.Position);
                 DestroyFloorObjects(BallArea(Player.Position, 2), spell.Element); // balls and breaths reach the floor too
                 break;
             case MonsterSpellKind.Breath:
+                ShowProjection(here, [], BreathArc(here, Player.Position), spell.Element, ProjectionKind.Breath);
                 ElementalHit(spell.Element, Math.Min(spell.BreathCap, Math.Max(1, monster.Hp / Math.Max(1, spell.BreathDivisor))), killer,
                     race.Power, monster.Position);
                 DestroyFloorObjects(BreathArc(monster.Position, Player.Position), spell.Element);
@@ -146,6 +151,7 @@ public sealed partial class GameSession
                 foreach (var (element, basis) in new[] { ("water", 30), ("elec", 20), ("ice", 20) })
                 {
                     if (Player.IsDead) break;
+                    ShowProjection(Player.Position, [], BallArea(Player.Position, 3), element, ProjectionKind.Ball);
                     ElementalHit(element, basis + Rng.Damroll(dice, 5), killer, race.Power, monster.Position);
                     DestroyFloorObjects(BallArea(Player.Position, 3), element);
                 }

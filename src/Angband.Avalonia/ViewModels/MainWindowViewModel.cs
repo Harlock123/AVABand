@@ -206,6 +206,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Events.Subscribe<ShopEnteredEvent>(OnShopEntered);
         _game.Events.Subscribe<LevelChangedEvent>(OnLevelChanged);
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);
+        _game.Events.Subscribe<ProjectionEvent>(OnProjection);
+        _game.Events.Subscribe<MonsterDamagedEvent>(OnMonsterDamaged);
+        Effects.Clear();
         IsInStore = false;
         IsPrompting = false;
         AttachAudio();
@@ -220,6 +223,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     public void Execute(GameCommand command)
     {
         command = WithCount(command);
+        Effects.Clear(); // a new command cuts short whatever the last one is still showing
         NoteForRepeat(command, _game.Execute(command));
         Refresh();
     }

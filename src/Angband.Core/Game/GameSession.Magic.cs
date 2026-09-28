@@ -478,15 +478,16 @@ public sealed partial class GameSession
 
     /// <summary>A bolt from the player: hits the first monster in its path.</summary>
     private void ProjectBolt(string name, string? element, int damage, Loc? target) =>
-        ProjectBoltEffect(name, target, m => ProjectileHitsMonster(m, name, element, damage));
+        ProjectBoltEffect(name, target, m => ProjectileHitsMonster(m, name, element, damage), element);
 
     /// <summary>Fires a bolt and applies <paramref name="hit"/> to the first monster it meets. False if it hit nothing.</summary>
-    private bool ProjectBoltEffect(string name, Loc? target, Action<Monster> hit)
+    private bool ProjectBoltEffect(string name, Loc? target, Action<Monster> hit, string? element = null)
     {
         if (SpellTarget(target) is not { } aim) return false;
         var path = ProjectionPath.Compute(Level, Player.Position, aim, MaxRange, PathFlags.StopAtCreature,
             p => Level.Monsters.At(p) is not null);
         Publish(new MissileFiredEvent(name, Player.Position, path));
+        ShowProjection(Player.Position, path, null, element, ProjectionKind.Bolt);
         if (path.Count > 0 && Level.Monsters.At(path[^1]) is { } monster)
         {
             hit(monster);
@@ -501,6 +502,7 @@ public sealed partial class GameSession
         if (SpellTarget(target) is not { } aim) return;
         var path = ProjectionPath.Compute(Level, Player.Position, aim, MaxRange, PathFlags.Through);
         Publish(new MissileFiredEvent(name, Player.Position, path));
+        ShowProjection(Player.Position, path, null, element, ProjectionKind.Beam);
         foreach (var p in path)
         {
             if (!Level.Has(p, TerrainFlags.Project)) break;
@@ -517,6 +519,7 @@ public sealed partial class GameSession
         var center = path.Count == 0 ? Player.Position : path[^1];
         if (!Level.Has(center, TerrainFlags.Project) && path.Count > 1) center = path[^2];
         Publish(new MissileFiredEvent(name, Player.Position, path));
+        ShowProjection(Player.Position, path, BallArea(center, radius), element, ProjectionKind.Ball);
 
         foreach (var monster in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(center) <= radius && ProjectionPath.Projectable(Level, center, m.Position, radius + 1))
