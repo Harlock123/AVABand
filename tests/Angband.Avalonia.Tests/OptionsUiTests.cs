@@ -138,6 +138,36 @@ public class OptionsUiTests
         Assert.True(Row(vm.CreateCharacterCreation().BirthOptionRows, OptionIds.ForceDescend).IsChecked);
         Assert.False(Row(vm.BirthOptionRows, OptionIds.StartKit).IsChecked);
     }
+
+    [AvaloniaFact]
+    public void TheNewBirthOptions_AreInCharacterCreation_AndShownInSettings_AndTakeEffect()
+    {
+        var (window, vm, _, _) = Open();
+        string[] added = [OptionIds.AiLearn, OptionIds.LevelsPersist, OptionIds.PercentDamage];
+
+        // Character creation: every birth option, each one to choose.
+        var creation = vm.CreateCharacterCreation();
+        foreach (var id in added) Assert.True(Row(creation.BirthOptionRows, id).IsEnabled);
+
+        // Settings -> Options: shown, fixed for the character (as Angband's birth options are).
+        var settings = window.OpenSettings();
+        settings.ShowOptionsPage();
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var texts = settings.GetVisualDescendants().OfType<TextBlock>().Select(t => t.Text).ToList();
+        foreach (var id in added)
+        {
+            Assert.False(Row(vm.BirthOptionRows, id).IsEnabled);
+            Assert.Contains(OptionCatalog.Find(id)!.Description, texts);
+        }
+
+        // Chosen at creation, they are the new character's.
+        Row(creation.BirthOptionRows, OptionIds.LevelsPersist).IsChecked = true;
+        Row(creation.BirthOptionRows, OptionIds.PercentDamage).IsChecked = true;
+        creation.StartCommand.Execute(null);
+        Assert.True(vm.Game.PersistentLevels);
+        Assert.True(vm.Game.PercentDamage);
+        Assert.True(Row(vm.BirthOptionRows, OptionIds.LevelsPersist).IsChecked);
+    }
 }
 
 public class FeelingUiTests

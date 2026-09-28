@@ -142,6 +142,12 @@ public static class SaveGame
             },
             Level = LevelToSave(g, g.Level, g.Known, withScent: true),
             ArenaReturn = g.ArenaReturn is { } back ? LevelToSave(g, back.Level, back.Known, withScent: false) : null,
+            StoredLevels = [.. g.StoredLevels.Values.OrderBy(s => s.Level.Depth).Select(s =>
+            {
+                var saved = LevelToSave(g, s.Level, s.Known, withScent: false);
+                saved.StoredTurn = s.Turn;
+                return saved;
+            })],
             ArenaReturnX = g.ArenaReturn?.Position.X ?? 0,
             ArenaReturnY = g.ArenaReturn?.Position.Y ?? 0,
             CommandedMonster = g.Commanded is { IsActive: true } c ? c.Id : 0,
@@ -413,6 +419,11 @@ public static class SaveGame
         {
             var (backLevel, backKnown) = ReadLevel(outside);
             g.RestoreArena(backLevel, backKnown, new Loc(f.ArenaReturnX, f.ArenaReturnY));
+        }
+        foreach (var stored in f.StoredLevels)
+        {
+            var (storedLevel, storedKnown) = ReadLevel(stored);
+            g.RestoreStoredLevel(storedLevel, storedKnown, stored.StoredTurn);
         }
         if (f.CommandedMonster > 0) g.RestoreCommanded(f.CommandedMonster);
         g.StoreDays = f.StoreDays;

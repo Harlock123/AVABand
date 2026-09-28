@@ -40,6 +40,8 @@ public sealed class SaveFile
     public int StoreDays { get; set; }
     /// <summary>During Single Combat: the level outside the arena, and where the player stood on it.</summary>
     public LevelSave? ArenaReturn { get; set; }
+    /// <summary>A persistent dungeon's other levels (birth_levels_persist); empty otherwise and in older saves.</summary>
+    public List<LevelSave> StoredLevels { get; set; } = [];
     public int ArenaReturnX { get; set; }
     public int ArenaReturnY { get; set; }
     /// <summary>The monster under the player's command (0 = none).</summary>
@@ -249,6 +251,8 @@ public sealed class LevelSave
     public List<MonsterSave> Monsters { get; set; } = [];
     public List<ObjectPileSave> Objects { get; set; } = [];
     public int[] Population { get; set; } = [];
+    /// <summary>For a stored level: the game turn it was left on.</summary>
+    public long StoredTurn { get; set; }
 }
 
 public sealed class StoreSave

@@ -395,43 +395,68 @@ public sealed partial class GameSession : ITurnHandler
     {
         MarkDebugUsed();
         depth = Math.Clamp(depth, 0, Data.Constants.MaxDepth);
-        ChangeLevel(depth, StairArrival.None);
+        ChangeLevel(depth, StairArrival.None, fresh: depth == Player.Depth); // "regenerate level" makes a new one even when levels persist
         return EnergyTable.MoveEnergy;
     }
 
-    private void ChangeLevel(int depth, StairArrival arrival)
+    /// <param name="fresh">Throw the current level away and build a new one, even in a persistent dungeon.</param>
+    private void ChangeLevel(int depth, StairArrival arrival, bool fresh = false)
     {
         var seed = depth == 0 ? TownSeed : Rng.NextULong();
-        if (Level is not null) PreserveUnfoundArtifacts();
+        var persist = PersistentLevels;
+        var from = Player.Position;
+        if (Level is not null)
+        {
+            if (persist && !fresh) StoreCurrentLevel(); // (its artifacts stay with it)
+            else PreserveUnfoundArtifacts();
+        }
         ArenaReturn = null; // a new level ends any duel (and any command) for good
         Commanded = null;
-        var generated = _generator.Generate(new LevelRequest(depth, seed, arrival, ConnectStairs: Options[OptionIds.ConnectStairs]));
 
-        if (Level is not null) Vision.Reset(Level);
-        ClearTarget();
-        Level = generated.Level;
-        Known = new KnownMap(Level.Width, Level.Height);
-        Scent.Reset(Level);
-        Player.Depth = depth;
-        Player.MaxDepth = Math.Max(Player.MaxDepth, depth);
-        Player.Position = generated.PlayerStart;
+        if (persist && !fresh && _storedLevels.Remove(depth, out var stored))
+        {
+            EnterStoredLevel(stored, from);
+            Player.Depth = depth;
+            Player.MaxDepth = Math.Max(Player.MaxDepth, depth);
+            Scheduler.Clear();
+            Scheduler.Add(Player);
+            Player.Energy = EnergyTable.MoveEnergy;
+            foreach (var monster in stored.Level.Monsters.All) Scheduler.Add(monster);
+        }
+        else
+        {
+            var generated = _generator.Generate(new LevelRequest(depth, seed, arrival, ConnectStairs: Options[OptionIds.ConnectStairs],
+                Joins: persist ? JoinsFor(depth) : null, PreferredStart: persist && Level is not null ? from : null,
+                Persistent: persist));
 
-        Scheduler.Clear();
-        Scheduler.Add(Player);
-        Player.Energy = EnergyTable.MoveEnergy; // Angband: the player always gets the first move on a new level
+            if (Level is not null) Vision.Reset(Level);
+            ClearTarget();
+            Level = generated.Level;
+            Known = new KnownMap(Level.Width, Level.Height);
+            Scent.Reset(Level);
+            Player.Depth = depth;
+            Player.MaxDepth = Math.Max(Player.MaxDepth, depth);
+            Player.Position = generated.PlayerStart;
 
-        // Uniques that are dead stay dead; the rest may appear on each new level.
-        var unavailable = new HashSet<string>(KilledUniques);
-        _spawner.Populate(Level, Rng, Player.Position, unavailable);
-        foreach (var monster in Level.Monsters.All) Scheduler.Add(monster);
-        PopulateObjects();
-        DisguiseMonsters();
-        PrepareQuestLevel();
-        PrepareFeeling();
-        CheatPeek();
+            Scheduler.Clear();
+            Scheduler.Add(Player);
+            Player.Energy = EnergyTable.MoveEnergy; // Angband: the player always gets the first move on a new level
 
-        foreach (var p in Level.AllLocs())
-            if (Level[p].Has(SquareFlags.Mark)) Known.Remember(Level, p);
+            // Uniques that are dead stay dead (and in a persistent dungeon, those alive on a kept
+            // level stay there); the rest may appear on each new level.
+            var unavailable = new HashSet<string>(KilledUniques);
+            if (persist) unavailable.UnionWith(UniquesOnStoredLevels());
+            _spawner.Populate(Level, Rng, Player.Position, unavailable);
+            foreach (var monster in Level.Monsters.All) Scheduler.Add(monster);
+            PopulateObjects();
+            DisguiseMonsters();
+            PrepareQuestLevel();
+            PrepareFeeling();
+            CheatPeek();
+
+            foreach (var p in Level.AllLocs())
+                if (Level[p].Has(SquareFlags.Mark)) Known.Remember(Level, p);
+        }
         if (depth == 0)
         {
             ApplyTownLighting();
@@ -450,7 +475,7 @@ public sealed partial class GameSession : ITurnHandler
         Search(); // Angband on_new_level: a secret door beside the arrival spot is found at once
         SenseOre();
 
-        Publish(new LevelChangedEvent(depth, Level.ProfileId));
+        Publish(new LevelChangedEvent(depth, Level!.ProfileId)); // (set by either branch above)
     }
 
     /// <summary>Puts the player on an existing level (tests now; loading saved games later).</summary>

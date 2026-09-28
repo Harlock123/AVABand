@@ -663,15 +663,24 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     damage die by a percentage (+10 is +39%, +20 is +72%, up to +255%), slays and brands multiply
     the dice (evil ×1.8, animals ×2, the ×3 slays ×2.5, the ×5 ones ×3.5, brands ×1.5 or ×2.5) and
     add their extra, a critical adds up to five whole dice, and everyone has two blows at least.
+    And **persistent levels** (4.2's experimental `birth_levels_persist`, off by default;
+    `Game/GameSession.PersistentLevels.cs`, `Generation/StairJoins.cs`): every level you leave is
+    kept, with your map of it, the monsters and the things on the floor, and is there again when you
+    come back — its monsters having healed and shaken off confusion, fear and the rest for the time
+    you were away; uniques alive on a kept level can't turn up elsewhere meanwhile. The stairs line
+    up: a new level has an up staircase under each down staircase of the level above (and a down
+    staircase over each up staircase of the level below), each dug through to the rest of the level,
+    and no others of that kind, and you arrive on the square you left from — so going back up lands
+    you on the staircase you came down. No labyrinths are made for a persistent dungeon (as in 4.2);
+    the debug menu's *Regenerate level* still makes a new one. Kept levels are in the save.
   - *Cheat*: peek into monster creation (uniques on the level), peek into dungeon creation (the
     level profile and its vaults), and avoid death (you are healed, cured and sent to town). Once
     one is used the character is marked as a cheater and, as in Angband, its score is not recorded.
   - Connected stairs now work as in 4.2.5 (`gen-util.c`): you arrive on a way *back* (an up
     staircase after going down), where AVABand used to put you on a staircase leading onward.
   - Not offered: the roguelike keyset (AVABand's keys are rebindable instead), use sound (see the
-    Sound tab), animate flicker, auto-more, cheat_xtra, and the birth options for floor stacking,
-    persistent levels, which
-    AVABand doesn't have.
+    Sound tab), animate flicker, auto-more, cheat_xtra, and the birth option for floor stacking,
+    which AVABand doesn't have. (Persistent levels here don't yet ask for a recall depth, as 4.2 does.)
 - **Inscriptions** (`Items/Inscription.cs`, `Game/GameSession.Inscriptions.cs`,
   `ViewModels/MainWindowViewModel.Inscriptions.cs`): Angband's notes on objects. `{` picks an item
   (carried, worn or underfoot) and asks for the text; `}` removes one; neither takes game time.
