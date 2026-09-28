@@ -30,6 +30,8 @@ public sealed partial class MainWindowViewModel
             _loadedAtStartup = true;
             return;
         }
+        // No living character, though there was one: ask what next rather than just starting over.
+        ShouldOfferStartMenu = _settings.LastCharacter is not null;
     }
 
     [RelayCommand]
@@ -104,7 +106,7 @@ public sealed partial class MainWindowViewModel
 
     private void OnPlayerDied(PlayerDiedEvent e)
     {
-        RecordDeath();
+        var score = RecordDeath();
         try
         {
             _saves?.DeleteFor(_game);
@@ -113,5 +115,6 @@ public sealed partial class MainWindowViewModel
         {
             // The save may linger; it is marked alive, but death is final in the UI either way.
         }
+        ShowDeathMenu(score);
     }
 }

@@ -126,9 +126,10 @@ public sealed partial class MainWindowViewModel
     }
 
     /// <summary>On death: enter the score table and write a dump (Angband's tombstone and death dump).</summary>
-    private void RecordDeath()
+    /// <returns>The line about the score, for the game-over menu (null without a record store).</returns>
+    private string? RecordDeath()
     {
-        if (_records is null) return;
+        if (_records is null) return null;
         var entry = ScoreEntry.For(_game);
         SaveLore();
         try
@@ -137,16 +138,18 @@ public sealed partial class MainWindowViewModel
             var rank = _game.IsCheater ? 0 : _records.RecordScore(entry);
             _lastDeath = entry;
             var dump = _records.WriteDump(_game, BuildDump());
-            AddMessage(_game.IsCheater ? "Score not registered for cheaters."
+            var score = _game.IsCheater ? "Score not registered for cheaters."
                 : rank > 0
-                ? $"You placed #{rank} on the high-score table ({entry.Points} points). Ctrl+H shows it."
-                : $"You scored {entry.Points} points.");
+                ? $"You placed #{rank} on the high-score table ({entry.Points} points)."
+                : $"You scored {entry.Points} points.";
+            AddMessage(score);
             AddMessage($"Character dump written to {dump}");
-            ShowHighScores();
+            return score;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             AddMessage($"Could not record the score: {ex.Message}");
+            return null;
         }
     }
 }

@@ -45,6 +45,8 @@ public partial class MainWindow : Window
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
             _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
             _subscribed.HelpRequested -= OnHelpRequested;
+            _subscribed.GameOverMenuRequested -= OnGameOverMenuRequested;
+            _subscribed.ExitRequested -= OnExitRequested;
             _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
         }
@@ -61,6 +63,8 @@ public partial class MainWindow : Window
         vm.KnowledgeRequested += OnKnowledgeRequested;
         vm.KeyCommandsRequested += OnKeyCommandsRequested;
         vm.HelpRequested += OnHelpRequested;
+        vm.GameOverMenuRequested += OnGameOverMenuRequested;
+        vm.ExitRequested += OnExitRequested;
         vm.MessageHistoryRequested += OnMessageHistoryRequested;
         vm.OverviewRequested += OnOverviewRequested;
 
@@ -165,6 +169,9 @@ public partial class MainWindow : Window
         // First run: go straight to character creation, as Angband does.
         if (DataContext is MainWindowViewModel { IsFirstRun: true } vm && !Design.IsDesignMode && ShowCreationOnFirstRun)
             vm.RequestNewCharacter();
+        // The last character died: ask what next, rather than just starting over in town.
+        else if (DataContext is MainWindowViewModel { ShouldOfferStartMenu: true } again && !Design.IsDesignMode && ShowCreationOnFirstRun)
+            again.ShowStartMenu();
     }
 
     /// <summary>Tests turn this off so windows don't pop up.</summary>
@@ -319,6 +326,10 @@ public partial class MainWindow : Window
     }
 
     private void OnHelpRequested(HelpViewModel help) => DialogFit.Show(new HelpWindow { DataContext = help }, this);
+
+    private void OnGameOverMenuRequested(GameOverMenuViewModel menu) => DialogFit.Show(new GameOverWindow { DataContext = menu }, this);
+
+    private void OnExitRequested() => Close();
 
     private void OnExit(object? sender, RoutedEventArgs e) => Close();
 

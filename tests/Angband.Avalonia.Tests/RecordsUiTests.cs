@@ -59,6 +59,13 @@ public sealed class RecordsUiTests : IDisposable
         Assert.Equal("a Cave orc", entry.KilledBy);
         Assert.Contains("Killed by a Cave orc", File.ReadAllText(Assert.Single(Directory.GetFiles(records.DumpDirectory))));
 
+        // Death opens the game-over menu; its high-scores choice shows the table.
+        var menuWindow = Assert.IsType<GameOverWindow>(window.OwnedWindows.Last());
+        var menu = (GameOverMenuViewModel)menuWindow.DataContext!;
+        Assert.Equal("You have died", menu.Title);
+        Assert.Contains(menu.Lines, l => l.Contains("was killed by a Cave orc"));
+        Assert.Contains(menu.Lines, l => l.Contains("#1 on the high-score table"));
+        menu.Choose(menu.Choices.Single(c => c.Label == "View the high scores"));
         var scoresWindow = Assert.IsType<HighScoresWindow>(window.OwnedWindows.Last());
         var scores = (HighScoresViewModel)scoresWindow.DataContext!;
         var row = Assert.Single(scores.Rows);
@@ -103,6 +110,9 @@ public sealed class RecordsUiTests : IDisposable
         Assert.StartsWith("*** RETIRED VICTORIOUS ***", vm.StatusText);
         var entry = Assert.Single(records.LoadScores().Entries);
         Assert.True(entry.Won);
+        var menu = (GameOverMenuViewModel)window.OwnedWindows.OfType<GameOverWindow>().Last().DataContext!;
+        Assert.Equal("Your adventure is over", menu.Title);
+        menu.Choose(menu.Choices.Single(c => c.Label == "View the high scores"));
         var scores = (HighScoresViewModel)window.OwnedWindows.OfType<HighScoresWindow>().Last().DataContext!;
         Assert.Equal("Retired victorious", scores.Rows.Single().Fate);
     }

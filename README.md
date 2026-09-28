@@ -419,7 +419,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   Saves live in `<AppData>/AVABand/saves/` (one file per character, written atomically). Ctrl+S
   saves, Ctrl+O opens the list of saved characters (load or delete). The game autosaves on every
   level change, when switching characters and on exit, and continues the most recent living
-  character on start-up. Death deletes the save (permadeath).
+  character on start-up. Death deletes the save (permadeath) and opens a small **game-over menu**
+  — how it ended and the score, then *Play again as* the same character (name, race, class, birth
+  stats and options), *Create a new character…*, *Load a saved character…* (when one is alive),
+  *View the high scores*, *Look at the character sheet* or *Exit*; a letter, a click or the
+  controller picks, and Esc leaves the dead character on screen. Starting the game with no living
+  character to continue shows the same menu ("Your last adventure ended: …") rather than dropping
+  a fresh character into town unasked.
 - **Character dumps and scores** (`Angband.Core/Records`): `C` opens the character sheet, a
   plain-text dump in the style of Angband's (summary, stats with race/class adjustments, skills,
   a per-slot resistance grid that shows unknown runes as `?`, equipment, pack, quiver, home, spells

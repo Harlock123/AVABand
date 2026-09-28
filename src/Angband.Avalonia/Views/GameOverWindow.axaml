@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.GameOverWindow"
+        x:DataType="vm:GameOverMenuViewModel"
+        Title="{Binding Title}"
+        Width="560" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner">
+  <StackPanel Margin="22" Spacing="14">
+    <TextBlock Text="{Binding Title}" FontSize="22" FontWeight="SemiBold" />
+    <ItemsControl ItemsSource="{Binding Lines}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding}" TextWrapping="Wrap" Opacity="0.85" Margin="0,1" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <ItemsControl x:Name="ChoiceList" ItemsSource="{Binding Choices}" Margin="0,4,0,0">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:GameOverChoice">
+          <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Margin="0,3" Padding="12,8"
+                  Click="OnChoice" Tag="{Binding}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <TextBlock Text="{Binding Letter}" Foreground="#e6c35c" FontFamily="{StaticResource MonoFont}" />
+              <TextBlock Text="{Binding Label}" />
+            </StackPanel>
+          </Button>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <TextBlock Text="A letter or a click chooses; Esc or B closes and leaves things as they are." Opacity="0.6" FontSize="12" />
+  </StackPanel>
+</Window>
