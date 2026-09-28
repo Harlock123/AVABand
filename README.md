@@ -196,7 +196,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     instead; turn the birth option off for classic selling (`constants.json`'s `noSelling` sets its
     default). What you sell is identified, loses its inscription, joins a matching pile, and wands and
     staves the store deals in are recharged; lights are refuelled. With no selling on, the store says so
-    and calls it giving (as 4.2's "Give which item?"), showing no price. Debug → *Shops pay gold when you sell*
+    and calls it giving (as 4.2's "Give which item?"), showing no price. What you are wielding or
+    wearing is tagged *wielded* or *worn* in the list and is never sold, given or stored at a keypress:
+    the store asks first (y/n, or Enter / controller A). Debug → *Shops pay gold when you sell*
     turns selling on mid-game.
   - Bought items are fully known. The home stores up to 24 stacks.
   Walk onto an entrance (or press `_` / Confirm on it) to open the store screen: letters buy or sell

@@ -207,8 +207,9 @@ public partial class MainWindow : Window
 
         if (!ctrlOrAlt && KeyboardInput.Symbol(e) is { Length: 1 } symbol && char.IsLetter(symbol[0]))
         {
-            // In a store, a letter buys/sells one of that item; Shift+letter the whole stack.
-            if (vm.IsInStore && vm.StoreRows.Any(r => r.Letter == symbol.ToLowerInvariant()))
+            // In a store, a letter buys/sells one of that item; Shift+letter the whole stack
+            // (unless a question is waiting: then y/n answer it).
+            if (vm.IsInStore && !vm.IsConfirming && vm.StoreRows.Any(r => r.Letter == symbol.ToLowerInvariant()))
             {
                 vm.StoreTransact(symbol[0], all: char.IsUpper(symbol[0]));
                 e.Handled = true;

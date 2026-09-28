@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Core.Items;
 using Angband.Input;
@@ -10,8 +11,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Angband.Avalonia.ViewModels;
 
 /// <summary>A line in the store screen: something to buy, or something of yours to sell.</summary>
-public sealed record StoreRow(string Letter, string Glyph, uint GlyphColor, string Name, string Price, string Weight, Item Item)
+public sealed record StoreRow(string Letter, string Glyph, uint GlyphColor, string Name, string Price, string Weight, Item Item,
+    string Equipped = "")
 {
+    /// <summary>Whether the row is something the player has on (shown, and asked about before it goes).</summary>
+    public bool IsEquipped => Equipped.Length > 0;
+
     public IBrush GlyphBrush { get; } = new ImmutableSolidColorBrush(Color.FromUInt32(GlyphColor));
 }
 
@@ -72,6 +77,17 @@ public sealed partial class MainWindowViewModel
     {
         if (_game.StoreHere is not { } store) return;
         var item = row.Item;
+        if (StoreSellMode && row.IsEquipped)
+        {
+            // What you have on never goes at a keypress: ask first.
+            var verb = store.IsHome ? "Put" : _game.NoSelling ? "Give away" : "Sell";
+            AskFirst($"{verb} {_game.Describe(item)}, which you are {(item.Base.Slot is EquipSlot.Weapon or EquipSlot.Bow ? "wielding" : "wearing")}?", () =>
+            {
+                Execute(new SellCommand(item, item.Number));
+                RefreshStore();
+            });
+            return;
+        }
         if (StoreSellMode) Execute(new SellCommand(item, all ? item.Number : 1));
         else
         {
@@ -143,9 +159,12 @@ public sealed partial class MainWindowViewModel
                 : StoreSellMode ? (_game.SellPrice(store, item) is var p and > 0 ? $"{p} gold" : _game.NoSelling ? "" : "no gold")
                 : $"{_game.BuyPrice(store, item)} gold";
             var name = StoreSellMode ? _game.Describe(item) : DescribeStock(store, item);
+            var equipped = StoreSellMode && _game.Player.Inventory.Equipped.Contains(item)
+                ? item.Base.Slot is EquipSlot.Weapon or EquipSlot.Bow ? "wielded" : "worn"
+                : "";
             StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),
                 _cells.Color(flavor?.Color ?? item.Base.Color), name, price,
-                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item));
+                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped));
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
         OnPropertyChanged(nameof(StoreModeText));

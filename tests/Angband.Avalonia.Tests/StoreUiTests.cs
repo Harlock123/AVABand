@@ -87,6 +87,61 @@ public class StoreUiTests
         Assert.StartsWith("Give", vm.StoreModeText);
     }
 
+    /// <summary>
+    /// What you have on is marked in the sell list, and a hasty key press doesn't sell it: it asks,
+    /// and the answer goes to the question, not to the store.
+    /// </summary>
+    [AvaloniaFact]
+    public void WieldedAndWornItems_AreMarked_AndAskedAboutBeforeSelling()
+    {
+        var (window, vm, game) = OpenAt("weaponsmith");
+        game.MarkDebugUsed();
+        vm.ToggleShopsPayGoldCommand.Execute(null); // selling for gold, the case that matters most
+        var spare = game.Objects.Create("dagger");
+        spare.ToHit = spare.ToDam = 0;
+        game.Player.Inventory.Add(spare);
+        var wielded = game.Player.Inventory.Weapon!;
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+
+        var weaponRow = vm.StoreRows.Single(r => r.Item == wielded);
+        var spareRow = vm.StoreRows.Single(r => r.Item == spare);
+        Assert.Equal("wielded", weaponRow.Equipped);
+        Assert.False(spareRow.IsEquipped);
+        Assert.Equal("wielded", vm.StoreRows.Single(r => r.Item.Base.Id == "sling").Equipped); // launchers are wielded too
+
+        // The hasty key: a question, nothing sold, and "n" keeps it.
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(weaponRow.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        Assert.True(vm.IsConfirming);
+        Assert.Contains("which you are wielding?", vm.LastMessage);
+        Assert.Same(wielded, game.Player.Inventory.Weapon);
+        window.KeyPressQwerty(PhysicalKey.N, RawInputModifiers.None);
+        Assert.False(vm.IsConfirming);
+        Assert.Same(wielded, game.Player.Inventory.Weapon);
+
+        // Enter answers the question too (it doesn't buy or sell the selected row).
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(weaponRow.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        var gold = game.Player.Gold;
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.Null(game.Player.Inventory.Weapon);
+        Assert.True(game.Player.Gold > gold);
+
+        // The spare in the pack still sells at once.
+        var row = vm.StoreRows.Single(r => r.Item == spare);
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(row.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        Assert.False(vm.IsConfirming);
+        Assert.DoesNotContain(spare, game.Player.Inventory.Pack);
+    }
+
+    [AvaloniaFact]
+    public void AtTheArmoury_YourArmourIsMarkedWorn()
+    {
+        var (window, vm, game) = OpenAt("armoury");
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+        var body = game.Player.Inventory.Equipped.Single(i => i.Base.Slot == Angband.Core.Definitions.EquipSlot.Body);
+        Assert.Equal("worn", vm.StoreRows.Single(r => r.Item == body).Equipped);
+        TileRenderingTests.Save(window, "store-sell-equipped");
+    }
+
     [AvaloniaFact]
     public void Letters_Buy_Tab_Switches_AndEscapeLeaves()
     {

@@ -151,7 +151,7 @@
         <DockPanel>
           <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,0,0,10">
             <TextBlock Text="{Binding StoreTitle}" FontSize="20" FontWeight="SemiBold" Foreground="White" />
-            <TextBlock Text="{Binding StoreSubtitle}" Foreground="#e6c35c" />
+            <TextBlock Text="{Binding StoreSubtitle}" Foreground="#e6c35c" TextWrapping="Wrap" />
             <TextBlock Text="{Binding StoreModeText}" Foreground="#8ab4f8" Margin="0,6,0,0" />
           </StackPanel>
           <TextBlock DockPanel.Dock="Bottom" Margin="0,10,0,0" Foreground="#888" FontSize="11" TextWrapping="Wrap"
@@ -165,7 +165,12 @@
                              FontFamily="{StaticResource MonoFont}" FontSize="13" />
                   <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
                              FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
-                  <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="#eee" TextWrapping="Wrap" />
+                  <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Name}" Foreground="#eee" TextWrapping="Wrap" />
+                    <Border IsVisible="{Binding IsEquipped}" Background="#5a3a10" CornerRadius="3" Padding="5,0" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding Equipped}" Foreground="#ffcc66" FontSize="11" FontWeight="SemiBold" />
+                    </Border>
+                  </StackPanel>
                   <TextBlock Grid.Column="3" Text="{Binding Price}" Foreground="#e6c35c" Margin="12,0" />
                   <TextBlock Grid.Column="4" Text="{Binding Weight}" Foreground="#888" FontSize="12" HorizontalAlignment="Right" />
                 </Grid>

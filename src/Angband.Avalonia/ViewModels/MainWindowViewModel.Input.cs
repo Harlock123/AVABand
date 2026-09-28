@@ -74,6 +74,12 @@ public sealed partial class MainWindowViewModel
     public void HandleAction(InputAction action)
     {
         if (action == InputAction.None) return;
+        // A question comes first, even in a store (Enter/A must answer it, not buy or sell).
+        if (IsConfirming)
+        {
+            if (action is InputAction.Confirm or InputAction.Cancel) Confirm(action == InputAction.Confirm);
+            return;
+        }
         // Outside the map (menus, stores, lists, look mode) Shift+direction just moves, as the direction would.
         if ((IsInStore || IsShowingList || IsConfirming || IsLooking || IsPrompting) && action.ToRunDirection() is { } runDir)
             action = InputActions.FromDirection(runDir);
