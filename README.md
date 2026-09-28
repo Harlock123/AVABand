@@ -904,7 +904,11 @@ the mushroom of Turbulence, the wand of Dragon's Breath, and eight vaults sealed
 
 Tiles for the new content: the Adam Bolt and Gervais sets map every Angband monster and object by
 name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by name and keyword
-(`tools/dcss_monster_tiles.py`, `tools/dcss_object_tiles.py`), and every tileset has a fallback
+(`tools/dcss_monster_tiles.py`, `tools/dcss_object_tiles.py`) — every monster now has a tile of its
+own, as do the weapons, armour, food, books and lights DCSS has a fitting picture for — and every
+flavour (unknown potions, rings, amulets, wands, staves, rods, mushrooms) gets the DCSS image
+nearest its name and colour, spread so that flavours look as different as the pack allows
+(`tools/dcss_flavor_tiles.py`); every tileset also has a fallback
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
