@@ -28,6 +28,7 @@ public class ReadmeScreenshots
     {
         MainWindow.ShowCreationOnFirstRun = false;
         var settings = new AppSettings { UseTiles = tiles, TilesetId = tileset, TileScale = 1.5, Muted = true };
+        settings.Options[DisplayOptions.Hints] = false; // no tips over the pictures
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), Tilesets, settings, save: null)
         {
             Clock = () => ShotTime, // the character dump's date, fixed so the sheet looks the same every run
