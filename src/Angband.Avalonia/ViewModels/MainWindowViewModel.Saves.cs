@@ -74,6 +74,20 @@ public sealed partial class MainWindowViewModel
         return dialog;
     }
 
+    /// <summary>How often the game saves by itself while you play (besides each level change and exit).</summary>
+    public static readonly TimeSpan AutosaveInterval = TimeSpan.FromMinutes(5);
+
+    private DateTime? _lastSave;
+
+    /// <summary>After a command: save if it has been <see cref="AutosaveInterval"/> since the last save (the option allowing).</summary>
+    private void AutosaveIfDue()
+    {
+        if (_saves is null || _game.Player.IsDead || !OptionValue(DisplayOptions.Autosave)) return;
+        var now = Clock();
+        _lastSave ??= now; // the clock starts with the game
+        if (now - _lastSave.Value >= AutosaveInterval) TrySave();
+    }
+
     /// <summary>Saves quietly (autosave); returns false and reports if the disk refused.</summary>
     public bool TrySave()
     {
@@ -82,6 +96,7 @@ public sealed partial class MainWindowViewModel
         try
         {
             _saves.Save(_game);
+            _lastSave = Clock();
             return true;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)

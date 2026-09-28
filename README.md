@@ -420,7 +420,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   game continues exactly as the original would have (tested by playing both side by side).
   Saves live in `<AppData>/AVABand/saves/` (one file per character, written atomically). Ctrl+S
   saves, Ctrl+O opens the list of saved characters (load or delete). The game autosaves on every
-  level change, when switching characters and on exit, and continues the most recent living
+  level change, when switching characters, on exit and every five minutes of play (the option
+  *Save every five minutes while playing*, on by default), and continues the most recent living
   character on start-up. Death deletes the save (permadeath) and opens a small **game-over menu**
   — how it ended and the score, then *Play again as* the same character (name, race, class, birth
   stats and options), *Create a new character…*, *Load a saved character…* (when one is alive),

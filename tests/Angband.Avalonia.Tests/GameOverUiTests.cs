@@ -117,4 +117,34 @@ public sealed class GameOverUiTests : IDisposable
         var saved = Assert.Single(saves.List());
         Assert.False(saved.Summary.IsDead);
     }
+
+    [AvaloniaFact]
+    public void TheGame_SavesItself_EveryFiveMinutesOfPlay()
+    {
+        var (_, vm) = Open();
+        var saves = new SaveStore(Path.Combine(_dir, "autosaves"));
+        vm.UseSaves(saves, resume: false);
+        var now = new DateTime(2025, 1, 1, 12, 0, 0);
+        vm.Clock = () => now;
+
+        vm.Execute(new Angband.Core.Game.HoldCommand());   // the clock starts
+        now = now.AddMinutes(4);
+        vm.Execute(new Angband.Core.Game.HoldCommand());
+        Assert.Empty(saves.List());
+        now = now.AddMinutes(2);
+        vm.Execute(new Angband.Core.Game.HoldCommand());   // six minutes: saved
+        Assert.Single(saves.List());
+
+        // Off, it leaves saving to the level changes and exit.
+        var (_, quiet) = Open();
+        var none = new SaveStore(Path.Combine(_dir, "none"));
+        quiet.UseSaves(none, resume: false);
+        quiet.SetOption(DisplayOptions.Autosave, false);
+        var t = new DateTime(2025, 1, 1, 12, 0, 0);
+        quiet.Clock = () => t;
+        quiet.Execute(new Angband.Core.Game.HoldCommand());
+        t = t.AddHours(1);
+        quiet.Execute(new Angband.Core.Game.HoldCommand());
+        Assert.Empty(none.List());
+    }
 }
