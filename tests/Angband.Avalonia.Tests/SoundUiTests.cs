@@ -81,6 +81,7 @@ public class SoundUiTests
         window.Show();
         Assert.Equal(AudioBuffer.Automatic, settings.AudioBuffer);
         Assert.Equal(0, vm.AudioBufferIndex);
+        saves.Clear(); // (settings are also saved when a new-player hint is shown)
 
         var dialog = window.OpenSettings();
         var tabs = dialog.GetVisualDescendants().OfType<TabControl>().First();
