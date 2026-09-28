@@ -42,6 +42,14 @@
                     Value="{Binding MapFontSize}" />
             <TextBlock Grid.Column="5" VerticalAlignment="Center" Margin="8,0,0,0" Text="{Binding MapFontSize}" />
           </Grid>
+          <Grid ColumnDefinitions="Auto,240,Auto,*" RowDefinitions="Auto">
+            <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0" Text="Interface size" />
+            <Slider x:Name="InterfaceSizeSlider" Grid.Column="1" Minimum="0.8" Maximum="2" TickFrequency="0.1" IsSnapToTickEnabled="True"
+                    Value="{Binding InterfaceScale}" />
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="8,0,16,0" Text="{Binding InterfaceScaleText}" />
+            <TextBlock Grid.Column="3" VerticalAlignment="Center" Opacity="0.7" TextWrapping="Wrap"
+                       Text="The sidebar, messages, menus and dialogs (the map has its own zoom). Dialogs opened after a change use it." />
+          </Grid>
         </StackPanel>
     
         <TextBlock DockPanel.Dock="Bottom" Margin="0,12,0,0" Opacity="0.7" TextWrapping="Wrap"

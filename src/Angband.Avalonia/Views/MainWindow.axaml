@@ -39,7 +39,8 @@
   </Window.Styles>
 
   <DockPanel>
-    <Menu DockPanel.Dock="Top">
+    <LayoutTransformControl DockPanel.Dock="Top" LayoutTransform="{Binding InterfaceTransform}">
+    <Menu>
       <MenuItem Header="_Game">
         <MenuItem Header="_New character..." Command="{Binding NewGameCommand}" InputGesture="Ctrl+N" />
         <MenuItem Header="_Quick start (same character)" Command="{Binding QuickStartCommand}" />
@@ -92,12 +93,16 @@
                   ToggleType="CheckBox" IsChecked="{Binding ShopsPayGold, Mode=OneWay}" />
       </MenuItem>
     </Menu>
+    </LayoutTransformControl>
 
-    <Border DockPanel.Dock="Top" Background="#101010" Padding="8,4">
+    <LayoutTransformControl DockPanel.Dock="Top" LayoutTransform="{Binding InterfaceTransform}">
+    <Border Background="#101010" Padding="8,4">
       <TextBlock Text="{Binding LastMessage}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
     </Border>
+    </LayoutTransformControl>
 
-    <Border DockPanel.Dock="Bottom" Background="#101010" Padding="8,4">
+    <LayoutTransformControl DockPanel.Dock="Bottom" LayoutTransform="{Binding InterfaceTransform}">
+    <Border Background="#101010" Padding="8,4">
       <DockPanel>
         <!-- The count typed with '0', while it is typed and until a command uses it. -->
         <Border Name="CountBadge" DockPanel.Dock="Right" Background="#804000" CornerRadius="3" Padding="6,0"
@@ -107,9 +112,11 @@
         <TextBlock Text="{Binding StatusText}" Foreground="#C0C0C0" FontFamily="{StaticResource MonoFont}" />
       </DockPanel>
     </Border>
+    </LayoutTransformControl>
 
     <!-- Inventory panel -->
-    <Border DockPanel.Dock="Right" Width="340" Background="#0c0c0c" BorderBrush="#222" BorderThickness="1,0,0,0">
+    <LayoutTransformControl DockPanel.Dock="Right" LayoutTransform="{Binding InterfaceTransform}">
+    <Border Width="340" Background="#0c0c0c" BorderBrush="#222" BorderThickness="1,0,0,0">
       <ScrollViewer>
         <StackPanel Margin="10" Spacing="4">
           <TextBlock Text="{Binding GoldText}" Foreground="Gold" FontWeight="SemiBold" />
@@ -140,6 +147,7 @@
         </StackPanel>
       </ScrollViewer>
     </Border>
+    </LayoutTransformControl>
 
     <Panel>
     <controls:MapView x:Name="Map"
@@ -152,6 +160,10 @@
                       CenterPlayer="{Binding CenterPlayer}"
                       Effects="{Binding Effects}"
                       ClipToBounds="True" />
+
+      <!-- Everything over the map scales with the interface size; the map itself has its own zoom. -->
+      <LayoutTransformControl LayoutTransform="{Binding InterfaceTransform}">
+      <Panel>
 
       <!-- Hover to look: what is under the mouse, at the foot of the map. -->
       <Border x:Name="HoverLabel" IsVisible="{Binding HoverText, Converter={x:Static ObjectConverters.IsNotNull}}"
@@ -255,6 +267,8 @@
           <TextBlock Text="Press a letter (or move and confirm), Esc to cancel." Foreground="#888" FontSize="11" />
         </StackPanel>
       </Border>
+      </Panel>
+      </LayoutTransformControl>
     </Panel>
   </DockPanel>
 

@@ -32,6 +32,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _saveSettings = save;
         _mapFontSize = settings.FontSize;
         _tileScale = settings.TileScale;
+        _interfaceScale = Math.Clamp(settings.InterfaceScale, 0.8, 2.0);
+        Views.DialogFit.InterfaceScale = _interfaceScale;
         _selectedTileset = tilesets.FirstOrDefault(t => t.Id == settings.TilesetId) ?? tilesets.FirstOrDefault();
         _useTiles = settings.UseTiles && _selectedTileset is not null;
         _showMonsterPanel = settings.ShowMonsterPanel;

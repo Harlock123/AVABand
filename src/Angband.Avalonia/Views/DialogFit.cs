@@ -15,11 +15,27 @@ public static class DialogFit
     /// <summary>Room left around a dialog for the bar, borders and gaps, in device-independent pixels.</summary>
     public const double Margin = 48;
 
-    /// <summary>Shrinks <paramref name="dialog"/> to fit the screen <paramref name="owner"/> is on, then shows it.</summary>
+    /// <summary>The interface size (Settings → Display): dialogs are drawn this much larger.</summary>
+    public static double InterfaceScale { get; set; } = 1.0;
+
+    /// <summary>Scales <paramref name="dialog"/> to the interface size, shrinks it to fit the screen <paramref name="owner"/> is on, then shows it.</summary>
     public static void Show(Window dialog, Window owner)
     {
+        Scale(dialog, InterfaceScale);
         FitTo(dialog, AvailableSize(owner));
         dialog.Show(owner);
+    }
+
+    /// <summary>Draws a dialog's contents <paramref name="scale"/> times larger, and the window with them.</summary>
+    public static void Scale(Window dialog, double scale)
+    {
+        if (Math.Abs(scale - 1) < 0.01 || dialog.Content is not Control content) return;
+        dialog.Content = null;
+        dialog.Content = new LayoutTransformControl { LayoutTransform = new global::Avalonia.Media.ScaleTransform(scale, scale), Child = content };
+        if (!double.IsNaN(dialog.Width)) dialog.Width *= scale;
+        if (!double.IsNaN(dialog.Height)) dialog.Height *= scale;
+        dialog.MinWidth *= scale;
+        dialog.MinHeight *= scale;
     }
 
     /// <summary>Shrinks the dialog's requested size to at most <paramref name="available"/>.</summary>

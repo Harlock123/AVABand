@@ -40,6 +40,31 @@ public sealed partial class MainWindowViewModel
 
     partial void OnSelectedTilesetChanged(TilesetManifest? value) => SaveSettings();
     partial void OnTileScaleChanged(double value) => SaveSettings();
+
+    /// <summary>
+    /// The size of the interface around the map — sidebar, message and status lines, menus, the panels
+    /// over the map and every dialog — from 80% to 200%. The map keeps its own zoom.
+    /// </summary>
+    [ObservableProperty] private double _interfaceScale = 1.0;
+
+    /// <summary>The scaling the views apply (a layout transform, so text stays sharp and layouts reflow).</summary>
+    public global::Avalonia.Media.ScaleTransform InterfaceTransform => new(InterfaceScale, InterfaceScale);
+
+    public string InterfaceScaleText => $"{InterfaceScale * 100:0}%";
+
+    partial void OnInterfaceScaleChanged(double value)
+    {
+        var clamped = Math.Clamp(Math.Round(value, 2), 0.8, 2.0);
+        if (Math.Abs(clamped - value) > 0.001)
+        {
+            InterfaceScale = clamped;
+            return;
+        }
+        Views.DialogFit.InterfaceScale = value;
+        OnPropertyChanged(nameof(InterfaceTransform));
+        OnPropertyChanged(nameof(InterfaceScaleText));
+        SaveSettings();
+    }
     partial void OnMapFontSizeChanged(double value) => SaveSettings();
 
     [RelayCommand]
@@ -66,6 +91,7 @@ public sealed partial class MainWindowViewModel
         _settings.UseTiles = UseTiles;
         _settings.TilesetId = SelectedTileset?.Id ?? _settings.TilesetId;
         _settings.TileScale = TileScale;
+        _settings.InterfaceScale = InterfaceScale;
         _settings.FontSize = MapFontSize;
         _saveSettings?.Invoke(_settings);
     }

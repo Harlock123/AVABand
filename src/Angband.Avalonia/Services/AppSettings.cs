@@ -9,6 +9,8 @@ public sealed class AppSettings
     /// <summary>Folder name of the chosen tileset.</summary>
     public string? TilesetId { get; set; } = "adam-bolt";
     public double TileScale { get; set; } = 2.0;
+    /// <summary>The size of everything but the map: sidebar, message and status lines, menus, dialogs (1 = 100%).</summary>
+    public double InterfaceScale { get; set; } = 1.0;
     public double FontSize { get; set; } = 16;
     public bool EffectsEnabled { get; set; } = true;
     public bool MusicEnabled { get; set; } = true;

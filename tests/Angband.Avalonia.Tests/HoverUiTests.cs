@@ -63,4 +63,35 @@ public class HoverUiTests
         window.MouseMove(new Point(2, 2)); // over the menu bar, off the map
         Assert.Null(vm.HoverText);
     }
+
+    [AvaloniaFact]
+    public void TheInterfaceSize_ScalesEverythingButTheMap_AndDialogs()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var settings = new AppSettings();
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null);
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1440, Height = 900 };
+        window.Show();
+        var sidebar = window.GetVisualDescendants().OfType<Border>().First(b => b.Width == 340);
+        var map = window.GetVisualDescendants().OfType<MapView>().First(m => m.Name == "Map");
+        var mapFont = map.CellFontSize;
+        Assert.Equal(340, sidebar.Bounds.Width, 1);
+
+        vm.InterfaceScale = 1.5;
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var scaled = sidebar.TransformToVisual(window)!.Value.Transform(new Point(sidebar.Bounds.Width, 0)).X
+                     - sidebar.TransformToVisual(window)!.Value.Transform(new Point(0, 0)).X;
+        Assert.Equal(510, scaled, 1);                   // the sidebar, half as big again
+        Assert.Equal(mapFont, map.CellFontSize);         // the map is left to its own zoom
+        Assert.Equal(1.5, settings.InterfaceScale);      // and kept for next time
+
+        vm.ShowKeyCommands();
+        var dialog = window.OwnedWindows.OfType<KeyCommandsWindow>().Last();
+        Assert.Equal(860 * 1.5, dialog.Width, 1);
+
+        vm.InterfaceScale = 5;                           // out of range: held at 200%
+        Assert.Equal(2.0, vm.InterfaceScale);
+        vm.InterfaceScale = 1.0;
+    }
 }
