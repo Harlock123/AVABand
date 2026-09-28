@@ -266,8 +266,6 @@ public static class SaveGame
         g.RestoreHotbar(f.Hotbar);
         foreach (var (q, n) in f.QuestKills) g.QuestKills[q] = n;
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
-        g.RestoreJourney(f.JourneyVisits.Select(v => new JourneyVisit(v.Turn, v.Depth, v.Profile)),
-            f.JourneyKills.Select(k => new JourneyKill(k.Turn, k.Depth, k.Race, k.Unique)));
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));
         g.Knowledge.RestoreSeen(f.Knowledge.SeenKinds, f.Knowledge.SeenEgos, f.Knowledge.SeenArtifacts);
@@ -457,6 +455,10 @@ public static class SaveGame
         g.Scheduler.SetPending(f.PendingActors
             .Select(id => id == Player.PlayerActorId ? (IActor)p : level.Monsters[id])
             .OfType<IActor>());
+
+        // After the level and the clock (an older save's journey starts here and now).
+        g.RestoreJourney(f.JourneyVisits.Select(v => new JourneyVisit(v.Turn, v.Depth, v.Profile)),
+            f.JourneyKills.Select(k => new JourneyKill(k.Turn, k.Depth, k.Race, k.Unique)));
 
         g.RecalculateBonuses();
         g.UpdateView();
