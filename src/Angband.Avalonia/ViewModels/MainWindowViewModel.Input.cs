@@ -184,7 +184,11 @@ public sealed partial class MainWindowViewModel
             case InputAction.Wield: BeginItemPrompt(ItemPromptKind.Wield); break;
             case InputAction.TakeOff: BeginItemPrompt(ItemPromptKind.TakeOff); break;
             case InputAction.Quaff: BeginItemPrompt(ItemPromptKind.Quaff); break;
-            case InputAction.Read: BeginItemPrompt(ItemPromptKind.Read); break;
+            case InputAction.Read:
+                // Angband player_can_read_prereq: said before the scrolls are offered.
+                if (_game.CannotRead() is { } why) AddMessage(why);
+                else BeginItemPrompt(ItemPromptKind.Read);
+                break;
             case InputAction.Eat: BeginItemPrompt(ItemPromptKind.Eat); break;
             case InputAction.Drop: BeginItemPrompt(ItemPromptKind.Drop); break;
             case InputAction.Throw: BeginItemPrompt(ItemPromptKind.Throw); break;

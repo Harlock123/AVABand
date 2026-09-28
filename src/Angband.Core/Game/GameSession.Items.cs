@@ -311,6 +311,17 @@ public sealed partial class GameSession
         return picked;
     }
 
+    /// <summary>
+    /// Angband player_can_read: why the player can't read just now (blind, no light, confused,
+    /// amnesiac), or null if they can.
+    /// </summary>
+    public string? CannotRead() =>
+        Player.IsBlind ? "You can't see anything."
+        : !Level[Player.Position].Has(SquareFlags.Seen) ? "You have no light to read by."
+        : Player.Timed.Has(TimedIds.Confused) ? "You are too confused to read!"
+        : Player.Timed.Has(TimedIds.Amnesia) ? "You can't remember how to read!"
+        : null;
+
     private int Drop(Item item, int count)
     {
         if (!Player.Inventory.Contains(item)) return 0;
@@ -396,14 +407,9 @@ public sealed partial class GameSession
             Publish(new MessageEvent("You must choose a monster symbol to banish."));
             return 0;
         }
-        if (item.Base.Id == "scroll" && (Player.IsBlind || !Level[Player.Position].Has(SquareFlags.Seen)))
+        if (item.Base.Id == "scroll" && CannotRead() is { } why)
         {
-            Publish(new MessageEvent(Player.IsBlind ? "You can't see anything." : "You have no light to read by."));
-            return 0;
-        }
-        if (item.Base.Id == "scroll" && Player.Timed.Has(TimedIds.Amnesia)) // Angband player_can_read
-        {
-            Publish(new MessageEvent("You can't remember how to read!"));
+            Publish(new MessageEvent(why));
             return 0;
         }
 

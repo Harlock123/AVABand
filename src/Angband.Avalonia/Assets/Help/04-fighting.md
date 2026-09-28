@@ -25,7 +25,7 @@ have.
 ## When things go wrong
 
 - **Afraid**: you can't attack in melee — shoot, cast or leave.
-- **Confused**: you stumble about and can't cast spells.
+- **Confused**: you stumble about, and can't cast spells or read scrolls.
 - **Blind**: you can't see, read or cast.
 - **Poisoned** or **cut**: you lose hit points over time; potions cure them.
 - **Paralysed**: very dangerous — Free Action protects you.
