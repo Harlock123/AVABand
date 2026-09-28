@@ -352,7 +352,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
       deep descent or teleport level from the cell; a save made mid-duel keeps both levels.
   - Enchanting now rolls its dice ("1d4" was read as one try).
 - **Items** (`Angband.Core/Items`, `Game/GameSession.Items.cs`, `GameSession.Devices.cs`): 373 object
-  kinds, 91 egos and 124 artifacts (most of Angband 4.2's, imported by `tools/angband_object_import.py`
+  kinds, 91 egos and all 138 of 4.2's artifacts (most of Angband 4.2's, imported by `tools/angband_object_import.py`
   and `tools/angband_ego_artifact_import.py`; *of Flame* and *of Frost* as in 4.2 — a weapon ego that
   also resists and an ammunition one that doesn't, both proof against their element), 11 curses, per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to

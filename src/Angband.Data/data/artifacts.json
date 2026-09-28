@@ -4244,5 +4244,301 @@
       "TELEPATHY"
     ],
     "description": "Containing much of the power of he who once was mightiest among the Ainur, this plain iron crown has mounted upon it the two remaining Silmarils, greatest treasures of Middle-Earth."
+  },
+  {
+    "id": "of_himring",
+    "name": "of Himring",
+    "kind": "hard_leather_armour",
+    "level": 25,
+    "rarity": 5,
+    "armour": 20,
+    "toAc": 15,
+    "resists": [
+      "chaos",
+      "nether",
+      "pois"
+    ],
+    "activation": "timed:prot_evil:1d25+20",
+    "activationText": "grants you protection from evil for 1d25 plus 3 times your character level turns",
+    "recharge": "100+d100",
+    "description": "In this studded cuirass of pliable leather lives the memory of unvanquished Himring, defiant fortress surrounded by the legions of Morgoth."
+  },
+  {
+    "id": "thalkettoth",
+    "name": "'Thalkettoth'",
+    "kind": "soft_armour_leather_scale_mail",
+    "level": 30,
+    "rarity": 5,
+    "toHit": -1,
+    "armour": 20,
+    "toAc": 25,
+    "modifiers": {
+      "dex": 3,
+      "speed": 3
+    },
+    "resists": [
+      "acid",
+      "shards",
+      "free_act"
+    ],
+    "description": "An amazingly light tunic and skirt sewn with thick, overlapping scales of hardened leather. Those who wear it move with agility and assurance."
+  },
+  {
+    "id": "of_arvedui",
+    "name": "of Arvedui",
+    "kind": "chain_mail",
+    "level": 20,
+    "rarity": 3,
+    "toHit": -2,
+    "armour": 40,
+    "toAc": 15,
+    "modifiers": {
+      "str": 2
+    },
+    "resists": [
+      "shards",
+      "nexus",
+      "acid",
+      "elec",
+      "fire",
+      "cold"
+    ],
+    "description": "A hauberk, leggings, and sleeves of interlocking steel rings, well padded with leather. You feel as strong and tall as Arvedui, last king of Arnor, as you put it on."
+  },
+  {
+    "id": "of_caspanion",
+    "name": "of Caspanion",
+    "kind": "augmented_chain_mail",
+    "level": 35,
+    "rarity": 9,
+    "toHit": -2,
+    "armour": 45,
+    "toAc": 20,
+    "modifiers": {
+      "int": 2,
+      "wis": 2,
+      "con": 3
+    },
+    "resists": [
+      "acid",
+      "pois",
+      "conf"
+    ],
+    "activation": "destroy_doors",
+    "activationText": "destroys all doors surrounding you",
+    "recharge": "10",
+    "description": "A hauberk, leggings, and sleeves of interlocking steel rings, strategically reinforced at vital locations with a second layer of chain. Magics to enhance body and mind lie within, and no door can bar the wearer's path."
+  },
+  {
+    "id": "of_the_rohirrim",
+    "name": "of the Rohirrim",
+    "kind": "metal_brigandine_armour",
+    "level": 45,
+    "rarity": 3,
+    "armour": 50,
+    "toAc": 15,
+    "modifiers": {
+      "str": 2,
+      "dex": 2
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "sound",
+      "fear",
+      "conf"
+    ],
+    "description": "Small steel plates cover an inner layer of sturdy canvas, and both metal and cloth bear scenes of hunting and war. As you don the armour of Eorl the Young, matchless in combat, you feel his spirit surround you."
+  },
+  {
+    "id": "of_isildur",
+    "name": "of Isildur",
+    "kind": "full_plate_armour",
+    "level": 55,
+    "rarity": 3,
+    "armour": 75,
+    "toAc": 25,
+    "modifiers": {
+      "con": 1
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "sound",
+      "nexus",
+      "conf"
+    ],
+    "description": "A gleaming steel suit covering the wearer from neck to foot, with runes of warding and stability deeply engraved into its surface."
+  },
+  {
+    "id": "belegennon",
+    "name": "'Belegennon'",
+    "kind": "mithril_chain_mail",
+    "level": 55,
+    "rarity": 3,
+    "toHit": -1,
+    "armour": 35,
+    "toAc": 20,
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "pois"
+    ],
+    "activation": "teleport:10",
+    "activationText": "teleports you randomly up to 10 squares away",
+    "recharge": "2",
+    "description": "This wondrous shirt of fine-linked chain shimmers before your eyes like light upon a rippling sea, the gems on it glittering like stars, the sound of the rings when shaken like the tinkle of rain in a pool. It stands untouched amidst the fury of the elements, and blows seem strangely less powerful."
+  },
+  {
+    "id": "of_celeborn",
+    "name": "of Celeborn",
+    "kind": "mithril_plate_mail",
+    "level": 65,
+    "rarity": 3,
+    "toHit": -3,
+    "armour": 65,
+    "toAc": 25,
+    "modifiers": {
+      "str": 3
+    },
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "dark",
+      "disen"
+    ],
+    "activation": "banish",
+    "activationText": "removes all non-unique monsters represented by a chosen symbol from the level, dealing you damage in the process",
+    "recharge": "500",
+    "description": "A shimmering suit of true-silver, forged long ago by dwarven smiths of legend. It gleams with purest white as you gaze upon it, and mighty are its powers to protect and banish."
+  },
+  {
+    "id": "soulkeeper",
+    "name": "'Soulkeeper'",
+    "kind": "adamantite_plate_mail",
+    "level": 75,
+    "rarity": 9,
+    "toHit": -4,
+    "armour": 90,
+    "toAc": 20,
+    "modifiers": {
+      "con": 2
+    },
+    "resists": [
+      "acid",
+      "cold",
+      "dark",
+      "nether",
+      "nexus",
+      "chaos",
+      "sust_con",
+      "fear"
+    ],
+    "flags": [
+      "HOLD_LIFE"
+    ],
+    "activation": "heal:1000:0; cure:cut",
+    "activationText": "heals 1000 hit points",
+    "recharge": "444",
+    "description": "A suit of imperishable adamant with unconquerable strength to endure evil and disruptive magics. It protects the life force of its wearer as nothing else can."
+  },
+  {
+    "id": "razorback",
+    "name": "'Razorback'",
+    "kind": "multi_hued_dragon_scale_mail",
+    "level": 90,
+    "rarity": 9,
+    "toHit": -4,
+    "armour": 50,
+    "toAc": 25,
+    "modifiers": {
+      "light": 1
+    },
+    "resists": [
+      "elec",
+      "disen",
+      "acid",
+      "fire",
+      "cold",
+      "pois",
+      "light",
+      "dark",
+      "free_act",
+      "see_invis"
+    ],
+    "activation": "ball:elec:150:3",
+    "activationText": "fires a ball of lightning (150)",
+    "recharge": "50",
+    "description": "A massive suit of heavy dragon scales deeply saturated with many colors. It throbs with angry energies, and you feel the raw elemental might of untamed Lightning as you put it on."
+  },
+  {
+    "id": "mediator",
+    "name": "'Mediator'",
+    "kind": "balance_dragon_scale_mail",
+    "level": 95,
+    "rarity": 12,
+    "toHit": -4,
+    "armour": 60,
+    "toAc": 25,
+    "resists": [
+      "chaos",
+      "disen",
+      "shards",
+      "sound",
+      "nexus",
+      "free_act"
+    ],
+    "flags": [
+      "SLOW_DIGEST",
+      "REGEN"
+    ],
+    "activation": "ball:elec:150:3",
+    "activationText": "fires a ball of lightning (150)",
+    "recharge": "50",
+    "description": "A great suit of dragon hide, set with scales of many hues. Even the mightiest wyrms of Law and Chaos fear the judgement of its wearer."
+  },
+  {
+    "id": "bladeturner",
+    "name": "'Bladeturner'",
+    "kind": "power_dragon_scale_mail",
+    "level": 100,
+    "rarity": 17,
+    "toHit": -8,
+    "armour": 80,
+    "toAc": 35,
+    "resists": [
+      "acid",
+      "elec",
+      "fire",
+      "cold",
+      "pois",
+      "light",
+      "dark",
+      "sound",
+      "shards",
+      "nether",
+      "nexus",
+      "chaos",
+      "disen",
+      "fear",
+      "blind",
+      "conf"
+    ],
+    "flags": [
+      "HOLD_LIFE",
+      "REGEN"
+    ],
+    "activation": "heal:30:0; cure:afraid; timed:berserk:1d50+50; timed:blessed:1d50+50; timed:oppose_acid:1d50+50; timed:oppose_elec:1d50+50; timed:oppose_fire:1d50+50; timed:oppose_cold:1d50+50; timed:oppose_pois:1d50+50",
+    "activationText": "bestows upon you berserk rage, bless, and resistance",
+    "recharge": "50",
+    "description": "An adamant suit with scales of every color. Untrammelled powers elemental and ethereal swirl around it in an inextricably intermingled nimbus."
   }
 ]

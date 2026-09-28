@@ -15,6 +15,8 @@ TYPES = {
     "sword": "sword", "hafted": "hafted", "polearm": "polearm", "arrow": "arrow", "bolt": "bolt", "shot": "shot",
     "boots": "boots", "helm": "helm", "crown": "crown", "soft armor": "soft_armour", "hard armor": "hard_armour",
     "dragon armor": "dragon_armour", "cloak": "cloak", "gloves": "gloves", "shield": "shield", "ring": "ring",
+    # artifact.txt spells them the British way.
+    "soft armour": "soft_armour", "hard armour": "hard_armour", "dragon armour": "dragon_armour",
     "amulet": "amulet", "potion": "potion", "scroll": "scroll", "food": "food", "mushroom": "mushroom",
     "wand": "wand", "staff": "staff", "rod": "rod", "bow": "bow", "digger": "digger", "chest": "chest",
 }
