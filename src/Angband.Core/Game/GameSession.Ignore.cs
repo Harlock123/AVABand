@@ -106,6 +106,7 @@ public sealed partial class GameSession
     /// <summary>Sets the quality ignored for an item type (the options menu).</summary>
     public void SetIgnoreQuality(string typeId, IgnoreLevel level)
     {
+        using var _ = Recorded("ignore-quality", typeId, level);
         if (level is IgnoreLevel.None or IgnoreLevel.Unknown) Ignore.Quality.Remove(typeId);
         else Ignore.Quality[typeId] = level;
         IgnoreDrop();
@@ -114,6 +115,7 @@ public sealed partial class GameSession
     /// <summary>Ignores (or stops ignoring) a kind, as known or unknown (the knowledge menu).</summary>
     public void SetKindIgnored(Definitions.ObjectKindDef kind, bool ignored)
     {
+        using var _ = Recorded("ignore-kind", kind.Id, ignored);
         var set = Knowledge.IsAware(kind) || Knowledge.Flavor(kind) is null ? Ignore.KindsAware : Ignore.KindsUnaware;
         if (ignored) set.Add(kind.Id);
         else
@@ -130,6 +132,7 @@ public sealed partial class GameSession
     /// <summary>Ignores (or stops ignoring) an ego for every item type it comes on (the knowledge menu).</summary>
     public void SetEgoIgnored(Definitions.EgoItemDef ego, bool ignored)
     {
+        using var _ = Recorded("ignore-ego", ego.Id, ignored);
         foreach (var type in EgoTypes(ego))
             if (ignored) Ignore.Egos.Add(IgnoreSettings.EgoKey(ego.Id, type.Id));
             else Ignore.Egos.Remove(IgnoreSettings.EgoKey(ego.Id, type.Id));

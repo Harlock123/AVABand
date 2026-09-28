@@ -480,10 +480,28 @@ public sealed partial class GameSession
     }
 
     /// <summary>The answer to "Set recall depth to current depth?", for the next recall started below the deepest level.</summary>
-    public bool? RecallSetsDepth { get; set; }
+    public bool? RecallSetsDepth
+    {
+        get => _recallSetsDepth;
+        set
+        {
+            using var _ = Recorded("recall-sets-depth", value);
+            _recallSetsDepth = value;
+        }
+    }
+    private bool? _recallSetsDepth;
 
     /// <summary>The level chosen to return to, for the next recall started from town in a persistent dungeon.</summary>
-    public int? RecallChoice { get; set; }
+    public int? RecallChoice
+    {
+        get => _recallChoice;
+        set
+        {
+            using var _ = Recorded("recall-choice", value);
+            _recallChoice = value;
+        }
+    }
+    private int? _recallChoice;
 
     /// <summary>The levels a persistent dungeon's recall can take you to: those kept.</summary>
     public IReadOnlyList<int> RecallChoices => [.. _storedLevels.Keys.Where(d => d > 0).Order()];

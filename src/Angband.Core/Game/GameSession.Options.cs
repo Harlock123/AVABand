@@ -31,7 +31,11 @@ public sealed partial class GameSession
     public bool UsedDebug => CheatsUsed.Contains(DebugCheat);
 
     /// <summary>Marks the character as having used debug commands, for good, as Angband does.</summary>
-    public void MarkDebugUsed() => CheatsUsed.Add(DebugCheat);
+    public void MarkDebugUsed()
+    {
+        using var _ = Recorded("debug");
+        CheatsUsed.Add(DebugCheat);
+    }
 
     /// <summary>
     /// Changes an option during play. Birth options are fixed once the character exists; switching a
@@ -39,6 +43,7 @@ public sealed partial class GameSession
     /// </summary>
     public bool SetOption(string id, bool value)
     {
+        using var _ = Recorded("option", id, value);
         if (OptionCatalog.Find(id) is not { } def || def.Kind == OptionKind.Birth) return false;
         Options[id] = value;
         if (def.Kind == OptionKind.Cheat && value) CheatsUsed.Add(id);
@@ -49,6 +54,7 @@ public sealed partial class GameSession
     /// <summary>Takes the interface options from the player's settings (they aren't part of the save).</summary>
     public void ApplyInterfaceOptions(IReadOnlyDictionary<string, bool> values)
     {
+        using var _ = Recorded("interface-options", values);
         foreach (var o in OptionCatalog.OfKind(OptionKind.Interface))
             if (values.TryGetValue(o.Id, out var v)) SetOption(o.Id, v);
     }
@@ -79,6 +85,7 @@ public sealed partial class GameSession
     /// </summary>
     public void DebugSetShopsPay(bool pay)
     {
+        using var _ = Recorded("shops-pay", pay);
         if (NoSelling != pay) return;
         MarkDebugUsed();
         Options[OptionIds.NoSelling] = !pay;

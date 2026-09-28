@@ -551,6 +551,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     of Cure Light Wounds keeps working as you find more, and shows how many you carry ("x2",
     "none", "worn"); a spell you can't cast now (no book) is greyed. The slots are saved with the
     character.
+  - **Replays** (AVABand's own; the option *Record every game as a replay*, on by default): every game
+    is deterministic, so each is recorded as it is played — the game as it stood when recording began
+    (a save, inside), then every command and every choice made outside one (targets, options,
+    ignoring, notes, recall choices) — into `replays/` beside the saves, rewritten with each save and
+    at death (a few kilobytes: gzipped JSON, `.avareplay`). Game → *Watch a replay…* lists them (or
+    opens one someone sent you) and plays it back in the main window: Enter pauses, → steps, ↑ ↓
+    change the speed (1 to 64 steps a second), Esc stops and brings back the character you were
+    playing. At the end it says whether the replay played out exactly as recorded (it checks the
+    turn, depth, place and hit points); one made by a different AVABand may not. The tutorial isn't
+    recorded, and a replay is never saved, scored or recorded itself.
   - **Ambience** (AVABand's own; Settings → Sound: *Ambience on/off* and its own volume): a quiet loop
     under the music for where you are — the town by day or by night, the dungeon by depth (shallow to
     1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and fortresses their own,

@@ -128,11 +128,12 @@ public sealed partial class MainWindowViewModel
     public bool TrySave()
     {
         SaveLore();
-        if (_saves is null || _game.Player.IsDead || _game.IsTutorial) return false; // (the tutorial is never saved)
+        if (_saves is null || _game.Player.IsDead || _game.IsTutorial || _game.IsReplay) return false; // (nor is the tutorial, or a replay)
         try
         {
             _saves.Save(_game);
             _lastSave = Clock();
+            WriteReplay();
             return true;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
@@ -170,6 +171,8 @@ public sealed partial class MainWindowViewModel
     private void OnPlayerDied(PlayerDiedEvent e)
     {
         if (TutorialDeath()) return;
+        if (_game.IsReplay) return; // watching a replay: nothing to record or delete
+        WriteReplay();
         SceneForDeath(); // shown behind the game-over menu
         var score = RecordDeath();
         try

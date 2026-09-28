@@ -37,6 +37,7 @@ public sealed partial class GameSession
     /// </summary>
     public bool AddNote(string text)
     {
+        using var _ = Recorded("note", text);
         if (string.IsNullOrEmpty(text) || text[0] == ' ') return false;
         var note = text.StartsWith("/say ", StringComparison.Ordinal) ? $"-- {Player.Name} says: \"{text[5..]}\""
             : text.StartsWith("/me", StringComparison.Ordinal) ? $"-- {Player.Name}{text[3..]}"

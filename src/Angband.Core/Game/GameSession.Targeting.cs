@@ -18,6 +18,7 @@ public sealed partial class GameSession
 
     public void SetTarget(Monster monster)
     {
+        using var _ = Recorded("target-monster", monster.Position.X, monster.Position.Y);
         TargetMonster = monster;
         TrackHealth(monster);
         TargetLocation = null;
@@ -25,6 +26,7 @@ public sealed partial class GameSession
 
     public void SetTarget(Loc location)
     {
+        using var _ = Recorded("target-loc", location.X, location.Y);
         TargetMonster = null;
         TargetLocation = location;
     }
@@ -68,7 +70,17 @@ public sealed partial class GameSession
     /// The next aimed command goes at the target even with "use old target" off (the map menu's
     /// "Fire on", "Cast on": Angband gives such commands DIR_TARGET). The interface clears it.
     /// </summary>
-    public bool AimAtTargetNext { get; set; }
+    public bool AimAtTargetNext
+    {
+        get => _aimAtTargetNext;
+        set
+        {
+            if (value == _aimAtTargetNext) return;
+            using var _ = Recorded("aim-next", value);
+            _aimAtTargetNext = value;
+        }
+    }
+    private bool _aimAtTargetNext;
 
     /// <summary>The direction from the player toward the target (for bolts of stone to mud and the like).</summary>
     public Direction? DirectionToTarget()
@@ -84,6 +96,7 @@ public sealed partial class GameSession
     /// </summary>
     public bool TargetClosest(bool quiet = false)
     {
+        using var _ = Recorded("target-closest", quiet);
         ClearTarget();
         if (TargetableMonsters().FirstOrDefault() is not { } nearest)
         {

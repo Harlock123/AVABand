@@ -70,6 +70,19 @@ public partial class MainWindow : Window
         vm.SetRouteKeyHeld(held);
     }
 
+    /// <summary>"Open a replay file…": a file picker for .avareplay files.</summary>
+    private async void OnReplayFileRequested()
+    {
+        if (DataContext is not MainWindowViewModel vm) return;
+        var files = await StorageProvider.OpenFilePickerAsync(new global::Avalonia.Platform.Storage.FilePickerOpenOptions
+        {
+            Title = "Open a replay",
+            AllowMultiple = false,
+            FileTypeFilter = [new global::Avalonia.Platform.Storage.FilePickerFileType("AVABand replays") { Patterns = ["*.avareplay"] }],
+        });
+        if (files.Count > 0 && global::Avalonia.Platform.Storage.StorageProviderExtensions.TryGetLocalPath(files[0]) is { } path) vm.PlayReplay(path);
+    }
+
     private global::Avalonia.Point? _mapPress;
 
     /// <summary>
@@ -193,6 +206,7 @@ public partial class MainWindow : Window
             _subscribed.PropertyChanged -= OnViewModelPropertyChanged;
             _subscribed.NewCharacterRequested -= OnNewCharacterRequested;
             _subscribed.LoadRequested -= OnLoadRequested;
+            _subscribed.ReplayFileRequested -= OnReplayFileRequested;
             _subscribed.CharacterSheetRequested -= OnCharacterSheetRequested;
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
@@ -211,6 +225,7 @@ public partial class MainWindow : Window
         vm.PropertyChanged += OnViewModelPropertyChanged;
         vm.NewCharacterRequested += OnNewCharacterRequested;
         vm.LoadRequested += OnLoadRequested;
+        vm.ReplayFileRequested += OnReplayFileRequested;
         vm.CharacterSheetRequested += OnCharacterSheetRequested;
         vm.HighScoresRequested += OnHighScoresRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;

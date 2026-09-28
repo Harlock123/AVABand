@@ -44,6 +44,7 @@ public sealed partial class GameSession
     /// </summary>
     public void SetAutoInscription(ObjectKindDef kind, string? text)
     {
+        using var _ = Recorded("inscribe-kind", kind.Id, text);
         Knowledge.SetKindNote(kind, text);
         foreach (var item in Player.Inventory.All) Knowledge.See(item);
         Player.Inventory.SortQuiver();

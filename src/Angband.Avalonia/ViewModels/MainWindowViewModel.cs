@@ -254,6 +254,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Messages.Clear();
         _history.Clear();
         _lastCommand = null;
+        StartRecording();
         Refresh();
     }
 

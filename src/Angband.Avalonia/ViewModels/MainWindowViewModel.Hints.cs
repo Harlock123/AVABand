@@ -50,6 +50,7 @@ public sealed partial class MainWindowViewModel
     private void CheckHints()
     {
         if (CheckTutorial()) return;
+        if (_game.IsReplay) return;
         if (HasHint || !OptionValue(DisplayOptions.Hints) || _game.Player.IsDead) return;
         foreach (var (id, due, text) in Hints())
         {

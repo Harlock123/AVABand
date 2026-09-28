@@ -65,6 +65,30 @@ public sealed partial class GameSession : ITurnHandler
 
     /// <summary>A tutorial game (<see cref="Tutorial"/>): never saved, never scored.</summary>
     public bool IsTutorial { get; internal set; }
+
+    /// <summary>A game being played back from a replay: never saved, scored or recorded.</summary>
+    public bool IsReplay { get; set; }
+
+    /// <summary>Records this game for a replay, while set.</summary>
+    public Persistence.ReplayRecorder? Recorder { get; set; }
+
+    private int _replayDepth;
+
+    /// <summary>
+    /// A choice made from outside a command (a target, an option...): recorded for a replay, unless it
+    /// is made inside a command or another such choice (replaying that reproduces it).
+    /// </summary>
+    private ReplayScope Recorded(string op, params object?[] args)
+    {
+        if (_replayDepth == 0) Recorder?.Call(op, args);
+        _replayDepth++;
+        return new ReplayScope(this);
+    }
+
+    private readonly struct ReplayScope(GameSession game) : IDisposable
+    {
+        public void Dispose() => game._replayDepth--;
+    }
     /// <summary>The town layout seed, fixed for the whole game.</summary>
     public ulong TownSeed { get; }
     public GameRandom Rng { get; }
@@ -120,7 +144,22 @@ public sealed partial class GameSession : ITurnHandler
     /// Executes a player command. Returns true if it used game time, in which case monsters and the
     /// world advance until the player can act again. Commands that fail take no time.
     /// </summary>
-    public bool Execute(GameCommand command) => command switch
+    public bool Execute(GameCommand command)
+    {
+        // A replay records the commands given from outside (not those one command runs for another).
+        if (_replayDepth == 0) Recorder?.Command(command);
+        _replayDepth++;
+        try
+        {
+            return Dispatch(command);
+        }
+        finally
+        {
+            _replayDepth--;
+        }
+    }
+
+    private bool Dispatch(GameCommand command) => command switch
     {
         CountedCommand counted => Repeat(counted.Command, Math.Clamp(counted.Count, 1, MaxCommandCount)),
         // Angband do_cmd_walk: walking at a trap you know of tries to disarm it (and keeps trying).
