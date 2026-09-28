@@ -37,6 +37,11 @@ public sealed class Player : IActor
 
     /// <summary>World ticks until Word of Recall activates (0 = not active).</summary>
     public int RecallTimer { get; set; }
+    /// <summary>
+    /// Where Word of Recall takes you from town (Angband recall_depth); 0 means the deepest level
+    /// reached. Set by choosing a level (persistent dungeons) or "set recall depth to current depth".
+    /// </summary>
+    public int RecallDepth { get; set; }
     /// <summary>World ticks until Deep Descent takes effect (0 = not active).</summary>
     public int DeepDescentTimer { get; set; }
     public int Level { get; set; } = 1;

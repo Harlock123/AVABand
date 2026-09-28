@@ -131,4 +131,55 @@ public class RepeatUiTests
         Assert.Equal(0, vm.PendingCount);
         Assert.Equal("Cancelled.", vm.LastMessage);
     }
+
+    [AvaloniaFact]
+    public void Recall_InAPersistentDungeon_AsksWhichLevel()
+    {
+        var (window, vm) = Open("warrior");
+        var game = vm.Game;
+        game.Options[OptionIds.LevelsPersist] = true;
+        foreach (var down in new[] { true, true, false, false })
+        {
+            game.Player.Position = game.Level.FindFeature(down ? Angband.Core.Definitions.TerrainFlags.DownStair
+                : Angband.Core.Definitions.TerrainFlags.UpStair).First();
+            foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+            vm.Execute(new TakeStairsCommand(down));
+        }
+        Assert.Equal(0, game.Player.Depth);
+        var scroll = game.Objects.Create("scroll_of_word_of_recall");
+        game.Knowledge.LearnKind(scroll.Kind);
+        scroll = game.Player.Inventory.Add(scroll)!;
+
+        vm.Execute(new UseCommand(scroll));
+        Assert.True(vm.IsEnteringNumber);
+        Assert.StartsWith("Which level do you wish to return to (0 to cancel)? 2", vm.LastMessage); // the deepest
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.Contains("You must choose a level you have previously visited.", vm.Messages);
+        Assert.True(vm.IsEnteringNumber);                        // asked again
+        window.KeyPressQwerty(PhysicalKey.Digit1, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.False(vm.IsEnteringNumber);
+        Assert.True(game.Player.RecallTimer > 0);
+        Assert.Equal(1, game.Player.RecallDepth);
+    }
+
+    [AvaloniaFact]
+    public void Recall_BelowTheDeepestLevel_AsksWhetherToSetTheDepth()
+    {
+        var (window, vm) = Open("warrior");
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(8));
+        vm.Execute(new DebugJumpCommand(3));
+        var scroll = game.Objects.Create("scroll_of_word_of_recall");
+        game.Knowledge.LearnKind(scroll.Kind);
+        scroll = game.Player.Inventory.Add(scroll)!;
+        vm.Execute(new UseCommand(scroll));
+        Assert.True(vm.IsConfirming);
+        Assert.Equal("Set recall depth to current depth? (y/n)", vm.LastMessage);
+        window.KeyPressQwerty(PhysicalKey.Y, RawInputModifiers.None);
+        Assert.True(game.Player.RecallTimer > 0);
+        Assert.Equal(3, game.Player.MaxDepth);
+    }
 }

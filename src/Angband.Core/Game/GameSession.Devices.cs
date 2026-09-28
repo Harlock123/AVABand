@@ -234,7 +234,8 @@ public sealed partial class GameSession
             {
                 Publish(new MessageEvent("You feel yourself yanked downwards!"));
                 // Forced descent recalls one level below the deepest reached (Angband player_set_recall_depth).
-                var depth = ForceDescend && QuestAt(Player.MaxDepth) is null ? DescentTarget(Player.MaxDepth) : Player.MaxDepth;
+                var depth = ForceDescend && QuestAt(Player.MaxDepth) is null ? DescentTarget(Player.MaxDepth)
+                    : Player.RecallDepth > 0 ? Math.Min(Player.RecallDepth, Player.MaxDepth) : Player.MaxDepth;
                 ChangeLevel(Math.Clamp(depth, 1, Data.Constants.MaxDepth), StairArrival.None);
             }
         }
@@ -448,9 +449,55 @@ public sealed partial class GameSession
             Publish(new MessageEvent("A tension leaves the air around you..."));
             return true;
         }
+        // Angband effect_handler_RECALL: set where it will take you.
+        var setHere = RecallSetsDepth;
+        var choice = RecallChoice;
+        RecallSetsDepth = null;
+        RecallChoice = null;
+        if (Player.Depth > 0)
+        {
+            if (Player.Depth != Player.MaxDepth)
+            {
+                if (setHere == true) Player.RecallDepth = Player.MaxDepth = Player.Depth;
+            }
+            else Player.RecallDepth = 0; // the deepest level
+        }
+        else if (PersistentLevels && choice is { } level)
+        {
+            // Persistent dungeons: a level visited before (4.2 player_get_recall_depth).
+            if (!RecallChoices.Contains(level))
+            {
+                Publish(new MessageEvent("You must choose a level you have previously visited."));
+                return false;
+            }
+            Player.RecallDepth = level;
+        }
         Player.RecallTimer = 15 + Rng.RandInt1(20);
         Publish(new MessageEvent("The air about you becomes charged..."));
         return true;
+    }
+
+    /// <summary>The answer to "Set recall depth to current depth?", for the next recall started below the deepest level.</summary>
+    public bool? RecallSetsDepth { get; set; }
+
+    /// <summary>The level chosen to return to, for the next recall started from town in a persistent dungeon.</summary>
+    public int? RecallChoice { get; set; }
+
+    /// <summary>The levels a persistent dungeon's recall can take you to: those kept.</summary>
+    public IReadOnlyList<int> RecallChoices => [.. _storedLevels.Keys.Where(d => d > 0).Order()];
+
+    /// <summary>Whether a command would start (not cancel) Word of Recall: a recall scroll, rod, spell or activation.</summary>
+    public bool StartsRecall(GameCommand command)
+    {
+        if (Player.RecallTimer > 0 || InArena) return false;
+        var effect = command switch
+        {
+            UseCommand use => use.Item.Kind.Effect,
+            ActivateCommand activate => activate.Item.Activation,
+            CastCommand cast => Data.Spell(cast.SpellId)?.Effect,
+            _ => null,
+        };
+        return effect is not null && effect.Split(';').Any(e => e.Trim().Split(':')[0] == "recall");
     }
 
     /// <summary>

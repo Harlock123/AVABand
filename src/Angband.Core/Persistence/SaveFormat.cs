@@ -162,6 +162,7 @@ public sealed class PlayerSave
     public Dictionary<string, int> StatDrain { get; set; } = [];
     public long MaxExperience { get; set; }
     public int RecallTimer { get; set; }
+    public int RecallDepth { get; set; }
     public int DeepDescentTimer { get; set; }
     public List<int> HpGains { get; set; } = [];
     public List<string> LearnedSpells { get; set; } = [];

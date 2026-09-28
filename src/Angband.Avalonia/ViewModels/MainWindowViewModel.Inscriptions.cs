@@ -50,9 +50,25 @@ public sealed partial class MainWindowViewModel
         LastMessage = question + " (y/n)";
     }
 
-    /// <summary>Answers a question asked by <see cref="AskFirst"/>; false if none was pending.</summary>
+    private Action<bool>? _answerAction;
+
+    /// <summary>Asks a yes/no question whose answer, either way, goes to <paramref name="answer"/>.</summary>
+    private void AskYesNo(string question, Action<bool> answer)
+    {
+        _answerAction = answer;
+        IsConfirming = true;
+        LastMessage = question + " (y/n)";
+    }
+
+    /// <summary>Answers a question asked by <see cref="AskFirst"/> or <see cref="AskYesNo"/>; false if none was pending.</summary>
     private bool ConfirmAction(bool yes)
     {
+        if (_answerAction is { } answer)
+        {
+            _answerAction = null;
+            answer(yes);
+            return true;
+        }
         if (_confirmAction is not { } action) return false;
         _confirmAction = null;
         if (yes) action();

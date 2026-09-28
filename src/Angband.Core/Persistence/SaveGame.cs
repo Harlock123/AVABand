@@ -125,7 +125,7 @@ public static class SaveGame
                 ConHpRemainder = p.ConHpRemainder, Regenerates = p.Regenerates, Infravision = p.Infravision,
                 MaxMana = p.MaxMana, Mana = p.Mana, ManaFraction = p.ManaFraction,
                 Stats = new(p.Stats), BaseStats = new(p.BaseStats), NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
-                MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, DeepDescentTimer = p.DeepDescentTimer,
+                MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, RecallDepth = p.RecallDepth, DeepDescentTimer = p.DeepDescentTimer,
                 LearnedSpells = [.. p.LearnedSpells], CastSpells = p.CastSpells.Order(StringComparer.Ordinal).ToList(),
                 BaseSpeed = p.BaseSpeed, BaseArmour = p.BaseArmour, BaseToHit = p.BaseToHit, BaseToDam = p.BaseToDam,
                 BaseStealth = p.BaseStealth, BaseBlows = p.BaseBlows, BaseShots = p.BaseShots,
@@ -330,6 +330,7 @@ public static class SaveGame
         p.MaxExperience = Math.Max(ps.MaxExperience, ps.Experience);
         p.HpGains.AddRange(ps.HpGains);
         (p.RecallTimer, p.DeepDescentTimer) = (ps.RecallTimer, ps.DeepDescentTimer);
+        p.RecallDepth = ps.RecallDepth;
         // Spells since retired (AVABand's pre-4.2 books) are forgotten.
         p.LearnedSpells.AddRange(ps.LearnedSpells.Where(id => data.Spell(id) is not null));
         p.CastSpells.UnionWith(ps.CastSpells.Where(id => data.Spell(id) is not null));

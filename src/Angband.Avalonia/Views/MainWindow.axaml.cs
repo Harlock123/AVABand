@@ -184,6 +184,14 @@ public partial class MainWindow : Window
             return;
         }
 
+        // A number asked for (the level to recall to): digits, Backspace, Enter, Escape.
+        if (vm.IsEnteringNumber)
+        {
+            vm.NumberKey(KeyboardInput.Symbol(e), e.Key == Key.Back, e.Key == Key.Escape, e.Key == Key.Enter);
+            e.Handled = true;
+            return;
+        }
+
         // Typing a count after '0': digits, Backspace, Escape and Enter; any other key is the command.
         if (vm.IsEnteringCount && !ctrlOrAlt
             && vm.CountKey(KeyboardInput.Symbol(e), e.Key == Key.Back, e.Key == Key.Escape, e.Key == Key.Enter))

@@ -222,6 +222,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     /// <summary>Runs a command from any input device.</summary>
     public void Execute(GameCommand command)
     {
+        if (AskAboutRecall(command)) return;
         command = WithCount(command);
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
         NoteForRepeat(command, _game.Execute(command));

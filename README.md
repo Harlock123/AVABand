@@ -386,7 +386,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     Destruction and Banishment (three artifacts).
   - **Potions & scrolls**: stat gain (and Brawn-style trades), restore life levels, experience,
     healing to *Healing* and Life, restore mana, heroism, berserk strength, resistances, true
-    seeing, infravision, enlightenment; Word of Recall (to your deepest level and back), Deep
+    seeing, infravision, enlightenment; Word of Recall (to your deepest level and back; read below your deepest level it asks, as
+    4.2 does, "Set recall depth to current depth?" — yes makes this level the deepest), Deep
     Descent, Teleport Level, enchanting, recharging, acquirement, protection from evil,
     banishment of everything nearby, summoning, aggravation and more.
   Generation ports Angband's `m_bonus` and `apply_magic` (good/great/bad rolls, egos, artifacts
@@ -672,7 +673,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     staircase over each up staircase of the level below), each dug through to the rest of the level,
     and no others of that kind, and you arrive on the square you left from — so going back up lands
     you on the staircase you came down. No labyrinths are made for a persistent dungeon (as in 4.2);
-    the debug menu's *Regenerate level* still makes a new one. Kept levels are in the save.
+    the debug menu's *Regenerate level* still makes a new one. Kept levels are in the save. Word
+    of Recall read in town asks "Which level do you wish to return to?" (the deepest kept level
+    by default; only a level you have visited will do).
   - *Cheat*: peek into monster creation (uniques on the level), peek into dungeon creation (the
     level profile and its vaults), and avoid death (you are healed, cured and sent to town). Once
     one is used the character is marked as a cheater and, as in Angband, its score is not recorded.
@@ -680,7 +683,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     staircase after going down), where AVABand used to put you on a staircase leading onward.
   - Not offered: the roguelike keyset (AVABand's keys are rebindable instead), use sound (see the
     Sound tab), animate flicker, auto-more, cheat_xtra, and the birth option for floor stacking,
-    which AVABand doesn't have. (Persistent levels here don't yet ask for a recall depth, as 4.2 does.)
+    which AVABand doesn't have.
 - **Inscriptions** (`Items/Inscription.cs`, `Game/GameSession.Inscriptions.cs`,
   `ViewModels/MainWindowViewModel.Inscriptions.cs`): Angband's notes on objects. `{` picks an item
   (carried, worn or underfoot) and asks for the text; `}` removes one; neither takes game time.
