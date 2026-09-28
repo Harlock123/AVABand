@@ -94,6 +94,7 @@ public sealed partial class GameSession
 
         if (monster.IsAfraid) return FleeMoves(monster, candidates);
         if (KeepsAway(monster)) return KeepAwayMoves(monster, candidates);
+        if (GuardMoves(monster, candidates) is { } guarding) return guarding;
 
         // Angband: a monster that can see the decoy goes for it.
         if (DecoyFor(monster) is { } decoy)
@@ -144,6 +145,28 @@ public sealed partial class GameSession
             return [DirectionExtensions.FromOffset(Player.Position.X - here.X, Player.Position.Y - here.Y)];
         }
         return better.Select(c => c.Dir).ToList();
+    }
+
+    /// <summary>
+    /// Angband get_move_bodyguard: a bodyguard more than a step from its leader moves back towards
+    /// it — by a square that also brings it nearer the player, if there is one — unless the leader
+    /// is out of sight and more than 10 squares off (then it looks after itself). Null when it
+    /// needn't (or can't): it then moves as any monster would.
+    /// </summary>
+    private List<Direction>? GuardMoves(Monster monster, List<(Direction Dir, Loc To)> candidates)
+    {
+        if (LeaderOf(monster) is not { } leader) return null;
+        var here = monster.Position;
+        var distance = here.DistanceTo(leader.Position);
+        if (distance <= 1) return null;
+        if (distance > 10 && !ProjectionPath.Projectable(Level, here, leader.Position, MaxRange)) return null;
+        var towardPlayer = here.DistanceTo(Player.Position);
+        var closer = candidates
+            .Where(c => c.To.DistanceTo(leader.Position) < distance && (Level.IsPassable(c.To) || c.To == Player.Position))
+            .OrderBy(c => c.To.DistanceTo(Player.Position) < towardPlayer ? 0 : 1)
+            .ThenBy(c => c.To.DistanceTo(leader.Position))
+            .Select(c => c.Dir).ToList();
+        return closer.Count > 0 ? closer : null;
     }
 
     /// <summary>
@@ -365,6 +388,8 @@ public sealed partial class GameSession
                 foreach (var item in Player.Inventory.Equipped.ToList()) LearnRunesOf(item, RuneIds.ToAc);
             }
 
+            // Angband melee_effect_elemental: fire, acid, lightning and cold blows harm the pack too.
+            if (effect.Element is { } harming && damage > 0) InventoryDamage(harming, Math.Min(damage * 5, 300));
             TakeHit(damage, killer);
             Publish(new MonsterAttackEvent(monster.Id, Hit: true, damage, blow.Method));
             if (Player.IsDead) break;

@@ -401,7 +401,8 @@ public static class DataLoader
         var ids = spells.Select(s => s.Id).ToHashSet();
         foreach (var s in spells)
         {
-            if (s.Element is { } e && elements.All(x => x.Id != e)) errors.Add($"monster spell '{s.Id}' uses unknown element '{e}'.");
+            if (s.Element is { } e && elements.All(x => x.Id != e) && !Projections.Unresistable.Contains(e))
+                errors.Add($"monster spell '{s.Id}' uses unknown element '{e}'.");
             if (s.Timed is { } t && timed.All(x => x.Id != t)) errors.Add($"monster spell '{s.Id}' uses unknown timed effect '{t}'.");
         }
         foreach (var m in monsters)

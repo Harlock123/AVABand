@@ -106,6 +106,11 @@ public sealed class MonsterFriendDef
     public char? Glyph { get; init; }
 
     public bool IsSame => string.Equals(Race, "same", StringComparison.Ordinal);
+
+    /// <summary>Angband's group role for these escorts: <c>bodyguard</c> ones stay by their leader and never lose heart.</summary>
+    public string? Role { get; init; }
+
+    public bool IsBodyguard => string.Equals(Role, "bodyguard", StringComparison.Ordinal);
 }
 
 /// <summary>A kind of monster (Angband monster.txt).</summary>
@@ -205,6 +210,16 @@ public static class MonsterFlags
     public const string Giant = "GIANT";
     public const string Dragon = "DRAGON";
     public const string Demon = "DEMON";
+}
+
+/// <summary>
+/// Angband 4.2 projection types a player can't resist (projection.txt), used only for what they do
+/// besides damage: they aren't elements in <c>elements.json</c>, so no gear resists them.
+/// </summary>
+public static class Projections
+{
+    public static readonly IReadOnlySet<string> Unresistable =
+        new HashSet<string>(["water", "ice", "gravity", "inertia", "force", "time", "plasma"], StringComparer.Ordinal);
 }
 
 /// <summary>What a monster spell does.</summary>

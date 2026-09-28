@@ -468,6 +468,7 @@
   },
   {
     "id": "lantern",
+    "ignore": ["fire"],
     "name": "Lantern~",
     "base": "light",
     "level": 5,
@@ -901,6 +902,7 @@
   },
   {
     "id": "ring_of_resist_fire_and_cold",
+    "ignore": ["cold", "fire"],
     "name": "Resist Fire and Cold",
     "base": "ring",
     "level": 10,
@@ -953,6 +955,7 @@
   },
   {
     "id": "amulet_of_resist_lightning",
+    "ignore": ["elec"],
     "name": "Resist Lightning",
     "base": "amulet",
     "level": 10,
@@ -1650,6 +1653,7 @@
   },
   {
     "id": "mithril_arrow",
+    "ignore": ["acid", "fire"],
     "name": "Mithril Arrow~",
     "base": "arrow",
     "level": 55,
@@ -1678,6 +1682,7 @@
   },
   {
     "id": "mithril_bolt",
+    "ignore": ["acid"],
     "name": "Mithril Bolt~",
     "base": "bolt",
     "level": 50,
@@ -1776,6 +1781,7 @@
   },
   {
     "id": "pair_of_iron_shod_boots",
+    "ignore": ["fire"],
     "name": "Pair~ of Iron Shod Boots",
     "base": "boots",
     "level": 5,
@@ -1789,6 +1795,7 @@
   },
   {
     "id": "pair_of_steel_shod_boots",
+    "ignore": ["fire"],
     "name": "Pair~ of Steel Shod Boots",
     "base": "boots",
     "level": 20,
@@ -1802,6 +1809,7 @@
   },
   {
     "id": "pair_of_mithril_shod_boots",
+    "ignore": ["acid", "fire"],
     "name": "Pair~ of Mithril Shod Boots",
     "base": "boots",
     "level": 60,
@@ -1815,6 +1823,7 @@
   },
   {
     "id": "pair_of_ethereal_slippers",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Pair~ of Ethereal Slippers",
     "base": "boots",
     "level": 0,
@@ -1852,6 +1861,7 @@
   },
   {
     "id": "golden_crown",
+    "ignore": ["acid"],
     "name": "Golden Crown~",
     "base": "crown",
     "level": 45,
@@ -1864,6 +1874,7 @@
   },
   {
     "id": "jewel_encrusted_crown",
+    "ignore": ["acid"],
     "name": "Jewel Encrusted Crown~",
     "base": "crown",
     "level": 50,
@@ -2006,6 +2017,7 @@
   },
   {
     "id": "mithril_chain_mail",
+    "ignore": ["acid"],
     "name": "Mithril Chain Mail~",
     "base": "hard_armour",
     "level": 55,
@@ -2019,6 +2031,7 @@
   },
   {
     "id": "mithril_plate_mail",
+    "ignore": ["acid"],
     "name": "Mithril Plate Mail~",
     "base": "hard_armour",
     "level": 60,
@@ -2032,6 +2045,7 @@
   },
   {
     "id": "adamantite_plate_mail",
+    "ignore": ["acid"],
     "name": "Adamantite Plate Mail~",
     "base": "hard_armour",
     "level": 75,
@@ -2062,6 +2076,7 @@
   },
   {
     "id": "ethereal_cloak",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Ethereal Cloak~",
     "base": "cloak",
     "level": 50,
@@ -2075,6 +2090,7 @@
   },
   {
     "id": "set_of_mithril_gauntlets",
+    "ignore": ["acid", "fire"],
     "name": "Set~ of Mithril Gauntlets",
     "base": "gloves",
     "level": 0,
@@ -2102,6 +2118,7 @@
   },
   {
     "id": "set_of_alchemists_gloves",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Set~ of Alchemist's Gloves",
     "base": "gloves",
     "level": 0,
@@ -2159,6 +2176,7 @@
   },
   {
     "id": "mithril_shield",
+    "ignore": ["acid"],
     "name": "Mithril Shield~",
     "base": "shield",
     "level": 70,
@@ -2242,6 +2260,7 @@
   },
   {
     "id": "ring_of_speed",
+    "ignore": ["elec"],
     "name": "Speed",
     "base": "ring",
     "level": 75,
@@ -2322,6 +2341,7 @@
   },
   {
     "id": "ring_of_flames",
+    "ignore": ["fire"],
     "name": "Flames",
     "base": "ring",
     "level": 50,
@@ -2343,6 +2363,7 @@
   },
   {
     "id": "ring_of_acid",
+    "ignore": ["acid"],
     "name": "Acid",
     "base": "ring",
     "level": 50,
@@ -2364,6 +2385,7 @@
   },
   {
     "id": "ring_of_ice",
+    "ignore": ["cold"],
     "name": "Ice",
     "base": "ring",
     "level": 50,
@@ -2385,6 +2407,7 @@
   },
   {
     "id": "ring_of_lightning",
+    "ignore": ["elec"],
     "name": "Lightning",
     "base": "ring",
     "level": 50,
@@ -2618,6 +2641,7 @@
   },
   {
     "id": "amulet_of_resist_acid",
+    "ignore": ["acid"],
     "name": "Resist Acid",
     "base": "amulet",
     "level": 10,
@@ -2632,6 +2656,7 @@
   },
   {
     "id": "amulet_of_resistance",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Resistance",
     "base": "amulet",
     "level": 60,
@@ -2649,6 +2674,7 @@
   },
   {
     "id": "amulet_of_sustenance",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Sustenance",
     "base": "amulet",
     "level": 60,
@@ -2671,6 +2697,7 @@
   },
   {
     "id": "amulet_of_the_magi",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "the Magi",
     "base": "amulet",
     "level": 70,
@@ -2693,6 +2720,7 @@
   },
   {
     "id": "amulet_of_esp",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "ESP",
     "base": "amulet",
     "level": 50,
@@ -3629,6 +3657,7 @@
   },
   {
     "id": "potion_of_dragon_breath",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Dragon Breath",
     "base": "potion",
     "level": 0,
@@ -3719,6 +3748,7 @@
   },
   {
     "id": "wand_of_lightning_balls",
+    "ignore": ["elec"],
     "name": "Lightning Balls",
     "base": "wand",
     "level": 35,
@@ -3732,6 +3762,7 @@
   },
   {
     "id": "wand_of_cold_balls",
+    "ignore": ["cold"],
     "name": "Cold Balls",
     "base": "wand",
     "level": 40,
@@ -3745,6 +3776,7 @@
   },
   {
     "id": "wand_of_fire_balls",
+    "ignore": ["fire"],
     "name": "Fire Balls",
     "base": "wand",
     "level": 50,
@@ -3758,6 +3790,7 @@
   },
   {
     "id": "wand_of_acid_balls",
+    "ignore": ["acid"],
     "name": "Acid Balls",
     "base": "wand",
     "level": 50,
@@ -3927,6 +3960,7 @@
   },
   {
     "id": "wand_of_wonder",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Wonder",
     "base": "wand",
     "level": 3,
@@ -3940,6 +3974,7 @@
   },
   {
     "id": "wand_of_dragons_flame",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Dragon's Flame",
     "base": "wand",
     "level": 50,
@@ -3953,6 +3988,7 @@
   },
   {
     "id": "wand_of_dragons_frost",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Dragon's Frost",
     "base": "wand",
     "level": 50,
@@ -3979,6 +4015,7 @@
   },
   {
     "id": "wand_of_annihilation",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Annihilation",
     "base": "wand",
     "level": 60,
@@ -4187,6 +4224,7 @@
   },
   {
     "id": "staff_of_healing",
+    "ignore": ["elec"],
     "name": "Healing",
     "base": "staff",
     "level": 70,
@@ -4291,6 +4329,7 @@
   },
   {
     "id": "staff_of_speed",
+    "ignore": ["elec"],
     "name": "Speed",
     "base": "staff",
     "level": 40,
@@ -4317,6 +4356,7 @@
   },
   {
     "id": "staff_of_the_magi",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "the Magi",
     "base": "staff",
     "level": 70,
@@ -4343,6 +4383,7 @@
   },
   {
     "id": "rod_of_detection",
+    "ignore": ["elec"],
     "name": "Detection",
     "base": "rod",
     "level": 30,
@@ -4434,6 +4475,7 @@
   },
   {
     "id": "rod_of_fire_balls",
+    "ignore": ["fire"],
     "name": "Fire Balls",
     "base": "rod",
     "level": 75,
@@ -4447,6 +4489,7 @@
   },
   {
     "id": "rod_of_cold_balls",
+    "ignore": ["cold"],
     "name": "Cold Balls",
     "base": "rod",
     "level": 60,
@@ -4460,6 +4503,7 @@
   },
   {
     "id": "rod_of_lightning_balls",
+    "ignore": ["elec"],
     "name": "Lightning Balls",
     "base": "rod",
     "level": 55,
@@ -4473,6 +4517,7 @@
   },
   {
     "id": "rod_of_acid_balls",
+    "ignore": ["acid"],
     "name": "Acid Balls",
     "base": "rod",
     "level": 70,
@@ -4525,6 +4570,7 @@
   },
   {
     "id": "rod_of_healing",
+    "ignore": ["elec"],
     "name": "Healing",
     "base": "rod",
     "level": 80,
@@ -4538,6 +4584,7 @@
   },
   {
     "id": "rod_of_restoration",
+    "ignore": ["elec"],
     "name": "Restoration",
     "base": "rod",
     "level": 80,
@@ -4629,6 +4676,7 @@
   },
   {
     "id": "rod_of_recall",
+    "ignore": ["elec"],
     "name": "Recall",
     "base": "rod",
     "level": 30,
@@ -4642,6 +4690,7 @@
   },
   {
     "id": "rod_of_speed",
+    "ignore": ["elec"],
     "name": "Speed",
     "base": "rod",
     "level": 95,
@@ -4721,6 +4770,7 @@
   },
   {
     "id": "black_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Black Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4743,6 +4793,7 @@
   },
   {
     "id": "blue_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Blue Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4765,6 +4816,7 @@
   },
   {
     "id": "white_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "White Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4787,6 +4839,7 @@
   },
   {
     "id": "red_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Red Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4809,6 +4862,7 @@
   },
   {
     "id": "green_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Green Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 60,
@@ -4831,6 +4885,7 @@
   },
   {
     "id": "multi_hued_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Multi-Hued Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 90,
@@ -4857,6 +4912,7 @@
   },
   {
     "id": "shining_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Shining Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 65,
@@ -4880,6 +4936,7 @@
   },
   {
     "id": "law_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Law Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 80,
@@ -4903,6 +4960,7 @@
   },
   {
     "id": "gold_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Gold Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 50,
@@ -4925,6 +4983,7 @@
   },
   {
     "id": "chaos_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Chaos Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 80,
@@ -4948,6 +5007,7 @@
   },
   {
     "id": "balance_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Balance Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 95,
@@ -4973,6 +5033,7 @@
   },
   {
     "id": "power_dragon_scale_mail",
+    "ignore": ["acid", "elec", "fire", "cold"],
     "name": "Power Dragon Scale Mail~",
     "base": "dragon_armour",
     "level": 100,

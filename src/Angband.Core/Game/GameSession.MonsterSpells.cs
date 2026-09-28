@@ -93,10 +93,11 @@ public sealed partial class GameSession
         {
             case MonsterSpellKind.Bolt:
             case MonsterSpellKind.Ball:
-                ElementalHit(spell.Element, SpellDamage(spell, race), killer);
+                ElementalHit(spell.Element, SpellDamage(spell, race), killer, race.Depth, monster.Position);
                 break;
             case MonsterSpellKind.Breath:
-                ElementalHit(spell.Element, Math.Min(spell.BreathCap, Math.Max(1, monster.Hp / Math.Max(1, spell.BreathDivisor))), killer);
+                ElementalHit(spell.Element, Math.Min(spell.BreathCap, Math.Max(1, monster.Hp / Math.Max(1, spell.BreathDivisor))), killer,
+                    race.Depth, monster.Position);
                 break;
             case MonsterSpellKind.Wound:
                 if (Rng.RandInt0(100) < Player.SkillSave) Publish(new MessageEvent("You resist the effects!"));
@@ -219,7 +220,7 @@ public sealed partial class GameSession
     /// Damage of an element (or plain damage when <paramref name="elementId"/> is null), reduced by the
     /// player's resistance. Taking elemental damage teaches the resistance runes of worn gear.
     /// </summary>
-    public void ElementalHit(string? elementId, int damage, string killer)
+    public void ElementalHit(string? elementId, int damage, string killer, int power = 0, Loc? source = null)
     {
         if (elementId is not null && Data.Element(elementId) is { } element)
         {
@@ -227,7 +228,8 @@ public sealed partial class GameSession
             if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(elementId))) LearnRune(RuneIds.Resist(elementId));
         }
         TakeHit(damage, killer);
-        if (elementId == "chaos" && !Player.IsDead) ChaosSideEffects();
+        // Then what the element does besides (Angband project_player's handlers).
+        if (elementId is not null && !Player.IsDead) ElementSideEffects(elementId, damage, power, source);
     }
 
     /// <summary>

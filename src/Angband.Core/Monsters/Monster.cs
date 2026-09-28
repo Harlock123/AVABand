@@ -40,6 +40,12 @@ public sealed class Monster : IActor
     public int Confused { get; set; }
     public int Fear { get; set; }
     public int Held { get; set; }
+
+    /// <summary>
+    /// Angband MON_GROUP_BODYGUARD: the id of the leader this monster guards, while it lives (then
+    /// the monster is an ordinary member of its group).
+    /// </summary>
+    public int? BodyguardOf { get; set; }
     /// <summary>Hasted (Angband mon_tmd FAST): +10 speed while it lasts.</summary>
     public int Fast { get; set; }
     /// <summary>Slowed (Angband mon_tmd SLOW): -10 speed while it lasts.</summary>

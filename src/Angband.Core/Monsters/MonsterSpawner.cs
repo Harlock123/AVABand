@@ -95,7 +95,11 @@ public sealed class MonsterSpawner(GameData data)
                 if (friendRace is null) break;
             }
             if (friendRace is null) continue;
-            placed.AddRange(PlaceFriends(level, rng, race, friendRace, total, at, asleep, uniques));
+            var escorts = PlaceFriends(level, rng, race, friendRace, total, at, asleep, uniques);
+            // Angband group roles: bodyguards are bound to the monster they escort.
+            if (friend.IsBodyguard)
+                foreach (var guard in escorts.Where(g => g != placed[0])) guard.BodyguardOf = placed[0].Id;
+            placed.AddRange(escorts);
         }
         return placed;
     }

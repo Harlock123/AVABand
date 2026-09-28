@@ -198,6 +198,8 @@ public sealed class MonsterSave
     public int Fast { get; set; }
     public int Slow { get; set; }
     public bool Camouflaged { get; set; }
+    /// <summary>The leader it guards (Angband bodyguards); null for everyone else and in older saves.</summary>
+    public int? BodyguardOf { get; set; }
     /// <summary>A shapechanged monster's own race (Race is its current form).</summary>
     public string? OriginalRace { get; set; }
     public ItemSave? MimicItem { get; set; }

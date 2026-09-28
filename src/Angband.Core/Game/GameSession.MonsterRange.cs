@@ -29,6 +29,7 @@ public sealed partial class GameSession
         int min;
 
         if (monster.IsAfraid || race.Has("FRIGHTENED")) min = flee; // the afraid all run
+        else if (LeaderOf(monster) is not null) min = 1;      // bodyguards don't flee
         else
         {
             min = 1;
@@ -76,6 +77,18 @@ public sealed partial class GameSession
 
     private bool Breathes(MonsterRaceDef race) =>
         race.Spells.Any(s => Data.MonsterSpell(s)?.Kind == MonsterSpellKind.Breath);
+
+    /// <summary>
+    /// The leader a bodyguard guards, while it lives; when it has died the bodyguard becomes an
+    /// ordinary member of its group (Angband monster_group_remove_leader).
+    /// </summary>
+    public Monster? LeaderOf(Monster monster)
+    {
+        if (monster.BodyguardOf is not { } id) return null;
+        var leader = Level.Monsters.All.FirstOrDefault(m => m.Id == id && m.IsActive);
+        if (leader is null) monster.BodyguardOf = null;
+        return leader;
+    }
 
     /// <summary>Whether the monster's morale has broken: it keeps right away from the player.</summary>
     private bool KeepsAway(Monster monster) => !monster.IsAfraid && CombatRange(monster).Min >= FleeRange;

@@ -140,6 +140,14 @@ public sealed class Item
         && (Note is null || other.Note is null || Note == other.Note)
         && Ignored == other.Ignored;
 
+    /// <summary>
+    /// Whether an element can harm it in the pack (Angband EL_INFO_HATES without EL_INFO_IGNORE):
+    /// its base hates the element and neither its kind nor its ego is proof against it. Artifacts
+    /// are never harmed.
+    /// </summary>
+    public bool HarmedBy(string element) =>
+        Artifact is null && Base.Hates.Contains(element) && !Kind.Ignore.Contains(element) && Ego?.Ignore.Contains(element) != true;
+
     /// <summary>Wands and staves: a stack's charges are shared (Angband tval_can_have_charges).</summary>
     public bool HasCharges => Base.Id is "wand" or "staff";
 

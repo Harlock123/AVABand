@@ -4651,7 +4651,8 @@
    {
     "chance": 100,
     "number": "1d5",
-    "race": "large_kobold"
+    "race": "large_kobold",
+    "role": "bodyguard"
    }
   ],
   "description": "Strong and powerful, for a kobold."
@@ -10292,7 +10293,8 @@
    {
     "chance": 100,
     "number": "4d4",
-    "race": "uruk"
+    "race": "uruk",
+    "role": "bodyguard"
    }
   ],
   "description": "A large and powerful orc, he looks just like his father. He is tall and fast, but fortunately blessed with orcish brains."
@@ -11389,7 +11391,8 @@
    {
     "chance": 100,
     "number": "4d4",
-    "race": "uruk"
+    "race": "uruk",
+    "role": "bodyguard"
    },
    {
     "chance": 80,
@@ -11798,7 +11801,8 @@
    {
     "chance": 100,
     "number": "4d4",
-    "race": "uruk"
+    "race": "uruk",
+    "role": "bodyguard"
    },
    {
     "chance": 50,
@@ -17663,7 +17667,8 @@
    {
     "chance": 100,
     "number": "3d3",
-    "race": "easterling_champion"
+    "race": "easterling_champion",
+    "role": "bodyguard"
    },
    {
     "chance": 100,
@@ -18028,7 +18033,8 @@
    {
     "chance": 100,
     "number": "3d3",
-    "race": "cave_ogre"
+    "race": "cave_ogre",
+    "role": "bodyguard"
    },
    {
     "chance": 80,
@@ -19218,7 +19224,8 @@
    {
     "chance": 100,
     "number": "2d5",
-    "race": "easterling_champion"
+    "race": "easterling_champion",
+    "role": "bodyguard"
    }
   ],
   "description": "A mighty warrior from the east, Lorgan hates everything that he cannot control.",
@@ -22398,7 +22405,8 @@
    {
     "chance": 100,
     "number": "3d3",
-    "race": "giant_army_ant"
+    "race": "giant_army_ant",
+    "role": "bodyguard"
    }
   ],
   "description": "She's upset because you hurt her children.",
@@ -22484,7 +22492,8 @@
    {
     "chance": 100,
     "number": "4d4",
-    "race": "olog"
+    "race": "olog",
+    "role": "bodyguard"
    }
   ],
   "description": "A massive and cruel troll of great power, drool slides caustically down his muscular frame. Despite his bulk, he strikes with stunning speed.",
@@ -33290,7 +33299,8 @@
    {
     "chance": 100,
     "number": "1d2",
-    "race": "greater_balrog"
+    "race": "greater_balrog",
+    "role": "bodyguard"
    },
    {
     "chance": 100,

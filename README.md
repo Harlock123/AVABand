@@ -160,8 +160,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     and a badly hurt monster of about your strength backs off. Monsters that never move, and
     casters that never strike, want 3 more squares (unless you're within 5); archers that shoot
     rarely and casters that cast often (over 24%) like 3 more; breathers in good health don't mind
-    point blank. Taunting cancels it all. (4.2's bodyguards never lose heart; AVABand's escorts
-    don't carry that role yet, so they follow the same rules.)
+    point blank. Taunting cancels it all.
+  - **Bodyguards** (4.2's `bodyguard` escort role, `get_move_bodyguard`): the escorts marked so in
+    `monster.txt` — Bolg's, Azog's and Uglúk's uruks, Gothmog's greater balrogs, the Queen Ant's
+    army ants and five more — are bound to their leader. While it lives they never lose heart, and
+    whenever they are more than a step from it they close back in (by a square nearer you, if there
+    is one) rather than charging — unless it is out of sight and more than 10 squares off. When
+    the leader dies they fight as ordinary monsters. The bond is kept in the save.
 - **Character creation** (`Game/Birth.cs`, `races.json`; Game → New character, Ctrl+N): name,
   11 races (Human, Half-Elf, Elf, Hobbit, Gnome, Dwarf, Half-Orc, Half-Troll, Dunadan, High-Elf,
   Kobold) with stat/skill adjustments, hit dice, experience factors, infravision and innate
@@ -527,6 +532,23 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   comes into view; hopeless rock just gets one futile chip. Rubble may hide an object, treasure
   veins give gold, secret doors are found, permanent rock and the level edge refuse. The General
   Store sells shovels and picks; the character sheet shows your digging skill.
+- **What breaths, balls and bolts do besides damage** (`Game/GameSession.ElementEffects.cs`, 4.2's
+  `project-player.c`): acid, lightning, fire and cold harm your pack — each vulnerable thing may be
+  destroyed ("One of your Scrolls of Phase Door was destroyed!"), weapons and armour lose a point
+  of enchantment instead, rods are four times safer, and immunity, artifacts, what you wear and
+  things proof against the element (a Lantern against fire, Mithril arrows against acid and fire,
+  egos *of Resistance*…; 4.2's IGNORE flags) are spared; elemental melee blows do it too. Very
+  strong fire and cold (from casters of level 80+) may also drain STR or DEX, blind, poison or
+  wither your life. Poison poisons; light and darkness blind (strong light also dazzles, strong
+  darkness drains experience and slows); sound stuns (and strongly, disorients); shards cut; nexus
+  scrambles your stats and teleports you — to the breather, off the level, or far away; nether
+  drains experience (hold life or resistance protect; strong nether dulls the mind and saps
+  energy); chaos hallucinates, confuses and drains; disenchantment dulls your gear; water confuses
+  and stuns; ice cuts, stuns and chills the pack; gravity warps you a few squares, slows and stuns;
+  inertia slows; force stuns and throws you back; time drains experience or stats; plasma stuns.
+  Resisting the element (or the status — free action, protection from confusion, stunning,
+  blindness) stops the side effect as in 4.2. Plasma, ice, water, gravity, inertia, force and time
+  are their own kinds now, not fire and cold: no gear resists them, as in 4.2.
 - **Hallucination** (`image`, Angband's TMD_IMAGE; `Game/GameSession.Search.cs` and the map view):
   the Mushroom of Emergency, monster blows that "cause hallucinations" (a magic mushroom patch's
   spores, a silent watcher's gaze…), chaos (which also confuses and drains experience) and a
@@ -827,9 +849,9 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: the bodyguard role for escorts (so they never lose heart, as in 4.2), and the side effects of the
-other elements' breaths and balls (nexus teleporting you, sound stunning, and so on — only chaos's
-are modelled).
+Natural next steps: amnesia (4.2's TMD_AMNESIA, from very strong darkness and some monster
+spells), and the three weapon egos *of Fury*, *of Flame* and *of Frost*, which aren't in AVABand's
+data yet.
 
 ## Licence
 

@@ -1,6 +1,7 @@
 [
   {
     "id": "sword",
+    "hates": ["acid"],
     "name": "Sword",
     "glyph": "|",
     "color": "White",
@@ -9,6 +10,7 @@
   },
   {
     "id": "hafted",
+    "hates": ["acid", "fire"],
     "name": "Hafted Weapon",
     "glyph": "\\",
     "color": "White",
@@ -17,6 +19,7 @@
   },
   {
     "id": "polearm",
+    "hates": ["acid", "fire"],
     "name": "Polearm",
     "glyph": "/",
     "color": "White",
@@ -41,6 +44,7 @@
   },
   {
     "id": "bow",
+    "hates": ["acid", "fire"],
     "name": "Bow",
     "glyph": "}",
     "color": "Umber",
@@ -66,6 +70,7 @@
   },
   {
     "id": "arrow",
+    "hates": ["acid", "fire"],
     "name": "Arrow",
     "glyph": "{",
     "color": "LightUmber",
@@ -75,6 +80,7 @@
   },
   {
     "id": "bolt",
+    "hates": ["acid"],
     "name": "Bolt",
     "glyph": "{",
     "color": "Slate",
@@ -84,6 +90,7 @@
   },
   {
     "id": "soft_armour",
+    "hates": ["acid", "fire"],
     "name": "Soft Armour",
     "glyph": "(",
     "color": "Slate",
@@ -91,6 +98,7 @@
   },
   {
     "id": "hard_armour",
+    "hates": ["acid"],
     "name": "Hard Armour",
     "glyph": "[",
     "color": "Slate",
@@ -98,6 +106,7 @@
   },
   {
     "id": "shield",
+    "hates": ["acid"],
     "name": "Shield",
     "glyph": ")",
     "color": "Umber",
@@ -105,6 +114,7 @@
   },
   {
     "id": "helm",
+    "hates": ["acid"],
     "name": "Helm",
     "glyph": "]",
     "color": "Umber",
@@ -112,6 +122,7 @@
   },
   {
     "id": "gloves",
+    "hates": ["acid", "fire"],
     "name": "Gloves",
     "glyph": "]",
     "color": "Umber",
@@ -119,6 +130,7 @@
   },
   {
     "id": "boots",
+    "hates": ["acid", "fire"],
     "name": "Boots",
     "glyph": "]",
     "color": "Umber",
@@ -126,6 +138,7 @@
   },
   {
     "id": "cloak",
+    "hates": ["acid", "fire"],
     "name": "Cloak",
     "glyph": "(",
     "color": "Green",
@@ -133,6 +146,7 @@
   },
   {
     "id": "light",
+    "hates": ["fire"],
     "name": "Light Source",
     "glyph": "~",
     "color": "Yellow",
@@ -149,6 +163,7 @@
   },
   {
     "id": "ring",
+    "hates": ["elec"],
     "name": "Ring~",
     "glyph": "=",
     "color": "Red",
@@ -157,6 +172,7 @@
   },
   {
     "id": "magic_book",
+    "hates": ["fire"],
     "name": "Magic Book~",
     "glyph": "?",
     "color": "Red",
@@ -164,6 +180,7 @@
   },
   {
     "id": "prayer_book",
+    "hates": ["fire"],
     "name": "Holy Book~",
     "glyph": "?",
     "color": "LightGreen",
@@ -171,6 +188,7 @@
   },
   {
     "id": "nature_book",
+    "hates": ["fire"],
     "name": "Nature Book~",
     "glyph": "?",
     "color": "Green",
@@ -178,6 +196,7 @@
   },
   {
     "id": "shadow_book",
+    "hates": ["fire"],
     "name": "Necromantic Tome~",
     "glyph": "?",
     "color": "Violet",
@@ -185,6 +204,7 @@
   },
   {
     "id": "potion",
+    "hates": ["cold", "sound", "shards", "ice", "force"],
     "name": "Potion~",
     "glyph": "!",
     "color": "LightBlue",
@@ -193,6 +213,7 @@
   },
   {
     "id": "scroll",
+    "hates": ["acid", "fire"],
     "name": "Scroll~",
     "glyph": "?",
     "color": "White",
@@ -208,6 +229,7 @@
   },
   {
     "id": "flask",
+    "hates": ["cold", "sound", "shards", "ice", "force"],
     "name": "Flask",
     "glyph": "!",
     "color": "Yellow",
@@ -215,6 +237,7 @@
   },
   {
     "id": "crown",
+    "hates": ["acid"],
     "name": "Crown",
     "glyph": "]",
     "color": "Yellow",
@@ -239,6 +262,7 @@
   },
   {
     "id": "wand",
+    "hates": ["elec"],
     "name": "Wand",
     "glyph": "-",
     "color": "LightSlate",
@@ -247,6 +271,7 @@
   },
   {
     "id": "staff",
+    "hates": ["acid", "fire"],
     "name": "Staff",
     "glyph": "_",
     "color": "LightUmber",
@@ -255,6 +280,7 @@
   },
   {
     "id": "rod",
+    "hates": ["elec"],
     "name": "Rod",
     "glyph": "-",
     "color": "Slate",
@@ -263,6 +289,7 @@
   },
   {
     "id": "chest",
+    "hates": ["acid", "fire"],
     "name": "Chest",
     "glyph": "~",
     "color": "Slate",

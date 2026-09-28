@@ -28,6 +28,8 @@ public sealed class ObjectBaseDef
     public string Color { get; init; } = "White";
     public EquipSlot Slot { get; init; }
     public int MaxStack { get; init; } = 40;
+    /// <summary>Elements that can destroy (or, for weapons and armour, damage) things of this base (Angband HATES_*).</summary>
+    public IReadOnlyList<string> Hates { get; init; } = [];
     /// <summary>% chance to break when thrown or fired and it hits.</summary>
     public int BreakChance { get; init; } = 10;
     /// <summary>Flavour group ("potion", "scroll", "ring"...) when kinds of this base look alike until learned.</summary>
@@ -115,6 +117,8 @@ public sealed class ObjectKindDef
     public required string Id { get; init; }
     public required string Name { get; init; }
     public required string Base { get; init; }
+    /// <summary>Elements this kind is proof against, though its base hates them (Angband IGNORE_*).</summary>
+    public IReadOnlyList<string> Ignore { get; init; } = [];
     public int Level { get; init; }
     /// <summary>Relative commonness; 0 means never randomly generated.</summary>
     public int Commonness { get; init; } = 10;
@@ -172,6 +176,8 @@ public sealed class ObjectKindDef
 public sealed class EgoItemDef
 {
     public required string Id { get; init; }
+    /// <summary>Elements the ego makes an item proof against (Angband IGNORE_*).</summary>
+    public IReadOnlyList<string> Ignore { get; init; } = [];
     /// <summary>Suffix such as <c>of Burning</c>.</summary>
     public required string Name { get; init; }
     public IReadOnlyList<string> Bases { get; init; } = [];

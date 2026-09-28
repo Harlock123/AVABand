@@ -221,7 +221,7 @@ public static class SaveGame
             {
                 Id = m.Id, Race = m.Race.Id, X = m.Position.X, Y = m.Position.Y, Hp = m.Hp, MaxHp = m.MaxHp, Speed = m.Speed,
                 Energy = m.Energy, Sleep = m.Sleep, Stun = m.Stun, Confused = m.Confused, Fear = m.Fear, Held = m.Held,
-                Fast = m.Fast, Slow = m.Slow, Camouflaged = m.Camouflaged, OriginalRace = m.OriginalRace?.Id,
+                Fast = m.Fast, Slow = m.Slow, Camouflaged = m.Camouflaged, BodyguardOf = m.BodyguardOf, OriginalRace = m.OriginalRace?.Id,
                 MimicItem = m.MimicItem is null ? null : ItemToSave(m.MimicItem), Carried = m.Carried.Select(ItemToSave).ToList(), LootRolled = m.LootRolled,
                 WanderTarget = m.WanderTarget is { } w ? [w.X, w.Y] : null, WanderStuck = m.WanderStuck,
             });
@@ -386,7 +386,7 @@ public static class SaveGame
                 {
                     Hp = ms.Hp, Energy = ms.Energy, Sleep = ms.Sleep, Stun = ms.Stun, Confused = ms.Confused, Fear = ms.Fear,
                     Held = ms.Held, WanderStuck = ms.WanderStuck, Fast = ms.Fast, Slow = ms.Slow,
-                    Camouflaged = ms.Camouflaged, OriginalRace = ms.OriginalRace is null ? null : data.Monster(ms.OriginalRace), MimicItem = ms.MimicItem is null ? null : ToItem(ms.MimicItem),
+                    Camouflaged = ms.Camouflaged, BodyguardOf = ms.BodyguardOf, OriginalRace = ms.OriginalRace is null ? null : data.Monster(ms.OriginalRace), MimicItem = ms.MimicItem is null ? null : ToItem(ms.MimicItem),
                     WanderTarget = ms.WanderTarget is [var wx, var wy] ? new Loc(wx, wy) : null,
                 };
                 m.Carried.AddRange(ms.Carried.Select(ToItem).OfType<Item>());
