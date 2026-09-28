@@ -137,7 +137,7 @@ public static class SaveGame
                 Skills = new()
                 {
                     ["melee"] = p.SkillMelee, ["bow"] = p.SkillBow, ["throw"] = p.SkillThrow,
-                    ["save"] = p.SkillSave, ["disarm"] = p.DisarmSkill, ["device"] = p.SkillDevice,
+                    ["save"] = p.SkillSave, ["disarm"] = p.DisarmSkill, ["disarm_magic"] = p.DisarmMagicSkill, ["device"] = p.SkillDevice,
                 },
                 Timed = new(p.Timed.Snapshot()),
                 Pack = p.Inventory.Pack.Select(ItemToSave).ToList(),
@@ -356,6 +356,8 @@ public static class SaveGame
         p.SkillThrow = ps.Skills.GetValueOrDefault("throw", p.SkillThrow);
         p.SkillSave = ps.Skills.GetValueOrDefault("save", p.SkillSave);
         p.DisarmSkill = ps.Skills.GetValueOrDefault("disarm", p.DisarmSkill);
+        // (Saves from before the magical skill had one disarming skill for both.)
+        p.DisarmMagicSkill = ps.Skills.GetValueOrDefault("disarm_magic", p.DisarmSkill);
         p.SkillDevice = ps.Skills.GetValueOrDefault("device", p.SkillDevice);
         foreach (var (id, value) in ps.Timed)
             if (data.Timed(id) is { } def) p.Timed.Set(def, value);

@@ -75,11 +75,13 @@ public class BirthTests
         var hobbit = Create("hobbit", "mage");
         var troll = Create("half_troll", "warrior");
         Assert.Equal(7 + 0, hobbit.Player.HitDie);
-        Assert.Equal(12 + 10, troll.Player.HitDie);
-        Assert.Equal(110 + 30, hobbit.Player.ExpFactor);
+        Assert.Equal(12 + 9, troll.Player.HitDie);
+        Assert.Equal(120, hobbit.Player.ExpFactor); // 4.2.5: the race's alone (classes have none)
         Assert.True(hobbit.Player.Stealth > troll.Player.Stealth);
         Assert.True(troll.Player.SkillMelee > hobbit.Player.SkillMelee);
-        Assert.True(hobbit.ExperienceForLevel(1) > troll.ExperienceForLevel(1));
+        var highElf = Create("high_elf", "mage");
+        var human = Create("human", "mage");
+        Assert.True(highElf.ExperienceForLevel(1) > human.ExperienceForLevel(1)); // 145 against 100
     }
 
     [Theory]

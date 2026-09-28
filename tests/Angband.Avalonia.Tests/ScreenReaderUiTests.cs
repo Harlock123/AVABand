@@ -46,7 +46,7 @@ public class ScreenReaderUiTests
         // Describe surroundings still works, on the message line.
         window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
         window.KeyPressQwerty(PhysicalKey.D, RawInputModifiers.Control | RawInputModifiers.Shift);
-        Assert.StartsWith("Hit points 20 of 20. In the town", vm.LastMessage);
+        Assert.StartsWith("Hit points 19 of 19. In the town", vm.LastMessage);
     }
 
     [AvaloniaFact]

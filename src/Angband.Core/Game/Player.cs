@@ -148,6 +148,8 @@ public sealed class Player : IActor
     public int SkillSave { get; set; } = 18;
     /// <summary>Disarm/lockpicking skill used for locked doors.</summary>
     public int DisarmSkill { get; set; } = 30;
+    /// <summary>Disarming magical traps (runes) — Angband 4.2's skill-disarm-magic; <see cref="DisarmSkill"/> is the physical one.</summary>
+    public int DisarmMagicSkill { get; set; } = 30;
 
     /// <summary>To-hit including the stun penalty.</summary>
     public int EffectiveToHit => ToHit - StunPenalty;

@@ -95,12 +95,14 @@ public sealed partial class GameSession
         Player.SkillSave = Skill("save", Player.SkillSave)
                            + StatTables.SavingThrow[StatTables.Index(Player.Stats.GetValueOrDefault("wis", 15))];
         Player.DisarmSkill = Skill("disarm", Player.DisarmSkill);
+        Player.DisarmMagicSkill = Skill("disarm_magic", Player.DisarmMagicSkill);
         Player.SkillDevice = Skill("device", Player.SkillDevice);
         if (PlayerShape is { } shape)
         {
             Player.SkillMelee += shape.Skills.GetValueOrDefault("melee");
             Player.SkillSave += shape.Skills.GetValueOrDefault("save");
             Player.DisarmSkill += shape.Skills.GetValueOrDefault("disarm");
+            Player.DisarmMagicSkill += shape.Skills.GetValueOrDefault("disarm_magic");
             Player.SkillDevice += shape.Skills.GetValueOrDefault("device");
         }
         Player.BaseStealth = Skill("stealth", Player.BaseStealth);

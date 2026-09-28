@@ -214,7 +214,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             realm is null ? "No magic" : $"{realm.Name} magic ({realm.Stat.ToUpperInvariant()}): {p.MaxMana} spell points at level 1"
                                          + (cls!.FirstSpellLevel > 1 ? $" (spells from level {cls.FirstSpellLevel})" : ""),
             $"Armour {p.Armour}   To-hit {p.ToHit:+0;-0}   To-dam {p.ToDam:+0;-0}   Carry {p.WeightLimit / 20} lb unhindered",
-            $"Melee {p.SkillMelee}   Shooting {p.SkillBow}   Throwing {p.SkillThrow}   Saving throw {p.SkillSave}   Stealth {p.Stealth}   Disarm {p.DisarmSkill}",
+            $"Melee {p.SkillMelee}   Shooting {p.SkillBow}   Throwing {p.SkillThrow}   Saving throw {p.SkillSave}   Stealth {p.Stealth}   Disarm {p.DisarmSkill} (magic {p.DisarmMagicSkill})",
             abilities.Count > 0 ? "Abilities: " + string.Join(", ", abilities) : "No special abilities",
             $"Starting gold {p.Gold}",
         });

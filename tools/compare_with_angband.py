@@ -897,7 +897,7 @@ def compare_artifacts(gd, data):
 # Classes, class spells, races
 
 STAT_ORDER = ["str", "int", "wis", "dex", "con"]
-SKILL_MAP = [("disarm", "skill-disarm-phys"), ("device", "skill-device"), ("save", "skill-save"),
+SKILL_MAP = [("disarm", "skill-disarm-phys"), ("disarm_magic", "skill-disarm-magic"), ("device", "skill-device"), ("save", "skill-save"),
              ("stealth", "skill-stealth"), ("melee", "skill-melee"), ("bow", "skill-shoot"),
              ("throw", "skill-throw"), ("dig", "skill-dig")]
 REV_RESIST = {v: k for k, v in OI.RESISTS.items()}
@@ -949,7 +949,7 @@ def compare_classes_and_spells(gd, data):
             base, per10 = (one(e, key, "0:0").split(":") + ["0"])[:2]
             csec.cmp(label, f"skill {ours_key} ({key})", (c.get("skills") or {}).get(ours_key, 0), int(base))
             csec.cmp(label, f"skill {ours_key} per 10 levels", (c.get("skillsPer10Levels") or {}).get(ours_key, 0), int(per10))
-        for key in ("skill-search", "skill-disarm-magic"):
+        for key in ("skill-search",):
             if one(e, key, "0:0") not in ("0:0", "0"):
                 csec.unmodelled[f"{key} (no AVABand skill)"] += 1
         csec.cmp(label, "hit die", c.get("hitDie", 0), int(one(e, "hitdie", "0")))
@@ -996,8 +996,8 @@ def compare_classes_and_spells(gd, data):
         if c["id"] not in used:
             csec.only_ours.append(c["id"])
     csec.notes += [
-        "Skills: ours `disarm` is compared with 4.2.5 `skill-disarm-phys` (4.2.5's separate `skill-disarm-magic` "
-        "has no AVABand field); `bow` = `skill-shoot`; a skill missing from ours counts as 0. AVABand has no "
+        "Skills: ours `disarm` is compared with 4.2.5 `skill-disarm-phys` and `disarm_magic` with "
+        "`skill-disarm-magic`; `bow` = `skill-shoot`; a skill missing from ours counts as 0. AVABand has no "
         "search skill, so `skill-search` is counted as unexpressible rather than compared.",
         "Flags: `player-flags` + `obj-flags` against ours `flags` (+ `resists`); NO_MANA is taken as implied by "
         "a class with no realm.",
@@ -1028,7 +1028,7 @@ def compare_classes_and_spells(gd, data):
             rsec.cmp(label, f"stat {s}", (r.get("stats") or {}).get(s, 0), v)
         for ours_key, key in SKILL_MAP:
             rsec.cmp(label, f"skill {ours_key} ({key})", (r.get("skills") or {}).get(ours_key, 0), int(one(e, key, "0")))
-        for key in ("skill-search", "skill-disarm-magic"):
+        for key in ("skill-search",):
             if one(e, key, "0") != "0":
                 rsec.unmodelled[f"{key} (no AVABand skill)"] += 1
         rsec.cmp(label, "hit die", r.get("hitDie", 0), int(one(e, "hitdie", "0")))
@@ -1039,8 +1039,8 @@ def compare_classes_and_spells(gd, data):
         if r["id"] not in rused:
             rsec.only_ours.append(r["id"])
     rsec.notes += [
-        "Skills as for classes (disarm = `skill-disarm-phys`, bow = `skill-shoot`; `skill-search` and "
-        "`skill-disarm-magic` have no AVABand skill).",
+        "Skills as for classes (disarm = `skill-disarm-phys`, disarm_magic = `skill-disarm-magic`, bow = "
+        "`skill-shoot`; `skill-search` has no AVABand skill).",
         "Flags/resists: 4.2.5 `obj-flags`, `player-flags` and `values` (RES_x[1] → RES_x) against ours "
         "`resists` (mapped back to 4.2.5 names: acid → RES_ACID, sust_dex → SUST_DEX, hold_life → HOLD_LIFE, ...) "
         "and `flags` (REGENERATE → REGEN).",

@@ -34,11 +34,11 @@ public class MagicTests
     // --- Classes and levels -----------------------------------------------------------------------
 
     [Theory]
-    [InlineData("warrior", "dagger", 20, 0)]
+    [InlineData("warrior", "dagger", 19, 0)]
     [InlineData("mage", "dagger", 10, 2)]
     [InlineData("priest", "mace", 12, 2)]
     [InlineData("ranger", "dagger", 15, 0)]
-    [InlineData("druid", null, 10, 2)]
+    [InlineData("druid", null, 12, 2)]
     public void Classes_StartWithTheirKitHitPointsAndMana(string cls, string? weapon, int hp, int mana)
     {
         var game = GameSession.NewGame(TestData.Game, 1, cls);
@@ -71,7 +71,7 @@ public class MagicTests
         Assert.Equal(10, game.Player.Level);
         Assert.Contains("Welcome to level 10.", messages);
         Assert.True(game.Player.MaxHp >= hp);
-        Assert.Equal(34 + 15 * 10 / 10, game.Player.SkillMelee); // base + 15 per 10 levels
+        Assert.Equal(35 + 15 * 10 / 10, game.Player.SkillMelee); // base + 15 per 10 levels
         Assert.True(game.Player.SkillMelee > melee);
         Assert.Equal(1 + StatTables.ManaPerLevel[StatTables.Index(18)] * 10 / 100, game.Player.MaxMana);
     }

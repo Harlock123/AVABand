@@ -130,6 +130,8 @@ public class SecretDoorTests
         game.Events.Subscribe<MessageEvent>(m => found += m.Text == "You have found a secret door." ? 1 : 0);
         for (var i = 0; i < 200; i++)
         {
+            game.Player.MaxHp = game.Player.Hp = 100_000; // arrivals, not fights
+            Assert.False(game.IsGameOver);
             game.Execute(new DebugJumpCommand(1 + i % 30));
             if (game.Player.LightRadius == 0) continue;
             Assert.DoesNotContain(game.Level.Neighbors(game.Player.Position), p => game.Level.FeatureAt(p).Has(TerrainFlags.Secret));

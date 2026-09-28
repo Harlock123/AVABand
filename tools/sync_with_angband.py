@@ -549,8 +549,83 @@ def sync_artifacts(gd, data):
     print(f"artifacts: {changed} of {len(ours)} brought into line")
 
 
+def sync_player_skills(o, e, per10):
+    """Stats, skills (and their growth per 10 levels, for a class) and hit die from a 4.2.5 record."""
+    stats = {s: v for s, v in zip(cw.STAT_ORDER, (int(x) for x in cw.one(e, "stats", "0:0:0:0:0").split(":"))) if v}
+    set_or_pop(o, "stats", stats or None, None)
+    skills, growth = dict(o.get("skills") or {}), dict(o.get("skillsPer10Levels") or {})
+    for ours_key, key in cw.SKILL_MAP:
+        base, ten = (cw.one(e, key, "0:0").split(":") + ["0"])[:2]
+        skills[ours_key] = int(base)
+        if per10:
+            growth[ours_key] = int(ten)
+    # A race's skills are adjustments: none is nothing.
+    o["skills"] = skills if per10 else {k: v for k, v in skills.items() if v}
+    if per10:
+        o["skillsPer10Levels"] = growth
+    set_or_pop(o, "hitDie", int(cw.one(e, "hitdie", "0")), 0)
+
+
+def sync_classes(gd, data):
+    path = os.path.join(data, "classes.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    by_id = {c["id"]: c for c in ours}
+    changed = 0
+    for e in cw.parse_records(os.path.join(gd, "class.txt")):
+        c = by_id.get(cw.slug(e["name"]))
+        if c is None:
+            continue
+        before = json.dumps(c, sort_keys=True)
+        sync_player_skills(c, e, per10=True)
+        c.pop("expFactor", None)  # 4.2.5 classes have none: a character's is its race's
+        changed += json.dumps(c, sort_keys=True) != before
+    write_json(path, ours, 2)
+    print(f"classes: {changed} of {len(ours)} brought into line")
+
+
+def sync_races(gd, data):
+    path = os.path.join(data, "races.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    by_id = {r["id"]: r for r in ours}
+    changed = 0
+    for e in cw.parse_records(os.path.join(gd, "p_race.txt")):
+        r = by_id.get(cw.slug(e["name"]))
+        if r is None:
+            continue
+        before = json.dumps(r, sort_keys=True)
+        sync_player_skills(r, e, per10=False)
+        r["expFactor"] = int(cw.one(e, "exp", "100"))
+        set_or_pop(r, "infravision", int(cw.one(e, "infravision", "0")), 0)
+        changed += json.dumps(r, sort_keys=True) != before
+    write_races(path, ours)
+    print(f"races: {changed} of {len(ours)} brought into line")
+
+
+def write_races(path, races):
+    """races.json's own layout: who, then stats and skills, protections, flags, and the description."""
+    def val(v):
+        if isinstance(v, dict):
+            return "{ " + ", ".join(f"{json.dumps(k)}: {json.dumps(x, ensure_ascii=False)}" for k, x in v.items()) + " }" if v else "{}"
+        return json.dumps(v, ensure_ascii=False)
+
+    def fields(r, keys):
+        return ", ".join(f'"{k}": {val(r[k])}' for k in keys if k in r)
+    lines = [["id", "name", "hitDie", "expFactor", "infravision"], ["stats"], ["skills"], ["resists"], ["flags"]]
+    known = {k for group in lines for k in group} | {"description"}
+    out = []
+    for r in races:
+        parts = [fields(r, group) for group in lines if any(k in r for k in group)]
+        parts += [f'"{k}": {val(v)}' for k, v in r.items() if k not in known]
+        if "description" in r:
+            parts.append(f'"description": {val(r["description"])}')
+        out.append("  { " + ",\n    ".join(parts) + " }")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join(out) + "\n]\n")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
-            "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts}
+            "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
+            "races": sync_races}
 
 
 def main():

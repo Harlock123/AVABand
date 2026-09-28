@@ -192,7 +192,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Character creation** (`Game/Birth.cs`, `races.json`; Game → New character, Ctrl+N): name,
   11 races (Human, Half-Elf, Elf, Hobbit, Gnome, Dwarf, Half-Orc, Half-Troll, Dunadan, High-Elf,
   Kobold) with stat/skill adjustments, hit dice, experience factors, infravision and innate
-  abilities as in 4.2's `p_race.txt` — Elves and Half-Elves sustain DEX, Half-Trolls STR (and
+  abilities as in 4.2.5's `p_race.txt` (the experience factor is the race's alone, as in 4.2.5,
+  whose classes have none; disarming is two skills, physical and magical, as 4.2.5 has it) — Elves and Half-Elves sustain DEX, Half-Trolls STR (and
   regenerate), Dúnedain CON; Hobbits hold on to their life force, High-Elves see invisible,
   Gnomes have free action, Dwarves can't be blinded, and resistances to light, dark and poison —
   and three knacks: Hobbits know a mushroom as soon as they pick it up ("Mushrooms for
