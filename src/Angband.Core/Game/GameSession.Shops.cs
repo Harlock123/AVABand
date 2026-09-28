@@ -449,7 +449,7 @@ public sealed partial class GameSession
         if (store.IsHome)
         {
             var merge = store.Stock.FirstOrDefault(s => s.CanStackWith(sold));
-            if (merge is not null) merge.Number += sold.Number;
+            if (merge is not null) merge.Absorb(sold);
             else store.Stock.Add(sold);
         }
         else

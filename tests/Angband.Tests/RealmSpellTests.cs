@@ -155,8 +155,10 @@ public class RealmSpellTests
         var game = Hero("druid", 9, 40);
         var near = Foe(game, "cave_orc", new Loc(2, 0));
         var hp = game.Player.Hp;
+        var said = Messages(game);
         Cast(game, "volcanic_eruption");
-        Assert.True(near.Hp < 10_000);
+        // (Checked by the message: a 10,000 hit point orc can regenerate the damage over the failed casts.)
+        Assert.Contains(said, m => m.Contains("hits the cave orc"));
         Assert.True(game.Player.Hp >= hp - 60); // only the quake may bruise
     }
 

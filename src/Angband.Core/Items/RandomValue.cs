@@ -38,6 +38,9 @@ public readonly record struct RandomValue(int Base, int Dice, int Bonus, bool Ne
         return new RandomValue(b, d, m, negative);
     }
 
+    /// <summary>Angband randcalc(AVERAGE): the base plus the dice's average (a magic bonus counts as nothing).</summary>
+    public int Average => (Base + (Dice > 0 ? (Dice + 1) / 2 : 0)) * (Negative ? -1 : 1);
+
     public int Roll(GameRandom rng, int level)
     {
         var value = Base + (Dice > 0 ? rng.RandInt1(Dice) : 0) + (Bonus > 0 ? ObjectFactory.MagicBonus(rng, Bonus, level) : 0);

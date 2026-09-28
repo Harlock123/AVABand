@@ -57,9 +57,9 @@ public sealed partial class GameSession
     private int UseDeviceItem(Item item, Loc? target, Direction? direction)
     {
         var verb = item.Base.Id switch { "wand" => "aim", "staff" => "use", _ => "zap" };
-        if (item.Base.Id == "rod" && item.Timeout > 0)
+        if (item.IsRod && !item.RodReady)
         {
-            Publish(new MessageEvent("The rod is still charging."));
+            Publish(new MessageEvent(item.Number > 1 ? "The rods are all still charging." : "The rod is still charging."));
             return 0;
         }
         if (item.Base.Id != "rod" && item.Charges <= 0)
@@ -115,7 +115,8 @@ public sealed partial class GameSession
             _effectSource = "";
         }
 
-        if (item.Base.Id == "rod") item.Timeout = Math.Max(1, RandomValue.Parse(item.Kind.Recharge ?? "10").Roll(Rng, 0));
+        // A zapped rod adds its recharge time to the stack's (Angband: the stack's rods recharge together).
+        if (item.IsRod) item.Timeout += Math.Max(1, RandomValue.Parse(item.Kind.Recharge ?? "10").Roll(Rng, 0));
         else
         {
             item.Charges--;
@@ -211,8 +212,10 @@ public sealed partial class GameSession
     private void DeviceUpkeep()
     {
         foreach (var rod in Player.Inventory.Pack.Where(i => i.Timeout > 0))
-            if (--rod.Timeout == 0 && Knowledge.KnowsKind(rod) && Options[OptionIds.NotifyRecharge])
-                Publish(new MessageEvent($"Your {Describe(rod, withArticle: false)} has recharged."));
+            if (rod.Recharge() && Knowledge.KnowsKind(rod) && Options[OptionIds.NotifyRecharge])
+                Publish(new MessageEvent(rod.Timeout > 0 && rod.Number > 1
+                    ? $"One of your {Describe(rod, withArticle: false)} has recharged."
+                    : $"Your {Describe(rod, withArticle: false)} {(rod.Number > 1 ? "have" : "has")} recharged."));
         foreach (var worn in Player.Inventory.Equipped.Where(i => i.Timeout > 0))
             if (--worn.Timeout == 0 && Options[OptionIds.NotifyRecharge])
                 Publish(new MessageEvent($"Your {Describe(worn, withArticle: false)} has recharged."));

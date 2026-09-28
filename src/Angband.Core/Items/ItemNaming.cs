@@ -84,7 +84,9 @@ public static class ItemNaming
         if (item.IsChest) sb.Append(' ').Append(ChestDescription(item, knowledge));
         if (item.Base.Id is "wand" or "staff" && knowsKind)
             sb.Append(item.Charges == 1 ? " (1 charge)" : $" ({item.Charges} charges)");
-        if (item.Timeout > 0 && (item.Base.Id == "rod" || item.CanActivate)) sb.Append(" (charging)");
+        // Angband obj_desc_charges: a stack of rods says how many are charging.
+        if (item.Timeout > 0 && item.IsRod && item.Number > 1) sb.Append($" ({item.NumberCharging} charging)");
+        else if (item.Timeout > 0 && (item.IsRod || item.CanActivate)) sb.Append(" (charging)");
 
         // Angband obj_desc_inscrip: the inscription and the special notes, in one pair of braces.
         var notes = new List<string>();

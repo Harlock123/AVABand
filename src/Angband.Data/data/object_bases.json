@@ -29,8 +29,7 @@
     "glyph": "\\",
     "color": "Slate",
     "slot": "weapon",
-    "breakChance": 0,
-    "maxStack": 1
+    "breakChance": 0
   },
   {
     "id": "sling",
@@ -88,56 +87,49 @@
     "name": "Soft Armour",
     "glyph": "(",
     "color": "Slate",
-    "slot": "body",
-    "maxStack": 1
+    "slot": "body"
   },
   {
     "id": "hard_armour",
     "name": "Hard Armour",
     "glyph": "[",
     "color": "Slate",
-    "slot": "body",
-    "maxStack": 1
+    "slot": "body"
   },
   {
     "id": "shield",
     "name": "Shield",
     "glyph": ")",
     "color": "Umber",
-    "slot": "shield",
-    "maxStack": 1
+    "slot": "shield"
   },
   {
     "id": "helm",
     "name": "Helm",
     "glyph": "]",
     "color": "Umber",
-    "slot": "head",
-    "maxStack": 1
+    "slot": "head"
   },
   {
     "id": "gloves",
     "name": "Gloves",
     "glyph": "]",
     "color": "Umber",
-    "slot": "hands",
-    "maxStack": 1
+    "slot": "hands"
   },
   {
     "id": "boots",
     "name": "Boots",
     "glyph": "]",
     "color": "Umber",
-    "slot": "feet",
-    "maxStack": 1
+    "slot": "feet"
   },
   {
     "id": "cloak",
     "name": "Cloak",
     "glyph": "(",
     "color": "Green",
-    "slot": "cloak",
-    "maxStack": 1
+    "slot": "cloak"
   },
   {
     "id": "light",
@@ -227,8 +219,7 @@
     "glyph": "]",
     "color": "Yellow",
     "slot": "head",
-    "breakChance": 0,
-    "maxStack": 1
+    "breakChance": 0
   },
   {
     "id": "dragon_armour",
@@ -236,8 +227,7 @@
     "glyph": "[",
     "color": "LightGreen",
     "slot": "body",
-    "breakChance": 0,
-    "maxStack": 1
+    "breakChance": 0
   },
   {
     "id": "mushroom",
@@ -253,8 +243,7 @@
     "glyph": "-",
     "color": "LightSlate",
     "flavor": "wand",
-    "breakChance": 25,
-    "maxStack": 1
+    "breakChance": 25
   },
   {
     "id": "staff",
@@ -262,8 +251,7 @@
     "glyph": "_",
     "color": "LightUmber",
     "flavor": "staff",
-    "breakChance": 10,
-    "maxStack": 1
+    "breakChance": 10
   },
   {
     "id": "rod",
@@ -271,8 +259,7 @@
     "glyph": "-",
     "color": "Slate",
     "flavor": "rod",
-    "breakChance": 15,
-    "maxStack": 1
+    "breakChance": 15
   },
   {
     "id": "chest",

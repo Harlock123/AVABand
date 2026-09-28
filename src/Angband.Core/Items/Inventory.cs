@@ -120,11 +120,7 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     }
 
     /// <summary>Merges an item into a stack; the stack takes its inscription if it had none (Angband object_absorb).</summary>
-    private static void Absorb(Item stack, Item item)
-    {
-        stack.Number += item.Number;
-        stack.Note ??= item.Note;
-    }
+    private static void Absorb(Item stack, Item item) => stack.Absorb(item);
 
     /// <summary>
     /// Orders the quiver: ammunition inscribed <c>@f#</c> or <c>@v#</c> by that number, the rest after it

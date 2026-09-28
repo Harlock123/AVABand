@@ -21,7 +21,7 @@ public sealed class ObjectPiles(int width)
     {
         if (!_piles.TryGetValue(Index(p), out var pile)) _piles[Index(p)] = pile = [];
         var match = pile.FirstOrDefault(i => i.CanStackWith(item) && i.Number + item.Number <= i.Base.MaxStack);
-        if (match is not null) match.Number += item.Number;
+        if (match is not null) match.Absorb(item);
         else pile.Add(item);
     }
 

@@ -40,8 +40,9 @@ public class SpellLoreTests
         var wand = game.Objects.Create(wandKind);
         wand.Charges = 5;
         game.Knowledge.LearnKind(wand.Kind);
-        var item = game.Player.Inventory.Add(wand)!;
-        for (var i = 0; i < 20 && item.Charges == 5; i++) game.Execute(new UseCommand(item, target.Position));
+        var item = game.Player.Inventory.Add(wand)!; // joins any wand of the kind already carried
+        var charges = item.Charges;
+        for (var i = 0; i < 20 && item.Charges == charges; i++) game.Execute(new UseCommand(item, target.Position));
     }
 
     [Fact]

@@ -363,6 +363,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - Pack (23 slots), quiver (every 40 missiles use a slot), 12 equipment slots, weight limit with
     speed penalty. Equipment drives armour, to-hit/dam, speed, stealth, blows, shots (counted in
     tenths, as Angband's SHOTS[10] is one extra shot) light and resistances. Torches burn out; lanterns refuel from flasks of oil.
+  - Stacking follows 4.2's `object_stackable`: the same kind with the same enchantments, dice,
+    modifiers, resistances, flags, curses and ego stacks (up to 40), so identical armour and
+    weapons stack too ("2 Soft Leather Armours"; wielding takes one); artifacts and chests never do,
+    nor gear recharging an activation. Wands and staves stack whatever their charges — the stack
+    shares them ("2 Wands of Magic Missile (10 charges)"), and splitting it shares them out.
+    Rods stack whatever their recharging: the stack keeps one recharge timer that counts one rod
+    per recharge time, so you can zap while any rod is ready ("3 Rods of Treasure Location
+    (1 charging)"), they recharge together, and one taken off the stack takes its share of the time.
   - Commands: pick up, drop, wield, take off, quaff/read/eat, throw (oil burns), fire (missiles land
     on the floor or break), refuel. Gold and matching ammo are picked up automatically.
 - **Save/load** (`Angband.Core/Persistence`): the complete game state — RNG state, player,
@@ -817,8 +825,7 @@ name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
-Natural next steps: Angband's stacking of armour and devices (AVABand keeps one per slot), the
-bodyguard role for escorts (so they never lose heart, as in 4.2), and the side effects of the
+Natural next steps: the bodyguard role for escorts (so they never lose heart, as in 4.2), and the side effects of the
 other elements' breaths and balls (nexus teleporting you, sound stunning, and so on — only chaos's
 are modelled).
 

@@ -115,19 +115,80 @@ public sealed class Item
     }
 
     /// <summary>Whether two stacks may merge (Angband object_similar, simplified).</summary>
+    /// <summary>
+    /// Angband 4.2 object_stackable: the same kind with the same properties — enchantments, dice,
+    /// modifiers, resistances, flags, curses and ego — and never artifacts or chests. Wands and
+    /// staves stack whatever their charges (a stack shares them) and rods whatever their recharging;
+    /// other things that are recharging an activation don't stack.
+    /// </summary>
     public bool CanStackWith(Item other) =>
         other != this
         && other.Kind == Kind
         && Base.MaxStack > 1
-        && Ego is null && other.Ego is null && Artifact is null && other.Artifact is null
+        && Artifact is null && other.Artifact is null
+        && Ego == other.Ego
         && ToHit == other.ToHit && ToDam == other.ToDam && ToAc == other.ToAc
         && Damage == other.Damage && Armour == other.Armour
         && Curses.SequenceEqual(other.Curses)
-        && Flags.SetEquals(other.Flags) && Charges == other.Charges && Timeout == other.Timeout && ChestState == other.ChestState
+        && Flags.SetEquals(other.Flags) && ChestState == other.ChestState
+        && Modifiers.Count == other.Modifiers.Count && Modifiers.All(m => other.Modifier(m.Key) == m.Value)
+        && Resists.SetEquals(other.Resists)
+        && (HasCharges || Charges == other.Charges)
+        && (IsRod || (Timeout == 0 && other.Timeout == 0))
         && Fuel == other.Fuel
         // Angband object_similar: different inscriptions keep stacks apart; an uninscribed one may join.
         && (Note is null || other.Note is null || Note == other.Note)
         && Ignored == other.Ignored;
+
+    /// <summary>Wands and staves: a stack's charges are shared (Angband tval_can_have_charges).</summary>
+    public bool HasCharges => Base.Id is "wand" or "staff";
+
+    /// <summary>Rods: a stack's recharge time is shared (Angband tval_can_have_timeout).</summary>
+    public bool IsRod => Base.Id == "rod";
+
+    /// <summary>The average turns one rod of this kind takes to recharge (Angband randcalc(time, AVERAGE)).</summary>
+    public int RechargeTime => Kind.Recharge is { } r ? Math.Max(1, RandomValue.Parse(r).Average) : 0;
+
+    /// <summary>
+    /// Angband number_charging: how many rods of the stack are still recharging (the shared timeout
+    /// counts one rod per recharge time); a single rod or activatable item is just charging or not.
+    /// </summary>
+    public int NumberCharging
+    {
+        get
+        {
+            if (Timeout <= 0) return 0;
+            if (!IsRod || RechargeTime <= 0) return 1;
+            return Math.Min(Number, (Timeout + RechargeTime - 1) / RechargeTime);
+        }
+    }
+
+    /// <summary>Whether a rod of the stack is ready to zap (Angband: some aren't charging).</summary>
+    public bool RodReady => NumberCharging < Number;
+
+    /// <summary>
+    /// Angband recharge_timeout: every rod still charging recharges at once. Returns true when at
+    /// least one finished.
+    /// </summary>
+    public bool Recharge()
+    {
+        var before = NumberCharging;
+        if (before == 0) return false;
+        Timeout -= IsRod ? Math.Min(before, Timeout) : 1;
+        return NumberCharging < before;
+    }
+
+    /// <summary>Angband object_absorb_merge: joins another stack to this one, pooling charges and recharge time.</summary>
+    public void Absorb(Item other)
+    {
+        Number += other.Number;
+        Note ??= other.Note;
+        if (IsRod) Timeout += other.Timeout;
+        if (HasCharges) Charges = (int)Math.Min(MaxCharges, (long)Charges + other.Charges);
+    }
+
+    /// <summary>Angband MAX_PVAL.</summary>
+    public const int MaxCharges = 32767;
 
     /// <summary>The player's inscription (Angband's note), shown in braces; see <see cref="Inscription"/>.</summary>
     public string? Note { get; set; }
@@ -146,6 +207,18 @@ public sealed class Item
     {
         if (count <= 0 || count >= Number) throw new ArgumentOutOfRangeException(nameof(count));
         var copy = Clone(serial, count);
+        // Angband distribute_charges: the charges go in proportion; the part taken off gets up to
+        // its share of the recharge time.
+        if (HasCharges)
+        {
+            copy.Charges = Charges * count / Number;
+            Charges -= copy.Charges;
+        }
+        if (IsRod)
+        {
+            copy.Timeout = Math.Min(Timeout, RechargeTime * count);
+            Timeout -= copy.Timeout;
+        }
         Number -= count;
         return copy;
     }
