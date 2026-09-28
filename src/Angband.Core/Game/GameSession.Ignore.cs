@@ -144,7 +144,7 @@ public sealed partial class GameSession
 
     /// <summary>Angband ego_has_ignore_type: the item types an ego can appear on.</summary>
     private IEnumerable<IgnoreType> EgoTypes(Definitions.EgoItemDef ego) =>
-        Data.Objects.Where(k => ego.Bases.Contains(k.Base)).Select(Ignoring.TypeOf).OfType<IgnoreType>().Distinct();
+        Data.Objects.Where(ego.Fits).Select(Ignoring.TypeOf).OfType<IgnoreType>().Distinct();
 
     private int ToggleUnignore()
     {

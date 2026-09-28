@@ -83,6 +83,18 @@ public sealed partial class GameSession
         }
     }
 
+    /// <summary>
+    /// Angband process_world: gear that drains experience (DRAIN_EXP) takes a little one time in ten:
+    /// a tenth of 10d6 plus the life-drain share of it.
+    /// </summary>
+    private void DrainExperienceUpkeep()
+    {
+        if (!Player.HasGearFlag(Definitions.ItemFlags.DrainExp)) return;
+        if (Player.Experience > 0 && Rng.OneIn(10))
+            LoseExperience((Rng.Damroll(10, 6) + Player.Experience / 100 * LifeDrainPercent) / 10);
+        LearnRune(Definitions.RuneIds.Flag(Definitions.ItemFlags.DrainExp));
+    }
+
     /// <summary>Angband player_stat_dec: a point off the stat, sustained or not.</summary>
     private void LoseStatToBlackBreath(string stat, string message)
     {
@@ -117,6 +129,7 @@ public sealed partial class GameSession
         // Angband TMD_HEAL (Rapid Regeneration): 30 hit points a turn.
         if (timed.Has("heal") && Player.Hp < Player.MaxHp) Player.Hp = Math.Min(Player.MaxHp, Player.Hp + 30);
         BlackBreathUpkeep();
+        DrainExperienceUpkeep();
         RegenerateHp();
         RegenerateMana();
         ItemUpkeep();

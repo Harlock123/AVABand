@@ -90,7 +90,7 @@ public static class EquipComparison
     {
         string Plus(int v, string rune) => k.KnowsRune(rune) ? v.ToString("+0;-0", System.Globalization.CultureInfo.InvariantCulture) : "?";
         if (item.Base.IsWeapon) return $"{item.Damage} ({Plus(item.ToHit, RuneIds.ToHit)},{Plus(item.ToDam, RuneIds.ToDam)})";
-        if (item.Base.Slot == EquipSlot.Bow) return $"x{item.Kind.Multiplier} ({Plus(item.ToHit, RuneIds.ToHit)},{Plus(item.ToDam, RuneIds.ToDam)})";
+        if (item.Base.Slot == EquipSlot.Bow) return $"x{item.Multiplier} ({Plus(item.ToHit, RuneIds.ToHit)},{Plus(item.ToDam, RuneIds.ToDam)})";
         if (item.Armour > 0 || item.ToAc != 0) return $"[{item.Armour},{Plus(item.ToAc, RuneIds.ToAc)}]";
         return "";
     }

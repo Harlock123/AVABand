@@ -364,9 +364,10 @@ public sealed partial class MainWindowViewModel
             .OrderBy(e => e.Level).ThenBy(e => e.Name, StringComparer.Ordinal)
             .Select(e =>
             {
-                var b = e.Bases.FirstOrDefault() ?? "";
+                var bases = e.AllBases(_data).ToList();
+                var b = bases.FirstOrDefault() ?? "";
                 return new KnowledgeRow(BaseGlyph(b), BaseColor(b), Capitalize(e.Name),
-                    string.Join(", ", e.Bases.Select(BaseName).Distinct()),
+                    string.Join(", ", bases.Select(BaseName).Distinct()),
                     () => ObjectInfo.DescribeEgo(_game, e), Ego: e);
             })
             .ToList();

@@ -24,7 +24,7 @@ PREFIX = {"ring": "ring_of_", "amulet": "amulet_of_", "wand": "wand_of_", "staff
           "mushroom": "mushroom_of_", "potion": "potion_of_", "scroll": "scroll_of_"}
 MODIFIERS = {"STR": "str", "INT": "int", "WIS": "wis", "DEX": "dex", "CON": "con", "SPEED": "speed",
              "STEALTH": "stealth", "INFRA": "infra", "LIGHT": "light", "SEARCH": "search", "BLOWS": "blows",
-             "SHOTS": "shots", "TUNNEL": "tunnel"}
+             "SHOTS": "shots", "TUNNEL": "tunnel", "MIGHT": "might"}
 RESISTS = {"RES_ACID": "acid", "RES_ELEC": "elec", "RES_FIRE": "fire", "RES_COLD": "cold", "RES_POIS": "pois",
            "RES_LIGHT": "light", "RES_DARK": "dark", "RES_SOUND": "sound", "RES_SHARD": "shards",
            "RES_NEXUS": "nexus", "RES_NETHER": "nether", "RES_CHAOS": "chaos", "RES_DISEN": "disen"}
@@ -32,7 +32,8 @@ FLAG_RESISTS = {"FREE_ACT": "free_act", "SEE_INVIS": "see_invis", "PROT_FEAR": "
                 "PROT_CONF": "conf", "SUST_STR": "sust_str", "SUST_INT": "sust_int", "SUST_WIS": "sust_wis",
                 "SUST_DEX": "sust_dex", "SUST_CON": "sust_con"}
 FLAG_ABILITIES = {"REGEN": "REGEN", "SLOW_DIGEST": "SLOW_DIGEST", "HOLD_LIFE": "HOLD_LIFE", "TELEPATHY": "TELEPATHY",
-                  "FEATHER": "FEATHER", "AFRAID": "AFRAID", "IMPAIR_HP": "IMPAIR_HP",
+                  "FEATHER": "FEATHER", "AFRAID": "AFRAID", "IMPAIR_HP": "IMPAIR_HP", "AGGRAVATE": "AGGRAVATE",
+                  "DRAIN_EXP": "DRAIN_EXP", "IMPACT": "IMPACT", "TRAP_IMMUNE": "TRAP_IMMUNE",
                   "THROWING": "THROWING"}
 CURSES = {"vulnerability": "vulnerability", "teleportation": "teleportation", "dullness": None, "sickliness": None,
           "enveloping": None, "irritation": None, "weakness": "weakness", "clumsiness": "clumsiness",

@@ -267,7 +267,11 @@ def load(data, name):
 
 FLAG_TO_RESIST = dict(OI.FLAG_RESISTS, PROT_STUN="stun")
 FLAG_TO_ABILITY = dict(OI.FLAG_ABILITIES)
-EXTRA_KIND_FLAGS = {"BURNS_OUT": "BURNS_OUT", "TAKES_FUEL": "REFUELABLE", "INSTA_ART": "INSTA_ART", "EXPLODE": "EXPLODE"}
+EXTRA_KIND_FLAGS = {"BURNS_OUT": "BURNS_OUT", "TAKES_FUEL": "REFUELABLE", "INSTA_ART": "INSTA_ART", "EXPLODE": "EXPLODE",
+                    "BLESSED": "BLESSED", "NO_FUEL": "NO_FUEL"}
+# Ego kind flags asking for a random extra power, in AVABand's spelling (EgoItemDef.RandomPower).
+RANDOM_POWERS = {"RAND_SUSTAIN": "sustain", "RAND_POWER": "power", "RAND_HI_RES": "high_resist",
+                 "RAND_BASE_RES": "base_resist", "RAND_RES_POWER": "resist_or_power"}
 SLAY_FLAGS = set(EA.SLAY_NAMES)
 BRAND_ELEMS = {k: v[0] for k, v in EA.BRANDS.items()}
 
@@ -310,6 +314,8 @@ def props_42(e, sec, *, abilities_skip=(), values_key="values", flags_key="flags
             p["mods"]["tunnel"] = canon_rv(f[4:])
         elif f in EXTRA_KIND_FLAGS:
             p["flags"].add(EXTRA_KIND_FLAGS[f])
+        elif f in RANDOM_POWERS:
+            p["random"] = RANDOM_POWERS[f]
         else:
             sec.unmodelled[f"flag {f}"] += 1
     for line in get(e, "curse"):
@@ -692,30 +698,81 @@ def ego_bases(e):
     return out
 
 
+def kind_ids(data):
+    """(base family, normalised name) -> our kind id, for ego `item:` lines."""
+    return {(family(k["base"]), norm_name(k["name"])): k["id"] for k in load(data, "objects.json")}
+
+
+def ego_kinds(e, kinds):
+    """An ego's `item:` lines as our kind ids."""
+    out = []
+    for it in get(e, "item"):
+        t, _, name = it.partition(":")
+        base = TYPE_TO_BASE.get(t)
+        if base and (family(base), norm_name(name)) in kinds:
+            out.append(kinds[(family(base), norm_name(name))])
+    return out
+
+
+def ego_type_bases(e):
+    """The bases on an ego's `type:` lines (a launcher ego covers slings, bows and crossbows)."""
+    out = []
+    for t in get(e, "type"):
+        b = TYPE_TO_BASE.get(t)
+        for x in (["sling", "bow", "crossbow"] if b == "bow" else [b] if b else []):
+            if x not in out:
+                out.append(x)
+    return out
+
+
+def ego_minimums(e):
+    """min-combat (255 = none) and min-values, as AVABand's EgoItemDef.Minimums."""
+    out = {}
+    combat = one(e, "min-combat")
+    if combat:
+        for key, v in zip(("to_h", "to_d", "to_a"), combat.split(":")):
+            if v.strip() and int(v) != 255:
+                out[key] = int(v)
+    for line in get(e, "min-values"):
+        for part in (x.strip() for x in line.split("|")):
+            m = re.fullmatch(r"([A-Z_]+)\[(-?\d+)\]", part)
+            if m and m.group(1) in OI.MODIFIERS:
+                out[OI.MODIFIERS[m.group(1)]] = int(m.group(2))
+    return out
+
+
+def ego_flags_off(e):
+    return sorted(EXTRA_KIND_FLAGS.get(f, FLAG_TO_ABILITY.get(f, f)) for f in flag_list(e, "flags-off"))
+
+
 def compare_egos(gd, data):
     sec = section("egos", "Ego items", "egos.json", "ego_item.txt")
     ours = load(data, "egos.json")
     theirs = parse_records(os.path.join(gd, "ego_item.txt"))
+    kinds = kind_ids(data)
+    base_of = {k["id"]: k["base"] for k in load(data, "objects.json")}
     by_name = collections.defaultdict(list)
     for o in ours:
         by_name[o["name"].lower()].append(o)
+
+    def all_bases(o):
+        return set(o.get("bases", [])) | {base_of[k] for k in o.get("kinds", []) if k in base_of}
     used = set()
     for e in theirs:
         tb = ego_bases(e)
-        cands = by_name.get(e["name"].lower(), [])
-        best = max(cands, key=lambda o: len(set(o.get("bases", [])) & tb), default=None)
-        if best is None or not set(best.get("bases", [])) & tb:
+        cands = [o for o in by_name.get(e["name"].lower(), []) if o["id"] not in used]
+        best = max(cands, key=lambda o: len(all_bases(o) & tb), default=None)
+        if best is None or not (all_bases(best) & tb or (not tb and not all_bases(best))):
             sec.only_theirs.append(f"{e['name']} ({', '.join(sorted(tb))})")
             continue
         o = best
         used.add(o["id"])
         sec.compared += 1
         label = f"{o['id']} ({e['name']} on {', '.join(sorted(tb))})"
-        missing_bases = tb - set(o.get("bases", []))
-        if missing_bases:
-            sec.diff(label, "bases missing in ours", None, missing_bases)
-        if get(e, "item"):
-            sec.unmodelled["item: (ego limited to specific kinds; ours has bases only)"] += 1
+        sec.cmp_set(label, "bases", o.get("bases", []), ego_type_bases(e))
+        sec.cmp_set(label, "kinds (item: lines)", o.get("kinds", []), ego_kinds(e, kinds))
+        sec.cmp(label, "minimums (min-combat, min-values)", o.get("minimums") or {}, ego_minimums(e))
+        sec.cmp_set(label, "flags off", o.get("flagsOff", []), ego_flags_off(e))
         alloc = one(e, "alloc", "0:1 to 127")
         common, rng = alloc.split(":", 1)
         lo, _, hi = rng.partition(" to ")
@@ -727,7 +784,7 @@ def compare_egos(gd, data):
             r = (o.get("rolls") or {}).get({"toHit": "to_h", "toDam": "to_d", "toAc": "to_a"}[key])
             sec.cmp(label, f"{name} (random)", canon_rv(r if r is not None else o.get(key)), canon_rv(text))
         tp = props_42(e, sec, abilities_skip=("THROWING",))
-        # NO_FUEL on an ego is AVABand's concern only via the kind; count, don't compare.
+        sec.cmp(label, "random power (RAND_*)", o.get("randomPower"), tp.get("random"))
         cmp_props(sec, label, props_ours(o), tp)
     for o in ours:
         if o["id"] not in used:
@@ -738,8 +795,7 @@ def compare_egos(gd, data):
         "against each, and only bases missing from ours are reported.",
         "Level = alloc minimum and maxDepth = alloc maximum (the importer's convention); commonness = alloc "
         "commonness.",
-        "Not compared (no AVABand field): `info` cost and rating, `min-combat`, `min-values`, `flags-off`, `desc`, "
-        "the specific kinds on `item:` lines.",
+        "Not compared (no AVABand field): `info` cost and rating, `desc`.",
     ]
     return sec
 

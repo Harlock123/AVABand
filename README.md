@@ -367,14 +367,19 @@ A `GameSession` created with a seed and fed the same commands replays identicall
       level may resist); the level waits, and when you win you're back where you stood. No recall,
       deep descent or teleport level from the cell; a save made mid-duel keeps both levels.
   - Enchanting now rolls its dice ("1d4" was read as one try).
-- **Items** (`Angband.Core/Items`, `Game/GameSession.Items.cs`, `GameSession.Devices.cs`): 373 object
-  kinds, 91 egos and all 138 of 4.2's artifacts (imported by `tools/angband_object_import.py`
-  and `tools/angband_ego_artifact_import.py`; *of Flame* and *of Frost* as in 4.2 — a weapon ego that
-  also resists and an ammunition one that doesn't, both proof against their element), 11 curses, per-game flavours (potion colours, ring
+- **Items** (`Angband.Core/Items`, `Game/GameSession.Items.cs`, `GameSession.Devices.cs`): 4.2.5's
+  405 object kinds (with its eleven treasures, copper to adamantite by value) and all 107 of its egos
+  and 138 artifacts (imported by `tools/angband_object_import.py` and
+  `tools/angband_ego_artifact_import.py`, kept in line by `tools/sync_with_angband.py`). Egos are
+  4.2.5's in full: lantern and torch egos (*of Brightness*, *of Shadows*, *(Everburning)*, *of True
+  Sight*), random extra sustains, powers and high resistances, minimum values, extra might, and
+  the *of Morgul* blades' aggravation and experience drain. 11 curses, per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to
   mithril and dragon scale mail, crowns; rings and amulets with rolled bonuses (Angband's
   `B+dXMY` values: Strength `1+M5`, Protection `5+d5M10`...); gear can raise stats and grant
-  see invisible, free action, sustains, hold life, regeneration, slow digestion and telepathy.
+  see invisible, free action, sustains, hold life, regeneration, slow digestion, telepathy,
+  feather falling and trap immunity — or saddle you with fear, slow healing, aggravation or
+  experience drain. Kinds come in 4.2.5's piles (potions and scrolls often by twos and threes).
   - **Magic devices**: wands (`a` aim), staffs (`Z` use) and rods (`z` zap) with charges or
     recharge times, used with Angband's device skill (per class and race). Bolts, beams, balls,
     dragon breath, monster slow/confuse/sleep/hold/stun/scare, teleport other, polymorph, clone,

@@ -46,7 +46,15 @@ public sealed partial class GameSession
         while (used + blowEnergy <= EnergyTable.MoveEnergy && monster.IsActive)
         {
             used += blowEnergy;
-            PlayerBlow(monster);
+            // Angband py_attack_real / blow_after_effects: with IMPACT, a blow of more than 50 shakes
+            // the earth around you, and the attack ends if the monster is no longer there.
+            if (PlayerBlow(monster) > 50 && Player.HasGearFlag(ItemFlags.Impact))
+            {
+                LearnRune(RuneIds.Flag(ItemFlags.Impact));
+                var where = monster.Position;
+                Earthquake(10);
+                if (!monster.IsActive || Level.Monsters.At(where) != monster) break;
+            }
         }
         return used;
     }
@@ -197,7 +205,9 @@ public sealed partial class GameSession
             return 0;
         }
 
-        var range = Math.Min(6 + 2 * bow.Kind.Multiplier, MaxRange);
+        // Angband calc_bonuses: the launcher's multiplier, plus extra might from anything worn.
+        var multiplier = bow.Kind.Multiplier + Player.Inventory.Equipped.Sum(i => i.Modifier(ItemModifiers.Might));
+        var range = Math.Min(6 + 2 * multiplier, MaxRange);
         var target = requestedTarget ?? AimPoint(range);
         if (target is not { } aim)
         {
@@ -207,7 +217,7 @@ public sealed partial class GameSession
 
         var missile = Player.Inventory.Remove(ammo, 1, () => Objects.NextSerial++);
         var toHit = Player.EffectiveToHit + bow.ToHit + missile.ToHit;
-        FlyMissile(missile, aim, range, Player.SkillBow, toHit, bow.Kind.Multiplier, bow);
+        FlyMissile(missile, aim, range, Player.SkillBow, toHit, multiplier, bow);
 
         if (!Player.Inventory.Contains(ammo) || ammo.Number == 0)
             Publish(new MessageEvent("You have no more of that ammunition."));

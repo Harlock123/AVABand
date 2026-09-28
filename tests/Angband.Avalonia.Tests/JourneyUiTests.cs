@@ -25,6 +25,7 @@ public class JourneyUiTests
         vm.Game.MarkDebugUsed();
         foreach (var depth in new[] { 1, 3, 2, 5, 8, 6, 12 })
         {
+            vm.Game.Player.MaxHp = vm.Game.Player.Hp = 100_000; // a trip, not a fight
             vm.Execute(new DebugJumpCommand(depth));
             for (var i = 0; i < 30; i++) vm.Execute(new HoldCommand());
         }

@@ -57,8 +57,8 @@ public static class ItemNaming
         // Combat numbers.
         if (item.Base.IsWeapon || item.IsAmmo)
             sb.Append($" ({item.Damage})");
-        if (item.Base.Slot == EquipSlot.Bow && item.Kind.Multiplier > 0)
-            sb.Append($" (x{item.Kind.Multiplier})");
+        if (item.Base.Slot == EquipSlot.Bow && item.Multiplier > 0)
+            sb.Append($" (x{item.Multiplier})");
 
         var knowsHit = knowledge.KnowsRune(RuneIds.ToHit);
         var knowsDam = knowledge.KnowsRune(RuneIds.ToDam);
@@ -80,7 +80,7 @@ public static class ItemNaming
         if (knownMods.Count > 0)
             sb.Append(" <").Append(string.Join(", ", knownMods.Select(kv => $"{kv.Value:+0;-0}"))).Append('>');
 
-        if (item.Kind.Fuel > 0) sb.Append($" ({item.Fuel} turns)");
+        if (item.UsesFuel) sb.Append($" ({item.Fuel} turns)");
         if (item.IsChest) sb.Append(' ').Append(ChestDescription(item, knowledge));
         if (item.Base.Id is "wand" or "staff" && knowsKind)
             sb.Append(item.Charges == 1 ? " (1 charge)" : $" ({item.Charges} charges)");

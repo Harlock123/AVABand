@@ -215,7 +215,7 @@ public sealed partial class GameSession
 
     private void EatLight()
     {
-        if (Player.Inventory.Light is not { } light || light.IsArtifact || light.Kind.Fuel <= 0 || light.Fuel <= 0) return;
+        if (Player.Inventory.Light is not { } light || light.IsArtifact || !light.UsesFuel || light.Fuel <= 0) return;
         light.Fuel = Math.Max(1, light.Fuel - (250 + Rng.RandInt1(250)));
         Publish(new MessageEvent("Your light dims!"));
         RecalculateBonuses();

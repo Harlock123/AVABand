@@ -99,7 +99,7 @@ public sealed partial class GameSession
             p.Shots += item.Modifier(ItemModifiers.Shots); // tenths of a shot, as in Angband (SHOTS[10] = +1 shot)
             var itemLight = item.Modifier(ItemModifiers.Light);
             if (itemLight > 0 && ClassHas(ClassFlags.Unlight)) itemLight--; // Angband: lights are dimmer to the unlit
-            if (item.Kind.Fuel > 0 && item.Fuel <= 0) itemLight = 0; // burnt out
+            if (item.UsesFuel && item.Fuel <= 0) itemLight = 0; // burnt out
             else if (item.Kind.Has("BURNS_OUT") && item.Fuel < 100) itemLight--;
             light += itemLight;
             foreach (var r in item.Resists) resists[r] = Math.Max(resists.GetValueOrDefault(r), 1);
@@ -570,7 +570,8 @@ public sealed partial class GameSession
     private int Refuel(Item flask)
     {
         var light = Player.Inventory.Light;
-        if (light is null || !light.Kind.Has("REFUELABLE"))
+        // An Everburning lantern (Angband flags-off TAKES_FUEL, NO_FUEL) can't be refilled.
+        if (light is null || !light.Flags.Contains("REFUELABLE") || !light.UsesFuel)
         {
             Publish(new MessageEvent("Your light cannot be refilled."));
             return 0;
@@ -843,7 +844,7 @@ public sealed partial class GameSession
     private void ItemUpkeep()
     {
         DeviceUpkeep();
-        if (Player.Inventory.Light is { } light && light.Kind.Fuel > 0 && light.Fuel > 0)
+        if (Player.Inventory.Light is { } light && light.UsesFuel && light.Fuel > 0)
         {
             light.Fuel--;
             if (light.Fuel == 100) Publish(new MessageEvent("Your light is growing faint."));

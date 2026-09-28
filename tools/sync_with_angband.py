@@ -425,8 +425,72 @@ def sync_objects(gd, data):
           f"{[t + ': ' + e['name'] for e, t, _ in missing]}")
 
 
+def sync_egos(gd, data):
+    path = os.path.join(data, "egos.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    kinds = cw.kind_ids(data)
+    base_of = {k["id"]: k["base"] for k in json.load(open(os.path.join(data, "objects.json"), encoding="utf-8"))}
+    scratch = cw.Section("egos", "", "", "")
+
+    def all_bases(o):
+        return set(o.get("bases", [])) | {base_of[k] for k in o.get("kinds", []) if k in base_of}
+    used, changed, added = set(), 0, []
+    ids = {o["id"] for o in ours}
+    for e in cw.parse_records(os.path.join(gd, "ego_item.txt")):
+        tb = cw.ego_bases(e)
+        cands = [o for o in ours if o["name"].lower() == e["name"].lower() and o["id"] not in used]
+        o = max(cands, key=lambda c: len(all_bases(c) & tb), default=None)
+        if o is None or not (all_bases(o) & tb or (not tb and not all_bases(o))):
+            # One of ours covering several of 4.2.5's (Slay Animal on weapons and on ammunition) is
+            # split; one we lack is made.
+            bases = cw.ego_type_bases(e) or sorted({base_of[k] for k in cw.ego_kinds(e, kinds)})
+            sibling = next((x["id"] for x in ours if x["name"].lower() == e["name"].lower()), None)
+            ego_id = f"{sibling}_{bases[0]}" if sibling and bases else oi.slug(e["name"])
+            if ego_id in ids:
+                ego_id = f"{ego_id}_{bases[0] if bases else 'none'}"
+            n = 2
+            while ego_id in ids:
+                ego_id = f"{oi.slug(e['name'])}_{bases[0]}_{n}"
+                n += 1
+            o = {"id": ego_id, "name": e["name"]}
+            ids.add(ego_id)
+            at = max((i for i, x in enumerate(ours) if x["name"].lower() == e["name"].lower()), default=len(ours) - 1) + 1
+            ours.insert(at, o)
+            added.append(ego_id)
+        used.add(o["id"])
+        before = json.dumps(o, sort_keys=True)
+        bases = cw.ego_type_bases(e)
+        if set(bases) != set(o.get("bases", [])):
+            o["bases"] = bases
+        set_or_pop(o, "kinds", cw.ego_kinds(e, kinds) or None, None)
+        common, rng = cw.one(e, "alloc", "0:1 to 127").split(":", 1)
+        lo, _, hi = rng.partition(" to ")
+        o["level"] = int(lo)
+        o["commonness"] = int(common)
+        set_or_pop(o, "maxDepth", int(hi or 127), 127)
+        for field in ("toHit", "toDam", "toAc"):
+            o.pop(field, None)
+        rolls = dict(o.get("rolls") or {})
+        for key, text in zip(("to_h", "to_d", "to_a"), (cw.one(e, "combat") or "0:0:0").split(":")):
+            rolls.pop(key, None)
+            if cw.canon_rv(text) != "0":
+                rolls[key] = oi.random_value(text.strip())
+        set_or_pop(o, "rolls", rolls or None, None)
+        tp = cw.props_42(e, scratch, abilities_skip=("THROWING",))
+        sync_props(o, tp)
+        set_or_pop(o, "randomPower", tp.get("random"), None)
+        set_or_pop(o, "minimums", cw.ego_minimums(e) or None, None)
+        set_or_pop(o, "flagsOff", cw.ego_flags_off(e) or None, None)
+        changed += json.dumps(o, sort_keys=True) != before
+    # Keys in a steady order: identity, where it's made, then what it gives.
+    order = ["id", "name", "bases", "kinds", "level", "commonness", "maxDepth"]
+    ours = [dict([(k, o[k]) for k in order if k in o] + [(k, v) for k, v in o.items() if k not in order]) for o in ours]
+    write_json(path, ours, None)
+    print(f"egos: {changed} of {len(ours)} brought into line; added {added}")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
-            "objects": sync_objects}
+            "objects": sync_objects, "egos": sync_egos}
 
 
 def main():

@@ -220,7 +220,7 @@ public static class ObjectInfo
         if (b.IsWeapon || item.IsAmmo || b.Id == "digger") facts.Add($"It does {item.Damage} damage");
         if (item.IsThrowing)
             facts.Add($"it is made for throwing, doing {GameSession.ThrowMultiplier(item)} times its damage thrown");
-        if (b.Slot == EquipSlot.Bow && item.Kind.Multiplier > 0) facts.Add($"it multiplies the damage of its missiles by {item.Kind.Multiplier}");
+        if (b.Slot == EquipSlot.Bow && item.Multiplier > 0) facts.Add($"it multiplies the damage of its missiles by {item.Multiplier}");
         if (item.Armour > 0) facts.Add($"it gives {item.Armour} armour");
         if (item.Kind.Fuel > 0) facts.Add($"it burns for up to {item.Kind.Fuel} turns");
         if (item.Kind.Charges is { } charges) facts.Add($"it is found with {charges} charges");
@@ -279,14 +279,29 @@ public static class ObjectInfo
     {
         var data = game.Data;
         var sb = new StringBuilder($"{Capitalize(ego.Name)}\n\n");
-        var bases = ego.Bases.Select(b => data.ObjectBase(b) is { } ob ? ItemNaming.Plain(ob.Name, true).ToLowerInvariant() : b).Distinct().ToList();
+        var bases = ego.AllBases(data).Select(b => data.ObjectBase(b) is { } ob ? ItemNaming.Plain(ob.Name, true).ToLowerInvariant() : b).Distinct().ToList();
         sb.Append($"Found on {Join(bases)}.\n");
         var facts = new List<string>();
         if (!ego.ToHit.Equals(Randomness.Dice.Zero)) facts.Add($"extra accuracy ({ego.ToHit})");
         if (!ego.ToDam.Equals(Randomness.Dice.Zero)) facts.Add($"extra damage ({ego.ToDam})");
         if (!ego.ToAc.Equals(Randomness.Dice.Zero)) facts.Add($"extra armour ({ego.ToAc})");
         facts.AddRange(ego.Modifiers.Select(kv => $"{kv.Value:+0;-0} {ModifierName(kv.Key)}"));
-        facts.AddRange(ego.Rolls.Select(kv => $"{kv.Value} {ModifierName(kv.Key)}"));
+        facts.AddRange(ego.Rolls.Select(kv => kv.Key switch
+        {
+            "to_h" => $"extra accuracy ({kv.Value})",
+            "to_d" => $"extra damage ({kv.Value})",
+            "to_a" => $"extra armour ({kv.Value})",
+            _ => $"{kv.Value} {ModifierName(kv.Key)}",
+        }));
+        if (ego.RandomPower is { } power)
+            facts.Add(power switch
+            {
+                "sustain" => "a random sustain",
+                "high_resist" => "a random high resistance",
+                "base_resist" => "a random resistance",
+                "resist_or_power" => "a random resistance or power",
+                _ => "a random power",
+            });
         facts.AddRange(ego.Slays.Select(s => $"slays {s.Name} (x{s.Multiplier})"));
         facts.AddRange(ego.Brands.Select(x => $"a {x.Name} brand (x{x.Multiplier})"));
         facts.AddRange(ego.Resists.Select(r => ProtectionName(data, r)));

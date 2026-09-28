@@ -341,6 +341,18 @@ public sealed partial class GameSession
     /// </summary>
     private void ReduceSleep(Monster monster)
     {
+        // Angband monster_reduce_sleep: aggravation (AGGRAVATE gear) wakes it outright.
+        if (Player.HasGearFlag(ItemFlags.Aggravate))
+        {
+            monster.Sleep = 0;
+            monster.IsVisible = MonsterVisible(monster);
+            if (monster.IsVisible)
+            {
+                Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} wakes up."));
+                LearnRune(RuneIds.Flag(ItemFlags.Aggravate));
+            }
+            return;
+        }
         if (!CanHear(monster)) return;
         var distance = Noise[monster.Position];
 

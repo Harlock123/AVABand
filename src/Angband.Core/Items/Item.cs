@@ -83,6 +83,12 @@ public sealed class Item
     /// <summary>Bursts when thrown (Angband EXPLODE, flasks of oil): three times the damage, and it always breaks.</summary>
     public bool Explodes => Kind.Has("EXPLODE");
 
+    /// <summary>A launcher's multiplier: its own, plus any extra might (Angband pval + MIGHT).</summary>
+    public int Multiplier => Kind.Multiplier + Modifier(Definitions.ItemModifiers.Might);
+
+    /// <summary>A light that burns fuel: one with fuel to burn, unless it needs none (Angband NO_FUEL, Everburning).</summary>
+    public bool UsesFuel => Kind.Fuel > 0 && !Flags.Contains("NO_FUEL");
+
     /// <summary>Fuel for a lantern (Angband tval_is_fuel): a flask.</summary>
     public bool IsFuel => Base.Id == "flask";
 

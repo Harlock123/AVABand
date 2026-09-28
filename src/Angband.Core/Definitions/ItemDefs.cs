@@ -69,9 +69,17 @@ public static class ItemFlags
     public const string Afraid = "AFRAID";
     /// <summary>Slow healing (Angband IMPAIR_HP, the Ring of Open Wounds).</summary>
     public const string ImpairHp = "IMPAIR_HP";
+    /// <summary>Wakes every monster that takes its turn (Angband AGGRAVATE, the Morgul blades).</summary>
+    public const string Aggravate = "AGGRAVATE";
+    /// <summary>Drains experience now and then (Angband DRAIN_EXP).</summary>
+    public const string DrainExp = "DRAIN_EXP";
+    /// <summary>A blow of more than 50 shakes the earth (Angband IMPACT).</summary>
+    public const string Impact = "IMPACT";
+    /// <summary>Immunity to traps (Angband TRAP_IMMUNE).</summary>
+    public const string TrapImmune = "TRAP_IMMUNE";
 
     public static readonly IReadOnlySet<string> Abilities = new HashSet<string>(StringComparer.Ordinal)
-        { Regen, SlowDigest, HoldLife, Telepathy, Feather, Afraid, ImpairHp };
+        { Regen, SlowDigest, HoldLife, Telepathy, Feather, Afraid, ImpairHp, Aggravate, DrainExp, Impact, TrapImmune };
 
     public static string Name(string flag) => flag switch
     {
@@ -82,6 +90,10 @@ public static class ItemFlags
         Feather => "feather falling",
         Afraid => "fear",
         ImpairHp => "impaired healing",
+        Aggravate => "aggravation",
+        DrainExp => "experience drain",
+        Impact => "earthquakes",
+        TrapImmune => "trap immunity",
         _ => flag.ToLowerInvariant().Replace('_', ' '),
     };
 }
@@ -103,6 +115,8 @@ public static class ItemModifiers
     public const string Searching = "search";
     /// <summary>Digging power (Angband TUNNEL): +20 digging skill per point.</summary>
     public const string Tunnel = "tunnel";
+    /// <summary>Extra might (Angband MIGHT): added to a launcher's multiplier.</summary>
+    public const string Might = "might";
 }
 
 public sealed class SlayDef
@@ -200,9 +214,23 @@ public sealed class EgoItemDef
     /// <summary>Suffix such as <c>of Flame</c>.</summary>
     public required string Name { get; init; }
     public IReadOnlyList<string> Bases { get; init; } = [];
+    /// <summary>Particular kinds it may also be made on (Angband ego_item.txt <c>item:</c>): lanterns, torches.</summary>
+    public IReadOnlyList<string> Kinds { get; init; } = [];
     public int Level { get; init; }
     public int Commonness { get; init; } = 10;
     public int MaxDepth { get; init; } = 127;
+    /// <summary>
+    /// A random extra power when made (Angband RAND_*): <c>sustain</c>, <c>power</c> (a protection or
+    /// ability), <c>high_resist</c>, <c>base_resist</c>, or <c>resist_or_power</c> (one in three a power).
+    /// </summary>
+    public string? RandomPower { get; init; }
+    /// <summary>
+    /// The least the finished item may have (Angband min-combat and min-values): <c>to_h</c>,
+    /// <c>to_d</c>, <c>to_a</c> and modifiers by id.
+    /// </summary>
+    public IReadOnlyDictionary<string, int> Minimums { get; init; } = new Dictionary<string, int>();
+    /// <summary>Flags it takes away (Angband flags-off): an Everburning lantern no longer takes fuel.</summary>
+    public IReadOnlyList<string> FlagsOff { get; init; } = [];
     /// <summary>Extra rolled bonuses: <c>1d5</c> etc., added on top of normal magic.</summary>
     public Dice ToHit { get; init; } = Dice.Zero;
     public Dice ToDam { get; init; } = Dice.Zero;
@@ -217,6 +245,13 @@ public sealed class EgoItemDef
     public IReadOnlyList<string> Flags { get; init; } = [];
     /// <summary>Curses the ego always carries (e.g. a "Morgul" weapon).</summary>
     public IReadOnlyList<string> Curses { get; init; } = [];
+
+    /// <summary>Whether it can be made on <paramref name="kind"/>: its bases, or its particular kinds.</summary>
+    public bool Fits(ObjectKindDef kind) => Bases.Contains(kind.Base) || Kinds.Contains(kind.Id);
+
+    /// <summary>The bases it can appear on, including those of its particular kinds.</summary>
+    public IEnumerable<string> AllBases(GameData data) =>
+        Bases.Concat(Kinds.Select(k => data.Object(k)?.Base).OfType<string>()).Distinct();
 }
 
 /// <summary>A unique named object (Angband artifact.txt). Each appears at most once per game.</summary>

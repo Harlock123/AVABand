@@ -131,7 +131,7 @@ public sealed class ObjectFactory(GameData data)
             }
         }
 
-        if (power == 2 && b.IsWearable && b.Slot != EquipSlot.Light) TryMakeEgo(rng, item, level);
+        if (power == 2 && b.IsWearable) TryMakeEgo(rng, item, level);
         if (power == -2 && b.IsWearable) AddRandomCurses(rng, item, rng.RandRange(1, 2));
     }
 
@@ -221,23 +221,87 @@ public sealed class ObjectFactory(GameData data)
 
     public bool TryMakeEgo(GameRandom rng, Item item, int level)
     {
-        var egos = data.Egos.Where(e => e.Bases.Contains(item.Base.Id) && e.Level <= level && e.MaxDepth >= level).ToList();
+        var egos = data.Egos.Where(e => e.Fits(item.Kind) && e.Level <= level && e.MaxDepth >= level).ToList();
         var ego = rng.PickWeighted(egos, e => e.Commonness);
         if (ego is null) return false;
+        ApplyEgo(rng, item, ego, level);
+        return true;
+    }
 
+    /// <summary>Angband ego_apply_magic, then ego_apply_minima: makes <paramref name="item"/> <paramref name="ego"/>.</summary>
+    public static void ApplyEgo(GameRandom rng, Item item, EgoItemDef ego, int level)
+    {
         item.Ego = ego;
+        AddRandomPower(rng, item, ego.RandomPower);
         item.ToHit += ego.ToHit.Roll(rng);
         item.ToDam += ego.ToDam.Roll(rng);
         item.ToAc += ego.ToAc.Roll(rng);
         foreach (var (mod, value) in ego.Modifiers) item.Modifiers[mod] = item.Modifier(mod) + value;
-        foreach (var (mod, text) in ego.Rolls) item.Modifiers[mod] = item.Modifier(mod) + RandomValue.Parse(text).Roll(rng, level);
+        foreach (var (key, text) in ego.Rolls)
+        {
+            var roll = RandomValue.Parse(text).Roll(rng, level);
+            switch (key)
+            {
+                case "to_h": item.ToHit += roll; break;
+                case "to_d": item.ToDam += roll; break;
+                case "to_a": item.ToAc += roll; break;
+                default: item.Modifiers[key] = item.Modifier(key) + roll; break;
+            }
+        }
         foreach (var f in ego.Flags) item.Flags.Add(f);
+        foreach (var f in ego.FlagsOff) item.Flags.Remove(f);
         item.Slays.AddRange(ego.Slays);
         item.Brands.AddRange(ego.Brands);
         foreach (var r in ego.Resists) item.Resists.Add(r);
         foreach (var c in ego.Curses)
             if (!item.Curses.Contains(c)) item.Curses.Add(c);
-        return true;
+        ApplyEgoMinimums(item);
+    }
+
+    /// <summary>Angband ego_apply_minima: the ego's least values, once all the magic is in.</summary>
+    public static void ApplyEgoMinimums(Item item)
+    {
+        if (item.Ego is not { } ego) return;
+        foreach (var (key, least) in ego.Minimums)
+        {
+            switch (key)
+            {
+                case "to_h": item.ToHit = Math.Max(item.ToHit, least); break;
+                case "to_d": item.ToDam = Math.Max(item.ToDam, least); break;
+                case "to_a": item.ToAc = Math.Max(item.ToAc, least); break;
+                default: if (item.Modifier(key) < least) item.Modifiers[key] = least; break;
+            }
+        }
+    }
+
+    private static readonly string[] Sustains = ["sust_str", "sust_int", "sust_wis", "sust_dex", "sust_con"];
+    // Angband's protections and miscellaneous abilities (object_property.txt), in AVABand's spelling:
+    // protections and see invisible / free action are protections, the rest ability flags.
+    private static readonly string[] PowerResists = ["fear", "blind", "conf", "stun", "see_invis", "free_act"];
+    private static readonly string[] PowerFlags =
+        [ItemFlags.SlowDigest, ItemFlags.Feather, ItemFlags.Regen, ItemFlags.Telepathy, ItemFlags.HoldLife, ItemFlags.TrapImmune];
+    private static readonly string[] BaseResists = ["acid", "elec", "fire", "cold"];
+    private static readonly string[] HighResists = ["pois", "light", "dark", "sound", "shards", "nexus", "nether", "chaos", "disen"];
+
+    /// <summary>
+    /// Angband ego_apply_magic's random extras: a sustain, a power (protection or ability), a base or
+    /// high resist — one the item doesn't already have.
+    /// </summary>
+    private static void AddRandomPower(GameRandom rng, Item item, string? kind)
+    {
+        if (kind is null) return;
+        var pick = kind == "resist_or_power" ? rng.RandInt1(3) : 0;
+        string[] resists = [], flags = [];
+        if (kind == "sustain") resists = Sustains;
+        else if (kind == "power" || pick == 1) (resists, flags) = (PowerResists, PowerFlags);
+        else if (kind == "base_resist" || pick > 1) resists = BaseResists;
+        else if (kind == "high_resist") resists = HighResists;
+        var choices = resists.Where(r => !item.Resists.Contains(r)).Select(r => (Resist: true, Id: r))
+            .Concat(flags.Where(f => !item.Flags.Contains(f) && !item.Kind.Has(f)).Select(f => (Resist: false, Id: f))).ToList();
+        if (choices.Count == 0) return;
+        var (isResist, id) = rng.Pick(choices);
+        if (isResist) item.Resists.Add(id);
+        else item.Flags.Add(id);
     }
 
     public void AddRandomCurses(GameRandom rng, Item item, int count)
