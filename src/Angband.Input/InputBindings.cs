@@ -96,6 +96,7 @@ public sealed class InputBindings
         K(InputAction.HighScores, "Ctrl+H");
         K(InputAction.Feeling, "Ctrl+F");
         K(InputAction.MessageHistory, "Ctrl+P");
+        K(InputAction.RepeatCommand, "Ctrl+V"); // Angband's 'n' moves here (roguelike keys), so its roguelike key
         K(InputAction.MonsterList, "Char:[");
         K(InputAction.ObjectList, "Char:]");
         K(InputAction.ShowCommands, "Char:?", "F1");

@@ -178,13 +178,14 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         ApplyOptions();
         Messages.Clear();
         _history.Clear();
+        _lastCommand = null;
         Refresh();
     }
 
     /// <summary>Runs a command from any input device.</summary>
     public void Execute(GameCommand command)
     {
-        _game.Execute(command);
+        NoteForRepeat(command, _game.Execute(command));
         Refresh();
     }
 

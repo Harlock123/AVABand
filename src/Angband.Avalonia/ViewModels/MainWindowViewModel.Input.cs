@@ -181,6 +181,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.MonsterKnowledge: ShowKnowledge(); break;
             case InputAction.ShowCommands: ShowKeyCommands(); break;
             case InputAction.MessageHistory: ShowMessageHistory(); break;
+            case InputAction.RepeatCommand: RepeatLastCommand(); break;
             case InputAction.MonsterList: ShowMonsterList(); break;
             case InputAction.ObjectList: ShowObjectList(); break;
             case InputAction.Cast: BeginSpellPrompt(SpellPromptKind.Cast); break;

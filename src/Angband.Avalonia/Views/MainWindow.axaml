@@ -52,6 +52,7 @@
         <MenuItem Header="_High scores..." Command="{Binding ShowHighScoresCommand}" InputGesture="Ctrl+H" />
         <MenuItem Header="_Knowledge..." Command="{Binding ShowKnowledgeCommand}" InputGesture="Shift+OemTilde" />
         <MenuItem Header="Keyboard _commands..." Command="{Binding ShowKeyCommandsCommand}" InputGesture="F1" />
+        <MenuItem Header="_Repeat last command" Command="{Binding RepeatLastCommandCommand}" InputGesture="Ctrl+V" />
         <MenuItem Header="_Message history..." Command="{Binding ShowMessageHistoryCommand}" InputGesture="Ctrl+P" />
         <MenuItem Header="Level _feeling" Command="{Binding ShowFeelingCommand}" InputGesture="Ctrl+F" />
         <MenuItem Header="_Retire (after winning)" Command="{Binding RetireCommand}" InputGesture="Shift+Q" />

@@ -80,6 +80,9 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.Activate, "Activate a worn item"),
             (InputAction.Steal, "Steal from a monster next to you (rogues)"),
         ]),
+        ("Repeating", [
+            (InputAction.RepeatCommand, "Do the last command again: cast, fire, throw, use an item, dig, disarm... (aimed ones aim afresh)"),
+        ]),
         ("Magic", [
             (InputAction.Cast, "Cast a spell or pray"),
             (InputAction.Study, "Learn a new spell from a book"),

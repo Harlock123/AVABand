@@ -55,6 +55,8 @@ public enum InputAction
     JumpNextLevel, JumpToTown,
     /// <summary>The message history (Angband Ctrl+P). Added last so saved bindings keep their meaning.</summary>
     MessageHistory,
+    /// <summary>Repeat the last command (Angband 'n' / roguelike Ctrl+V). Added last so saved bindings keep their meaning.</summary>
+    RepeatCommand,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -143,6 +145,7 @@ public static class InputActions
         InputAction.JumpNextLevel => "Jump to the next level (debug)",
         InputAction.JumpToTown => "Jump back to town (debug)",
         InputAction.ShowCommands => "Keyboard commands",
+        InputAction.RepeatCommand => "Repeat last command",
         _ => System.Text.RegularExpressions.Regex.Replace(action.ToString(), "(?<=[a-z])([A-Z])", " $1").ToLowerInvariant() is var s
             ? char.ToUpperInvariant(s[0]) + s[1..] : action.ToString(),
     };
