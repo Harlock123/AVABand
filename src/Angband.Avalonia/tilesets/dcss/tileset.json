@@ -122,7 +122,7 @@
     "object:light_crossbow": "item/weapon/ranged/crossbow_1.png",
     "object:iron_shot": "item/weapon/ranged/sling_bullet_1_new.png",
     "object:arrow": "item/weapon/ranged/orcish_arrow.png",
-    "object:bolt": "item/weapon/ranged/elven_arrow.png",
+    "object:bolt": "avaband_bolt.png",
     "object:soft_leather_armour": "item/armor/torso/leather_armor_1.png",
     "object:soft_studded_leather": "item/armor/torso/studded_leather_armor.png",
     "object:hard_leather_armour": "item/armor/torso/leather_armor_2.png",
@@ -160,7 +160,7 @@
     "object-base:crossbow": "item/weapon/ranged/crossbow_1.png",
     "object-base:shot": "item/weapon/ranged/sling_bullet_1_new.png",
     "object-base:arrow": "item/weapon/ranged/orcish_arrow.png",
-    "object-base:bolt": "item/weapon/ranged/elven_arrow.png",
+    "object-base:bolt": "avaband_bolt.png",
     "object-base:soft_armour": "item/armor/torso/leather_armor_1.png",
     "object-base:hard_armour": "item/armor/torso/chain_mail_1.png",
     "object-base:shield": "item/armor/shields/buckler_1_new.png",
@@ -1207,6 +1207,11 @@
     "monster:the_tarrasque": "monster/juggernaut.png",
     "monster:measse_the_bloody": "monster/demons/sun_demon.png",
     "monster:carcharoth_the_jaws_of_thirst": "monster/animals/hell_hound_old.png",
-    "monster:storm_of_unmagic": "monster/nonliving/maelstrom_3.png"
+    "monster:storm_of_unmagic": "monster/nonliving/maelstrom_3.png",
+    "object:shovel": "avaband_shovel.png",
+    "object:pick": "avaband_pick.png",
+    "object:mattock": "avaband_mattock.png",
+    "object:seeker_bolt": "avaband_seeker_bolt.png",
+    "object:mithril_bolt": "avaband_mithril_bolt.png"
   }
 }

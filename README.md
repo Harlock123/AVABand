@@ -938,7 +938,8 @@ nearest its name and colour, spread so that flavours look as different as the pa
 (`tools/dcss_flavor_tiles.py`), and where the pack runs out (60 potion flavours, 43 potion
 pictures) the flavours sharing a picture get recoloured copies — tinted to their own colour, or
 made lighter, darker or a little shifted in hue — so every unknown item of a kind looks different;
-every tileset also has a fallback
+the few things DCSS has no picture for — a shovel, a pick, a mattock and crossbow bolts — are
+drawn in its style (`tools/avaband_drawn_tiles.py`, CC0); every tileset also has a fallback
 creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fallbacks.py`).
 
 ## Roadmap
