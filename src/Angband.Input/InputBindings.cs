@@ -6,8 +6,10 @@ namespace Angband.Input;
 /// Which keys and gamepad buttons trigger which actions. Keyboard chords are key names with
 /// optional modifiers (<c>Up</c>, <c>NumPad8</c>, <c>Ctrl+T</c>, <c>F7</c>) or typed characters
 /// (<c>Char:&gt;</c>, <c>Char:G</c>), which follow the keyboard layout. Gamepad buttons use SDL's
-/// game-controller names (<c>A</c>, <c>B</c>, <c>LeftShoulder</c>, <c>RightTrigger</c>...). Several
-/// chords may trigger one action; each chord or button triggers one action.
+/// game-controller names (<c>A</c>, <c>B</c>, <c>LeftShoulder</c>, <c>RightTrigger</c>...), or two
+/// of them held together (<c>LeftTrigger+A</c>); <c>LeftTrigger+DPad</c> bound to
+/// <see cref="InputAction.Run"/> makes that button plus a direction run. Several chords may trigger
+/// one action; each chord or button triggers one action.
 /// </summary>
 public sealed class InputBindings
 {
@@ -125,6 +127,10 @@ public sealed class InputBindings
         P(InputAction.OpenSettings, "Start");
         P(InputAction.Hold, "LeftStick");
         P(InputAction.ToggleTiles, "RightStick");
+        // The left trigger is also a shift: with a direction it runs, with A it repeats the last command
+        // (a tap on its own still throws).
+        P(InputAction.Run, "LeftTrigger+DPad");
+        P(InputAction.RepeatCommand, "LeftTrigger+A");
         return b;
     }
 

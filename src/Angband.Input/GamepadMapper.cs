@@ -5,7 +5,10 @@ namespace Angband.Input;
 /// <summary>
 /// Turns raw gamepad state (button presses, stick and trigger positions, time) into actions:
 /// the D-pad and left stick give eight-way movement with hold-to-repeat, triggers act as buttons,
-/// and other buttons fire their bound action once per press. Pure logic, so it is testable
+/// and other buttons fire their bound action once per press. A button used in a chord binding
+/// (<c>LeftTrigger+A</c>, <c>LeftTrigger+DPad</c>) is a shift: held with another button it gives
+/// the chord's action, held with a direction it runs, and pressed alone it fires its own action
+/// when released. Pure logic, so it is testable
 /// without hardware; <see cref="SdlGamepadProvider"/> feeds it from SDL.
 /// </summary>
 public sealed class GamepadMapper(InputBindings bindings)
@@ -21,6 +24,11 @@ public sealed class GamepadMapper(InputBindings bindings)
     private double _stickX, _stickY;
     private Direction? _heldDirection;
     private TimeSpan _nextRepeat;
+    /// <summary>Whether the shift button now held has been used in a chord (so its own action is skipped).</summary>
+    private bool _chordUsed;
+
+    /// <summary>The key of a binding for a shift button held with a direction.</summary>
+    public const string DirectionChord = "DPad";
 
     public InputBindings Bindings { get; set; } = bindings;
 
@@ -38,15 +46,41 @@ public sealed class GamepadMapper(InputBindings bindings)
             capture(button);
             return;
         }
-        if (IsMovementButton(button)) UpdateDirection(now);
-        else if (Bindings.ForButton(button) is var action and not InputAction.None) ActionTriggered?.Invoke(action);
+        if (IsMovementButton(button))
+        {
+            UpdateDirection(now);
+            return;
+        }
+        if (HeldShift(except: button) is { } shift && Bindings.ForButton(shift + "+" + button) is var chord and not InputAction.None)
+        {
+            _chordUsed = true;
+            ActionTriggered?.Invoke(chord);
+            return;
+        }
+        if (IsShift(button))
+        {
+            _chordUsed = false; // its own action waits for the release
+            return;
+        }
+        if (Bindings.ForButton(button) is var action and not InputAction.None) ActionTriggered?.Invoke(action);
     }
 
     public void ButtonUp(string button, TimeSpan now)
     {
         if (!_held.Remove(button)) return;
         if (IsMovementButton(button)) UpdateDirection(now);
+        else if (IsShift(button) && !_chordUsed && Bindings.ForButton(button) is var action and not InputAction.None)
+            ActionTriggered?.Invoke(action);
     }
+
+    /// <summary>A button some chord binding starts with.</summary>
+    private bool IsShift(string button)
+    {
+        var prefix = button + "+";
+        return Bindings.Buttons.Keys.Any(k => k.StartsWith(prefix, StringComparison.Ordinal));
+    }
+
+    private string? HeldShift(string? except = null) => _held.FirstOrDefault(b => b != except && IsShift(b));
 
     /// <summary>Left stick position, each axis -1..1 (y down is positive, as SDL reports it).</summary>
     public void LeftStick(double x, double y, TimeSpan now)
@@ -111,6 +145,14 @@ public sealed class GamepadMapper(InputBindings bindings)
         if (dir == _heldDirection) return;
         _heldDirection = dir;
         if (dir is not { } d) return;
+        if (HeldShift() is { } shift && Bindings.ForButton(shift + "+" + DirectionChord) == InputAction.Run)
+        {
+            // Shift and a direction: run that way, once (the run goes on by itself).
+            _chordUsed = true;
+            ActionTriggered?.Invoke(InputActions.RunFromDirection(d));
+            _nextRepeat = TimeSpan.MaxValue;
+            return;
+        }
         ActionTriggered?.Invoke(InputActions.FromDirection(d));
         _nextRepeat = now + RepeatDelay;
     }

@@ -87,13 +87,62 @@ public class InputTests
         var (pad, actions) = Pad();
         pad.Trigger("LeftTrigger", 0.4, T0);
         Assert.Empty(actions);
+        pad.Trigger("RightTrigger", 0.9, T0);
+        pad.Trigger("RightTrigger", 0.45, T0); // not released yet (hysteresis)
+        pad.Trigger("RightTrigger", 0.9, T0);
+        Assert.Equal([InputAction.Wield], actions);
+        pad.Trigger("RightTrigger", 0.0, T0);
+        pad.Trigger("RightTrigger", 0.9, T0);
+        Assert.Equal([InputAction.Wield, InputAction.Wield], actions);
+    }
+
+    [Fact]
+    public void TheLeftTrigger_TappedAlone_StillThrows_OnRelease()
+    {
+        var (pad, actions) = Pad();
         pad.Trigger("LeftTrigger", 0.9, T0);
-        pad.Trigger("LeftTrigger", 0.45, T0); // not released yet (hysteresis)
-        pad.Trigger("LeftTrigger", 0.9, T0);
-        Assert.Equal([InputAction.Throw], actions);
+        Assert.Empty(actions); // it might be the start of a chord
         pad.Trigger("LeftTrigger", 0.0, T0);
+        Assert.Equal([InputAction.Throw], actions);
+    }
+
+    [Fact]
+    public void LeftTrigger_WithADirection_Runs_Once()
+    {
+        var (pad, actions) = Pad();
         pad.Trigger("LeftTrigger", 0.9, T0);
-        Assert.Equal([InputAction.Throw, InputAction.Throw], actions);
+        pad.ButtonDown("DPadLeft", T0);
+        pad.Tick(TimeSpan.FromSeconds(2)); // no hold-to-repeat for a run
+        pad.ButtonUp("DPadLeft", T0);
+        pad.LeftStick(0.7, 0.7, T0);       // the stick runs too
+        pad.LeftStick(0, 0, T0);
+        pad.Trigger("LeftTrigger", 0.0, T0);
+        Assert.Equal([InputAction.RunWest, InputAction.RunSouthEast], actions); // and no throw
+    }
+
+    [Fact]
+    public void LeftTrigger_WithA_RepeatsTheLastCommand()
+    {
+        var (pad, actions) = Pad();
+        pad.Trigger("LeftTrigger", 0.9, T0);
+        pad.ButtonDown("A", T0);
+        pad.ButtonUp("A", T0);
+        pad.ButtonDown("A", T0);
+        pad.Trigger("LeftTrigger", 0.0, T0);
+        pad.ButtonUp("A", T0);
+        pad.ButtonDown("A", T0); // the trigger let go: A confirms again
+        Assert.Equal([InputAction.RepeatCommand, InputAction.RepeatCommand, InputAction.Confirm], actions);
+    }
+
+    [Fact]
+    public void SavedBindings_WithoutTheShortcuts_GetThem()
+    {
+        var old = InputBindings.Defaults();
+        old.Buttons.Remove("LeftTrigger+DPad");
+        old.Buttons.Remove("LeftTrigger+A");
+        old.AddMissingDefaults();
+        Assert.Equal(InputAction.Run, old.ForButton("LeftTrigger+DPad"));
+        Assert.Equal(InputAction.RepeatCommand, old.ForButton("LeftTrigger+A"));
     }
 
     [Fact]

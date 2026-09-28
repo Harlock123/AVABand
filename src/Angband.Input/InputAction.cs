@@ -103,6 +103,20 @@ public static class InputActions
         _ => null,
     };
 
+    /// <summary>The run action for a direction.</summary>
+    public static InputAction RunFromDirection(Direction dir) => dir switch
+    {
+        Direction.North => InputAction.RunNorth,
+        Direction.NorthEast => InputAction.RunNorthEast,
+        Direction.East => InputAction.RunEast,
+        Direction.SouthEast => InputAction.RunSouthEast,
+        Direction.South => InputAction.RunSouth,
+        Direction.SouthWest => InputAction.RunSouthWest,
+        Direction.West => InputAction.RunWest,
+        Direction.NorthWest => InputAction.RunNorthWest,
+        _ => InputAction.Run,
+    };
+
     public static InputAction FromDirection(Direction dir) => dir switch
     {
         Direction.North => InputAction.MoveNorth,

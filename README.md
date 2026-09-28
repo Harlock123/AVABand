@@ -841,8 +841,8 @@ the context action, or a game command.
   or opens into a room, a wall is ahead, or you are hurt, get hungry, faint or feel the level. The
   first step is checked like a walk (a known wall says so and takes no time; a monster there is
   attacked, a closed door opened), and only that step can be sent astray by confusion. In menus,
-  stores, lists and look mode Shift+direction moves like the plain direction. The gamepad has no
-  default run button: bind *Run (asks which way)* or a *Run north*… action in Settings → Controls.
+  stores, lists and look mode Shift+direction moves like the plain direction. On a gamepad, hold the
+  left trigger and press a direction (D-pad or stick) to run.
 - **Mouse**: left-click travels to a known square along the shortest known path (stopping when a
   monster comes into view or you are hurt; adjacent monsters are attacked); right-click shoots a
   monster or describes the square; the wheel zooms.
@@ -850,6 +850,9 @@ the context action, or a game command.
   D-pad or left stick move in eight directions with hold-to-repeat and navigate menus; A confirms
   (or takes the stairs / picks up), B cancels, X fires, Y casts, LB quaffs, RB reads, LT throws,
   RT wields, Back rests, Start opens settings, left stick click holds, right stick click toggles tiles.
+  The left trigger is also a shift: LT + direction runs, LT + A repeats the last command, and LT
+  tapped on its own throws when let go. (Chords are ordinary bindings — `LeftTrigger+A`,
+  `LeftTrigger+DPad` for running — so any button can be made a shift in `bindings.json`.)
 - **Rebinding**: Settings → Controls lists every action with its keys and button; *Key…*/*Button…*
   capture the next press. Bindings are saved to `<AppData>/AVABand/bindings.json`; actions added in later versions get their default keys when those keys are still free (so a saved `bindings.json` that still has `s` as hold keeps it; rebind Steal in Settings).
 
@@ -899,7 +902,7 @@ creature per monster letter (`monster-glyph:<letter>`, `tools/tileset_glyph_fall
 
 ## Roadmap
 AVABand now has every monster spell and artifact in Angband 4.2's game data, every ego that 4.2
-generates, and every timed effect its items, spells and monsters use. Natural next steps are comforts: controller shortcuts for running and repeating. (*of Fury* stays out: in
+generates, and every timed effect its items, spells and monsters use. (*of Fury* stays out: in
 4.2.5 its weapon types are commented out, so it is never made.)
 
 ## Licence
