@@ -1,14 +1,16 @@
 {
   "name": "CC0 dungeon music",
-  "author": "RandomMind, JaggedStone, yd, Paul Wortmann, HaelDB, TinyWorlds, Spring Spring, Eponasoft, The Oracle, Juhani Junkala (SubspaceAudio) (via OpenGameArt.org)",
+  "author": "RandomMind, JaggedStone, yd, Paul Wortmann, HaelDB, TinyWorlds, Spring Spring, Eponasoft, The Oracle, Juhani Junkala (SubspaceAudio), cynicmusic, AR (via OpenGameArt.org)",
   "license": "CC0 1.0 Public Domain Dedication (https://creativecommons.org/publicdomain/zero/1.0/)",
   "source": "https://opengameart.org",
   "music": {
     "town": [
-      "The_Old_Tower_Inn.mp3"
+      "The_Old_Tower_Inn.mp3",
+      "town_theme.mp3"
     ],
     "town_night": [
-      "dungeon002_0.ogg"
+      "midnight.ogg",
+      "forest_ambience.mp3"
     ],
     "dungeon": [
       "dungeon_ambient_1_0.ogg",

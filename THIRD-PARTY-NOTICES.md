@@ -33,7 +33,7 @@ Each tileset folder carries its own `LICENSE.txt`.
 | Pack | Author | Licence | Source |
 |---|---|---|---|
 | Angband sounds | Dubtrain | Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/) | https://github.com/angband/angband/tree/master/lib/sounds |
-| Dungeon music | RandomMind, JaggedStone, yd, Paul Wortmann, HaelDB, TinyWorlds, Spring Spring, Eponasoft, The Oracle, Juhani Junkala (via OpenGameArt.org) | CC0 1.0 | https://opengameart.org |
+| Dungeon music | RandomMind, JaggedStone, yd, Paul Wortmann, HaelDB, TinyWorlds, Spring Spring, Eponasoft, The Oracle, Juhani Junkala, cynicmusic, AR (via OpenGameArt.org) | CC0 1.0 | https://opengameart.org |
 
 See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.
 

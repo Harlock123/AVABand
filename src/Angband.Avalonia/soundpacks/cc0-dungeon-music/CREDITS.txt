@@ -33,3 +33,12 @@ evil_temple.ogg               "Evil temple Ambiance loop" by HaelDB
                               https://opengameart.org/content/evil-temple-ambiance-loop
 horror_atmosphere.ogg         "Post Apocalyptic Wastelands" by Juhani Junkala (SubspaceAudio)
                               https://opengameart.org/content/horror-atmosphere
+
+Town (so the town, by day or night, never shares a track with the dungeon):
+
+town_theme.mp3                "Town Theme RPG" by cynicmusic (day)
+                              https://opengameart.org/content/town-theme-rpg
+midnight.ogg                  "Midnight" by AR (night; re-encoded to Ogg Vorbis)
+                              https://opengameart.org/content/midnight
+forest_ambience.mp3           "Forest Ambience" by TinyWorlds (night)
+                              https://opengameart.org/content/forest-ambience

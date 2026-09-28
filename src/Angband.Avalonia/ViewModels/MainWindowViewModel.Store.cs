@@ -26,9 +26,17 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty] private string _storeSubtitle = "";
     [ObservableProperty] private int _storeSelectedIndex;
 
-    public string StoreModeText => StoreSellMode
-        ? (_game.StoreHere?.IsHome == true ? "Your belongings (letter to store, Tab for the home)" : "Sell (letter to sell, Tab to buy)")
-        : (_game.StoreHere?.IsHome == true ? "In your home (letter to take, Tab to store)" : "For sale (letter to buy, Tab to sell)");
+    /// <summary>
+    /// The pane heading. Under birth_no_selling (on by default, as in Angband 4.2) the shops pay
+    /// nothing, so — like 4.2's "Give which item?" — selling is called giving, and says why.
+    /// </summary>
+    public string StoreModeText => _game.StoreHere?.IsHome == true
+        ? (StoreSellMode ? "Your belongings (letter to store, Tab for the home)" : "In your home (letter to take, Tab to store)")
+        : _game.NoSelling
+            ? (StoreSellMode
+                ? "Give (letter to give; the shop identifies it, and recharges some wands and staves; Tab to buy)"
+                : "For sale (letter to buy, Tab to give items)")
+            : (StoreSellMode ? "Sell (letter to sell, Tab to buy)" : "For sale (letter to buy, Tab to sell)");
 
     private void OnShopEntered(ShopEnteredEvent e)
     {
@@ -120,7 +128,8 @@ public sealed partial class MainWindowViewModel
         StoreSubtitle = store.IsHome ? $"Your home ({store.Stock.Count}/{store.Def.Capacity} slots)"
             : store.Owner is { } owner && !_game.NoSelling
                 ? $"{owner.Name}, who pays up to {owner.Purse} gold  ·  You have {_game.Player.Gold} gold" // Angband: "Store (max_cost)"
-                : $"{store.Owner?.Name ?? "The shopkeeper"}  ·  You have {_game.Player.Gold} gold";
+                : $"{store.Owner?.Name ?? "The shopkeeper"}  ·  You have {_game.Player.Gold} gold"
+                  + (_game.NoSelling ? "  ·  Shops pay nothing (birth option \"no selling\"): gold in the dungeon is increased instead" : "");
 
         var items = StoreSellMode
             ? _game.Player.Inventory.Pack.Concat(_game.Player.Inventory.Quiver).Concat(_game.Player.Inventory.Equipped)
@@ -131,7 +140,7 @@ public sealed partial class MainWindowViewModel
             var item = items[i];
             var flavor = item.IsFlavored ? _game.Knowledge.Flavor(item.Kind) : null;
             var price = store.IsHome ? ""
-                : StoreSellMode ? (_game.SellPrice(store, item) is var p and > 0 ? $"{p} gold" : "no gold")
+                : StoreSellMode ? (_game.SellPrice(store, item) is var p and > 0 ? $"{p} gold" : _game.NoSelling ? "" : "no gold")
                 : $"{_game.BuyPrice(store, item)} gold";
             var name = StoreSellMode ? _game.Describe(item) : DescribeStock(store, item);
             StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),

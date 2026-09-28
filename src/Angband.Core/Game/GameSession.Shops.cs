@@ -464,6 +464,7 @@ public sealed partial class GameSession
 
         Publish(new MessageEvent(store.IsHome ? $"You drop off {Describe(sold)}."
             : price > 0 ? $"You sold {Describe(sold)} for {price} gold."
+            : NoSelling ? $"You give {Describe(sold)} to the store (shops pay nothing: \"no selling\" is on)."
             : $"You give {Describe(sold)} to the store."));
         Publish(new ItemSoldEvent(store.Id, sold.Kind.Id, price));
         RecalculateBonuses();

@@ -37,6 +37,29 @@ public class StoreUiTests
         TileRenderingTests.Save(window, "store-alchemist");
     }
 
+    /// <summary>
+    /// Angband 4.2's default birth_no_selling: shops pay nothing, so the store says "Give" (as 4.2's
+    /// "Give which item?"), explains why, and shows no price, rather than looking like a broken sale.
+    /// </summary>
+    [AvaloniaFact]
+    public void WithNoSelling_TheStoreSaysGive_AndWhy()
+    {
+        var (window, vm, game) = OpenAt("general");
+        Assert.True(game.NoSelling); // the default, as in 4.2
+        Assert.Contains("Shops pay nothing (birth option \"no selling\")", vm.StoreSubtitle);
+        Assert.Equal("For sale (letter to buy, Tab to give items)", vm.StoreModeText);
+
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+        Assert.StartsWith("Give (letter to give; the shop identifies it", vm.StoreModeText);
+        var food = vm.StoreRows.First(r => r.Item.Kind.Id == "ration_of_food");
+        Assert.Equal("", food.Price);
+
+        var gold = game.Player.Gold;
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(food.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        Assert.Equal(gold, game.Player.Gold);
+        Assert.Contains("shops pay nothing", vm.LastMessage);
+    }
+
     [AvaloniaFact]
     public void Letters_Buy_Tab_Switches_AndEscapeLeaves()
     {

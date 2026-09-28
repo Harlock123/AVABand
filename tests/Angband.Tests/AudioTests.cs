@@ -205,7 +205,7 @@ public class AudioTests
         var game = GameSession.NewGame(TestData.Game, 7);
         var (_, director, _, engine) = Setup(game);
         Assert.Equal("town", director.MusicMood);
-        Assert.Equal("The_Old_Tower_Inn.mp3", engine.MusicStarted.Last());
+        Assert.Contains(engine.MusicStarted.Last(), Music.Music["town"]);
 
         game.Execute(new DebugJumpCommand(5));
         Assert.Equal("dungeon", director.MusicMood);
@@ -246,15 +246,56 @@ public class AudioTests
         Assert.Equal(count, engine.MusicStarted.Count);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void Music_ChangesBackOnReturningToTown(bool day)
+    {
+        var game = GameSession.NewGame(TestData.Game, 7);
+        var (_, director, _, engine) = Setup(game);
+        if (!day) game.Scheduler.SetGameTurn(game.Data.Constants.DayLength * 3 / 4);
+        for (var i = 0; i < 20; i++)
+        {
+            game.Execute(new DebugJumpCommand(5));
+            Assert.Contains(engine.CurrentMusic is { } d ? Path.GetFileName(d) : "", Music.Music["dungeon"]);
+            game.Execute(new DebugJumpCommand(0));
+            var mood = director.MusicMood;
+            Assert.Contains(Path.GetFileName(engine.CurrentMusic ?? ""), Music.Music[mood]);
+            Assert.True(mood == "town" || !Music.Music["dungeon"].Contains(Path.GetFileName(engine.CurrentMusic!)),
+                $"{mood}: still playing {engine.CurrentMusic} at turn {game.GameTurn}, day {game.IsDaytime}");
+        }
+    }
+
     /// <summary>A playlist of one just plays that track again.</summary>
     [Fact]
     public void Music_WithOneTrack_PlaysItAgain()
     {
-        var game = GameSession.NewGame(TestData.Game, 7);
-        var (_, _, _, engine) = Setup(game);
-        Assert.Equal("The_Old_Tower_Inn.mp3", engine.MusicStarted.Last());
-        engine.FinishMusic();
-        Assert.Equal(["The_Old_Tower_Inn.mp3", "The_Old_Tower_Inn.mp3"], engine.MusicStarted.TakeLast(2));
+        var dir = Directory.CreateTempSubdirectory("avaband-pack").FullName;
+        try
+        {
+            File.WriteAllText(Path.Combine(dir, "soundpack.json"), """{ "name": "One", "music": { "town": ["only.ogg"] } }""");
+            File.WriteAllBytes(Path.Combine(dir, "only.ogg"), []); // never decoded: the engine only records it
+            var engine = new RecordingAudioEngine();
+            using var director = new SoundDirector(engine) { MusicPack = SoundPack.Load(dir) };
+            director.Attach(GameSession.NewGame(TestData.Game, 7));
+            Assert.Equal("only.ogg", engine.MusicStarted.Last());
+            engine.FinishMusic();
+            Assert.Equal(["only.ogg", "only.ogg"], engine.MusicStarted.TakeLast(2));
+        }
+        finally
+        {
+            Directory.Delete(dir, recursive: true);
+        }
+    }
+
+    /// <summary>The town, by day or night, has music of its own: going back up always changes the tune.</summary>
+    [Fact]
+    public void TownMusic_SharesNoTrackWithTheDungeon()
+    {
+        var below = Music.Music["dungeon"].Concat(Music.Music["deep"]).ToHashSet();
+        Assert.All(Music.Music["town"].Concat(Music.Music["town_night"]), t => Assert.DoesNotContain(t, below));
+        Assert.True(Music.Music["town"].Count >= 2);
+        Assert.True(Music.Music["town_night"].Count >= 2);
     }
 
     /// <summary>Every bundled track decodes, and each playlist has a choice of tracks.</summary>

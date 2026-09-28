@@ -185,7 +185,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     4.2's *birth_no_selling*) nothing at all, with dungeon gold multiplied by the depth (up to 5×)
     instead; turn the birth option off for classic selling (`constants.json`'s `noSelling` sets its
     default). What you sell is identified, loses its inscription, joins a matching pile, and wands and
-    staves the store deals in are recharged; lights are refuelled.
+    staves the store deals in are recharged; lights are refuelled. With no selling on, the store says so
+    and calls it giving (as 4.2's "Give which item?"), showing no price.
   - Bought items are fully known. The home stores up to 24 stacks.
   Walk onto an entrance (or press `_` / Confirm on it) to open the store screen: letters buy or sell
   one, Shift+letter the whole stack, Tab (pad X) switches buying/selling, Esc (pad B) leaves.
@@ -690,7 +691,7 @@ Bundled packs (in `src/Angband.Avalonia/soundpacks/`):
 | Pack | Content | Licence |
 |---|---|---|
 | Angband sounds (Dubtrain) | 246 effects for 149 events | CC BY 4.0, see its `LICENSE.txt` |
-| CC0 dungeon music | 13 tracks (about 48 minutes): town, night, 7 for the dungeon, 5 for the deep levels | CC0, see its `CREDITS.txt` |
+| CC0 dungeon music | 16 tracks (about 55 minutes): 2 for the town by day, 2 by night, 7 for the dungeon, 5 for the deep levels (the town's never overlap the dungeon's, so going back up always changes the tune) | CC0, see its `CREDITS.txt` |
 
 A sound pack is a folder with a `soundpack.json` (in `soundpacks/` next to the game or
 `<AppData>/AVABand/soundpacks/`):
