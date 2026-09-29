@@ -268,11 +268,11 @@ public static class ObjectInfo
         if (slays.Count > 0) lines.Add($"It slays {Join(slays)}.");
         var brands = item.Brands.Where(x => k.KnowsRune(RuneIds.Brand(x.Element))).Select(x => $"{x.Name} (x{x.Multiplier})").ToList();
         if (brands.Count > 0) lines.Add($"It is branded with {Join(brands)}.");
-        var resists = item.Resists.Where(r => k.KnowsRune(RuneIds.Resist(r))).Select(r => ProtectionName(data, r)).ToList();
+        var resists = item.Resists.Where(r => k.KnowsProperty(item, RuneIds.Resist(r))).Select(r => ProtectionName(data, r)).ToList();
         if (resists.Count > 0) lines.Add($"It provides {Join(resists)}.");
         var immune = item.Immunities.Where(r => k.KnowsRune(RuneIds.Resist(r))).Select(r => ElementName(data, r)).ToList();
         if (immune.Count > 0) lines.Add($"It makes you immune to {Join(immune)}.");
-        var abilities = item.Flags.Where(f => ItemFlags.Abilities.Contains(f) && k.KnowsRune(RuneIds.Flag(f))).Select(ItemFlags.Name).ToList();
+        var abilities = item.Flags.Where(f => ItemFlags.Abilities.Contains(f) && k.KnowsProperty(item, RuneIds.Flag(f))).Select(ItemFlags.Name).ToList();
         if (abilities.Count > 0) lines.Add($"It grants {Join(abilities)}.");
         // Angband describe_curses: what each known curse does, and whether it can be broken.
         foreach (var c in item.Curses.Where(c => k.KnowsRune(RuneIds.Curse(c))))

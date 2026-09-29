@@ -269,7 +269,7 @@ FLAG_TO_RESIST = dict(OI.FLAG_RESISTS, PROT_STUN="stun")
 FLAG_TO_ABILITY = dict(OI.FLAG_ABILITIES)
 EXTRA_KIND_FLAGS = {"BURNS_OUT": "BURNS_OUT", "TAKES_FUEL": "REFUELABLE", "INSTA_ART": "INSTA_ART", "EXPLODE": "EXPLODE",
                     "BLESSED": "BLESSED", "NO_FUEL": "NO_FUEL", "STICKY": "STICKY",
-                    "GOOD": "GOOD"}
+                    "GOOD": "GOOD", "EASY_KNOW": "EASY_KNOW"}
 # Ego kind flags asking for a random extra power, in AVABand's spelling (EgoItemDef.RandomPower).
 RANDOM_POWERS = {"RAND_SUSTAIN": "sustain", "RAND_POWER": "power", "RAND_HI_RES": "high_resist",
                  "RAND_BASE_RES": "base_resist", "RAND_RES_POWER": "resist_or_power"}

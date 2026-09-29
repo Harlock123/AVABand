@@ -89,7 +89,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 ### 4.2.5 properties AVABand's format can't express (not reported as differences)
 
-- flag EASY_KNOW: 22
 - flag QUEST_ART: 2
 - flag SHOOTS_ARROWS: 2
 - flag SHOOTS_BOLTS: 2
@@ -322,7 +321,7 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Monster bases | 56 | 0 | 0 | 0 | 0 | 0 |
 | Monster spells | 91 | 0 | 0 | 0 | 0 | 4 |
 | Blow effects | 30 | 0 | 0 | 0 | 0 | 0 |
-| Object kinds | 391 | 0 | 0 | 0 | 14 | 32 |
+| Object kinds | 391 | 0 | 0 | 0 | 14 | 10 |
 | Ego items | 107 | 0 | 0 | 0 | 0 | 0 |
 | Artifacts | 138 | 0 | 0 | 0 | 0 | 0 |
 | Classes | 9 | 0 | 0 | 0 | 0 | 1 |
@@ -339,5 +338,5 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Elements | 25 | 0 | 0 | 0 | 0 | 31 |
 | Chest traps | 7 | 0 | 0 | 0 | 0 | 0 |
 | Quests | 2 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **1902** | **0** | **0** | **0** | **14** | **88** |
+| **Total** | **1902** | **0** | **0** | **0** | **14** | **66** |
 

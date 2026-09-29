@@ -492,7 +492,8 @@
     },
     "fuel": 5000,
     "flags": [
-      "BURNS_OUT"
+      "BURNS_OUT",
+      "EASY_KNOW"
     ]
   },
   {
@@ -512,7 +513,8 @@
     },
     "fuel": 15000,
     "flags": [
-      "REFUELABLE"
+      "REFUELABLE",
+      "EASY_KNOW"
     ]
   },
   {
@@ -1013,6 +1015,9 @@
     "resists": [
       "fire",
       "cold"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -1026,6 +1031,9 @@
     "weight": 2,
     "resists": [
       "pois"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -1046,7 +1054,10 @@
     ],
     "cursePowers": {
       "teleportation": 100
-    }
+    },
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "amulet_of_resist_lightning",
@@ -1063,6 +1074,9 @@
     "weight": 3,
     "resists": [
       "elec"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -1090,7 +1104,8 @@
     "cost": 200,
     "weight": 3,
     "flags": [
-      "SLOW_DIGEST"
+      "SLOW_DIGEST",
+      "EASY_KNOW"
     ]
   },
   {
@@ -2579,6 +2594,9 @@
       "sust_str",
       "sust_dex",
       "sust_con"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2595,6 +2613,9 @@
       "sust_str",
       "sust_int",
       "sust_wis"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2790,7 +2811,8 @@
     "activationText": "heals 40 hit points, cures blindness, heals cuts and cures confusion",
     "power": 25,
     "flags": [
-      "IMPAIR_HP"
+      "IMPAIR_HP",
+      "EASY_KNOW"
     ]
   },
   {
@@ -2807,7 +2829,8 @@
       "speed": 2
     },
     "flags": [
-      "AFRAID"
+      "AFRAID",
+      "EASY_KNOW"
     ]
   },
   {
@@ -2841,6 +2864,9 @@
     },
     "resists": [
       "fear"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2854,7 +2880,8 @@
     "cost": 250,
     "weight": 2,
     "flags": [
-      "SLOW_DIGEST"
+      "SLOW_DIGEST",
+      "EASY_KNOW"
     ]
   },
   {
@@ -2868,7 +2895,8 @@
     "cost": 200,
     "weight": 2,
     "flags": [
-      "FEATHER"
+      "FEATHER",
+      "EASY_KNOW"
     ]
   },
   {
@@ -2883,6 +2911,9 @@
     "weight": 2,
     "resists": [
       "free_act"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2897,6 +2928,9 @@
     "weight": 2,
     "resists": [
       "see_invis"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2949,6 +2983,9 @@
     "weight": 3,
     "resists": [
       "acid"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2972,6 +3009,9 @@
       "acid",
       "elec",
       "cold"
+    ],
+    "flags": [
+      "EASY_KNOW"
     ]
   },
   {
@@ -2999,7 +3039,8 @@
     ],
     "flags": [
       "HOLD_LIFE",
-      "SLOW_DIGEST"
+      "SLOW_DIGEST",
+      "EASY_KNOW"
     ]
   },
   {
@@ -3143,7 +3184,8 @@
     "cost": 600,
     "weight": 3,
     "flags": [
-      "REGEN"
+      "REGEN",
+      "EASY_KNOW"
     ]
   },
   {
@@ -3175,7 +3217,10 @@
     ],
     "cursePowers": {
       "teleportation": 100
-    }
+    },
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "amulet_of_adornment",
@@ -3186,7 +3231,10 @@
     "minDepth": 10,
     "maxDepth": 40,
     "cost": 0,
-    "weight": 3
+    "weight": 3,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "amulet_of_inertia",

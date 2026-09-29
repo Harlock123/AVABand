@@ -514,7 +514,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with
   `--fail-on-diff`. What the report still lists: the 14 special artifact kinds (4.2.5 makes those
   from artifact.txt), and 4.2.5 properties AVABand models another way (the decoy and door locks
-  aren't traps; launchers' SHOOTS_* come from their base; EASY_KNOW).
+  aren't traps; launchers' SHOOTS_* come from their base). EASY_KNOW is carried and does what it
+  does in 4.2.5: once you know an EASY_KNOW kind (lights, and the rings and amulets that are no
+  more than their flavour), its ego's object flags are known too — a Lantern of True Sight shows
+  its see invisible and protection from blindness at once.
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so

@@ -114,6 +114,28 @@ public sealed class PlayerKnowledge
 
     public bool KnowsRune(string rune) => _runes.Contains(rune);
 
+    /// <summary>The protections that are object flags in Angband (see invisible, free action...), not resistances.</summary>
+    private static readonly HashSet<string> FlagProtections = ["fear", "blind", "conf", "stun", "free_act", "see_invis"];
+
+    /// <summary>
+    /// Whether a property of this object is known (Angband object_flags_known): its rune is, or —
+    /// for an EASY_KNOW kind you know (lights, and the rings and amulets that are nothing more than
+    /// their flavour) — it is one of its ego's object flags.
+    /// </summary>
+    public bool KnowsProperty(Item item, string rune)
+    {
+        if (_runes.Contains(rune)) return true;
+        if (item.Ego is not { } ego || !item.Kind.Has("EASY_KNOW") || !KnowsKind(item)) return false;
+        var colon = rune.IndexOf(':');
+        var what = colon < 0 ? "" : rune[(colon + 1)..];
+        return (colon < 0 ? rune : rune[..colon]) switch
+        {
+            "flag" => ego.Flags.Contains(what),
+            "resist" => FlagProtections.Contains(what) && ego.Resists.Contains(what),
+            _ => false,
+        };
+    }
+
     /// <summary>Whether an object is marked for ignoring (shown as {ignore}); set by the game session.</summary>
     public Func<Item, bool>? IgnoredCheck { get; set; }
 

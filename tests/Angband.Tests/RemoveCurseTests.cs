@@ -63,3 +63,27 @@ public class RemoveCurseTests
         Assert.Equal("30+d30", new Func<string>(() => { game.GainExperience(game.ExperienceForLevel(29)); return game.UncurseStrengthText("remove_curse:{L}+1d{L}"); })());
     }
 }
+
+/// <summary>Angband EASY_KNOW: a known kind's ego flags are known too (object_flags_known).</summary>
+public class EasyKnowTests
+{
+    [Fact]
+    public void A_Lantern_of_True_Sight_shows_its_protections_at_once()
+    {
+        var game = Arena.Create(4);
+        var data = game.Data;
+        Assert.Equal(22, data.Objects.Count(k => k.Has("EASY_KNOW")));
+        var lantern = game.Objects.Create("lantern");
+        Angband.Core.Items.ObjectFactory.ApplyEgo(new Angband.Core.Randomness.GameRandom(1), lantern, data.Egos.Single(e => e.Id == "of_true_sight"), 10);
+        Assert.True(game.Knowledge.KnowsKind(lantern));
+        Assert.False(game.Knowledge.KnowsRune(Angband.Core.Definitions.RuneIds.Resist("see_invis")));
+        var text = ObjectInfo.DescribeItem(game, lantern);
+        Assert.Contains("see invisible", text, StringComparison.OrdinalIgnoreCase);
+
+        // A sword isn't EASY_KNOW: its ego's free action stays a mystery until the rune is learned.
+        var sword = game.Objects.Create("dagger");
+        var westernesse = data.Egos.First(e => e.Resists.Contains("free_act") && e.Bases.Contains("sword"));
+        Angband.Core.Items.ObjectFactory.ApplyEgo(new Angband.Core.Randomness.GameRandom(1), sword, westernesse, 30);
+        Assert.False(game.Knowledge.KnowsProperty(sword, Angband.Core.Definitions.RuneIds.Resist("free_act")));
+    }
+}
