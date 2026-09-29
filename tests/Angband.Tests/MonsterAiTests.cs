@@ -374,24 +374,46 @@ public class MonsterAiTests
     }
 
     [Fact]
-    public void FrightenedCasters_OnlyUseEscapes()
+    public void A_caster_at_full_health_never_heals()
     {
+        // Angband remove_bad_spells: no HEAL at full hit points (for any monster that isn't stupid).
         var game = Arena.Create(14, BigRoom);
         game.Player.Hp = game.Player.MaxHp = 100_000;
         var orfax = Arena.AddMonster(game, "orfax", new Loc(15, 2));
         var spells = Collect<MonsterSpellEvent>(game);
-
-        for (var i = 0; i < 100; i++)
+        for (var i = 0; i < 150; i++)
         {
-            orfax.Fear = 50;
-            orfax.Hp = orfax.MaxHp / 3;
+            orfax.Hp = orfax.MaxHp;
             Hold(game, 1);
         }
-
-        // Healing also restores courage, so a non-escape spell may follow a heal - but never otherwise.
         Assert.NotEmpty(spells);
-        var offensive = spells.Count(s => s.SpellId is not ("HEAL" or "BLINK"));
-        Assert.True(offensive <= spells.Count(s => s.SpellId == "HEAL"), $"{offensive} offensive casts while afraid");
+        Assert.DoesNotContain(spells, s => s.SpellId == "HEAL");
+    }
+
+    [Fact]
+    public void Afraid_casters_fail_more_often()
+    {
+        // Angband monster_spell_failrate: 24% (4.2.5's MIN(spell power, 1)), 20 more while afraid.
+        double FailShare(bool afraid)
+        {
+            var game = Arena.Create(15, Hall);
+            game.Player.Hp = game.Player.MaxHp = 100_000;
+            var shaman = Arena.AddMonster(game, "kobold_shaman", new Loc(12, 2));
+            shaman.Hp = shaman.MaxHp = 100_000;
+            int fails = 0, casts = 0;
+            game.Events.Subscribe<MessageEvent>(m => fails += m.Text.EndsWith("tries to cast a spell, but fails.") ? 1 : 0);
+            game.Events.Subscribe<MonsterSpellEvent>(_ => casts++);
+            for (var i = 0; i < 1500; i++)
+            {
+                if (afraid) shaman.Fear = 50;
+                Hold(game, 1);
+            }
+            return fails / (double)Math.Max(1, fails + casts);
+        }
+        var calm = FailShare(false);
+        var scared = FailShare(true);
+        Assert.InRange(calm, 0.15, 0.33);
+        Assert.InRange(scared, 0.35, 0.55);
     }
 
     [Fact]

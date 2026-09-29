@@ -47,6 +47,7 @@ public class OldSaveTests
         // It plays on: time passes, monsters move, and it goes down a level.
         var turn = game.GameTurn;
         game.Player.Hp = game.Player.MaxHp; // (the saves were made at up to half hit points)
+        TestGames.ClearMonsters(game);      // (a 10 hp mage: nothing here should decide whether it lives)
         for (var i = 0; i < 30 && game.Player.Hp > game.Player.MaxHp / 2; i++) game.Execute(new HoldCommand()); // (a 10 hp mage)
         Assert.True(game.GameTurn > turn);
         game.Execute(new DebugJumpCommand(4));

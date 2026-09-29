@@ -597,6 +597,23 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   that got something (or was fended off from your purse, two times in three) finishes its blows
   before the puff of smoke; the blows stop if you're moved; and monster recall counts only the
   blows seen to land.
+- **Monster spells, projections and your blows as 4.2.5 has them** (`make_ranged_attack`,
+  `project-mon.c`, `project_p`, `py_attack_real`): a monster casts only with you in range and in
+  its line of fire (no healing, blinking or summoning out of sight); a spell fails 24% of the time
+  for any monster not stupid (4.2.5's formula takes the smaller of spell power and 1), 20 more
+  afraid and 50 confused or disenchanted, and a confused one can still try; smart monsters near
+  death drop damaging spells half the time, and all but the stupid drop what can't help (healing at
+  full health, haste while hasted, a whip or spit out of reach, a bolt without a clear shot, a
+  summons with no room). A projection of yours does what 4.2.5's does to a monster: fire burns the
+  fire-hating twice as hard ("catches fire!"), light makes orcs cringe, what a monster breathes it
+  resists, the undead are immune to nether and the evil half so, sound, ice and force may stun,
+  chaos confuses and may polymorph, nexus and gravity may teleport, disenchantment makes a caster's
+  spells fail more — with 4.2.5's notes ("resists a lot.") in place of the pain message, and its
+  deaths ("The orc dies.", "freezes and shatters!", "You hear a scream of agony!" unseen); hit by
+  something while blind or unseen you're told what ("You are hit by fire!"). Your blows wake and
+  free a held monster even when they miss; a punch does 1 and your bonuses (no criticals); a
+  weapon's to-dam is multiplied by a critical hit; slays and brands on anything worn count; the
+  glowing hands confuse as 4.2.5's do.
 - **What 4.2.5 says and shows that AVABand didn't** (history.txt, pain.txt, player_property.txt,
   hints.txt, class titles): a character is born with an age, height, weight and a background from
   their race's history charts ("You are one of several children of a Yeoman...") on the character

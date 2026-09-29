@@ -29,6 +29,7 @@ public class ReplayTests
             }
             if (game.Player.Hp < game.Player.MaxHp / 3 && game.Player.Inventory.Pack.FirstOrDefault(p => p.Kind.Id == "cure_light_wounds") is { } potion)
                 game.Execute(new UseCommand(potion));
+            else if (game.Player.Hp < game.Player.MaxHp / 3) game.Execute(new DebugCureAllCommand()); // (recorded too)
         }
     }
 

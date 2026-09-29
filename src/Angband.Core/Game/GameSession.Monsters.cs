@@ -41,7 +41,7 @@ public sealed partial class GameSession
         var race = monster.Race;
         if (race.Has(MonsterFlags.Multiply) && TryMultiply(monster)) return EnergyTable.MoveEnergy;
         if (monster.IsVisible) Lore.For(race.Id).TurnsWatched++;
-        if (RangedAttackKind(monster) is { } innate && TryCastSpell(monster, innate)) return EnergyTable.MoveEnergy;
+        if (MakeRangedAttack(monster)) return EnergyTable.MoveEnergy;
 
         var adjacent = monster.Position.ChebyshevTo(Player.Position) == 1;
         if (race.Has(MonsterFlags.NeverMove))
@@ -403,6 +403,8 @@ public sealed partial class GameSession
                 Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} recovers its courage."));
             if (monster.Confused > 0) monster.Confused--;
             if (monster.Stun > 0) monster.Stun--;
+            if (monster.Disenchanted > 0 && --monster.Disenchanted == 0 && monster.IsVisible)
+                Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} seems magical again."));
             if (monster.Held > 0) monster.Held--;
             if (monster.Slow > 0 && --monster.Slow == 0 && monster.IsVisible)
                 Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} is no longer slow."));

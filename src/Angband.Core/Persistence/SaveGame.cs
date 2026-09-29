@@ -237,7 +237,7 @@ public static class SaveGame
             save.Monsters.Add(new MonsterSave
             {
                 Id = m.Id, Race = m.Race.Id, X = m.Position.X, Y = m.Position.Y, Hp = m.Hp, MaxHp = m.MaxHp, Speed = m.Speed,
-                Energy = m.Energy, Sleep = m.Sleep, Stun = m.Stun, Confused = m.Confused, Fear = m.Fear, Held = m.Held,
+                Energy = m.Energy, Sleep = m.Sleep, Stun = m.Stun, Disenchanted = m.Disenchanted, Confused = m.Confused, Fear = m.Fear, Held = m.Held,
                 Fast = m.Fast, Slow = m.Slow, Camouflaged = m.Camouflaged, BodyguardOf = m.BodyguardOf, OriginalRace = m.OriginalRace?.Id,
                 KnownPlayer = m.KnownPlayer.Count == 0 ? null : new Dictionary<string, int>(m.KnownPlayer),
                 MimicItem = m.MimicItem is null ? null : ItemToSave(m.MimicItem), Carried = m.Carried.Select(ItemToSave).ToList(), LootRolled = m.LootRolled,
@@ -418,7 +418,7 @@ public static class SaveGame
                 }
                 var m = new Monster(ms.Id, race, new Loc(ms.X, ms.Y), ms.MaxHp, ms.Speed)
                 {
-                    Hp = ms.Hp, Energy = ms.Energy, Sleep = ms.Sleep, Stun = ms.Stun, Confused = ms.Confused, Fear = ms.Fear,
+                    Hp = ms.Hp, Energy = ms.Energy, Sleep = ms.Sleep, Stun = ms.Stun, Disenchanted = ms.Disenchanted, Confused = ms.Confused, Fear = ms.Fear,
                     Held = ms.Held, WanderStuck = ms.WanderStuck, Fast = ms.Fast, Slow = ms.Slow,
                     Camouflaged = ms.Camouflaged, BodyguardOf = ms.BodyguardOf, KnownPlayer = ms.KnownPlayer is { } learned ? new Dictionary<string, int>(learned) : [], OriginalRace = ms.OriginalRace is null ? null : data.Monster(ms.OriginalRace), MimicItem = ms.MimicItem is null ? null : ToItem(ms.MimicItem),
                     WanderTarget = ms.WanderTarget is [var wx, var wy] ? new Loc(wx, wy) : null,

@@ -571,36 +571,13 @@ public sealed partial class GameSession
         foreach (var monster in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(center) <= radius && ProjectionPath.Projectable(Level, center, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(center)).ThenBy(m => m.Id).ToList())
-            ProjectileHitsMonster(monster, name, element, damage / (monster.Position.DistanceTo(center) + 1));
+            ProjectileHitsMonster(monster, name, element, damage / (monster.Position.DistanceTo(center) + 1), monster.Position.DistanceTo(center));
         DestroyFloorObjects(BallArea(center, radius), element);
     }
 
     private void SpellHitsMonster(Monster monster, SpellDef spell, string? element, int damage) =>
         ProjectileHitsMonster(monster, spell.Name, element, damage);
 
-    /// <summary>Applies elemental resistance (Angband: immune monsters take 1/9; vulnerable ones double).</summary>
-    private void ProjectileHitsMonster(Monster monster, string source, string? element, int damage)
-    {
-        var note = "";
-        // Angband HOLY_ORB: evil monsters take double.
-        if (element == "holy_orb" && monster.Race.Has(MonsterFlags.Evil))
-        {
-            damage *= 2;
-            note = " is hit hard";
-            LearnMonsterFlag(monster.Race, MonsterFlags.Evil);
-        }
-        if (element is not null && Data.Element(element) is { } el)
-        {
-            if (el.ImmunityFlag is { } im && monster.Race.Has(im)) { damage /= 9; note = " resists a lot"; }
-            else if (el.VulnerabilityFlag is { } vu && monster.Race.Has(vu)) { damage *= 2; note = " is hit hard"; }
-            if (el.ImmunityFlag is { } i) LearnMonsterResponse(monster, i);
-            if (el.VulnerabilityFlag is { } v) LearnMonsterResponse(monster, v);
-        }
-        // Angband project_m: a special note if there is one, otherwise how it hurts.
-        if (note.Length > 0 && monster.IsVisible) Publish(new MessageEvent($"{Capitalize(MonsterName(monster))}{note}{DamageNote(damage)}."));
-        Publish(new PlayerAttackEvent(monster.Id, Hit: true, damage, CriticalGrade.None));
-        DamageMonster(monster, damage, pain: note.Length == 0);
-    }
 
     /// <summary>Light-sensitive monsters in view take damage (Call Light and friends).</summary>
     private void LightDamage(Randomness.Dice dice)

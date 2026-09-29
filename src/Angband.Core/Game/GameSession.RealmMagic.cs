@@ -151,7 +151,7 @@ public sealed partial class GameSession
         foreach (var m in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(at) <= radius && ProjectionPath.Projectable(Level, at, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(at)).ThenBy(m => m.Id).ToList())
-            ProjectileHitsMonster(m, _effectSource, element, damage / (m.Position.DistanceTo(at) + 1));
+            ProjectileHitsMonster(m, _effectSource, element, damage / (m.Position.DistanceTo(at) + 1), m.Position.DistanceTo(at));
     }
 
     /// <summary>Angband SPHERE: an explosion centred on the player that spares them.</summary>
@@ -162,7 +162,7 @@ public sealed partial class GameSession
         foreach (var m in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(Player.Position) <= radius && ProjectionPath.Projectable(Level, Player.Position, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(Player.Position)).ThenBy(m => m.Id).ToList())
-            ProjectileHitsMonster(m, _effectSource, element, damage / (m.Position.DistanceTo(Player.Position) + 1));
+            ProjectileHitsMonster(m, _effectSource, element, damage / (m.Position.DistanceTo(Player.Position) + 1), m.Position.DistanceTo(Player.Position));
         DestroyFloorObjects(BallArea(Player.Position, radius), element);
     }
 

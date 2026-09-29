@@ -36,6 +36,12 @@ public sealed partial class GameSession
         var blowEnergy = CombatMath.BlowEnergy(Player.Blows, EnergyTable.MoveEnergy);
         var used = 0;
         WakeMonster(monster);
+        // Angband py_attack_real: an attack frees a held monster.
+        if (monster.Held > 0)
+        {
+            monster.Held = 0;
+            if (monster.IsVisible) Publish(new MessageEvent($"{Capitalize(name)} is no longer held."));
+        }
         CombatRegenOnAttack();
         if (ClassHas(ClassFlags.ShieldBash))
         {
@@ -84,7 +90,14 @@ public sealed partial class GameSession
             return -1;
         }
 
-        var (multiplier, verb, rune, oMultiplier) = weapon is null ? (1, "hit", null, 10) : BestMultiplier(weapon, monster);
+        // Angband improve_attack_modifier over the weapon and everything else worn but the bow (a
+        // ring's or gloves' slay counts too); without a weapon, a punch.
+        var gearSlays = Player.Inventory.Equipped.Where(i => i != weapon && i.Base.Slot != EquipSlot.Bow).SelectMany(i => i.Slays).ToList();
+        var gearBrands = Player.Inventory.Equipped.Where(i => i != weapon && i.Base.Slot != EquipSlot.Bow).SelectMany(i => i.Brands).ToList();
+        var (multiplier, verb, rune, oMultiplier) = weapon is null ? (1, "punch", null, 10) : BestMultiplier(weapon, monster);
+        if ((gearSlays.Count > 0 || gearBrands.Count > 0) && BestMultiplier(gearSlays, gearBrands, monster, learn: true) is var worn
+            && (PercentDamage ? worn.OMultiplier > oMultiplier : worn.Multiplier > multiplier))
+            (multiplier, verb, rune, oMultiplier) = worn;
         // Temporary brands and slays (Angband player_timed.txt brand/slay: the poison coating,
         // Smite Evil, Demon Bane...) better the blow, weapon or not.
         var temporary = Player.Timed.Active.Select(kv => Data.Timed(kv.Key)).OfType<TimedEffectDef>().ToList();
@@ -99,20 +112,29 @@ public sealed partial class GameSession
             damage = OMeleeDamage(monster, weapon, oMultiplier, weaponToHit + Player.EffectiveToHit, out grade);
         else
         {
-            damage = dice.Roll(Rng) * multiplier;
-            damage = CombatMath.CriticalMelee(Rng, weapon?.Weight ?? 0, weaponToHit + Player.EffectiveToHit,
-                Player.SkillMelee, damage, out grade, Player.Level, IsDebuffed(monster));
-            damage += weaponToDam + Player.EffectiveToDam;
+            // Angband melee_damage (a punch does 1) with the weapon's own to-dam, then critical_melee
+            // (only with a weapon), then the rest of the to-dam.
+            damage = (weapon is null ? 1 : dice.Roll(Rng)) * multiplier + weaponToDam;
+            grade = CriticalGrade.None;
+            if (weapon is not null)
+                damage = CombatMath.CriticalMelee(Rng, weapon.Weight, weaponToHit + Player.EffectiveToHit,
+                    Player.SkillMelee, damage, out grade, Player.Level, IsDebuffed(monster));
+            damage += Player.EffectiveToDam;
         }
-        damage = Math.Max(0, damage);
+        if (damage <= 0)
+        {
+            damage = 0;
+            verb = "fail to harm";
+        }
 
         Publish(new PlayerAttackEvent(monster.Id, Hit: true, damage, grade));
         Publish(new MessageEvent($"You {ShapeBlowVerb() ?? verb} {name}{DamageNote(damage)}.{CriticalMessage(grade)}"));
         if (Player.Timed.Has("att_conf") && Data.Timed("att_conf") is { } glow)
         {
-            // Monster confusion (Angband ATT_CONF): the glowing hands confuse, then fade.
-            AffectMonster(monster, "confuse", Player.Level + 20);
+            // Angband blow_side_effects: the glowing hands fade, confusing the monster 10 turns and a
+            // tenth of a roll up to your level.
             if (Player.Timed.Set(glow, 0) is { } faded) Publish(new MessageEvent(faded));
+            MonIncTimed(monster, MonsterCondition.Confused, 10 + Rng.RandInt0(Player.Level) / 10);
         }
         if (weapon is not null)
         {
@@ -282,7 +304,8 @@ public sealed partial class GameSession
     /// survivor you can see shows how it was hurt (Angband message_pain, as missiles, spells and
     /// breath do; melee doesn't).
     /// </summary>
-    public bool DamageMonster(Monster monster, int damage, bool pain = false)
+    /// <param name="deathNote">Said instead of "You have slain ..." if it dies (a spell's "The orc dies.").</param>
+    public bool DamageMonster(Monster monster, int damage, bool pain = false, string? deathNote = null)
     {
         Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage));
         Reveal(monster);
@@ -291,7 +314,7 @@ public sealed partial class GameSession
 
         if (monster.Hp < 0)
         {
-            KillMonster(monster);
+            KillMonster(monster, deathNote);
             return true;
         }
         if (pain && monster.IsVisible && PainMessage(monster, damage) is { } hurt)
@@ -330,13 +353,13 @@ public sealed partial class GameSession
     private static string SingularVerb(string text) =>
         System.Text.RegularExpressions.Regex.Replace(text, @"\[([^|\]]*)(\|[^\]]*)?\]", m => m.Groups[1].Value);
 
-    private void KillMonster(Monster monster)
+    private void KillMonster(Monster monster, string? deathNote = null)
     {
         // A shapechanged monster dies as what it really is (Sauron, not Wolf-Sauron).
         var race = monster.OriginalRace ?? monster.Race;
         var name = MonsterName(monster);
         var destroyed = race.Has(MonsterFlags.Undead) || race.Has("NONLIVING");
-        Publish(new MessageEvent($"You have {(destroyed ? "destroyed" : "slain")} {name}."));
+        Publish(new MessageEvent(deathNote ?? $"You have {(destroyed ? "destroyed" : "slain")} {name}."));
 
         var (whole, fraction) = CombatMath.KillExperience(race.Experience, race.Depth, Player.Level);
         Player.ExperienceFraction += fraction;

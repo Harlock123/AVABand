@@ -209,6 +209,7 @@ public sealed class MonsterSave
     public int Energy { get; set; }
     public int Sleep { get; set; }
     public int Stun { get; set; }
+    public int Disenchanted { get; set; }
     public int Confused { get; set; }
     public int Fear { get; set; }
     public int Held { get; set; }

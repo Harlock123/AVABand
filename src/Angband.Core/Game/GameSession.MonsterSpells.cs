@@ -11,73 +11,122 @@ namespace Angband.Core.Game;
 /// <summary>Monster spells and innate ranged attacks (Angband make_ranged_attack / mon-spell.c).</summary>
 public sealed partial class GameSession
 {
-    /// <summary>
-    /// Angband make_ranged_attack / monster_can_cast: first a roll against the race's spell
-    /// frequency, then against its innate frequency — each a 100/N percent chance, halved while the
-    /// player taunts and doubled at the monster's preferred range. Returns whether this turn is for a spell (false) or an innate attack (true),
-    /// or null for neither.
-    /// </summary>
-    private bool? RangedAttackKind(Monster monster)
+    /// <summary>Angband's spell types (list-mon-spells.h), by spell id: what the choosing filters go by.</summary>
+    [Flags]
+    private enum SpellType { None = 0, Annoy = 1, Bolt = 2, Ball = 4, Breath = 8, Direct = 16, Summon = 32, Haste = 64, Heal = 128, HealOther = 256, Tactic = 512, Escape = 1024, Innate = 2048 }
+
+    private const SpellType DamageSpells = SpellType.Bolt | SpellType.Ball | SpellType.Breath | SpellType.Direct; // RST_DAMAGE
+
+    private static SpellType TypeOf(string id) => id switch
     {
-        var race = monster.Race;
-        // Angband: halved while the player taunts; doubled when the monster is at its preferred range.
-        var atBest = monster.Position.DistanceTo(Player.Position) == CombatRange(monster).Best;
-        int Chance(int oneIn) => oneIn <= 0 ? 0 : 100 / oneIn / (Player.Timed.Has("taunt") ? 2 : 1) * (atBest ? 2 : 1);
-        if (Chance(race.SpellFrequency) is > 0 and var spell && Rng.RandInt0(100) < spell) return false;
-        if (Chance(race.InnateFrequency) is > 0 and var innate && Rng.RandInt0(100) < innate) return true;
-        return null;
+        "SHRIEK" or "WEAVE" => SpellType.Annoy | SpellType.Innate,
+        "WHIP" or "SPIT" or "SHOT" or "ARROW" or "BOLT" or "BOULDER" => SpellType.Bolt | SpellType.Innate,
+        _ when id.StartsWith("BR_", StringComparison.Ordinal) => SpellType.Breath | SpellType.Innate,
+        _ when id.StartsWith("BA_", StringComparison.Ordinal) || id.StartsWith("BE_", StringComparison.Ordinal) || id == "STORM" => SpellType.Ball,
+        _ when id.StartsWith("BO_", StringComparison.Ordinal) || id == "MISSILE" => SpellType.Bolt,
+        "MIND_BLAST" or "BRAIN_SMASH" => SpellType.Direct | SpellType.Annoy,
+        "WOUND" => SpellType.Direct,
+        "SLOW" or "HOLD" => SpellType.Annoy | SpellType.Haste,
+        "HASTE" => SpellType.Haste,
+        "HEAL" => SpellType.Heal,
+        "HEAL_KIN" => SpellType.HealOther,
+        "BLINK" => SpellType.Tactic | SpellType.Escape,
+        "TPORT" or "TELE_AWAY" or "TELE_LEVEL" => SpellType.Escape,
+        "SHAPECHANGE" => SpellType.Tactic,
+        _ when id.StartsWith("S_", StringComparison.Ordinal) => SpellType.Summon,
+        _ => SpellType.Annoy,
+    };
+
+    /// <summary>
+    /// Angband monster_can_cast: a roll against the race's frequency (innate or not) — halved while
+    /// you taunt, doubled at its favourite range — then you must be in range and in its line of fire.
+    /// </summary>
+    private bool MonsterCanCast(Monster monster, bool innate)
+    {
+        var oneIn = innate ? monster.Race.InnateFrequency : monster.Race.SpellFrequency;
+        if (oneIn <= 0) return false;
+        var chance = 100 / oneIn;
+        if (Player.Timed.Has("taunt")) chance /= 2;
+        var distance = monster.Position.DistanceTo(Player.Position);
+        if (distance == CombatRange(monster).Best) chance *= 2;
+        if (Rng.RandInt0(100) >= chance) return false;
+        if (distance > MaxRange) return false;
+        return ProjectionPath.Projectable(Level, monster.Position, Player.Position, MaxRange);
     }
 
     /// <summary>
-    /// Picks and casts a spell of the kind chosen (innate attacks or other spells, as Angband's
-    /// choose_attack_spell); false if nothing suitable could be cast (the monster then moves).
+    /// Angband make_ranged_attack: a spell if the frequency allows (or else an innate attack); a smart
+    /// monster near death leaves damaging spells aside half the time; one that isn't stupid drops
+    /// what can't help (a heal at full health, haste while hasted, teleport-to beside you, a lash out
+    /// of reach, what it has learned you resist, a bolt without a clear shot, a summons with no room);
+    /// then one of the rest at random. A spell (not an innate attack) fails 25% of the time less a
+    /// little — 4.2.5's formula takes the smaller of the race's spell power and 1, so it is 24 or 25%
+    /// — plus 20 afraid and 50 confused or disenchanted; stupid monsters never fail.
     /// </summary>
-    private bool TryCastSpell(Monster monster, bool innate)
+    private bool MakeRangedAttack(Monster monster)
     {
-        var race = monster.Race;
-        var here = monster.Position;
-        var inView = CanSee(monster) && ProjectionPath.Projectable(Level, here, Player.Position, MaxRange);
-        var clearShot = inView && ClearBolt(monster);
-
-        var usable = race.Spells
-            .Select(Data.MonsterSpell)
-            .OfType<MonsterSpellDef>()
-            .Where(s => s.Kind switch
-            {
-                MonsterSpellKind.Bolt => clearShot,
-                MonsterSpellKind.Heal => monster.Hp < monster.MaxHp,
-                MonsterSpellKind.Blink or MonsterSpellKind.Teleport => true,
-                MonsterSpellKind.Haste => monster.Fast == 0,
-                MonsterSpellKind.DrainMana => inView && Player.Mana > 0,
-                MonsterSpellKind.HealKin => WoundedKin(monster) is not null,
-                MonsterSpellKind.TeleportSelfTo => !inView || here.ChebyshevTo(Player.Position) > 1,
-                MonsterSpellKind.Summon => inView || here.DistanceTo(Player.Position) <= 10,
-                _ => inView,
-            })
-            .Where(s => s.Innate == innate)
-            .Where(s => monster.Confused == 0 || s.Innate)
-            .ToList();
-        usable = WithoutKnownFailures(monster, usable); // what it has learned won't work
-
-        // Frightened monsters try to get away or patch themselves up.
-        if (monster.IsAfraid)
+        var innate = false;
+        if (!MonsterCanCast(monster, false))
         {
-            var escapes = usable.Where(s => s.Escape).ToList();
-            if (escapes.Count > 0) usable = escapes;
+            if (!MonsterCanCast(monster, true)) return false;
+            innate = true;
         }
-        if (usable.Count == 0) return false;
-
-        var spell = Rng.Pick(usable);
-        var seen = monster.IsVisible;
-        var name = Capitalize(MonsterName(monster));
-
-        // Angband: non-innate spells fail 25 - (level + 3) / 4 percent of the time.
-        if (!spell.Innate && !race.Has(MonsterFlags.Smart) && Rng.RandInt0(100) < Math.Max(0, 25 - (race.Depth + 3) / 4))
+        var race = monster.Race;
+        var spells = race.Spells.Select(Data.MonsterSpell).OfType<MonsterSpellDef>()
+            .OrderBy(sp => Data.MonsterSpells.ToList().IndexOf(sp)).ToList();
+        if (race.Has(MonsterFlags.Smart) && monster.Hp < monster.MaxHp / 10 && Rng.OneIn(2))
+            spells = [.. spells.Where(sp => (TypeOf(sp.Id) & DamageSpells) == 0)];
+        var stupid = race.Has(MonsterFlags.Stupid);
+        if (!stupid)
         {
-            if (seen) Publish(new MessageEvent($"{name} tries to cast a spell, but fails."));
-            return true;
+            var distance = monster.Position.DistanceTo(Player.Position);
+            spells = [.. spells.Where(sp => sp.Id switch
+            {
+                "HEAL" => monster.Hp < monster.MaxHp,
+                "HEAL_KIN" => WoundedKin(monster) is not null,
+                "HASTE" => monster.Fast <= 10,
+                "TELE_TO" or "TELE_SELF_TO" => distance != 1,
+                "WHIP" => distance <= 2,
+                "SPIT" => distance <= 3,
+                _ => true,
+            })];
+            spells = WithoutKnownFailures(monster, spells);
+            if (!ClearBolt(monster)) spells = [.. spells.Where(sp => (TypeOf(sp.Id) & SpellType.Bolt) == 0)];
+            if (!SummonPossible(monster.Position)) spells = [.. spells.Where(sp => (TypeOf(sp.Id) & SpellType.Summon) == 0)];
+        }
+        // Angband choose_attack_spell: only innate attacks, or only spells, as was rolled for.
+        var choice = spells.Where(sp => ((TypeOf(sp.Id) & SpellType.Innate) != 0) == innate).ToList();
+        if (choice.Count == 0) return false;
+        var spell = choice[Rng.RandInt0(choice.Count)];
+
+        if (monster.Camouflaged) Reveal(monster);
+        if (!innate && !stupid)
+        {
+            var power = Math.Min(race.Power, 1);
+            var failRate = 25 - (power + 3) / 4;
+            if (monster.Fear > 0) failRate += 20;
+            if (monster.Confused > 0 || monster.Disenchanted > 0) failRate += 50;
+            if (Rng.RandInt0(100) < failRate)
+            {
+                Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} tries to cast a spell, but fails."));
+                return true;
+            }
         }
         return CastSpell(monster, spell);
+    }
+
+    /// <summary>Angband summon_possible: an empty, unwarded floor square within 2 of the grid, in its line of sight.</summary>
+    private bool SummonPossible(Loc grid)
+    {
+        for (var y = grid.Y - 2; y <= grid.Y + 2; y++)
+        for (var x = grid.X - 2; x <= grid.X + 2; x++)
+        {
+            var near = new Loc(x, y);
+            if (!Level.InBounds(near) || grid.DistanceTo(near) > 2) continue;
+            if (Level[near].Trap != 0 && Data.TrapByIndex(Level[near].Trap) is { Warding: true }) continue;
+            if (Level.IsEmptyFloor(near) && near != Player.Position && ProjectionPath.Projectable(Level, grid, near, 3)) return true;
+        }
+        return false;
     }
 
     /// <summary>A monster casts this spell (never failing): for tests.</summary>
@@ -282,6 +331,10 @@ public sealed partial class GameSession
     /// </summary>
     public void ElementalHit(string? elementId, int damage, string killer, int power = 0, Loc? source = null)
     {
+        // Angband project_p: blind, or struck by something unseen, you're told only what hit you.
+        if (elementId is not null && Data.Element(elementId) is { BlindDescription.Length: > 0 } felt
+            && (Player.IsBlind || _actingMonster is { IsVisible: false }))
+            Publish(new MessageEvent($"You are hit by {felt.BlindDescription}!"));
         if (elementId is not null && Data.Element(elementId) is { } element)
         {
             // Angband adjust_dam: ice is resisted as cold is; the evil are vulnerable to holy orbs.

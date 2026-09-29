@@ -37,6 +37,8 @@ public sealed class Monster : IActor
     // Monster timed effects (Angband mon_tmd): counted down every 10 game turns.
     public int Sleep { get; set; }
     public int Stun { get; set; }
+    /// <summary>Disenchanted (Angband MON_TMD_DISEN): its spells fail half as often again.</summary>
+    public int Disenchanted { get; set; }
     public int Confused { get; set; }
     public int Fear { get; set; }
     public int Held { get; set; }

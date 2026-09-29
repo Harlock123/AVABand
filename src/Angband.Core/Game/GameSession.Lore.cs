@@ -64,6 +64,9 @@ public sealed partial class GameSession
         else lore.FlagsLacking.Add(flag);
     }
 
+    /// <summary>Learns that a race has a spell (it showed it by resisting what it breathes).</summary>
+    public void LearnMonsterSpell(MonsterRaceDef race, string spell) => Lore.For(race.Id).SpellsSeen.Add(spell);
+
     /// <summary>Angband look_mon_desc: "the cave orc (wounded, asleep)".</summary>
     public string LookDescription(Monster m)
     {

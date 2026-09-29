@@ -60,7 +60,7 @@ public sealed partial class GameSession
         foreach (var m in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(Player.Position) <= radius && ProjectionPath.Projectable(Level, Player.Position, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(Player.Position)).ThenBy(m => m.Id).ToList())
-            ProjectileHitsMonster(m, "zone", elementId, damage / (m.Position.DistanceTo(Player.Position) + 1));
+            ProjectileHitsMonster(m, "zone", elementId, damage / (m.Position.DistanceTo(Player.Position) + 1), m.Position.DistanceTo(Player.Position));
         ElementalHit(elementId, damage, "a zone of unmagic");
     }
 
