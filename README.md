@@ -402,8 +402,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     4.2 does, "Set recall depth to current depth?" — yes makes this level the deepest), Deep
     Descent, Teleport Level, enchanting, recharging, acquirement, protection from evil,
     banishment of everything nearby, summoning, aggravation and more.
-  Generation ports Angband's `m_bonus` and `apply_magic` (good/great/bad rolls, egos, artifacts
-  created once per game, cursed bad items). Artifacts are 4.2.5's: each has its alloc chance and
+  Generation is 4.2.5's `make_object` and `apply_magic`: a third and more of things are good (33 +
+  level in 100) and three in ten of those great (an ego, or a chance at an artifact — two for a
+  great drop, two more for a unique's or acquirement); one wearable in twenty is cursed; great
+  melee weapons may get bigger dice and great ammunition an extra side; a Ring of Speed may be
+  super-charged; good drops come from 4.2.5's good kinds, ten levels deeper; kinds are allocated no
+  deeper than level 100, and now and then from much deeper (egos too). Artifacts are 4.2.5's: each has its alloc chance and
   depth range (deeper than its minimum only by luck, never past its maximum), its own weight, and
   immunities where 4.2.5 gives them; the special artifacts (the Phial, the Star, the Arkenstone,
   the rings of power...) turn up as themselves one object in a thousand (one good one in ten), as

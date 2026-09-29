@@ -13,6 +13,8 @@ public sealed class ObjectFactory(GameData data)
     private const int MaxDepth = 128;
     /// <summary>1-in-N chance of a deeper-than-normal kind (Angband great_obj).</summary>
     public const int GreatObjectChance = 20;
+    /// <summary>Angband obj-make:great-ego: one in this many egos are picked from much deeper.</summary>
+    public const int GreatEgoChance = 20;
 
     public long NextSerial { get; set; } = 1;
 
@@ -45,11 +47,18 @@ public sealed class ObjectFactory(GameData data)
         return Math.Clamp(rng.Normal(bonus, stand), 0, max);
     }
 
-    /// <summary>Picks a kind for <paramref name="level"/>, weighted by commonness, occasionally deeper.</summary>
+    /// <summary>Angband obj-make:max-depth: object allocation goes no deeper than this.</summary>
+    public const int MaxObjectDepth = 100;
+
+    /// <summary>
+    /// Angband get_obj_num: a kind for <paramref name="level"/>, weighted by commonness — now and then
+    /// from far deeper, and never from past the deepest allocation level (100).
+    /// </summary>
     public ObjectKindDef? PickKind(GameRandom rng, int level, Func<ObjectKindDef, bool>? filter = null)
     {
         if (level > 0 && rng.OneIn(GreatObjectChance))
-            level = Math.Min(1 + level * MaxDepth / rng.RandInt1(MaxDepth), MaxDepth - 1);
+            level = 1 + level * MaxObjectDepth / rng.RandInt1(MaxObjectDepth);
+        level = Math.Clamp(level, 0, MaxObjectDepth);
 
         var eligible = data.Objects.Where(k =>
                 k.Commonness > 0 && (k.MinDepth ?? k.Level) <= level && k.MaxDepth >= level
@@ -59,8 +68,11 @@ public sealed class ObjectFactory(GameData data)
         return rng.PickWeighted(eligible, k => k.Commonness);
     }
 
-    /// <summary>A random object for the floor or a monster drop (Angband make_object).</summary>
-    public Item? Make(GameRandom rng, int level, bool good = false, bool great = false)
+    /// <summary>
+    /// A random object for the floor or a monster drop (Angband make_object). <paramref name="extraRoll"/>
+    /// gives two more chances at an artifact (a unique's drop, acquirement).
+    /// </summary>
+    public Item? Make(GameRandom rng, int level, bool good = false, bool great = false, bool extraRoll = false)
     {
         // Angband make_object: now and then a special artifact (the Phial, the Star, a ring of
         // power...) — one time in ten for a good object; failing that, the object is good.
@@ -69,15 +81,13 @@ public sealed class ObjectFactory(GameData data)
             if (MakeSpecialArtifact(rng, level) is { } special) return special;
             good = true;
         }
-        Func<ObjectKindDef, bool>? filter = good || great
-            ? k => data.ObjectBase(k.Base) is { IsWearable: true } || k.Level >= level / 2
-            : null;
+        Func<ObjectKindDef, bool>? filter = good || great ? IsGoodKind : null;
         var kind = PickKind(rng, good ? level + 10 : level, filter);
         if (kind is null) return null;
 
         var item = Create(kind, 1);
         item.OriginDepth = level;
-        ApplyMagic(rng, item, level, good, great);
+        ApplyMagic(rng, item, level, good, great, extraRoll: extraRoll);
         // Angband make_object: then, unless it became an artifact, perhaps a pile of them.
         if (!item.IsArtifact && kind.PileChance >= rng.RandInt1(100))
             item.Number = Math.Max(1, kind.StackSize.Roll(rng));
@@ -85,10 +95,30 @@ public sealed class ObjectFactory(GameData data)
     }
 
     /// <summary>
-    /// Angband apply_magic: roll the object's power (-2 cursed ... +2 excellent) and apply bonuses,
-    /// egos, artifacts or curses accordingly.
+    /// Angband kind_is_good: what a good drop may be — armour and weapons that don't start damaged,
+    /// arrows and bolts, and kinds marked GOOD (the Ring of Speed, the great amulets).
     /// </summary>
-    public void ApplyMagic(GameRandom rng, Item item, int level, bool good = false, bool great = false, bool artifacts = true)
+    public bool IsGoodKind(ObjectKindDef kind)
+    {
+        int Least(string roll, int fixedValue) =>
+            kind.Rolls.TryGetValue(roll, out var text) ? RandomValue.Parse(text).Min : fixedValue;
+        var b = data.ObjectBase(kind.Base);
+        if (b is { IsWearable: true } && b.Slot is EquipSlot.Body or EquipSlot.Cloak or EquipSlot.Shield or EquipSlot.Head
+                or EquipSlot.Hands or EquipSlot.Feet)
+            return Least("to_a", kind.ToAc) >= 0;
+        if (kind.Base is "sword" or "hafted" or "polearm" or "digger" or "sling" or "bow" or "crossbow")
+            return Least("to_h", kind.ToHit) >= 0 && Least("to_d", kind.ToDam) >= 0;
+        if (kind.Base is "arrow" or "bolt") return true;
+        return kind.Has("GOOD");
+    }
+
+    /// <summary>
+    /// Angband apply_magic: roll the object's power (good one time in 33 + level, great 30% of those),
+    /// give an excellent one its chances at an artifact (two if it must be great, two more for a
+    /// unique's drop), make it an ego if great, curse a wearable one time in 20, then its bonuses.
+    /// </summary>
+    public void ApplyMagic(GameRandom rng, Item item, int level, bool good = false, bool great = false, bool artifacts = true,
+        bool extraRoll = false)
     {
         ApplyKindRolls(rng, item, level);
         if (item.IsChest)
@@ -96,50 +126,105 @@ public sealed class ObjectFactory(GameData data)
             item.ChestState = PickChestTraps(rng, item.Kind);
             return;
         }
-        var goodChance = Math.Min(75, 10 + level);
-        var greatChance = Math.Min(20, 5 + level / 5);
 
         var power = 0;
-        if (good || great || rng.Percent(goodChance))
+        if (good || rng.RandInt0(100) < 33 + level)
         {
             power = 1;
-            if (great || rng.Percent(greatChance)) power = 2;
-        }
-        else if (rng.Percent(goodChance))
-        {
-            power = -1;
-            if (rng.Percent(greatChance)) power = -2;
+            if (great || rng.RandInt0(100) < 30) power = 2;
         }
 
-        if (power == 2 && artifacts && item.IsWearable && TryMakeArtifact(rng, item, level)) return;
+        if (artifacts)
+        {
+            var rolls = (great ? 2 : power >= 2 ? 1 : 0) + (extraRoll ? 2 : 0);
+            for (var i = 0; i < rolls; i++)
+                if (TryMakeArtifact(rng, item, level)) return;
+        }
+
+        if (power == 2) TryMakeEgo(rng, item, level);
+        if (rng.OneIn(20) && item.IsWearable) level = ApplyCurse(rng, item, level);
 
         var b = item.Base;
-        if (b.IsWeapon || b.Slot == EquipSlot.Bow || b.IsAmmo)
+        if (b.IsWeapon || b.Slot == EquipSlot.Bow || b.IsAmmo) ApplyWeaponMagic(rng, item, level, power);
+        else if (b.IsWearable && b.Slot is not (EquipSlot.Light or EquipSlot.Ring or EquipSlot.Amulet))
         {
-            if (power != 0)
+            // Angband apply_magic_armour.
+            if (power > 0)
             {
-                var sign = Math.Sign(power);
-                item.ToHit += sign * (rng.RandInt1(5) + MagicBonus(rng, 5, level));
-                item.ToDam += sign * (rng.RandInt1(5) + MagicBonus(rng, 5, level));
-                if (Math.Abs(power) == 2)
+                item.ToAc += rng.RandInt1(5) + MagicBonus(rng, 5, level);
+                if (power > 1) item.ToAc += MagicBonus(rng, 10, level);
+            }
+        }
+        else if (item.Kind.Id == "ring_of_speed")
+            while (rng.OneIn(2)) item.Modifiers[ItemModifiers.Speed] = item.Modifier(ItemModifiers.Speed) + 1; // super-charged
+
+        ApplyEgoMinimums(item);
+    }
+
+    /// <summary>
+    /// Angband apply_magic_weapon: a good weapon gains 1d5 + m_bonus(5) to hit and to dam, a great
+    /// one m_bonus(10) more — and a great melee weapon may have its dice super-charged, great
+    /// ammunition an extra side or two.
+    /// </summary>
+    private static void ApplyWeaponMagic(GameRandom rng, Item item, int level, int power)
+    {
+        if (power <= 0) return;
+        item.ToHit += rng.RandInt1(5) + MagicBonus(rng, 5, level);
+        item.ToDam += rng.RandInt1(5) + MagicBonus(rng, 5, level);
+        if (power < 2) return;
+        item.ToHit += MagicBonus(rng, 10, level);
+        item.ToDam += MagicBonus(rng, 10, level);
+
+        var (dd, ds) = (item.Damage.Count, item.Damage.Sides);
+        if (item.Base.IsWeapon && !item.IsAmmo && item.Base.Slot == EquipSlot.Weapon)
+        {
+            while (dd * ds > 0 && rng.OneIn(4 * dd * ds))
+            {
+                // More dice or sides make still more likely.
+                if (rng.RandInt0(dd + ds) < dd)
                 {
-                    item.ToHit += sign * MagicBonus(rng, 10, level);
-                    item.ToDam += sign * MagicBonus(rng, 10, level);
+                    for (var more = rng.RandInt1(2 + dd / ds); (dd + 1) * ds <= 40 && more > 0; more--)
+                        if (!rng.OneIn(3)) dd++;
+                }
+                else
+                {
+                    for (var more = rng.RandInt1(2 + ds / dd); dd * (ds + 1) <= 40 && more > 0; more--)
+                        if (!rng.OneIn(3)) ds++;
                 }
             }
         }
-        else if (b.IsWearable && b.Slot is not (EquipSlot.Light or EquipSlot.Ring or EquipSlot.Amulet))
+        else if (item.IsAmmo && rng.OneIn(6))
         {
-            if (power != 0)
+            ds++;
+            if (rng.OneIn(10)) ds++;
+        }
+        item.Damage = item.Damage with { Count = dd, Sides = ds };
+    }
+
+    /// <summary>
+    /// Angband apply_curse: up to four tries at a curse that fits the item (never a blessed one);
+    /// each curse taken makes the object count as a little deeper.
+    /// </summary>
+    public int ApplyCurse(GameRandom rng, Item item, int level)
+    {
+        if (item.Flags.Contains("BLESSED")) return level;
+        var power = rng.RandInt1(9) + 10 * MagicBonus(rng, 9, level);
+        var newLevel = level;
+        for (var n = rng.RandInt1(4); n > 0; n--)
+        {
+            for (var tries = 3; tries > 0; tries--)
             {
-                var sign = Math.Sign(power);
-                item.ToAc += sign * (rng.RandInt1(5) + MagicBonus(rng, 5, level));
-                if (Math.Abs(power) == 2) item.ToAc += sign * MagicBonus(rng, 10, level);
+                var curse = rng.Pick(data.Curses);
+                if (curse.Bases.Count > 0 && !curse.Bases.Contains(item.Base.Id)) continue;
+                if (!item.Curses.Contains(curse.Id))
+                {
+                    item.Curses.Add(curse.Id);
+                    newLevel += rng.RandInt1(1 + power / 10);
+                }
+                break;
             }
         }
-
-        if (power == 2 && b.IsWearable) TryMakeEgo(rng, item, level);
-        if (power == -2 && b.IsWearable) AddRandomCurses(rng, item, rng.RandRange(1, 2));
+        return newLevel;
     }
 
     /// <summary>Rolls the kind's random values: modifiers and bonuses (rings, amulets...) and device charges.</summary>
@@ -251,9 +336,21 @@ public sealed class ObjectFactory(GameData data)
         CreatedArtifacts.Add(art.Id);
     }
 
+    /// <summary>
+    /// Angband make_ego_item / ego_find_random: now and then from much deeper; an ego is allowed up to
+    /// its deepest, and below its shallowest only by luck (one in a third of the shortfall, at least 2).
+    /// </summary>
     public bool TryMakeEgo(GameRandom rng, Item item, int level)
     {
-        var egos = data.Egos.Where(e => e.Fits(item.Kind) && e.Level <= level && e.MaxDepth >= level).ToList();
+        if (item.IsArtifact || item.Ego is not null) return false;
+        if (level > 0 && rng.OneIn(GreatEgoChance))
+            level = Math.Min(1 + level * MaxDepth / rng.RandInt1(MaxDepth), MaxDepth - 1);
+        var egos = new List<EgoItemDef>();
+        foreach (var e in data.Egos)
+        {
+            if (level > e.MaxDepth || !e.Fits(item.Kind)) continue;
+            if (level >= e.Level || rng.OneIn(Math.Max(2, (e.Level - level) / 3))) egos.Add(e);
+        }
         var ego = rng.PickWeighted(egos, e => e.Commonness);
         if (ego is null) return false;
         ApplyEgo(rng, item, ego, level);

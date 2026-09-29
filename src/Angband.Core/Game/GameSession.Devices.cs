@@ -408,7 +408,7 @@ public sealed partial class GameSession
             case "acquirement":
             {
                 for (var i = 0; i < Math.Max(1, e.Int(0)); i++)
-                    if (Objects.Make(Rng, Math.Max(Level.Depth, 1), good: true, great: true) is { } item) DropNear(item, Player.Position);
+                    if (Objects.Make(Rng, Math.Max(Level.Depth, 1), good: true, great: true, extraRoll: true) is { } item) DropNear(item, Player.Position);
                 Publish(new MessageEvent("Something appears at your feet."));
                 return true;
             }

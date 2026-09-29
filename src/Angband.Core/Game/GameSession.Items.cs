@@ -962,7 +962,8 @@ public sealed partial class GameSession
         for (var i = 0; i < number; i++)
         {
             var gold = race.Has("ONLY_GOLD") || (!race.Has("ONLY_ITEM") && Rng.OneIn(2));
-            var item = gold ? MakeLevelGold(level) : Objects.Make(Rng, level, good, great);
+            // Angband mon_create_drop: a unique's drop has extra chances at an artifact.
+            var item = gold ? MakeLevelGold(level) : Objects.Make(Rng, level, good, great, extraRoll: race.IsUnique);
             if (item is not null) loot.Add(item);
         }
         return loot;

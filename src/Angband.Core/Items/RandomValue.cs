@@ -50,6 +50,9 @@ public readonly record struct RandomValue(int Base, int Dice, int Bonus, bool Ne
     /// <summary>Angband randcalc(AVERAGE): the base plus the dice's average (a magic bonus counts as nothing).</summary>
     public int Average => (Base + (Dice > 0 ? DiceCount * (Dice + 1) / 2 : 0)) * (Negative ? -1 : 1);
 
+    /// <summary>Angband randcalc(MINIMISE): the least it can be.</summary>
+    public int Min => Negative ? -(Base + (Dice > 0 ? DiceCount * Dice : 0) + Bonus) : Base + (Dice > 0 ? DiceCount : 0);
+
     public int Roll(GameRandom rng, int level)
     {
         var value = Base + (Dice > 0 ? rng.Damroll(DiceCount, Dice) : 0) + (Bonus > 0 ? ObjectFactory.MagicBonus(rng, Bonus, level) : 0);

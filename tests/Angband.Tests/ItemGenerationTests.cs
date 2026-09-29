@@ -49,18 +49,20 @@ public class ItemGenerationTests
     }
 
     [Fact]
-    public void BadRolls_CanBeCursed()
+    public void Wearables_AreCursed_OneTimeInTwenty_AndNeverBadlyEnchanted()
     {
+        // Angband 4.2.5 apply_magic: no negative power any more, but one wearable in twenty is cursed.
         var rng = new GameRandom(4);
         var f = Factory();
         var cursed = 0;
-        for (var i = 0; i < 3000; i++)
+        for (var i = 0; i < 4000; i++)
         {
             var item = f.Create("leather_boots");
-            f.ApplyMagic(rng, item, 40);
-            if (item.IsCursed) { cursed++; Assert.True(item.ToAc < 0); }
+            f.ApplyMagic(rng, item, 40, artifacts: false);
+            if (item.IsCursed) cursed++;
+            Assert.True(item.ToAc >= 0);
         }
-        Assert.True(cursed > 0);
+        Assert.InRange(cursed, 120, 290); // about 200
     }
 
     [Fact]

@@ -175,15 +175,21 @@ public class LateSpellTests
         var servant = Foe(game, "jackal", new Loc(2, 0), hp: 100, awake: false);
         for (var i = 0; i < 30 && game.Commanded != servant; i++) Cast(game, "command", servant.Position);
         Assert.Same(servant, game.Commanded);
+        // (Failed casts can wake it to wander: put it back beside you, in the open.)
+        game.Level.Monsters.Move(servant, game.Player.Position + new Loc(2, 0));
         var victim = Foe(game, "jackal", servant.Position + new Loc(2, 0) - game.Player.Position, hp: 1000, awake: false);
+        victim.Held = 10_000; // it stays put to be bitten
 
         var me = game.Player.Position;
         var was = servant.Position;
         Assert.True(game.Execute(new WalkCommand(Direction.East)));
         Assert.Equal(me, game.Player.Position); // it moved, not you
         Assert.Equal(was + new Loc(1, 0), servant.Position);
-        game.Execute(new WalkCommand(Direction.East)); // into the other jackal: an attack
-        Assert.True(victim.Hp < 1000);
+        var said = new List<string>();
+        using (game.Events.Subscribe<MessageEvent>(m => said.Add(m.Text)))
+            for (var i = 0; i < 10 && victim.Hp == 1000; i++)
+                game.Execute(new WalkCommand(Direction.East)); // into the other jackal: an attack (bites can miss)
+        Assert.True(victim.Hp < 1000, string.Join(" / ", said));
 
         // Anything else lets it go.
         game.Execute(new RestCommand());

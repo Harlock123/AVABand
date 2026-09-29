@@ -2543,7 +2543,10 @@
     "weight": 2,
     "rolls": {
       "speed": "4+M6"
-    }
+    },
+    "flags": [
+      "GOOD"
+    ]
   },
   {
     "id": "ring_of_searching",
@@ -3022,6 +3025,9 @@
       "see_invis",
       "sust_int",
       "blind"
+    ],
+    "flags": [
+      "GOOD"
     ]
   },
   {
@@ -3067,7 +3073,8 @@
       "sust_wis"
     ],
     "flags": [
-      "HOLD_LIFE"
+      "HOLD_LIFE",
+      "GOOD"
     ]
   },
   {
@@ -3091,6 +3098,9 @@
       "sust_con",
       "free_act",
       "fear"
+    ],
+    "flags": [
+      "GOOD"
     ]
   },
   {
@@ -3114,6 +3124,9 @@
       "nexus",
       "pois",
       "sust_dex"
+    ],
+    "flags": [
+      "GOOD"
     ]
   },
   {
