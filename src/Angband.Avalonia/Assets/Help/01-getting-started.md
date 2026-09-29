@@ -9,6 +9,10 @@ offers to resume from the last save and says how long ago that was.
 
 ## Your first steps
 
+The game opens on its **title screen**: *Continue* your last character (or, if they died, *Play
+again* as them), *Create a new character*, *Load* another, see the *High scores*, or *Exit* — a
+letter, the arrows and Enter, a click or the gamepad pick.
+
 Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
 then read out, and **Ctrl+Shift+D** describes what is around you (Windows, macOS and Linux).
 

@@ -4,6 +4,7 @@
   "license": "CC0 1.0 Public Domain Dedication (https://creativecommons.org/publicdomain/zero/1.0/)",
   "source": "https://opengameart.org",
   "music": {
+    "title": ["title_theme.ogg"],
     "town": [
       "The_Old_Tower_Inn.mp3",
       "town_theme.mp3"

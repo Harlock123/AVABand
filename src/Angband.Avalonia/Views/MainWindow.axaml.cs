@@ -168,6 +168,14 @@ public partial class MainWindow : Window
         e.Handled = true;
     }
 
+    /// <summary>A click on a title screen choice takes it (the click has already selected it).</summary>
+    private void OnTitleTapped(object? sender, global::Avalonia.Input.TappedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm && e.Source is global::Avalonia.Visual v
+            && v.FindAncestorOfType<ListBoxItem>(includeSelf: true) is { DataContext: TitleChoice choice })
+            choice.Act();
+    }
+
     /// <summary>An item row in the sidebar: pressing and moving drags it onto the hotbar; right-click opens its menu.</summary>
     private void OnItemRowPressed(object? sender, PointerPressedEventArgs e)
     {
@@ -347,6 +355,12 @@ public partial class MainWindow : Window
     protected override void OnOpened(EventArgs e)
     {
         base.OnOpened(e);
+        // The title screen, whose choices cover a first run, a crash and a dead character too.
+        if (DataContext is MainWindowViewModel titled && !Design.IsDesignMode && ShowCreationOnFirstRun && ShowTitleAtStart)
+        {
+            titled.ShowTitle();
+            return;
+        }
         // First run: go straight to character creation, as Angband does.
         if (DataContext is MainWindowViewModel { IsFirstRun: true } vm && !Design.IsDesignMode && ShowCreationOnFirstRun)
             vm.RequestNewCharacter();
@@ -361,6 +375,9 @@ public partial class MainWindow : Window
     /// <summary>Tests turn this off so windows don't pop up.</summary>
     public static bool ShowCreationOnFirstRun { get; set; } = true;
 
+    /// <summary>Whether the title screen opens with the window (not with --seed, --depth or --no-title).</summary>
+    public bool ShowTitleAtStart { get; set; } = true;
+
     /// <summary>
     /// Keyboard provider: letters pick menu entries and answer y/n questions directly; every other key
     /// is looked up in the (rebindable) bindings and routed like any other device's action.
@@ -369,6 +386,17 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
         if (vm.HasScene) vm.SkipScenes(); // a key cuts the scenes short, and still does what it does
+
+        // The title screen: a letter picks, arrows move, Enter takes.
+        if (vm.IsShowingTitle)
+        {
+            e.Handled = true;
+            if (e.Key is Key.Up or Key.NumPad8) vm.MoveTitleSelection(-1);
+            else if (e.Key is Key.Down or Key.NumPad2) vm.MoveTitleSelection(+1);
+            else if (e.Key is Key.Enter or Key.Space) vm.ChooseSelectedTitle();
+            else if (KeyboardInput.Symbol(e) is { Length: 1 } s && char.IsLetter(s[0])) vm.TitleKey(s[0]);
+            return;
+        }
         var ctrlOrAlt = (e.KeyModifiers & (KeyModifiers.Control | KeyModifiers.Alt)) != 0;
 
         // The hotbar: Alt+1 .. Alt+0 use its slots; with Shift, change them.

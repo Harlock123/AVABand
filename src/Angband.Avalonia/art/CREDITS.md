@@ -99,3 +99,9 @@ The pictures AVABand shows at moments of note. All are public-domain works (thei
 - Source: https://commons.wikimedia.org/wiki/File:Inferno_Canto_34_(148619628).jpg
 - Licence: Public domain (Wikimedia Commons licence tag: {{PD-old-auto-expired|deathyear=1883}}; Commons LicenseShortName: 'Public domain')
 - Notes: Wood engraving; winged Lucifer frozen in Cocytus confronting the tiny figures of Dante and Virgil.
+
+## title.jpg and title-logo.png
+
+- **Thangorodrim** — the three smoking peaks over the gates of Angband, with the AVABand logo; drawn for AVABand, procedurally, by `tools/title_art.py`
+- Licence: CC0 (public domain). The logo's lettering is Cinzel Decorative and Cinzel by Natanael Gama (SIL Open Font License 1.1).
+- Notes: shown behind the title screen. Your own `title.png`/`title.jpg` and `title-logo.png` in `<AppData>/AVABand/art/` replace them.

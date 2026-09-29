@@ -369,6 +369,61 @@
 
   <!-- A moment's scene at moments of note (the option "Show scenes at moments of note"). -->
   <controls:SceneView x:Name="SceneView" Scene="{Binding Scene}" IsVisible="{Binding HasScene}" />
+
+  <!-- The title screen: Thangorodrim, the logo, and what to do. -->
+  <Panel x:Name="TitleScreen" IsVisible="{Binding IsShowingTitle}" Background="#050305" ClipToBounds="True">
+    <Image Source="{Binding TitleBackground}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <Border IsHitTestVisible="False">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,55%" EndPoint="0%,100%">
+          <GradientStop Offset="0" Color="#00000000" />
+          <GradientStop Offset="1" Color="#D8000000" />
+        </LinearGradientBrush>
+      </Border.Background>
+    </Border>
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Margin="24,28,24,12">
+      <Viewbox Grid.Row="0" MaxHeight="230" MaxWidth="820" Stretch="Uniform" HorizontalAlignment="Center">
+        <Image Source="{Binding TitleLogo}" />
+      </Viewbox>
+      <ListBox Grid.Row="2" x:Name="TitleMenu" ItemsSource="{Binding TitleChoices}" SelectedIndex="{Binding TitleSelectedIndex}"
+               HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="32,0,0,0"
+               Background="#B0100806" BorderBrush="#7a4a24" BorderThickness="1" CornerRadius="6"
+               Padding="8,6" Focusable="False" Cursor="Hand" Tapped="OnTitleTapped" MinWidth="360">
+        <ListBox.Styles>
+          <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="14,5" />
+            <Setter Property="CornerRadius" Value="4" />
+          </Style>
+          <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#6a3212" />
+          </Style>
+          <Style Selector="ListBoxItem:selected:focus /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#6a3212" />
+          </Style>
+          <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#3a1c0c" />
+          </Style>
+          <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#7a3a16" />
+          </Style>
+        </ListBox.Styles>
+        <ListBox.ItemTemplate>
+          <DataTemplate x:DataType="vm:TitleChoice">
+            <StackPanel Orientation="Horizontal" AutomationProperties.Name="{Binding Label}">
+              <TextBlock Text="{Binding Letter, StringFormat={}{0})}" Foreground="#a07850" FontFamily="{StaticResource MonoFont}"
+                         FontSize="14" MinWidth="28" VerticalAlignment="Center" />
+              <StackPanel>
+                <TextBlock Text="{Binding Label}" FontFamily="{StaticResource TitleFont}" FontSize="20" Foreground="#f0d8a8" />
+                <TextBlock Text="{Binding Detail}" IsVisible="{Binding Detail, Converter={x:Static ObjectConverters.IsNotNull}}"
+                           FontSize="12" Foreground="#b89878" Margin="1,0,0,2" />
+              </StackPanel>
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      </ListBox>
+      <TextBlock Grid.Row="3" Text="{Binding TitleFooter}" Foreground="#806850" FontSize="11" HorizontalAlignment="Right" Margin="0,10,8,0" />
+    </Grid>
+  </Panel>
   </Panel>
 
 </Window>

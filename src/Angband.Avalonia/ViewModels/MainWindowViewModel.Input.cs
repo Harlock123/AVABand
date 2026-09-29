@@ -83,6 +83,16 @@ public sealed partial class MainWindowViewModel
     public void HandleAction(InputAction action)
     {
         if (action == InputAction.None) return;
+        if (IsShowingTitle)
+        {
+            switch (action)
+            {
+                case InputAction.MoveNorth: MoveTitleSelection(-1); break;
+                case InputAction.MoveSouth: MoveTitleSelection(+1); break;
+                case InputAction.Confirm: ChooseSelectedTitle(); break;
+            }
+            return;
+        }
         if (ReplayAction(action)) return;
         if (IsEnteringNumber)
         {

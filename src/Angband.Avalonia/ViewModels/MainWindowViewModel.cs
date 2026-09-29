@@ -257,6 +257,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _history.Clear();
         _lastCommand = null;
         StartRecording();
+        CloseTitle(); // a game started or loaded from the title screen
         Refresh();
     }
 

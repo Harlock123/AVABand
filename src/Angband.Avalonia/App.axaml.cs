@@ -54,7 +54,12 @@ public partial class App : Application
             vm.UseSaves(SaveStore.Default(), resume: !(desktop.Args ?? []).Contains("--seed"));
             foreach (var problem in problems) Trace.WriteLine(problem);
             ApplyDebugArguments(vm, desktop.Args ?? []);
-            var mainWindow = new MainWindow { DataContext = vm };
+            var args = desktop.Args ?? [];
+            var mainWindow = new MainWindow
+            {
+                DataContext = vm,
+                ShowTitleAtStart = !args.Contains("--seed") && !args.Contains("--depth") && !args.Contains("--no-title"),
+            };
             // Through the window, so the B button can close dialogs and the game ignores the pad behind them.
             if (pad is not null) pad.ActionTriggered += mainWindow.HandleGamepadAction;
             desktop.MainWindow = mainWindow;

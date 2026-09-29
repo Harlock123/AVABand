@@ -5,6 +5,7 @@
   <Application.Resources>
     <!-- Bundled (Assets/Fonts), so columns line up on every system whatever monospace fonts it has. -->
     <FontFamily x:Key="MonoFont">avares://AVABand/Assets/Fonts#DejaVu Sans Mono</FontFamily>
+    <FontFamily x:Key="TitleFont">avares://AVABand/Assets/Fonts#Cinzel</FontFamily>
   </Application.Resources>
   <Application.Styles>
     <FluentTheme />

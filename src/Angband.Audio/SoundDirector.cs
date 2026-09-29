@@ -83,8 +83,27 @@ public sealed class SoundDirector : IDisposable
         _engine.StopAmbience();
     }
 
-    /// <summary>The music mood for the current place: town / town_night / dungeon / deep.</summary>
-    public string MusicMood => _depth == 0 ? (_day ? "town" : "town_night") : _depth >= 20 ? "deep" : "dungeon";
+    /// <summary>The music mood: the title screen's own, or for the current place (town / town_night / dungeon / deep).</summary>
+    public string MusicMood => TitleScreen ? "title" : _depth == 0 ? (_day ? "town" : "town_night") : _depth >= 20 ? "deep" : "dungeon";
+
+    private bool _titleScreen;
+
+    /// <summary>
+    /// The title screen is up: its own music (a pack's "title" mood, or the town's if it has none),
+    /// and no ambience. Off again, the music follows the game.
+    /// </summary>
+    public bool TitleScreen
+    {
+        get => _titleScreen;
+        set
+        {
+            if (_titleScreen == value) return;
+            _titleScreen = value;
+            UpdateMusic();
+            if (value) _engine.StopAmbience();
+            else UpdateAmbience();
+        }
+    }
 
     private void OnEvent(IGameEvent e)
     {
@@ -280,7 +299,7 @@ public sealed class SoundDirector : IDisposable
 
     private void UpdateAmbience()
     {
-        if (!_ambienceEnabled || _bus is null || AmbienceFile() is not { } file) _engine.StopAmbience();
+        if (_titleScreen || !_ambienceEnabled || _bus is null || AmbienceFile() is not { } file) _engine.StopAmbience();
         else _engine.PlayAmbience(file);
     }
 
@@ -354,7 +373,7 @@ public sealed class SoundDirector : IDisposable
     {
         if (!MusicEnabled || MusicPack is not { } pack) return null;
         var mood = MusicMood;
-        var fallback = mood switch { "town_night" => "town", "deep" => "dungeon", _ => mood };
+        var fallback = mood switch { "town_night" or "title" => "town", "deep" => "dungeon", _ => mood };
         if (!pack.Music.TryGetValue(mood, out var tracks) && !pack.Music.TryGetValue(fallback, out tracks)) return null;
         return tracks.Count == 0 ? null : [.. tracks.Select(pack.Resolve)];
     }

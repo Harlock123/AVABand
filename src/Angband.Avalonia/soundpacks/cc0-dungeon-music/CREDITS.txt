@@ -42,3 +42,9 @@ midnight.ogg                  "Midnight" by AR (night; re-encoded to Ogg Vorbis)
                               https://opengameart.org/content/midnight
 forest_ambience.mp3           "Forest Ambience" by TinyWorlds (night)
                               https://opengameart.org/content/forest-ambience
+
+Title screen:
+
+title_theme.ogg               "The Gates of Angband", composed and synthesised for AVABand
+                              (tools/title_theme.py: drone, bells, strings, harp, horn, choir,
+                              timpani, all made in code - no samples). CC0.

@@ -42,6 +42,7 @@ and some RLTiles flavours recoloured) by AVABand's tools.
 | Pack | Author | Licence | Source |
 |---|---|---|---|
 | Angband sounds | Dubtrain | Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/) | https://github.com/angband/angband/tree/master/lib/sounds |
+| Title music: "The Gates of Angband" (`title_theme.ogg`, in the dungeon music pack) | composed and synthesised for AVABand by `tools/title_theme.py` | CC0 1.0 | this repository |
 | Dungeon music | RandomMind, JaggedStone, yd, Paul Wortmann, HaelDB, TinyWorlds, Spring Spring, Eponasoft, The Oracle, Juhani Junkala, cynicmusic, AR (via OpenGameArt.org) | CC0 1.0 | https://opengameart.org |
 
 See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.
@@ -54,6 +55,10 @@ Doré (*Inferno*), John Martin (*Pandemonium*, *The Great Day of His Wrath*), Ca
 (*Meadows near Greifswald*, *The Abbey in the Oakwood*) and Joseph Wright of Derby (*Cavern, near
 Naples*, *A Grotto in the Gulf of Salerno*). Each file's title, artist, source page and the exact
 licence tag on it are in `art/CREDITS.md`.
+
+The title screen's picture (`title.jpg`, Thangorodrim over the gates of Angband) and logo
+(`title-logo.png`) were drawn for AVABand by `tools/title_art.py` and are CC0; the logo is set in
+Cinzel Decorative (below).
 
 ## Ambience loops (`src/Angband.Avalonia/ambience`)
 
@@ -68,6 +73,11 @@ DejaVu Sans Mono (regular and bold), built into AVABand for the map's letters an
 text. Copyright (c) 2003 Bitstream, Inc. (Bitstream Vera), with DejaVu changes in the public
 domain; free to use, copy and redistribute under the Bitstream Vera / DejaVu licence in
 `Assets/Fonts/LICENSE.txt`. Source: https://dejavu-fonts.github.io/
+
+Cinzel (the title screen's menu, a static SemiBold instance of the variable font) and Cinzel
+Decorative (drawn into the title logo): Copyright (c) 2012 Natanael Gama, with Reserved Font Name
+"Cinzel"; SIL Open Font License 1.1, in `Assets/Fonts/OFL-Cinzel.txt`. Source:
+https://github.com/google/fonts/tree/main/ofl/cinzel
 
 ## Libraries (bundled in the release builds)
 

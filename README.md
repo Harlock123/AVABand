@@ -82,6 +82,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 `LevelRequest(depth, seed)` always yields the same level.
 
 ## Implemented so far
+- **Title screen** (`ViewModels/MainWindowViewModel.Title.cs`): the game opens on Thangorodrim —
+  the three smoking peaks over the gates of Angband (`art/title.jpg`, drawn by `tools/title_art.py`)
+  under the AVABand logo (`art/title-logo.png`, Cinzel Decorative) — to its own music, "The Gates of
+  Angband" (`title_theme.ogg`, the music packs' `title` mood; composed and synthesised by
+  `tools/title_theme.py`: an organ drone, tolling bells and wind, strings, a harp, a horn, a
+  wordless choir and timpani in D minor, 1:51, starting and ending on the drone so it loops). The
+  menu fits what there is: *Continue <name>* (the level, race, class and where, and after a crash
+  when the save was made), or *Play again as <name>* if the last character died (and what killed
+  them), *Create a new character* (*Begin your first adventure* the first time), *Load a saved
+  character*, *High scores* and *Exit*. Letters, arrows and Enter, a click or the gamepad choose; it
+  stays up behind any dialog it opens and goes when a game starts or loads. Your own `title.png` and
+  `title-logo.png` in the art folder replace the pictures. `--seed`, `--depth` and `--no-title` skip it.
 - **Level generation** (`Angband.Core/Generation`, the `Cave` class): a port of Angband 4.2.5's
   `generate.c`, `gen-cave.c`, `gen-room.c`, `gen-util.c`, `gen-chunk.c` and `gen-monster.c`, driven by
   4.2.5's own data — `dungeon_profiles.json` (`dungeon_profile.txt`), `templates/vaults.json`
@@ -1270,7 +1282,7 @@ AMBIENT_DAY/NITE/DNG1-5). One file is picked at random per play; `town_night` fa
 and `deep` to `dungeon`. Music is a **playlist**: each track plays through once and then another
 from the same mood follows (never the same one twice running, unless it's the only one); taking
 the stairs changes the mood, and a track that also belongs to the new mood's list carries on.
-The music moods: `town` by day, `town_night`, `dungeon` for levels 1-19 and `deep` from level 20. `tools/angband_sound_prf_to_soundpack.py` converts Angband's `sound.prf`.
+The music moods: `title` (the title screen; falls back to `town`), `town` by day, `town_night`, `dungeon` for levels 1-19 and `deep` from level 20. `tools/angband_sound_prf_to_soundpack.py` converts Angband's `sound.prf`.
 
 ## Modding
 Data loads from `data/` next to the executable, then from each folder in
