@@ -36,6 +36,18 @@ public partial class MainWindow : Window
                 else vm.ZoomOut();
             };
         }
+        // Two arrow keys together move diagonally: presses wait a moment for a partner, releases count too.
+        _arrowChord.Move += dir => (DataContext as MainWindowViewModel)?.HandleAction(InputActions.FromDirection(dir));
+        _arrowTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(10), DispatcherPriority.Input, (_, _) =>
+        {
+            _arrowChord.Tick(_arrowClock.Elapsed);
+            if (!_arrowChord.IsWaiting) _arrowTimer!.Stop();
+        });
+        AddHandler(KeyUpEvent, (_, e) =>
+        {
+            if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, _arrowClock.Elapsed);
+        }, RoutingStrategies.Tunnel, handledEventsToo: true);
+        Deactivated += (_, _) => _arrowChord.Reset();
         // Shift held shows the travel route under the mouse: follow it from keys and pointer alike.
         AddHandler(KeyDownEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: true), RoutingStrategies.Tunnel, handledEventsToo: true);
         AddHandler(KeyUpEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: false), RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -372,6 +384,19 @@ public partial class MainWindow : Window
             again.ShowStartMenu();
     }
 
+    private readonly ArrowChord _arrowChord = new();
+    private readonly DispatcherTimer _arrowTimer;
+    private readonly System.Diagnostics.Stopwatch _arrowClock = System.Diagnostics.Stopwatch.StartNew();
+
+    private static Angband.Core.Geometry.Direction? ArrowKeyDirection(Key key) => key switch
+    {
+        Key.Up => Angband.Core.Geometry.Direction.North,
+        Key.Down => Angband.Core.Geometry.Direction.South,
+        Key.Left => Angband.Core.Geometry.Direction.West,
+        Key.Right => Angband.Core.Geometry.Direction.East,
+        _ => null,
+    };
+
     /// <summary>Tests turn this off so windows don't pop up.</summary>
     public static bool ShowCreationOnFirstRun { get; set; } = true;
 
@@ -386,6 +411,17 @@ public partial class MainWindow : Window
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
         if (vm.HasScene) vm.SkipScenes(); // a key cuts the scenes short, and still does what it does
+
+        // Two arrow keys held together move diagonally (plain arrows, at the command prompt, as bound by default).
+        if (e.KeyModifiers == KeyModifiers.None && ArrowKeyDirection(e.Key) is { } arrow && !_replaying && vm.IsAtCommandPrompt && !vm.IsShowingTitle
+            && !vm.IsEnteringCount && vm.OptionValue(DisplayOptions.ArrowDiagonals)
+            && vm.Bindings.ForKey(e.Key.ToString()) == InputActions.FromDirection(arrow))
+        {
+            _arrowChord.Down(arrow, _arrowClock.Elapsed);
+            if (_arrowChord.IsWaiting) _arrowTimer.Start();
+            e.Handled = true;
+            return;
+        }
 
         // The title screen: a letter picks, arrows move, Enter takes.
         if (vm.IsShowingTitle)

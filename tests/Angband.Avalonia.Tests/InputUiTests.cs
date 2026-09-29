@@ -150,4 +150,28 @@ public class InputUiTests
         Assert.True(vm.IsPrompting);
         Assert.Equal(1, vm.PromptSelectedIndex);
     }
+
+    [AvaloniaFact]
+    public void Up_and_Right_together_step_north_east()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        TestKit.OpenGround(vm);
+        var from = vm.Game.Player.Position;
+
+        window.KeyPressQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.ArrowRight, RawInputModifiers.None);
+        Assert.Equal(from + new Angband.Core.Geometry.Loc(1, -1), vm.Game.Player.Position);
+
+        // A single tap still steps straight.
+        window.KeyPressQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
+        Assert.Equal(from + new Angband.Core.Geometry.Loc(1, 0), vm.Game.Player.Position);
+    }
 }

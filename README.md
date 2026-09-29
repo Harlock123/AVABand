@@ -1369,6 +1369,10 @@ the context action, or a game command.
   lines the D-pad and A pick; and LT tapped on its own throws when let go. (On a keyboard: `&` for
   that menu, Alt+←/→ and Alt+Enter for the hotbar cursor.) (Chords are ordinary bindings — `LeftTrigger+A`,
   `LeftTrigger+DPad` for running — so any button can be made a shift in `bindings.json`.)
+- **Arrow-key diagonals** (`Angband.Input/ArrowChord.cs`; option *Two arrow keys held together
+  move diagonally*, on): Up and Right together step north-east, as the gamepad's D-pad does. A lone
+  arrow waits 50 ms for a partner (letting go sooner moves at once), and held keys keep repeating —
+  diagonally while both are down. Only plain arrows bound to movement, at the command prompt.
 - **Keysets**: AVABand's own keys are the default (arrows, the keypad and `hjklyubn` move; the
   commands are mostly Angband's original letters). Angband 4.2's two keysets are a click away —
   Settings → Controls → *Angband keys* (the original set: `l` look, `t` take off, `T` tunnel, `z`

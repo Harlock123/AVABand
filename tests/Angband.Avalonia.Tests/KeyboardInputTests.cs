@@ -36,7 +36,10 @@ public class KeyboardInputTests
         var (window, vm) = Open();
         var revision = vm.Revision;
         foreach (var key in new[] { PhysicalKey.ArrowUp, PhysicalKey.ArrowDown, PhysicalKey.ArrowLeft, PhysicalKey.ArrowRight })
+        {
             window.KeyPressQwerty(key, RawInputModifiers.None);
+            window.KeyReleaseQwerty(key, RawInputModifiers.None); // (a tap: a held arrow waits a moment for a second one)
+        }
         Assert.True(vm.Revision > revision);
     }
 
