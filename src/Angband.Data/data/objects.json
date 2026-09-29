@@ -4140,7 +4140,7 @@
     "maxDepth": 15,
     "cost": 0,
     "weight": 4,
-    "effect": "set_food:400; cure:poisoned; timed:paralyzed:4",
+    "effect": "set_food:400; cure:poisoned; timed_nores:paralyzed:4",
     "stackSize": "1d2"
   },
   {

@@ -186,16 +186,14 @@ public sealed partial class GameSession
             p.ToDam += lust / 2;
             p.Blows += 100 * (lust / 20);
         }
-        if (timed.Has("grim_purpose"))
-        {
-            // (An older AVABand status for Grim Purpose, kept so saves with it still load.)
-            resists["free_act"] = Math.Max(resists.GetValueOrDefault("free_act"), 1);
-            resists["conf"] = Math.Max(resists.GetValueOrDefault("conf"), 1);
-        }
-        // Angband player_timed.txt flag-synonyms: while these last they are the protection itself.
-        if (timed.Has("free_act")) resists["free_act"] = Math.Max(resists.GetValueOrDefault("free_act"), 1);
-        if (timed.Has("oppose_conf")) resists["conf"] = Math.Max(resists.GetValueOrDefault("conf"), 1);
-        if (timed.Has("bold")) resists["fear"] = Math.Max(resists.GetValueOrDefault("fear"), 1);
+        // Angband player_timed.txt flag-synonyms: while these last they are the protection itself
+        // (heroism and berserking are fearlessness, Free Action is free action...).
+        foreach (var (id, _) in timed.Active)
+            if (Data.Timed(id)?.FlagSynonym is { } flag && ProtectionOfFlag(flag) is { } protection)
+                resists[protection] = Math.Max(resists.GetValueOrDefault(protection), 1);
+        // Angband calc_bonuses: invulnerability and the mystic shield harden your armour.
+        if (timed.Has("invuln")) p.Armour += 100;
+        if (timed.Has("shield")) p.Armour += 50;
         if (ClassHas(ClassFlags.Unlight)) resists["dark"] = Math.Max(resists.GetValueOrDefault("dark"), 1);
         if (ClassHas(ClassFlags.Evil))
         {
@@ -717,6 +715,9 @@ public sealed partial class GameSession
             }
             case "timed":
                 return e.Dice(1).Roll(Rng) is var turns and > 0 && IncreaseTimed(e.Arg(0), turns);
+            case "timed_nores":
+                // Angband TIMED_INC_NO_RES: nothing protects against it (the salt water's paralysis).
+                return e.Dice(1).Roll(Rng) is var still and > 0 && IncreaseTimed(e.Arg(0), still, check: false);
             case "nourish":
                 Publish(new MessageEvent("That tastes good."));
                 SetFood(Player.Food + e.Int(0));
@@ -1064,6 +1065,14 @@ public sealed partial class GameSession
         }
         return loot;
     }
+
+    /// <summary>The protection an object flag gives, in AVABand's resist keys (Angband flag-synonym).</summary>
+    internal static string? ProtectionOfFlag(string flag) => flag switch
+    {
+        "PROT_FEAR" => "fear", "PROT_CONF" => "conf", "PROT_BLIND" => "blind", "PROT_STUN" => "stun",
+        "FREE_ACT" => "free_act", "SEE_INVIS" => "see_invis",
+        _ => null,
+    };
 }
 
 /// <summary>One parsed effect, e.g. <c>timed:fast:20+1d20</c> → name "timed", args ["fast", "20+1d20"].</summary>
@@ -1091,7 +1100,7 @@ public static class ItemEffects
 {
     public static readonly IReadOnlySet<string> Known = new HashSet<string>
     {
-        "heal", "cure", "reduce", "timed", "nourish", "satisfy", "teleport", "light_area", "detect_monsters", "map_area",
+        "heal", "cure", "reduce", "timed", "timed_nores", "nourish", "satisfy", "teleport", "light_area", "detect_monsters", "map_area",
         "detect_objects", "identify", "remove_curse", "fire_damage",
         // Devices and the fuller item list (GameSession.Devices.cs).
         "bolt", "beam", "ball", "breath", "monster_status", "teleport_other", "drain_life", "heal_monster", "haste_monster",

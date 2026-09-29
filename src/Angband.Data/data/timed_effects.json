@@ -1,331 +1,54 @@
 [
-  {
-    "id": "poisoned",
-    "name": "Poisoned",
-    "onBegin": "You are poisoned!",
-    "onEnd": "You are no longer poisoned.",
-    "onIncrease": "You are more poisoned!"
-  },
-  {
-    "id": "cut",
-    "name": "Cut",
-    "onBegin": "You have been given a cut.",
-    "onEnd": "You are no longer bleeding.",
-    "onIncrease": "Your cut gets worse.",
-    "max": 1000
-  },
-  {
-    "id": "stun",
-    "name": "Stun",
-    "onBegin": "You have been stunned.",
-    "onEnd": "You are no longer stunned.",
-    "onIncrease": "You are more dazed.",
-    "max": 200
-  },
-  {
-    "id": "confused",
-    "name": "Confused",
-    "onBegin": "You are confused!",
-    "onEnd": "You feel less confused now.",
-    "onIncrease": "You are more confused!"
-  },
-  {
-    "id": "image",
-    "name": "Halluc",
-    "onBegin": "You feel drugged!",
-    "onEnd": "You can see clearly again.",
-    "onIncrease": "You feel more drugged!"
-  },
-  {
-    "id": "amnesia",
-    "name": "Amnesiac",
-    "onBegin": "You feel your memories fade.",
-    "onEnd": "Your memories come flooding back."
-  },
-  {
-    "id": "afraid",
-    "name": "Afraid",
-    "onBegin": "You are terrified!",
-    "onEnd": "You feel bolder now.",
-    "onIncrease": "You are more scared!"
-  },
-  {
-    "id": "paralyzed",
-    "name": "Paralyzed",
-    "onBegin": "You are paralysed!",
-    "onEnd": "You can move again.",
-    "stacking": "no_stack"
-  },
-  {
-    "id": "blind",
-    "name": "Blind",
-    "onBegin": "You are blind.",
-    "onEnd": "You blink and your eyes clear.",
-    "onIncrease": "Your eyes are clouded further."
-  },
-  {
-    "id": "slow",
-    "name": "Slow",
-    "onBegin": "You feel yourself moving slower!",
-    "onEnd": "You feel yourself speed up."
-  },
-  {
-    "id": "fast",
-    "name": "Haste",
-    "onBegin": "You feel yourself moving faster!",
-    "onEnd": "You feel yourself slow down.",
-    "harmful": false,
-    "stacking": "max"
-  },
-  {
-    "id": "blessed",
-    "name": "Blessed",
-    "onBegin": "You feel righteous!",
-    "onEnd": "The prayer has expired.",
-    "harmful": false
-  },
-  {
-    "id": "hero",
-    "name": "Hero",
-    "onBegin": "You feel like a hero!",
-    "onEnd": "The heroism wears off.",
-    "harmful": false
-  },
-  {
-    "id": "regen",
-    "name": "Regen",
-    "onBegin": "You feel your body renewing itself.",
-    "onEnd": "You feel less vital.",
-    "harmful": false
-  },
-  {
-    "id": "oppose_fire",
-    "name": "ResFire",
-    "onBegin": "You feel resistant to fire!",
-    "onEnd": "You feel less resistant to fire.",
-    "harmful": false
-  },
-  {
-    "id": "oppose_cold",
-    "name": "ResCold",
-    "onBegin": "You feel resistant to cold!",
-    "onEnd": "You feel less resistant to cold.",
-    "harmful": false
-  },
-  {
-    "id": "oppose_pois",
-    "name": "ResPois",
-    "onBegin": "You feel resistant to poison!",
-    "onEnd": "You feel less resistant to poison.",
-    "harmful": false
-  },
-  {
-    "id": "berserk",
-    "name": "Berserk",
-    "onBegin": "You feel like a killing machine!",
-    "onEnd": "You feel less berserk.",
-    "harmful": false
-  },
-  {
-    "id": "see_invisible",
-    "name": "SInvis",
-    "onBegin": "Your eyes feel very sensitive!",
-    "onEnd": "Your eyes feel less sensitive.",
-    "harmful": false
-  },
-  {
-    "id": "infravision",
-    "name": "Infra",
-    "onBegin": "Your eyes begin to tingle!",
-    "onEnd": "Your eyes stop tingling.",
-    "harmful": false
-  },
-  {
-    "id": "prot_evil",
-    "name": "ProtEvil",
-    "onBegin": "You feel safe from evil!",
-    "onEnd": "You no longer feel safe from evil.",
-    "harmful": false
-  },
-  {
-    "id": "oppose_acid",
-    "name": "ResAcid",
-    "onBegin": "You feel resistant to acid!",
-    "onEnd": "You feel less resistant to acid.",
-    "harmful": false
-  },
-  {
-    "id": "oppose_elec",
-    "name": "ResElec",
-    "onBegin": "You feel resistant to electricity!",
-    "onEnd": "You feel less resistant to electricity.",
-    "harmful": false
-  },
-  {
-    "id": "telepathy",
-    "name": "ESP",
-    "onBegin": "Your mind expands!",
-    "onEnd": "Your mind contracts.",
-    "harmful": false
-  },
-  {
-    "id": "att_conf",
-    "name": "AttConf",
-    "onBegin": "Your hands begin to glow!",
-    "onEnd": "The glow fades from your hands.",
-    "harmful": false
-  },
-  {
-    "id": "terror",
-    "name": "Terror",
-    "onBegin": "You feel the need to run away and fast!",
-    "onEnd": "The urge to run dissipates.",
-    "harmful": false
-  },
-  {
-    "id": "stoneskin",
-    "name": "Stone",
-    "onBegin": "Your skin turns to stone.",
-    "onEnd": "A fleshy shade returns to your skin.",
-    "harmful": false
-  },
-  {
-    "id": "sprint",
-    "name": "Sprint",
-    "onBegin": "You start sprinting.",
-    "onEnd": "You suddenly stop sprinting.",
-    "harmful": false
-  },
-  {
-    "id": "stealth",
-    "name": "Stealth",
-    "onBegin": "You feel silent!",
-    "onEnd": "You feel less stealthy.",
-    "harmful": false
-  },
-  {
-    "id": "scrambled",
-    "name": "Scrambled",
-    "onBegin": "Your body starts to scramble...",
-    "onEnd": "Your body reasserts its true nature.",
-    "onIncrease": "You are more scrambled!",
-    "harmful": true
-  },
-  {
-    "id": "grim_purpose",
-    "name": "Purpose",
-    "onBegin": "You focus your mind grimly.",
-    "onEnd": "Your grim purpose fades.",
-    "harmful": false
-  },
-  {
-    "id": "att_pois",
-    "name": "AttPois",
-    "onBegin": "Poison drips from your weapon!",
-    "onEnd": "Your weapon is no longer poisonous.",
-    "harmful": false
-  },
-  {
-    "id": "att_run",
-    "name": "HitRun",
-    "onBegin": "You tense up ready to escape!",
-    "onEnd": "You relax again.",
-    "harmful": false
-  },
-  {
-    "id": "taunt",
-    "name": "Taunt",
-    "onBegin": "You start aggravating your enemies!",
-    "onEnd": "You stop aggravating your enemies.",
-    "harmful": false
-  },
-  {
-    "id": "bloodlust",
-    "name": "Bloodlust",
-    "onBegin": "A red mist descends over your eyes!",
-    "onIncrease": "Your thirst for blood increases!",
-    "onEnd": "The mist clears.",
-    "harmful": false,
-    "max": 50
-  },
-  {
-    "id": "att_evil",
-    "name": "AttEvil",
-    "onBegin": "Your weapon is imbued with holy force!",
-    "onEnd": "Holy force fades from your weapon.",
-    "harmful": false
-  },
-  {
-    "id": "att_demon",
-    "name": "AttDemon",
-    "onBegin": "Your weapon becomes a bane of demons!",
-    "onEnd": "Your weapon returns to normal.",
-    "harmful": false
-  },
-  {
-    "id": "att_vamp",
-    "name": "AttVamp",
-    "onBegin": "You can drain life from your victims!",
-    "onEnd": "Your thirst for life fades.",
-    "harmful": false
-  },
-  {
-    "id": "command",
-    "name": "Command",
-    "onBegin": "You take control of your victim!",
-    "onEnd": "You lose control of your victim.",
-    "harmful": false
-  },
-  {
-    "id": "fastcast",
-    "name": "FastCast",
-    "onBegin": "Your mind accelerates!",
-    "onEnd": "Your mind slows down again.",
-    "harmful": false
-  },
-  {
-    "id": "covertracks",
-    "name": "NoTrack",
-    "onBegin": "You begin covering your tracks.",
-    "onEnd": "You stop covering your tracks.",
-    "harmful": false
-  },
-  {
-    "id": "heal",
-    "name": "Heal",
-    "onBegin": "You feel your body mending!",
-    "onEnd": "Your body stops mending so quickly.",
-    "harmful": false
-  },
-  {
-    "id": "free_act",
-    "name": "FrAct",
-    "onBegin": "Your limbs fill with energy!",
-    "onEnd": "Your limbs return to normal.",
-    "onIncrease": "Your limbs feel more energetic!",
-    "harmful": false
-  },
-  {
-    "id": "oppose_conf",
-    "name": "RConf",
-    "onBegin": "You feel resistant to confusion!",
-    "onEnd": "You are no longer resistant to confusion.",
-    "onIncrease": "You feel more resistant to confusion!",
-    "harmful": false
-  },
-  {
-    "id": "bold",
-    "name": "Bold",
-    "onBegin": "You feel bold.",
-    "onEnd": "You no longer feel bold.",
-    "onIncrease": "You feel even bolder!",
-    "harmful": false
-  },
-  {
-    "id": "blackbreath",
-    "name": "BlkBrth",
-    "onBegin": "You are overcome by the Black Breath.",
-    "onEnd": "The Black Shadow lifts.",
-    "max": 10
-  }
+  {"id": "fast", "name": "Haste", "description": "haste", "onBegin": "You feel yourself moving faster!", "onEnd": "You feel yourself slow down.", "color": "LightGreen", "sound": "SPEED", "harmful": false},
+  {"id": "slow", "name": "Slow", "description": "slowness", "onBegin": "You feel yourself moving slower!", "onEnd": "You feel yourself speed up.", "color": "LightUmber", "sound": "SLOW", "fail": [{"kind": "protection", "id": "free_act"}]},
+  {"id": "blind", "name": "Blind", "description": "blindness", "onBegin": "You are blind.", "onEnd": "You blink and your eyes clear.", "color": "Orange", "sound": "BLIND", "fail": [{"kind": "protection", "id": "blind"}]},
+  {"id": "paralyzed", "name": "Paralyzed!", "description": "paralysis", "onBegin": "You are paralysed!", "onEnd": "You can move again.", "color": "Red", "sound": "PARALYZED", "fail": [{"kind": "protection", "id": "free_act"}], "stacking": "no_stack"},
+  {"id": "confused", "name": "Confused", "description": "confusion", "onBegin": "You are confused!", "onEnd": "You are no longer confused.", "onIncrease": "You are more confused!", "onDecrease": "You feel a little less confused.", "color": "Orange", "sound": "CONFUSED", "fail": [{"kind": "protection", "id": "conf"}]},
+  {"id": "afraid", "name": "Afraid", "description": "fear", "onBegin": "You are terrified!", "onEnd": "You feel bolder now.", "onIncrease": "You are more scared!", "color": "Orange", "sound": "AFRAID", "fail": [{"kind": "protection", "id": "fear"}]},
+  {"id": "image", "name": "Halluc", "description": "hallucination", "onBegin": "You feel drugged!", "onEnd": "You can see clearly again.", "onIncrease": "You feel more drugged!", "color": "Orange", "sound": "DRUGGED", "fail": [{"kind": "resist", "id": "chaos"}]},
+  {"id": "poisoned", "name": "Poisoned", "description": "poisoning", "onBegin": "You are poisoned!", "onEnd": "You are no longer poisoned.", "onIncrease": "You are more poisoned!", "onDecrease": "You are less poisoned.", "color": "Orange", "sound": "POISONED", "fail": [{"kind": "resist", "id": "pois"}, {"kind": "timed", "id": "oppose_pois"}]},
+  {"id": "cut", "name": "Graze", "description": "wounds", "onBegin": "You have been given a graze.", "onEnd": "You are no longer bleeding.", "color": "Yellow", "sound": "CUT", "grades": [{"max": 10, "color": "Yellow", "label": "Graze", "message": "You have been given a graze."}, {"max": 25, "color": "Yellow", "label": "Light Cut", "message": "You have been given a light cut."}, {"max": 50, "color": "Orange", "label": "Bad Cut", "message": "You have been given a bad cut."}, {"max": 100, "color": "Orange", "label": "Nasty Cut", "message": "You have been given a nasty cut."}, {"max": 200, "color": "Red", "label": "Severe Cut", "message": "You have been given a severe cut."}, {"max": 1000, "color": "Red", "label": "Deep Gash", "message": "You have been given a deep gash."}, {"max": 10000, "color": "LightRed", "label": "Mortal Wound", "message": "You have been given a mortal wound."}], "fail": [{"kind": "player", "id": "ROCK"}]},
+  {"id": "stun", "name": "Stun", "description": "stunning", "onBegin": "You have been stunned.", "onEnd": "You are no longer stunned.", "color": "Orange", "sound": "STUN", "grades": [{"max": 50, "color": "Orange", "label": "Stun", "message": "You have been stunned."}, {"max": 150, "color": "Orange", "label": "Heavy Stun", "message": "You have been heavily stunned."}, {"max": 10000, "color": "Red", "label": "Knocked Out", "message": "You have been knocked out."}], "fail": [{"kind": "protection", "id": "stun"}]},
+  {"id": "prot_evil", "name": "ProtEvil", "description": "protection from evil", "onBegin": "You feel safe from evil!", "onEnd": "You no longer feel safe from evil.", "onIncrease": "You feel even safer from evil!", "color": "LightGreen", "sound": "PROT_EVIL", "harmful": false},
+  {"id": "invuln", "name": "Invuln", "description": "invulnerability", "onBegin": "You feel invulnerable!", "onEnd": "You feel vulnerable once more.", "color": "LightGreen", "sound": "INVULN", "harmful": false},
+  {"id": "hero", "name": "Hero", "description": "heroism", "onBegin": "You feel like a hero!", "onEnd": "You no longer feel heroic.", "onIncrease": "You feel more like a hero!", "color": "LightGreen", "sound": "HERO", "flagSynonym": "PROT_FEAR", "harmful": false},
+  {"id": "berserk", "name": "Berserk", "description": "berserk rage", "onBegin": "You feel like a killing machine!", "onEnd": "You no longer feel berserk.", "onIncrease": "You feel even more berserk!", "color": "LightGreen", "sound": "BERSERK", "flagSynonym": "PROT_FEAR", "harmful": false},
+  {"id": "shield", "name": "Shield", "description": "mystic shield", "onBegin": "A mystic shield forms around your body!", "onEnd": "Your mystic shield crumbles away.", "onIncrease": "The mystic shield strengthens.", "color": "LightGreen", "sound": "SHIELD", "harmful": false},
+  {"id": "blessed", "name": "Blssd", "description": "your AC and to-hit bonus", "onBegin": "You feel righteous!", "onEnd": "The prayer has expired.", "onIncrease": "You feel more righteous!", "color": "LightGreen", "sound": "BLESSED", "harmful": false},
+  {"id": "see_invisible", "name": "SInvis", "description": "see invisible", "onBegin": "Your eyes feel very sensitive!", "onEnd": "Your eyes no longer feel so sensitive.", "onIncrease": "Your eyes feel more sensitive!", "color": "LightGreen", "sound": "SEE_INVIS", "flagSynonym": "SEE_INVIS", "flagOnly": true, "harmful": false},
+  {"id": "infravision", "name": "Infra", "description": "enhanced infravision", "onBegin": "Your eyes begin to tingle!", "onEnd": "Your eyes stop tingling.", "onIncrease": "The tingling in your eyes intensifies.", "color": "LightGreen", "sound": "INFRARED", "harmful": false},
+  {"id": "oppose_acid", "name": "RAcid", "description": "acid resistance", "onBegin": "You feel resistant to acid!", "onEnd": "You are no longer resistant to acid.", "onIncrease": "You feel more resistant to acid!", "color": "Slate", "sound": "RES_ACID", "fail": [{"kind": "vulnerable", "id": "acid"}], "resist": "acid", "harmful": false},
+  {"id": "oppose_elec", "name": "RElec", "description": "electricity resistance", "onBegin": "You feel resistant to electricity!", "onEnd": "You are no longer resistant to electricity.", "onIncrease": "You feel more resistant to electricity!", "color": "Blue", "sound": "RES_ELEC", "fail": [{"kind": "vulnerable", "id": "elec"}], "resist": "elec", "harmful": false},
+  {"id": "oppose_fire", "name": "RFire", "description": "fire resistance", "onBegin": "You feel resistant to fire!", "onEnd": "You are no longer resistant to fire.", "onIncrease": "You feel more resistant to fire!", "color": "Red", "sound": "RES_FIRE", "fail": [{"kind": "vulnerable", "id": "fire"}], "resist": "fire", "harmful": false},
+  {"id": "oppose_cold", "name": "RCold", "description": "cold resistance", "onBegin": "You feel resistant to cold!", "onEnd": "You are no longer resistant to cold.", "onIncrease": "You feel more resistant to cold!", "color": "White", "sound": "RES_COLD", "fail": [{"kind": "vulnerable", "id": "cold"}], "resist": "cold", "harmful": false},
+  {"id": "oppose_pois", "name": "RPois", "description": "poison resistance", "onBegin": "You feel resistant to poison!", "onEnd": "You are no longer resistant to poison.", "onIncrease": "You feel more resistant to poison!", "color": "Green", "sound": "RES_POIS", "fail": [{"kind": "vulnerable", "id": "pois"}], "resist": "pois", "harmful": false},
+  {"id": "oppose_conf", "name": "RConf", "description": "confusion resistance", "onBegin": "You feel resistant to confusion!", "onEnd": "You are no longer resistant to confusion.", "onIncrease": "You feel more resistant to confusion!", "color": "Violet", "flagSynonym": "PROT_CONF", "flagOnly": true, "harmful": false},
+  {"id": "amnesia", "name": "Amnesiac", "description": "amnesia", "onBegin": "You feel your memories fade.", "onEnd": "Your memories come flooding back.", "color": "Orange", "sound": "GENERIC"},
+  {"id": "telepathy", "name": "ESP", "description": "telepathy", "onBegin": "Your mind expands.", "onEnd": "Your horizons are once more limited.", "onIncrease": "Your mind expands further.", "color": "LightBlue", "sound": "GENERIC", "flagSynonym": "TELEPATHY", "flagOnly": true, "harmful": false},
+  {"id": "stoneskin", "name": "Stone", "description": "stone skin", "onBegin": "Your skin turns to stone.", "onEnd": "A fleshy shade returns to your skin.", "color": "LightGreen", "sound": "GENERIC", "harmful": false},
+  {"id": "terror", "name": "Terror", "description": "terror", "onBegin": "You feel the need to run away and fast!", "onEnd": "The urge to run dissipates.", "color": "Red", "sound": "AFRAID", "harmful": false},
+  {"id": "sprint", "name": "Sprint", "description": "sprinting", "onBegin": "You start sprinting.", "onEnd": "You suddenly stop sprinting.", "color": "LightGreen", "sound": "SPEED", "harmful": false},
+  {"id": "bold", "name": "Bold", "description": "fearlessness", "onBegin": "You feel bold.", "onEnd": "You no longer feel bold.", "onIncrease": "You feel even bolder!", "color": "LightGreen", "sound": "BOLD", "flagSynonym": "PROT_FEAR", "flagOnly": true, "harmful": false},
+  {"id": "scrambled", "name": "Scrambled", "description": "scrambled", "onBegin": "Your body starts to scramble...", "onEnd": "Your body reasserts its true nature.", "onIncrease": "You are more scrambled!", "color": "Violet", "sound": "SCRAMBLE", "fail": [{"kind": "resist", "id": "nexus"}]},
+  {"id": "trapsafe", "name": "TrapSafe", "description": "safety from traps", "onBegin": "You feel safe from traps.", "onEnd": "You feel vulnerable to traps again.", "onIncrease": "You feel even safer from traps!", "color": "LightGreen", "flagSynonym": "TRAP_IMMUNE", "flagOnly": true, "harmful": false},
+  {"id": "fastcast", "name": "FastCast", "description": "mana channelling", "onBegin": "You feel your mind accelerate.", "onEnd": "You feel your mind slow again.", "color": "Magenta", "harmful": false},
+  {"id": "att_acid", "name": "AttAcid", "description": "temporary acid brand", "onBegin": "Your {kind} start{s} to drip with acid!", "onEnd": "The acid disappears from your {kind}.", "color": "Slate", "brand": {"element": "acid", "multiplier": 3, "verb": "dissolve", "name": "acid"}, "harmful": false},
+  {"id": "att_elec", "name": "AttElec", "description": "temporary lightning brand", "onBegin": "Sparks gather around your {kind}!", "onEnd": "The sparks fade from your {kind}.", "color": "Blue", "brand": {"element": "elec", "multiplier": 3, "verb": "shock", "name": "lightning"}, "harmful": false},
+  {"id": "att_fire", "name": "AttFire", "description": "temporary fire brand", "onBegin": "Flames surround your {kind}!", "onEnd": "The flames on your {kind} subside.", "color": "Red", "brand": {"element": "fire", "multiplier": 3, "verb": "burn", "name": "fire"}, "harmful": false},
+  {"id": "att_cold", "name": "AttCold", "description": "temporary cold brand", "onBegin": "Your {kind} {is} covered in frost!", "onEnd": "The frost evaporates from your {kind}.", "color": "White", "brand": {"element": "cold", "multiplier": 3, "verb": "freeze", "name": "cold"}, "harmful": false},
+  {"id": "att_pois", "name": "AttPois", "description": "temporary poison brand", "onBegin": "Your {kind} drip{s} with poison!", "onEnd": "The poison disappears from your {kind}.", "color": "Green", "brand": {"element": "pois", "multiplier": 3, "verb": "poison", "name": "poison"}, "harmful": false},
+  {"id": "att_conf", "name": "AttConf", "description": "temporary monster confusion", "onBegin": "Your hands begin to glow!", "onEnd": "The glow fades from your hands.", "color": "LightUmber", "harmful": false},
+  {"id": "att_evil", "name": "AttEvil", "description": "temporary slay evil", "onBegin": "Your {kind} {is} imbued with holy force!", "onEnd": "Holy force fades from your {kind}.", "color": "White", "slay": {"monsterFlag": "EVIL", "multiplier": 2, "verb": "smite", "name": "evil creatures"}, "harmful": false},
+  {"id": "att_demon", "name": "AttDemon", "description": "temporary slay demon", "onBegin": "Your {kind} become{s} a bane of demons!", "onEnd": "Your {kind} return{s} to normal.", "color": "LightRed", "slay": {"monsterFlag": "DEMON", "multiplier": 5, "verb": "smite", "name": "demons"}, "harmful": false},
+  {"id": "att_vamp", "name": "AttVamp", "description": "temporary hitpoint siphoning", "onBegin": "Your can drain life from your victims!", "onEnd": "Your life-draining power passes.", "color": "Purple", "harmful": false},
+  {"id": "heal", "name": "Heal", "description": "turn-by-turn healing through increased metabolism", "onBegin": "Your metabolism speeds up!", "onEnd": "Your metabolism return to normal.", "color": "LightGreen", "harmful": false},
+  {"id": "command", "name": "Cmd", "description": "commanding a monster", "onBegin": "You focus on your target.", "onEnd": "Your resume control of your own body.", "color": "LightPurple", "harmful": false},
+  {"id": "att_run", "name": "HitRun", "description": "escape on attack", "onBegin": "You tense up ready to escape!", "onEnd": "You relax again.", "color": "Mud", "harmful": false},
+  {"id": "covertracks", "name": "NoTrack", "description": "leave no scent trail, reduce visibility", "onBegin": "You begin covering your tracks.", "onEnd": "You stop covering your tracks.", "color": "LightTeal", "harmful": false},
+  {"id": "powershot", "name": "PShot", "description": "piercing shot", "onBegin": "You prepare to shoot powerfully!", "onEnd": "Your shooting power returns to normal.", "color": "Magenta", "harmful": false},
+  {"id": "taunt", "name": "Taunt", "description": "taunting", "onBegin": "You start aggravating your enemies!", "onEnd": "You stop aggravating your enemies.", "color": "Magenta", "harmful": false},
+  {"id": "bloodlust", "name": "Bloodlust", "description": "desire to kill", "onBegin": "A red mist descends over your eyes!", "onEnd": "The mist clears.", "color": "Yellow", "max": 50, "grades": [{"max": 10, "color": "Yellow", "label": "Bloodlust", "message": "A red mist descends over your eyes!"}, {"max": 18, "color": "LightPink", "label": "Bloodlust", "message": "Your thirst for blood increases!"}, {"max": 26, "color": "Orange", "label": "Bloodlust", "message": "Your thirst for blood increases!"}, {"max": 34, "color": "Red", "label": "Bloodlust", "message": "Your thirst for blood increases!"}, {"max": 45, "color": "LightRed", "label": "Bloodlust", "message": "Your thirst for blood increases!"}, {"max": 50, "color": "LightPurple", "label": "Bloodlust", "message": "Your thirst for blood is insatiable!"}], "harmful": false},
+  {"id": "blackbreath", "name": "BlkBrth", "description": "black breath", "onBegin": "You are overcome by the Black Breath.", "onEnd": "The Black Shadow lifts.", "color": "LightDark", "max": 10},
+  {"id": "stealth", "name": "Stealth", "description": "stealth", "onBegin": "You feel silent!", "onEnd": "You feel less stealthy.", "color": "LightDark", "harmful": false},
+  {"id": "free_act", "name": "FrAct", "description": "free action", "onBegin": "Your limbs fill with energy!", "onEnd": "Your limbs return to normal.", "onIncrease": "Your limbs feel more energetic!", "color": "LightGreen", "flagSynonym": "FREE_ACT", "flagOnly": true, "harmful": false}
 ]

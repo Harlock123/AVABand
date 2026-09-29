@@ -108,6 +108,21 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Status effects** (`Effects/TimedEffects.cs`, `timed_effects.json`): poison, cuts, stun
   (to-hit/dam penalty, knock-out), confusion (40% random steps), fear (no melee), paralysis
   (lost turns, non-stacking), blindness, slow/haste. Angband fixed-point HP regeneration, resting.
+  All 52 of 4.2.5's `player_timed.txt` effects (all but FOOD; hunger is kept apart), synced and
+  compared whole: the *grades* (a graze, light cut… deep gash, mortal wound; stun, heavy stun,
+  knocked out; bloodlust's six) with their status-bar labels, colours and messages — going up a
+  grade always says so, falling one is quiet; `on-increase`/`on-decrease` messages; what
+  *prevents* an effect (its `fail` lines: Free Action stops slowing and paralysis, resisting chaos
+  stops hallucination, opposing poison stops poisoning, stone can't bleed, being vulnerable to
+  acid rules out a temporary resistance to it) — except for 4.2.5's `TIMED_INC_NO_RES` effects
+  (the salt water's paralysis, a trap's slowness); the flag synonyms (heroism and berserking are
+  fearlessness while they last); temporary brands and slays from the data (a fire, cold, acid,
+  lightning or poison coating, Smite Evil, Demon Bane), with the weapon named in the message
+  ("Flames surround your Dagger!"). Cuts, poison and stunning wear off as fast as Constitution
+  heals them (Angband adj_con_fix: five a turn at 18/100), a mortal wound not at all; knocked out
+  is past 150. New from 4.2.5: the mystic shield (+50 AC), invulnerability (+100 AC, and no hurt
+  short of 9000), safety from traps. (AVABand's own `regen` and `grim_purpose` statuses are gone;
+  Grim Purpose was already 4.2.5's two effects.)
 - **Monsters & AI** (`Game/GameSession.Monsters.cs`, `GameSession.MonsterSpells.cs`,
   `GameSession.MonsterPowers.cs`): 624 races in `monsters.json` — Angband 4.2's whole bestiary from
   the town to Morgoth, imported with `tools/angband_monster_import.py`

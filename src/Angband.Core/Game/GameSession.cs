@@ -331,7 +331,7 @@ public sealed partial class GameSession : ITurnHandler
     {
         var target = Player.Position.Step(dir);
         return Level.InBounds(target) && Level[target].Trap != 0 && Level[target].Has(SquareFlags.TrapVisible)
-               && Level.Monsters.At(target) is null && !IsWebbed(target) && !Player.HasGearFlag("TRAP_IMMUNE");
+               && Level.Monsters.At(target) is null && !IsWebbed(target) && !TrapSafe;
     }
 
     private int Walk(Direction dir, bool confuse = true)

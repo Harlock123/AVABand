@@ -1647,6 +1647,78 @@ def spell_avg_42(e, power):
     return rv_avg(dice)
 
 
+TIMED_PROTECTIONS = {"FREE_ACT": "free_act", "PROT_BLIND": "blind", "PROT_CONF": "conf", "PROT_FEAR": "fear",
+                     "PROT_STUN": "stun"}
+TIMED_FAIL_KINDS = {"1": "protection", "2": "resist", "3": "vulnerable", "4": "player", "5": "timed"}
+TIMED_EXTRA = {"INVULN": "invuln", "SHIELD": "shield", "TRAPSAFE": "trapsafe", "POWERSHOT": "powershot",
+               "BOLD": "bold", "FREE_ACT": "free_act"}
+
+
+def timed_id(name):
+    return OI.TIMED.get(name) or TIMED_EXTRA.get(name) or name.lower()
+
+
+def compare_timed(gd, data):
+    sec = section("timed", "Timed effects", "timed_effects.json", "player_timed.txt")
+    ours = {x["id"]: x for x in load(data, "timed_effects.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "player_timed.txt")):
+        if e["name"] == "FOOD":
+            sec.unmodelled["FOOD (hunger is kept apart from timed effects)"] += 1
+            continue
+        tid = timed_id(e["name"])
+        x = ours.get(tid)
+        if x is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(tid)
+        sec.compared += 1
+        label = e["name"]
+        grades = [g.split(":") for g in get(e, "grade")]
+        mine = x.get("grades") or [{"max": x.get("max", 10000), "color": x.get("color", "White"), "label": x.get("name"),
+                                    "message": x.get("onBegin", "")}]
+        sec.cmp(label, "grades (max/colour/label/message)",
+                [(g.get("max"), g.get("color"), g.get("label"), g.get("message"), g.get("downMessage") or None) for g in mine],
+                [(int(g[1]), MI.COLORS.get(g[0]), g[2], g[3], (g[4] or None) if len(g) > 4 else None) for g in grades])
+        sec.cmp(label, "name (first grade's label)", x.get("name"), grades[0][2])
+        sec.cmp(label, "max", x.get("max", 10000), int(grades[-1][1]))
+        sec.cmp(label, "description", x.get("description", ""), one(e, "desc", ""))
+        sec.cmp(label, "on-end", x.get("onEnd") or None, one(e, "on-end"))
+        sec.cmp(label, "on-increase", x.get("onIncrease") or None, one(e, "on-increase"))
+        sec.cmp(label, "on-decrease", x.get("onDecrease") or None, one(e, "on-decrease"))
+        sec.cmp(label, "sound (msgt)", x.get("sound"), one(e, "msgt"))
+        sec.cmp(label, "lower bound", x.get("lowerBound", 0), int(one(e, "lower-bound", "0")))
+        theirs_fail = []
+        for f in get(e, "fail"):
+            code, _, what = f.partition(":")
+            kind = TIMED_FAIL_KINDS[code]
+            fid = (TIMED_PROTECTIONS.get(what, f"?{what}") if kind == "protection" else timed_id(what) if kind == "timed"
+                   else what if kind == "player" else what.lower())
+            theirs_fail.append(f"{kind}:{fid}")
+        sec.cmp_set(label, "fail", [f"{f['kind']}:{f['id']}" for f in x.get("fail", [])], theirs_fail)
+        sec.cmp(label, "non-stacking", x.get("stacking") == "no_stack", "NONSTACKING" in flag_list(e, "flags"))
+        sec.cmp(label, "temporary resist", x.get("resist"), (one(e, "resist") or "").lower() or None)
+        syn = one(e, "flag-synonym")
+        sec.cmp(label, "flag synonym", (x.get("flagSynonym"), bool(x.get("flagOnly"))),
+                (syn.split(":")[0], syn.split(":")[1] == "1") if syn else (None, False))
+        brand = one(e, "brand")
+        sec.cmp(label, "brand", (x["brand"]["element"], x["brand"]["multiplier"]) if x.get("brand") else None,
+                (EA.BRANDS[brand.split("_")[0]][0], int(brand.split("_")[1])) if brand else None)
+        slay = one(e, "slay")
+        sec.cmp(label, "slay", (x["slay"]["monsterFlag"], x["slay"]["multiplier"]) if x.get("slay") else None,
+                (slay.split("_")[0], int(slay.split("_")[1])) if slay else None)
+        for key in ("on-begin-effect", "on-end-effect"):
+            if one(e, key):
+                sec.unmodelled[f"{key} {one(e, key)} (in code: GameSession.OnTimedStarted/Ended)"] += 1
+    for tid in ours:
+        if tid not in used:
+            sec.only_ours.append(tid)
+    sec.notes += ["Every field of player_timed.txt is compared but for FOOD (AVABand keeps hunger apart) and the "
+                  "on-begin/on-end effects (sprinting ends in slowness, scrambling), which are in code. `harmful` is "
+                  "AVABand's own (what curing clears)."]
+    return sec
+
+
 def compare_summons(gd, data):
     sec = section("summons", "Summons", "summons.json", "summon.txt")
     ours = {x["id"]: x for x in load(data, "summons.json")}
@@ -1862,7 +1934,7 @@ def render(gd, data, out):
     w("")
     w("- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by "
       "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
-      "object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath "
+      "object_property.txt, player_property.txt, projection.txt (except breath "
       "divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
       "slay.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, "
       "ui_*.txt, blow_methods.txt (methods are only checked for existence).")
@@ -1901,7 +1973,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

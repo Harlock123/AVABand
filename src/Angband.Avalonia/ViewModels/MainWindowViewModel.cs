@@ -374,7 +374,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         var where = depth == 0 ? "Town" : $"{depth * _data.Constants.FeetPerLevel} ft (L{depth})";
         var hunger = _game.HungerLevel;
         var effects = string.Join(" ", player.Timed.Active
-            .Select(kv => _data.Timed(kv.Key)?.Name ?? kv.Key)
+            .Select(kv => _data.Timed(kv.Key)?.GradeAt(kv.Value)?.Label ?? kv.Key)
             .Prepend(hunger == HungerLevel.Fed ? "" : hunger.ToString())
             .Append(player.RecallTimer > 0 ? "Recall" : "")
             .Append(player.DeepDescentTimer > 0 ? "Descent" : "")

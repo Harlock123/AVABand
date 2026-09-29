@@ -909,6 +909,81 @@ def sync_curses(gd, data):
     print(f"curses: {len(out)} written ({len([c for c in out if c['id'] not in ours])} new)")
 
 
+TIMED_EXTRA = {"INVULN": "invuln", "SHIELD": "shield", "TRAPSAFE": "trapsafe", "POWERSHOT": "powershot",
+               "BOLD": "bold", "FREE_ACT": "free_act"}
+TIMED_PROTECTIONS = {"FREE_ACT": "free_act", "PROT_BLIND": "blind", "PROT_CONF": "conf", "PROT_FEAR": "fear",
+                     "PROT_STUN": "stun"}
+TIMED_FAIL_KINDS = {"1": "protection", "2": "resist", "3": "vulnerable", "4": "player", "5": "timed"}
+
+
+def timed_id(name):
+    return oi.TIMED.get(name) or TIMED_EXTRA.get(name) or name.lower()
+
+
+def sync_timed(gd, data):
+    """player_timed.txt, whole (but FOOD: AVABand keeps hunger apart); AVABand's own `harmful` is kept."""
+    path = os.path.join(data, "timed_effects.json")
+    ours = {t["id"]: t for t in json.load(open(path, encoding="utf-8"))}
+    out = []
+    for e in cw.parse_records(os.path.join(gd, "player_timed.txt")):
+        if e["name"] == "FOOD":
+            continue
+        tid = timed_id(e["name"])
+        grades = []
+        for g in cw.get(e, "grade"):
+            parts = g.split(":")
+            grade = {"max": int(parts[1]), "color": mi.COLORS[parts[0]], "label": parts[2], "message": parts[3]}
+            if len(parts) > 4 and parts[4]:
+                grade["downMessage"] = parts[4]
+            grades.append(grade)
+        t = {"id": tid, "name": grades[0]["label"], "description": cw.one(e, "desc") or ""}
+        t["onBegin"] = grades[0]["message"]
+        for key, field in (("on-end", "onEnd"), ("on-increase", "onIncrease"), ("on-decrease", "onDecrease")):
+            if cw.one(e, key):
+                t[field] = cw.one(e, key)
+        t["color"] = grades[0]["color"]
+        if cw.one(e, "msgt"):
+            t["sound"] = cw.one(e, "msgt")
+        if grades[-1]["max"] != 10000:
+            t["max"] = grades[-1]["max"]
+        if len(grades) > 1:
+            t["grades"] = grades
+        if cw.one(e, "lower-bound"):
+            t["lowerBound"] = int(cw.one(e, "lower-bound"))
+        fails = []
+        for f in cw.get(e, "fail"):
+            code, _, what = f.partition(":")
+            kind = TIMED_FAIL_KINDS[code]
+            fid = {"protection": lambda w: TIMED_PROTECTIONS[w], "timed": timed_id,
+                   "player": lambda w: w}.get(kind, lambda w: w.lower())(what)
+            fails.append({"kind": kind, "id": fid})
+        if fails:
+            t["fail"] = fails
+        if "NONSTACKING" in cw.flag_list(e, "flags"):
+            t["stacking"] = "no_stack"
+        if cw.one(e, "resist"):
+            t["resist"] = cw.one(e, "resist").lower()
+        if cw.one(e, "flag-synonym"):
+            flag, _, only = cw.one(e, "flag-synonym").partition(":")
+            t["flagSynonym"] = flag
+            if only == "1":
+                t["flagOnly"] = True
+        if cw.one(e, "brand"):
+            code, _, mult = cw.one(e, "brand").partition("_")
+            t["brand"] = brand_def(f"{ea.BRANDS[code][0]}x{mult}")
+        if cw.one(e, "slay"):
+            flag, _, mult = cw.one(e, "slay").partition("_")
+            t["slay"] = slay_def(f"{flag}x{mult}")
+        # AVABand's own: harmful unless marked otherwise (effects new from 4.2.5 are all boons).
+        if not (ours[tid].get("harmful", True) if tid in ours else False):
+            t["harmful"] = False
+        out.append(t)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(x, ensure_ascii=False) for x in out) + "\n]\n")
+    print(f"timed effects: {len(out)} written ({[t['id'] for t in out if t['id'] not in ours]} new; "
+          f"{[k for k in ours if k not in {t['id'] for t in out}]} dropped)")
+
+
 def sync_summons(gd, data):
     """summon.txt, whole: the kinds of summons (which monsters answer, and what to fall back on)."""
     path = os.path.join(data, "summons.json")
@@ -955,7 +1030,8 @@ def sync_constants(gd, data):
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
-            "curses": sync_curses, "constants": sync_constants, "summons": sync_summons}
+            "curses": sync_curses, "constants": sync_constants, "summons": sync_summons,
+            "timed": sync_timed}
 
 
 def main():

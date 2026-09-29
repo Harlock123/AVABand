@@ -85,13 +85,14 @@ public sealed partial class GameSession
         }
 
         var (multiplier, verb, rune, oMultiplier) = weapon is null ? (1, "hit", null, 10) : BestMultiplier(weapon, monster);
-        if (Player.Timed.Has("att_pois") && PoisonCoating(monster.Race) is { } venom && venom > multiplier)
-            (multiplier, verb, rune, oMultiplier) = (venom, "poison", null, OBrandMultiplier(3, venom > 3));
-        // Smite Evil and Demon Bane (Angband ATT_EVIL: EVIL_2, ATT_DEMON: DEMON_5).
-        if (Player.Timed.Has("att_evil") && monster.Race.Has(MonsterFlags.Evil) && multiplier < 2)
-            (multiplier, verb, rune, oMultiplier) = (2, "smite", null, OSlayMultiplier(MonsterFlags.Evil, 2));
-        if (Player.Timed.Has("att_demon") && monster.Race.Has("DEMON") && multiplier < 5)
-            (multiplier, verb, rune, oMultiplier) = (5, "smite", null, OSlayMultiplier("DEMON", 5));
+        // Temporary brands and slays (Angband player_timed.txt brand/slay: the poison coating,
+        // Smite Evil, Demon Bane...) better the blow, weapon or not.
+        var temporary = Player.Timed.Active.Select(kv => Data.Timed(kv.Key)).OfType<TimedEffectDef>().ToList();
+        if (temporary.Any(t => t.Brand is not null || t.Slay is not null)
+            && BestMultiplier([.. temporary.Select(t => t.Slay).OfType<SlayDef>()], [.. temporary.Select(t => t.Brand).OfType<BrandDef>()],
+                monster, learn: false) is var temp
+            && (PercentDamage ? temp.OMultiplier > oMultiplier : temp.Multiplier > multiplier))
+            (multiplier, verb, rune, oMultiplier) = (temp.Multiplier, temp.Verb, null, temp.OMultiplier);
         int damage;
         CriticalGrade grade;
         if (PercentDamage)
@@ -132,14 +133,6 @@ public sealed partial class GameSession
         if (!killed && Player.Timed.Has("att_vamp") && living && drained > 0)
             Player.Hp = Math.Min(Player.MaxHp, Player.Hp + drained);
         return damage;
-    }
-
-    /// <summary>A poison-coated weapon (the Venom ritual) is a x3 poison brand, x6 against the vulnerable.</summary>
-    private int? PoisonCoating(MonsterRaceDef race)
-    {
-        var element = Data.Element("pois");
-        if (element?.ImmunityFlag is { } immune && race.Has(immune)) return null;
-        return element?.VulnerabilityFlag is { } vuln && race.Has(vuln) ? 6 : 3;
     }
 
     /// <summary>
@@ -238,14 +231,22 @@ public sealed partial class GameSession
     /// The best slay or brand of an object that applies to a race, with its attack verb and the rune
     /// it reveals (Angband improve_attack_modifier).
     /// </summary>
-    private (int Multiplier, string Verb, string? Rune, int OMultiplier) BestMultiplier(Item item, Monster monster)
+    private (int Multiplier, string Verb, string? Rune, int OMultiplier) BestMultiplier(Item item, Monster monster) =>
+        BestMultiplier(item.Slays, item.Brands, monster, learn: true);
+
+    /// <summary>
+    /// The best of these slays and brands against the monster (Angband improve_attack_modifier);
+    /// <paramref name="learn"/>: an item's, whose runes it teaches.
+    /// </summary>
+    private (int Multiplier, string Verb, string? Rune, int OMultiplier) BestMultiplier(IEnumerable<SlayDef> slays,
+        IEnumerable<BrandDef> brands, Monster monster, bool learn)
     {
         var race = monster.Race;
         (int Multiplier, string Verb, string? Rune, int OMultiplier) best = (1, "hit", null, 10);
         // Percentage damage ranks slays and brands by their O-multipliers, as 4.2 does.
         bool Better(int multiplier, int oMultiplier) =>
             PercentDamage ? oMultiplier > best.OMultiplier : multiplier > best.Multiplier;
-        foreach (var slay in item.Slays)
+        foreach (var slay in slays)
         {
             // A slay that bites tells you what the creature is (Angband learns the race flag).
             if (race.Has(slay.MonsterFlag)) Lore.For(race.Id).FlagsKnown.Add(slay.MonsterFlag);
@@ -253,11 +254,11 @@ public sealed partial class GameSession
                 && Better(slay.Multiplier, oSlay))
                 best = (slay.Multiplier, slay.Verb, RuneIds.Slay(slay.MonsterFlag), oSlay);
         }
-        foreach (var brand in item.Brands)
+        foreach (var brand in brands)
         {
             var element = Data.Element(brand.Element);
             // A known brand shows whether the monster resists it, or is hurt by it (Angband learns either way).
-            if (Knowledge.KnowsRune(RuneIds.Brand(brand.Element)))
+            if (!learn || Knowledge.KnowsRune(RuneIds.Brand(brand.Element)))
             {
                 if (element?.ImmunityFlag is { } resist) LearnMonsterResponse(monster, resist);
                 if (element?.VulnerabilityFlag is { } hurt) LearnMonsterResponse(monster, hurt);

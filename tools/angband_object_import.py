@@ -201,8 +201,10 @@ def effects(e, level_exprs=False):
             t = f"cure:{TIMED[arg]}"
         elif name == "TIMED_DEC" and arg in TIMED:
             t = f"reduce:{TIMED[arg]}"
-        elif name in ("TIMED_INC", "TIMED_SET", "TIMED_INC_NO_RES") and arg in TIMED:
+        elif name in ("TIMED_INC", "TIMED_SET") and arg in TIMED:
             t = f"timed:{TIMED[arg]}:{d}"
+        elif name == "TIMED_INC_NO_RES" and arg in TIMED:
+            t = f"timed_nores:{TIMED[arg]}:{d}"
         elif name == "TIMED_INC" and arg == "BOLD":
             t = "cure:afraid"
         elif name == "NOURISH":

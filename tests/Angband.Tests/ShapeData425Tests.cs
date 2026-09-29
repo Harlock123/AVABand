@@ -26,15 +26,17 @@ public class ShapeData425Tests
     public void The_Pukel_man_is_stone()
     {
         var game = Arena.Create(4);
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        game.IncreaseTimed(TimedIds.Cut, 50); // cut before the change
         game.Shapechange("pukel_man");
         Assert.Equal(3, game.Player.Resists["pois"]);
         Assert.Equal(10, game.DamageReduction);
 
-        game.Player.Hp = game.Player.MaxHp = 1000;
-        game.IncreaseTimed(TimedIds.Cut, 50);
         for (var i = 0; i < 30; i++) game.Execute(new HoldCommand());
         Assert.Equal(50, game.Player.Timed[TimedIds.Cut]); // neither bleeding nor healing
         Assert.Equal(1000, game.Player.Hp);
+        Assert.False(game.IncreaseTimed(TimedIds.Cut, 50)); // and stone can't be cut (player_timed.txt fail:4:ROCK)
+        Assert.Equal(50, game.Player.Timed[TimedIds.Cut]);
     }
 
     [Fact]

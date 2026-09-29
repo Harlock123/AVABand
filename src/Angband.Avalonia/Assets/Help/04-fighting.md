@@ -30,7 +30,9 @@ have.
   keeps you afraid while you wear it.
 - **Confused**: you stumble about, and can't cast spells or read scrolls.
 - **Blind**: you can't see, read or cast.
-- **Poisoned** or **cut**: you lose hit points over time; potions cure them.
+- **Poisoned** or **cut**: you lose hit points over time; potions cure them. A good Constitution
+  heals them (and stunning) faster, but a **Mortal Wound** never closes by itself.
+- **Stunned**: to-hit and to-dam suffer (badly when heavily stunned); past that you are knocked out.
 - **Paralysed**: very dangerous — Free Action protects you.
 
 ## The health bar

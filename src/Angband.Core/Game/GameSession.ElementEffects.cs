@@ -237,20 +237,11 @@ public sealed partial class GameSession
 
     private bool HoldsLife => Player.HasGearFlag(Definitions.ItemFlags.HoldLife) || Player.Resists.GetValueOrDefault("hold_life") > 0;
 
-    /// <summary>What protects against each status (Angband player_timed.txt fail lines).</summary>
-    private bool Protected(string timed) => timed switch
-    {
-        TimedIds.Slow or TimedIds.Paralyzed => Player.Resists.GetValueOrDefault("free_act") > 0,
-        TimedIds.Blind => Player.Resists.GetValueOrDefault("blind") > 0,
-        TimedIds.Confused => Player.Resists.GetValueOrDefault("conf") > 0,
-        TimedIds.Afraid => Player.Resists.GetValueOrDefault("fear") > 0,
-        TimedIds.Stun => Player.Resists.GetValueOrDefault("stun") > 0,
-        TimedIds.Poisoned => Player.Resists.GetValueOrDefault("pois") > 0 || Player.Timed.Has("oppose_pois"),
-        _ => false,
-    };
+    /// <summary>Whether something keeps a status off (Angband player_inc_check, from player_timed.txt's fail lines).</summary>
+    private bool Protected(string timed) => Data.Timed(timed) is { } def && !IncreaseCheck(def);
 
     /// <summary>Angband player_inc_timed with its check: adds a status unless the player is protected from it.</summary>
-    private bool Afflict(string timed, int amount) => amount > 0 && !Protected(timed) && IncreaseTimed(timed, amount);
+    private bool Afflict(string timed, int amount) => amount > 0 && IncreaseTimed(timed, amount);
 
     private void Stun(int amount) => Afflict(TimedIds.Stun, amount);
 

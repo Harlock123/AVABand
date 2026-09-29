@@ -1,11 +1,16 @@
 using Angband.Core.Geometry;
 using Angband.Core.Effects;
+using Angband.Core.Magic;
 using Angband.Core.Time;
 
 namespace Angband.Core.Game;
 
 public sealed partial class GameSession
 {
+    /// <summary>Angband adj_con_fix: how much faster Constitution heals cuts, poison and stunning.</summary>
+    private static readonly int[] ConFix =
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 5, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9];
+
     /// <summary>Angband PY_REGEN_NORMAL and PY_REGEN_HPBASE (regeneration in 1/65536 hit points).</summary>
     private const int RegenNormal = 197;
     private const int RegenBase = 1442;
@@ -13,7 +18,9 @@ public sealed partial class GameSession
     /// <summary>Hurts the player (Angband take_hit). Death happens below zero hit points.</summary>
     public void TakeHit(int damage, string killer)
     {
-        // Angband take_hit: damage reduction (DAM_RED gear or shape) comes off every hurt.
+        // Angband take_hit: invulnerability shrugs off all but the mightiest blows; damage
+        // reduction (DAM_RED gear or shape) comes off every other hurt.
+        if (Player.Timed.Has("invuln") && damage < 9000) return;
         damage -= DamageReduction;
         if (Player.IsDead || damage <= 0) return;
         Player.Hp -= damage;
@@ -39,35 +46,84 @@ public sealed partial class GameSession
         }
     }
 
-    /// <summary>Adds to a timed effect, printing its message. Returns false for unknown effects.</summary>
-    public bool IncreaseTimed(string id, int amount)
+    /// <summary>
+    /// Adds to a timed effect, printing its message (Angband player_inc_timed). With
+    /// <paramref name="check"/> (Angband's TIMED_INC, as against TIMED_INC_NO_RES) the effect's
+    /// <c>fail</c> lines can stop it: a protection, a resistance, a vulnerability, being stone, or
+    /// another effect. Returns false for unknown or prevented effects.
+    /// </summary>
+    public bool IncreaseTimed(string id, int amount, bool check = true)
     {
         if (Data.Timed(id) is not { } def) return false;
-        // Angband player_timed.txt fail:2:CHAOS — resisting chaos keeps the mind clear.
-        if (id == TimedIds.Image && Player.Resists.GetValueOrDefault("chaos") > 0)
-        {
-            if (Player.Inventory.Equipped.Any(i => i.Resists.Contains("chaos"))) LearnRune(Definitions.RuneIds.Resist("chaos"));
-            return false;
-        }
         if (id == TimedIds.Afraid && (Player.Timed.Has(TimedIds.Hero) || Player.Timed.Has("berserk") || Player.Timed.Has("bold")))
         {
             Publish(new MessageEvent("You feel bold."));
             return true;
         }
+        if (check && !IncreaseCheck(def)) return false;
         var wasActive = Player.Timed.Has(id);
         var message = Player.Timed.Increase(def, amount);
         if (!wasActive && Player.Timed.Has(id)) OnTimedStarted(id);
         if (message is not null)
         {
-            Publish(new MessageEvent(message));
+            SayTimed(message);
             Publish(new StatusChangedEvent(id, Player.Timed[id]));
         }
         if (id is TimedIds.Hero or "berserk" or "bold" && Player.Timed.Has(TimedIds.Afraid) && Data.Timed(TimedIds.Afraid) is { } fear
             && Player.Timed.Set(fear, 0) is { } bold)
-            Publish(new MessageEvent(bold));
+            SayTimed(bold);
         RecalculateBonuses();
         return true;
     }
+
+    /// <summary>
+    /// Whether nothing keeps the effect from taking hold (Angband player_inc_check): each of its
+    /// <c>fail</c> lines — worn protections and resistances show themselves as they do.
+    /// </summary>
+    private bool IncreaseCheck(Definitions.TimedEffectDef def)
+    {
+        foreach (var f in def.Fail)
+        {
+            switch (f.Kind)
+            {
+                case "protection" or "resist":
+                    if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(f.Id))) LearnRune(Definitions.RuneIds.Resist(f.Id));
+                    if (Player.Resists.GetValueOrDefault(f.Id) > 0) return false;
+                    break;
+                case "vulnerable":
+                    if (Player.Resists.GetValueOrDefault(f.Id) < 0) return false;
+                    break;
+                case "player":
+                    if (f.Id == "ROCK" && IsRock) return false;
+                    break;
+                case "timed":
+                    if (Player.Timed.Has(f.Id)) return false;
+                    break;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// A timed effect's message, with Angband's tags for the wielded weapon filled in (Angband
+    /// print_custom_message): <c>{kind}</c> its kind ("hands" bare-handed), <c>{s}</c> a verb's
+    /// "s" for one weapon, <c>{is}</c> "is" or "are".
+    /// </summary>
+    private void SayTimed(string message)
+    {
+        if (message.Contains('{'))
+        {
+            var weapon = Player.Inventory.Weapon;
+            message = message.Replace("{kind}", weapon?.Kind.Name ?? "hands")
+                .Replace("{s}", weapon is { Number: 1 } ? "s" : "")
+                .Replace("{is}", weapon is { Number: 1 } ? "is" : "are");
+        }
+        Publish(new MessageEvent(message));
+    }
+
+    /// <summary>Whether a timed effect is at the grade with this label (Angband player_timed_grade_eq).</summary>
+    public bool TimedGradeIs(string id, string label) =>
+        Player.Timed.Has(id) && Data.Timed(id)?.GradeAt(Player.Timed[id]) is { } g && g.Label == label;
 
     /// <summary>
     /// Angband process_world: the Black Breath (a Ringwraith's touch) may each turn sicken you (CON),
@@ -224,14 +280,24 @@ public sealed partial class GameSession
         RegenerateMana();
         ItemUpkeep();
 
+        // Angband decrease_timeouts: most effects wear off a turn at a time; cuts, poison and
+        // stunning as fast as Constitution heals them (a mortal wound, or a stone body, not at all).
         var ended = false;
+        var adjust = ConFix[StatTables.Index(Player.Stats.GetValueOrDefault("con", 15))] + 1;
         foreach (var (id, _) in timed.Active.ToList())
         {
             if (Data.Timed(id) is not { } def) continue;
-            if (id == TimedIds.Cut && IsRock) continue;
-            if (timed.Decrease(def, 1) is { } message)
+            var decrease = id switch
             {
-                Publish(new MessageEvent(message));
+                TimedIds.Cut => IsRock || TimedGradeIs(id, "Mortal Wound") ? 0 : adjust,
+                TimedIds.Poisoned or TimedIds.Stun => adjust,
+                _ => 1,
+            };
+            if (decrease == 0) continue;
+            if (id == TimedIds.Stun) ended = true; // its grade sets the penalties
+            if (timed.Decrease(def, decrease) is { } message)
+            {
+                SayTimed(message);
                 Publish(new StatusChangedEvent(id, 0));
                 if (!timed.Has(id)) OnTimedEnded(id);
                 ended = true;
@@ -253,7 +319,6 @@ public sealed partial class GameSession
 
         var percent = Hunger.RegenPercent(HungerLevel, RegenNormal);
         if (Player.IsResting) percent *= 2;
-        if (Player.Timed.Has(TimedIds.Regen)) percent *= 2;
         if (Player.Regenerates || Player.HasGearFlag(Definitions.ItemFlags.Regen)) percent *= 2;
         // Blackguards heal slowly, as does anyone wearing the Ring of Open Wounds (Angband IMPAIR_HP).
         if (ClassHas(Definitions.ClassFlags.ImpairHp) || Player.HasGearFlag(Definitions.ItemFlags.ImpairHp)) percent /= 2;

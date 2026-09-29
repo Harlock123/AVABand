@@ -57,7 +57,7 @@ public sealed partial class GameSession
                     else IncreaseTimed(e.Arg(0), Amount(e.Arg(1)));
                     break;
                 case "timed_nores":
-                    IncreaseTimed(e.Arg(0), Amount(e.Arg(1)));
+                    IncreaseTimed(e.Arg(0), Amount(e.Arg(1)), check: false);
                     break;
                 case "drain":
                     DrainStat(e.Arg(0));
@@ -195,8 +195,8 @@ public sealed partial class GameSession
     /// <summary>Angband pick_trap: no trap doors on a quest level or the bottom one.</summary>
     private bool TrapDoorsAllowedHere => Level.Depth < Data.Constants.MaxDepth && QuestAt(Level.Depth) is null;
 
-    /// <summary>Immune to traps (Angband player_is_trapsafe): trap-immune gear, or the eagle's shape.</summary>
-    private bool TrapSafe => Player.HasGearFlag(ItemFlags.TrapImmune);
+    /// <summary>Immune to traps (Angband player_is_trapsafe): safety from traps (TRAPSAFE), trap-immune gear, or the eagle's shape.</summary>
+    private bool TrapSafe => Player.Timed.Has("trapsafe") || Player.HasGearFlag(ItemFlags.TrapImmune);
 
     /// <summary>
     /// Angband hit_trap: a trap goes off — unless you are safe from traps, or saved by your gear
@@ -212,7 +212,7 @@ public sealed partial class GameSession
         if (delayed is { } d && d != trap.Has("DELAY")) return;
         if (TrapSafe)
         {
-            LearnRune(RuneIds.Flag(ItemFlags.TrapImmune));
+            if (Player.HasGearFlag(ItemFlags.TrapImmune)) LearnRune(RuneIds.Flag(ItemFlags.TrapImmune));
             Level[p].Flags |= SquareFlags.TrapVisible;
             return;
         }

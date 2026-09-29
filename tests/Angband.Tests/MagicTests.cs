@@ -314,7 +314,7 @@ public class MagicTests
             var game = Arena.Create();
             game.Player.MaxHp = 500;
             game.Player.Hp = 1;
-            if (regen) game.IncreaseTimed(TimedIds.Regen, 1000);
+            game.Player.Regenerates = regen;
             TestGames.HoldUntil(game, game.GameTurn + 10 * 50);
             return game.Player.Hp;
         }

@@ -26,22 +26,100 @@ public enum TimedStacking
     Increase,
     /// <summary>Ignore new doses while active (e.g. paralysis, to prevent perma-lock).</summary>
     NoStack,
-    /// <summary>Keep the larger of the two.</summary>
+    /// <summary>Keep the larger of the two (AVABand's own; no 4.2.5 effect does this).</summary>
     Max,
 }
 
-/// <summary>A status effect with a duration (Angband player_timed.txt).</summary>
+/// <summary>
+/// A status effect with a duration (Angband player_timed.txt). Its grades (Angband <c>grade</c>
+/// lines) name the stages it goes through — a graze, a deep gash, a mortal wound — each with the
+/// status-bar label, colour and message on reaching it; one with a single stage keeps it in
+/// <see cref="Name"/>, <see cref="Color"/>, <see cref="OnBegin"/> and <see cref="Max"/>.
+/// </summary>
 public sealed class TimedEffectDef
 {
     public required string Id { get; init; }
+    /// <summary>The status-bar label (the grade's label, Angband <c>grade</c>).</summary>
     public required string Name { get; init; }
+    /// <summary>What it is, in words (Angband <c>desc</c>: "haste", "wounds").</summary>
+    public string Description { get; init; } = "";
     public string OnBegin { get; init; } = "";
     public string OnEnd { get; init; } = "";
     public string OnIncrease { get; init; } = "";
+    public string OnDecrease { get; init; } = "";
+    /// <summary>The status-bar colour (the grade's colour).</summary>
+    public string Color { get; init; } = "White";
+    /// <summary>The sound it makes (Angband <c>msgt</c>).</summary>
+    public string? Sound { get; init; }
+    /// <summary>The most it can reach (the top grade's).</summary>
     public int Max { get; init; } = 10_000;
+    /// <summary>The least it can be (Angband <c>lower-bound</c>).</summary>
+    public int LowerBound { get; init; }
+    /// <summary>The stages, lowest first, when there is more than one (Angband <c>grade</c> lines).</summary>
+    public IReadOnlyList<TimedGradeDef> Grades { get; init; } = [];
+    /// <summary>What keeps it from taking hold (Angband <c>fail</c> lines).</summary>
+    public IReadOnlyList<TimedFailDef> Fail { get; init; } = [];
+    /// <summary>
+    /// <see cref="TimedStacking.NoStack"/>: a new dose does nothing while it lasts (Angband
+    /// <c>flags:NONSTACKING</c>); otherwise doses add up.
+    /// </summary>
     public TimedStacking Stacking { get; init; } = TimedStacking.Increase;
+    /// <summary>The element it resists while it lasts (Angband <c>resist</c>).</summary>
+    public string? Resist { get; init; }
+    /// <summary>The object flag it stands for while it lasts (Angband <c>flag-synonym</c>).</summary>
+    public string? FlagSynonym { get; init; }
+    /// <summary>
+    /// Whether it is nothing more than that flag (Angband <c>flag-synonym</c>'s second part: Free
+    /// Action is, heroism isn't).
+    /// </summary>
+    public bool FlagOnly { get; init; }
+    /// <summary>A brand on your blows while it lasts (Angband <c>brand</c>).</summary>
+    public BrandDef? Brand { get; init; }
+    /// <summary>A slay on your blows while it lasts (Angband <c>slay</c>).</summary>
+    public SlayDef? Slay { get; init; }
     /// <summary>Whether it counts as harmful (cleared by curing, blocks regeneration, etc.).</summary>
     public bool Harmful { get; init; } = true;
+
+    /// <summary>Every stage, lowest first: <see cref="Grades"/>, or the one this effect has.</summary>
+    public IReadOnlyList<TimedGradeDef> AllGrades => _all ??= Grades.Count > 0 ? Grades
+        : [new TimedGradeDef { Max = Max, Color = Color, Label = Name, Message = OnBegin }];
+    private IReadOnlyList<TimedGradeDef>? _all;
+
+    /// <summary>The stage a value is at (Angband's walk up the grades); null at 0.</summary>
+    public TimedGradeDef? GradeAt(int value)
+    {
+        if (value <= 0) return null;
+        var grades = AllGrades;
+        foreach (var g in grades)
+            if (value <= g.Max) return g;
+        return grades[^1];
+    }
+}
+
+/// <summary>A stage of a timed effect (Angband player_timed.txt <c>grade</c>).</summary>
+public sealed class TimedGradeDef
+{
+    /// <summary>The most it can be at this stage.</summary>
+    public int Max { get; init; }
+    public string Color { get; init; } = "White";
+    /// <summary>The status-bar label.</summary>
+    public string Label { get; init; } = "";
+    /// <summary>Said on reaching this stage from below.</summary>
+    public string Message { get; init; } = "";
+    /// <summary>Said on falling back to this stage (hunger only, in 4.2.5).</summary>
+    public string? DownMessage { get; init; }
+}
+
+/// <summary>
+/// What keeps a timed effect from taking hold (Angband player_timed.txt <c>fail</c>): a protection
+/// (<c>protection</c>: free_act, blind, conf, fear, stun), a resistance (<c>resist</c>), being
+/// vulnerable to an element (<c>vulnerable</c>), a player flag (<c>player</c>: ROCK) or another
+/// timed effect (<c>timed</c>).
+/// </summary>
+public sealed class TimedFailDef
+{
+    public required string Kind { get; init; }
+    public required string Id { get; init; }
 }
 
 /// <summary>How a monster attacks (bite, claw, touch...).</summary>

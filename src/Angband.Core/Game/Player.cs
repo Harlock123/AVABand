@@ -112,7 +112,8 @@ public sealed class Player : IActor
     public TimedEffects Timed { get; } = new();
     public bool IsBlind => Timed.Has(TimedIds.Blind);
     /// <summary>Paralysed, or stunned to the point of being knocked out.</summary>
-    public bool IsIncapacitated => Timed.Has(TimedIds.Paralyzed) || Timed[TimedIds.Stun] >= 100;
+    /// <summary>Paralysed, or knocked out (Angband: stunned past "Heavy Stun", over 150).</summary>
+    public bool IsIncapacitated => Timed.Has(TimedIds.Paralyzed) || Timed[TimedIds.Stun] > 150;
 
     // --- The character's own values -------------------------------------------------------
     public int BaseSpeed { get; set; }
