@@ -857,13 +857,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     under the music for where you are — the town by day or by night, the dungeon by depth (shallow to
     1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and hard centres (the
     fortress loop) their own, as moria levels, lairs and gauntlets may (`ambient-moria`,
-    `ambient-lair`, `ambient-gauntlet`: else the cavern's, the cavern's and the labyrinth's; none
-    of these come with the game — no CC0 loop whose origin could be checked was found — so yours
-    play if you add them),
+    `ambient-lair`, `ambient-gauntlet`: else the cavern's, the cavern's and the labyrinth's). The
+    cavern, fortress, moria, lair and gauntlet loops were made for AVABand by `tools/ambience_loops.py`
+    (synthesised, seamless 60 s loops, CC0: drips echoing in stone; wind in halls and a far forge-hammer;
+    deep halls and, now and then, drums in the deep; slow breathing and a heartbeat; gusting wind with
+    a thin whine) — no downloadable CC0 loop whose origin could be checked was found,
     each falling back to the one before (the abyss to the deep, a cavern to its depth's). It crossfades
     on each change of place. Loops named `ambient-town-day`, `ambient-town-night`,
-    `ambient-dungeon-shallow`, `-deep`, `-abyss`, `ambient-cavern`, `ambient-labyrinth` and
-    `ambient-fortress` (`.ogg`, `.wav` or `.mp3`) are looked for in your `<AppData>/AVABand/ambience/`
+    `ambient-dungeon-shallow`, `-deep`, `-abyss`, `ambient-cavern`, `ambient-labyrinth`,
+    `ambient-fortress`, `ambient-moria`, `ambient-lair` and `ambient-gauntlet` (`.ogg`, `.wav` or `.mp3`) are looked for in your `<AppData>/AVABand/ambience/`
     folder, then in the game's own `ambience/` folder. (Angband's occasional ambient sound effects,
     AMBIENT_DAY and AMBIENT_DNG1..5, still play on top.) The audio engine now streams two channels,
     music and ambience, each with its own fades.

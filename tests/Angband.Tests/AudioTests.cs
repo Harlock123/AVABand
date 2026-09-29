@@ -477,4 +477,14 @@ public class AmbienceTests
             Directory.Delete(game, true);
         }
     }
+
+    [Theory]
+    [InlineData("cavern"), InlineData("hard_centre"), InlineData("moria"), InlineData("lair"), InlineData("gauntlet"), InlineData("labyrinth")]
+    public void Every_special_level_has_a_bundled_loop_of_its_own(string profile)
+    {
+        // (The game's own ambience folder, as the sources hold it.)
+        var folder = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "src", "Angband.Avalonia", "ambience");
+        var own = SoundDirector.AmbienceNames(30, day: true, profile)[0];
+        Assert.True(File.Exists(Path.Combine(folder, own + ".ogg")), $"{own}.ogg is missing");
+    }
 }

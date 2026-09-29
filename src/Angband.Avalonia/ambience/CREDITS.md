@@ -1,6 +1,6 @@
 # Credits: ambience
 
-The ambience loops AVABand plays under the music. All were released under CC0 (public domain dedication) on OpenGameArt.org; the licence field on each asset's page is given below. There is no bundled cavern, fortress, moria, lair or gauntlet loop (the candidates' origins couldn't be confirmed, or they weren't loops), so those fall back to the dungeon's by depth. Your own loops of the same names, in `<AppData>/AVABand/ambience/`, are played instead.
+The ambience loops AVABand plays under the music. All were released under CC0 (public domain dedication) on OpenGameArt.org; the licence field on each asset's page is given below. The cavern, fortress, moria, lair and gauntlet loops were made for AVABand instead (below): the downloadable candidates' origins couldn't be confirmed, or they weren't loops. Your own loops of the same names, in `<AppData>/AVABand/ambience/`, are played instead.
 
 ## ambient-dungeon-abyss.ogg
 
@@ -43,3 +43,10 @@ The ambience loops AVABand plays under the music. All were released under CC0 (p
 - Source: https://opengameart.org/content/crickets-ambient-noise-loopable
 - Licence: CC0 (OpenGameArt 'License(s): CC0' field on the asset page)
 - Notes: Original is 11.45 s loopable; I concatenated it 3x (34.4 s) and encoded Vorbis q4 to meet the 20 s minimum.
+
+## ambient-cavern.ogg, ambient-fortress.ogg, ambient-moria.ogg, ambient-lair.ogg, ambient-gauntlet.ogg
+
+- **Made for AVABand** by `tools/ambience_loops.py`: synthesised from noise and oscillators (no samples), each 60 s and seamless (its tail cross-faded into its head), at about -28 dB mean.
+- Licence: CC0 (public domain).
+- Notes: cavern — water dripping into pools, echoing in stone, over a low draught; fortress (a hard centre) — wind in great halls, a far forge-hammer, now and then a chain; moria — deep halls, slow drips, and far off, now and then, drums in the deep; lair — slow heavy breathing in the dark and a low heartbeat; gauntlet — rushing, gusting wind with a thin metallic whine. Not auditioned by ear: checked by loudness, seam and spectrum only.
+
