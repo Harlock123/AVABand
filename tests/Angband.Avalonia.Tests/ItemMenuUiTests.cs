@@ -1,0 +1,185 @@
+using Angband.Avalonia.ViewModels;
+using Angband.Core.Definitions;
+using Angband.Core.Game;
+using Angband.Core.Items;
+using Angband.Data;
+using Angband.Input;
+using Angband.Avalonia.Views;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Headless;
+using Avalonia.Headless.XUnit;
+using Avalonia.Input;
+using Avalonia.VisualTree;
+
+namespace Angband.Avalonia.Tests;
+
+/// <summary>
+/// The item menu (Angband 4.2.5 ui-context.c context_menu_object) — right-click in the sidebar, or
+/// 'i' / 'e' — and AVABand's "Clear out junk" checklist.
+/// </summary>
+public class ItemMenuUiTests
+{
+    private static MainWindowViewModel Start()
+    {
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
+        vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.StartGame(42, "warrior");
+        TestKit.Give(vm);
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        return vm;
+    }
+
+    private static Item Carry(MainWindowViewModel vm, string kind, int count = 1)
+    {
+        var item = vm.Game.Objects.Create(kind, count);
+        vm.Game.Knowledge.LearnKind(item.Kind);
+        var carried = vm.Game.Player.Inventory.Add(item)!;
+        vm.Refresh();
+        return carried;
+    }
+
+    private static void Choose(MainWindowViewModel vm, string label) =>
+        vm.PromptKey((char)('a' + vm.MenuLabels.ToList().FindIndex(l => l == label || l.StartsWith(label))));
+
+    [AvaloniaFact]
+    public void A_potion_offers_what_4_2_5_offers_and_quaffing_from_the_menu_drinks_it()
+    {
+        var vm = Start();
+        var potion = Carry(vm, "cure_serious_wounds");
+        vm.OpenItemMenu(potion);
+        Assert.StartsWith("A Potion of Cure Serious Wounds", vm.PromptTitle);
+        Assert.Equal(["Inspect", "Quaff", "Drop", "Throw", "Inscribe", "Ignore"], vm.MenuLabels);
+        Choose(vm, "Quaff");
+        Assert.False(vm.Game.Player.Inventory.Contains(potion));
+    }
+
+    [AvaloniaFact]
+    public void A_stack_can_be_dropped_one_at_a_time_or_all_at_once()
+    {
+        var vm = Start();
+        var flasks = vm.Game.Player.Inventory.Pack.Single(i => i.Kind.Id == "flask_of_oil");
+        vm.OpenItemMenu(flasks);
+        Assert.Contains("Drop all", vm.MenuLabels);
+        Choose(vm, "Drop");
+        Assert.Equal(1, flasks.Number);
+    }
+
+    [AvaloniaFact]
+    public void Sticky_gear_offers_no_way_off()
+    {
+        var vm = Start();
+        var game = vm.Game;
+        var ring = game.Objects.Create("ring_of_protection");
+        ring.Flags.Add("STICKY"); // as a sticky curse makes it
+        game.Player.Inventory.Wield(ring, () => game.Objects.NextSerial++);
+        vm.Refresh();
+        vm.OpenItemMenu(ring);
+        Assert.DoesNotContain("Take off", vm.MenuLabels);
+        Assert.DoesNotContain("Throw", vm.MenuLabels);
+
+        vm.CancelPrompt();
+        var weapon = game.Player.Inventory.Weapon!;
+        vm.OpenItemMenu(weapon);
+        Assert.Contains("Take off", vm.MenuLabels);
+        Assert.Contains("Throw", vm.MenuLabels); // a wielded weapon can be thrown (4.2.5 obj_can_throw)
+    }
+
+    [AvaloniaFact]
+    public void I_and_e_pick_an_item_for_its_menu()
+    {
+        var vm = Start();
+        vm.HandleAction(InputAction.Inventory);
+        Assert.Equal("Inventory — which item?", vm.PromptTitle);
+        var potion = vm.PromptRows.First(r => r.Item.Kind.Id == "cure_light_wounds");
+        vm.PromptKey(potion.Letter[0]);
+        Assert.StartsWith("2 Potions of Cure Light Wounds", vm.PromptTitle);
+
+        vm.CancelPrompt();
+        vm.HandleAction(InputAction.Equipment);
+        Assert.Equal("Equipment — which item?", vm.PromptTitle);
+        Assert.All(vm.PromptRows, r => Assert.Contains(r.Item, vm.Game.Player.Inventory.Equipped));
+    }
+
+    [AvaloniaFact]
+    public void Ignore_from_the_menu_opens_the_ignore_choices()
+    {
+        var vm = Start();
+        var potion = Carry(vm, "cure_serious_wounds");
+        vm.OpenItemMenu(potion);
+        Choose(vm, "Ignore");
+        Assert.StartsWith("Ignore a Potion of Cure Serious Wounds", vm.PromptTitle);
+        Assert.Contains(vm.ChoiceRows, r => r.Text == "This item only");
+    }
+
+    [AvaloniaFact]
+    public void Clearing_out_junk_ignores_the_ticked_and_leaves_the_rest()
+    {
+        var vm = Start();
+        var game = vm.Game;
+        var sleep = Carry(vm, "sleep");                // a Potion of Sleep: worthless once known
+        var flesh = Carry(vm, "scrap_of_flesh");        // worthless too
+        var dagger = game.Objects.Create("dagger");     // cursed, but still worth a lot
+        dagger.ToHit = dagger.ToDam = 20;
+        Assert.True(game.Objects.AddCurse(new Angband.Core.Randomness.GameRandom(1), dagger, game.Data.Curse("teleportation")!, 1));
+        game.Knowledge.LearnRune(RuneIds.Curse("teleportation"));
+        game.Player.Inventory.Add(dagger);
+        var keep = Carry(vm, "confusion");               // worthless, but inscribed !k
+        keep.Note = "!k";
+        vm.Refresh();
+
+        vm.HandleAction(InputAction.ClearJunk);
+        var labels = vm.MenuLabels;
+        Assert.True(labels[0] == "Ignore the 2 ticked", string.Join(" | ", labels));
+        Assert.Contains(labels, l => l.StartsWith("[x]") && l.Contains("Sleep") && l.EndsWith("worthless"));
+        Assert.Contains(labels, l => l.StartsWith("[x]") && l.Contains("Flesh"));
+        Assert.Contains(labels, l => l.StartsWith("[ ]") && l.Contains("Dagger") && l.Contains("cursed (teleportation), but worth"));
+        Assert.Equal(4, labels.Count);
+
+        // Letters toggle; the list comes back with the change, the cursor where it was.
+        var daggerRow = labels.ToList().FindIndex(l => l.Contains("Dagger"));
+        vm.PromptKey((char)('a' + daggerRow));
+        Assert.StartsWith("[x]", vm.MenuLabels[daggerRow]);
+        Assert.Equal(daggerRow, vm.PromptSelectedIndex);
+        var fleshRow = vm.MenuLabels.ToList().FindIndex(l => l.Contains("Flesh"));
+        vm.PromptKey((char)('a' + fleshRow));
+        Assert.Equal("Ignore the 2 ticked", vm.MenuLabels[0]);
+
+        vm.PromptKey('a');
+        var pack = game.Player.Inventory.Pack;
+        Assert.DoesNotContain(sleep, pack);
+        Assert.DoesNotContain(dagger, pack);
+        Assert.Contains(flesh, pack);
+        Assert.Contains(keep, pack);
+        Assert.True(game.IsMarkedIgnored(sleep) && game.IsMarkedIgnored(dagger));
+    }
+
+    [AvaloniaFact]
+    public void Right_clicking_an_item_in_the_sidebar_opens_its_menu()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = Start();
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        window.CaptureRenderedFrame();
+        var row = window.GetVisualDescendants().OfType<Control>()
+            .First(c => c.DataContext is ItemRow r && r.Item.Kind.Id == "cure_light_wounds" && c.Bounds.Height > 0 && c is Grid);
+        var centre = row.TranslatePoint(new Point(row.Bounds.Width / 2, row.Bounds.Height / 2), window)!.Value;
+        window.MouseDown(centre, MouseButton.Right);
+        window.MouseUp(centre, MouseButton.Right);
+        Assert.True(vm.IsPrompting);
+        Assert.StartsWith("2 Potions of Cure Light Wounds", vm.PromptTitle);
+        Assert.Contains("Quaff", vm.MenuLabels);
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "item-menu");
+    }
+
+    [AvaloniaFact]
+    public void With_no_junk_it_says_so()
+    {
+        var vm = Start();
+        vm.HandleAction(InputAction.ClearJunk);
+        Assert.False(vm.IsPrompting);
+        Assert.Contains("nothing that looks like junk", vm.LastMessage);
+    }
+}

@@ -219,6 +219,9 @@ public sealed partial class MainWindowViewModel
             case InputAction.Pickup: BeginItemPrompt(ItemPromptKind.Pickup); break;
             case InputAction.Refuel: BeginItemPrompt(ItemPromptKind.Refuel); break;
             case InputAction.Inspect: BeginItemPrompt(ItemPromptKind.Inspect); break;
+            case InputAction.Inventory: BeginItemPrompt(ItemPromptKind.InventoryMenu); break;
+            case InputAction.Equipment: BeginItemPrompt(ItemPromptKind.EquipmentMenu); break;
+            case InputAction.ClearJunk: BeginClearJunk(); break;
             case InputAction.AimWand: BeginItemPrompt(ItemPromptKind.Aim); break;
             case InputAction.UseStaff: BeginItemPrompt(ItemPromptKind.UseStaff); break;
             case InputAction.ZapRod: BeginItemPrompt(ItemPromptKind.Zap); break;

@@ -168,11 +168,17 @@ public partial class MainWindow : Window
         e.Handled = true;
     }
 
-    /// <summary>An item row in the sidebar: pressing and moving drags it onto the hotbar.</summary>
+    /// <summary>An item row in the sidebar: pressing and moving drags it onto the hotbar; right-click opens its menu.</summary>
     private void OnItemRowPressed(object? sender, PointerPressedEventArgs e)
     {
-        if ((sender as Control)?.DataContext is ItemRow row && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
-            BeginPending(e, MainWindowViewModel.DragPayload(row.Item), null);
+        if ((sender as Control)?.DataContext is not ItemRow row) return;
+        var point = e.GetCurrentPoint(this).Properties;
+        if (point.IsRightButtonPressed && DataContext is MainWindowViewModel vm)
+        {
+            vm.OpenItemMenu(row.Item);
+            e.Handled = true;
+        }
+        else if (point.IsLeftButtonPressed) BeginPending(e, MainWindowViewModel.DragPayload(row.Item), null);
     }
 
     /// <summary>A hotbar slot: left-click uses it (or fills an empty one), right-click changes it.</summary>

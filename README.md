@@ -1093,6 +1093,21 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   AVABand drops them free where Angband queues a drop). `K` shows ignored items again (marked
   `{ignore}`). Quality thresholds are also on the Options page (*Item ignoring*); kinds and egos can
   be ignored from the Knowledge window. All of it is saved with the character.
+  - **The item menu** (`ViewModels/MainWindowViewModel.ItemMenu.cs`, 4.2.5's `context_menu_object`):
+    right-click an item in the sidebar (pack, quiver, equipment), or choose one with `i` (the pack)
+    or `e` (what you wear) as Angband's inventory commands do: *Inspect*; *Cast / Study / Browse* for
+    your books; *Aim / Zap / Use / Read / Quaff / Eat / Activate / Fire* as the item needs; *Refill*;
+    *Take off* (not for sticky gear) or *Equip*; *Drop* and, for a stack, *Drop all* (one or the
+    lot, where 4.2.5 asks how many); *Pick up*; *Throw* (not worn gear, except a weapon that can
+    come off); *Inscribe*, *Uninscribe*; *Ignore / Unignore* (Angband's ignore menu). Each goes
+    through the same inscription checks (`!q`, `!d`, `!*`) as its own key.
+  - **Clear out junk** (AVABand's own; Ctrl+K, or the player menu → Other; `GameSession.JunkCandidates`):
+    a checklist of carried things ignoring suits — worth nothing as far as you know (4.2.5's
+    `object_value`, judged only once the kind and its runes are known), of known bad quality, or
+    carrying a curse you know — ticked, except a cursed thing still worth gold ("cursed
+    (teleportation), but worth 8550 gold"). Letters toggle, the top line ignores the ticked ones
+    ("This item only") in one go. Artifacts, worn gear and anything inscribed `!k`/`!*` are left
+    out. There is no permanent destroy: 4.2 replaced it with ignoring, and `K` undoes a slip.
 - **Throwing weapons** (Angband 4.2's `obj-gear.c` and `player-attack.c`): daggers, spears,
   throwing axes and hammers, flasks of oil, rounded pebbles and mithril shots are made for throwing
   (THROWING). Thrown by hand they do (2 + weight/12) times their damage — ×3 for a dagger, ×6 for a

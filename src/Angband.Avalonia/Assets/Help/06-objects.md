@@ -15,6 +15,16 @@ Potions, scrolls, rings, amulets, wands, staffs, rods and mushrooms are known by
 `K` (or `O` with roguelike keys) shows them again for a while. The Options page has quality
 ignoring for weapons and armour.
 
+**Right-click** anything in your pack, quiver or equipment (or press `i` for the pack, `e` for
+what you wear, and pick it) for everything you can do with it: inspect, use, equip or take off,
+drop (one, or the whole stack), throw, inscribe, or ignore.
+
+**Clear out junk** (`Ctrl+K`, or right-click yourself → Other) lists what you carry that you know
+is worthless, cursed or of bad quality, each ticked or not; a letter (or a click) ticks and unticks,
+and the top line ignores everything ticked — dropped and hidden, as ignoring always is, and `K`
+brings it back if you change your mind. A cursed thing that is still worth something starts
+unticked, and artifacts, worn gear and anything inscribed `!k` are never listed.
+
 ## Inscriptions
 
 `{` inscribes an item. Some inscriptions do things, as in Angband: `@q1` lets you quaff it with

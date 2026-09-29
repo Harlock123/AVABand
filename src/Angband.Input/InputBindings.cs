@@ -86,6 +86,9 @@ public sealed class InputBindings
         K(InputAction.Pickup, "Char:g");
         K(InputAction.Refuel, "Char:F");
         K(InputAction.Inspect, "Char:I");
+        K(InputAction.Inventory, "Char:i");
+        K(InputAction.Equipment, "Char:e");
+        K(InputAction.ClearJunk, "Ctrl+K");
         K(InputAction.Cast, "Char:m");
         K(InputAction.Study, "Char:G");
         K(InputAction.Browse, "Char:B");
@@ -217,6 +220,7 @@ public sealed class InputBindings
         K(InputAction.Refuel, "Char:F"); K(InputAction.Inspect, "Char:I"); K(InputAction.Cast, "Char:m");
         K(InputAction.Study, "Char:G"); K(InputAction.Retire, "Char:Q"); K(InputAction.CharacterSheet, "Char:C");
         K(InputAction.OverviewMap, "Char:M");
+        K(InputAction.Inventory, "Char:i"); K(InputAction.Equipment, "Char:e");
         return b;
     }
 

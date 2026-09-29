@@ -103,6 +103,7 @@ public sealed partial class MainWindowViewModel
         ("Show object list", ShowObjectList),
         ("Toggle ignored", () => HandleAction(InputAction.ToggleIgnore)),
         ("Ignore an item", () => HandleAction(InputAction.Ignore)),
+        ("Clear out junk", BeginClearJunk),
         ("Options", ShowOptions),
         ("Commands", ShowKeyCommands),
     ];

@@ -1,3 +1,4 @@
+using Angband.Core.Definitions;
 using Angband.Core.Items;
 using Angband.Core.World;
 
@@ -172,5 +173,38 @@ public sealed partial class GameSession
             dropped = true;
         }
         if (dropped) RecalculateBonuses();
+    }
+}
+
+/// <summary>One line of "Clear out junk": an item, why it's junk, and whether it starts ticked.</summary>
+public sealed record JunkItem(Item Item, string Why, bool Ticked);
+
+// AVABand's "Clear out junk": the carried things ignoring would suit — worth nothing as far as you
+// know, carrying a curse you know of, or of known bad quality. Artifacts, worn gear and anything
+// inscribed !k or !* are left out, as ignoring by quality leaves them.
+public sealed partial class GameSession
+{
+    public IReadOnlyList<JunkItem> JunkCandidates()
+    {
+        var list = new List<JunkItem>();
+        foreach (var item in Player.Inventory.Pack.Concat(Player.Inventory.Quiver))
+        {
+            if (item.IsArtifact || item.Ignored || IsMarkedIgnored(item) || Inscription.AsksFirst(item, 'k')) continue;
+            var reasons = new List<string>();
+            var judged = Knowledge.KnowsKind(item) && (Knowledge.IsFullyKnown(item) || !ItemValue.HasVariablePower(item));
+            var value = ItemValue.Known(item, Data, Knowledge);
+            var worthless = judged && value == 0;
+            if (worthless) reasons.Add("worthless");
+            var bad = Ignoring.LevelOf(item, Knowledge) == IgnoreLevel.Bad;
+            if (bad && !worthless) reasons.Add("bad");
+            var curses = item.Curses.Where(c => Knowledge.KnowsRune(RuneIds.Curse(c))).Select(c => Data.Curse(c)?.Name ?? c).ToList();
+            if (curses.Count > 0) reasons.Add($"cursed ({string.Join(", ", curses)})");
+            if (reasons.Count == 0) continue;
+            // A curse alone on something still worth having is listed, but left for you to tick.
+            var ticked = worthless || bad || value == 0;
+            if (!ticked) reasons.Add($"but worth {value} gold");
+            list.Add(new JunkItem(item, string.Join(", ", reasons), ticked));
+        }
+        return list;
     }
 }

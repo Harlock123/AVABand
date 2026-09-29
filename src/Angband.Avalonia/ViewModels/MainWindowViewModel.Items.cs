@@ -32,6 +32,8 @@ public enum ItemPromptKind
     Ignore,
     /// <summary>Any item that can be used (Angband 'U'): each goes to its own command.</summary>
     UseAny,
+    /// <summary>An item from the pack (Angband 'i') or what you wear ('e'), for its menu.</summary>
+    InventoryMenu, EquipmentMenu,
 }
 
 /// <summary>One line in the inventory panel or an item prompt.</summary>
@@ -80,6 +82,8 @@ public sealed partial class MainWindowViewModel
                 ItemPromptKind.Uninscribe => "You have nothing with an inscription.",
                 ItemPromptKind.Ignore => "You have nothing to ignore.",
                 ItemPromptKind.UseAny => "You have nothing to use.",
+                ItemPromptKind.InventoryMenu => "You have nothing in your pack.",
+                ItemPromptKind.EquipmentMenu => "You are not wearing anything.",
                 _ => "You have nothing to choose.",
             });
             return;
@@ -99,6 +103,8 @@ public sealed partial class MainWindowViewModel
         PromptTitle = kind switch
         {
             ItemPromptKind.Wield => "Wear or wield which item?",
+            ItemPromptKind.InventoryMenu => "Inventory — which item?",
+            ItemPromptKind.EquipmentMenu => "Equipment — which item?",
             ItemPromptKind.TakeOff => "Take off which item?",
             ItemPromptKind.Quaff => "Quaff which potion?",
             ItemPromptKind.Read => "Read which scroll?",
@@ -185,7 +191,7 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Eat => 'E', ItemPromptKind.Drop => 'd', ItemPromptKind.Throw => 'v', ItemPromptKind.Pickup => 'g',
         ItemPromptKind.Refuel => 'F', ItemPromptKind.Inspect => 'I', ItemPromptKind.Aim => 'a', ItemPromptKind.UseStaff => 'u',
         ItemPromptKind.Zap => 'z', ItemPromptKind.Activate => 'A', ItemPromptKind.Inscribe => '{', ItemPromptKind.Ignore => 'k',
-        ItemPromptKind.UseAny => 'U', _ => '}',
+        ItemPromptKind.UseAny => 'U', ItemPromptKind.InventoryMenu => 'i', ItemPromptKind.EquipmentMenu => 'e', _ => '}',
     };
 
     private static string CommandVerb(ItemPromptKind kind) => kind switch
@@ -194,7 +200,8 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Read => "read", ItemPromptKind.Eat => "eat", ItemPromptKind.Drop => "drop", ItemPromptKind.Throw => "throw",
         ItemPromptKind.Pickup => "pick up", ItemPromptKind.Refuel => "refuel with", ItemPromptKind.Inspect => "inspect",
         ItemPromptKind.Aim => "aim", ItemPromptKind.UseStaff => "use", ItemPromptKind.Zap => "zap", ItemPromptKind.Activate => "activate",
-        ItemPromptKind.Inscribe => "inscribe", ItemPromptKind.Ignore => "ignore", ItemPromptKind.UseAny => "use", _ => "un-inscribe",
+        ItemPromptKind.Inscribe => "inscribe", ItemPromptKind.Ignore => "ignore", ItemPromptKind.UseAny => "use",
+        ItemPromptKind.InventoryMenu or ItemPromptKind.EquipmentMenu => "choose", _ => "un-inscribe",
     };
 
     /// <summary>The command an item is used with, for 'U' (none if it can't be used).</summary>
@@ -223,6 +230,9 @@ public sealed partial class MainWindowViewModel
         }
         switch (kind)
         {
+            case ItemPromptKind.InventoryMenu or ItemPromptKind.EquipmentMenu:
+                OpenItemMenu(item);
+                break;
             case ItemPromptKind.Inscribe:
                 BeginInscription(item);
                 break;
@@ -311,6 +321,8 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Inscribe => inv.Equipped.Concat(carried).Concat(floor),
             ItemPromptKind.Uninscribe => inv.Equipped.Concat(carried).Concat(floor).Where(i => i.Note is not null),
             ItemPromptKind.Ignore => inv.Equipped.Concat(carried).Concat(floor),
+            ItemPromptKind.InventoryMenu => carried,
+            ItemPromptKind.EquipmentMenu => inv.Equipped,
             ItemPromptKind.UseAny => carried.Concat(floor).Concat(inv.Equipped).Where(i => UseKind(i) is not null)
                 .Where(i => i.Base.Id is not ("wand" or "staff" or "rod") || inv.Pack.Contains(i)),
             _ => inv.Equipped.Concat(carried).Concat(floor),

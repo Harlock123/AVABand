@@ -90,6 +90,11 @@ public enum InputAction
     HotbarNext, HotbarPrevious, HotbarUse, ContextMenu,
     /// <summary>Say what is around you (for screen readers; AVABand's own). Added last so saved bindings keep their meaning.</summary>
     DescribeSurroundings,
+    /// <summary>
+    /// Pick an item from the pack (Angband 'i') or what you wear ('e') for its menu, and AVABand's
+    /// "Clear out junk". Added last so saved bindings keep their meaning.
+    /// </summary>
+    Inventory, Equipment, ClearJunk,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }

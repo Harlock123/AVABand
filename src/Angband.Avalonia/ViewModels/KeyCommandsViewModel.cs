@@ -68,7 +68,10 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.Inspect, "Inspect an item: what it does and what you know of it"),
             (InputAction.Inscribe, "Inscribe an item (e.g. @q1, !d)"),
             (InputAction.Uninscribe, "Remove an inscription"),
+            (InputAction.Inventory, "Your pack: pick an item for what you can do with it"),
+            (InputAction.Equipment, "What you wear: pick an item for what you can do with it"),
             (InputAction.Ignore, "Ignore an item, or everything like it"),
+            (InputAction.ClearJunk, "Clear out junk: ignore worthless, cursed or bad things you carry"),
             (InputAction.ToggleIgnore, "Show or hide ignored items"),
         ]),
         ("Fighting and devices", [
