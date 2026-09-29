@@ -30,8 +30,28 @@ jobs:
       - name: Test
         run: dotnet test AVABand.sln -c Release --no-build
 
+  drift:
+    # AVABand's game data must match Angband 4.2.5's (tools/compare_with_angband.py); the release
+    # is pinned by checksum.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Fetch Angband 4.2.5
+        run: |
+          curl -sSL -o angband.tar.gz https://github.com/angband/angband/archive/refs/tags/4.2.5.tar.gz
+          echo "2a27ce296310c4cbf960e2eb41ef55d383e546f24533446cf224119498a99651  angband.tar.gz" | sha256sum -c -
+          tar xzf angband.tar.gz -C "$RUNNER_TEMP"
+      - name: Compare with 4.2.5
+        run: python3 tools/compare_with_angband.py "$RUNNER_TEMP/angband-4.2.5/lib/gamedata" --out "$RUNNER_TEMP/drift.md" --fail-on-diff
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: angband-4.2.5-data-drift
+          path: ${{ runner.temp }}/drift.md
+
   publish:
-    needs: test
+    needs: [test, drift]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

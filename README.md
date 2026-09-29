@@ -461,14 +461,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   every way down still comes out somewhere.
 - **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
-  spells), race, shape, trap, terrain feature and store with 4.2.5's own files, reusing the
+  spells), race, shape, trap, terrain feature, store and curse with 4.2.5's own files, reusing the
   importers' parsing, and writes a Markdown report of every field that differs
-  (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category now matches: 0 field
-  differences across 1,697 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
+  differences across 1,724 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
   monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
-  conversions while keeping ids and AVABand's own fields. What remains is listed there too: the 14
-  special artifact kinds (4.2.5 makes those from artifact.txt), and 4.2.5 properties AVABand
-  models another way (the decoy and door locks aren't traps; EASY_KNOW; the "air swing" curse).
+  conversions while keeping ids and AVABand's own fields, and CI checks it on every push: the
+  `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with
+  `--fail-on-diff`. What the report still lists: the 14 special artifact kinds (4.2.5 makes those
+  from artifact.txt), and 4.2.5 properties AVABand models another way (the decoy and door locks
+  aren't traps; launchers' SHOOTS_* come from their base; EASY_KNOW).
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so

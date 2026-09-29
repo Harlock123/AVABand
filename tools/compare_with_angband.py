@@ -1721,6 +1721,9 @@ def main():
     ap.add_argument("--data", default=os.path.join(HERE, "..", "src", "Angband.Data", "data"),
                     help="AVABand data directory (default: src/Angband.Data/data)")
     ap.add_argument("--out", help="write the Markdown report here (default: stdout)")
+    ap.add_argument("--fail-on-diff", action="store_true",
+                    help="exit 1 if anything differs (fields, entries only in 4.2.5, or only in ours other than the "
+                         "special artifact kinds 4.2.5 makes from artifact.txt) — for CI")
     args = ap.parse_args()
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
@@ -1732,6 +1735,15 @@ def main():
         for s in SECTIONS:
             print(f"{s.title:16} matched {s.compared:4}  with diffs {len(s.diffs):4}  field diffs {s.n_field_diffs():5}  "
                   f"only 4.2.5 {len(s.only_theirs):4}  only ours {len(s.only_ours):4}")
+    if args.fail_on_diff:
+        drift = [f"{s.title}: {s.n_field_diffs()} field differences, {len(s.only_theirs)} only in 4.2.5, "
+                 f"{len([o for o in s.only_ours if 'INSTA_ART' not in o])} only in ours"
+                 for s in SECTIONS
+                 if s.n_field_diffs() or s.only_theirs or any("INSTA_ART" not in o for o in s.only_ours)]
+        if drift:
+            print("Drift from Angband 4.2.5's data:\n  " + "\n  ".join(drift), file=sys.stderr)
+            sys.exit(1)
+        print("No drift from Angband 4.2.5's data.")
 
 
 if __name__ == "__main__":
