@@ -1,5 +1,6 @@
 using Angband.Core.Definitions;
 using Angband.Core.Game;
+using Angband.Core.Magic;
 using Angband.Core.Items;
 using Angband.Core.Monsters;
 using Angband.Core.Randomness;
@@ -99,5 +100,87 @@ public class GameDataDrift425Tests
                 Assert.Matches("^[a-z ]+$", t);
             });
         }
+    }
+
+    [Fact]
+    public void Characters_are_born_with_a_background_age_height_and_weight()
+    {
+        var hobbit = GameSession.NewGame(Data, 12, CharacterSpec.Default("hobbit", "rogue"));
+        var p = hobbit.Player;
+        Assert.StartsWith("You are", p.Background);
+        var race = Data.Race("hobbit")!;
+        Assert.InRange(p.Age, race.Age.Base + 1, race.Age.Base + race.Age.Mod);
+        Assert.InRange(p.Height, race.Height.Base - 5 * race.Height.Mod, race.Height.Base + 5 * race.Height.Mod);
+        Assert.True(p.Weight > 0);
+        // The same seed, the same background; the background has its own dice.
+        Assert.Equal(p.Background, GameSession.NewGame(Data, 12, CharacterSpec.Default("hobbit", "rogue")).Player.Background);
+        var dump = CharacterDump.Build(hobbit);
+        Assert.Contains($"Age    {p.Age}", dump);
+        Assert.Contains(p.Background.Split(' ')[3], dump);
+
+        using var stream = new MemoryStream();
+        Angband.Core.Persistence.SaveGame.Save(hobbit, stream);
+        stream.Position = 0;
+        var loaded = Angband.Core.Persistence.SaveGame.Load(Data, stream).Player;
+        Assert.Equal((p.Age, p.Height, p.Weight, p.Background), (loaded.Age, loaded.Height, loaded.Weight, loaded.Background));
+    }
+
+    [Fact]
+    public void A_background_follows_the_charts_to_their_end()
+    {
+        foreach (var race in Data.Races)
+        {
+            var text = GameSession.BackgroundFrom(Data, race.History, new GameRandom(1));
+            Assert.False(string.IsNullOrWhiteSpace(text), race.Id);
+        }
+    }
+
+    [Fact]
+    public void A_hurt_monster_shows_its_pain_as_4_2_5_says_it()
+    {
+        var game = Arena.Create(3);
+        var orc = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Angband.Core.Geometry.Loc(2, 0));
+        orc.Hp = orc.MaxHp = 100;
+        orc.Hp = 90;
+        Assert.Equal("The cave orc grunts with pain.", game.PainMessage(orc, 10));    // 90% left
+        orc.Hp = 5;
+        Assert.Equal("The cave orc cries out feebly.", game.PainMessage(orc, 95));   // 5% left
+        Assert.Equal("The cave orc is unharmed.", game.PainMessage(orc, 0));
+    }
+
+    [Fact]
+    public void Abilities_are_named_as_the_birth_screen_names_them()
+    {
+        var elf = Birth.Abilities(Data, Data.Race("elf"), Data.Class("mage")).Select(a => a.Name).ToList();
+        Assert.Equal(["Full Spellcaster", "Extra Spell Beaming", "Spell Choice", "Sustain Dexterity", "Light Resistance"], elf);
+        var warrior = Birth.Abilities(Data, Data.Race("human"), Data.Class("warrior"));
+        Assert.Contains(("No Magic", "You cannot cast spells."), warrior);
+    }
+
+    [Fact]
+    public void The_character_sheet_gives_the_title_for_the_level()
+    {
+        var game = GameSession.NewGame(Data, 3, "warrior");
+        game.GainExperience(game.ExperienceForLevel(11) - game.Player.Experience);
+        var dump = CharacterDump.Build(game);
+        Assert.Contains($"Title  {Data.Class("warrior")!.Titles[(game.Player.Level - 1) / 5]}", dump);
+        Assert.Contains("[Abilities]", dump);
+    }
+
+    [Fact]
+    public void Shopkeepers_sometimes_greet_you_or_pass_on_a_hint()
+    {
+        var game = GameSession.NewGame(Data, 8, "warrior");
+        game.GainExperience(game.ExperienceForLevel(29) - game.Player.Experience);
+        var said = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => said.Add(m.Text));
+        var shop = game.Level.AllLocs().First(p => Data.Terrain[game.Level[p].Feature].Shop is { } id && id != "home");
+        for (var i = 0; i < 60; i++)
+        {
+            game.Player.Position = shop;
+            game.Execute(new EnterStoreCommand());
+        }
+        Assert.Contains(said, m => Data.Hints.Any(h => m == $"\"{h}\""));
+        Assert.Contains(said, m => m.Contains(": \"") && !Data.Hints.Any(h => m == $"\"{h}\""));
     }
 }

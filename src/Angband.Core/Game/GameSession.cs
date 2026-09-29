@@ -133,6 +133,7 @@ public sealed partial class GameSession : ITurnHandler
             var race = data.Race(spec.RaceId);
             if (race is null && data.Races.Count > 0) throw new ArgumentException($"Unknown race '{spec.RaceId}'.", nameof(spec));
             game.ApplyCharacter(spec, race, cls);
+            if (race is not null) game.RollBackground(race);
         }
         game.ChangeLevel(0, StairArrival.None);
         game.AddHistory("Began the quest to destroy Morgoth."); // Angband player_birth
@@ -377,7 +378,11 @@ public sealed partial class GameSession : ITurnHandler
 
         if (feature.Shop is { } shopId)
         {
-            if (_stores.TryGetValue(shopId, out var store)) Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+            if (_stores.TryGetValue(shopId, out var store))
+            {
+                Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+                GreetInShop(store);
+            }
             else Publish(new MessageEvent($"The {Data.Shops.FirstOrDefault(s => s.Id == shopId)?.Name ?? shopId} is closed."));
         }
         else if (feature.Has(TerrainFlags.Stair))

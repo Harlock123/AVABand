@@ -36,20 +36,17 @@ public sealed partial class GameSession
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
     ];
 
-    /// <summary>
-    /// A slay's O-multiplier, in tenths (slay.txt o-multiplier): evil ×1.8, animals ×2, the ×3 slays
-    /// ×2.5, the ×5 ones ×3.5.
-    /// </summary>
-    internal static int OSlayMultiplier(string monsterFlag, int multiplier) =>
-        multiplier == 2 && monsterFlag == MonsterFlags.Evil ? 18 : 5 * multiplier + 10;
+    /// <summary>A slay's O-multiplier, in tenths (slay.txt o-multiplier): evil ×1.8, animals ×2, the ×3 slays ×2.5...</summary>
+    internal int OSlayMultiplier(string monsterFlag, int multiplier) =>
+        Data.SlayType(monsterFlag, multiplier)?.OMultiplier ?? 10 * multiplier;
 
     /// <summary>
-    /// A brand's O-multiplier, in tenths (brand.txt): ×1.5 for the weak brands, ×2.5 for the others;
-    /// a vulnerable monster takes twice the extra (get_monster_brand_multiplier).
+    /// A brand's O-multiplier, in tenths (brand.txt o-multiplier): ×1.5 for the weak brands, ×2.5 for
+    /// the others; a vulnerable monster takes twice the extra (get_monster_brand_multiplier).
     /// </summary>
-    internal static int OBrandMultiplier(int multiplier, bool vulnerable)
+    internal int OBrandMultiplier(string element, int multiplier, bool vulnerable)
     {
-        var o = 10 * multiplier - 5;
+        var o = Data.BrandType(element, multiplier)?.OMultiplier ?? 10 * multiplier;
         return vulnerable ? 2 * (o - 10) + 10 : o;
     }
 

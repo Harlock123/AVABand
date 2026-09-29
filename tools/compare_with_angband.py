@@ -986,6 +986,7 @@ def compare_classes_and_spells(gd, data):
             csec.cmp(label, f"skill {ours_key} ({key})", (c.get("skills") or {}).get(ours_key, 0), int(base))
             csec.cmp(label, f"skill {ours_key} per 10 levels", (c.get("skillsPer10Levels") or {}).get(ours_key, 0), int(per10))
         csec.cmp(label, "hit die", c.get("hitDie", 0), int(one(e, "hitdie", "0")))
+        csec.cmp(label, "titles", c.get("titles", []), get(e, "title"))
         ours_kit = sorted((k["kind"], k.get("count", 1), k.get("countMax", k.get("count", 1)), k.get("unlessOption"))
                           for k in c.get("startingKit") or [])
         csec.cmp(label, "starting kit (kind, least, most, unless option)", ours_kit,
@@ -1069,6 +1070,8 @@ def compare_classes_and_spells(gd, data):
         rsec.cmp(label, "experience factor", r.get("expFactor", 0), int(one(e, "exp", "0")))
         rsec.cmp(label, "infravision", r.get("infravision", 0), int(one(e, "infravision", "0")))
         rsec.cmp_set(label, "flags/resists", player_tokens_ours(r), player_tokens_42(e))
+        for key, theirs in race_body_42(e).items():
+            rsec.cmp(label, key, r.get(key), theirs)
     for r in races:
         if r["id"] not in rused:
             rsec.only_ours.append(r["id"])
@@ -1078,7 +1081,8 @@ def compare_classes_and_spells(gd, data):
         "Flags/resists: 4.2.5 `obj-flags`, `player-flags` and `values` (RES_x[1] → RES_x) against ours "
         "`resists` (mapped back to 4.2.5 names: acid → RES_ACID, sust_dex → SUST_DEX, hold_life → HOLD_LIFE, ...) "
         "and `flags` (REGENERATE → REGEN).",
-        "Not compared: `history`, `age`, `height`, `weight`, `equip`, descriptions.",
+        "`history` (the first history chart), `age`, `height` and `weight` (base and spread) are compared; "
+        "descriptions aren't.",
     ]
 
 
@@ -1629,11 +1633,12 @@ def compare_monster_bases(gd, data):
         used.add(bid)
         sec.compared += 1
         sec.cmp(bid, "glyph", b.get("glyph"), one(e, "glyph"))
+        sec.cmp(bid, "pain", b.get("pain", 0), int(one(e, "pain", "0")))
     for bid in ours:
         if bid not in used:
             sec.only_ours.append(bid)
-    sec.notes += ["Only the glyph is compared; the base flags are compared through each monster's merged flags. "
-                  "Not compared: `pain`, `desc`."]
+    sec.notes += ["The glyph and pain type are compared; the base flags are compared through each monster's merged "
+                  "flags. Not compared: `desc`."]
     return sec
 
 
@@ -2040,6 +2045,250 @@ def compare_names(gd, data):
     return sec
 
 
+def race_body_42(e):
+    """p_race.txt's history chart, age, height and weight, in races.json's shape."""
+    out = {"history": int(one(e, "history", "0"))}
+    for key in ("age", "height", "weight"):
+        base, mod = (one(e, key) or "0:0").split(":")
+        out[key] = {"base": int(base), "mod": int(mod)}
+    return out
+
+
+def histories_42(gd):
+    """history.txt's charts, in the order they first appear, each entry as written."""
+    charts = {}
+    for raw in open(os.path.join(gd, "history.txt"), encoding="utf-8"):
+        line = raw.rstrip("\n")
+        if line.startswith("chart:"):
+            _, idx, nxt, roll = line.split(":")
+            entry = {"next": int(nxt), "roll": int(roll), "text": ""}
+            charts.setdefault(int(idx), []).append(entry)
+        elif line.startswith("phrase:"):
+            entry["text"] += line.split(":", 1)[1]
+    return [{"chart": idx, "entries": entries} for idx, entries in charts.items()]
+
+
+def compare_histories(gd, data):
+    sec = section("histories", "Histories", "histories.json", "history.txt")
+    ours = {c["chart"]: c for c in load(data, "histories.json")}
+    for t in histories_42(gd):
+        x = ours.get(t["chart"])
+        if x is None:
+            sec.only_theirs.append(f"chart {t['chart']}")
+            continue
+        sec.compared += 1
+        sec.cmp(f"chart {t['chart']}", "entries", [(e["roll"], e["next"], e["text"]) for e in x["entries"]],
+                [(e["roll"], e["next"], e["text"]) for e in t["entries"]])
+    theirs = {t["chart"] for t in histories_42(gd)}
+    sec.only_ours += [f"chart {c}" for c in ours if c not in theirs]
+    sec.notes += ["Every chart's entries (roll, next chart and phrase) are compared, in order: get_history takes "
+                  "the first whose roll reaches 1d100."]
+    return sec
+
+
+def pain_42(gd):
+    """pain.txt: each type's seven messages, most to least health left."""
+    out, cur = [], None
+    for raw in open(os.path.join(gd, "pain.txt"), encoding="utf-8"):
+        line = raw.rstrip("\n")
+        if line.startswith("type:"):
+            cur = {"type": int(line.split(":")[1]), "messages": []}
+            out.append(cur)
+        elif line.startswith("message:"):
+            cur["messages"].append(line.split(":", 1)[1])
+    return out
+
+
+def compare_pain(gd, data):
+    sec = section("pain", "Pain messages", "pain.json", "pain.txt")
+    ours = {p["type"]: p for p in load(data, "pain.json")}
+    theirs = pain_42(gd)
+    for t in theirs:
+        x = ours.get(t["type"])
+        if x is None:
+            sec.only_theirs.append(f"type {t['type']}")
+            continue
+        sec.compared += 1
+        sec.cmp(f"type {t['type']}", "messages", x["messages"], t["messages"])
+    sec.only_ours += [f"type {k}" for k in ours if k not in {t["type"] for t in theirs}]
+    sec.notes += ["Each type's seven messages, in order (more than 95% of health left ... 10% or less)."]
+    return sec
+
+
+# object_property.txt codes AVABand spells otherwise (its resist list's protections and abilities).
+PROPERTY_IDS = {"PROT_FEAR": "fear", "PROT_BLIND": "blind", "PROT_CONF": "conf", "PROT_STUN": "stun",
+                "SEE_INVIS": "see_invis", "FREE_ACT": "free_act"}
+ELEMENT_IDS = {"ACID": "acid", "ELEC": "elec", "FIRE": "fire", "COLD": "cold", "POIS": "pois", "LIGHT": "light",
+               "DARK": "dark", "SOUND": "sound", "SHARD": "shards", "NEXUS": "nexus", "NETHER": "nether",
+               "CHAOS": "chaos", "DISEN": "disen"}
+# 4.2.5's tval names in type-mult lines, as AVABand's object bases.
+TVAL_BASES = {"soft armor": ["soft_armour"], "hard armor": ["hard_armour"], "dragon armor": ["dragon_armour"],
+              "bow": ["sling", "bow", "crossbow"]}
+
+
+def object_properties_42(gd):
+    """object_property.txt: each property's type, 4.2.5 code, AVABand id, power, mult, subtype and type-mults."""
+    out = []
+    for e in parse_records(os.path.join(gd, "object_property.txt")):
+        typ, code = one(e, "type"), one(e, "code")
+        if typ in ("stat", "mod"):
+            pid = code.lower()
+        elif typ == "flag":
+            pid = code.lower() if code.startswith("SUST_") else PROPERTY_IDS.get(code, code)
+        else:
+            pid = ELEMENT_IDS.get(code, code.lower())
+        x = {"type": typ, "code": code, "id": pid, "power": int(one(e, "power", "0"))}
+        if one(e, "mult"):
+            x["mult"] = int(one(e, "mult"))
+        if one(e, "subtype"):
+            x["subtype"] = one(e, "subtype")
+        tm = {}
+        for line in get(e, "type-mult"):
+            tval, n = line.rsplit(":", 1)
+            for b in TVAL_BASES.get(tval, [slug(tval)]):
+                tm[b] = int(n)
+        if tm:
+            x["typeMult"] = tm
+        out.append(x)
+    return out
+
+
+def slays_42(gd):
+    return [{"code": e["name"], "flag": one(e, "race-flag"), "multiplier": int(one(e, "multiplier")),
+             "oMultiplier": int(one(e, "o-multiplier")), "power": int(one(e, "power"))}
+            for e in parse_records(os.path.join(gd, "slay.txt"), start="code")]
+
+
+def brands_42(gd):
+    return [{"code": e["name"], "element": ELEMENT_IDS[e["name"].rsplit("_", 1)[0]],
+             "multiplier": int(one(e, "multiplier")), "oMultiplier": int(one(e, "o-multiplier")),
+             "power": int(one(e, "power"))}
+            for e in parse_records(os.path.join(gd, "brand.txt"), start="code")]
+
+
+def compare_list(key, title, ours_file, theirs_file, ours, theirs, note):
+    sec = section(key, title, ours_file, theirs_file)
+    mine = {x["code"] + ":" + x.get("type", ""): x for x in ours}
+    for t in theirs:
+        label = t["code"] + ":" + t.get("type", "")
+        x = mine.get(label)
+        if x is None:
+            sec.only_theirs.append(label)
+            continue
+        sec.compared += 1
+        for k in sorted(set(t) | set(x)):
+            sec.cmp(label, k, x.get(k), t.get(k))
+    sec.only_ours += [k for k in mine if k not in {t["code"] + ":" + t.get("type", "") for t in theirs}]
+    sec.notes += [note]
+    return sec
+
+
+def compare_object_properties(gd, data):
+    return compare_list("object_properties", "Object properties", "object_properties.json", "object_property.txt",
+                        load(data, "object_properties.json"), object_properties_42(gd),
+                        "Each property's power, mult, subtype and type-mults (what object_power and so prices and "
+                        "random artifacts make of it). Names, descriptions and messages are AVABand's own.")
+
+
+def compare_slays(gd, data):
+    return compare_list("slays", "Slays", "slays.json", "slay.txt", load(data, "slays.json"), slays_42(gd),
+                        "Power and O-multiplier (the names and verbs are on each object).")
+
+
+def compare_brands(gd, data):
+    return compare_list("brands", "Brands", "brands.json", "brand.txt", load(data, "brands.json"), brands_42(gd),
+                        "Power and O-multiplier (the names and verbs are on each object).")
+
+
+EQUIP_SLOT_TYPES = {"Weapon": "WEAPON", "Bow": "BOW", "Ring": "RING", "Amulet": "AMULET", "Light": "LIGHT",
+                    "Body": "BODY_ARMOR", "Cloak": "CLOAK", "Shield": "SHIELD", "Head": "HAT", "Hands": "GLOVES",
+                    "Feet": "BOOTS"}
+
+
+def compare_body(gd, data):
+    """body.txt's one body against Inventory.Slots, AVABand's equipment: slot types in order."""
+    sec = section("body", "Body", "Items/Inventory.cs (Slots)", "body.txt")
+    root = os.path.normpath(os.path.join(data, "..", "..", ".."))
+    src = open(os.path.join(root, CS, "Items/Inventory.cs"), encoding="utf-8").read()
+    ours = [EQUIP_SLOT_TYPES.get(t, t) for t in re.findall(r'new\("[^"]+", EquipSlot\.(\w+)\)', src)]
+    for e in parse_records(os.path.join(gd, "body.txt"), start="body"):
+        sec.compared += 1
+        sec.cmp(e["name"], "slots", ours, [line.split(":")[0] for line in get(e, "slot")])
+    sec.notes += ["The kinds of slot and their order (which decide where things are worn, and which slot "
+                  "disenchantment picks). The slots' names are AVABand's (4.2.5 names the rings' hands)."]
+    return sec
+
+
+def player_properties_42(gd):
+    """player_property.txt: each ability's type, code, name, description (and an element's level)."""
+    out, cur = [], None
+    for raw in open(os.path.join(gd, "player_property.txt"), encoding="utf-8"):
+        line = raw.rstrip("\n")
+        if not line or line.startswith("#"):
+            continue
+        key, _, value = line.partition(":")
+        if key == "type":
+            cur = {"type": value}
+            out.append(cur)
+        elif key == "code":
+            cur["code"] = value
+        elif key == "name":
+            cur["name"] = value
+        elif key == "desc":
+            cur["desc"] = cur.get("desc", "") + value
+        elif key == "value":
+            cur["value"] = int(value)
+    return out
+
+
+def compare_player_properties(gd, data):
+    sec = section("player_properties", "Player properties", "player_properties.json", "player_property.txt")
+    ours = load(data, "player_properties.json")
+    theirs = player_properties_42(gd)
+    for i, t in enumerate(theirs):
+        label = f"{t['type']} {t.get('code') or t['name']}"
+        if i >= len(ours):
+            sec.only_theirs.append(label)
+            continue
+        sec.compared += 1
+        for k in sorted(set(t) | set(ours[i])):
+            sec.cmp(label, k, ours[i].get(k), t.get(k))
+    sec.only_ours += [f"entry {i}" for i in range(len(theirs), len(ours))]
+    sec.notes += ["Every ability, in order (the birth screen and character sheet list them so): type, code, name, "
+                  "description and an element's level."]
+    return sec
+
+
+def hints_42(gd):
+    """hints.txt: the shopkeepers' hints, in order."""
+    return [raw.rstrip("\n")[2:] for raw in open(os.path.join(gd, "hints.txt"), encoding="utf-8") if raw.startswith("H:")]
+
+
+def compare_hints(gd, data):
+    sec = section("hints", "Hints", "hints.json", "hints.txt")
+    ours, theirs = load(data, "hints.json"), hints_42(gd)
+    sec.compared = 1
+    sec.cmp("hints", "all of them, in order", ours, theirs)
+    sec.notes += [f"The {len(theirs)} hints a shopkeeper may pass on as you come in (prt_welcome)."]
+    return sec
+
+
+def compare_world(gd, data):
+    """world.txt: AVABand's dungeon is levels 0 (the town) to max depth, each one above the next."""
+    sec = section("world", "World", "constants.json (maxDepth)", "world.txt")
+    levels = [line.rstrip("\n").split(":") for line in open(os.path.join(gd, "world.txt"), encoding="utf-8")
+              if line.startswith("level:")]
+    names = {lv[2]: int(lv[1]) for lv in levels}
+    sec.compared = 1
+    ours = load(data, "constants.json").get("maxDepth", 127)
+    sec.cmp("dungeon", "deepest level", ours, max(int(lv[1]) for lv in levels))
+    chained = all((lv[3] == "None" or names.get(lv[3]) == int(lv[1]) - 1) and (lv[4] == "None" or names.get(lv[4]) == int(lv[1]) + 1)
+                  for lv in levels)
+    sec.cmp("dungeon", "each level between the one above and the one below", True, chained)
+    sec.notes += ["AVABand's levels are numbered, not named: what matters is that 4.2.5's run straight down."]
+    return sec
+
+
 def compare_quests(gd, data):
     sec = section("quests", "Quests", "quests.json", "quest.txt")
     ours = {x["id"]: x for x in load(data, "quests.json")}
@@ -2440,7 +2689,10 @@ def main():
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
                compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps, compare_quests,
                compare_profiles, compare_vaults, compare_room_templates, compare_pits,
-               compare_blow_methods, compare_realms, compare_object_bases, compare_flavors, compare_names):
+               compare_blow_methods, compare_realms, compare_object_bases, compare_flavors, compare_names,
+               compare_histories, compare_pain, compare_object_properties, compare_slays, compare_brands,
+               compare_body, compare_player_properties, compare_hints,
+               compare_world):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

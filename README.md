@@ -556,9 +556,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
   spells), race, shape, trap, terrain feature, store, curse, constant, summon kind, timed effect,
   element, chest trap, quest, dungeon profile, vault, room template, pit theme, blow method, realm,
-  object base, flavour and name list with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
+  object base, flavour, name list, history chart, pain message, object property, slay, brand, player
+  property and hint, the equipment slots and the world's levels with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
   differs (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
-  differences across 2,689 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  differences across 2,891 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
   monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
   conversions while keeping ids and AVABand's own fields, and CI checks it on every push: the
   `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with
@@ -588,6 +589,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   that got something (or was fended off from your purse, two times in three) finishes its blows
   before the puff of smoke; the blows stop if you're moved; and monster recall counts only the
   blows seen to land.
+- **What 4.2.5 says and shows that AVABand didn't** (history.txt, pain.txt, player_property.txt,
+  hints.txt, class titles): a character is born with an age, height, weight and a background from
+  their race's history charts ("You are one of several children of a Yeoman...") on the character
+  sheet, with their title for their level and their abilities as the birth screen names them
+  (Relentless [30], No Magic, Shield Bash...; the creation screen lists them so too); a monster hurt
+  by a missile, spell or breath shows its pain ("The cave orc grunts with pain.") where it used to
+  say only that it was hit; and a shopkeeper may greet you as you come in — a welcome that warms
+  with your level, or one of 4.2.5's hints. Object power (so prices and random artifacts) reads
+  object_property.txt, slay.txt and brand.txt instead of a copy of them, and counts what an
+  object ignores.
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so

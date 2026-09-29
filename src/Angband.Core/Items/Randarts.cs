@@ -369,7 +369,7 @@ public sealed class RandartGenerator
         var slay = _rng.Pick(options);
         d.Slays.Add(slay);
         // Angband: often another if the first is weak.
-        if (_rng.RandInt0(4) != 0 && ArtifactPower.SlayPower(slay) < 105) AddSlay(d);
+        if (_rng.RandInt0(4) != 0 && ArtifactPower.SlayPower(slay, _data) < 105) AddSlay(d);
     }
 
     private void AddBrand(Draft d)
@@ -518,7 +518,7 @@ public sealed class RandartGenerator
 /// </summary>
 public static class ArtifactPower
 {
-    public static int SlayPower(SlayDef slay) => ObjectPower.SlayPower(slay);
+    public static int SlayPower(SlayDef slay, GameData data) => ObjectPower.SlayPower(slay, data);
 
     public static int Of(ArtifactDef art, GameData data) => Of(RandartGenerator.Draft.FromArtifact(art, data), data);
 

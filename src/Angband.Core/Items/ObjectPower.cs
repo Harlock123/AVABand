@@ -24,6 +24,8 @@ public sealed class PowerProfile
     /// <summary>AVABand's resist list: elements, and protections, sustains and abilities (fear, free_act, sust_str...).</summary>
     public IReadOnlyCollection<string> Resists { get; init; } = [];
     public IReadOnlyCollection<string> Flags { get; init; } = [];
+    /// <summary>Elements it ignores (its kind's or ego's IGNORE_x; artifacts ignore the four base ones).</summary>
+    public IReadOnlyCollection<string> Ignores { get; init; } = [];
     /// <summary>Elements the object is vulnerable to (from curses).</summary>
     public IReadOnlyCollection<string> Vulnerabilities { get; init; } = [];
     public IReadOnlyCollection<string> Curses { get; init; } = [];
@@ -52,6 +54,8 @@ public sealed class PowerProfile
             Resists = [.. item.Resists.Where(r => Knows(RuneIds.Resist(r)))],
             Flags = [.. item.Flags.Where(f => !ItemFlags.Abilities.Contains(f) || Knows(RuneIds.Flag(f)))],
             Curses = [.. item.Curses.Where(c => Knows(RuneIds.Curse(c)))],
+            // (What an object ignores is its kind's: unknown until the kind is.)
+            Ignores = known is null || known.KnowsKind(item) ? [.. item.Kind.Ignore.Concat(item.Ego?.Ignore ?? []).Distinct()] : [],
             IsEgo = item.Ego is not null, IsArtifact = item.Artifact is not null,
             ActivationPower = item.Artifact?.Activation is not null ? item.Artifact.ActivationPower : null,
         };
@@ -78,32 +82,12 @@ public static class ObjectPower
         "arrow" => (12, 9, 5), "bolt" => (14, 9, 7), _ => (10, 9, 4),
     };
 
-    // object_property.txt modifiers: power and stat-bonus weight ("mult"); type-mult below.
-    private static readonly Dictionary<string, (int Power, int Mult)> Modifiers = new(StringComparer.Ordinal)
-    {
-        ["str"] = (9, 13), ["int"] = (5, 10), ["wis"] = (5, 10), ["dex"] = (8, 10), ["con"] = (12, 15),
-        ["stealth"] = (8, 12), ["search"] = (2, 5), ["infra"] = (4, 8), ["tunnel"] = (3, 8), ["speed"] = (20, 6),
-        ["dam_red"] = (5, 6), ["blows"] = (0, 50), ["shots"] = (0, 5), ["might"] = (0, 30), ["moves"] = (0, 50),
-        ["light"] = (3, 6),
-    };
-
+    // obj-power.c flag_sets, by object_property.txt subtype.
     private enum FlagSet { None, Sustain, Protection, Misc }
 
-    // object_property.txt flags, by AVABand name (resist-list ids and item flags): power and set.
-    private static readonly Dictionary<string, (int Power, FlagSet Set)> Flags = new(StringComparer.Ordinal)
+    private static FlagSet SetOf(string? subtype) => subtype switch
     {
-        ["sust_str"] = (9, FlagSet.Sustain), ["sust_int"] = (4, FlagSet.Sustain), ["sust_wis"] = (4, FlagSet.Sustain),
-        ["sust_dex"] = (7, FlagSet.Sustain), ["sust_con"] = (8, FlagSet.Sustain),
-        ["fear"] = (6, FlagSet.Protection), ["blind"] = (16, FlagSet.Protection), ["conf"] = (24, FlagSet.Protection),
-        ["stun"] = (12, FlagSet.Protection),
-        ["SLOW_DIGEST"] = (2, FlagSet.Misc), ["FEATHER"] = (1, FlagSet.Misc), ["REGEN"] = (5, FlagSet.Misc),
-        ["TELEPATHY"] = (35, FlagSet.Misc), ["see_invis"] = (6, FlagSet.Misc), ["free_act"] = (8, FlagSet.Misc),
-        ["HOLD_LIFE"] = (5, FlagSet.Misc), ["TRAP_IMMUNE"] = (5, FlagSet.Misc),
-        ["IMPACT"] = (10, FlagSet.None), ["BLESSED"] = (1, FlagSet.None), ["NO_FUEL"] = (5, FlagSet.None),
-        ["THROWING"] = (4, FlagSet.None), ["DIG_1"] = (3, FlagSet.None), ["DIG_2"] = (6, FlagSet.None), ["DIG_3"] = (9, FlagSet.None),
-        ["IMPAIR_HP"] = (-8, FlagSet.None), ["IMPAIR_MANA"] = (-8, FlagSet.None), ["AFRAID"] = (-20, FlagSet.None),
-        ["NO_TELEPORT"] = (-20, FlagSet.None), ["AGGRAVATE"] = (-20, FlagSet.None), ["DRAIN_EXP"] = (-5, FlagSet.None),
-        ["STICKY"] = (-5, FlagSet.None), ["FRAGILE"] = (-1, FlagSet.None),
+        "sustain" => FlagSet.Sustain, "protection" => FlagSet.Protection, "misc ability" => FlagSet.Misc, _ => FlagSet.None,
     };
 
     // obj-power.c flag_sets: extra power for several of a kind, and a bonus for the full set.
@@ -122,19 +106,10 @@ public static class ObjectPower
     ];
 
     /// <summary>slay.txt power (100 = no better than nothing).</summary>
-    public static int SlayPower(SlayDef slay) => (slay.MonsterFlag, slay.Multiplier) switch
-    {
-        ("EVIL", _) => 200, ("ANIMAL", _) => 115, ("ORC", _) => 101, ("TROLL", _) => 101, ("GIANT", _) => 102,
-        ("DEMON", >= 5) => 120, ("DEMON", _) => 110, ("DRAGON", >= 5) => 110, ("DRAGON", _) => 105,
-        ("UNDEAD", >= 5) => 130, ("UNDEAD", _) => 115, _ => 105,
-    };
+    public static int SlayPower(SlayDef slay, GameData data) => data.SlayType(slay.MonsterFlag, slay.Multiplier)?.Power ?? 100;
 
     /// <summary>brand.txt power.</summary>
-    public static int BrandPower(BrandDef brand) => (brand.Element, brand.Multiplier) switch
-    {
-        ("acid", >= 3) => 161, ("elec", >= 3) => 116, ("fire", >= 3) => 113, ("cold", >= 3) => 119, ("pois", >= 3) => 122,
-        ("acid", _) => 130, ("elec", _) => 108, ("fire", _) => 107, ("cold", _) => 109, ("pois", _) => 111, _ => 110,
-    };
+    public static int BrandPower(BrandDef brand, GameData data) => data.BrandType(brand.Element, brand.Multiplier)?.Power ?? 100;
 
     public static int Of(Item item, GameData data, PlayerKnowledge? known = null) => Of(PowerProfile.Of(item, known), data);
 
@@ -176,7 +151,7 @@ public static class ObjectPower
         p *= mult + Mod("might");
 
         // Slays and brands.
-        p = SlayPowerOf(o, p, dicePower);
+        p = SlayPowerOf(o, p, dicePower, data);
         if (bow) p /= MaxBlows;
         p += o.ToHit * ToHitPower / 2;
 
@@ -198,8 +173,8 @@ public static class ObjectPower
         }
         if (tval is "ring" or "amulet") p += BaseJewelryPower;
 
-        p = ModifierPower(o, p, tval);
-        p = FlagsPower(o, p, tval);
+        p = ModifierPower(o, p, tval, data);
+        p = FlagsPower(o, p, tval, data);
         p = ElementPower(o, p);
 
         // Activation, or the kind's own effect.
@@ -213,13 +188,13 @@ public static class ObjectPower
         return p;
     }
 
-    private static int SlayPowerOf(PowerProfile o, int p, int dicePower)
+    private static int SlayPowerOf(PowerProfile o, int p, int dicePower, GameData data)
     {
         int brands = o.Brands.Count, slays = o.Slays.Count(s => s.Multiplier <= 3), kills = o.Slays.Count(s => s.Multiplier > 3);
         if (brands + slays + kills == 0) return p;
         var best = 1;
-        foreach (var br in o.Brands) best = Math.Max(best, BrandPower(br));
-        foreach (var s in o.Slays) best = Math.Max(best, SlayPower(s));
+        foreach (var br in o.Brands) best = Math.Max(best, BrandPower(br, data));
+        foreach (var s in o.Slays) best = Math.Max(best, SlayPower(s, data));
         p += dicePower * dicePower * (best - 100) / 2500;
         if (slays > 1) p += slays * slays * dicePower / (DamagePower * 5);
         if (brands > 1) p += 2 * brands * brands * dicePower / (DamagePower * 5);
@@ -231,23 +206,15 @@ public static class ObjectPower
         return p;
     }
 
-    private static bool IsArmourType(string tval) =>
-        tval is "soft_armour" or "hard_armour" or "dragon_armour" or "cloak" or "shield" or "helm" or "crown" or "gloves" or "boots";
-
-    private static bool IsWeaponType(string tval) => tval is "sword" or "polearm" or "hafted" or "digger";
-
-    private static bool IsBowType(string tval) => tval is "sling" or "bow" or "crossbow";
-
     /// <summary>Angband modifier_power: each modifier's power (times its type-mult), plus a term for many at once.</summary>
-    private static int ModifierPower(PowerProfile o, int p, string tval)
+    private static int ModifierPower(PowerProfile o, int p, string tval, GameData data)
     {
         var statBonus = 0;
         foreach (var (mod, k) in o.Modifiers)
         {
-            if (!Modifiers.TryGetValue(mod, out var m)) continue;
+            if ((data.ObjectProperty("stat", mod) ?? data.ObjectProperty("mod", mod)) is not { } m) continue;
             statBonus += k * m.Mult;
-            var typeMult = (mod, tval) switch { ("dex", "gloves") => 2, ("light", "light") => 3, _ => 1 };
-            p += k * m.Power * typeMult;
+            p += k * m.Power * m.TypeMultFor(tval);
         }
         if (statBonus > 249) p += InhibitPower;
         else if (statBonus > 0) p += AbilityPower[statBonus / 10];
@@ -255,7 +222,7 @@ public static class ObjectPower
     }
 
     /// <summary>Angband flags_power: sustains, protections, abilities and bad flags, with extra for sets.</summary>
-    private static int FlagsPower(PowerProfile o, int p, string tval)
+    private static int FlagsPower(PowerProfile o, int p, string tval, GameData data)
     {
         var counts = new Dictionary<FlagSet, int>();
         var flags = o.Resists.Concat(o.Flags).Distinct(StringComparer.Ordinal).ToList();
@@ -263,9 +230,9 @@ public static class ObjectPower
         if (o.Base?.Slot == EquipSlot.Light && o.Kind is { Fuel: 0 } && !flags.Contains("NO_FUEL")) flags.Add("NO_FUEL");
         foreach (var flag in flags)
         {
-            if (!Flags.TryGetValue(flag, out var f)) continue;
-            p += f.Power * FlagTypeMult(flag, tval);
-            if (f.Set != FlagSet.None) counts[f.Set] = counts.GetValueOrDefault(f.Set) + 1;
+            if (data.ObjectProperty("flag", flag) is not { } f) continue;
+            p += f.Power * f.TypeMultFor(tval);
+            if (SetOf(f.Subtype) is var set and not FlagSet.None) counts[set] = counts.GetValueOrDefault(set) + 1;
         }
         foreach (var (set, count) in counts)
         {
@@ -276,31 +243,17 @@ public static class ObjectPower
         return p;
     }
 
-    /// <summary>object_property.txt type-mult for flags: abilities count double off weapons, and so on.</summary>
-    private static int FlagTypeMult(string flag, string tval)
-    {
-        var offWeapon = tval is "ring" or "amulet" or "light" || IsArmourType(tval);
-        return flag switch
-        {
-            "free_act" when tval == "gloves" => 5,
-            "REGEN" or "TELEPATHY" or "see_invis" or "free_act" or "HOLD_LIFE" or "TRAP_IMMUNE" => offWeapon ? 2 : 1,
-            "IMPACT" => IsWeaponType(tval) ? 1 : 0,
-            "BLESSED" => IsWeaponType(tval) && tval != "hafted" ? 1 : 0,
-            "NO_FUEL" => tval == "light" ? 1 : 0,
-            _ => 1,
-        };
-    }
-
     /// <summary>
     /// Angband element_power: ignoring, vulnerability, resistance or immunity to each element, with
-    /// extra for several and a bonus for a full set. Artifacts ignore the four base elements.
+    /// extra for several and a bonus for a full set. Anything that ignores an element (an artifact
+    /// ignores the four base ones) is worth that much more.
     /// </summary>
     private static int ElementPower(PowerProfile o, int p)
     {
         int immunities = 0, low = 0, high = 0;
         foreach (var el in Elements)
         {
-            if (o.IsArtifact && el.Low) p += el.Ignore;
+            if (el.Low && (o.IsArtifact || o.Ignores.Contains(el.Id))) p += el.Ignore;
             var level = o.Vulnerabilities.Contains(el.Id) && !o.Resists.Contains(el.Id) ? -1
                 : o.Resists.Contains("im_" + el.Id) ? 3
                 : o.Resists.Contains(el.Id) ? 1 : 0;

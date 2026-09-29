@@ -362,6 +362,7 @@ public sealed partial class GameSession
             return 0;
         }
         Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+        GreetInShop(store);
         return 0;
     }
 
@@ -491,5 +492,43 @@ public sealed partial class GameSession
         var gold = Objects.MakeGold(Rng, level);
         if (NoSelling && Level.Depth > 0) gold.GoldValue *= Math.Min(5, Level.Depth);
         return gold;
+    }
+
+    /// <summary>Angband comment_welcome: how a shopkeeper greets you, warmer the higher your level.</summary>
+    private static readonly string[] ShopWelcomes =
+    [
+        "", "{0} nods to you.", "{0} says hello.", "{0}: \"See anything you like, adventurer?\"",
+        "{0}: \"How may I help you, {1}?\"", "{0}: \"Welcome back, {1}.\"", "{0}: \"A pleasure to see you again, {1}.\"",
+        "{0}: \"How may I be of assistance, good {1}?\"", "{0}: \"You do honour to my humble store, noble {1}.\"",
+        "{0}: \"I and my family are entirely at your service, {1}.\"",
+    ];
+
+    /// <summary>
+    /// Angband prt_welcome: half the time the keeper says something as you come in — one time in
+    /// three a hint (hints.txt), otherwise, once you're past level 5, a welcome by your level, calling
+    /// you by your title, your name or "valued customer".
+    /// </summary>
+    private void GreetInShop(Store store)
+    {
+        if (store.IsHome || store.Owner is not { } owner || Rng.OneIn(2)) return;
+        var shortName = owner.Name.Split(' ')[0];
+        if (Rng.OneIn(3))
+        {
+            // Angband random_hint: each hint in turn, kept one time in n.
+            string? hint = null;
+            for (var n = 1; n <= Data.Hints.Count; n++)
+                if (Rng.OneIn(n)) hint = Data.Hints[n - 1];
+            if (hint is not null) Publish(new MessageEvent($"\"{hint}\""));
+        }
+        else if (Player.Level > 5)
+        {
+            var i = Math.Min((Player.Level - 1) / 5, ShopWelcomes.Length - 1);
+            var titles = Player.Class?.Titles ?? [];
+            string name;
+            if (i % 2 == 1 && Rng.RandInt0(2) != 0 && titles.Count > 0) name = titles[Math.Min(titles.Count - 1, (Player.Level - 1) / 5)];
+            else if (Rng.RandInt0(2) != 0) name = Player.Name;
+            else name = "valued customer";
+            Publish(new MessageEvent(string.Format(System.Globalization.CultureInfo.InvariantCulture, ShopWelcomes[i], shortName, name)));
+        }
     }
 }

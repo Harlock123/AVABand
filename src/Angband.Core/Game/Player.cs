@@ -19,6 +19,12 @@ public sealed class Player : IActor
     public bool IsActive => true;
 
     public string Name { get; set; } = "Adventurer";
+    /// <summary>Age in years, height in inches and weight in pounds, rolled at birth (Angband get_ahw).</summary>
+    public int Age { get; set; }
+    public int Height { get; set; }
+    public int Weight { get; set; }
+    /// <summary>The character's background, from the race's history charts (Angband player history).</summary>
+    public string Background { get; set; } = "";
     public Loc Position { get; set; }
     public int Depth { get; set; }
     public int MaxDepth { get; set; }

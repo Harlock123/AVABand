@@ -37,7 +37,9 @@ it returns when you regain it, or with a Potion of Restore Life Levels.
 
 ## The character sheet
 
-`C` shows everything: stats, skills, resistances, and a paper doll of what you wear. **Save to
+`C` shows everything: your title for your level, age, height and weight, the background you were
+born with, your race's and class's abilities, stats, skills, resistances, and a paper doll of what
+you wear. **Save to
 file** writes it to a text file, as Angband's character dumps. At the end is your **history** — when
 you set out, each level reached, each unique killed, each artifact found — and `:` adds a note of
 your own to it. An artifact gone for good (left on a level, or sold off by a shop) is marked

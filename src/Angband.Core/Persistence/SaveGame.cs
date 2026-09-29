@@ -121,7 +121,7 @@ public static class SaveGame
             },
             Player = new PlayerSave
             {
-                Name = p.Name, Race = p.Race?.Id, Class = p.Class?.Id, X = p.Position.X, Y = p.Position.Y, Energy = p.Energy,
+                Name = p.Name, Age = p.Age, Height = p.Height, Weight = p.Weight, Background = p.Background, Race = p.Race?.Id, Class = p.Class?.Id, X = p.Position.X, Y = p.Position.Y, Energy = p.Energy,
                 Depth = p.Depth, MaxDepth = p.MaxDepth, Level = p.Level, MaxLevel = p.MaxLevel, ExpFactor = p.ExpFactor,
                 HitDie = p.HitDie, Experience = p.Experience, ExperienceFraction = p.ExperienceFraction, Gold = p.Gold,
                 Food = p.Food, MaxHp = p.MaxHp, Hp = p.Hp, HpFraction = p.HpFraction, IsDead = p.IsDead, IsWinner = p.IsWinner, KilledBy = p.KilledBy,
@@ -327,6 +327,7 @@ public static class SaveGame
         var ps = f.Player;
         var p = g.Player;
         p.Name = ps.Name;
+        (p.Age, p.Height, p.Weight, p.Background) = (ps.Age, ps.Height, ps.Weight, ps.Background ?? "");
         p.Race = ps.Race is null ? null : data.Race(ps.Race);
         p.Class = ps.Class is null ? null : data.Class(ps.Class);
         if (ps.Race is not null && p.Race is null) errors.Add($"unknown race '{ps.Race}'");

@@ -270,7 +270,7 @@ public sealed partial class GameSession
             }
             var vulnerable = element?.VulnerabilityFlag is { } vuln && race.Has(vuln);
             var multiplier = vulnerable ? brand.Multiplier * 2 : brand.Multiplier;
-            var oBrand = OBrandMultiplier(brand.Multiplier, vulnerable);
+            var oBrand = OBrandMultiplier(brand.Element, brand.Multiplier, vulnerable);
             if (Better(multiplier, oBrand)) best = (multiplier, brand.Verb, RuneIds.Brand(brand.Element), oBrand);
         }
         return best;
@@ -278,9 +278,11 @@ public sealed partial class GameSession
 
     /// <summary>
     /// Damages a monster (Angband mon_take_hit): wakes it, may kill it (granting experience and
-    /// dropping loot) or frighten it. Returns true if it died.
+    /// dropping loot) or frighten it. Returns true if it died. With <paramref name="pain"/>, a
+    /// survivor you can see shows how it was hurt (Angband message_pain, as missiles, spells and
+    /// breath do; melee doesn't).
     /// </summary>
-    public bool DamageMonster(Monster monster, int damage)
+    public bool DamageMonster(Monster monster, int damage, bool pain = false)
     {
         Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage));
         Reveal(monster);
@@ -292,6 +294,8 @@ public sealed partial class GameSession
             KillMonster(monster);
             return true;
         }
+        if (pain && monster.IsVisible && PainMessage(monster, damage) is { } hurt)
+            Publish(new MessageEvent($"{hurt[..^1]}{DamageNote(damage)}{hurt[^1]}"));
 
         if (!monster.IsAfraid && !monster.Race.Has(MonsterFlags.NoFear))
         {
@@ -304,6 +308,27 @@ public sealed partial class GameSession
         }
         return false;
     }
+
+    /// <summary>
+    /// Angband message_pain: by the share of its health the hit left it, one of its base's seven pain
+    /// messages ("The orc grunts with pain."); unharmed, it says so.
+    /// </summary>
+    public string? PainMessage(Monster monster, int damage)
+    {
+        var name = Capitalize(MonsterName(monster));
+        if (damage <= 0) return $"{name} is unharmed.";
+        var baseId = monster.Race.Base;
+        if (Data.MonsterBases.FirstOrDefault(b => b.Id == baseId) is not { Pain: > 0 } monsterBase
+            || Data.Pain.FirstOrDefault(p => p.Type == monsterBase.Pain) is not { Messages.Count: 7 } pain) return null;
+        long now = Math.Max(0, monster.Hp);
+        var percentage = (int)(now * 100 / (now + damage));
+        var index = percentage switch { > 95 => 0, > 75 => 1, > 50 => 2, > 35 => 3, > 20 => 4, > 10 => 5, _ => 6 };
+        return $"{name} {SingularVerb(pain.Messages[index])}";
+    }
+
+    /// <summary>Angband's message verbs for one subject: <c>grunt[s]</c> → grunts, <c>cr[ies|y]</c> → cries.</summary>
+    private static string SingularVerb(string text) =>
+        System.Text.RegularExpressions.Regex.Replace(text, @"\[([^|\]]*)(\|[^\]]*)?\]", m => m.Groups[1].Value);
 
     private void KillMonster(Monster monster)
     {

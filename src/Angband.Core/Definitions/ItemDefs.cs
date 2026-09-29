@@ -396,3 +396,44 @@ public sealed class ChestTrapDef
     /// <summary>This trap's bit in a chest's trap value (set from the list order).</summary>
     public int Bit { get; internal set; }
 }
+
+/// <summary>
+/// What a property of an object is worth (Angband object_property.txt): its power (for each point
+/// of a modifier), its weight in the stat-bonus total (<see cref="Mult"/>), its set (sustain,
+/// protection, misc ability...) and how that power multiplies on each kind of object (type-mult;
+/// 1 where none is given).
+/// </summary>
+public sealed class ObjectPropertyDef
+{
+    /// <summary><c>stat</c>, <c>mod</c>, <c>flag</c>, <c>ignore</c>, <c>resistance</c>, <c>vulnerability</c> or <c>immunity</c>.</summary>
+    public required string Type { get; init; }
+    public string Code { get; init; } = "";
+    /// <summary>AVABand's name for it: a modifier, a flag, a resist-list id or an element.</summary>
+    public required string Id { get; init; }
+    public int Power { get; init; }
+    public int Mult { get; init; }
+    public string? Subtype { get; init; }
+    public IReadOnlyDictionary<string, int> TypeMult { get; init; } = new Dictionary<string, int>();
+
+    public int TypeMultFor(string baseId) => TypeMult.TryGetValue(baseId, out var m) ? m : 1;
+}
+
+/// <summary>A slay's worth (Angband slay.txt): its power and its O-combat multiplier, in tenths.</summary>
+public sealed class SlayTypeDef
+{
+    public string Code { get; init; } = "";
+    public required string Flag { get; init; }
+    public int Multiplier { get; init; }
+    public int OMultiplier { get; init; }
+    public int Power { get; init; }
+}
+
+/// <summary>A brand's worth (Angband brand.txt): its power and its O-combat multiplier, in tenths.</summary>
+public sealed class BrandTypeDef
+{
+    public string Code { get; init; } = "";
+    public required string Element { get; init; }
+    public int Multiplier { get; init; }
+    public int OMultiplier { get; init; }
+    public int Power { get; init; }
+}

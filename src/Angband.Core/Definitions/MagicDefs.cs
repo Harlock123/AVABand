@@ -50,6 +50,8 @@ public sealed class ClassDef
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
+    /// <summary>Its ten titles, one for each five levels (Angband class.txt title).</summary>
+    public IReadOnlyList<string> Titles { get; init; } = [];
     /// <summary>Added to the race's hit die.</summary>
     public int HitDie { get; init; }
     /// <summary>Skills at level 1: melee, bow, throw, save, stealth, disarm, device.</summary>
@@ -113,4 +115,52 @@ public sealed class RaceDef
     /// <summary>Innate flags such as <c>REGENERATE</c>.</summary>
     public IReadOnlyList<string> Flags { get; init; } = [];
     public string Description { get; init; } = "";
+    /// <summary>The history chart a background starts from (Angband p_race.txt history).</summary>
+    public int History { get; init; }
+    /// <summary>Age at birth: the base plus 1d(mod) years.</summary>
+    public BaseAndSpread Age { get; init; } = new();
+    /// <summary>Height in inches, normally distributed about the base.</summary>
+    public BaseAndSpread Height { get; init; } = new();
+    /// <summary>Weight in pounds, normally distributed about the base.</summary>
+    public BaseAndSpread Weight { get; init; } = new();
+}
+
+/// <summary>A base and its spread (p_race.txt's age, height and weight).</summary>
+public sealed class BaseAndSpread
+{
+    public int Base { get; init; }
+    public int Mod { get; init; }
+}
+
+/// <summary>
+/// One of the charts a character's background is made from (Angband history.txt): the first entry
+/// whose roll reaches 1d100 gives its phrase and names the chart to read next (0 ends it).
+/// </summary>
+public sealed class HistoryChartDef
+{
+    public int Chart { get; init; }
+    public IReadOnlyList<HistoryEntryDef> Entries { get; init; } = [];
+}
+
+public sealed class HistoryEntryDef
+{
+    public int Next { get; init; }
+    public int Roll { get; init; }
+    public string Text { get; init; } = "";
+}
+
+/// <summary>
+/// A race's or class's ability as the birth screen and character sheet name it (Angband
+/// player_property.txt): a player flag, an object flag, or (type <c>element</c>) a resistance level
+/// that stands for one such ability per element.
+/// </summary>
+public sealed class PlayerPropertyDef
+{
+    /// <summary><c>player</c>, <c>object</c> or <c>element</c>.</summary>
+    public required string Type { get; init; }
+    public string? Code { get; init; }
+    public required string Name { get; init; }
+    public string Desc { get; init; } = "";
+    /// <summary>For an element: the resistance level it describes (1, 3 or -1).</summary>
+    public int Value { get; init; }
 }

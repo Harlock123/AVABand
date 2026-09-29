@@ -61,13 +61,13 @@ public class CharacterCreationUiTests
 
         Assert.Contains("the Dwarf Priest", creation.Preview);
         Assert.Contains("Divine magic (WIS)", creation.Preview);
-        Assert.Contains("cannot be blinded", creation.Preview);
+        Assert.Contains("Blindness Immunity", creation.Preview);
         Assert.Equal("+2", creation.StatRows.Single(r => r.Id == "wis").RaceMod);
         Assert.Equal("+3", creation.StatRows.Single(r => r.Id == "wis").ClassMod);
         TileRenderingTests.Save(window.OwnedWindows[0], "character-creation");
     }
 
-    /// <summary>Every race and class's abilities are described in words, never as a raw flag ("bravery_30").</summary>
+    /// <summary>Every race and class's abilities are named as 4.2.5's birth screen names them, never as a raw flag ("bravery_30").</summary>
     [AvaloniaFact]
     public void Preview_DescribesEveryAbilityInWords()
     {
@@ -85,9 +85,9 @@ public class CharacterCreationUiTests
 
         creation.SelectedRace = creation.Races.Single(r => r.Id == "human");
         creation.SelectedClass = creation.Classes.Single(c => c.Id == "warrior");
-        Assert.Contains("Abilities: shield bashes, immune to fear from level 30", creation.Preview);
+        Assert.Contains("Abilities: Relentless [30], No Magic, Shield Bash", creation.Preview);
         creation.SelectedClass = creation.Classes.Single(c => c.Id == "mage");
-        Assert.Contains("bolt spells often become beams, spells can reach 0% failure", creation.Preview);
+        Assert.Contains("Abilities: Full Spellcaster, Extra Spell Beaming, Spell Choice", creation.Preview); // player_property.txt order
     }
 
     [AvaloniaFact]

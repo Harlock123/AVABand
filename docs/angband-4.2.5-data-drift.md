@@ -37,6 +37,15 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Object bases](#object-bases) — `object_bases.json` vs `object_base.txt`
 - [Flavours](#flavors) — `flavors.json` vs `flavor.txt (+ names.txt's scroll words)`
 - [Names](#names) — `names.json` vs `names.txt (section 1)`
+- [Histories](#histories) — `histories.json` vs `history.txt`
+- [Pain messages](#pain) — `pain.json` vs `pain.txt`
+- [Object properties](#object-properties) — `object_properties.json` vs `object_property.txt`
+- [Slays](#slays) — `slays.json` vs `slay.txt`
+- [Brands](#brands) — `brands.json` vs `brand.txt`
+- [Body](#body) — `Items/Inventory.cs (Slots)` vs `body.txt`
+- [Player properties](#player-properties) — `player_properties.json` vs `player_property.txt`
+- [Hints](#hints) — `hints.json` vs `hints.txt`
+- [World](#world) — `constants.json (maxDepth)` vs `world.txt`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -58,7 +67,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 
 ### Notes: normalisation and fields not compared
 
-- Only the glyph is compared; the base flags are compared through each monster's merged flags. Not compared: `pain`, `desc`.
+- The glyph and pain type are compared; the base flags are compared through each monster's merged flags. Not compared: `desc`.
 
 <a id="monster-spells"></a>
 ## Monster spells: `monster_spells.json` vs `monster_spell.txt (+ projection.txt, list-mon-spells.h)`
@@ -174,7 +183,7 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - Skills as for classes (disarm = `skill-disarm-phys`, disarm_magic = `skill-disarm-magic`, bow = `skill-shoot`, search = `skill-search`).
 - Flags/resists: 4.2.5 `obj-flags`, `player-flags` and `values` (RES_x[1] → RES_x) against ours `resists` (mapped back to 4.2.5 names: acid → RES_ACID, sust_dex → SUST_DEX, hold_life → HOLD_LIFE, ...) and `flags` (REGENERATE → REGEN).
-- Not compared: `history`, `age`, `height`, `weight`, `equip`, descriptions.
+- `history` (the first history chart), `age`, `height` and `weight` (base and spread) are compared; descriptions aren't.
 
 <a id="shapes"></a>
 ## Shapes: `shapes.json` vs `shape.txt`
@@ -389,6 +398,87 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - The words random artifact and character names are made from, in order. names.txt's scroll words are compared under Flavours.
 
+<a id="histories"></a>
+## Histories: `histories.json` vs `history.txt`
+
+44 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every chart's entries (roll, next chart and phrase) are compared, in order: get_history takes the first whose roll reaches 1d100.
+
+<a id="pain"></a>
+## Pain messages: `pain.json` vs `pain.txt`
+
+12 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Each type's seven messages, in order (more than 95% of health left ... 10% or less).
+
+<a id="object-properties"></a>
+## Object properties: `object_properties.json` vs `object_property.txt`
+
+78 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Each property's power, mult, subtype and type-mults (what object_power and so prices and random artifacts make of it). Names, descriptions and messages are AVABand's own.
+
+<a id="slays"></a>
+## Slays: `slays.json` vs `slay.txt`
+
+11 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Power and O-multiplier (the names and verbs are on each object).
+
+<a id="brands"></a>
+## Brands: `brands.json` vs `brand.txt`
+
+10 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Power and O-multiplier (the names and verbs are on each object).
+
+<a id="body"></a>
+## Body: `Items/Inventory.cs (Slots)` vs `body.txt`
+
+1 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- The kinds of slot and their order (which decide where things are worn, and which slot disenchantment picks). The slots' names are AVABand's (4.2.5 names the rings' hands).
+
+<a id="player-properties"></a>
+## Player properties: `player_properties.json` vs `player_property.txt`
+
+44 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every ability, in order (the birth screen and character sheet list them so): type, code, name, description and an element's level.
+
+<a id="hints"></a>
+## Hints: `hints.json` vs `hints.txt`
+
+1 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- The 99 hints a shopkeeper may pass on as you come in (prt_welcome).
+
+<a id="world"></a>
+## World: `constants.json (maxDepth)` vs `world.txt`
+
+1 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- AVABand's levels are numbered, not named: what matters is that 4.2.5's run straight down.
+
 ## Not compared at all
 
 - 4.2.5 files with no comparison here: object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
@@ -429,5 +519,14 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Object bases | 36 | 0 | 0 | 0 | 0 | 0 |
 | Flavours | 8 | 0 | 0 | 0 | 0 | 0 |
 | Names | 1 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **2689** | **0** | **0** | **0** | **14** | **58** |
+| Histories | 44 | 0 | 0 | 0 | 0 | 0 |
+| Pain messages | 12 | 0 | 0 | 0 | 0 | 0 |
+| Object properties | 78 | 0 | 0 | 0 | 0 | 0 |
+| Slays | 11 | 0 | 0 | 0 | 0 | 0 |
+| Brands | 10 | 0 | 0 | 0 | 0 | 0 |
+| Body | 1 | 0 | 0 | 0 | 0 | 0 |
+| Player properties | 44 | 0 | 0 | 0 | 0 | 0 |
+| Hints | 1 | 0 | 0 | 0 | 0 | 0 |
+| World | 1 | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **2891** | **0** | **0** | **0** | **14** | **58** |
 

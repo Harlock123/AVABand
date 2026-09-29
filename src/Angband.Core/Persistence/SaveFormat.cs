@@ -137,6 +137,10 @@ public sealed class BrandSave
 public sealed class PlayerSave
 {
     public string Name { get; set; } = "";
+    public int Age { get; set; }
+    public int Height { get; set; }
+    public int Weight { get; set; }
+    public string Background { get; set; } = "";
     public string? Race { get; set; }
     public string? Class { get; set; }
     public int X { get; set; }

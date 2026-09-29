@@ -588,6 +588,7 @@ def sync_classes(gd, data):
         before = json.dumps(c, sort_keys=True)
         sync_player_skills(c, e, per10=True)
         c.pop("expFactor", None)  # 4.2.5 classes have none: a character's is its race's
+        c["titles"] = cw.get(e, "title")
         # 4.2.5's equip lines: all a class starts with (wearables are worn, as wield_all does).
         base_of = {k["id"]: k["base"] for k in json.load(open(os.path.join(data, "objects.json"), encoding="utf-8"))}
         wearable = {"sword", "hafted", "polearm", "digger", "sling", "bow", "crossbow", "light", "soft_armour", "hard_armour",
@@ -623,6 +624,7 @@ def sync_races(gd, data):
         sync_player_skills(r, e, per10=False)
         r["expFactor"] = int(cw.one(e, "exp", "100"))
         set_or_pop(r, "infravision", int(cw.one(e, "infravision", "0")), 0)
+        r.update(cw.race_body_42(e))
         changed += json.dumps(r, sort_keys=True) != before
     write_races(path, ours)
     print(f"races: {changed} of {len(ours)} brought into line")
@@ -637,7 +639,8 @@ def write_races(path, races):
 
     def fields(r, keys):
         return ", ".join(f'"{k}": {val(r[k])}' for k in keys if k in r)
-    lines = [["id", "name", "hitDie", "expFactor", "infravision"], ["stats"], ["skills"], ["resists"], ["flags"]]
+    lines = [["id", "name", "hitDie", "expFactor", "infravision"], ["history", "age", "height", "weight"], ["stats"],
+             ["skills"], ["resists"], ["flags"]]
     known = {k for group in lines for k in group} | {"description"}
     out = []
     for r in races:
@@ -1284,6 +1287,57 @@ def sync_flavors(gd, data):
     print(f"flavors: {len(ours)} groups synced")
 
 
+def sync_histories(gd, data):
+    """history.txt, whole."""
+    charts = cw.histories_42(gd)
+    with open(os.path.join(data, "histories.json"), "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(c, ensure_ascii=False) for c in charts) + "\n]\n")
+    print(f"histories: {len(charts)} charts written")
+
+
+def sync_pain(gd, data):
+    """pain.txt, whole, and each monster base's pain type from monster_base.txt."""
+    types = cw.pain_42(gd)
+    with open(os.path.join(data, "pain.json"), "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(t, ensure_ascii=False) for t in types) + "\n]\n")
+    path = os.path.join(data, "monster_bases.json")
+    bases = json.load(open(path, encoding="utf-8"))
+    pain = {cw.slug(e["name"]): int(cw.one(e, "pain", "0")) for e in cw.parse_records(os.path.join(gd, "monster_base.txt"))}
+    out = []
+    for b in bases:
+        b = {k: v for k, v in b.items() if k != "pain"}
+        if pain.get(cw.slug(b["id"])):
+            b = {"id": b["id"], "glyph": b["glyph"], "pain": pain[cw.slug(b["id"])],
+                 **{k: v for k, v in b.items() if k not in ("id", "glyph")}}
+        out.append(b)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(b, ensure_ascii=False) for b in out) + "\n]\n")
+    print(f"pain: {len(types)} types, {sum(1 for b in out if 'pain' in b)} bases")
+
+
+def sync_object_properties(gd, data):
+    """object_property.txt, slay.txt and brand.txt: the numbers object_power uses."""
+    for name, rows in (("object_properties.json", cw.object_properties_42(gd)), ("slays.json", cw.slays_42(gd)),
+                       ("brands.json", cw.brands_42(gd))):
+        with open(os.path.join(data, name), "w", encoding="utf-8") as f:
+            f.write("[\n" + ",\n".join("  " + json.dumps(r, ensure_ascii=False) for r in rows) + "\n]\n")
+        print(f"{name}: {len(rows)} written")
+
+
+def sync_player_properties(gd, data):
+    """player_property.txt, whole."""
+    rows = cw.player_properties_42(gd)
+    with open(os.path.join(data, "player_properties.json"), "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(r, ensure_ascii=False) for r in rows) + "\n]\n")
+    print(f"player properties: {len(rows)} written")
+
+
+def sync_hints(gd, data):
+    """hints.txt, whole."""
+    write_json(os.path.join(data, "hints.json"), cw.hints_42(gd), 0)
+    print("hints: synced")
+
+
 def sync_names(gd, data):
     """names.txt's Tolkien names."""
     write_json(os.path.join(data, "names.json"), cw.names_42(gd)[1], 0)
@@ -1298,7 +1352,9 @@ SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "b
             "chest_traps": sync_chest_traps, "quests": sync_quests,
             "profiles": sync_profiles, "vaults": sync_vaults, "room_templates": sync_room_templates, "pits": sync_pits,
             "blow_methods": sync_blow_methods, "realms": sync_realms, "object_bases": sync_object_bases,
-            "flavors": sync_flavors, "names": sync_names}
+            "flavors": sync_flavors, "names": sync_names, "histories": sync_histories,
+            "pain": sync_pain, "object_properties": sync_object_properties,
+            "player_properties": sync_player_properties, "hints": sync_hints}
 
 
 def main():

@@ -360,7 +360,7 @@ public sealed partial class GameSession
         var damage = Math.Min(dice.Roll(Rng), Math.Max(0, undead.Hp + 1));
         Publish(new MessageEvent($"You draw power from {MonsterName(undead)}."));
         Publish(new PlayerAttackEvent(undead.Id, Hit: true, damage, Combat.CriticalGrade.None));
-        DamageMonster(undead, damage);
+        DamageMonster(undead, damage, pain: true);
         Player.Mana = Math.Min(Player.MaxMana, Player.Mana + damage);
     }
 
@@ -403,7 +403,7 @@ public sealed partial class GameSession
         var drained = Math.Min(power, Math.Max(0, victim.Hp + 1));
         Publish(new MessageEvent($"You bite {MonsterName(victim)}."));
         Publish(new PlayerAttackEvent(victim.Id, Hit: true, drained, Combat.CriticalGrade.None));
-        DamageMonster(victim, drained);
+        DamageMonster(victim, drained, pain: true);
         Player.Hp = Math.Min(Player.MaxHp, Player.Hp + drained);
         SetFood(Player.Food + drained * 10);
         Publish(new MessageEvent("You feel refreshed."));

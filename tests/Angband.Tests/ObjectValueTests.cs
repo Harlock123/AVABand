@@ -59,11 +59,12 @@ public class ObjectValueTests
     [Fact]
     public void Jewellery_CountsItsResistances_AndItsEffectsPower()
     {
-        // Ring of Flames [+10]: 10 to AC + 4 jewellery + 6 fire resistance + 11 for its effect.
+        // Ring of Flames [+10]: 10 to AC + 4 jewellery + 6 fire resistance + 3 for ignoring fire
+        // (obj-power.c el_powers) + 11 for its effect.
         var ring = Objects.Create("ring_of_flames");
         ring.ToAc = 10;
-        Assert.Equal(31, ObjectPower.Of(ring, TestData.Game));
-        Assert.Equal(31 * 36, Value(ring));
+        Assert.Equal(34, ObjectPower.Of(ring, TestData.Game));
+        Assert.Equal(34 * 39, Value(ring));
     }
 
     [Fact]

@@ -17,8 +17,15 @@ public static class DataLoader
     public const string TrapsFile = "traps.json";
     public const string ChestTrapsFile = "chest_traps.json";
     public const string QuestsFile = "quests.json";
+    public const string HistoriesFile = "histories.json";
     public const string ShapesFile = "shapes.json";
     public const string MonsterBasesFile = "monster_bases.json";
+    public const string PainFile = "pain.json";
+    public const string ObjectPropertiesFile = "object_properties.json";
+    public const string SlaysFile = "slays.json";
+    public const string BrandsFile = "brands.json";
+    public const string PlayerPropertiesFile = "player_properties.json";
+    public const string HintsFile = "hints.json";
     /// <summary>Words the random artifact namer learns from (Angband names.txt, the Tolkien section).</summary>
     public const string NamesFile = "names.json";
     public const string ProfilesFile = "dungeon_profiles.json";
@@ -105,8 +112,15 @@ public static class DataLoader
         var flavors = new Merged<FlavorGroupDef>(f => f.Id);
         var chestTraps = new Merged<ChestTrapDef>(t => t.Id);
         var quests = new Merged<QuestDef>(q => q.Id);
+        var histories = new Merged<HistoryChartDef>(h => h.Chart.ToString(System.Globalization.CultureInfo.InvariantCulture));
         var shapes = new Merged<ShapeDef>(s => s.Id);
         var monsterBases = new Merged<MonsterBaseDef>(b => b.Id);
+        var pain = new Merged<PainDef>(p => p.Type.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        var objectProperties = new Merged<ObjectPropertyDef>(p => p.Type + ":" + p.Code);
+        var slayTypes = new Merged<SlayTypeDef>(s => s.Code);
+        var brandTypes = new Merged<BrandTypeDef>(b => b.Code);
+        var playerProperties = new Merged<PlayerPropertyDef>(p => p.Type + ":" + (p.Code ?? p.Name));
+        var hints = new List<string>();
         List<StartItemDef>? startingKit = null;
         var nameWords = new List<string>();
         var colors = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
@@ -138,8 +152,15 @@ public static class DataLoader
             flavors.AddRange(Read<List<FlavorGroupDef>>(dir, FlavorsFile, errors));
             chestTraps.AddRange(Read<List<ChestTrapDef>>(dir, ChestTrapsFile, errors));
             quests.AddRange(Read<List<QuestDef>>(dir, QuestsFile, errors));
+            histories.AddRange(Read<List<HistoryChartDef>>(dir, HistoriesFile, errors));
             shapes.AddRange(Read<List<ShapeDef>>(dir, ShapesFile, errors));
             monsterBases.AddRange(Read<List<MonsterBaseDef>>(dir, MonsterBasesFile, errors));
+            pain.AddRange(Read<List<PainDef>>(dir, PainFile, errors));
+            objectProperties.AddRange(Read<List<ObjectPropertyDef>>(dir, ObjectPropertiesFile, errors));
+            slayTypes.AddRange(Read<List<SlayTypeDef>>(dir, SlaysFile, errors));
+            brandTypes.AddRange(Read<List<BrandTypeDef>>(dir, BrandsFile, errors));
+            playerProperties.AddRange(Read<List<PlayerPropertyDef>>(dir, PlayerPropertiesFile, errors));
+            hints.AddRange(Read<List<string>>(dir, HintsFile, errors) ?? []);
             startingKit = Read<List<StartItemDef>>(dir, StartingKitFile, errors) ?? startingKit;
             nameWords.AddRange(Read<List<string>>(dir, NamesFile, errors) ?? []);
             town = Read<TownJson>(dir, TownFile, errors) ?? town;
@@ -188,6 +209,16 @@ public static class DataLoader
             if (q.Level < 1 || q.Level > (constants?.MaxDepth ?? 127)) errors.Add($"quest '{q.Id}' is on an impossible level {q.Level}.");
         }
         if (chestTraps.Items.Count > 30) errors.Add($"{ChestTrapsFile}: at most 30 chest traps (they are bits of one number).");
+        foreach (var b in monsterBases.Items.Where(b => b.Pain != 0 && pain.Items.All(p => p.Type != b.Pain)))
+            errors.Add($"monster base '{b.Id}' uses unknown pain type {b.Pain}.");
+        foreach (var p in pain.Items.Where(p => p.Messages.Count != 7))
+            errors.Add($"pain type {p.Type} has {p.Messages.Count} messages, not 7.");
+        var chartIds = histories.Items.Select(h => h.Chart).ToHashSet();
+        foreach (var r in races.Items.Where(r => r.History != 0 && !chartIds.Contains(r.History)))
+            errors.Add($"race '{r.Id}' starts its history at unknown chart {r.History}.");
+        foreach (var h in histories.Items)
+        foreach (var e in h.Entries.Where(e => e.Next != 0 && !chartIds.Contains(e.Next)))
+            errors.Add($"history chart {h.Chart} leads to unknown chart {e.Next}.");
         foreach (var m in monsterDefs)
         foreach (var k in m.Mimics.Where(k => !kindIds.Contains(k)))
             errors.Add($"monster '{m.Id}' mimics unknown object '{k}'.");
@@ -251,6 +282,13 @@ public static class DataLoader
             Flavors = flavors.Items,
             ChestTraps = chestTraps.Items,
             Quests = quests.Items.OrderBy(q => q.Level).ToList(),
+            Histories = histories.Items,
+            Pain = pain.Items,
+            ObjectProperties = objectProperties.Items,
+            SlayTypes = slayTypes.Items,
+            BrandTypes = brandTypes.Items,
+            PlayerProperties = playerProperties.Items,
+            Hints = hints,
             Shapes = shapes.Items,
             MonsterBases = monsterBases.Items,
             NameWords = nameWords.Distinct(StringComparer.OrdinalIgnoreCase).ToList(),

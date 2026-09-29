@@ -65,6 +65,18 @@
     "flags": [
       "SHIELD_BASH",
       "BRAVERY_30"
+    ],
+    "titles": [
+      "Rookie",
+      "Soldier",
+      "Swordsman",
+      "Swashbuckler",
+      "Veteran",
+      "Myrmidon",
+      "Commando",
+      "Champion",
+      "Hero",
+      "Lord"
     ]
   },
   {
@@ -129,6 +141,18 @@
       "BEAM",
       "ZERO_FAIL",
       "CHOOSE_SPELLS"
+    ],
+    "titles": [
+      "Novice",
+      "Apprentice",
+      "Trickster",
+      "Illusionist",
+      "Spellbinder",
+      "Evoker",
+      "Conjurer",
+      "Warlock",
+      "Sorcerer",
+      "Arch-Mage"
     ]
   },
   {
@@ -199,6 +223,18 @@
     "flags": [
       "BLESS_WEAPON",
       "ZERO_FAIL"
+    ],
+    "titles": [
+      "Believer",
+      "Acolyte",
+      "Devotee",
+      "Adept",
+      "Evangelist",
+      "Priest",
+      "Elder",
+      "Prophet",
+      "Patriarch",
+      "High Priest"
     ]
   },
   {
@@ -272,6 +308,18 @@
     "flags": [
       "FAST_SHOT",
       "CHOOSE_SPELLS"
+    ],
+    "titles": [
+      "Runner",
+      "Strider",
+      "Scout",
+      "Courser",
+      "Tracker",
+      "Guide",
+      "Explorer",
+      "Pathfinder",
+      "Ranger",
+      "Ranger Lord"
     ]
   },
   {
@@ -337,6 +385,18 @@
       "ZERO_FAIL",
       "CHARM",
       "CHOOSE_SPELLS"
+    ],
+    "titles": [
+      "Wanderer",
+      "Tamer",
+      "Nurturer",
+      "Gardener",
+      "Forester",
+      "Creator",
+      "Earth Warder",
+      "Windrider",
+      "Stormwielder",
+      "High Mystic"
     ]
   },
   {
@@ -406,7 +466,19 @@
         "kind": "first_spells"
       }
     ],
-    "description": "A stealthy thief and trickster: deadly with thrown weapons and slings, a picker of locks and pockets, with a little arcane magic."
+    "description": "A stealthy thief and trickster: deadly with thrown weapons and slings, a picker of locks and pockets, with a little arcane magic.",
+    "titles": [
+      "Vagabond",
+      "Cutpurse",
+      "Footpad",
+      "Robber",
+      "Burglar",
+      "Filcher",
+      "Sharper",
+      "Rogue",
+      "Thief",
+      "Master Thief"
+    ]
   },
   {
     "id": "paladin",
@@ -475,7 +547,19 @@
         "kind": "novices_handbook"
       }
     ],
-    "description": "A holy warrior: nearly a warrior's equal in battle, with a few prayers of blessing and healing. Blessed and hafted weapons serve paladins best."
+    "description": "A holy warrior: nearly a warrior's equal in battle, with a few prayers of blessing and healing. Blessed and hafted weapons serve paladins best.",
+    "titles": [
+      "Gallant",
+      "Keeper",
+      "Protector",
+      "Defender",
+      "Warder",
+      "Knight",
+      "Guardian",
+      "Chevalier",
+      "Paladin",
+      "Paladin Lord"
+    ]
   },
   {
     "id": "necromancer",
@@ -536,7 +620,19 @@
         "kind": "into_the_shadows"
       }
     ],
-    "description": "A dark caster who shuns the light: sees without it, and performs rituals of nether and darkness that falter on lit ground."
+    "description": "A dark caster who shuns the light: sees without it, and performs rituals of nether and darkness that falter on lit ground.",
+    "titles": [
+      "Acolyte",
+      "Curser",
+      "Dark Student",
+      "Initiate",
+      "Slavemaster",
+      "Summoner",
+      "Controller",
+      "Commander",
+      "Dark Master",
+      "Night Lord"
+    ]
   },
   {
     "id": "blackguard",
@@ -609,6 +705,18 @@
         "kind": "cure_light_wounds"
       }
     ],
-    "description": "A brutal warrior fed by bloodshed: mana comes from fighting rather than rest, and fuels rituals of fury and fear. Heals slowly."
+    "description": "A brutal warrior fed by bloodshed: mana comes from fighting rather than rest, and fuels rituals of fury and fear. Heals slowly.",
+    "titles": [
+      "Rat",
+      "Bully",
+      "Thug",
+      "Ruffian",
+      "Brigand",
+      "Raider",
+      "Tormentor",
+      "Marauder",
+      "Destroyer",
+      "Tyrant"
+    ]
   }
 ]

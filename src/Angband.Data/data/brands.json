@@ -1,0 +1,12 @@
+[
+  {"code": "ACID_3", "element": "acid", "multiplier": 3, "oMultiplier": 25, "power": 161},
+  {"code": "ELEC_3", "element": "elec", "multiplier": 3, "oMultiplier": 25, "power": 116},
+  {"code": "FIRE_3", "element": "fire", "multiplier": 3, "oMultiplier": 25, "power": 113},
+  {"code": "COLD_3", "element": "cold", "multiplier": 3, "oMultiplier": 25, "power": 119},
+  {"code": "POIS_3", "element": "pois", "multiplier": 3, "oMultiplier": 25, "power": 122},
+  {"code": "ACID_2", "element": "acid", "multiplier": 2, "oMultiplier": 15, "power": 130},
+  {"code": "ELEC_2", "element": "elec", "multiplier": 2, "oMultiplier": 15, "power": 108},
+  {"code": "FIRE_2", "element": "fire", "multiplier": 2, "oMultiplier": 15, "power": 107},
+  {"code": "COLD_2", "element": "cold", "multiplier": 2, "oMultiplier": 15, "power": 109},
+  {"code": "POIS_2", "element": "pois", "multiplier": 2, "oMultiplier": 15, "power": 111}
+]

@@ -1,0 +1,13 @@
+[
+  {"code": "EVIL_2", "flag": "EVIL", "multiplier": 2, "oMultiplier": 18, "power": 200},
+  {"code": "ANIMAL_2", "flag": "ANIMAL", "multiplier": 2, "oMultiplier": 20, "power": 115},
+  {"code": "ORC_3", "flag": "ORC", "multiplier": 3, "oMultiplier": 25, "power": 101},
+  {"code": "TROLL_3", "flag": "TROLL", "multiplier": 3, "oMultiplier": 25, "power": 101},
+  {"code": "GIANT_3", "flag": "GIANT", "multiplier": 3, "oMultiplier": 25, "power": 102},
+  {"code": "DEMON_3", "flag": "DEMON", "multiplier": 3, "oMultiplier": 25, "power": 110},
+  {"code": "DRAGON_3", "flag": "DRAGON", "multiplier": 3, "oMultiplier": 25, "power": 105},
+  {"code": "UNDEAD_3", "flag": "UNDEAD", "multiplier": 3, "oMultiplier": 25, "power": 115},
+  {"code": "DEMON_5", "flag": "DEMON", "multiplier": 5, "oMultiplier": 35, "power": 120},
+  {"code": "DRAGON_5", "flag": "DRAGON", "multiplier": 5, "oMultiplier": 35, "power": 110},
+  {"code": "UNDEAD_5", "flag": "UNDEAD", "multiplier": 5, "oMultiplier": 35, "power": 130}
+]

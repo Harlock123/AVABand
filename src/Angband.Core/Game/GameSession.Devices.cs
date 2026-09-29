@@ -640,7 +640,7 @@ public sealed partial class GameSession
         {
             any = true;
             if (m.IsVisible) Publish(new MessageEvent($"{Capitalize(MonsterName(m))} shudders."));
-            DamageMonster(m, dice.Roll(Rng));
+            DamageMonster(m, dice.Roll(Rng), pain: true);
         }
         return any;
     }
@@ -693,7 +693,7 @@ public sealed partial class GameSession
             if (Level.Monsters.At(p) is { } m && m.Race.Has("HURT_LIGHT"))
             {
                 Publish(new MessageEvent($"{Capitalize(MonsterName(m))} cringes from the light!"));
-                DamageMonster(m, damage.Roll(Rng));
+                DamageMonster(m, damage.Roll(Rng), pain: true);
             }
         }
         Publish(new MessageEvent("A line of light appears."));

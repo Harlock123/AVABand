@@ -592,7 +592,7 @@ public sealed partial class GameSession
             LearnRunesOf(missile, RuneIds.ToHit, RuneIds.ToDam);
             if (launcher is not null) LearnRunesOf(launcher, RuneIds.ToHit, RuneIds.ToDam);
             if (rune is not null) LearnRune(rune);
-            DamageMonster(monster, damage);
+            DamageMonster(monster, damage, pain: true);
             hitSomething = true;
             break;
         }

@@ -46,6 +46,12 @@ public sealed class GameData
     public IReadOnlyList<RealmDef> Realms { get; init; } = [];
     public IReadOnlyList<ClassDef> Classes { get; init; } = [];
     public IReadOnlyList<RaceDef> Races { get; init; } = [];
+    /// <summary>Race and class abilities as the birth screen names them (Angband player_property.txt).</summary>
+    public IReadOnlyList<PlayerPropertyDef> PlayerProperties { get; init; } = [];
+    /// <summary>What shopkeepers may tell you as you come in (Angband hints.txt).</summary>
+    public IReadOnlyList<string> Hints { get; init; } = [];
+    /// <summary>The background charts (Angband history.txt).</summary>
+    public IReadOnlyList<HistoryChartDef> Histories { get; init; } = [];
     public IReadOnlyList<StoreDef> Stores { get; init; } = [];
     public StoreDef? Store(string id) => Stores.FirstOrDefault(s => s.Id == id);
     public RaceDef? Race(string id) => Races.FirstOrDefault(r => r.Id == id);
@@ -67,6 +73,28 @@ public sealed class GameData
     public IReadOnlyList<ShapeDef> Shapes { get; init; } = [];
     /// <summary>The kinds of monster and their symbols (Angband monster_base.txt), for identifying a symbol.</summary>
     public IReadOnlyList<MonsterBaseDef> MonsterBases { get; init; } = [];
+    /// <summary>What object properties are worth (Angband object_property.txt).</summary>
+    public IReadOnlyList<ObjectPropertyDef> ObjectProperties { get; init; } = [];
+    /// <summary>Slays' and brands' worth (Angband slay.txt, brand.txt).</summary>
+    public IReadOnlyList<SlayTypeDef> SlayTypes { get; init; } = [];
+    public IReadOnlyList<BrandTypeDef> BrandTypes { get; init; } = [];
+
+    private Dictionary<(string, string), ObjectPropertyDef>? _properties;
+
+    /// <summary>The property of that type with AVABand's id (or 4.2.5's code), if there is one.</summary>
+    public ObjectPropertyDef? ObjectProperty(string type, string id)
+    {
+        _properties ??= ObjectProperties.GroupBy(p => (p.Type, p.Id)).ToDictionary(g => g.Key, g => g.First());
+        return _properties.GetValueOrDefault((type, id)) ?? _properties.GetValueOrDefault((type, id.ToUpperInvariant()));
+    }
+
+    public SlayTypeDef? SlayType(string flag, int multiplier) =>
+        SlayTypes.FirstOrDefault(s => s.Flag == flag && s.Multiplier == multiplier);
+
+    public BrandTypeDef? BrandType(string element, int multiplier) =>
+        BrandTypes.FirstOrDefault(b => b.Element == element && b.Multiplier == multiplier);
+    /// <summary>Pain messages by type (Angband pain.txt).</summary>
+    public IReadOnlyList<PainDef> Pain { get; init; } = [];
     /// <summary>Words for random names (random artifacts).</summary>
     public IReadOnlyList<string> NameWords { get; init; } = [];
     public ShapeDef? Shape(string id) => Shapes.FirstOrDefault(s => s.Id == id);

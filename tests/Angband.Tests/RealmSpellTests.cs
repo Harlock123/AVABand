@@ -159,7 +159,7 @@ public class RealmSpellTests
         var said = Messages(game);
         Cast(game, "volcanic_eruption");
         // (Checked by the message: a 10,000 hit point orc can regenerate the damage over the failed casts.)
-        Assert.Contains(said, m => m.Contains("hits the cave orc"));
+        Assert.Contains("The cave orc shrugs off the attack.", said); // (4.2.5's pain message, from > 95% health)
         Assert.True(game.Player.Hp >= hp - 60); // only the quake may bruise
     }
 

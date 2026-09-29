@@ -328,6 +328,8 @@ public sealed class MonsterBaseDef
 {
     public required string Id { get; init; }
     public required string Glyph { get; init; }
+    /// <summary>Which of pain.json's sets of messages its monsters use when hurt (0: none).</summary>
+    public int Pain { get; init; }
     public string Description { get; init; } = "";
 }
 
@@ -479,4 +481,14 @@ public sealed record SummonDef
     public string? Fallback { get; init; }
     /// <summary>What they are, for monster recall ("greater undead").</summary>
     public string Description { get; init; } = "";
+}
+
+/// <summary>
+/// How a hurt monster reacts (Angband pain.txt): seven messages, for more than 95%, 75%, 50%, 35%,
+/// 20% and 10% of its health left, and less; <c>[s]</c> and <c>[ies|y]</c> mark the verb's endings.
+/// </summary>
+public sealed class PainDef
+{
+    public int Type { get; init; }
+    public IReadOnlyList<string> Messages { get; init; } = [];
 }

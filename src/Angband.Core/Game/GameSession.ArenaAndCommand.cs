@@ -79,7 +79,7 @@ public sealed partial class GameSession
         var damage = Rng.Damroll(dice, 50 + lost);
         Publish(new MessageEvent($"Your curse strikes {MonsterName(m)}{DamageNote(damage)}."));
         Publish(new PlayerAttackEvent(m.Id, Hit: true, damage, Combat.CriticalGrade.None));
-        DamageMonster(m, damage);
+        DamageMonster(m, damage, pain: true);
     }
 
     /// <summary>

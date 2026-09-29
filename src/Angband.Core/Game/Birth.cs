@@ -28,6 +28,44 @@ public sealed record CharacterSpec(
 /// <summary>Angband 4.2 birth rules: point-buy costs, rolled stats and final stat calculation.</summary>
 public static class Birth
 {
+    /// <summary>AVABand's resist-list ids and race flags as Angband's object flags.</summary>
+    private static readonly Dictionary<string, string> ObjectFlagCodes = new(StringComparer.Ordinal)
+    {
+        ["fear"] = "PROT_FEAR", ["blind"] = "PROT_BLIND", ["conf"] = "PROT_CONF", ["stun"] = "PROT_STUN",
+        ["see_invis"] = "SEE_INVIS", ["free_act"] = "FREE_ACT", ["hold_life"] = "HOLD_LIFE", ["REGENERATE"] = "REGEN",
+    };
+
+    /// <summary>
+    /// A race's or class's abilities, as Angband's birth screen lists them (race_help, class_help):
+    /// player_property.txt in order — object flags and player flags it has, and (races only) each
+    /// element it resists as "Poison Resistance", described "You resist poison."
+    /// </summary>
+    public static IReadOnlyList<(string Name, string Description)> Abilities(GameData data, RaceDef? race, ClassDef? cls)
+    {
+        var codes = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var id in (race?.Resists ?? []).Concat(race?.Flags ?? []).Concat(cls?.Flags ?? []))
+            codes.Add(ObjectFlagCodes.TryGetValue(id, out var code) ? code : id.StartsWith("sust_") ? id.ToUpperInvariant() : id);
+        // A class without magic is Angband's NO_MANA (AVABand's classes say so by having no realm).
+        if (cls is { Realm: null }) codes.Add("NO_MANA");
+        var list = new List<(string, string)>();
+        foreach (var p in data.PlayerProperties)
+        {
+            if (p.Type == "element")
+            {
+                if (race is null) continue;
+                foreach (var element in data.Elements)
+                {
+                    var level = race.Resists.Contains("im_" + element.Id) ? 3 : race.Resists.Contains(element.Id) ? 1 : 0;
+                    if (level != p.Value || level == 0) continue;
+                    list.Add(($"{char.ToUpperInvariant(element.Name[0])}{element.Name[1..]} {p.Name}", $"{p.Desc} {element.Name}."));
+                }
+            }
+            else if (p.Code is { } code && codes.Contains(code))
+                list.Add((p.Name, p.Desc));
+        }
+        return list;
+    }
+
     /// <summary>Lowest and highest base stat point-buy allows.</summary>
     public const int PointBuyMin = 10, PointBuyMax = 18;
 

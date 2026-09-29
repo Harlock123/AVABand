@@ -164,44 +164,10 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             return;
         }
         var p = GameSession.NewGame(_data, 0, spec).Player;
+        // Angband's birth screen names them from player_property.txt (race_help, class_help).
         var abilities = new List<string>();
         if (p.Infravision > 0) abilities.Add($"infravision {p.Infravision * 10} ft");
-        abilities.AddRange(p.IntrinsicResists.Keys.Select(r => r switch
-        {
-            "free_act" => "free action", "blind" => "cannot be blinded", "pois" => "resists poison",
-            "light" => "resists light", "dark" => "resists darkness", "hold_life" => "holds on to its life force",
-            "see_invis" => "sees invisible things", _ when r.StartsWith("sust_") => "keeps its " + r[5..] switch
-            {
-                "str" => "strength", "int" => "intelligence", "wis" => "wisdom", "dex" => "dexterity", "con" => "constitution", var st => st,
-            },
-            _ => Readable(r),
-        }));
-        if (p.Regenerates) abilities.Add("regenerates quickly");
-        abilities.AddRange((race?.Flags ?? []).Select(f => f switch
-        {
-            "KNOW_MUSHROOM" => "knows mushrooms on sight",
-            "KNOW_ZAPPER" => "knows wands, staves and rods on sight",
-            "SEE_ORE" => "senses treasure in the rock nearby",
-            _ => null,
-        }).OfType<string>());
-        abilities.AddRange((cls?.Flags ?? []).Select(f => f switch
-        {
-            ClassFlags.Steal => "steals from monsters",
-            ClassFlags.Unlight => "sees without light (spells falter on lit ground)",
-            ClassFlags.ShieldBash => "shield bashes",
-            ClassFlags.BlessWeapon => "+2 with hafted or blessed weapons",
-            ClassFlags.CombatRegen => "mana from fighting, not rest",
-            ClassFlags.ImpairHp => "heals slowly",
-            // Angband 4.2's player_property.txt descriptions, in the same few words.
-            ClassFlags.Bravery30 => "immune to fear from level 30",
-            ClassFlags.Beam => "bolt spells often become beams",
-            ClassFlags.ZeroFail => "spells can reach 0% failure",
-            ClassFlags.FastShot => "shoots faster with a bow as levels rise",
-            ClassFlags.Charm => "extra persuasive to animals",
-            ClassFlags.ChooseSpells => "chooses which spells to learn",
-            ClassFlags.Evil => "resists nether, but holy attacks hurt more",
-            _ => Readable(f),
-        }));
+        abilities.AddRange(Birth.Abilities(_data, race, cls).Select(a => a.Name));
         var realm = cls?.Realm is { } r ? _data.Realm(r) : null;
 
         Preview = string.Join(Environment.NewLine, new[]
@@ -218,7 +184,6 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     }
 
     /// <summary>A flag with no wording of its own, readably: "SOME_FLAG" → "some flag" (never the raw id).</summary>
-    private static string Readable(string flag) => flag.Replace('_', ' ').ToLowerInvariant();
 
     private static string Mod(int v) => v == 0 ? "" : v.ToString("+0;-0", CultureInfo.InvariantCulture);
 }

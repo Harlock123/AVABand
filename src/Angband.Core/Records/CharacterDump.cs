@@ -58,7 +58,18 @@ public static class CharacterDump
             $"Turns  {game.NormalTurns} (game {game.GameTurn})",
         ];
         for (var i = 0; i < left.Length; i++) Line($" {left[i],-36}{right[i]}");
+        // Angband show_title: the class's title for the level (a winner is a winner).
+        var titles = p.Class?.Titles ?? [];
+        var title = p.IsWinner ? "***WINNER***" : titles.Count > 0 ? titles[Math.Min(titles.Count - 1, (p.Level - 1) / 5)] : null;
+        if (title is not null) Line($" Title  {title}");
+        if (p.Age > 0) Line($" Age    {p.Age,-29}Height {p.Height / 12}'{p.Height % 12}\"   Weight {p.Weight} lb");
         Line();
+        // Angband's character history (the background rolled at birth), wrapped as its 'C' screen does.
+        if (p.Background.Length > 0)
+        {
+            foreach (var line in Wrap(p.Background, 74)) Line($" {line}");
+            Line();
+        }
         if (p.IsWinner) Line(" *** Winner: slayer of Morgoth ***");
         if (game.PlayerShape is { } shape) Line($" In the shape of {(("aeiou".Contains(char.ToLowerInvariant(shape.Name[0]))) ? "an" : "a")} {shape.Name}.");
         Line(p.IsDead && p.IsWinner ? " Retired victorious."
@@ -66,6 +77,14 @@ public static class CharacterDump
             : $" Still alive ({game.HungerLevel.ToString().ToLowerInvariant()}).");
         Line($" Seed {game.Seed}   Score {Scoring.Points(p)} points");
         if (game.IsCheater) Line($" Cheated ({string.Join(", ", game.CheatsUsed.Order(StringComparer.Ordinal))}): not scored.");
+
+        // --- Abilities (Angband's birth screen names them; player_property.txt) ---
+        var abilities = Birth.Abilities(data, p.Race, p.Class);
+        if (abilities.Count > 0)
+        {
+            Section("Abilities");
+            foreach (var (name, description) in abilities) Line($" {name + ':',-24} {description}");
+        }
 
         // --- Birth options (as in Angband's dump) ---
         Section("Birth options");
@@ -190,4 +209,21 @@ public static class CharacterDump
     private static string Signed(int v) => v >= 0 ? "+" + v.ToString(Inv) : v.ToString(Inv);
 
     private static string Truncate(string s, int n) => s.Length <= n ? s : s[..n];
+
+    /// <summary>Words to lines no longer than <paramref name="width"/>.</summary>
+    private static IEnumerable<string> Wrap(string text, int width)
+    {
+        var line = new StringBuilder();
+        foreach (var word in text.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (line.Length > 0 && line.Length + 1 + word.Length > width)
+            {
+                yield return line.ToString();
+                line.Clear();
+            }
+            if (line.Length > 0) line.Append(' ');
+            line.Append(word);
+        }
+        if (line.Length > 0) yield return line.ToString();
+    }
 }

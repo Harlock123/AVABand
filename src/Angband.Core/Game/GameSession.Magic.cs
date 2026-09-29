@@ -5,6 +5,7 @@ using Angband.Core.Geometry;
 using Angband.Core.Items;
 using Angband.Core.Magic;
 using Angband.Core.Monsters;
+using Angband.Core.Randomness;
 using Angband.Core.Time;
 
 namespace Angband.Core.Game;
@@ -21,6 +22,34 @@ public sealed partial class GameSession
     /// Creates the character (Angband player_birth): stats from the spec plus race and class
     /// adjustments, skills, hit points, racial abilities, starting gold and the class kit.
     /// </summary>
+    /// <summary>
+    /// Angband get_ahw and get_history: age, height and weight, and a background read from the race's
+    /// history charts. (Rolled on their own stream of the seed, so the game's own dice fall as before.)
+    /// </summary>
+    private void RollBackground(RaceDef race)
+    {
+        var rng = new GameRandom(GameRandom.DeriveSeed(Seed, 0xB10B));
+        Player.Age = race.Age.Base + rng.RandInt1(race.Age.Mod);
+        Player.Height = rng.Normal(race.Height.Base, race.Height.Mod);
+        Player.Weight = rng.Normal(race.Weight.Base, race.Weight.Mod);
+        Player.Background = BackgroundFrom(Data, race.History, rng);
+    }
+
+    /// <summary>Angband get_history: from the chart, the first entry whose roll reaches 1d100, then its next chart.</summary>
+    public static string BackgroundFrom(GameData data, int chart, GameRandom rng)
+    {
+        var text = new System.Text.StringBuilder();
+        for (var guard = 0; chart != 0 && guard < 100; guard++)
+        {
+            if (data.Histories.FirstOrDefault(h => h.Chart == chart) is not { } current) break;
+            var roll = rng.RandInt1(100);
+            if (current.Entries.FirstOrDefault(e => roll <= e.Roll) is not { } entry) break;
+            text.Append(entry.Text);
+            chart = entry.Next;
+        }
+        return text.ToString().Trim();
+    }
+
     private void ApplyCharacter(CharacterSpec spec, RaceDef? race, ClassDef cls)
     {
         var p = Player;
@@ -567,12 +596,10 @@ public sealed partial class GameSession
             if (el.ImmunityFlag is { } i) LearnMonsterResponse(monster, i);
             if (el.VulnerabilityFlag is { } v) LearnMonsterResponse(monster, v);
         }
-        var name = MonsterName(monster);
-        Publish(new MessageEvent(note.Length > 0
-            ? $"{Capitalize(name)}{note}{DamageNote(damage)}."
-            : $"The {source.ToLowerInvariant()} hits {name}{DamageNote(damage)}."));
+        // Angband project_m: a special note if there is one, otherwise how it hurts.
+        if (note.Length > 0 && monster.IsVisible) Publish(new MessageEvent($"{Capitalize(MonsterName(monster))}{note}{DamageNote(damage)}."));
         Publish(new PlayerAttackEvent(monster.Id, Hit: true, damage, CriticalGrade.None));
-        DamageMonster(monster, damage);
+        DamageMonster(monster, damage, pain: note.Length == 0);
     }
 
     /// <summary>Light-sensitive monsters in view take damage (Call Light and friends).</summary>
@@ -583,7 +610,7 @@ public sealed partial class GameSession
             LearnMonsterResponse(m, "HURT_LIGHT"); // cringing or not, you see how it takes the light
             if (!m.Race.Has("HURT_LIGHT")) continue;
             if (m.IsVisible) Publish(new MessageEvent($"{Capitalize(MonsterName(m))} cringes from the light!"));
-            DamageMonster(m, dice.Roll(Rng));
+            DamageMonster(m, dice.Roll(Rng), pain: true);
         }
     }
 

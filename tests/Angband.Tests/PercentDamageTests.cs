@@ -60,13 +60,13 @@ public class PercentDamageTests
         var game = Game();
         // Slay orc (x3 -> O x2.5): each die averages 7.5 (2d14), plus 15.
         Assert.InRange(Average(() => game.ODamage(2, 5, 1, 25, 0, 0)), 29.5, 30.5);
-        Assert.Equal(18, GameSession.OSlayMultiplier("EVIL", 2));
-        Assert.Equal(20, GameSession.OSlayMultiplier("ANIMAL", 2));
-        Assert.Equal(25, GameSession.OSlayMultiplier("ORC", 3));
-        Assert.Equal(35, GameSession.OSlayMultiplier("DRAGON", 5));
-        Assert.Equal(15, GameSession.OBrandMultiplier(2, vulnerable: false));
-        Assert.Equal(25, GameSession.OBrandMultiplier(3, vulnerable: false));
-        Assert.Equal(40, GameSession.OBrandMultiplier(3, vulnerable: true)); // twice the extra
+        Assert.Equal(18, game.OSlayMultiplier("EVIL", 2));
+        Assert.Equal(20, game.OSlayMultiplier("ANIMAL", 2));
+        Assert.Equal(25, game.OSlayMultiplier("ORC", 3));
+        Assert.Equal(35, game.OSlayMultiplier("DRAGON", 5));
+        Assert.Equal(15, game.OBrandMultiplier("fire", 2, vulnerable: false));
+        Assert.Equal(25, game.OBrandMultiplier("fire", 3, vulnerable: false));
+        Assert.Equal(40, game.OBrandMultiplier("fire", 3, vulnerable: true)); // twice the extra
     }
 
     [Fact]
