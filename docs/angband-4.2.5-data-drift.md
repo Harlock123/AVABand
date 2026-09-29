@@ -25,6 +25,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Constants](#constants) — `constants.json and C# constants` vs `constants.txt`
 - [Summons](#summons) — `summons.json` vs `summon.txt`
 - [Timed effects](#timed) — `timed_effects.json` vs `player_timed.txt`
+- [Elements](#elements) — `elements.json` vs `projection.txt (type:element)`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -273,9 +274,23 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - Every field of player_timed.txt is compared but for FOOD (AVABand keeps hunger apart) and the on-begin/on-end effects (sprinting ends in slowness, scrambling), which are in code. `harmful` is AVABand's own (what curing clears).
 
+<a id="elements"></a>
+## Elements: `elements.json` vs `projection.txt (type:element)`
+
+25 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### 4.2.5 properties AVABand's format can't express (not reported as differences)
+
+- monster projections (their effects are in code): 24
+- environs projections (their effects are in code): 7
+
+### Notes: normalisation and fields not compared
+
+- Elements are compared whole (names, descriptions, resistance numerator/denominator, breath divisor and cap, colour, sound). Ice is resisted as cold (`resistedAs`, 4.2.5's adjust_dam special case). The monsters' immunity/vulnerability flags are AVABand's own. Projections that aren't elements (environs, monster and player effects) are listed as unmodelled: what they do is in code.
+
 ## Not compared at all
 
-- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, projection.txt (except breath divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
+- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, chest_trap.txt, quest.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
 - Descriptions and messages everywhere.
 
 <a id="summary"></a>
@@ -301,5 +316,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Constants | 75 | 0 | 0 | 0 | 0 | 14 |
 | Summons | 17 | 0 | 0 | 0 | 0 | 0 |
 | Timed effects | 52 | 0 | 0 | 0 | 0 | 4 |
-| **Total** | **1868** | **0** | **0** | **0** | **14** | **57** |
+| Elements | 25 | 0 | 0 | 0 | 0 | 31 |
+| **Total** | **1893** | **0** | **0** | **0** | **14** | **88** |
 

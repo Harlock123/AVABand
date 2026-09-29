@@ -100,7 +100,7 @@ public static class CharacterDump
         for (var i = 0; i < equipment.Count; i++) header.Append(Letter(i));
         header.Append(" @  Total");
         Line(header.ToString());
-        foreach (var element in data.Elements)
+        foreach (var element in data.Elements.Where(e => e.Resistable))
         {
             var rune = RuneIds.Resist(element.Id);
             var known = game.Knowledge.KnowsRune(rune);

@@ -984,6 +984,53 @@ def sync_timed(gd, data):
           f"{[k for k in ours if k not in {t['id'] for t in out}]} dropped)")
 
 
+ELEMENT_IDS = {"SHARD": "shards", "DISEN": "disen", "HOLY_ORB": "holy_orb"}
+RESISTABLE_ELEMENTS = 13  # 4.2.5's base and high elements, the ones gear resists (ELEM_HIGH_MAX)
+
+
+def element_id(code):
+    return ELEMENT_IDS.get(code, code.lower())
+
+
+def projection_colour(name):
+    return "".join(w.capitalize() for w in name.split())
+
+
+def sync_elements(gd, data):
+    """projection.txt's elements, whole; AVABand's own immunity/vulnerability monster flags are kept."""
+    path = os.path.join(data, "elements.json")
+    ours = {x["id"]: x for x in json.load(open(path, encoding="utf-8"))}
+    out = []
+    elements = [e for e in cw.parse_records(os.path.join(gd, "projection.txt"), start="code") if cw.one(e, "type") == "element"]
+    for i, e in enumerate(elements):
+        eid = element_id(e["name"])
+        x = {"id": eid, "name": cw.one(e, "name")}
+        for key, field in (("desc", "description"), ("player-desc", "playerDescription"),
+                           ("blind-desc", "blindDescription"), ("lash-desc", "lashDescription")):
+            if cw.one(e, key):
+                x[field] = cw.one(e, key)
+        if cw.one(e, "numerator"):
+            x["numerator"] = int(cw.one(e, "numerator").strip())
+            x["denominator"] = plain_dice(cw.one(e, "denominator"))
+        x["breathDivisor"] = int(cw.one(e, "divisor"))
+        if int(cw.one(e, "damage-cap") or 0):
+            x["damageCap"] = int(cw.one(e, "damage-cap"))
+        x["color"] = projection_colour(cw.one(e, "color"))
+        if cw.one(e, "msgt") and cw.one(e, "msgt") != "GENERIC":
+            x["sound"] = cw.one(e, "msgt")
+        if i >= RESISTABLE_ELEMENTS:
+            x["resistable"] = False
+        if eid == "ice":
+            x["resistedAs"] = "cold"  # Angband adjust_dam: "Ice is a special case"
+        for keep in ("immunityFlag", "vulnerabilityFlag"):
+            if ours.get(eid, {}).get(keep):
+                x[keep] = ours[eid][keep]
+        out.append(x)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(x, ensure_ascii=False) for x in out) + "\n]\n")
+    print(f"elements: {len(out)} written ({[x['id'] for x in out if x['id'] not in ours]} new)")
+
+
 def sync_summons(gd, data):
     """summon.txt, whole: the kinds of summons (which monsters answer, and what to fall back on)."""
     path = os.path.join(data, "summons.json")
@@ -1031,7 +1078,7 @@ SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "b
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
             "curses": sync_curses, "constants": sync_constants, "summons": sync_summons,
-            "timed": sync_timed}
+            "timed": sync_timed, "elements": sync_elements}
 
 
 def main():

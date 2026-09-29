@@ -159,6 +159,12 @@ public static class DataLoader
         CheckCombatReferences(elements.Items, timedEffects.Items, blowMethods.Items, blowEffects.Items, monsterDefs, errors);
         CheckSpellReferences(monsterSpells.Items, monsterDefs, elements.Items, timedEffects.Items, errors);
         CheckSummons(summons.Items, monsterSpells.Items, monsterBases.Items, monsterDefs, errors);
+        foreach (var el in elements.Items)
+        {
+            CheckColor(colors, el.Color, $"element '{el.Id}'", errors);
+            if (el.ResistedAs is { } r && elements.Items.All(x => x.Id != r))
+                errors.Add($"element '{el.Id}' is resisted as unknown element '{r}'.");
+        }
         CheckMagicReferences(realms.Items, classes.Items, spells.Items, objects.Items, objectBases.Items, timedEffects.Items, errors);
         var kindIds = objects.Items.Select(o => o.Id).ToHashSet();
         var baseIds = objectBases.Items.Select(b => b.Id).ToHashSet();
@@ -441,7 +447,7 @@ public static class DataLoader
         var ids = spells.Select(s => s.Id).ToHashSet();
         foreach (var s in spells)
         {
-            if (s.Element is { } e && elements.All(x => x.Id != e) && !Projections.Unresistable.Contains(e))
+            if (s.Element is { } e && elements.All(x => x.Id != e))
                 errors.Add($"monster spell '{s.Id}' uses unknown element '{e}'.");
             if (s.Timed is { } t && timed.All(x => x.Id != t)) errors.Add($"monster spell '{s.Id}' uses unknown timed effect '{t}'.");
         }

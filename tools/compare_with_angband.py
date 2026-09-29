@@ -1719,6 +1719,51 @@ def compare_timed(gd, data):
     return sec
 
 
+ELEMENT_IDS = {"SHARD": "shards", "DISEN": "disen", "HOLY_ORB": "holy_orb"}
+
+
+def compare_elements(gd, data):
+    sec = section("elements", "Elements", "elements.json", "projection.txt (type:element)")
+    ours = {x["id"]: x for x in load(data, "elements.json")}
+    used = set()
+    n = 0
+    for e in parse_records(os.path.join(gd, "projection.txt"), start="code"):
+        if one(e, "type") != "element":
+            sec.unmodelled[f"{one(e, 'type')} projections (their effects are in code)"] += 1
+            continue
+        eid = ELEMENT_IDS.get(e["name"], e["name"].lower())
+        x = ours.get(eid)
+        n += 1
+        if x is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(eid)
+        sec.compared += 1
+        label = e["name"]
+        sec.cmp(label, "name", x.get("name"), one(e, "name"))
+        sec.cmp(label, "desc", x.get("description", ""), one(e, "desc", ""))
+        sec.cmp(label, "player-desc", x.get("playerDescription", ""), one(e, "player-desc", ""))
+        sec.cmp(label, "blind-desc", x.get("blindDescription", ""), one(e, "blind-desc", ""))
+        sec.cmp(label, "lash-desc", x.get("lashDescription", ""), one(e, "lash-desc", ""))
+        sec.cmp(label, "numerator", x.get("numerator", 0), int((one(e, "numerator") or "0").strip()))
+        sec.cmp(label, "denominator", canon_rv(x.get("denominator", "0")), canon_rv(one(e, "denominator") or "0"))
+        sec.cmp(label, "breath divisor", x.get("breathDivisor", 0), int(one(e, "divisor") or 0))
+        sec.cmp(label, "damage cap", x.get("damageCap", 0), int(one(e, "damage-cap") or 0))
+        sec.cmp(label, "colour", x.get("color", "White"), "".join(w.capitalize() for w in one(e, "color").split()))
+        msgt = one(e, "msgt")
+        sec.cmp(label, "sound (msgt)", x.get("sound"), None if msgt in (None, "GENERIC") else msgt)
+        sec.cmp(label, "resistable by gear (the first 13)", x.get("resistable", True), n <= 13)
+        sec.cmp(label, "obvious and wakes (AVABand assumes both)", True, one(e, "obvious") == "1" and one(e, "wake") == "1")
+    for eid in ours:
+        if eid not in used:
+            sec.only_ours.append(eid)
+    sec.notes += ["Elements are compared whole (names, descriptions, resistance numerator/denominator, breath divisor and "
+                  "cap, colour, sound). Ice is resisted as cold (`resistedAs`, 4.2.5's adjust_dam special case). The "
+                  "monsters' immunity/vulnerability flags are AVABand's own. Projections that aren't elements "
+                  "(environs, monster and player effects) are listed as unmodelled: what they do is in code."]
+    return sec
+
+
 def compare_summons(gd, data):
     sec = section("summons", "Summons", "summons.json", "summon.txt")
     ours = {x["id"]: x for x in load(data, "summons.json")}
@@ -1934,9 +1979,8 @@ def render(gd, data, out):
     w("")
     w("- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by "
       "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
-      "object_property.txt, player_property.txt, projection.txt (except breath "
-      "divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
-      "slay.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, "
+      "object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
+      "slay.txt, pain.txt, chest_trap.txt, quest.txt, visuals.txt, world.txt, "
       "ui_*.txt, blow_methods.txt (methods are only checked for existence).")
     w("- Descriptions and messages everywhere.")
     w("")
@@ -1973,7 +2017,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

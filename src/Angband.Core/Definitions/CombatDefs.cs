@@ -3,16 +3,38 @@ using Angband.Core.Randomness;
 namespace Angband.Core.Definitions;
 
 /// <summary>
-/// A damage element (Angband projection.txt). Resistance divides damage by
-/// <see cref="Divisor"/> and multiplies by <see cref="Numerator"/>, once per resist level.
+/// A damage element (Angband projection.txt, its <c>type:element</c> entries). Resistance multiplies
+/// damage by <see cref="Numerator"/> and divides it by <see cref="Denominator"/> (rolled once), once
+/// per resist level. The first thirteen are what gear resists; the rest (water, ice, gravity...)
+/// can't be resisted, but for ice, which cold resistance covers.
 /// </summary>
 public sealed class ElementDef
 {
     public required string Id { get; init; }
     public required string Name { get; init; }
-    public int Numerator { get; init; } = 1;
-    /// <summary>Rolled per hit, e.g. <c>3</c> for fire or <c>1d6+6</c> for chaos.</summary>
-    public Dice Divisor { get; init; } = Dice.Constant(3);
+    /// <summary>What it is called in descriptions ("a holy orb").</summary>
+    public string Description { get; init; } = "";
+    /// <summary>What it is called when it hits you ("frost").</summary>
+    public string PlayerDescription { get; init; } = "";
+    /// <summary>What you feel it as when blind ("something sharp").</summary>
+    public string BlindDescription { get; init; } = "";
+    /// <summary>What a lash of it is ("venom").</summary>
+    public string LashDescription { get; init; } = "";
+    /// <summary>0 when resisting it does nothing.</summary>
+    public int Numerator { get; init; }
+    /// <summary>Rolled once per hit, e.g. <c>3</c> for fire or <c>1d4+8</c> for chaos; 0 when unresistable.</summary>
+    public Dice Denominator { get; init; } = Dice.Zero;
+    /// <summary>Breaths do the breather's hit points divided by this (Angband <c>divisor</c>).</summary>
+    public int BreathDivisor { get; init; }
+    /// <summary>The most a breath of it does (Angband <c>damage-cap</c>); 0 for none.</summary>
+    public int DamageCap { get; init; }
+    public string Color { get; init; } = "White";
+    /// <summary>The sound of a breath of it (Angband <c>msgt</c>).</summary>
+    public string? Sound { get; init; }
+    /// <summary>Whether gear (and the character sheet) deals in resisting it.</summary>
+    public bool Resistable { get; init; } = true;
+    /// <summary>Another element whose resistance covers this one (ice: cold).</summary>
+    public string? ResistedAs { get; init; }
     /// <summary>Monster flag granting immunity (e.g. <c>IM_FIRE</c>); brands do nothing against it.</summary>
     public string? ImmunityFlag { get; init; }
     /// <summary>Monster flag making it take extra damage (e.g. <c>HURT_FIRE</c>).</summary>
@@ -295,16 +317,6 @@ public static class MonsterFlags
     public const string Giant = "GIANT";
     public const string Dragon = "DRAGON";
     public const string Demon = "DEMON";
-}
-
-/// <summary>
-/// Angband 4.2 projection types a player can't resist (projection.txt), used only for what they do
-/// besides damage: they aren't elements in <c>elements.json</c>, so no gear resists them.
-/// </summary>
-public static class Projections
-{
-    public static readonly IReadOnlySet<string> Unresistable =
-        new HashSet<string>(["water", "ice", "gravity", "inertia", "force", "time", "plasma", "mana"], StringComparer.Ordinal);
 }
 
 /// <summary>A kind of monster and its symbol (Angband monster_base.txt): "o", "Orc".</summary>

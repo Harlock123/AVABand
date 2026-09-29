@@ -108,11 +108,9 @@ public static class CombatMath
         if (damage <= 0) return 0;
         if (resistLevel >= 3) return 0;
         if (resistLevel < 0) return damage * 4 / 3;
+        var denominator = element.Denominator.Roll(rng); // rolled once, as 4.2.5 does
         for (var i = resistLevel; i > 0; i--)
-        {
-            var divisor = element.Divisor.Roll(rng);
-            if (divisor > 0) damage = damage * element.Numerator / divisor;
-        }
+            if (denominator > 0) damage = damage * element.Numerator / denominator;
         return damage;
     }
 

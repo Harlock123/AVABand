@@ -284,12 +284,12 @@ public sealed partial class GameSession
     {
         if (elementId is not null && Data.Element(elementId) is { } element)
         {
-            damage = CombatMath.ResistElement(Rng, element, damage, Player.Resists.GetValueOrDefault(elementId));
-            if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(elementId))) LearnRune(RuneIds.Resist(elementId));
-            LearnAboutPlayer(_actingMonster, elementId); // the caster sees how well it worked
+            // Angband adjust_dam: ice is resisted as cold is; the evil are vulnerable to holy orbs.
+            var resistedAs = element.ResistedAs ?? elementId;
+            damage = CombatMath.ResistElement(Rng, element, damage, Player.Resists.GetValueOrDefault(resistedAs));
+            if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(resistedAs))) LearnRune(RuneIds.Resist(resistedAs));
+            LearnAboutPlayer(_actingMonster, resistedAs); // the caster sees how well it worked
         }
-        else if (elementId is not null && Player.Resists.GetValueOrDefault(elementId) < 0)
-            damage = damage * 4 / 3; // Angband adjust_dam: vulnerable (the evil, to holy orbs)
         TakeHit(damage, killer);
         // Then what the element does besides (Angband project_player's handlers).
         if (elementId is not null && !Player.IsDead) ElementSideEffects(elementId, damage, power, source);

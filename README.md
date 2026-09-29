@@ -101,10 +101,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Combat** (`Angband.Core/Combat`, `Game/GameSession.Combat.cs`): Angband 4.2 formulas —
   `test_hit` (12% auto-hit, 5% auto-miss, armour ×2/3, unseen targets halved), melee and missile
   criticals, fractional blows (leftover energy), slays/brands with immunities, missile range and
-  distance penalty, armour soak, elemental resistance (data-driven divisors, double resist,
-  immunity, vulnerability), monster criticals causing cuts/stuns, monster fear on damage,
+  distance penalty, armour soak, elemental resistance (immunity, vulnerability, double resist),
+  monster criticals causing cuts/stuns, monster fear on damage,
   experience with fractional carry, death. `ProjectionPath` ports `project_path` (used for missiles
   and line-of-fire).
+- **Elements** (`elements.json`, synced from and compared with 4.2.5's `projection.txt`): all 25 —
+  the thirteen gear resists (acid to disenchantment) and water, ice, gravity, inertia, force, time,
+  plasma, meteors, magic missiles, mana, holy power and arrows — with their names and
+  descriptions, colours, breath sounds, breath divisors and damage caps. Resistance works as 4.2.5's
+  `adjust_dam`: damage × numerator / denominator once per level of resistance, the denominator
+  rolled once (so double resistance to chaos is 36/k² of it, k 9–12); light, dark, sound, shards,
+  nexus, nether, chaos and disenchantment are 6/(8+1d4) (they were 3.x's figures), the base five
+  1/3, and cold resistance covers ice. The character sheet lists the thirteen.
 - **Status effects** (`Effects/TimedEffects.cs`, `timed_effects.json`): poison, cuts, stun
   (to-hit/dam penalty, knock-out), confusion (40% random steps), fear (no melee), paralysis
   (lost turns, non-stacking), blindness, slow/haste. Angband fixed-point HP regeneration, resting.
