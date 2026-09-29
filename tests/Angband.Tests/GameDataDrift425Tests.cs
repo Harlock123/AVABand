@@ -200,4 +200,15 @@ public class GameDataDrift425Tests
         Assert.Equal(Data.Constants.FoodFull - 1, game.Player.Food);
         Assert.True(game.IsCheater); // a debug command, so not scored
     }
+
+    [Fact]
+    public void The_One_Ring_is_a_plain_gold_ring_until_you_stand_on_it()
+    {
+        var game = GameSession.NewGame(Data, 6, "warrior");
+        var ring = game.Objects.CreateArtifact(Data.Artifacts.First(a => a.Id == "the_one_ring"));
+        Assert.Equal("a Plain Gold Ring", ItemNaming.Describe(ring, game.Knowledge, full: false));
+        ring.Assessed = true; // (object_touch)
+        Assert.StartsWith("the ", ItemNaming.Describe(ring, game.Knowledge, full: false));
+        Assert.EndsWith("'The One Ring'", ItemNaming.Describe(ring, game.Knowledge, full: false));
+    }
 }

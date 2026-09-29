@@ -18,8 +18,17 @@ public static class ItemNaming
         var fullyKnown = knowledge.IsFullyKnown(item);
         var plural = item.Number != 1;
 
+        // Angband object_is_known_artifact: an artifact is known for what it is once you've stood on it
+        // (object_touch) — named then, runes or no.
+        var artifactKnown = item.IsArtifact && (item.Assessed || fullyKnown);
+
         string noun;
-        if (!knowsKind && knowledge.Flavor(item.Kind) is { } flavor)
+        // Angband obj_desc_get_basename: a special artifact's own kind (the One Ring's, the
+        // Elfstone's) shows its fixed flavour until you know the kind or the artifact.
+        if (item.Kind.IsSpecialArtifactKind && !artifactKnown && !knowledge.IsAware(item.Kind)
+            && knowledge.Flavor(item.Kind) is { } stone)
+            noun = $"{stone.Name} {Plain(item.Base.Name, plural)}";
+        else if (!knowsKind && knowledge.Flavor(item.Kind) is { } flavor)
         {
             var pattern = item.Base.Flavor == "scroll"
                 ? "{base} titled \"{flavor}\""
@@ -41,17 +50,14 @@ public static class ItemNaming
         var sb = new StringBuilder();
         if (withArticle)
         {
-            if (item.IsArtifact && fullyKnown) sb.Append("the ");
+            if (artifactKnown) sb.Append("the ");
             else if (plural) sb.Append(item.Number).Append(' ');
             else sb.Append(StartsWithVowel(noun) ? "an " : "a ");
         }
         sb.Append(noun);
 
-        if (fullyKnown)
-        {
-            if (item.Artifact is { } art) sb.Append(' ').Append(art.Name);
-            else if (item.Ego is { } ego) sb.Append(' ').Append(ego.Name);
-        }
+        if (artifactKnown && item.Artifact is { } art) sb.Append(' ').Append(art.Name);
+        else if (fullyKnown && item.Ego is { } ego) sb.Append(' ').Append(ego.Name);
         if (!full) return sb.ToString();
 
         // Combat numbers.

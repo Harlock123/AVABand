@@ -603,7 +603,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   say only that it was hit; and a shopkeeper may greet you as you come in — a welcome that warms
   with your level, or one of 4.2.5's hints. Object power (so prices and random artifacts) reads
   object_property.txt, slay.txt and brand.txt instead of a copy of them, and counts what an
-  object ignores.
+  object ignores. An artifact is named as soon as you stand on it (Angband object_touch), its runes known or
+  not, and the special artifacts' own kinds keep their flavour until then — the One Ring is "a
+  Plain Gold Ring" until you step on it.
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so
