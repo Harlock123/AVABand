@@ -32,7 +32,9 @@ Some gear carries curses: a sticky, draining or treacherous rune you learn when 
 The item's description says what each curse you know does. **Remove Curse** (scroll, staff or
 spell) asks which item, then which curse, showing each curse's strength against the spell's; if
 the spell is too weak the item turns fragile, and a fragile item may be destroyed. Curses that
-"cannot be removed" never go.
+"cannot be removed" never go. The **Curses** page of the Knowledge screen (`~`) lists every
+curse you have learned: what it does, how often it acts, what it can turn up on, what it won't
+share an item with, and what you are carrying it on.
 
 ## Floor stacking
 

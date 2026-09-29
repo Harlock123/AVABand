@@ -87,3 +87,21 @@ public class EasyKnowTests
         Assert.False(game.Knowledge.KnowsProperty(sword, Angband.Core.Definitions.RuneIds.Resist("free_act")));
     }
 }
+
+/// <summary>The Curses knowledge page's text.</summary>
+public class CurseKnowledgeTests
+{
+    [Fact]
+    public void A_curse_says_what_it_does_how_often_where_and_what_you_carry_it_on()
+    {
+        var game = Arena.Create(4);
+        var dagger = TestGames.GiveCursedItem(game, "teleportation", 30);
+        var text = ObjectInfo.DescribeCurse(game, game.Data.Curse("teleportation")!);
+        Assert.StartsWith("Teleportation curse", text);
+        Assert.Contains("It randomly makes you teleport.", text);
+        Assert.Contains("It acts every 1 to", text);
+        Assert.Contains("It can be found on", text);
+        Assert.Contains("anti-teleportation", text); // its conflict
+        Assert.Contains($"You carry it on {game.Describe(dagger)} (strength 30).", text);
+    }
+}

@@ -21,6 +21,32 @@ public sealed class KnowledgeUiTests
     }
 
     [AvaloniaFact]
+    public void The_Curses_page_lists_the_curses_you_know()
+    {
+        var (window, vm) = Open();
+        var game = vm.Game;
+        Assert.Empty(vm.CreateKnowledge().Curses!.Rows);
+
+        var dagger = game.Objects.Create("dagger");
+        Assert.True(game.Objects.AddCurse(new Angband.Core.Randomness.GameRandom(1), dagger, game.Data.Curse("siren")!, 12));
+        game.Player.Inventory.Add(dagger);
+        game.Knowledge.LearnRune(RuneIds.Curse("siren"));
+        var knowledge = vm.CreateKnowledge();
+        var row = Assert.Single(knowledge.Curses!.Rows);
+        Assert.Equal("Siren", row.Name);
+        Assert.Equal("carried", row.Note);
+        knowledge.Curses.Selected = row;
+        Assert.Contains("(strength 12)", knowledge.Curses.Text);
+
+        var knowledgeWindow = new KnowledgeWindow { DataContext = knowledge };
+        knowledgeWindow.Show();
+        knowledge.SelectedTab = 3;
+        TileRenderingTests.Save(knowledgeWindow, "knowledge-curses");
+        knowledgeWindow.Close();
+        window.Close();
+    }
+
+    [AvaloniaFact]
     public void Tilde_OpensKnowledge_WithWhatTheCharacterHasSeen()
     {
         var (window, vm) = Open();
@@ -117,7 +143,7 @@ public sealed class KnowledgeUiTests
 
         vm.HandleAction(InputAction.MonsterKnowledge);
         var knowledgeWindow = Assert.IsType<KnowledgeWindow>(window.OwnedWindows.Last());
-        ((KnowledgeViewModel)knowledgeWindow.DataContext!).SelectedTab = 10;
+        ((KnowledgeViewModel)knowledgeWindow.DataContext!).SelectedTab = 11;
         TileRenderingTests.Save(knowledgeWindow, "knowledge-history");
         knowledgeWindow.Close();
     }
@@ -152,7 +178,7 @@ public sealed class KnowledgeUiTests
         vm.HandleAction(InputAction.MonsterKnowledge);
         var knowledgeWindow = Assert.IsType<KnowledgeWindow>(window.OwnedWindows.Last());
         var shown = (KnowledgeViewModel)knowledgeWindow.DataContext!;
-        shown.SelectedTab = 8;
+        shown.SelectedTab = 9;
         shown.Equipment!.IncludeShops = true;
         TileRenderingTests.Save(knowledgeWindow, "knowledge-equipment");
         knowledgeWindow.Close();

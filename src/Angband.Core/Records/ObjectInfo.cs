@@ -444,6 +444,41 @@ public static class ObjectInfo
     private static string ModifierText(string mod, int value) =>
         mod == "shots" ? string.Create(Inv, $"{value / 10.0:+0.0;-0.0} shots") : $"{value:+0;-0} {ModifierName(mod)}";
 
+    /// <summary>
+    /// A curse, for the Curses knowledge page (AVABand's own; 4.2.5 lists curses among the runes):
+    /// what it does, what it carries (penalties, weaknesses, flags), how often it acts, what it can
+    /// be found on and what it won't share an item with.
+    /// </summary>
+    public static string DescribeCurse(GameSession game, CurseDef curse)
+    {
+        var data = game.Data;
+        var sb = new StringBuilder();
+        sb.Append(Capitalize(curse.Name)).Append(" curse\n\n");
+        sb.Append($"It {curse.Description}.\n");
+        var penalties = new List<string>();
+        if (curse.ToHit != 0) penalties.Add($"{curse.ToHit:+0;-0} to-hit");
+        if (curse.ToDam != 0) penalties.Add($"{curse.ToDam:+0;-0} to-dam");
+        if (curse.ToAc != 0) penalties.Add($"{curse.ToAc:+0;-0} armour");
+        penalties.AddRange(curse.Modifiers.Where(kv => kv.Value != 0).Select(kv => $"{kv.Value:+0;-0} {ModifierName(kv.Key)}"));
+        if (penalties.Count > 0) sb.Append($"It gives {Join(penalties)}.\n");
+        if (curse.Vulnerabilities.Count > 0)
+            sb.Append($"It makes you vulnerable to {Join([.. curse.Vulnerabilities.Select(v => ElementName(data, v))])}.\n");
+        if (curse.Resists.Count > 0) sb.Append($"It gives {Join([.. curse.Resists.Select(r => ProtectionName(data, r))])}.\n");
+        if (curse.Effect is { Length: > 0 } && RandomValue.Parse(curse.Time) is var time && time.Min > 0)
+        {
+            var most = time.Base + time.DiceCount * time.Dice;
+            sb.Append(most > time.Min ? $"It acts every {time.Min} to {most} turns.\n" : $"It acts every {most} turns.\n");
+        }
+        var bases = curse.Bases.Select(b => data.ObjectBase(b) is { } ob ? ItemNaming.Plain(ob.Name, true) : b).Distinct().ToList();
+        if (bases.Count > 0) sb.Append($"It can be found on {Join(bases)}.\n");
+        var conflicts = curse.Conflicts.Select(c => data.Curse(c)?.Name ?? c).ToList();
+        if (conflicts.Count > 0) sb.Append($"It never shares an item with the {Join(conflicts, "or")} curse{(conflicts.Count > 1 ? "s" : "")}.\n");
+        var carried = game.Player.Inventory.Equipped.Concat(game.Player.Inventory.Pack)
+            .Where(i => i.Curses.Contains(curse.Id)).Select(i => $"{game.Describe(i)} (strength {i.CursePower(curse.Id)})").ToList();
+        if (carried.Count > 0) sb.Append($"\nYou carry it on {Join(carried)}.\n");
+        return sb.ToString().TrimEnd();
+    }
+
     private static string ModifierName(string mod) => mod switch
     {
         "str" => "strength", "int" => "intelligence", "wis" => "wisdom", "dex" => "dexterity", "con" => "constitution",

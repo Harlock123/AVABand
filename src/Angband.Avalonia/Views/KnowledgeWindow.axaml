@@ -85,6 +85,7 @@
       </TabItem>
       <TabItem Header="Objects" Content="{Binding Objects}" />
       <TabItem Header="Runes" Content="{Binding Runes}" />
+      <TabItem Header="Curses" Content="{Binding Curses}" />
       <TabItem Header="Egos" Content="{Binding Egos}" />
       <TabItem Header="Artifacts" Content="{Binding Artifacts}" />
       <TabItem Header="Features" Content="{Binding Features}" />

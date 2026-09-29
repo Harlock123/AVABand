@@ -199,6 +199,9 @@ public sealed partial class KnowledgeViewModel : ObservableObject
         Artifacts = artifacts;
     }
 
+    /// <summary>The curses you know of (AVABand's own page; 4.2.5 lists them among the runes).</summary>
+    public KnowledgeCategoryViewModel? Curses { get; init; }
+
     public MonsterKnowledgeViewModel Monsters { get; }
     public KnowledgeCategoryViewModel Objects { get; }
     public KnowledgeCategoryViewModel Runes { get; }
@@ -213,7 +216,7 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     /// <summary>The character history, as Angband's history screen and dump show it.</summary>
     public string History { get; init; } = "";
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 egos, 4 artifacts, 5 features, 6 traps, 7 shapes, 8 equipment, 9 home, 10 history).</summary>
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -227,6 +230,7 @@ public sealed partial class MainWindowViewModel
     private KnowledgeViewModel CreateKnowledge(MonsterKnowledgeViewModel monsters) =>
         new(monsters, CreateObjectKnowledge(), CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge())
         {
+            Curses = CreateCurseKnowledge(),
             Features = CreateFeatureKnowledge(),
             Traps = CreateTrapKnowledge(),
             Home = CreateHomeKnowledge(),
@@ -349,6 +353,23 @@ public sealed partial class MainWindowViewModel
             .ToList();
         return new KnowledgeCategoryViewModel("Runes", $"{known.Count} of {all.Count} runes learned",
             "You have not learned any runes yet.", rows);
+    }
+
+    /// <summary>The curses whose runes you know: what each does, where it is found, what you carry it on.</summary>
+    public KnowledgeCategoryViewModel CreateCurseKnowledge()
+    {
+        var rows = _data.Curses
+            .Where(c => _game.Knowledge.KnowsRune(Angband.Core.Definitions.RuneIds.Curse(c.Id)))
+            .OrderBy(c => c.Name, StringComparer.Ordinal)
+            .Select(c =>
+            {
+                var carried = _game.Player.Inventory.Equipped.Concat(_game.Player.Inventory.Pack).Any(i => i.Curses.Contains(c.Id));
+                return new KnowledgeRow("*", 0xFFFF4040, Capitalize(c.Name), carried ? "carried" : "",
+                    () => ObjectInfo.DescribeCurse(_game, c));
+            })
+            .ToList();
+        return new KnowledgeCategoryViewModel("Curses", $"{rows.Count} of {_data.Curses.Count} curses known",
+            "You have not learned of any curses yet.", rows);
     }
 
     private static string RuneCategory(string rune) => (rune.IndexOf(':') is var i and > 0 ? rune[..i] : "combat") switch

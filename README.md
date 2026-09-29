@@ -421,7 +421,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   used up ("You have no curses to remove."). A curse of power 100 (the Rings and Amulets of
   Teleportation) is permanent and never offered; an item's description says what each known curse
   does ("It randomly makes you teleport; this curse cannot be removed."), even before you know
-  what kind of item it is. Per-game flavours (potion colours, ring
+  what kind of item it is. The Knowledge screen's **Curses** page (AVABand's own; 4.2.5 lists them among
+  the runes) has each curse you know: what it does, its penalties and weaknesses, how often it
+  acts, the kinds of item it can turn up on, the curses it never shares an item with, and the
+  items you carry it on, with their strength. Per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to
   mithril and dragon scale mail, crowns; rings and amulets with rolled bonuses (Angband's
   `B+dXMY` values: Strength `1+M5`, Protection `5+d5M10`...); gear can raise stats and grant
