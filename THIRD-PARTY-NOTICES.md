@@ -34,7 +34,7 @@ and is available under either of the following (AVABand uses the first):
 
 Each tileset folder carries its own `LICENSE.txt`. The spider-web tile in the Adam Bolt and Dungeon Crawl sets (`web.png`, `avaband_web.png`) was drawn for
 AVABand, as those sets have none, and is CC0; so are the Original and Nomad sets' `web.png` and
-`tree.png`. Tangaria, DawnLike, RLTiles and Hexany's sets were cropped and repacked (and Hexany's
+`tree.png`, and every set's `ava_*.png` quest tiles (tools/avaband_quest_tiles.py). Tangaria, DawnLike, RLTiles and Hexany's sets were cropped and repacked (and Hexany's
 and some RLTiles flavours recoloured) by AVABand's tools.
 
 ## Sound packs (`src/Angband.Avalonia/soundpacks`)

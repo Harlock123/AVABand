@@ -2036,10 +2036,10 @@
     "object:nature_craft": "main:3,13",
     "object:wild_forces": "main:31,12",
     "terrain:shop_inn": "main:7,2",
-    "terrain:sealed_door": "main:3,2",
-    "terrain:quest_altar": {"lit": "main:21,13", "torch": "main:23,13", "dark": "main:22,13"},
-    "terrain:dwarven_forge": "main:30,54",
-    "terrain:hermitage": "main:4,2",
+    "terrain:sealed_door": "ava_sealed_door.png",
+    "terrain:quest_altar": "ava_quest_altar.png",
+    "terrain:dwarven_forge": "ava_dwarven_forge.png",
+    "terrain:hermitage": "ava_hermitage.png",
     "object-base:quest": "main:28,3",
     "object-base:relic": "main:22,4",
     "object:shard_of_the_hilt": "main:15,10",
@@ -2048,6 +2048,6 @@
     "object:reforged_blade": "main:25,10",
     "object:water_of_ulmo": "main:0,5",
     "object:black_market_strongbox": "main:25,4",
-    "object:key_of_belegost": "main:15,14"
+    "object:key_of_belegost": "ava_key.png"
   }
 }

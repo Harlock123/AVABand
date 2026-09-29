@@ -114,9 +114,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
     `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. One a monster
     drops on a full pack's account and left behind on the level turns up at the Prancing Pony
-    ("Someone found this down below with your name on it"), so no quest can be lost that way. The tilesets draw
-    the new terrain and items with their nearest tiles (the sealed door as a closed door, the forge as
-    lava, the relic as an amulet...).
+    ("Someone found this down below with your name on it"), so no quest can be lost that way. Every tileset draws the
+    quest places and the key with small tiles of AVABand's own (`ava_*.png`, CC0), sized to the set,
+    and the other quest things with its nearest tiles (the inn a shop door, the relic an amulet, the
+    shards a sword...); `tools/avaband_quest_tiles.py` makes them and writes the mappings — re-run it
+    after rebuilding a tileset.
 - **Title screen** (`ViewModels/MainWindowViewModel.Title.cs`): the game opens on Thangorodrim —
   the three smoking peaks over the gates of Angband (`art/title.jpg`, drawn by `tools/title_art.py`)
   under the AVABand logo (`art/title-logo.png`, Cinzel Decorative) — to its own music, "The Pits of

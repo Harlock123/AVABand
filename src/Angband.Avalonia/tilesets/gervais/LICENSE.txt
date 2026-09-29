@@ -7,3 +7,6 @@ The image is included unmodified.
 
 tileset.json (the mapping of game ids to tiles) was generated from Angband's
 graf-dvg.prf and xtra-dvg.prf by tools/angband_prf_to_tileset.py.
+
+ava_*.png (the sealed door, dwarven forge, barrow altar, hermit's door and the Key of Belegost, for
+AVABand's quests) were drawn for AVABand by tools/avaband_quest_tiles.py and are CC0 (public domain).

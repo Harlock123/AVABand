@@ -31,3 +31,6 @@ and packed into one sheet (converted to 8 bits per channel). The artwork itself 
 tileset.json (the mapping of AVABand's game ids to tiles) was generated from Tangaria's graf-tan.prf
 and flvr-tan.prf by tools/tangaria_tileset.py (monsters Tangaria lacks or names differently are drawn
 with the nearest Tangaria creature), then given per-glyph fallbacks by tools/tileset_glyph_fallbacks.py.
+
+ava_*.png (the sealed door, dwarven forge, barrow altar, hermit's door and the Key of Belegost, for
+AVABand's quests) were drawn for AVABand by tools/avaband_quest_tiles.py and are CC0 (public domain).

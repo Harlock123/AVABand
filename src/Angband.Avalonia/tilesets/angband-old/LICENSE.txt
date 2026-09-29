@@ -20,3 +20,6 @@ neighbours' tiles.
 web.png and tree.png were made for AVABand and are CC0 (public domain): the set has no spider
 web (this is the Adam Bolt folder's web, scaled down) and no tree creature (tree.png stands for
 huorns, ents and Old Man Willow).
+
+ava_*.png (the sealed door, dwarven forge, barrow altar, hermit's door and the Key of Belegost, for
+AVABand's quests) were drawn for AVABand by tools/avaband_quest_tiles.py and are CC0 (public domain).

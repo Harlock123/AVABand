@@ -1445,10 +1445,10 @@
     "monster-glyph:U": "main:12,19",
     "monster-glyph:D": "main:19,20",
     "terrain:shop_inn": "main:6,0",
-    "terrain:sealed_door": "main:1,0",
-    "terrain:quest_altar": "main:23,0",
-    "terrain:dwarven_forge": "main:22,0",
-    "terrain:hermitage": "main:2,0",
+    "terrain:sealed_door": "ava_sealed_door.png",
+    "terrain:quest_altar": "ava_quest_altar.png",
+    "terrain:dwarven_forge": "ava_dwarven_forge.png",
+    "terrain:hermitage": "ava_hermitage.png",
     "object-base:quest": "main:6,2",
     "object-base:relic": "main:31,1",
     "object:shard_of_the_hilt": "main:8,0",
@@ -1457,6 +1457,6 @@
     "object:reforged_blade": "main:19,2",
     "object:water_of_ulmo": "main:5,2",
     "object:black_market_strongbox": "main:14,2",
-    "object:key_of_belegost": "main:17,1"
+    "object:key_of_belegost": "ava_key.png"
   }
 }
