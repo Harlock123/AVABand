@@ -211,8 +211,8 @@ public class MagicTests
 
         var full = 11 / 2 + 10;
         Assert.Equal(full, hits[centre.Id]);
-        Assert.Equal(full / 2, hits[side.Id]);
-        Assert.Equal(full / 2 / 9, hits[immune.Id]);
+        Assert.Equal((full + 1) / 2, hits[side.Id]);      // Angband project: (dam + d) / (d + 1)
+        Assert.Equal((full + 1) / 2 / 9, hits[immune.Id]);
     }
 
     [Fact]

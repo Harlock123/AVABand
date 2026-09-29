@@ -108,3 +108,26 @@ public class PlayerMelee425Tests
         Assert.Equal(0, orc.Held);
     }
 }
+
+/// <summary>Angband project's falloff and project_p's self-inflicted damage.</summary>
+public class Projection425Tests
+{
+    [Fact]
+    public void A_blast_falls_off_as_4_2_5s_does()
+    {
+        Assert.Equal(100, GameSession.BallDamage(100, 0));
+        Assert.Equal(50, GameSession.BallDamage(99, 1));   // (99 + 1) / 2
+        Assert.Equal(100, GameSession.BallDamage(100, 3, 4)); // a zone keeps its strength out to its radius
+        Assert.Equal(80, GameSession.BallDamage(100, 4, 4));
+    }
+
+    [Fact]
+    public void Your_own_zone_hurts_you_a_tenth_as_much()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5, CharacterSpec.Default("human", "necromancer"));
+        game.Player.Hp = game.Player.MaxHp = 1000;
+        var hp = game.Player.Hp;
+        game.ElementalHit("disen", 90, "yourself", selfInflicted: true);
+        Assert.Equal(hp - 9, game.Player.Hp);
+    }
+}

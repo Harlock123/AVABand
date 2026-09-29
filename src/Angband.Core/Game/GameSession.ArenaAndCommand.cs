@@ -50,8 +50,9 @@ public sealed partial class GameSession
     private Monster? AimedMonster() => (_effectTarget ?? AimPoint()) is { } p ? Level.Monsters.At(p) : null;
 
     /// <summary>
-    /// Angband SPOT (Zone of Unmagic): an explosion centred on the player that hurts the monsters
-    /// around (less further out) — and the player too.
+    /// Angband SPOT (Zone of Unmagic): an explosion centred on the player, at full strength out to
+    /// its radius (project's diameter_of_source), hurting the monsters around — and the player,
+    /// though only a tenth as much (project_p's self-inflicted damage).
     /// </summary>
     private void Spot(string element, int damage, int radius)
     {
@@ -60,9 +61,19 @@ public sealed partial class GameSession
         foreach (var m in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(Player.Position) <= radius && ProjectionPath.Projectable(Level, Player.Position, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(Player.Position)).ThenBy(m => m.Id).ToList())
-            ProjectileHitsMonster(m, "zone", elementId, damage / (m.Position.DistanceTo(Player.Position) + 1), m.Position.DistanceTo(Player.Position));
-        ElementalHit(elementId, damage, "a zone of unmagic");
+        {
+            var d = m.Position.DistanceTo(Player.Position);
+            ProjectileHitsMonster(m, "zone", elementId, BallDamage(damage, d, radius), d);
+        }
+        ElementalHit(elementId, damage, "yourself", selfInflicted: true);
     }
+
+    /// <summary>
+    /// Angband project's damage at distance <paramref name="d"/> from a blast's centre: (dam + d) /
+    /// (d + 1), or with a wide source, full strength to its diameter and falling off after.
+    /// </summary>
+    internal static int BallDamage(int damage, int d, int diameterOfSource = 0) =>
+        diameterOfSource == 0 || d == 0 ? (damage + d) / (d + 1) : Math.Min(damage, diameterOfSource * damage / (d + 1));
 
     /// <summary>
     /// Angband CURSE: direct damage to the targeted monster — (level/12 + 1) dice, each with 50 sides

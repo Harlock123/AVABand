@@ -17,7 +17,8 @@
 // (BOT_TRACE=1 shows its end); BOT_PLAIN=1 plays as the first bot did (no resting, corridors or
 // launcher), to compare.
 //
-// `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each from the
+// `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each (and a priest,
+// necromancer, druid and blackguard, two each, casting their own attack and healing spells) from the
 // top and one from 3000 ft, played by the bot (fleeing up or down stairs when beaten, cured between levels)
 // for that many decisions (default 4000), jumping deeper whenever a level is done, while a replay
 // records the game. It fails on an exception, on a decision that takes more than 10 seconds or a
@@ -51,9 +52,10 @@ if (args.Length > 0 && args[0] == "soak")
 {
     var decisions = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 4000;
     var failures = 0;
-    foreach (var cls in new[] { "warrior", "mage", "ranger" })
+    foreach (var cls in new[] { "warrior", "mage", "ranger", "priest", "necromancer", "druid", "blackguard" })
     {
-        foreach (var seed in new[] { 101UL, 202UL, 303UL, 404UL, 505UL })
+        var seeds = cls is "warrior" or "mage" or "ranger" ? new[] { 101UL, 202UL, 303UL, 404UL, 505UL } : [101UL, 202UL];
+        foreach (var seed in seeds)
             if (!Soak.Run(data, cls, seed, decisions, 1)) failures++;
         // And one each from 3000 ft to the bottom, cured as it goes, to see the deepest levels (Sauron's
         // and Morgoth's among them).
@@ -170,8 +172,14 @@ internal static class Bot
         ["potion_of_cure_critical_wounds", "cure_critical_wounds"], ["potion_of_healing", "healing"],
     ];
 
-    /// <summary>A mage's attack spells, strongest first (the bot casts the first it knows and can afford).</summary>
-    private static readonly string[] MageAttacks = ["mana_storm", "mana_bolt", "fire_ball", "acid_spray", "frost_bolt", "magic_missile"];
+    /// <summary>What an attack spell starts with (a bolt, beam, ball, arc...), in spells.json's effect grammar.</summary>
+    private static readonly string[] AttackEffects =
+        ["bolt:", "bolt_or_beam:", "beam:", "ball:", "arc:", "short_beam:", "strike:", "swarm:", "light_line:", "spot:"];
+
+    private static bool IsAttack(SpellDef s) =>
+        AttackEffects.Any(e => s.Effect.StartsWith(e, StringComparison.Ordinal)) && !s.Effect.Contains("aggravate");
+
+    private static bool IsHealing(SpellDef s) => s.Effect.StartsWith("heal:", StringComparison.Ordinal);
 
     private static string? Kind(GameData data, string[] ids) => ids.FirstOrDefault(id => data.Object(id) is not null);
 
@@ -289,6 +297,12 @@ internal static class Bot
             tally.Blinks++;
             return game.Execute(new UseCommand(phase));
         }
+        // Hurt, with a healing spell (priest, paladin): cast it, if it can see to.
+        if (!Plain && hurt < 50 && !p.Timed.Has("blind") && !p.Timed.Has("confused") && HealingSpell(game) is { } heal)
+        {
+            tally.Potions++;
+            if (game.Execute(new CastCommand(heal.Id))) return true;
+        }
         // Blind or confused, it can't fight or read: a cure potion clears both (and heals).
         var dazed = p.Timed.Has("blind") || p.Timed.Has("confused");
         if ((hurt < 50 || dazed) && Healing.Select(h => Kind(game.Data, h) is { } id ? Find(game, id) : null).FirstOrDefault(i => i is not null) is { } cure)
@@ -344,7 +358,10 @@ internal static class Bot
                 {
                     tally.Shots++;
                     tally.Waits = 0;
-                    if (game.Execute(new CastCommand(spell, mark.Position))) return true;
+                    var cast = spell.NeedsDirection
+                        ? new CastCommand(spell.Id, Direction: Toward(p.Position, mark.Position))
+                        : new CastCommand(spell.Id, mark.Position);
+                    if (game.Execute(cast)) return true;
                 }
                 if (p.Inventory.Bow is { } bow && p.Inventory.Quiver.Any(q => q.Base.AmmoClass == bow.Base.AmmoClass)
                     && mark.Position.DistanceTo(p.Position) <= 6 + 2 * bow.Multiplier)
@@ -428,10 +445,19 @@ internal static class Bot
             .Where(path => path.Count is > 0 and <= 15).OrderBy(path => path.Count).FirstOrDefault();
     }
 
-    /// <summary>The strongest attack spell learned that the bot has the mana for and fails no more than one time in four.</summary>
-    private static string? AttackSpell(GameSession game) =>
-        MageAttacks.FirstOrDefault(id => game.Player.LearnedSpells.Contains(id) && game.Data.Spells.FirstOrDefault(s => s.Id == id) is { } s
-            && game.SpellInfo(s) is { } info && info.Mana <= game.Player.Mana && game.SpellFailChance(s) <= 25);
+    /// <summary>
+    /// The attack spell (bolt, beam, ball, arc...) of the highest level the bot has learned, has the
+    /// mana for and fails no more than one time in four — whatever its class.
+    /// </summary>
+    private static SpellDef? AttackSpell(GameSession game) => CastableSpells(game, IsAttack).FirstOrDefault();
+
+    /// <summary>The healing spell of the highest level it can cast, likewise.</summary>
+    private static SpellDef? HealingSpell(GameSession game) => CastableSpells(game, IsHealing).FirstOrDefault();
+
+    private static IEnumerable<SpellDef> CastableSpells(GameSession game, Func<SpellDef, bool> kind) =>
+        game.ClassSpells.Where(s => kind(s) && game.Player.LearnedSpells.Contains(s.Id) && game.SpellInfo(s) is { } info
+                                    && info.Mana <= game.Player.Mana && game.SpellFailChance(s) <= 25)
+            .OrderByDescending(s => game.SpellInfo(s)!.Level);
 
     /// <summary>How many of a square's eight neighbours are open.</summary>
     private static int Openness(GameSession game, Loc at) => game.Level.Neighbors(at).Count(n => game.Level.IsPassable(n));

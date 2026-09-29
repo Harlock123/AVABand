@@ -329,7 +329,8 @@ public sealed partial class GameSession
     /// Damage of an element (or plain damage when <paramref name="elementId"/> is null), reduced by the
     /// player's resistance. Taking elemental damage teaches the resistance runes of worn gear.
     /// </summary>
-    public void ElementalHit(string? elementId, int damage, string killer, int power = 0, Loc? source = null)
+    /// <param name="selfInflicted">Your own projection (Angband project_p with self): a tenth of the damage.</param>
+    public void ElementalHit(string? elementId, int damage, string killer, int power = 0, Loc? source = null, bool selfInflicted = false)
     {
         // Angband project_p: blind, or struck by something unseen, you're told only what hit you.
         if (elementId is not null && Data.Element(elementId) is { BlindDescription.Length: > 0 } felt
@@ -343,6 +344,7 @@ public sealed partial class GameSession
             if (Player.Inventory.Equipped.Any(i => i.Resists.Contains(resistedAs))) LearnRune(RuneIds.Resist(resistedAs));
             LearnAboutPlayer(_actingMonster, resistedAs); // the caster sees how well it worked
         }
+        if (selfInflicted) damage /= 10;
         TakeHit(damage, killer);
         // Then what the element does besides (Angband project_player's handlers).
         if (elementId is not null && !Player.IsDead) ElementSideEffects(elementId, damage, power, source);

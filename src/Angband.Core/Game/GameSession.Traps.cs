@@ -134,9 +134,9 @@ public sealed partial class GameSession
         foreach (var monster in Level.Monsters.All
                      .Where(m => m.Position.DistanceTo(center) <= radius && ProjectionPath.Projectable(Level, center, m.Position, radius + 1))
                      .OrderBy(m => m.Position.DistanceTo(center)).ThenBy(m => m.Id).ToList())
-            ProjectileHitsMonster(monster, killer, element, damage / (monster.Position.DistanceTo(center) + 1), monster.Position.DistanceTo(center));
+            ProjectileHitsMonster(monster, killer, element, BallDamage(damage, monster.Position.DistanceTo(center)), monster.Position.DistanceTo(center));
         if (Player.Position.DistanceTo(center) <= radius)
-            ElementalHit(element, damage / (Player.Position.DistanceTo(center) + 1), killer);
+            ElementalHit(element, BallDamage(damage, Player.Position.DistanceTo(center)), killer);
         DestroyFloorObjects(area, element);
     }
 

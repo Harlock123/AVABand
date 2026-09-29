@@ -538,12 +538,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   the depth's level with depth-made gear, potions and Phase Door exploring, fighting, quaffing and
   blinking for 1000 turns — and reports survival, kills, experience, how much it saw and the
   potions it drank. It rests when things are quiet, backs into a corridor when several foes come at
-  it in the open and shoots them with the launcher it's given; `play [runs] mage` plays a mage
-  casting its strongest bolt or ball instead, and `BOT_PLAIN=1` the first, simpler bot.
+  it in the open and shoots them with the launcher it's given; `play [runs] <class>` plays any
+  class, casting the highest-level attack spell it has learned (bolt, beam, ball, arc...) and its
+  healing spells before potions, and `BOT_PLAIN=1` the first, simpler bot.
   `docs/balance.md` compares versions with it. It's a poor player, for comparing versions rather
   than judging difficulty; `one <depth> <seed> [class]` with `BOT_TRACE=1` shows how a run ended.
 - **Soak test** (`dotnet run -c Release --project tools/balance soak`, and CI's `soak` job on every
-  push): a warrior, a mage and a ranger of level 50, five fixed seeds each, played by the bot for
+  push): a warrior, a mage and a ranger of level 50, five fixed seeds each (and a priest,
+  necromancer, druid and blackguard, two each, casting their own bolts, balls, beams and arcs and
+  healing themselves with their spells), played by the bot for
   up to 4000 decisions, jumping deeper whenever a level is done and cured between levels (a debug
   *Cure all*, recorded like any command; they reach 1000 to 3000 ft before they die), and one of
   each from 3000 ft to the very bottom as a "tourist" — cured below half health, never killed

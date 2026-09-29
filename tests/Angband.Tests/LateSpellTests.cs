@@ -136,11 +136,12 @@ public class LateSpellTests
         var near = Foe(game, "cave_orc", new Loc(2, 0), awake: false);
         var far = Foe(game, "cave_orc", new Loc(6, 0), awake: false);
         game.GainExperience(game.ExperienceForLevel(31)); // level first, so the hit points compare
-        var hp = game.Player.Hp;
+        var hurt = new List<int>();
+        game.Events.Subscribe<PlayerHurtEvent>(e => hurt.Add(e.Damage));
         Cast(game, "zone_of_unmagic");
         Assert.True(near.Hp < 10_000);
         Assert.Equal(10_000, far.Hp);
-        Assert.True(game.Player.Hp < hp);
+        Assert.Contains(game.Player.Level * 3 / 10, hurt); // the caster too, a tenth as much (Angband project_p, self)
     }
 
     [Fact]
