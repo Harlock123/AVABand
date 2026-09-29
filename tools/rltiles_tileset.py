@@ -6,8 +6,10 @@ tiles for NetHack and for Dungeon Crawl. The Dungeon Crawl half is what the bund
 from, so this set takes its creatures, dungeon features and traps from the NetHack half (nh-mon0,
 nh-mon1, nh-dngn) and its objects from the shared item folder, and uses a Dungeon Crawl tile only
 where NetHack has nothing fitting (block walls, hydras, bears, griffons...). No image that is also
-in tilesets/dcss is used: every chosen tile is compared with the dcss folder's images and the
-script stops if one matches (90% or more of its pixels the same).
+in tilesets/dcss is used — every chosen tile is compared with the dcss folder's images and the
+script stops if one matches (90% or more of its pixels the same) — except a few (SHARED_WITH_DCSS:
+the black dragon, iron and stone golems, centipede, minotaur and sling), whose stand-ins were worse
+than the sameness.
 
 The source tiles are 8-bit BMPs on a teal (#476c6c) background. Creatures, objects and traps get
 that colour made transparent (so "opaque" is false and the floor shows through); terrain has it
@@ -109,7 +111,7 @@ RULES = [
     (r"carcharoth", "cerberus"),
     # D dragons
     (r"ancient blue|storm wyrm|sky dragon", "blue_dragon"), (r"ancient white|ice wyrm|scatha", "white_dragon"),
-    (r"ancient green|swamp wyrm", "dc-mon1/d/swamp_dragon"), (r"ancient black|ancalagon|annihilation", "gray_dragon"),
+    (r"ancient green|swamp wyrm", "dc-mon1/d/swamp_dragon"), (r"ancient black|ancalagon", "black_dragon"), (r"annihilation", "gray_dragon"),
     (r"ancient red|hell wyrm", "red_dragon"), (r"ancient gold|bile wyrm|glaurung", "yellow_dragon"),
     (r"ancient multi-hued|many colours|wyrm of chaos", "nh-mon0/0man/chromatic_dragon"),
     (r"dracolich", "dc-mon1/d/skeletal_dragon"), (r"death drake|wyrm of thunder", "gray_dragon"),
@@ -129,7 +131,7 @@ RULES = [
     (r"lost soul|moaning spirit|phantom|dread|^shadow$", "shade"), (r"poltergeist|ghost|banshee|spectre|spirit troll", "ghost"),
     # H hybrids
     (r"harpy|fury", "erinys"), (r"hippogriff", "dc-mon1/h/hippogriff"), (r"griffon", "dc-mon1/h/griffon"),
-    (r"chimaera|gorgimaera", "leocrotta"), (r"manticore", "dc-mon1/h/sphinx"), (r"minotaur|baphomet", "yeenoghu"),
+    (r"chimaera|gorgimaera", "leocrotta"), (r"manticore", "dc-mon1/h/sphinx"), (r"minotaur", "minotaur"), (r"baphomet", "yeenoghu"),
     # I insects
     (r"louse|flea", "grid_bug"), (r"fruit fly|hummerhorn|neekerbreeker|firefly", "xan"),
     # J snakes
@@ -183,7 +185,7 @@ RULES = [
     # b bats
     (r"fruit bat|disenchanter bat", "bat"), (r"vampire bat|gorgoroth|doombat", "vampire_bat"), (r"\bbat\b", "giant_bat"),
     # c centipedes
-    (r"centipede|carrion crawler", "scorpion"),
+    (r"centipede", "centipede"), (r"carrion crawler", "scorpion"),
     # d young dragons and drakes
     (r"(baby|young) blue", "baby_blue_dragon"), (r"(baby|young) white", "baby_white_dragon"),
     (r"(baby|young) green", "baby_green_dragon"), (r"(baby|young) black|shadow drake", "baby_black_dragon"),
@@ -192,7 +194,7 @@ RULES = [
     (r"law drake|ethereal drake", "baby_silver_dragon"), (r"balance drake|crystal drake", "baby_gray_dragon"),
     (r"wyvern", "dc-mon1/d/wyvern"),
     (r"mature white", "white_dragon"), (r"mature blue", "blue_dragon"), (r"mature green", "dc-mon1/d/swamp_dragon"),
-    (r"mature red", "red_dragon"), (r"mature gold", "yellow_dragon"), (r"mature black", "gray_dragon"),
+    (r"mature red", "red_dragon"), (r"mature gold", "yellow_dragon"), (r"mature black", "black_dragon"),
     (r"mature multi-hued", "nh-mon0/0man/chromatic_dragon"),
     # e eyes
     (r"spectator|gauth|beholder|omarax", "beholder"), (r"radiation eye|bloodshot eye|evil eye|eye druj", "dc-mon1/g/eye_of_devastation"),
@@ -202,6 +204,7 @@ RULES = [
     (r"tevildo", "large_cat"),
     # g golems
     (r"clay golem", "leather_golem"), (r"colbran", "dc-mon0/0golem/electric_golem"), (r"bone golem", "paper_golem"),
+    (r"iron golem", "iron_golem"), (r"stone golem", "stone_golem"),
     (r"golem|drolem|pukelman|silent watcher|colossus", "gold_golem"),
     # h dwarves, elves, hobbits
     (r"father christmas", "nh-mon0/0man/croesus"), (r"bullroarer|maggot|sméagol|hobbit", "hobbit"),
@@ -278,7 +281,7 @@ RULES = [
 # Objects. Paths under item/ (or elsewhere in the checkout).
 BASES = {
     "sword": "weapon/long_sword", "hafted": "weapon/mace", "polearm": "weapon/halberd", "digger": "misc/pick_axe",
-    "sling": "misc/leash", "bow": "weapon/bow", "crossbow": "weapon/crossbow", "shot": "gem/grey_stone",
+    "sling": "weapon/sling", "bow": "weapon/bow", "crossbow": "weapon/crossbow", "shot": "gem/grey_stone",
     "arrow": "weapon/arrow", "bolt": "weapon/crossbow_bolt", "soft_armour": "armor/leather_armor",
     "hard_armour": "armor/plate_mail", "shield": "armor/shield2", "helm": "armor/helm2", "gloves": "armor/glove1",
     "boots": "armor/boots_brown2", "cloak": "armor/cloak2", "light": "misc/brass_lantern", "amulet": "amulet/oval",
@@ -504,7 +507,13 @@ class Builder:
             raise SystemExit(f"{rel}: {w}x{h}, not 32x32")
         return [(0, 0, 0, 0) if p == BG else (*p, 255) for p in pixels]
 
+    # The few pictures that may be the same as the dcss set's: without them the stand-ins were worse
+    # than the sameness (black dragons drawn as grey ones, a sling as a leash, golems as gold ones).
+    SHARED_WITH_DCSS = {"black_dragon", "iron_golem", "stone_golem", "centipede", "minotaur", "sling"}
+
     def check_not_dcss(self, rel, pixels):
+        if os.path.basename(rel) in self.SHARED_WITH_DCSS:
+            return
         mine = [p[:3] if p[3] else None for p in pixels]
         for name, theirs in self.dcss:
             same = sum(1 for a, b in zip(mine, theirs) if a == b and a is not None)
