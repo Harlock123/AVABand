@@ -190,7 +190,7 @@ public sealed class SceneUiTests : IDisposable
         window.Show();
         var view = window.GetVisualDescendants().OfType<SceneView>().Single();
         string[] names = ["stairs-down", "stairs-up", "stairs-up-town", "recall-town", "recall-dungeon", "unique", "danger", "death",
-            "level-cavern", "level-labyrinth", "level-fortress"];
+            "level-cavern", "level-labyrinth", "level-fortress", "level-moria", "level-lair", "level-gauntlet"];
         foreach (var name in names)
         {
             var picture = vm.PictureFor(name);

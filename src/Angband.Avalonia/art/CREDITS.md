@@ -30,12 +30,33 @@ The pictures AVABand shows at moments of note. All are public-domain works (thei
 - Licence: Public domain (Wikimedia Commons licence tag: {{PD-Art|PD-old-auto-expired|deathyear=1854}}; Commons LicenseShortName: 'Public domain')
 - Notes: Oil; Satan before the vast infernal palace-fortress amid fire. Louvre (RF 2006-21), unframed crop.
 
+## level-gauntlet.jpg
+
+- **Inferno, Canto XXI, line 70: "Be None of You Outrageous"** — Gustave Doré (1832-1883), 1857-1861 (this printing c. 1903)
+- Source: https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Canto_XXI.,_line_70_-_Be_None_of_You_Outrageous.jpg
+- Licence: Public domain (Wikimedia Commons licence tag: {{PD-Art|PD-old-auto-expired|deathyear=1883}}; Commons LicenseShortName: 'Public domain')
+- Notes: Wood engraving; demons with forks crowd Virgil and Dante on the bridges of Malebolge. Trimmed to the printed plate (page margins, caption and page number cut away), 1600px, JPEG.
+
 ## level-labyrinth.jpg
 
 - **Le Carceri d'Invenzione, Plate XVI: The Pier with Chains (2nd ed.)** — Giovanni Battista Piranesi (1720-1778), 1761
 - Source: https://commons.wikimedia.org/wiki/File:Giovanni_Battista_Piranesi_-_Le_Carceri_d%27Invenzione_-_Second_Edition_-_1761_-_16_-_The_Pier_with_Chains.jpg
 - Licence: Public domain (Wikimedia Commons licence tag: {{PD-old-100}}; Commons LicenseShortName: 'Public domain')
 - Notes: Maze of arches, bridges and stairways.
+
+## level-lair.jpg
+
+- **Inferno, Plate 65 (Canto XXXI): The Titans** — Gustave Doré (1832-1883), 1857-1861
+- Source: https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Dante_Alighieri_-_Inferno_-_Plate_65_(Canto_XXXI_-_The_Titans).jpg
+- Licence: Public domain (Wikimedia Commons licence tag: {{PD-old}}; Commons LicenseShortName: 'Public domain')
+- Notes: Wood engraving; chained giants in their pit, the poets small beside them. Downscaled to 1600px, JPEG.
+
+## level-moria.jpg
+
+- **Coalbrookdale by Night** — Philip James de Loutherbourg (1740-1812), 1801
+- Source: https://commons.wikimedia.org/wiki/File:Philipp_Jakob_Loutherbourg_d._J._002.jpg
+- Licence: Public domain (Wikimedia Commons licence tags: {{PD-old-100}}, {{PD-Art-YorckProject}}; Commons LicenseShortName: 'Public domain')
+- Notes: Oil; furnaces and ironworks blazing at night — the fires of the old mines. Science Museum, London. 1920px Commons thumbnail, re-encoded.
 
 ## recall-dungeon.jpg
 

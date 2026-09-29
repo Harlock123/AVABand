@@ -759,7 +759,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     under the music for where you are — the town by day or by night, the dungeon by depth (shallow to
     1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and hard centres (the
     fortress loop) their own, as moria levels, lairs and gauntlets may (`ambient-moria`,
-    `ambient-lair`, `ambient-gauntlet`: else the cavern's, the cavern's and the labyrinth's),
+    `ambient-lair`, `ambient-gauntlet`: else the cavern's, the cavern's and the labyrinth's; none
+    of these come with the game — no CC0 loop whose origin could be checked was found — so yours
+    play if you add them),
     each falling back to the one before (the abyss to the deep, a cavern to its depth's). It crossfades
     on each change of place. Loops named `ambient-town-day`, `ambient-town-night`,
     `ambient-dungeon-shallow`, `-deep`, `-abyss`, `ambient-cavern`, `ambient-labyrinth` and
@@ -785,8 +787,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     stairwell in perspective, rings of recall light, rock closing round a cavern, a unique's glyph,
     a tombstone). The names are `stairs-down`, `stairs-up`, `stairs-up-town`, `recall-town`,
     `recall-dungeon`, `level-cavern`, `level-labyrinth`, `level-fortress`, `level-moria`,
-    `level-lair`, `level-gauntlet` (the last three falling back to the cavern's, the cavern's and the
-    labyrinth's), `danger`, `unique` and `death`, as `.png`, `.jpg` or `.jpeg`.
+    `level-lair`, `level-gauntlet`, `danger`, `unique` and `death`, as `.png`, `.jpg` or `.jpeg`
+    (the bundled moria, lair and gauntlet pictures are de Loutherbourg's *Coalbrookdale by Night* and
+    two of Doré's *Inferno* plates; `art/CREDITS.md` has them all).
   - **Screen reader support** (AVABand's own; the option *Screen reader support*, **off by
     default**): the map is drawn, so a screen reader can't read it; with the option on, a live
     region announces what is said — every message of a turn together, each prompt with its question

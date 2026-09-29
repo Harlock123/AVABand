@@ -1,6 +1,6 @@
 # Credits: ambience
 
-The ambience loops AVABand plays under the music. All were released under CC0 (public domain dedication) on OpenGameArt.org; the licence field on each asset's page is given below. There is no bundled cavern or fortress loop (the candidates' origins couldn't be confirmed), so those fall back to the dungeon's by depth. Your own loops of the same names, in `<AppData>/AVABand/ambience/`, are played instead.
+The ambience loops AVABand plays under the music. All were released under CC0 (public domain dedication) on OpenGameArt.org; the licence field on each asset's page is given below. There is no bundled cavern, fortress, moria, lair or gauntlet loop (the candidates' origins couldn't be confirmed, or they weren't loops), so those fall back to the dungeon's by depth. Your own loops of the same names, in `<AppData>/AVABand/ambience/`, are played instead.
 
 ## ambient-dungeon-abyss.ogg
 
