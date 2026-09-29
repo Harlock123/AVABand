@@ -119,6 +119,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     and the other quest things with its nearest tiles (the inn a shop door, the relic an amulet, the
     shards a sword...); `tools/avaband_quest_tiles.py` makes them and writes the mappings — re-run it
     after rebuilding a tileset.
+  - `tools/balance quests [seeds]` has the bot play each quest end to end (and the soak plays one of
+    each, recorded and replayed, on every push); its first runs had the bosses brought down to
+    their depth's measure (see `docs/balance.md`).
 - **Title screen** (`ViewModels/MainWindowViewModel.Title.cs`): the game opens on Thangorodrim —
   the three smoking peaks over the gates of Angband (`art/title.jpg`, drawn by `tools/title_art.py`)
   under the AVABand logo (`art/title-logo.png`, Cinzel Decorative) — to its own music, "The Pits of

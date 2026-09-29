@@ -6,9 +6,9 @@
   "color": "Orange",
   "depth": 12,
   "rarity": 1,
-  "speed": 5,
-  "hitPoints": 420,
-  "armour": 45,
+  "speed": 0,
+  "hitPoints": 260,
+  "armour": 36,
   "sleep": 30,
   "hearing": 20,
   "smell": 20,
@@ -22,7 +22,7 @@
    {
     "method": "hit",
     "effect": "hurt",
-    "damage": "1d12"
+    "damage": "1d10"
    },
    {
     "method": "hit",
@@ -32,7 +32,7 @@
    {
     "method": "hit",
     "effect": "hurt",
-    "damage": "1d12"
+    "damage": "1d10"
    }
   ],
   "flags": [
@@ -51,7 +51,7 @@
   "friends": [
    {
     "chance": 100,
-    "number": "3d4",
+    "number": "2d3",
     "race": "cave_orc"
    }
   ],
@@ -65,9 +65,9 @@
   "color": "LightPurple",
   "depth": 22,
   "rarity": 1,
-  "speed": 5,
-  "hitPoints": 950,
-  "armour": 65,
+  "speed": 0,
+  "hitPoints": 600,
+  "armour": 60,
   "sleep": 20,
   "hearing": 20,
   "smell": 0,
@@ -86,11 +86,6 @@
    {
     "method": "touch",
     "effect": "exp_40",
-    "damage": "0"
-   },
-   {
-    "method": "touch",
-    "effect": "terrify",
     "damage": "0"
    }
   ],
@@ -119,7 +114,6 @@
   "spellFrequency": 5,
   "spells": [
    "SCARE",
-   "HOLD",
    "DARKNESS",
    "WOUND"
   ],

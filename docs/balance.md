@@ -251,3 +251,31 @@ Within the noise for survival and kills; it sees less of each level (the time go
 and in the shallows it leaves one level in eight early — the unknown scrolls it reads include
 Teleport Level and Deep Descent. It isn't a better survivor; what it adds is play that picks up,
 wields and identifies things, which the soak test now covers.
+
+## AVABand's quests, played by the bot
+
+`dotnet run -c Release --project tools/balance quests 3` plays each quest end to end (tools/balance/Quests.cs):
+a warrior, a mage and a ranger, three seeds each, at a level each quest suits (16 for the Sealed Door
+up to 30 for Consecration), taking the quest at the Prancing Pony, going to each level it names and
+heading for what it wants there, fighting and healing as the plain bot does.
+
+```
+quest          done  died  decisions  potions  levels   (per class: warrior / mage / ranger, 3 seeds each)
+sealed_door    1/1/2 1/2/1       2384      7.1     3.4   killed by: a blue worm mass, Durgash the Keybearer, Durgash the Keybearer, poison
+burden         1/2/1 2/1/2       1287      6.7     3.1   killed by: a giant fruit fly, poison, poison, a 3-headed hydra, a skeleton human
+broken_blade   1/0/0 1/2/2       2650      5.9     4.3   killed by: an ironfist priest, a baby blue dragon, a blackguard, poison, a red dragon bat
+consecration   3/2/1 0/1/1       1407      3.7     2.4   killed by: Hathol, Lord of the Barrow, a giant fruit fly
+letter         3/3/3 0/0/0        507      1.3     1.6   killed by: 
+thief          1/0/0 2/3/3       2535      7.8    22.1   killed by: a sabre-tooth tiger, a ranger, a red worm mass, poison, a stegocentipede, a giant white louse, a black ogre, a blue icky thing
+board          3/2/2 0/1/0        445      2.1     7.8   killed by: a fatal wound
+```
+
+The first runs showed the two quest bosses were too strong for their depths — Durgash (420 HP, +5
+speed) killed every character that met him, and Hathol (950 HP, +5 speed, a paralysing spell and a
+terrifying touch — a frightened warrior can't strike at all) five in nine. Both were brought into line
+with Angband's uniques of their depth: Durgash 260 HP at normal speed (Grishnákh and Golfimbul have
+about 230), Hathol 600 HP at normal speed, without the paralysis or the terror. Now almost every death
+is the bot's own — poison it doesn't cure, worm masses, a fruit fly — as in its plain games; the quest
+bosses account for three in 63. The soak plays one of each quest (every way of the Letter) on seeds
+where the bot sees it through, recorded and replayed, on every push.
+

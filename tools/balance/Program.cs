@@ -25,6 +25,10 @@
 // game that hangs, and if the replay doesn't play back to exactly the same end; a failing game's
 // replay is written to soak-failures/ (watch it with Game > Watch a replay...).
 //
+// `quests [seeds]` — AVABand's quests, each played end to end by the bot (Quests.cs) with a warrior, a
+// mage and a ranger, that many seeds each: how many finish, how many die, and what it takes. The soak
+// plays one of each too, recorded and replayed.
+//
 // `record-replays [dir]` — records the four games tests/Angband.Tests/Replays keeps (ReplayFixtureTests),
 // for when a change is meant to change how games play out.
 //
@@ -61,8 +65,22 @@ if (args.Length > 0 && args[0] == "soak")
         // and Morgoth's among them).
         if (!Soak.Run(data, cls, 606UL, decisions, 60, tourist: true)) failures++;
     }
+    // AVABand's quests, one of each (and each way of the Letter), recorded and replayed.
+    failures += QuestBot.Soak(data);
     Console.WriteLine(failures == 0 ? "Soak: every game played and replayed cleanly." : $"Soak: {failures} game(s) failed.");
     Environment.Exit(failures == 0 ? 0 : 1);
+}
+
+if (args.Length > 0 && args[0] == "quests")
+{
+    if (args.Length > 3 && args[1] == "one")
+    {
+        var o = QuestBot.Play(data, args[2], args[3], args.Length > 4 ? ulong.Parse(args[4], CultureInfo.InvariantCulture) : 101);
+        Console.WriteLine(o);
+        return;
+    }
+    QuestBot.Report(data, args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 3);
+    return;
 }
 
 if (args.Length > 0 && args[0] == "record-replays")
@@ -645,22 +663,33 @@ internal static class Soak
         }
 
         var file = game.Recorder.ToFile(game);
+        var end = $"{done} decisions, to {maxDepth * 50} ft, {(game.Player.IsDead ? "killed by " + game.Player.KilledBy : "alive")}, "
+                  + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms";
+        return Finish(data, game, $"{cls} {seed}", $"{cls} {seed} from {start * 50} ft", marks, end, failure, keep, cls, seed);
+    }
+
+    /// <summary>
+    /// A soak game's end: any failure reported (and its replay kept), else its replay played back
+    /// through a file and checked step by step against the recorded game.
+    /// </summary>
+    internal static bool Finish(GameData data, GameSession game, string label, string title, List<(int Steps, ReplayEnd State)> marks,
+        string end, string? failure, string? keep, string cls, ulong seed)
+    {
+        var file = game.Recorder!.ToFile(game);
         if (keep is not null)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(keep)!);
             file.Write(keep);
         }
-        var end = $"{done} decisions, to {maxDepth * 50} ft, {(game.Player.IsDead ? "killed by " + game.Player.KilledBy : "alive")}, "
-                  + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms";
         if (failure is not null)
         {
-            Console.WriteLine($"{cls} {seed}: FAILED — {failure}\n  ({end})");
+            Console.WriteLine($"{label}: FAILED — {failure}\n  ({end})");
             Save(game, cls, seed);
             return false;
         }
 
         // Back through a file, as a player would watch it: the same end, the same history.
-        var path = Path.Combine(Path.GetTempPath(), $"avaband-soak-{cls}-{seed}{ReplayFile.Extension}");
+        var path = Path.Combine(Path.GetTempPath(), $"avaband-soak-{cls}-{seed}-{Guid.NewGuid():N}{ReplayFile.Extension}");
         file.Write(path);
         var player = new ReplayPlayer(data, ReplayFile.Read(path));
         File.Delete(path);
@@ -682,15 +711,15 @@ internal static class Soak
                    && player.Game.History.Select(h => h.Text).SequenceEqual(game.History.Select(h => h.Text));
         if (!same)
         {
-            Console.WriteLine($"{cls} {seed}: REPLAY DIFFERS — recorded {file.End}, replayed {ReplayCodec.EndOf(player.Game)}\n  ({end})\n  {divergence}");
+            Console.WriteLine($"{label}: REPLAY DIFFERS — recorded {file.End}, replayed {ReplayCodec.EndOf(player.Game)}\n  ({end})\n  {divergence}");
             Save(game, cls, seed);
             return false;
         }
-        Console.WriteLine($"{cls} {seed} from {start * 50} ft: ok — {end}; replay matches");
+        Console.WriteLine($"{title}: ok — {end}; replay matches");
         return true;
     }
 
-    private static void Save(GameSession game, string cls, ulong seed)
+    internal static void Save(GameSession game, string cls, ulong seed)
     {
         Directory.CreateDirectory("soak-failures");
         var path = Path.Combine("soak-failures", $"{cls}-{seed}{ReplayFile.Extension}");
