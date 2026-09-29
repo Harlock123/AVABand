@@ -451,6 +451,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   version that changed the save format (named by commit), and `OldSaveTests` loads each, plays on,
   goes down a level and saves it again in today's format. `tools/old-saves/make-old-save.sh
   <commit>` builds that commit in a scratch worktree and writes a new one.
+- **Balance check**: `dotnet run -c Release --project tools/balance` reports, depth by depth over
+  many generated levels, the objects (egos, artifacts, curses), gold, monsters and traps, and how
+  often a warrior of the depth's level dies holding still there. `docs/balance.md` compares the
+  game before and after the 4.2.5 data sync: egos and artifacts are several times commoner, as
+  4.2.5 makes them; the rest is within the noise.
 - **Persistent levels' stairs**: a new level meets its stored neighbours' stairs square for square;
   one that would land in permanent rock (a vault's wall) goes to the nearest square that fits, so
   every way down still comes out somewhere.
