@@ -141,6 +141,12 @@ public sealed class SoundDirector : IDisposable
             case LockPickFailedEvent:
                 Play("LOCKPICK_FAIL");
                 break;
+            case TrapFoundEvent:
+                Play("NOTICE");
+                break;
+            case TrapDisarmedEvent:
+                Play("DISARM");
+                break;
             case LockPickedEvent:
                 Play("LOCKPICK");
                 break;

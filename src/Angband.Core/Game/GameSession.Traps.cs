@@ -189,6 +189,9 @@ public sealed partial class GameSession
         Player.Mana = Math.Max(0, Player.Mana - drain);
     }
 
+    /// <summary>Traps noticed by sight this game (the hint about hidden traps waits for the first).</summary>
+    public int TrapsFound { get; private set; }
+
     /// <summary>Angband pick_trap: no trap doors on a quest level or the bottom one.</summary>
     private bool TrapDoorsAllowedHere => Level.Depth < Data.Constants.MaxDepth && QuestAt(Level.Depth) is null;
 
@@ -326,6 +329,7 @@ public sealed partial class GameSession
         if (Rng.RandInt0(100) < chance)
         {
             Publish(new MessageEvent($"You have disarmed the {trap.Name}."));
+            Publish(new TrapDisarmedEvent(p, trap.Id));
             Level[p].Trap = 0;
             Level[p].TrapPower = 0;
             Level[p].Flags &= ~SquareFlags.TrapVisible;

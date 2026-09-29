@@ -91,7 +91,7 @@ public static class CharacterDump
         Line(string.Create(Inv, $" Shooting {p.SkillBow,4}   Shots   {shots:0.0}/turn   Light       {p.LightRadius}"));
         Line(string.Create(Inv, $" Throwing {p.SkillThrow,4}   Saving  {p.SkillSave}%       Stealth     {p.Stealth}"));
         Line(string.Create(Inv, $" Disarm   {p.DisarmSkill,4}   Devices {p.SkillDevice,4}       Digging     {game.DiggingSkill}"));
-        Line(string.Create(Inv, $" (magic)  {p.DisarmMagicSkill,4}"));
+        Line(string.Create(Inv, $" (magic)  {p.DisarmMagicSkill,4}   Search  {game.SearchSkill,4}"));
 
         // --- Resistances grid ---
         Section("Resistances");

@@ -284,6 +284,8 @@ public sealed partial class GameSession : ITurnHandler
         if (Known.TrapsNoticed > 0)
         {
             Publish(new MessageEvent(Known.TrapsNoticed == 1 ? "You have found a trap." : $"You have found {Known.TrapsNoticed} traps."));
+            Publish(new TrapFoundEvent(Known.TrapsNoticed));
+            TrapsFound += Known.TrapsNoticed;
             Disturb();
             Known.TrapsNoticed = 0;
         }

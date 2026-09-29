@@ -87,6 +87,9 @@ public sealed partial class MainWindowViewModel
             () => $"A monster! Walk into it to attack. {KeyName(InputAction.Look)} looks at it (the sidebar then recalls what you know); right-click it for everything you can do.");
         yield return ("trap", () => Near(10).Any(p => game.Known.IsKnown(p) && game.VisibleTrapAt(p) is not null),
             () => $"A ^ is a trap. Walking at it tries to disarm it ({KeyName(InputAction.Disarm)} does too); {KeyName(InputAction.WalkIntoTrap)} walks onto it on purpose.");
+        yield return ("hidden_traps", () => game.TrapsFound > 0,
+            () => "You noticed that trap as it came into sight. Traps stay hidden until your search skill is up to "
+                  + $"them; it grows with your level and with gear of Searching (your character sheet, {KeyName(InputAction.CharacterSheet)}, shows it).");
         yield return ("floor", () => game.Level.Objects.At(player.Position).Any(i => !i.IsGold && !Hidden(i)),
             () => $"{KeyName(InputAction.Pickup)} picks up what you stand on (it is listed under \"On the floor\" in the sidebar).");
         yield return ("hungry", () => game.HungerLevel <= HungerLevel.Hungry,

@@ -41,6 +41,12 @@ public sealed record RecalledEvent(bool Up) : IGameEvent;
 /// <summary>A unique monster seen for the very first time (its lore had no sighting).</summary>
 public sealed record UniqueFirstSeenEvent(Monsters.Monster Monster) : IGameEvent;
 public sealed record StatusChangedEvent(string EffectId, int Value) : IGameEvent;
+/// <summary>Traps noticed as they came into sight (your search skill was up to them).</summary>
+public sealed record TrapFoundEvent(int Count) : IGameEvent;
+
+/// <summary>A trap disarmed.</summary>
+public sealed record TrapDisarmedEvent(Geometry.Loc At, string TrapId) : IGameEvent;
+
 public sealed record ItemPickedUpEvent(string KindId, int Amount, bool Gold = false) : IGameEvent;
 public sealed record ItemWieldedEvent(string KindId) : IGameEvent;
 public sealed record ItemUsedEvent(string KindId, string Verb) : IGameEvent;

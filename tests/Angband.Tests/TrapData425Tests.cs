@@ -83,6 +83,7 @@ public class TrapData425Tests
         game.UpdateView();
         Assert.True(game.Level[at].Has(SquareFlags.TrapVisible));
         Assert.Contains("You have found a trap.", said);
+        Assert.Contains($"Search  {game.SearchSkill,4}", Angband.Core.Records.CharacterDump.Build(game));
     }
 
     [Fact]

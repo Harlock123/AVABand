@@ -72,6 +72,25 @@ public class HintsUiTests
     }
 
     [AvaloniaFact]
+    public void NoticingAHiddenTrap_ExplainsTheSearchSkill()
+    {
+        var settings = new AppSettings();
+        foreach (var seen in new[] { "tutorial", "trap", "monster", "stairs", "floor", "level", "runes" }) settings.SeenHints.Add(seen);
+        var (_, vm, _) = Open(settings: settings);
+        vm.Game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(1));
+        vm.DismissHint();
+        var game = vm.Game;
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 1 && game.Level.IsEmptyFloor(l));
+        game.Level[at].Trap = game.Data.Traps.Single(t => t.Id == "pit").Index;
+        game.Level[at].TrapPower = 1;
+        game.Known.Forget(at);
+        vm.Execute(new HoldCommand());
+        Assert.StartsWith("You noticed that trap as it came into sight.", vm.HintText);
+    }
+
+    [AvaloniaFact]
     public void TheOption_TurnsHintsOff_AndSeenHintsCarryToTheNextCharacter()
     {
         var (_, vm, settings) = Open();

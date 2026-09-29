@@ -48,6 +48,26 @@ public class AudioTests
     }
 
     [Fact]
+    public void FindingATrap_Notices_AndDisarmingOne_Clicks()
+    {
+        // 4.2.5's sound.prf: NOTICE (you notice something) and DISARM.
+        var game = Arena.Create(4, "#########", "#,,,@,,,#", "#########");
+        TestGames.ClearMonsters(game);
+        var (_, _, played, _) = Setup(game);
+        var at = game.Player.Position + new Angband.Core.Geometry.Loc(1, 0);
+        game.Level[at].Trap = game.Data.Traps.Single(t => t.Id == "pit").Index;
+        game.Level[at].TrapPower = 5;
+        game.Known.Forget(at);
+        game.UpdateView();
+        Assert.Contains("NOTICE", played);
+        Assert.Equal(1, game.TrapsFound);
+
+        game.Player.DisarmSkill = 1000;
+        game.Execute(new DisarmCommand(Angband.Core.Geometry.Direction.East));
+        Assert.Contains("DISARM", played);
+    }
+
+    [Fact]
     public void EveryBreath_AndSummon_MakesItsOwnSound()
     {
         // 4.2's monster_spell.txt msgt: the frost breath is BR_FROST, poison BR_GAS, walls BR_FORCE…
