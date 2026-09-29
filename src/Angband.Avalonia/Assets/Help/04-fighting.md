@@ -4,7 +4,8 @@
 
 Walk into a monster to attack. Each turn you strike a number of **blows** (more with Strength,
 Dexterity and a lighter weapon); each blow must hit, then does the weapon's dice plus its
-**to-dam**. A heavy, well-aimed blow can be a **critical** hit for extra damage.
+**to-dam**. A heavy, well-aimed blow can be a **critical** hit for extra damage — and a critical
+multiplies the weapon's to-dam too. Fighting bare-handed does 1 a blow and never lands criticals.
 
 **Slays** (e.g. *slay orc*) and **brands** (e.g. *fire*) multiply a weapon's dice against the
 right monsters. You learn a weapon's runes by fighting with it.
@@ -18,8 +19,9 @@ thrown than held — and seldom break. A slay or brand on a missile adds to the 
 
 ## Armour and resistances
 
-Armour class lowers the chance to be hit and the damage of blows. **Resistances** cut elemental
-damage to a third or less (fire, cold, acid, lightning, poison, and later the rarer elements);
+Armour class lowers the chance to be hit, and the damage of plain hits. **Resistances** cut the
+five basic elements (fire, cold, acid, lightning, poison) to a third, and the rarer ones to about
+half or a little less;
 without them a breath from a big dragon can kill in one go. The character sheet shows which you
 have.
 

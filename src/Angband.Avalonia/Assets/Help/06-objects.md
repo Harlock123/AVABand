@@ -24,7 +24,9 @@ ignoring for weapons and armour.
 ## Artifacts and egos
 
 **Egos** are items with a name ("of Slay Evil", "of Resistance"); **artifacts** are unique items
-with a name and their own powers. The Knowledge screen lists all you have found.
+with a name and their own powers. The Knowledge screen lists all you have found. An artifact is
+named once you step on it; until then the special ones wear their flavour (the One
+Ring looks like "a Plain Gold Ring").
 
 ## Curses
 

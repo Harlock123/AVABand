@@ -69,8 +69,8 @@ AVABand.sln
 ├─ src/Angband.Audio       Sound: OpenAL engine, WAV/Ogg/MP3 decoders, sound packs, event→sound director
 ├─ src/Angband.Input       Input actions, rebindable key/button bindings, SDL2 gamepad provider
 ├─ src/Angband.Avalonia    MVVM front end (CommunityToolkit.Mvvm), DrawingContext map control
-├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures), perf/ (deep-dungeon speed check), compare_with_angband.py (data drift from 4.2.5)
-├─ tests/Angband.Tests          xUnit tests for the core systems
+├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures), perf/ (deep-dungeon speed check), compare_with_angband.py and sync_with_angband.py (data drift from 4.2.5), balance/ (depth tables, bot play, soak, record-replays)
+├─ tests/Angband.Tests          xUnit tests for the core systems; Replays/ (bot-played games) and Saves/ (old-version saves) as fixtures
 └─ tests/Angband.Avalonia.Tests Headless UI tests (real window, simulated keyboard)
 ```
 
@@ -119,15 +119,17 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     monster of that symbol), guardians about room treasure, 14 + 1d8 + k sleeping monsters with
     their groups anywhere but vaults and the player's square, objects in rooms and anywhere, gold
     — and put in place when you arrive. The town is AVABand's own (`town`: 8 shops, fixed per game).
-  - Stairs, rubble, depth-gated traps, connected stairs, spawn hints and population budgets for
-    the future monster/object systems. Every level is checked by `LevelValidator` (permanent border,
+  - Stairs, rubble, depth-gated traps, connected stairs, spawn hints and population budgets. Every level is checked by `LevelValidator` (permanent border,
     stairs present, all walkable squares reachable); failed attempts are retried.
 - **Turn system** (`Angband.Core/Time`): Angband's speed→energy table and a scheduler where the
-  most energetic actor goes first, with world upkeep every 10 game turns.
+  most energetic actor goes first, with world upkeep every 10 game turns. 4.2.5's constants: a new
+  monster one world turn in 500, 4 town residents by day and 8 by night, a new lantern half full
+  (7500 turns), up to 10 stacks in the quiver.
 - **Field of view & light** (`Angband.Core/Sight`): symmetric shadowcasting (exact integer
   slopes) out to `maxSight` (20); carried light sources (player torch radius 2); glowing rooms;
   bright terrain; glowing walls only seen from their lit side; blindness. Seen squares are stored
-  in the player's `KnownMap` (which can go out of date, as in Angband); traps are revealed on sight.
+  in the player's `KnownMap` (which can go out of date, as in Angband); traps stay hidden until your
+  search skill is up to them (see *Chests & traps*).
   The town has day and night (`dayLength` 10000 game turns); at night only shop entrances glow.
 - **Combat** (`Angband.Core/Combat`, `Game/GameSession.Combat.cs`): Angband 4.2 formulas —
   `test_hit` (12% auto-hit, 5% auto-miss, armour ×2/3, unseen targets halved), melee and missile
@@ -163,9 +165,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   short of 9000), safety from traps. (AVABand's own `regen` and `grim_purpose` statuses are gone;
   Grim Purpose was already 4.2.5's two effects.)
 - **Monsters & AI** (`Game/GameSession.Monsters.cs`, `GameSession.MonsterSpells.cs`,
-  `GameSession.MonsterPowers.cs`): 624 races in `monsters.json` — Angband 4.2's whole bestiary from
-  the town to Morgoth, imported with `tools/angband_monster_import.py`
-  (see *Game data from Angband* below) alongside 27 hand-written ones, with depth/rarity
+  `GameSession.MonsterPowers.cs`): 623 races in `monsters.json` — Angband 4.2.5's whole bestiary from
+  the town to Morgoth, each synced with `monster.txt` (see *Game data from Angband* below), with depth/rarity
   allocation with out-of-depth rolls, packs, and vault, pit, nest, chamber and lair monsters as
   4.2.5 chooses them.
   - **Groups and escorts**, as Angband 4.2 places them (`mon-make.c` `place_new_monster`,
@@ -182,8 +183,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     experience drain that can cost levels (hold life protects; Restore Life Levels undoes it),
     disenchantment, charge draining; invisible monsters (seen with see invisible), ghosts that
     pass through walls, tunnellers that bore through them, creatures of rock hurt by stone to mud.
-    Spells: breaths of all thirteen elements and more, bolts, balls and beams (damage grows with
-    the caster's level), wounds, mind blast and brain smash, drain mana, haste-self, forget,
+    Spells: breaths of all thirteen elements and more, bolts, balls and beams (damage from 4.2.5's
+    dice, worked out from the caster's spell power; breaths use `projection.txt`'s divisors and caps), wounds, mind blast and brain smash, drain mana, haste-self, forget,
     create traps, teleport away / level / to, darkness, heal kin, storms, webs, and summons of kin,
     animals, spiders, hounds, hydras, undead, demons and dragons — and the greater summons: an
     Ainu, greater demons, greater undead, ancient dragons, the Ringwraiths and uniques. All 91 of
@@ -235,7 +236,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - **Spells** (`monster_spells.json`): arrows, boulders, bolts, balls, breaths
     (damage from the caster's HP), wounds, blind/confuse/scare/slow/hold (saving throw and
     protections apply), heal, blink, teleport, teleport-to, summon (kin), shriek. Bolts need a clear
-    shot; non-innate spells can fail; frightened casters prefer escapes. As in Angband 4.2, a race
+    shot; non-innate spells fail 25% of the time at most (4.2.5's `monster_spell_failrate`), 20% more
+    often when the caster is afraid and 50% more when confused or disenchanted. As in Angband 4.2, a race
     has two frequencies, imported from `monster.txt`: `spellFrequency` (its `spell-freq`) for
     spells, and `innateFrequency` (`innate-freq`) for innate attacks — breaths, arrows, boulders,
     spit, shrieks — each "1 in N", a 100/N percent chance. Each turn it rolls for a spell first,
@@ -248,7 +250,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     each turn a monster works out the least distance it will keep and the one it likes best. A
     monster that judges you too strong — your level against its level + 25 (+8 for some), and when
     close, your health against its own — keeps right away instead of closing in, though it isn't
-    afraid: cornered beside you it fights. So a high-level character sees shallow monsters scatter,
+    afraid: cornered beside you it cowers and doesn't strike. So a high-level character sees shallow monsters scatter,
     and a badly hurt monster of about your strength backs off. Monsters that never move, and
     casters that never strike, want 3 more squares (unless you're within 5); archers that shoot
     rarely and casters that cast often (over 24%) like 3 more; breathers in good health don't mind
@@ -445,7 +447,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   and 138 artifacts (imported by `tools/angband_object_import.py` and
   `tools/angband_ego_artifact_import.py`, kept in line by `tools/sync_with_angband.py`). Egos are
   4.2.5's in full: lantern and torch egos (*of Brightness*, *of Shadows*, *(Everburning)*, *of True
-  Sight*), random extra sustains, powers and high resistances, minimum values, extra might, and
+  Sight*), *of Slow Descent* boots (feather falling), random extra sustains, powers and high resistances, minimum values, extra might, and
   the *of Morgul* blades' aggravation and experience drain. All 27 of 4.2.5's curses (`curses.json`,
   from `curse.txt`): each on an item has a power and its own timer — dullness and sickliness sap
   stats, vulnerability and irritation aggravate, anti-teleportation forbids teleporting, impaired
@@ -513,7 +515,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - 4.2 rune-based identification: properties (accuracy, slays, brands, resistances, curses,
     modifiers) are learned once and then recognised everywhere; hitting teaches a weapon's runes,
     being struck teaches armour's, element damage teaches resistances; flavours are learned by use.
-  - Pack (23 slots), quiver (every 40 missiles use a slot), 12 equipment slots, weight limit with
+  - Pack (23 slots), quiver (up to 10 stacks; every 40 missiles use a slot), 12 equipment slots, weight limit with
     speed penalty. Equipment drives armour, to-hit/dam, speed, stealth, blows, shots (counted in
     tenths, as Angband's SHOTS[10] is one extra shot) light and resistances. Torches burn out; lanterns refuel from flasks of oil.
   - Stacking follows 4.2's `object_stackable`: the same kind with the same enchantments, dice,
@@ -681,6 +683,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   the `HUNGRY` sound when worse); getting hungry interrupts resting. New characters start just below
   Full. Food: rations, slime molds, biscuits, and 4.2.5's Scroll of Remove Hunger. Gear: Amulet of
   Slow Digestion and Amulet of Regeneration (their runes are learned on wearing). The status bar shows the level whenever you're not simply Fed.
+- **Lava** (4.2.5's `terrain.txt` and `player_take_terrain_damage`): standing in it burns for
+  100 + 1d100 fire, resisted as fire and halved by feather falling, and may burn what you carry; a
+  step that would cost over a third of your hit points asks first ("The lava will scald you!"), and
+  running asks rather than wading in. Monsters without fire immunity keep out of it, and one left
+  in it burns (100 + 1d100) and, if it dies, earns no one anything.
 - **Chests & traps** (`Game/GameSession.Traps.cs`, `chest_traps.json`): Angband's six chests —
   small and large, wooden, iron and steel — with its chest traps: one in ten is merely locked,
   the rest get a trap for their level (gas, poison needles, summoning runes, paralysis gas, an
@@ -1104,10 +1111,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   similar power. Names come from W. Sheldon Simms' Markov generator (`randname.c`) trained on
   Angband's Tolkien word list (`names.json`): *'Mengilos'*, *of Egonaxe*. The One Ring, Grond and
   Morgoth's crown stay as they are. The set is rebuilt from a seed kept in the save, so it is the
-  same every time for that character. Not modelled: 4.2 properties AVABand lacks (immunities,
-  feather fall, stun protection, extra might and moves), and individual activation and curse powers
-  (AVABand counts 20 each).
-- **Minimal play loop**: walk, open/close/lock-pick doors, stairs, debug level jumps.
+  same every time for that character. Not modelled yet: the generator doesn't roll immunities,
+  feather fall, stun protection, extra might or moves (the game has them all), nor individual
+  activation and curse powers (AVABand counts 20 each).
 
 ## Tilesets
 Press **Ctrl+T** to switch between ASCII and graphical tiles, and **F10** (View → Display settings)

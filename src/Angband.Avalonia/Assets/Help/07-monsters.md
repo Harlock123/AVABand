@@ -23,7 +23,9 @@ what it resists. You learn more each time you meet or kill one. `~` keeps all of
   four squares away): hounds bring hounds, kin their own kind, the Nine each other. "But nothing
   comes." means none could answer. Monsters summoned by a trap or scroll wait for you to act first.
 - Frightened monsters run and come back when they recover. Group monsters surround you in the
-  open — fight them in corridors.
+  open, and packs hide and wait while you're in a corridor — fight them there.
+- Monsters cast only with a clear line to you, and fail up to a quarter of the time (more when
+  afraid, confused or disenchanted).
 - **Monsters learn**: with the birth option on (the default), a monster that sees you resist fire
   stops wasting fire bolts on you, and one that sees you shrug off confusion stops trying.
 
