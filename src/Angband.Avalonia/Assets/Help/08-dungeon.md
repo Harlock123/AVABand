@@ -7,7 +7,8 @@ are Moria-style ragged caves (levels 10-39), labyrinths (from 13), caverns (from
 rooms, half a cavern full of one kind of monster — and gauntlets (from 20), and hard centres, a
 great vault ringed by caverns (from 50). A gauntlet's maze can't be mapped, and you can't teleport
 in it or in the cavern you arrive in (a short blink of ten squares still works). Vaults hold the
-best treasure and the worst monsters.
+best treasure and the worst monsters. Arriving on a level out of the ordinary, you're told what
+kind it is ("You are in a gauntlet...").
 **Level feelings** tell you on arrival how dangerous the level seems, and once you have explored
 a little, how good its treasure is (`Ctrl+F` repeats them).
 

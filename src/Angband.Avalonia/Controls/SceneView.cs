@@ -295,8 +295,8 @@ public sealed class SceneView : Control
         {
             case SceneKind.StairsDown or SceneKind.StairsUp: DrawStairwell(context, scene, p); break;
             case SceneKind.RecallUp or SceneKind.RecallDown: DrawRecall(context, scene.Kind == SceneKind.RecallUp, p); break;
-            case SceneKind.Cavern: DrawCavern(context, p); break;
-            case SceneKind.Labyrinth: DrawLabyrinth(context, p); break;
+            case SceneKind.Cavern or SceneKind.Moria or SceneKind.Lair: DrawCavern(context, p); break;
+            case SceneKind.Labyrinth or SceneKind.Gauntlet: DrawLabyrinth(context, p); break;
             case SceneKind.Fortress: DrawFortress(context, p); break;
             case SceneKind.Danger: DrawDanger(context, p); break;
             case SceneKind.Unique: DrawUnique(context, scene, p); break;

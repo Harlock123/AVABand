@@ -242,7 +242,8 @@ public sealed class SoundDirector : IDisposable
     private static readonly string[] AmbienceExtensions = [".ogg", ".wav", ".mp3"];
 
     /// <summary>
-    /// The loops for a place, best first: a cavern, labyrinth or fortress has its own; otherwise the
+    /// The loops for a place, best first: a cavern, labyrinth or fortress has its own (a moria level or
+    /// lair falls back to the cavern's, a gauntlet to the labyrinth's); otherwise the
     /// town by day or night, or the dungeon by depth — shallow (to 1000 ft), deep (to 3000 ft) and
     /// the abyss below — each falling back to the one above it.
     /// </summary>
@@ -258,7 +259,13 @@ public sealed class SoundDirector : IDisposable
         if (depth == 0) return day ? ["ambient-town-day"] : ["ambient-town-night", "ambient-town-day"];
         // A hard centre (4.2.5's great vault in the middle of the level) sounds like a fortress.
         if (profile == "hard_centre") return ["ambient-fortress", .. bands];
-        return profile is "cavern" or "labyrinth" ? ["ambient-" + profile, .. bands] : bands;
+        return profile switch
+        {
+            "cavern" or "labyrinth" => ["ambient-" + profile, .. bands],
+            "moria" or "lair" => ["ambient-" + profile, "ambient-cavern", .. bands],
+            "gauntlet" => ["ambient-gauntlet", "ambient-labyrinth", .. bands],
+            _ => bands,
+        };
     }
 
     /// <summary>The loop for where you are now, if there is one in the folders.</summary>

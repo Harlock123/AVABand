@@ -213,4 +213,25 @@ public class Generation425Tests
         }
         Assert.Fail("no vault with letter monsters in 400 levels");
     }
+
+    [Fact]
+    public void Arriving_says_what_kind_of_level_it_is()
+    {
+        Assert.Null(GameSession.LevelKindText("classic"));
+        Assert.Null(GameSession.LevelKindText("modified"));
+        Assert.Contains("no teleporting", GameSession.LevelKindText("gauntlet"));
+        Assert.Contains("know its ways", GameSession.LevelKindText("labyrinth", known: true));
+
+        var game = GameSession.NewGame(TestData.Game, 4, "warrior");
+        game.Player.Hp = game.Player.MaxHp = 1_000_000;
+        game.MarkDebugUsed();
+        var said = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => said.Add(m.Text));
+        for (var tries = 0; tries < 300 && game.Level.ProfileId is not ("cavern" or "lair" or "gauntlet" or "labyrinth" or "moria"); tries++)
+        {
+            said.Clear();
+            game.Execute(new DebugJumpCommand(25));
+        }
+        Assert.Contains(GameSession.LevelKindText(game.Level.ProfileId, game.Level.IsKnown), said);
+    }
 }

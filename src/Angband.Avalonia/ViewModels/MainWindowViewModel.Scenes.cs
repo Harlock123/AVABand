@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Angband.Avalonia.ViewModels;
 
 /// <summary>The moments that show a scene.</summary>
-public enum SceneKind { StairsDown, StairsUp, RecallUp, RecallDown, Cavern, Labyrinth, Fortress, Danger, Unique, Death }
+public enum SceneKind { StairsDown, StairsUp, RecallUp, RecallDown, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, Unique, Death }
 
 /// <summary>
 /// A scene shown for a moment (AVABand's own): its kind, caption, the depth, whether the town is in
@@ -99,7 +99,10 @@ public sealed partial class MainWindowViewModel
         else AddScene(SceneKind.RecallDown, "Word of Recall draws you down into the depths", pictures: ["recall-dungeon"]);
     }
 
-    /// <summary>Arriving: a cavern, labyrinth or fortress, and a deadly feeling, have their scenes.</summary>
+    /// <summary>
+    /// Arriving: each level out of the ordinary, and a deadly feeling, has its scene (a lair, gauntlet
+    /// or moria level shows the cavern's or labyrinth's picture until it has its own).
+    /// </summary>
     private void SceneForArrival(LevelChangedEvent e)
     {
         var where = $"{e.Depth * 50} ft (level {e.Depth})";
@@ -109,6 +112,9 @@ public sealed partial class MainWindowViewModel
             case "labyrinth": AddScene(SceneKind.Labyrinth, $"A labyrinth… {where}", pictures: ["level-labyrinth"]); break;
             // 4.2.5's hard centre: a greater vault in the middle of the level, walled round by caverns.
             case "hard_centre": AddScene(SceneKind.Fortress, $"A fortress… {where}", pictures: ["level-fortress"]); break;
+            case "moria": AddScene(SceneKind.Moria, $"Old mines… {where}", pictures: ["level-moria", "level-cavern"]); break;
+            case "lair": AddScene(SceneKind.Lair, $"A lair… {where}", pictures: ["level-lair", "level-cavern"]); break;
+            case "gauntlet": AddScene(SceneKind.Gauntlet, $"A gauntlet… {where}", pictures: ["level-gauntlet", "level-labyrinth"]); break;
         }
         // Angband's monster feelings 1-3: omens of death, murderous, terribly dangerous.
         if (e.Depth > 0 && _game.FeelingStatus is not null && _game.Level.Feeling % 10 is >= 1 and <= 3)

@@ -560,6 +560,8 @@ public sealed partial class GameSession : ITurnHandler
         {
             _arriving = false;
         }
+        // (AVABand's own: 4.2.5 doesn't say what kind of level it made.)
+        if (depth > 0 && LevelKindText(Level!.ProfileId, Level.IsKnown) is { } kind) Publish(new MessageEvent(kind));
         if (depth > 0) ShowFeeling(); // Angband announces it in the dungeon only (Ctrl+F works in town too)
         Search(); // Angband on_new_level: a secret door beside the arrival spot is found at once
         SenseOre();
@@ -567,6 +569,18 @@ public sealed partial class GameSession : ITurnHandler
         NoteVisit();
         Publish(new LevelChangedEvent(depth, Level!.ProfileId)); // (set by either branch above)
     }
+
+    /// <summary>What arriving says of a level out of the ordinary (none for classic and modified levels).</summary>
+    public static string? LevelKindText(string? profile, bool known = false) => profile switch
+    {
+        "cavern" => "You are in a cavern.",
+        "labyrinth" => known ? "You are in a labyrinth, and you know its ways." : "You are in a labyrinth.",
+        "moria" => "You are in old mines, like those of Moria.",
+        "lair" => "Something has made its lair on this level.",
+        "gauntlet" => "You are in a gauntlet: there is no teleporting in its maze, nor in the cavern on one side of it.",
+        "hard_centre" => "A great vault lies at the heart of this level.",
+        _ => null,
+    };
 
     /// <summary>Puts the player on an existing level (tests now; loading saved games later).</summary>
     internal void UseLevel(Level level, Loc start)

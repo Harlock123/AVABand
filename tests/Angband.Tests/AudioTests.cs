@@ -441,6 +441,9 @@ public class AmbienceTests
     [InlineData(80, true, "classic", "ambient-dungeon-abyss,ambient-dungeon-deep,ambient-dungeon-shallow")]
     [InlineData(12, true, "cavern", "ambient-cavern,ambient-dungeon-shallow")]
     [InlineData(30, true, "labyrinth", "ambient-labyrinth,ambient-dungeon-deep,ambient-dungeon-shallow")]
+    [InlineData(12, true, "moria", "ambient-moria,ambient-cavern,ambient-dungeon-shallow")]
+    [InlineData(30, true, "lair", "ambient-lair,ambient-cavern,ambient-dungeon-deep,ambient-dungeon-shallow")]
+    [InlineData(30, true, "gauntlet", "ambient-gauntlet,ambient-labyrinth,ambient-dungeon-deep,ambient-dungeon-shallow")]
     public void EachPlace_HasItsLoops_BestFirst(int depth, bool day, string profile, string names) =>
         Assert.Equal(names.Split(','), SoundDirector.AmbienceNames(depth, day, profile));
 

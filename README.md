@@ -727,7 +727,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - **Ambience** (AVABand's own; Settings → Sound: *Ambience on/off* and its own volume): a quiet loop
     under the music for where you are — the town by day or by night, the dungeon by depth (shallow to
     1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and hard centres (the
-    fortress loop) their own,
+    fortress loop) their own, as moria levels, lairs and gauntlets may (`ambient-moria`,
+    `ambient-lair`, `ambient-gauntlet`: else the cavern's, the cavern's and the labyrinth's),
     each falling back to the one before (the abyss to the deep, a cavern to its depth's). It crossfades
     on each change of place. Loops named `ambient-town-day`, `ambient-town-night`,
     `ambient-dungeon-shallow`, `-deep`, `-abyss`, `ambient-cavern`, `ambient-labyrinth` and
@@ -743,7 +744,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - **Scenes** (AVABand's own; the option *Show scenes at moments of note*, on by default): a moment's
     full-window scene, fading in and out, with a caption — taking the stairs down ("Descending… 250
     ft (level 5)") or up ("Up into the town, by night"), Word of Recall taking you up or down,
-    arriving in a cavern, labyrinth or hard centre (a fortress), a level whose feeling is deadly ("Omens of death
+    arriving in a cavern, labyrinth, hard centre (a fortress), moria level, lair or gauntlet, a level whose feeling is deadly ("Omens of death
     haunt this place."), meeting a unique for the very first time (its name), and death (a tombstone,
     behind the game-over menu). Several queue — the stairs, then the cavern you arrive in; a click
     ends one, a key ends them all and still does what it does. Only the stairs show the stair scenes
@@ -752,8 +753,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     program; the option *Scenes use the bundled pictures* turns those off), else a painted scene (a
     stairwell in perspective, rings of recall light, rock closing round a cavern, a unique's glyph,
     a tombstone). The names are `stairs-down`, `stairs-up`, `stairs-up-town`, `recall-town`,
-    `recall-dungeon`, `level-cavern`, `level-labyrinth`, `level-fortress`, `danger`, `unique` and
-    `death`, as `.png`, `.jpg` or `.jpeg`.
+    `recall-dungeon`, `level-cavern`, `level-labyrinth`, `level-fortress`, `level-moria`,
+    `level-lair`, `level-gauntlet` (the last three falling back to the cavern's, the cavern's and the
+    labyrinth's), `danger`, `unique` and `death`, as `.png`, `.jpg` or `.jpeg`.
   - **Screen reader support** (AVABand's own; the option *Screen reader support*, **off by
     default**): the map is drawn, so a screen reader can't read it; with the option on, a live
     region announces what is said — every message of a turn together, each prompt with its question
