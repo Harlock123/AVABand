@@ -575,6 +575,19 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   and bolts break one time in five; slings and crossbows burn; weapons, armour, food and treasure
   have their own colours; the rings of power and the like keep their fixed stones; and scrolls are
   titled with 4.2.5's made-up words, as random names are.
+- **Monster melee as 4.2.5 fights** (`Game/GameSession.MonsterBlows.cs`): make_attack_normal and
+  mon-blows.c ported handler by handler. The hit roll is 4.2.5's test_hit (out of 10,000: 12% always
+  hits, 5% always misses — for your blows and shots and trap saves too); a blow that does nothing
+  always lands; protection from evil turns a blow only once it has landed; a stunned monster hits a
+  quarter less often and less hard; only plain hits and shattering blows are softened by armour
+  (the rest land in full); any hit whose method can cut or stun may, not only plain ones; a
+  paralysing blow always hurts a little when you're already held; experience drains take 2% of your
+  experience whatever the blow, and hold life resists them 95, 90, 75 or 50 times in 100; draining
+  charges takes level / (the device's level + 2) + 1 charges, not all; thieves and eaters pick a
+  pack slot at random (an empty one wastes the try), and a thief can't take what slays it; a thief
+  that got something (or was fended off from your purse, two times in three) finishes its blows
+  before the puff of smoke; the blows stop if you're moved; and monster recall counts only the
+  blows seen to land.
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so

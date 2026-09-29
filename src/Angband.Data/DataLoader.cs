@@ -412,8 +412,6 @@ public static class DataLoader
         {
             if (effect.Element is { } el && !elementIds.Contains(el))
                 errors.Add($"blow effect '{effect.Id}' uses unknown element '{el}'.");
-            if (effect.Timed is { } t && !timedIds.Contains(t))
-                errors.Add($"blow effect '{effect.Id}' uses unknown timed effect '{t}'.");
         }
         foreach (var monster in monsters)
         {

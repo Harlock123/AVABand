@@ -179,21 +179,11 @@ public sealed class BlowEffectDef
     public required string Id { get; init; }
     /// <summary>Accuracy bonus: hit chance is <c>power + 3 * monster level</c> vs. armour.</summary>
     public int Power { get; init; }
-    /// <summary>Damage is of this element (and resisted accordingly); null means plain physical.</summary>
+    /// <summary>
+    /// The element whose resistance counts against it (Angband blow_effects.txt resist): for monster
+    /// recall's colours; the handlers themselves (GameSession.MonsterBlows) know what each resists.
+    /// </summary>
     public string? Element { get; init; }
-    /// <summary>Plain hits are reduced by armour.</summary>
-    public bool ArmourReduces { get; init; }
-    /// <summary>Status effect inflicted on a hit.</summary>
-    public string? Timed { get; init; }
-    /// <summary>Duration is <c>DurationBase + randint1(damage or level)</c>.</summary>
-    public int DurationBase { get; init; }
-    /// <summary><c>damage</c> or <c>level</c>: what the random part of the duration scales with.</summary>
-    /// <summary>What the random part of the duration scales with: <c>level</c>, <c>half_level</c> or <c>damage</c>.</summary>
-    public string DurationScale { get; init; } = "level";
-    /// <summary>Whether the player's saving throw can shrug the status off.</summary>
-    public bool Save { get; init; }
-    /// <summary>Resist/protection that prevents the status entirely (e.g. <c>free_act</c>, <c>pois</c>).</summary>
-    public string? PreventedBy { get; init; }
 }
 
 public sealed class MonsterBlowDef

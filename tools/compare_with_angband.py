@@ -1604,7 +1604,7 @@ def compare_blow_effects(gd, data):
         res = one(e, "resist")
         if one(e, "effect-type") == "element" or e["name"] in ("ACID", "ELEC", "FIRE", "COLD"):
             theirs = (res or e["name"]).lower()
-            sec.cmp(bid, "resisted by (ours: element or preventedBy)", b.get("element") or b.get("preventedBy"), theirs)
+            sec.cmp(bid, "resisted by", b.get("element"), theirs)
     for bid in ours:
         if bid not in used:
             sec.only_ours.append(bid)

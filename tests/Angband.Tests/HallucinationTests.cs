@@ -61,10 +61,6 @@ public class HallucinationTests
     public void AMagicMushroomPatch_CanMakeYouHallucinate()
     {
         // 4.2's HALLU blow: 3 + 1d(level/2) turns of hallucination — no longer a stand-in for confusion.
-        var hallu = TestData.Game.BlowEffect("hallu")!;
-        Assert.Equal(TimedIds.Image, hallu.Timed);
-        Assert.Equal("chaos", hallu.PreventedBy);
-
         var game = Game();
         game.Player.Hp = game.Player.MaxHp = 10_000;
         var patch = Arena.AddMonster(game, "magic_mushroom_patch", game.Player.Position + new Loc(1, 0));

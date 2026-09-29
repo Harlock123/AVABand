@@ -27,26 +27,27 @@ public static class CombatMath
     public const int MaxArmourReduction = 240;
 
     /// <summary>
-    /// Angband test_hit: 12% automatic hit, 5% automatic miss; otherwise <c>randint0(chance)</c>
-    /// must reach two thirds of the armour. Unseen targets halve the chance.
+    /// Angband test_hit (hit_chance and random_chance_check): out of 10,000, a hit 1,200 times
+    /// always, a miss 500 times, and in between as often as the chance (at least 9) exceeds two thirds
+    /// of the armour, in proportion to the chance. Unseen targets halve the chance first.
     /// </summary>
-    public static bool TestHit(GameRandom rng, int chance, int armour, bool visible)
-    {
-        var k = rng.RandInt0(100);
-        if (k < 17) return k < 12;
-        if (!visible) chance /= 2;
-        if (chance < 9) chance = 9;
-        return rng.RandInt0(chance) >= armour * 2 / 3;
-    }
+    public static bool TestHit(GameRandom rng, int chance, int armour, bool visible) =>
+        rng.RandInt0(HundredPercent) >= HundredPercent - HitNumerator(chance, armour, visible);
 
     /// <summary>The probability (0..1) that <see cref="TestHit"/> succeeds, for UI and tests.</summary>
-    public static double HitProbability(int chance, int armour, bool visible)
+    public static double HitProbability(int chance, int armour, bool visible) =>
+        HitNumerator(chance, armour, visible) / (double)HundredPercent;
+
+    private const int HundredPercent = 10000, AlwaysHit = 1200, AlwaysMiss = 500;
+
+    private static int HitNumerator(int chance, int armour, bool visible)
     {
         if (!visible) chance /= 2;
-        if (chance < 9) chance = 9;
-        var needed = armour * 2 / 3;
-        var skillSuccess = Math.Max(0, chance - needed) / (double)chance;
-        return 0.12 + 0.83 * skillSuccess;
+        var toHit = Math.Max(9, chance);
+        long numerator = Math.Max(0, toHit - armour * 2 / 3);
+        numerator = HundredPercent * numerator / toHit;
+        numerator = numerator * (HundredPercent - AlwaysMiss - AlwaysHit) / HundredPercent;
+        return (int)numerator + AlwaysHit;
     }
 
     /// <summary>Melee hit chance: skill plus to-hit bonuses (Angband chance_of_melee_hit).</summary>
