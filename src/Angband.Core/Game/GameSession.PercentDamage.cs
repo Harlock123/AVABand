@@ -36,20 +36,6 @@ public sealed partial class GameSession
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
     ];
 
-    // constants.txt o-melee-critical / o-ranged-critical: a critical happens with chance
-    // power / (power + add); then each level in turn is taken one time in "chance" (the last always).
-    private const int OMeleeCritDebuff = 10, OMeleeCritScaleNum = 1, OMeleeCritScaleDen = 3, OMeleeCritAdd = 240;
-    private const int ORangedCritDebuff = 10, ORangedCritAdd = 360;
-    private static readonly (int Chance, int Dice, CriticalGrade Grade)[] OMeleeCritLevels =
-    [
-        (40, 5, CriticalGrade.HighSuperb), (12, 4, CriticalGrade.HighGreat), (3, 3, CriticalGrade.Superb),
-        (2, 2, CriticalGrade.Great), (1, 1, CriticalGrade.Good),
-    ];
-    private static readonly (int Chance, int Dice, CriticalGrade Grade)[] ORangedCritLevels =
-    [
-        (50, 3, CriticalGrade.Superb), (10, 2, CriticalGrade.Great), (1, 1, CriticalGrade.Good),
-    ];
-
     /// <summary>
     /// A slay's O-multiplier, in tenths (slay.txt o-multiplier): evil ×1.8, animals ×2, the ×3 slays
     /// ×2.5, the ×5 ones ×3.5.
@@ -68,7 +54,7 @@ public sealed partial class GameSession
     }
 
     /// <summary>Angband is_debuffed: a confused, held, frightened or stunned monster is easier to crit.</summary>
-    private static bool IsDebuffed(Monster monster) =>
+    internal static bool IsDebuffed(Monster monster) =>
         monster.Confused > 0 || monster.Held > 0 || monster.Fear > 0 || monster.Stun > 0;
 
     /// <summary>
@@ -98,17 +84,23 @@ public sealed partial class GameSession
     /// <summary>Angband o_critical_melee: the extra dice a blow's critical adds.</summary>
     private int OCriticalMelee(Monster monster, int toHit, out CriticalGrade grade)
     {
-        var power = CombatMath.MeleeChance(Player.SkillMelee, toHit) + (IsDebuffed(monster) ? OMeleeCritDebuff : 0);
-        power = power * OMeleeCritScaleNum / OMeleeCritScaleDen;
-        return OCritical(power, OMeleeCritAdd, OMeleeCritLevels, out grade);
+        // constants.txt o-melee-critical: power from the hit chance, a third of it, against power + 240.
+        var power = CombatMath.MeleeChance(Player.SkillMelee, toHit) + (IsDebuffed(monster) ? CriticalTables.OMeleeDebuffToHit : 0);
+        power = power * CriticalTables.OMeleePowerToHitScaleNumerator / CriticalTables.OMeleePowerToHitScaleDenominator;
+        power = power * CriticalTables.OMeleeChancePowerScaleNumerator / CriticalTables.OMeleeChancePowerScaleDenominator;
+        return OCritical(power, CriticalTables.OMeleeChanceAddDenominator, CriticalTables.OMeleeLevels, out grade);
     }
 
     /// <summary>Angband o_critical_shot: fired missiles at full power, thrown weapons at half again.</summary>
     private int OCriticalShot(Monster monster, int skill, int toHit, bool launched, out CriticalGrade grade)
     {
-        var power = CombatMath.MeleeChance(skill, toHit) + (IsDebuffed(monster) ? ORangedCritDebuff : 0);
-        if (!launched) power = power * 3 / 2;
-        return OCritical(power, ORangedCritAdd, ORangedCritLevels, out grade);
+        // constants.txt o-ranged-critical: fired missiles at full power, thrown weapons at half again.
+        var power = CombatMath.MeleeChance(skill, toHit) + (IsDebuffed(monster) ? CriticalTables.ORangedDebuffToHit : 0);
+        power = launched
+            ? power * CriticalTables.ORangedPowerLaunchedToHitScaleNumerator / CriticalTables.ORangedPowerLaunchedToHitScaleDenominator
+            : power * CriticalTables.ORangedPowerThrownToHitScaleNumerator / CriticalTables.ORangedPowerThrownToHitScaleDenominator;
+        power = power * CriticalTables.ORangedChancePowerScaleNumerator / CriticalTables.ORangedChancePowerScaleDenominator;
+        return OCritical(power, CriticalTables.ORangedChanceAddDenominator, CriticalTables.ORangedLevels, out grade);
     }
 
     private int OCritical(int power, int add, (int Chance, int Dice, CriticalGrade Grade)[] levels, out CriticalGrade grade)

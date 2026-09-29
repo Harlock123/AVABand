@@ -21,25 +21,48 @@ public sealed partial class GameSession
 
     public string Describe(Item item, bool withArticle = true) => ItemNaming.Describe(item, Knowledge, withArticle);
 
-    private void InitItems()
+    /// <summary>
+    /// Fresh gear and knowledge. A game without a class gets the general kit (<c>starting_kit.json</c>);
+    /// a character gets their class's instead (<see cref="GiveKit"/>).
+    /// </summary>
+    private void InitItems(bool generalKit = true)
     {
         Objects = new ObjectFactory(Data);
         Knowledge = new PlayerKnowledge(Data, Seed) { IgnoredCheck = IsMarkedIgnored };
         Player.Inventory = new Inventory(Data.Constants.PackSize, Data.Constants.QuiverSlotSize, Data.Constants.QuiverSize);
-
-        foreach (var start in Data.StartingKit)
-        {
-            var kind = Data.Object(start.Kind) ?? throw new GameDataException($"Starting kit names unknown object '{start.Kind}'.");
-            if (KitCount(start, kind) is var count && count <= 0) continue;
-            var item = Objects.Create(kind, count);
-            // The starting kit is fully known, as in Angband.
-            Knowledge.LearnKind(kind);
-            foreach (var rune in item.Runes()) Knowledge.LearnRune(rune);
-            if (start.Equip && item.IsWearable) Player.Inventory.Wield(item, () => Objects.NextSerial++);
-            else Player.Inventory.Add(item);
-        }
+        _keptBasics.Clear();
+        if (generalKit) GiveKit(Data.StartingKit, "Starting kit");
         ApplyBirthKnowledge();
         RecalculateBonuses();
+    }
+
+    /// <summary>
+    /// Angband player_outfit: each kit line, in a number between its least and most, fully known;
+    /// what can be worn is worn (wield_all), the rest carried. Returns the kit's worth (object_value_real),
+    /// which a new character pays for out of their starting gold.
+    /// </summary>
+    private long GiveKit(IEnumerable<StartItemDef> kit, string owner)
+    {
+        long worth = 0;
+        foreach (var start in kit)
+        {
+            var kind = Data.Object(start.Kind) ?? throw new GameDataException($"{owner} names unknown object '{start.Kind}'.");
+            if (start.UnlessOption is { } option && Options[option]) continue;
+            if (KitCount(start, kind) is var count && count <= 0) continue;
+            var item = Objects.Create(kind, count);
+            Knowledge.LearnKind(kind);
+            foreach (var rune in item.Runes()) Knowledge.LearnRune(rune);
+            worth += ItemValue.Real(item, Data, count);
+            var slot = item.IsWearable ? Player.Inventory.SlotFor(item) : -1;
+            if (start.Equip && slot >= 0 && Player.Inventory.Equipment[slot] is null)
+            {
+                var rest = item.Number > 1;
+                Player.Inventory.Wield(item, () => Objects.NextSerial++); // one is worn (split off the stack)
+                if (rest) Player.Inventory.Add(item);                    // and the others carried
+            }
+            else Player.Inventory.Add(item);
+        }
+        return worth;
     }
 
     /// <summary>
@@ -553,7 +576,8 @@ public sealed partial class GameSession
                 if (launcher is null) damage *= ThrowMultiplier(missile);
                 // Angband ranged_damage: a slay or brand adds its multiplier to the launcher's (1 thrown).
                 damage *= Math.Max(1, multiplier) + (bestMult > 1 ? bestMult : 0);
-                damage = CombatMath.CriticalShot(Rng, missile.Weight, toHit, Player.Level, damage, out grade);
+                damage = CombatMath.CriticalShot(Rng, missile.Weight, toHit, Player.Level, damage, out grade,
+                    skill, launched: launcher is not null, debuffed: IsDebuffed(monster));
             }
             // Angband make_ranged_throw: exploding things (flasks of oil) do three times as much.
             if (missile.Explodes) damage *= 3;

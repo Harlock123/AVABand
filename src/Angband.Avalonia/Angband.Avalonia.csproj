@@ -31,4 +31,7 @@
     <ProjectReference Include="..\Angband.Audio\Angband.Audio.csproj" />
     <ProjectReference Include="..\Angband.Input\Angband.Input.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Angband.Avalonia.Tests" />
+  </ItemGroup>
 </Project>

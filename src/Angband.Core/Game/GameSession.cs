@@ -527,7 +527,13 @@ public sealed partial class GameSession : ITurnHandler
             // level stay there); the rest may appear on each new level.
             var unavailable = new HashSet<string>(KilledUniques);
             if (persist) unavailable.UnionWith(UniquesOnStoredLevels());
+            // Angband town_gen: four residents by day, eight by night, more than 3 squares off.
+            if (Level.Depth == 0 && Level.ProfileId == "town")
+                Level.Population = Level.Population with { Monsters = 0 };
             _spawner.Populate(Level, Rng, Player.Position, unavailable);
+            if (Level.Depth == 0 && Level.ProfileId == "town")
+                for (var i = 0; i < (IsDaytime ? Data.Constants.TownMonstersDay : Data.Constants.TownMonstersNight); i++)
+                    _spawner.PlaceDistant(Level, Rng, Player.Position, 3, 0, unavailable);
             foreach (var monster in Level.Monsters.All) Scheduler.Add(monster);
             PopulateObjects();
             DisguiseMonsters();

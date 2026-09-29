@@ -11,7 +11,8 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
 - **Lose artifacts when leaving level** — an artifact you leave behind is gone for good.
 - **Show level feelings** — the arrival messages about danger and treasure.
 - **Increase gold drops but disable selling** — shops pay nothing, the dungeon more (the default).
-- **Start with a kit of useful gear** — off, you start with more gold instead.
+- **Start with a kit of useful gear** — your class's kit, as Angband 4.2.5 gives it, paid for out of
+  600 gold; off, you start with one food and one light and keep the gold the rest would have cost.
 - **Monsters learn from their mistakes** — they stop using attacks you resist.
 - **Know all runes on birth** / **Know all flavors on birth** — skip the learning.
 - **Persistent levels (experimental)** — levels are kept when you leave them.

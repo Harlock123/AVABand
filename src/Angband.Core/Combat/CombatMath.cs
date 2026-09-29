@@ -55,34 +55,44 @@ public static class CombatMath
     /// <summary>Missile hit chance, reduced by distance (Angband chance_of_missile_hit).</summary>
     public static int MissileChance(int skill, int toHit, int distance) => skill + toHit * BthPlusAdj - distance;
 
-    /// <summary>Angband critical_melee. <paramref name="weight"/> is in tenths of a pound.</summary>
-    public static int CriticalMelee(GameRandom rng, int weight, int toHit, int skill, int damage, out CriticalGrade grade)
+    /// <summary>
+    /// Angband critical_melee (constants.txt melee-critical): a chance from the weapon's weight, to-hit
+    /// (ten more against a <paramref name="debuffed"/> monster), level and skill; then a power from the
+    /// weight and a random part picks the level of critical. <paramref name="weight"/> is in tenths of a pound.
+    /// </summary>
+    public static int CriticalMelee(GameRandom rng, int weight, int toHit, int skill, int damage, out CriticalGrade grade,
+        int level = 0, bool debuffed = false)
     {
-        var power = weight + rng.RandInt1(650);
-        var chance = weight + toHit * 5 + (skill - 60);
+        if (debuffed) toHit += CriticalTables.MeleeDebuffToHit;
+        var chance = CriticalTables.MeleeChanceWeightScale * weight + CriticalTables.MeleeChanceToHitScale * toHit
+                     + CriticalTables.MeleeChanceLevelScale * level + CriticalTables.MeleeChanceToHitSkillScale * skill
+                     + CriticalTables.MeleeChanceOffset;
         grade = CriticalGrade.None;
-        if (rng.RandInt1(5000) > chance) return damage;
-
-        if (power < 400) { grade = CriticalGrade.Good; return 2 * damage + 5; }
-        if (power < 700) { grade = CriticalGrade.Great; return 2 * damage + 10; }
-        if (power < 900) { grade = CriticalGrade.Superb; return 3 * damage + 15; }
-        if (power < 1300) { grade = CriticalGrade.HighGreat; return 3 * damage + 20; }
-        grade = CriticalGrade.HighSuperb;
-        return 4 * damage + 20;
+        if (rng.RandInt1(CriticalTables.MeleeChanceRange) > chance) return damage;
+        var power = CriticalTables.MeleePowerWeightScale * weight + rng.RandInt1(CriticalTables.MeleePowerRandom);
+        return Level(power, CriticalTables.MeleeLevels, damage, out grade);
     }
 
-    /// <summary>Angband critical_shot, for fired and thrown missiles.</summary>
-    public static int CriticalShot(GameRandom rng, int weight, int toHit, int playerLevel, int damage, out CriticalGrade grade)
+    /// <summary>Angband critical_shot (constants.txt ranged-critical), for fired and thrown missiles.</summary>
+    public static int CriticalShot(GameRandom rng, int weight, int toHit, int playerLevel, int damage, out CriticalGrade grade,
+        int skill = 0, bool launched = true, bool debuffed = false)
     {
-        var power = weight + rng.RandInt1(500);
-        var chance = weight + toHit * 4 + playerLevel * 2;
+        if (debuffed) toHit += CriticalTables.RangedDebuffToHit;
+        var chance = CriticalTables.RangedChanceWeightScale * weight + CriticalTables.RangedChanceToHitScale * toHit
+                     + CriticalTables.RangedChanceLevelScale * playerLevel + CriticalTables.RangedChanceOffset
+                     + (launched ? CriticalTables.RangedChanceLaunchedToHitSkillScale : CriticalTables.RangedChanceThrownToHitSkillScale) * skill;
         grade = CriticalGrade.None;
-        if (rng.RandInt1(5000) > chance) return damage;
+        if (rng.RandInt1(CriticalTables.RangedChanceRange) > chance) return damage;
+        var power = CriticalTables.RangedPowerWeightScale * weight + rng.RandInt1(CriticalTables.RangedPowerRandom);
+        return Level(power, CriticalTables.RangedLevels, damage, out grade);
+    }
 
-        if (power < 500) { grade = CriticalGrade.Good; return 2 * damage + 5; }
-        if (power < 1000) { grade = CriticalGrade.Great; return 2 * damage + 10; }
-        grade = CriticalGrade.Superb;
-        return 3 * damage + 15;
+    private static int Level(int power, (int Cutoff, int Multiplier, int Add, CriticalGrade Grade)[] levels, int damage, out CriticalGrade grade)
+    {
+        var l = 0;
+        while (l < levels.Length - 1 && power >= levels[l].Cutoff) l++;
+        grade = levels[l].Grade;
+        return levels[l].Add + levels[l].Multiplier * damage;
     }
 
     /// <summary>Angband adjust_dam_armor: armour soaks up to 60% of a physical blow.</summary>

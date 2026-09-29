@@ -5,7 +5,7 @@
   "maxSight": 20,
   "dayLength": 10000,
   "birthPoints": 20,
-  "startGold": 200,
+  "startGold": 600,
   "foodUpper": 20000,
   "foodMax": 15000,
   "foodFull": 10000,
@@ -13,5 +13,18 @@
   "foodWeak": 1000,
   "foodFaint": 500,
   "foodStarve": 100,
-  "digestInterval": 100
+  "digestInterval": 100,
+  "packSize": 23,
+  "quiverSize": 10,
+  "quiverSlotSize": 40,
+  "maxBreeders": 100,
+  "breedRate": 8,
+  "storeTurns": 1000,
+  "storeInvenMax": 24,
+  "storeShuffle": 25,
+  "storeMagicLevel": 5,
+  "allocMonsterChance": 500,
+  "townMonstersDay": 4,
+  "townMonstersNight": 8,
+  "defaultLampFuel": 7500
 }

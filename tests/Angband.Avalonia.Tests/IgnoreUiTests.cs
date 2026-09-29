@@ -18,6 +18,7 @@ public class IgnoreUiTests
         MainWindow.ShowCreationOnFirstRun = false;
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
         vm.StartGame(42);
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         return (window, vm);

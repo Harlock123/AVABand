@@ -14,6 +14,7 @@ public sealed class KnowledgeUiTests
         MainWindow.ShowCreationOnFirstRun = false;
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
         vm.StartGame(42);
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         return (window, vm);
@@ -87,7 +88,7 @@ public sealed class KnowledgeUiTests
         var (window, vm) = Open();
         var game = vm.Game;
         var home = game.Stores.Values.Single(s => s.IsHome);
-        var torch = game.Player.Inventory.Pack.First(i => i.Base.Id == "light");
+        var torch = game.Objects.Create("wooden_torch");
         home.Stock.Add(torch.Clone(game.Objects.NextSerial++, 1));
         game.AddNote("left a torch at home");
 

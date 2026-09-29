@@ -281,7 +281,9 @@ public sealed partial class GameSession
     {
         if (ItemValue.Of(item, Data) <= 0) return null;
         item.Note = null;
-        if (item.Base.Slot == EquipSlot.Light) item.Fuel = Math.Max(item.Fuel, item.Kind.Fuel);
+        // Angband store_create_item: a light is sold as object_prep makes it (a torch full, a lamp half).
+        if (item.Base.Slot == EquipSlot.Light && item.Kind.Fuel > 0)
+            item.Fuel = Math.Max(item.Fuel, item.Kind.Has("REFUELABLE") ? Math.Min(item.Kind.Fuel, Data.Constants.DefaultLampFuel) : item.Kind.Fuel);
         else if (item.Base.Id == "rod") item.Timeout = 0;
         else if (item.Kind.Charges is { } charges && store.CanCarry(item.Kind))
         {

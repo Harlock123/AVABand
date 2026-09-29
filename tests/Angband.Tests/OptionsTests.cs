@@ -217,11 +217,11 @@ public class OptionsTests
     public void ShowFlavors_NamesTheFlavourOfKnownObjects()
     {
         var game = Born();
-        var potion = game.Objects.Create("cure_light_wounds");
+        var potion = game.Objects.Create("potion_of_berserk_strength"); // in the warrior's kit, so known
         var flavor = game.Knowledge.Flavor(potion.Kind)!.Name;
         Assert.DoesNotContain(flavor, game.Describe(potion));
         game.SetOption(OptionIds.ShowFlavors, true);
-        Assert.Contains($"{flavor} Potion of Cure Light Wounds", game.Describe(potion));
+        Assert.Contains($"{flavor} Potion of Berserk Strength", game.Describe(potion));
     }
 
     [Fact]

@@ -22,6 +22,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Terrain](#terrain) — `terrain.json` vs `terrain.txt`
 - [Stores](#stores) — `stores.json` vs `store.txt`
 - [Curses](#curses) — `curses.json` vs `curse.txt`
+- [Constants](#constants) — `constants.json and C# constants` vs `constants.txt`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -219,6 +220,32 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 - Matched by the importer's curse ids (the slug of the name; `burning up` → burning_up, `chilled to the bone` → chilled). Effects are AVABand trap-effect strings: compared by kind, amount, time and message; the treacherous weapon's WEAPON_DAMAGE is `damage:weapon`.
 - Not compared: `desc`.
 
+<a id="constants"></a>
+## Constants: `constants.json and C# constants` vs `constants.txt`
+
+75 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### 4.2.5 properties AVABand's format can't express (not reported as differences)
+
+- carry-cap:floor-size (AVABand floor piles have no limit): 1
+- dun-gen:amt-gold (dungeon_profile.json allocation (compared there)): 1
+- dun-gen:amt-item (dungeon_profile.json allocation (compared there)): 1
+- dun-gen:amt-room (dungeon_profile.json allocation (compared there)): 1
+- dun-gen:cent-max (an array size in 4.2.5's generator): 1
+- dun-gen:door-max (an array size in 4.2.5's generator): 1
+- dun-gen:pit-max (dungeon_profile.json (compared there)): 1
+- dun-gen:tunn-max (an array size in 4.2.5's generator): 1
+- dun-gen:wall-max (an array size in 4.2.5's generator): 1
+- level-max:monsters (AVABand's monster roster grows as needed): 1
+- player:food-value (AVABand's hunger is Angband 4.1's model (constants.json food*)): 1
+- world:stair-skip (the birth option's default (Angband birth_levels_skip); AVABand has none): 1
+- world:town-hgt (AVABand's town is its own layout (town.json)): 1
+- world:town-wid (AVABand's town is its own layout (town.json)): 1
+
+### Notes: normalisation and fields not compared
+
+- Each 4.2.5 constant is compared with where AVABand keeps it: constants.json, an object kind, or a named C# constant read from the source (critical hits: Combat/CriticalTables.cs). `world:max-depth` counts levels; AVABand's `maxDepth` is the deepest level (one less).
+
 ## Not compared at all
 
 - 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, summon.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
@@ -244,5 +271,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Terrain | 25 | 0 | 0 | 0 | 0 | 0 |
 | Stores | 8 | 0 | 0 | 0 | 0 | 0 |
 | Curses | 27 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **1724** | **0** | **0** | **0** | **14** | **39** |
+| Constants | 75 | 0 | 0 | 0 | 0 | 14 |
+| **Total** | **1799** | **0** | **0** | **0** | **14** | **53** |
 

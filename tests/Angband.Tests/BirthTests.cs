@@ -1,3 +1,4 @@
+using Angband.Core.Items;
 using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Core.Geometry;
@@ -37,10 +38,12 @@ public class BirthTests
     [Fact]
     public void UnspentPoints_BecomeGold()
     {
+        // Angband 4.2.5: 600, and 50 for each point unspent, less what the kit is worth.
         var thrifty = Create("human", "warrior", Stats(10, 10, 10, 10, 10));
         var spender = Create("human", "warrior", Stats(18, 17, 10, 10, 10));
-        Assert.Equal(200 + 20 * 50, thrifty.Player.Gold);
-        Assert.Equal(200, spender.Player.Gold);
+        long Worth(GameSession g) => g.Player.Inventory.All.Sum(i => ItemValue.Real(i, g.Data, i.Number));
+        Assert.Equal(600 + 20 * 50 - Worth(thrifty), thrifty.Player.Gold);
+        Assert.Equal(600 - Worth(spender), spender.Player.Gold);
     }
 
     // --- Rolling -------------------------------------------------------------------------------

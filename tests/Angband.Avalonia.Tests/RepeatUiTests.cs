@@ -17,6 +17,7 @@ public class RepeatUiTests
         MainWindow.ShowCreationOnFirstRun = false;
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
         vm.StartGame(42, classId);
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);

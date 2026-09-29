@@ -27,8 +27,13 @@ public sealed class ObjectFactory(GameData data)
     /// <summary>False with Angband's birth_no_artifacts: no artifacts are generated.</summary>
     public bool AllowArtifacts { get; set; } = true;
 
-    public Item Create(ObjectKindDef kind, int number = 1) =>
-        new(NextSerial++, kind, data.ObjectBase(kind.Base) ?? throw new GameDataException($"Object '{kind.Id}' has unknown base '{kind.Base}'."), number);
+    public Item Create(ObjectKindDef kind, int number = 1)
+    {
+        var item = new Item(NextSerial++, kind, data.ObjectBase(kind.Base) ?? throw new GameDataException($"Object '{kind.Id}' has unknown base '{kind.Base}'."), number);
+        // Angband object_prep: a lamp starts half full (default-lamp); a torch full (fuel-torch).
+        if (kind.Has("REFUELABLE") && kind.Fuel > 0) item.Fuel = Math.Min(kind.Fuel, data.Constants.DefaultLampFuel);
+        return item;
+    }
 
     public Item Create(string kindId, int number = 1) =>
         Create(data.Object(kindId) ?? throw new ArgumentException($"Unknown object '{kindId}'."), number);

@@ -910,6 +910,21 @@ REV_RESIST = {v: k for k, v in OI.RESISTS.items()}
 REV_RESIST.update({v: k for k, v in FLAG_TO_RESIST.items()})
 
 
+# 4.2.5 birth options that leave a kit line out (eopts), by AVABand's option id.
+KIT_OPTIONS = {"birth_no_recall": "birth_no_recall"}
+
+
+def class_kit_42(e, kinds):
+    """4.2.5's equip lines as AVABand kit entries (kind, least, most, option), or a note of what didn't resolve."""
+    out = []
+    for v in get(e, "equip"):
+        tval, name, lo, hi, eopt = (v.split(":") + ["none"])[:5]
+        base = TYPE_TO_BASE.get(tval)
+        kid = kinds.get((family(base or "?"), norm_name(name)))
+        out.append((kid or f"{tval}:{name} (no such kind)", int(lo), int(hi), None if eopt == "none" else KIT_OPTIONS.get(eopt, eopt)))
+    return out
+
+
 def player_tokens_42(e):
     toks = set()
     for f in flag_list(e, "obj-flags") + flag_list(e, "player-flags"):
@@ -956,6 +971,10 @@ def compare_classes_and_spells(gd, data):
             csec.cmp(label, f"skill {ours_key} ({key})", (c.get("skills") or {}).get(ours_key, 0), int(base))
             csec.cmp(label, f"skill {ours_key} per 10 levels", (c.get("skillsPer10Levels") or {}).get(ours_key, 0), int(per10))
         csec.cmp(label, "hit die", c.get("hitDie", 0), int(one(e, "hitdie", "0")))
+        ours_kit = sorted((k["kind"], k.get("count", 1), k.get("countMax", k.get("count", 1)), k.get("unlessOption"))
+                          for k in c.get("startingKit") or [])
+        csec.cmp(label, "starting kit (kind, least, most, unless option)", ours_kit,
+                 sorted(class_kit_42(e, kind_ids(data)), key=lambda t: (t[0], t[1], t[2], t[3] or "")))
         # 4.2.5 has no class experience factor (only races have `exp`).
         csec.cmp(label, "experience factor (4.2.5 classes have none)", c.get("expFactor", 0), 0)
         tflags = player_tokens_42(e)
@@ -1297,6 +1316,131 @@ def compare_curses(gd, data):
                   "bone` → chilled). Effects are AVABand trap-effect strings: compared by kind, amount, time and message; "
                   "the treacherous weapon's WEAPON_DAMAGE is `damage:weapon`.",
                   "Not compared: `desc`."]
+    return sec
+
+
+# 4.2.5 constants.txt -> where AVABand keeps each: ("json", constants.json key[, offset]) or
+# ("cs", source file under src/Angband.Core, constant or property name), or ("kind", object id, field).
+CS = "src/Angband.Core/"
+CONSTANT_HOMES = {
+    "world:max-depth": ("json", "maxDepth", 1),      # ours is the deepest level, 4.2.5's the count of levels
+    "world:day-length": ("json", "dayLength"),
+    "player:max-sight": ("json", "maxSight"),
+    "carry-cap:pack-size": ("json", "packSize"),
+    "carry-cap:quiver-size": ("json", "quiverSize"),
+    "carry-cap:quiver-slot-size": ("json", "quiverSlotSize"),
+    "mon-gen:repro-max": ("json", "maxBreeders"),
+    "mon-play:mult-rate": ("json", "breedRate"),
+    "player:start-gold": ("json", "startGold"),
+    "store:turns": ("json", "storeTurns"),
+    "store:inven-max": ("json", "storeInvenMax"),
+    "store:shuffle": ("json", "storeShuffle"),
+    "store:magic-level": ("json", "storeMagicLevel"),
+    "mon-gen:chance": ("json", "allocMonsterChance"),
+    "mon-gen:town-day": ("json", "townMonstersDay"),
+    "mon-gen:town-night": ("json", "townMonstersNight"),
+    "obj-make:default-lamp": ("json", "defaultLampFuel"),
+    "obj-make:fuel-torch": ("kind", "wooden_torch", "fuel"),
+    "obj-make:fuel-lamp": ("kind", "lantern", "fuel"),
+    "mon-gen:level-min": ("cs", "Definitions/DungeonProfileDef.cs", "MonsterMin"),
+    "mon-gen:ood-chance": ("cs", "Monsters/MonsterSpawner.cs", "OutOfDepthChance"),
+    "mon-gen:ood-amount": ("cs", "Monsters/MonsterSpawner.cs", "OutOfDepthAmount"),
+    "mon-gen:group-max": ("cs", "Monsters/MonsterSpawner.cs", "GroupMax"),
+    "mon-gen:group-dist": ("cs", "Monsters/MonsterSpawner.cs", "GroupDistance"),
+    "mon-play:break-glyph": ("cs", "Game/GameSession.Special.cs", "GlyphHardness"),
+    "mon-play:life-drain": ("cs", "Game/GameSession.MonsterSpells.cs", "LifeDrainPercent"),
+    "mon-play:flee-range": ("cs", "Game/GameSession.MonsterRange.cs", "FleeRangeBeyondSight"),
+    "mon-play:turn-range": ("cs", "Game/GameSession.MonsterRange.cs", "TurnRange"),
+    "world:feeling-total": ("cs", "Game/LevelFeelings.cs", "FeelingTotal"),
+    "world:feeling-need": ("cs", "Game/LevelFeelings.cs", "FeelingNeed"),
+    "world:move-energy": ("cs", "Time/EnergyTable.cs", "MoveEnergy"),
+    "world:dungeon-hgt": ("cs", "Definitions/DungeonProfileDef.cs", "Height"),
+    "world:dungeon-wid": ("cs", "Definitions/DungeonProfileDef.cs", "Width"),
+    "carry-cap:thrown-quiver-mult": ("cs", "Items/Inventory.cs", "ThrownQuiverMultiplier"),
+    "obj-make:max-depth": ("cs", "Items/ObjectFactory.cs", "MaxObjectDepth"),
+    "obj-make:great-obj": ("cs", "Items/ObjectFactory.cs", "GreatObjectChance"),
+    "obj-make:great-ego": ("cs", "Items/ObjectFactory.cs", "GreatEgoChance"),
+    "player:max-range": ("cs", "Game/GameSession.Combat.cs", "MaxRange"),
+}
+# Constants AVABand has no counterpart for, and why (listed, not compared).
+CONSTANTS_ELSEWHERE = {
+    "level-max:monsters": "AVABand's monster roster grows as needed",
+    "player:food-value": "AVABand's hunger is Angband 4.1's model (constants.json food*)",
+    "dun-gen:cent-max": "an array size in 4.2.5's generator", "dun-gen:door-max": "an array size in 4.2.5's generator",
+    "dun-gen:wall-max": "an array size in 4.2.5's generator", "dun-gen:tunn-max": "an array size in 4.2.5's generator",
+    "carry-cap:floor-size": "AVABand floor piles have no limit",
+    "world:stair-skip": "the birth option's default (Angband birth_levels_skip); AVABand has none",
+    "world:town-hgt": "AVABand's town is its own layout (town.json)",
+    "world:town-wid": "AVABand's town is its own layout (town.json)",
+    "dun-gen:amt-room": "dungeon_profile.json allocation (compared there)",
+    "dun-gen:amt-item": "dungeon_profile.json allocation (compared there)",
+    "dun-gen:amt-gold": "dungeon_profile.json allocation (compared there)",
+    "dun-gen:pit-max": "dungeon_profile.json (compared there)",
+}
+CRITICAL_PREFIXES = {"melee-critical": "Melee", "ranged-critical": "Ranged", "o-melee-critical": "OMelee",
+                     "o-ranged-critical": "ORanged"}
+
+
+def cs_constant(root, rel, name):
+    src = open(os.path.join(root, CS, rel), encoding="utf-8").read()
+    m = re.search(r"\b" + name + r"\b\s*(?:\{[^}]*\})?\s*=\s*(-?\d[\d_]*)", src)
+    return int(m.group(1).replace("_", "")) if m else None
+
+
+def pascal(words):
+    return "".join(w[:1].upper() + w[1:] for w in re.split(r"[-_]", words) if w)
+
+
+def compare_constants(gd, data):
+    sec = section("constants", "Constants", "constants.json and C# constants", "constants.txt")
+    root = os.path.normpath(os.path.join(data, "..", "..", ".."))
+    ours = load(data, "constants.json")
+    kinds = {k["id"]: k for k in load(data, "objects.json")}
+    crit = open(os.path.join(root, CS, "Combat/CriticalTables.cs"), encoding="utf-8").read()
+    levels = collections.defaultdict(list)
+    for line in open(os.path.join(gd, "constants.txt"), encoding="utf-8"):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split(":")
+        group = parts[0]
+        if group.endswith("-critical-level"):
+            levels[group[:-len("-level")]].append([int(x) if re.fullmatch(r"-?\d+", x) else x for x in parts[1:]])
+            continue
+        key, value = f"{group}:{parts[1]}", int(parts[2])
+        sec.compared += 1
+        if group in CRITICAL_PREFIXES:
+            name = CRITICAL_PREFIXES[group] + pascal(parts[1]).replace("Toh", "ToHit")
+            m = re.search(r"\b" + name + r"\s*=\s*(-?\d+)", crit)
+            sec.cmp(key, f"CriticalTables.{name}", int(m.group(1)) if m else None, value)
+            continue
+        home = CONSTANT_HOMES.get(key)
+        if home is None:
+            sec.compared -= 1
+            why = CONSTANTS_ELSEWHERE.get(key)
+            sec.unmodelled[f"{key} ({why})" if why else f"{key} (no AVABand counterpart)"] += 1
+            continue
+        if home[0] == "json":
+            sec.cmp(key, f"constants.json {home[1]}", ours.get(home[1], None) if home[1] in ours else None,
+                    value - (home[2] if len(home) > 2 else 0))
+        elif home[0] == "kind":
+            sec.cmp(key, f"{home[1]}.{home[2]}", kinds.get(home[1], {}).get(home[2]), value)
+        else:
+            sec.cmp(key, f"{home[1]} {home[2]}", cs_constant(root, home[1], home[2]), value)
+    grades = {"HIT_GOOD": "Good", "HIT_GREAT": "Great", "HIT_SUPERB": "Superb", "HIT_HI_GREAT": "HighGreat",
+              "HIT_HI_SUPERB": "HighSuperb"}
+    for group, rows in levels.items():
+        name = CRITICAL_PREFIXES[group] + "Levels"
+        m = re.search(name + r"\s*=\s*\[(.*?)\];", crit, re.S)
+        tuples = re.findall(r"\(([^()]*)\)", m.group(1)) if m else []
+        ours_rows = [[int(x) if re.fullmatch(r"-?\d+", x.strip()) else x.strip().replace("CriticalGrade.", "")
+                      for x in t.split(",")] for t in tuples]
+        theirs_rows = [[grades.get(x, x) if isinstance(x, str) else x for x in r] for r in rows]
+        sec.compared += 1
+        sec.cmp(f"{group}-level", f"CriticalTables.{name}", ours_rows, theirs_rows)
+    sec.notes += ["Each 4.2.5 constant is compared with where AVABand keeps it: constants.json, an object kind, or a "
+                  "named C# constant read from the source (critical hits: Combat/CriticalTables.cs). "
+                  "`world:max-depth` counts levels; AVABand's `maxDepth` is the deepest level (one less)."]
     return sec
 
 
@@ -1728,7 +1872,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

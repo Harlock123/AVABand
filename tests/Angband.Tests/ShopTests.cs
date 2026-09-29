@@ -7,8 +7,12 @@ namespace Angband.Tests;
 
 public class ShopTests
 {
-    private static GameSession InTown(ulong seed = 1, GameData? data = null) =>
-        GameSession.NewGame(data ?? TestData.Game, seed, CharacterSpec.Default("human", "warrior"));
+    private static GameSession InTown(ulong seed = 1, GameData? data = null)
+    {
+        var game = GameSession.NewGame(data ?? TestData.Game, seed, CharacterSpec.Default("human", "warrior"));
+        Arena.GiveTestKit(game);
+        return game;
+    }
 
     /// <summary>Puts the player on a store's entrance.</summary>
     private static Store At(GameSession game, string id)
@@ -76,7 +80,7 @@ public class ShopTests
 
         Assert.Equal(10_000 - 3 * price, game.Player.Gold);
         Assert.Contains(store.Stock, i => i.Kind.Id == "cure_light_wounds"); // always stocked
-        Assert.Equal(2 + 3, game.Player.Inventory.Pack.Single(i => i.Kind.Id == "cure_light_wounds").Number);
+        Assert.Equal(2 + 3, game.Player.Inventory.Pack.Single(i => i.Kind.Id == "cure_light_wounds").Number); // the test kit's 2
         Assert.True(game.Knowledge.IsAware(potion.Kind));
     }
 
@@ -155,7 +159,7 @@ public class ShopTests
         var game = InTown(8);
         var home = At(game, "home");
         var gold = game.Player.Gold;
-        var torches = game.Player.Inventory.Pack.First(i => i.Kind.Id == "wooden_torch");
+        var torches = game.Player.Inventory.Add(game.Objects.Create("wooden_torch", 2))!;
 
         game.Execute(new SellCommand(torches, 2));
         Assert.Contains(home.Stock, i => i.Kind.Id == "wooden_torch" && i.Number == 2);

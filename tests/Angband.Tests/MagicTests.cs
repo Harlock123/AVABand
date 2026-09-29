@@ -35,10 +35,10 @@ public class MagicTests
 
     [Theory]
     [InlineData("warrior", "dagger", 19, 0)]
-    [InlineData("mage", "dagger", 10, 2)]
+    [InlineData("mage", "rapier", 10, 2)]
     [InlineData("priest", "mace", 12, 2)]
-    [InlineData("ranger", "dagger", 15, 0)]
-    [InlineData("druid", null, 12, 2)]
+    [InlineData("ranger", "main_gauche", 15, 0)]
+    [InlineData("druid", "whip", 12, 2)]
     public void Classes_StartWithTheirKitHitPointsAndMana(string cls, string? weapon, int hp, int mana)
     {
         var game = GameSession.NewGame(TestData.Game, 1, cls);

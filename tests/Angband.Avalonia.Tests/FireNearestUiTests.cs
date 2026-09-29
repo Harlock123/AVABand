@@ -19,6 +19,7 @@ public class FireNearestUiTests
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
         vm.UseInput(InputBindings.Defaults(), null, null);
         vm.StartGame(42, "warrior"); // a sling and iron shots
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);

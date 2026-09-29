@@ -365,7 +365,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     }
 
 
-    private void Refresh()
+    internal void Refresh()
     {
         OnPropertyChanged(nameof(ShopsPayGold)); // a new or loaded game may differ
         var level = _game.Level;

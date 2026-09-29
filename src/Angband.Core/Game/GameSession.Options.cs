@@ -102,15 +102,12 @@ public sealed partial class GameSession
     /// </summary>
     private int KitCount(StartItemDef start, ObjectKindDef kind)
     {
-        if (Options[OptionIds.StartKit]) return start.Count;
-        var basic = kind.Base is "food" or "light" && _keptBasics.Add(kind.Base);
-        var kept = basic ? 1 : 0;
-        if (start.Count > kept) _kitGold += ItemValue.Of(Objects.Create(kind), Data) * (start.Count - kept);
-        return kept;
+        // Angband player_outfit: without the kit, only one food and one light.
+        if (!Options[OptionIds.StartKit]) return kind.Base is "food" or "light" && _keptBasics.Add(kind.Base) ? 1 : 0;
+        return start.CountMax is { } most && most > start.Count ? Rng.RandRange(start.Count, most) : start.Count;
     }
 
     private readonly HashSet<string> _keptBasics = [];
-    private long _kitGold;
 
     /// <summary>Angband birth_know_runes and birth_know_flavors.</summary>
     private void ApplyBirthKnowledge()

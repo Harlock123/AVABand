@@ -21,6 +21,7 @@ public class HotbarUiTests
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
         vm.UseInput(InputBindings.Defaults(), null, null);
         vm.StartGame(42, cls);
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
@@ -149,7 +150,7 @@ public class HotbarUiTests
         Assert.Equal(HotbarEntry.ForSpell(spell.Id), game.Hotbar[2]);
 
         // Armour can't be used from the hotbar; a spell not learned isn't taken.
-        var armour = game.Player.Inventory.Equipped.First(i => i.Base.Slot == Angband.Core.Definitions.EquipSlot.Body);
+        var armour = game.Player.Inventory.Add(game.Objects.Create("soft_leather_armour"))!;
         Drop(window, 0, MainWindowViewModel.DragPayload(armour));
         Assert.Null(game.Hotbar[0]);
         Assert.EndsWith("can't be used from the hotbar.", vm.LastMessage);

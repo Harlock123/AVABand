@@ -15,6 +15,7 @@ public class StoreUiTests
     {
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
         vm.StartGame(42, "warrior");
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         var game = (GameSession)typeof(MainWindowViewModel)

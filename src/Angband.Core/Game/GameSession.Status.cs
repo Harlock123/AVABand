@@ -87,6 +87,21 @@ public sealed partial class GameSession
     }
 
     /// <summary>
+    /// Angband process_world: one chance in 500 each world turn of a new monster, asleep, somewhere
+    /// more than the sight range and five squares away.
+    /// </summary>
+    private void WanderingMonster()
+    {
+        if (InArena || !Rng.OneIn(Data.Constants.AllocMonsterChance)) return;
+        var unavailable = new HashSet<string>(KilledUniques);
+        foreach (var m in Level.Monsters.All.Where(m => m.Race.IsUnique)) unavailable.Add(m.Race.Id);
+        if (PersistentLevels) unavailable.UnionWith(UniquesOnStoredLevels());
+        if (_spawner.PlaceDistant(Level, Rng, Player.Position, Data.Constants.MaxSight + 5, Level.Depth, unavailable) is not { } placed) return;
+        foreach (var m in placed) Scheduler.Add(m);
+        DisguiseMonsters();
+    }
+
+    /// <summary>
     /// Angband process_world: gear that drains experience (DRAIN_EXP) takes a little one time in ten:
     /// a tenth of 10d6 plus the life-drain share of it.
     /// </summary>
@@ -203,6 +218,7 @@ public sealed partial class GameSession
         // Angband TMD_HEAL (Rapid Regeneration): 30 hit points a turn.
         if (timed.Has("heal") && Player.Hp < Player.MaxHp) Player.Hp = Math.Min(Player.MaxHp, Player.Hp + 30);
         BlackBreathUpkeep();
+        WanderingMonster();
         DrainExperienceUpkeep();
         RegenerateHp();
         RegenerateMana();

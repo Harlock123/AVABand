@@ -194,7 +194,7 @@ public class MonsterAiTests
 
         Hold(game, 300);
 
-        Assert.Equal(6, game.Level.Monsters.Count);
+        Assert.Equal(6, game.Level.Monsters.All.Count(m => m.Race.Id == "white_worm_mass")); // (a wanderer may join them)
     }
 
     // --- Movement rules -------------------------------------------------------------------------

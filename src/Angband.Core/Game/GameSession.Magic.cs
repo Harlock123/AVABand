@@ -42,29 +42,17 @@ public sealed partial class GameSession
 
         // Level 1 hit points: the full hit die plus Constitution's share.
         p.MaxHp = p.Hp = Math.Max(1, p.HitDie + ConstitutionHp());
-        p.Gold = Birth.StartingGold(spec, Data.Constants);
         p.Food = Data.Constants.FoodFull - 1;
         ApplySkills();
 
-        foreach (var start in cls.StartingKit)
-        {
-            var kind = Data.Object(start.Kind) ?? throw new GameDataException($"Class '{cls.Id}' kit names unknown object '{start.Kind}'.");
-            if (KitCount(start, kind) is var count && count <= 0) continue;
-            var item = Objects.Create(kind, count);
-            Knowledge.LearnKind(kind);
-            foreach (var rune in item.Runes()) Knowledge.LearnRune(rune);
-            if (start.Equip && item.IsWearable)
-            {
-                if (Player.Inventory.Wield(item, () => Objects.NextSerial++) is { } replaced) Player.Inventory.Add(replaced);
-            }
-            else Player.Inventory.Add(item);
-        }
+        // Angband player_outfit: the class's kit, paid for out of the starting gold (never below nothing).
+        InitItems(generalKit: false);
+        var worth = GiveKit(cls.StartingKit, $"Class '{cls.Id}' kit");
+        p.Gold = (int)Math.Max(0, Birth.StartingGold(spec, Data.Constants) - worth);
 
         // Necromancers shun the light: the torch everyone starts with goes in the pack.
         if (cls.Flags.Contains(ClassFlags.Unlight) && Player.Inventory.Equipped.FirstOrDefault(i => i.Base.Slot == EquipSlot.Light) is { } light)
             Player.Inventory.TakeOff(light);
-
-        p.Gold += _kitGold; // without the starting kit, its value comes as gold
 
         RecalculateBonuses();
         RecalculateMana();

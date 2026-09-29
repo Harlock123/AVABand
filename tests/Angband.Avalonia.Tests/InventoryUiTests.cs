@@ -17,6 +17,7 @@ public class InventoryUiTests
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), tilesets,
             new AppSettings { UseTiles = tiles, TilesetId = "gervais", TileScale = 1.5 }, save: null);
         vm.StartGame(42);
+        TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         return (window, vm);
@@ -39,7 +40,7 @@ public class InventoryUiTests
         window.KeyPressQwerty(PhysicalKey.Q, RawInputModifiers.None);
         Assert.True(vm.IsPrompting);
         Assert.Equal("Quaff which potion?", vm.PromptTitle);
-        Assert.Single(vm.PromptRows);
+        Assert.Equal(2, vm.PromptRows.Count); // Cure Light Wounds, and the warrior's Berserk Strength
         TileRenderingTests.Save(window, "prompt-quaff");
 
         window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
@@ -51,6 +52,8 @@ public class InventoryUiTests
     public void Escape_CancelsAPrompt()
     {
         var (window, vm) = Open();
+        vm.Game.Player.Inventory.Add(vm.Game.Objects.Create("whip")); // something to wield
+        vm.Refresh();
         window.KeyPressQwerty(PhysicalKey.W, RawInputModifiers.None);
         Assert.True(vm.IsPrompting);
         window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);

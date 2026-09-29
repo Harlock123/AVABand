@@ -579,6 +579,23 @@ def sync_classes(gd, data):
         before = json.dumps(c, sort_keys=True)
         sync_player_skills(c, e, per10=True)
         c.pop("expFactor", None)  # 4.2.5 classes have none: a character's is its race's
+        # 4.2.5's equip lines: all a class starts with (wearables are worn, as wield_all does).
+        base_of = {k["id"]: k["base"] for k in json.load(open(os.path.join(data, "objects.json"), encoding="utf-8"))}
+        wearable = {"sword", "hafted", "polearm", "digger", "sling", "bow", "crossbow", "light", "soft_armour", "hard_armour",
+                    "dragon_armour", "shield", "cloak", "helm", "crown", "gloves", "boots", "ring", "amulet"}
+        kit = []
+        for kid, lo, hi, opt in cw.class_kit_42(e, cw.kind_ids(data)):
+            entry = {"kind": kid}
+            if lo != 1:
+                entry["count"] = lo
+            if hi != lo:
+                entry["countMax"] = hi
+            if base_of.get(kid) in wearable:
+                entry["equip"] = True
+            if opt:
+                entry["unlessOption"] = opt
+            kit.append(entry)
+        c["startingKit"] = kit
         changed += json.dumps(c, sort_keys=True) != before
     write_json(path, ours, 2)
     print(f"classes: {changed} of {len(ours)} brought into line")
@@ -886,10 +903,33 @@ def sync_curses(gd, data):
     print(f"curses: {len(out)} written ({len([c for c in out if c['id'] not in ours])} new)")
 
 
+def sync_constants(gd, data):
+    """The constants AVABand keeps in constants.json take 4.2.5's values (the rest live in code)."""
+    path = os.path.join(data, "constants.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    values = {}
+    for line in open(os.path.join(gd, "constants.txt"), encoding="utf-8"):
+        parts = line.strip().split(":")
+        if len(parts) == 3 and not line.startswith("#"):
+            values[f"{parts[0]}:{parts[1]}"] = int(parts[2])
+    changed = []
+    for key, home in cw.CONSTANT_HOMES.items():
+        if home[0] != "json" or key not in values:
+            continue
+        v = values[key] - (home[2] if len(home) > 2 else 0)
+        if ours.get(home[1]) != v:
+            ours[home[1]] = v
+            changed.append(home[1])
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(ours, f, indent=2)
+        f.write("\n")
+    print(f"constants: {changed or 'none'} brought into line")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
-            "curses": sync_curses}
+            "curses": sync_curses, "constants": sync_constants}
 
 
 def main():

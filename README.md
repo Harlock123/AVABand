@@ -260,7 +260,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Classes, levels & magic** (`Game/GameSession.Magic.cs`, `classes.json`, `realms.json`, `spells.json`):
   Warrior, Mage and Rogue (arcane), Priest and Paladin (divine), Ranger and Druid (nature),
   Necromancer and Blackguard (necromantic), each with skills that grow
-  every 10 levels, stat adjustments, hit dice and a starting kit. Angband's experience table and
+  every 10 levels, stat adjustments, hit dice and 4.2.5's starting kit (`equip` lines: 1–3 rations
+  and torches, a weapon, a book for casters, a Word of Recall unless recall is off — worn where it
+  can be), paid for out of 600 gold (plus 50 for each unspent point). Angband's experience table and
   level-ups (hit points, skills, spell points). Spells live in Angband 4.2's books (below); you study them
   once you reach their level (`G`: mages, druids, necromancers, rogues, rangers and blackguards choose
   the spell; priests and paladins choose a book and are granted one of its prayers at random, as in
@@ -835,8 +837,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     and teleport level go below the deepest level reached), no recall (until Morgoth is dead), no
     artifacts, stack objects on the floor (off: a square holds one object, or one stack of like
     ones, so what you drop or what falls rolls to the nearest free square), lose artifacts (otherwise an artifact left behind that you never found can turn up
-    again), no selling, the starting kit (without it only one food and one light, the rest as
-    gold), know all runes, know all flavours, and **monsters learn from their mistakes** (on by
+    again), no selling, the starting kit (without it only one food and one light, and the gold the rest
+    would have cost), know all runes, know all flavours, and **monsters learn from their mistakes** (on by
     default; `Game/GameSession.MonsterLearning.cs`, 4.2's `update_smart_learn` and
     `remove_bad_spells`): a monster that sees you resist an element or shrug off a status attack
     remembers it (stupid monsters never do, ordinary ones half the time), and later leaves out the

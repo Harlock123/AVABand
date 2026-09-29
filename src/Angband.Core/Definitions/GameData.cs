@@ -113,8 +113,13 @@ public sealed class GameData
 public sealed class StartItemDef
 {
     public required string Kind { get; init; }
+    /// <summary>How many (Angband equip min); a number up to <see cref="CountMax"/> when that is more.</summary>
     public int Count { get; init; } = 1;
+    /// <summary>The most (Angband equip max); none means exactly <see cref="Count"/>.</summary>
+    public int? CountMax { get; init; }
     public bool Equip { get; init; }
+    /// <summary>A birth option that leaves it out (Angband eopts: the Word of Recall with birth_no_recall).</summary>
+    public string? UnlessOption { get; init; }
 }
 
 public sealed class GameConstants
@@ -133,8 +138,15 @@ public sealed class GameConstants
     public int PackSize { get; init; } = 23;
     /// <summary>Missiles per pack slot the quiver uses (Angband: 40).</summary>
     public int QuiverSlotSize { get; init; } = 40;
-    /// <summary>Quiver stacks.</summary>
-    public int QuiverSize { get; init; } = 8;
+    /// <summary>Quiver stacks (Angband carry-cap:quiver-size).</summary>
+    public int QuiverSize { get; init; } = 10;
+    /// <summary>One chance in this many, each world turn, of a new monster somewhere out of sight (Angband mon-gen:chance).</summary>
+    public int AllocMonsterChance { get; init; } = 500;
+    /// <summary>A new lantern's fuel (Angband obj-make:default-lamp); it holds up to its kind's (fuel-lamp).</summary>
+    public int DefaultLampFuel { get; init; } = 7500;
+    /// <summary>Monsters in the town by day and by night (Angband mon-gen:town-day, town-night).</summary>
+    public int TownMonstersDay { get; init; } = 4;
+    public int TownMonstersNight { get; init; } = 8;
     /// <summary>Most breeders allowed on a level (Angband repro_monster_max).</summary>
     public int MaxBreeders { get; init; } = 100;
     /// <summary>Breeding chance scale (Angband repro_monster_rate).</summary>
@@ -145,8 +157,8 @@ public sealed class GameConstants
     public int RaceHitDie { get; init; } = 10;
     /// <summary>Point-buy budget (Angband: 20).</summary>
     public int BirthPoints { get; init; } = 20;
-    /// <summary>Starting gold, plus 50 per unspent point-buy point.</summary>
-    public int StartGold { get; init; } = 200;
+    /// <summary>Starting gold, plus 50 per unspent point-buy point, less the starting kit's worth (Angband player:start-gold).</summary>
+    public int StartGold { get; init; } = 600;
     /// <summary>
     /// Angband's birth_no_selling (on by default): stores give nothing for items, and gold found in
     /// the dungeon is multiplied to compensate. Turn off for classic selling.

@@ -119,8 +119,8 @@ public class ClassTests
     public void Necromancers_SeeWithoutLight_AndFumbleOnLitGround()
     {
         var game = Hero("necromancer", 1, "#########", "#.......#", "#...@...#", "#.......#", "#,,,,,,,#", "#########");
+        // 4.2.5's necromancer starts without a light at all.
         Assert.Null(game.Player.Inventory.Equipped.FirstOrDefault(i => i.Base.Slot == EquipSlot.Light));
-        Assert.Contains(game.Player.Inventory.Pack, i => i.Kind.Id == "wooden_torch");
         Assert.Equal(1, game.Player.Resists.GetValueOrDefault("dark"));
 
         var rat = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(1, 0), awake: false);

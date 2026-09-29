@@ -37,20 +37,28 @@
     },
     "startingKit": [
       {
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
+        "kind": "potion_of_berserk_strength"
+      },
+      {
         "kind": "dagger",
         "equip": true
       },
       {
-        "kind": "sling",
-        "equip": true
-      },
-      {
-        "kind": "iron_shot",
-        "count": 40
-      },
-      {
         "kind": "soft_leather_armour",
         "equip": true
+      },
+      {
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       }
     ],
     "description": "A master of weapons and armour, relying on strength rather than magic.",
@@ -96,15 +104,24 @@
     },
     "startingKit": [
       {
-        "kind": "dagger",
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
         "equip": true
+      },
+      {
+        "kind": "rapier",
+        "equip": true
+      },
+      {
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
         "kind": "first_spells"
-      },
-      {
-        "kind": "soft_leather_armour",
-        "equip": true
       }
     ],
     "description": "A student of arcane magic: frail, but able to blast foes from afar.",
@@ -154,15 +171,28 @@
     },
     "startingKit": [
       {
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
         "kind": "mace",
         "equip": true
       },
       {
-        "kind": "novices_handbook"
+        "kind": "cure_serious_wounds",
+        "count": 2
       },
       {
-        "kind": "soft_leather_armour",
-        "equip": true
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
+      },
+      {
+        "kind": "novices_handbook"
       }
     ],
     "description": "A servant of the divine, gifted with healing and holy light.",
@@ -209,7 +239,16 @@
     },
     "startingKit": [
       {
-        "kind": "dagger",
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
+        "kind": "main_gauche",
         "equip": true
       },
       {
@@ -218,14 +257,15 @@
       },
       {
         "kind": "arrow",
-        "count": 40
+        "count": 15,
+        "countMax": 20
+      },
+      {
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
         "kind": "lesser_charms"
-      },
-      {
-        "kind": "soft_leather_armour",
-        "equip": true
       }
     ],
     "description": "A hunter and archer of the wilds, with a little nature magic.",
@@ -272,19 +312,24 @@
     },
     "startingKit": [
       {
-        "kind": "sling",
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "whip",
         "equip": true
       },
       {
-        "kind": "iron_shot",
-        "count": 20
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
         "kind": "lesser_charms"
-      },
-      {
-        "kind": "soft_leather_armour",
-        "equip": true
       }
     ],
     "description": "A keeper of the natural world who calls on storms, stone and living things.",
@@ -337,20 +382,25 @@
     ],
     "startingKit": [
       {
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
         "kind": "dagger",
         "equip": true
       },
       {
-        "kind": "sling",
-        "equip": true
-      },
-      {
-        "kind": "iron_shot",
-        "count": 20
-      },
-      {
         "kind": "soft_leather_armour",
         "equip": true
+      },
+      {
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
         "kind": "first_spells"
@@ -402,15 +452,24 @@
     ],
     "startingKit": [
       {
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
         "kind": "main_gauche",
         "equip": true
       },
       {
-        "kind": "soft_leather_armour",
-        "equip": true
+        "kind": "scroll_of_protection_from_evil"
       },
       {
-        "kind": "scroll_of_protection_from_evil"
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
         "kind": "novices_handbook"
@@ -462,12 +521,16 @@
     ],
     "startingKit": [
       {
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
         "kind": "main_gauche",
         "equip": true
       },
       {
-        "kind": "soft_leather_armour",
-        "equip": true
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
         "kind": "into_the_shadows"
@@ -519,6 +582,18 @@
     ],
     "startingKit": [
       {
+        "kind": "into_the_shadows"
+      },
+      {
+        "kind": "ration_of_food",
+        "countMax": 3
+      },
+      {
+        "kind": "wooden_torch",
+        "countMax": 3,
+        "equip": true
+      },
+      {
         "kind": "tulwar",
         "equip": true
       },
@@ -527,11 +602,11 @@
         "equip": true
       },
       {
-        "kind": "soft_leather_armour",
-        "equip": true
+        "kind": "scroll_of_word_of_recall",
+        "unlessOption": "birth_no_recall"
       },
       {
-        "kind": "into_the_shadows"
+        "kind": "cure_light_wounds"
       }
     ],
     "description": "A brutal warrior fed by bloodshed: mana comes from fighting rather than rest, and fuels rituals of fury and fear. Heals slowly."

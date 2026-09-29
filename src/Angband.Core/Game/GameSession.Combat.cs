@@ -100,7 +100,7 @@ public sealed partial class GameSession
         {
             damage = dice.Roll(Rng) * multiplier;
             damage = CombatMath.CriticalMelee(Rng, weapon?.Weight ?? 0, weaponToHit + Player.EffectiveToHit,
-                Player.SkillMelee, damage, out grade);
+                Player.SkillMelee, damage, out grade, Player.Level, IsDebuffed(monster));
             damage += weaponToDam + Player.EffectiveToDam;
         }
         damage = Math.Max(0, damage);
