@@ -27,7 +27,7 @@ public sealed partial class MainWindowViewModel
 
     public string TitleFooter =>
         $"AVABand {typeof(MainWindowViewModel).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? ""}"
-        + "  ·  a clone of Angband 4.2.5  ·  music \"The Gates of Angband\"";
+        + "  ·  a clone of Angband 4.2.5";
 
     private static Bitmap? LoadBitmap(string? path)
     {

@@ -84,7 +84,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 ## Implemented so far
 - **Title screen** (`ViewModels/MainWindowViewModel.Title.cs`): the game opens on Thangorodrim —
   the three smoking peaks over the gates of Angband (`art/title.jpg`, drawn by `tools/title_art.py`)
-  under the AVABand logo (`art/title-logo.png`, Cinzel Decorative) — to its own music, "The Gates of
+  under the AVABand logo (`art/title-logo.png`, Cinzel Decorative) — to its own music, "The Pits of
   Angband" (`title_theme.ogg`, the music packs' `title` mood; composed and synthesised by
   `tools/title_theme.py`: an organ drone, tolling bells and wind, strings, a harp, a horn, a
   wordless choir and timpani in D minor, 1:51, starting and ending on the drone so it loops). The

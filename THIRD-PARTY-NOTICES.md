@@ -42,7 +42,7 @@ and some RLTiles flavours recoloured) by AVABand's tools.
 | Pack | Author | Licence | Source |
 |---|---|---|---|
 | Angband sounds | Dubtrain | Creative Commons Attribution 4.0 (https://creativecommons.org/licenses/by/4.0/) | https://github.com/angband/angband/tree/master/lib/sounds |
-| Title music: "The Gates of Angband" (`title_theme.ogg`, in the dungeon music pack) | composed and synthesised for AVABand by `tools/title_theme.py` | CC0 1.0 | this repository |
+| Title music: "The Pits of Angband" (`title_theme.ogg`, in the dungeon music pack) | composed and synthesised for AVABand by `tools/title_theme.py` | CC0 1.0 | this repository |
 | Dungeon music | RandomMind, JaggedStone, yd, Paul Wortmann, HaelDB, TinyWorlds, Spring Spring, Eponasoft, The Oracle, Juhani Junkala, cynicmusic, AR (via OpenGameArt.org) | CC0 1.0 | https://opengameart.org |
 
 See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compose and render AVABand's title music, "The Gates of Angband" (CC0, made for AVABand).
+"""Compose and render AVABand's title music, "The Pits of Angband" (CC0, made for AVABand).
 
 Everything is synthesised here - no samples: an organ drone, tolling bells, wind, a string
 ensemble, a plucked harp, a horn, a wordless choir and timpani, in a synthetic hall. D minor,

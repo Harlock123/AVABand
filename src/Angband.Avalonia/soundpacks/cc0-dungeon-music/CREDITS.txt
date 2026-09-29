@@ -45,6 +45,6 @@ forest_ambience.mp3           "Forest Ambience" by TinyWorlds (night)
 
 Title screen:
 
-title_theme.ogg               "The Gates of Angband", composed and synthesised for AVABand
+title_theme.ogg               "The Pits of Angband", composed and synthesised for AVABand
                               (tools/title_theme.py: drone, bells, strings, harp, horn, choir,
                               timpani, all made in code - no samples). CC0.
