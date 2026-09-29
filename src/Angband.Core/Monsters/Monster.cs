@@ -83,9 +83,16 @@ public sealed class Monster : IActor
     public bool IsDetected { get; set; }
 
     /// <summary>Where it is ambling to while it has no idea where the player is.</summary>
-    public Loc? WanderTarget { get; set; }
-    /// <summary>Failed steps toward <see cref="WanderTarget"/>; a new target is picked when stuck.</summary>
-    public int WanderStuck { get; set; }
+    /// <summary>Where it is heading (Angband mon->target.grid): the player, a noise, a scent, safety or cover.</summary>
+    public Loc MoveTarget { get; set; }
+    /// <summary>Following the player by sight, sound or scent (Angband MFLAG_TRACKING).</summary>
+    public bool Tracking { get; set; }
+    /// <summary>Knows the player is about, and may rouse its group (Angband MFLAG_AWARE).</summary>
+    public bool Aware { get; set; }
+    /// <summary>Took a turn last time round (Angband MFLAG_ACTIVE: it could sense the player, or was hurt).</summary>
+    public bool Active { get; set; }
+    /// <summary>The group it was placed with (the leader's id; its own for a monster alone).</summary>
+    public int GroupId { get; set; }
 
     public override string ToString() => $"{Race.Id}#{Id}@{Position}";
 }

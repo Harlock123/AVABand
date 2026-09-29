@@ -306,6 +306,8 @@ public sealed partial class GameSession
         if (ended) RecalculateBonuses();
 
         MonsterUpkeep(gameTurn);
+        // Angband process_world: noise and scent, once a turn (not while resting).
+        if (!Player.IsResting) UpdateNoiseAndScent();
     }
 
     /// <summary>Angband player_regen_hp: a fixed-point trickle, doubled while resting.</summary>
@@ -372,5 +374,13 @@ public sealed partial class GameSession
         }
         Player.IsResting = false;
         return rested;
+    }
+
+    /// <summary>Angband make_noise and update_scent.</summary>
+    private void UpdateNoiseAndScent()
+    {
+        var covertracks = Player.Timed.Has("covertracks");
+        Noise.Update(Level, Player.Position, covertracks ? 4 : 1);
+        Scent.Lay(Level, Player.Position, covertracks);
     }
 }

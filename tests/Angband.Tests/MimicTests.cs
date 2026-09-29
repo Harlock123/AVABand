@@ -100,15 +100,16 @@ public class MimicTests
     }
 
     [Fact]
-    public void An_adjacent_mimic_attacks_and_gives_itself_away()
+    public void An_object_mimic_lies_in_wait_even_beside_the_player()
     {
         var game = Game();
         var mimic = Hide(game, "potion_mimic", game.Player.Position + new Loc(0, 1));
         var attacked = false;
         game.Events.Subscribe<MonsterAttackEvent>(e => attacked |= e.MonsterId == mimic.Id);
+        // 4.2.5's process_monsters skips a mimicking monster until something gives it away.
         for (var i = 0; i < 10 && !attacked; i++) game.Execute(new HoldCommand());
-        Assert.True(attacked);
-        Assert.False(mimic.Camouflaged);
+        Assert.False(attacked);
+        Assert.True(mimic.Camouflaged);
     }
 
     [Fact]

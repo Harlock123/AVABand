@@ -84,13 +84,25 @@ public class MonsterRangeTests
     [Fact]
     public void Cornered_BesideThePlayer_ItFightsBack()
     {
-        // A dead end: the jackal can't get further away, so — not being afraid — it bites.
+        // A dead end, and a player too weak to scare it (get_move_find_range): the jackal bites.
+        var game = Arena.Create(9, "#####", "#@,,#", "#####");
+        TestGames.ClearMonsters(game);
+        game.Player.Level = 1;
+        game.Player.Position = new Loc(2, 1);
+        var jackal = Arena.AddMonster(game, "jackal", new Loc(3, 1));
+        Assert.True(Turns(game, jackal, 5) > 0);
+    }
+
+    [Fact]
+    public void Cornered_BesideAMuchStrongerPlayer_ItCowers()
+    {
+        // 4.2.5: a player far above its level puts it at flee range; it can't get away and doesn't bite.
         var game = Arena.Create(9, "#####", "#@,,#", "#####");
         TestGames.ClearMonsters(game);
         game.Player.Level = 40;
         game.Player.Position = new Loc(2, 1);
         var jackal = Arena.AddMonster(game, "jackal", new Loc(3, 1));
-        Assert.True(Turns(game, jackal, 5) > 0);
+        Assert.Equal(0, Turns(game, jackal, 5));
     }
 
     [Fact]

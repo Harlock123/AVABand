@@ -12,6 +12,8 @@ public enum PathFlags
     Through = 1,
     /// <summary>Stop at the first grid holding a monster (or the player).</summary>
     StopAtCreature = 2,
+    /// <summary>Pass through walls (Angband PROJECT_ROCK).</summary>
+    Rock = 4,
 }
 
 /// <summary>
@@ -104,17 +106,18 @@ public static class ProjectionPath
             var distance = ay > ax || ax > ay ? n + (k >> 1) : n + (n >> 1);
             if (distance >= range) return false;
             if ((flags & PathFlags.Through) == 0 && p == to) return false;
-            if (!level.Has(p, TerrainFlags.Project)) return false;
+            if ((flags & PathFlags.Rock) == 0 && !level.Has(p, TerrainFlags.Project)) return false;
             if ((flags & PathFlags.StopAtCreature) != 0 && occupied?.Invoke(p) == true) return false;
             return true;
         }
     }
 
     /// <summary>Whether a projection from <paramref name="from"/> reaches <paramref name="to"/> (Angband projectable).</summary>
-    public static bool Projectable(Level level, Loc from, Loc to, int range)
+    public static bool Projectable(Level level, Loc from, Loc to, int range, PathFlags flags = PathFlags.None,
+        Func<Loc, bool>? occupied = null)
     {
         if (from == to) return true;
-        var path = Compute(level, from, to, range);
+        var path = Compute(level, from, to, range, flags, occupied);
         return path.Count > 0 && path[^1] == to;
     }
 }

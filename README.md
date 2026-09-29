@@ -215,16 +215,23 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     pile of gold, potion/scroll/ring/chest mimics like a tempting potion, scroll, ring or chest (drawn with that
     object's tile, named by look, remembered on the map and found by object detection), and lurkers
     and trappers like bare floor. They lie in wait — no moving or spells — until found out: bump
-    into one ("The Potion of Healing was really a monster!"), let it strike from beside you, or hurt
-    it with anything. Monster detection doesn't see through the disguise, they can't be targeted,
+    into one ("The Potion of Healing was really a monster!"), or hurt it with anything — standing
+    beside you it still waits (4.2.5's process_monsters skips a mimicking monster). Monster detection doesn't see through the disguise, they can't be targeted,
     and a revealed lurker is still invisible without see invisible.
-  - Senses: sight via the symmetric FOV, **sound** by following the player's noise flow (hearing
-    minus stealth/3), **scent** from the trail the player leaves (races with `smell`).
-  - Behaviour: stealth-based waking; hunting; **wandering** when the player can't be sensed;
-    **fleeing** toward safety (out of view, far along the sound flow), turning to fight when
-    cornered; **pack tactics** (`GROUP_AI` waits out of sight while the player is in a corridor);
-    **breeding** (`MULTIPLY`, capped per level); opening, unlocking and bashing doors; pushing
-    past or trampling weaker monsters (`MOVE_BODY`/`KILL_BODY`).
+  - Movement is a port of 4.2.5's `mon-move.c`. Senses: sight (the monster's square is in view),
+    **sound** (the noise flow `make_noise` lays each game turn — one step louder per square, four
+    while covering tracks — against hearing minus stealth/3) and **scent** (`update_scent`'s ageing
+    5×5 trail, none while covering tracks, against the race's `smell`). A monster that can't sense
+    the player and is unhurt is **inactive** and takes no turn at all.
+  - Behaviour: stealth-based waking (`monster_reduce_sleep`); `get_move`'s preferred range (strong
+    players scare weaker monsters to flee range); advancing by sight, then sound, then scent;
+    following a **group tracker**, bodyguards keeping by their leader, **pack tactics** (`GROUP_AI`
+    hides for an ambush while the player is in a corridor, and surrounds in the open); **fleeing**
+    to safety or hiding; a frightened monster with nowhere to go **freezes** (its fear becomes
+    being held); the five-way `side_dirs` search, staggering from confusion and `RAND_25/50`;
+    **breeding** (`MULTIPLY`, capped per level); opening, unlocking and bashing doors ("You hear a
+    door burst open!"), tunnelling, pushing past or trampling weaker monsters
+    (`MOVE_BODY`/`KILL_BODY`), glyphs and decoys.
   - **Spells** (`monster_spells.json`): arrows, boulders, bolts, balls, breaths
     (damage from the caster's HP), wounds, blind/confuse/scare/slow/hold (saving throw and
     protections apply), heal, blink, teleport, teleport-to, summon (kin), shriek. Bolts need a clear

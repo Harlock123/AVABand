@@ -243,7 +243,6 @@ public sealed partial class GameSession : ITurnHandler
         Player.Energy -= energy;
         TerrainDamage();
         if (Player.IsDead) return;
-        if (!Player.Timed.Has("covertracks")) Scent.Lay(Level, Player.Position); // Angband: no scent while covering tracks
         UpdateView(); // monsters react to where the player is now
         Scheduler.Advance(this);
 
@@ -291,7 +290,6 @@ public sealed partial class GameSession : ITurnHandler
             Disturb();
             Known.TrapsNoticed = 0;
         }
-        Noise.Update(Level, Player.Position);
         foreach (var monster in Level.Monsters.All)
         {
             monster.IsVisible = MonsterVisible(monster);
@@ -549,6 +547,7 @@ public sealed partial class GameSession : ITurnHandler
             Level = generated.Level;
             Known = new KnownMap(Level.Width, Level.Height);
             Scent.Reset(Level);
+            Noise.Reset(Level);
             Player.Depth = depth;
             Player.MaxDepth = Math.Max(Player.MaxDepth, depth);
             Player.Position = generated.PlayerStart;

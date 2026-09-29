@@ -112,36 +112,4 @@ public sealed partial class GameSession
         monster.Carried.Clear();
     }
 
-    // --- Movement through walls ----------------------------------------------------------------
-
-    /// <summary>
-    /// PASS_WALL monsters drift through rock; KILL_WALL monsters bore through it. Returns null when
-    /// the flag doesn't apply (the normal rules decide), otherwise whether the monster moved.
-    /// </summary>
-    private bool? TryWallStep(Monster monster, TerrainDef feature, Geometry.Loc target)
-    {
-        if (feature.Has(TerrainFlags.Passable) || feature.Has(TerrainFlags.Permanent) || !Level.InBoundsFully(target)) return null;
-        var race = monster.Race;
-        if (race.Has(MonsterFlags.PassWall))
-        {
-            if (monster.IsVisible) LearnMonsterFlag(race, MonsterFlags.PassWall);
-            Level.Monsters.Move(monster, target);
-            monster.WanderStuck = 0;
-            return true;
-        }
-        if (race.Has(MonsterFlags.KillWall) && feature.HasAny(TerrainFlags.Rock | TerrainFlags.DoorAny))
-        {
-            ref var sq = ref Level[target];
-            sq.Feature = Data.Terrain.Ids.Floor;
-            sq.Flags &= ~SquareFlags.AnyWallMarker;
-            sq.LockPower = 0;
-            if (Level[target].Has(SquareFlags.View)) Publish(new MessageEvent("You hear a grinding noise."));
-            if (monster.IsVisible) LearnMonsterFlag(race, MonsterFlags.KillWall);
-            Level.Monsters.Move(monster, target);
-            monster.WanderStuck = 0;
-            UpdateView();
-            return true;
-        }
-        return null;
-    }
 }

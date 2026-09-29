@@ -95,6 +95,7 @@ public sealed partial class GameSession
         Level = stored.Level;
         Known = stored.Known;
         Scent.Reset(Level);
+        Noise.Reset(Level);
         RecoverMonsters(Level, GameTurn - stored.Turn);
         Player.Position = OpenSquareNear(from);
     }

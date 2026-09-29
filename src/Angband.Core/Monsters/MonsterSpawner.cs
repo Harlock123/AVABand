@@ -62,6 +62,7 @@ public sealed class MonsterSpawner(GameData data)
         if (asleep && race.Sleep > 0 && !race.Has(MonsterFlags.NoSleep))
             monster.Sleep = race.Sleep * 2 + rng.RandInt1(race.Sleep * 10);
         level.Monsters.Add(monster);
+        monster.GroupId = monster.Id;
         return monster;
     }
 
@@ -101,6 +102,7 @@ public sealed class MonsterSpawner(GameData data)
                 foreach (var guard in escorts.Where(g => g != placed[0])) guard.BodyguardOf = placed[0].Id;
             placed.AddRange(escorts);
         }
+        foreach (var m in placed) m.GroupId = placed[0].Id; // (Angband monster groups: one per placement)
         return placed;
     }
 

@@ -29,6 +29,7 @@ public class MonsterAiTests
         var game = Arena.Create();
         var kobold = Arena.AddMonster(game, "kobold", new Loc(9, 3)); // hearing 20, ~4 away
         game.Player.Stealth = 0;
+        game.Execute(new HoldCommand()); // the noise map is laid once a game turn (process_world)
         Assert.True(game.CanHear(kobold));
         game.Player.Stealth = 60; // hearing 20 - 60/3 = 0: deaf to the player
         Assert.False(game.CanHear(kobold));
@@ -82,7 +83,7 @@ public class MonsterAiTests
     }
 
     [Fact]
-    public void UnawareMonsters_Wander()
+    public void Monsters_that_cannot_sense_the_player_do_nothing()
     {
         var game = Arena.Create(3,
             "##########################",
@@ -91,22 +92,24 @@ public class MonsterAiTests
             "#,,,,,,,,,,#.............#",
             "##########################");
         game.Player.Stealth = 60;
+        // 4.2.5's monster_check_active: out of view, unheard, unsmelt and unhurt, it takes no turn.
         var lizard = Arena.AddMonster(game, "rock_lizard", new Loc(18, 2));
-        var visited = new HashSet<Loc> { lizard.Position };
+        var from = lizard.Position;
 
-        for (var i = 0; i < 40; i++)
-        {
-            Hold(game, 1);
-            visited.Add(lizard.Position);
-        }
+        Hold(game, 40);
 
-        Assert.True(visited.Count >= 4, $"only visited {visited.Count} squares");
+        Assert.Equal(from, lizard.Position);
+        Assert.False(lizard.Active);
+
+        lizard.Hp--; // a hurt monster is always active
+        Hold(game, 40);
+        Assert.NotEqual(from, lizard.Position);
     }
 
     // --- Fear -----------------------------------------------------------------------------------
 
     [Fact]
-    public void CorneredMonsters_TurnToFight()
+    public void Cornered_frightened_monsters_freeze()
     {
         var game = Arena.Create(1,
             "#######",
@@ -120,8 +123,10 @@ public class MonsterAiTests
 
         Hold(game, 2);
 
+        // 4.2.5's monster_turn: with nowhere to run, its fear turns to paralysis.
         Assert.Equal(0, kobold.Fear);
-        Assert.Contains("The kobold turns to fight!", messages);
+        Assert.True(kobold.Held > 0);
+        Assert.Contains("The kobold is held.", messages);
     }
 
     // --- Pack tactics --------------------------------------------------------------------------
@@ -174,7 +179,7 @@ public class MonsterAiTests
         var game = Arena.Create(5, BigRoom);
         game.Player.Hp = game.Player.MaxHp = 100_000;
         game.Player.Stealth = 60;
-        Arena.AddMonster(game, "white_worm_mass", new Loc(20, 3));
+        Arena.AddMonster(game, "white_worm_mass", new Loc(10, 3)); // in view: silent players go unheard
 
         Hold(game, 150);
 
@@ -190,7 +195,7 @@ public class MonsterAiTests
         var game = Arena.CreateWith(data, 6, BigRoom);
         game.Player.Hp = game.Player.MaxHp = 100_000;
         game.Player.Stealth = 60;
-        Arena.AddMonster(game, "white_worm_mass", new Loc(20, 3));
+        Arena.AddMonster(game, "white_worm_mass", new Loc(10, 3)); // in view: silent players go unheard
 
         Hold(game, 300);
 

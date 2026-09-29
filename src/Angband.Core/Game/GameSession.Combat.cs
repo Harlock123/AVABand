@@ -388,6 +388,7 @@ public sealed partial class GameSession
 
     private void WakeMonster(Monster monster)
     {
+        monster.Aware = true; // (Angband monster_wake with an aware chance of 100)
         if (monster.Sleep <= 0) return;
         monster.Sleep = 0;
         if (monster.IsVisible) Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} wakes up."));

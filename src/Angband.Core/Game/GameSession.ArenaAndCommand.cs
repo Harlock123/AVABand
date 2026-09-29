@@ -346,6 +346,7 @@ public sealed partial class GameSession
         Level = back.Level;
         Known = back.Known;
         Scent.Reset(Level);
+        Noise.Reset(Level);
         Player.Position = back.Position;
         if (Level.Monsters.At(Player.Position) is { } squatter) TeleportMonster(squatter, 10);
         ClearTarget();

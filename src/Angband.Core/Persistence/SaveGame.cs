@@ -212,7 +212,8 @@ public static class SaveGame
             Decoy = level.Decoy is { } decoy ? decoy.Y * level.Width + decoy.X : null,
             FeelSquares = level.FeelSquares.Select(p => p.Y * level.Width + p.X).Order().ToList(),
             Features = new ushort[squares.Length], Flags = new ushort[squares.Length], Known = new int[squares.Length],
-            ScentNow = withScent ? g.Scent.Now : 0, Scent = withScent ? g.Scent.Raw.ToArray() : [],
+            ScentNow = withScent ? g.Scent.Now : 0, Scent = withScent ? g.Scent.Raw.ToArray() : [], ScentAges = withScent,
+            Noise = withScent ? g.Noise.Raw.ToArray() : [],
             NextMonsterId = level.Monsters.NextId,
             Population = [level.Population.Monsters, level.Population.RoomObjects, level.Population.AnywhereObjects, level.Population.Gold],
         };
@@ -241,7 +242,7 @@ public static class SaveGame
                 Fast = m.Fast, Slow = m.Slow, Camouflaged = m.Camouflaged, BodyguardOf = m.BodyguardOf, OriginalRace = m.OriginalRace?.Id,
                 KnownPlayer = m.KnownPlayer.Count == 0 ? null : new Dictionary<string, int>(m.KnownPlayer),
                 MimicItem = m.MimicItem is null ? null : ItemToSave(m.MimicItem), Carried = m.Carried.Select(ItemToSave).ToList(), LootRolled = m.LootRolled,
-                WanderTarget = m.WanderTarget is { } w ? [w.X, w.Y] : null, WanderStuck = m.WanderStuck,
+                WanderTarget = [m.MoveTarget.X, m.MoveTarget.Y], Tracking = m.Tracking, Aware = m.Aware, Active = m.Active, GroupId = m.GroupId,
             });
         }
 
@@ -419,9 +420,10 @@ public static class SaveGame
                 var m = new Monster(ms.Id, race, new Loc(ms.X, ms.Y), ms.MaxHp, ms.Speed)
                 {
                     Hp = ms.Hp, Energy = ms.Energy, Sleep = ms.Sleep, Stun = ms.Stun, Disenchanted = ms.Disenchanted, Confused = ms.Confused, Fear = ms.Fear,
-                    Held = ms.Held, WanderStuck = ms.WanderStuck, Fast = ms.Fast, Slow = ms.Slow,
+                    Held = ms.Held, Fast = ms.Fast, Slow = ms.Slow, Tracking = ms.Tracking, Aware = ms.Aware, Active = ms.Active,
+                    GroupId = ms.GroupId == 0 ? ms.Id : ms.GroupId,
                     Camouflaged = ms.Camouflaged, BodyguardOf = ms.BodyguardOf, KnownPlayer = ms.KnownPlayer is { } learned ? new Dictionary<string, int>(learned) : [], OriginalRace = ms.OriginalRace is null ? null : data.Monster(ms.OriginalRace), MimicItem = ms.MimicItem is null ? null : ToItem(ms.MimicItem),
-                    WanderTarget = ms.WanderTarget is [var wx, var wy] ? new Loc(wx, wy) : null,
+                    MoveTarget = ms.WanderTarget is [var wx, var wy] ? new Loc(wx, wy) : default,
                 };
                 m.Carried.AddRange(ms.Carried.Select(ToItem).OfType<Item>());
                 m.LootRolled = ms.LootRolled;
@@ -438,8 +440,10 @@ public static class SaveGame
         var (level, known) = ReadLevel(ls);
         var squares = level.Squares;
         g.RestoreLevel(level, known);
-        if (ls.Scent.Length == squares.Length) g.Scent.Restore(ls.Width, ls.Scent, ls.ScentNow);
+        if (ls.ScentAges && ls.Scent.Length == squares.Length) g.Scent.Restore(ls.Width, ls.Scent, ls.ScentNow);
         else g.Scent.Reset(level);
+        if (ls.Noise.Length == squares.Length) g.Noise.Restore(ls.Width, ls.Noise);
+        else g.Noise.Reset(level);
         if (f.ArenaReturn is { } outside)
         {
             var (backLevel, backKnown) = ReadLevel(outside);

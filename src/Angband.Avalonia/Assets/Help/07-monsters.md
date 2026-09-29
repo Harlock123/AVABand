@@ -12,7 +12,11 @@ what it resists. You learn more each time you meet or kill one. `~` keeps all of
 
 ## How monsters behave
 
-- They wake when you are noisy (stealth helps) and follow your scent and sound.
+- They wake when you are noisy (stealth helps) and follow your scent and sound. A monster that
+  can't see, hear or smell you, and isn't hurt, does nothing at all until it can.
+- Covering your tracks leaves no scent and makes your noise carry a quarter as far.
+- A frightened monster with nowhere left to run freezes in place for a while.
+- A mimic disguised as an item waits until you find it out, even right beside you.
 - Some cast spells or breathe; breaths do damage from the monster's current hit points, so a
   wounded dragon breathes weaker.
 - Summoners call more the deeper you are and the stronger they are, around themselves (up to

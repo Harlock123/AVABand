@@ -225,8 +225,13 @@ public sealed class MonsterSave
     public ItemSave? MimicItem { get; set; }
     public List<ItemSave> Carried { get; set; } = [];
     public bool LootRolled { get; set; }
+    /// <summary>The move target (Monster.MoveTarget; older saves kept a wander target here).</summary>
     public int[]? WanderTarget { get; set; }
     public int WanderStuck { get; set; }
+    public bool Tracking { get; set; }
+    public bool Aware { get; set; }
+    public bool Active { get; set; }
+    public int GroupId { get; set; }
 }
 
 public sealed class ObjectPileSave
@@ -289,6 +294,10 @@ public sealed class LevelSave
     public Dictionary<int, ItemSave> RememberedObjects { get; set; } = [];
     public int[] Scent { get; set; } = [];
     public int ScentNow { get; set; }
+    /// <summary>Whether <see cref="Scent"/> holds ages (4.2.5's update_scent); older saves held stamps.</summary>
+    public bool ScentAges { get; set; }
+    /// <summary>The noise map (Angband cave->noise); empty in older saves.</summary>
+    public int[] Noise { get; set; } = [];
     public int NextMonsterId { get; set; }
     public List<MonsterSave> Monsters { get; set; } = [];
     public List<ObjectPileSave> Objects { get; set; } = [];
