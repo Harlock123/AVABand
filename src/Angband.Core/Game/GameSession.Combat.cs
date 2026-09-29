@@ -314,6 +314,7 @@ public sealed partial class GameSession
 
         if (monster.Hp < 0)
         {
+            if (QuestUndying(monster)) return false; // (Hathol, while his altar lies profaned)
             KillMonster(monster, deathNote);
             return true;
         }
@@ -377,6 +378,7 @@ public sealed partial class GameSession
         }
         QuestKill(monster);
         Level.Monsters.Remove(monster);
+        QuestMonsterKilled(monster);
         DropCarried(monster);
         var (items, gold) = DropMonsterLoot(monster);
         NoteKill(monster, items, gold);

@@ -10,7 +10,7 @@ public class TemplateTests
     public void All_of_4_2_5s_vaults_and_room_templates()
     {
         var data = TestData.Game;
-        Assert.Equal(162, data.Vaults.Count);
+        Assert.Equal(162, data.Vaults.Count(v => v.Type != "AVABand quest")); // (AVABand's quest rooms aside)
         Assert.Equal(500, data.RoomTemplates.Count);
         Assert.Equal(66, data.Vaults.Count(v => v.Type == "Interesting room"));
         Assert.All(data.Vaults, v => Assert.All(v.Rows, r => Assert.Equal(v.Width, r.Length)));

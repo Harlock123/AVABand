@@ -274,6 +274,11 @@ public sealed partial class Cave
             var t = v.Rows[y][x];
             if (t == ' ') continue;
             var g = SymmetryTransform(new Loc(x, y), y0, x0, v.Height, v.Width, tr.Rotate, tr.Reflect);
+            if (t is '(' or ')' or '[')
+            {
+                c.QuestSpots.Add((t, g));
+                continue;
+            }
             if (char.IsAsciiLetter(t) && t != 'x' && t != 'X')
             {
                 if (!racialSymbols.Contains(t) && racialSymbols.Count < 30) racialSymbols.Add(t);

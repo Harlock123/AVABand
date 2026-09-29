@@ -1,7 +1,7 @@
 {
   "width": 66,
   "height": 22,
-  "lotColumns": 4,
+  "lotColumns": 5,
   "lotRows": 2,
   "rubble": "1d4",
   "shops": [
@@ -12,6 +12,7 @@
     { "id": "alchemist", "name": "Alchemy shop", "terrain": "shop_alchemist" },
     { "id": "magic", "name": "Magic shop", "terrain": "shop_magic" },
     { "id": "black_market", "name": "Black market", "terrain": "shop_black_market" },
-    { "id": "home", "name": "Home", "terrain": "shop_home", "isHome": true }
+    { "id": "home", "name": "Home", "terrain": "shop_home", "isHome": true },
+    { "id": "inn", "name": "Prancing Pony", "terrain": "shop_inn" }
   ]
 }

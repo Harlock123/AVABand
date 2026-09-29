@@ -55,6 +55,16 @@ public static class DataLoader
     public const string SpellsFile = "spells.json";
     public const string RacesFile = "races.json";
     public const string StoresFile = "stores.json";
+    /// <summary>
+    /// AVABand's own additions, each read beside the Angband file it extends and merged into the same
+    /// registry — kept apart so the drift check (which reads only Angband's file names) leaves them be.
+    /// </summary>
+    public const string AvaTerrainFile = "ava_terrain.json";
+    public const string AvaMonstersFile = "ava_monsters.json";
+    public const string AvaObjectBasesFile = "ava_object_bases.json";
+    public const string AvaObjectsFile = "ava_objects.json";
+    public const string AvaVaultsFile = "ava_vaults.json";
+    public const string AvaQuestsFile = "ava_quests.json";
 
     private static readonly JsonSerializerOptions Options = new()
     {
@@ -112,6 +122,7 @@ public static class DataLoader
         var flavors = new Merged<FlavorGroupDef>(f => f.Id);
         var chestTraps = new Merged<ChestTrapDef>(t => t.Id);
         var quests = new Merged<QuestDef>(q => q.Id);
+        var avaQuests = new Merged<AvaQuestDef>(q => q.Id);
         var histories = new Merged<HistoryChartDef>(h => h.Chart.ToString(System.Globalization.CultureInfo.InvariantCulture));
         var shapes = new Merged<ShapeDef>(s => s.Id);
         var monsterBases = new Merged<MonsterBaseDef>(b => b.Id);
@@ -130,6 +141,7 @@ public static class DataLoader
         foreach (var dir in directories)
         {
             terrain.AddRange(Read<List<TerrainJson>>(dir, TerrainFile, errors));
+            terrain.AddRange(Read<List<TerrainJson>>(dir, AvaTerrainFile, errors));
             traps.AddRange(Read<List<TrapJson>>(dir, TrapsFile, errors));
             profiles.AddRange(Read<List<DungeonProfileDef>>(dir, ProfilesFile, errors));
             elements.AddRange(Read<List<ElementDef>>(dir, ElementsFile, errors));
@@ -137,6 +149,7 @@ public static class DataLoader
             blowMethods.AddRange(Read<List<BlowMethodDef>>(dir, BlowMethodsFile, errors));
             blowEffects.AddRange(Read<List<BlowEffectDef>>(dir, BlowEffectsFile, errors));
             monsters.AddRange(Read<List<MonsterJson>>(dir, MonstersFile, errors));
+            monsters.AddRange(Read<List<MonsterJson>>(dir, AvaMonstersFile, errors));
             monsterSpells.AddRange(Read<List<MonsterSpellDef>>(dir, MonsterSpellsFile, errors));
             realms.AddRange(Read<List<RealmDef>>(dir, RealmsFile, errors));
             classes.AddRange(Read<List<ClassDef>>(dir, ClassesFile, errors));
@@ -144,7 +157,9 @@ public static class DataLoader
             races.AddRange(Read<List<RaceDef>>(dir, RacesFile, errors));
             stores.AddRange(Read<List<StoreDef>>(dir, StoresFile, errors));
             objectBases.AddRange(Read<List<ObjectBaseDef>>(dir, ObjectBasesFile, errors));
+            objectBases.AddRange(Read<List<ObjectBaseDef>>(dir, AvaObjectBasesFile, errors));
             objects.AddRange(Read<List<ObjectKindDef>>(dir, ObjectsFile, errors));
+            objects.AddRange(Read<List<ObjectKindDef>>(dir, AvaObjectsFile, errors));
             egos.AddRange(Read<List<EgoItemDef>>(dir, EgosFile, errors));
             artifacts.AddRange(Read<List<ArtifactDef>>(dir, ArtifactsFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, CursesFile, errors));
@@ -152,6 +167,7 @@ public static class DataLoader
             flavors.AddRange(Read<List<FlavorGroupDef>>(dir, FlavorsFile, errors));
             chestTraps.AddRange(Read<List<ChestTrapDef>>(dir, ChestTrapsFile, errors));
             quests.AddRange(Read<List<QuestDef>>(dir, QuestsFile, errors));
+            avaQuests.AddRange(Read<List<AvaQuestDef>>(dir, AvaQuestsFile, errors));
             histories.AddRange(Read<List<HistoryChartDef>>(dir, HistoriesFile, errors));
             shapes.AddRange(Read<List<ShapeDef>>(dir, ShapesFile, errors));
             monsterBases.AddRange(Read<List<MonsterBaseDef>>(dir, MonsterBasesFile, errors));
@@ -170,6 +186,7 @@ public static class DataLoader
 
             var templateDir = Path.Combine(dir, TemplatesFolder);
             vaults.AddRange(Read<List<VaultDef>>(templateDir, VaultsFile, errors));
+            vaults.AddRange(Read<List<VaultDef>>(templateDir, AvaVaultsFile, errors));
             roomTemplates.AddRange(Read<List<RoomTemplateDef>>(templateDir, RoomTemplatesFile, errors));
             pits.AddRange(Read<List<PitProfileDef>>(dir, PitsFile, errors));
         }
@@ -282,6 +299,7 @@ public static class DataLoader
             Flavors = flavors.Items,
             ChestTraps = chestTraps.Items,
             Quests = quests.Items.OrderBy(q => q.Level).ToList(),
+            AvaQuests = avaQuests.Items,
             Histories = histories.Items,
             Pain = pain.Items,
             ObjectProperties = objectProperties.Items,
@@ -381,7 +399,8 @@ public static class DataLoader
                 errors.Add($"profile '{p.Id}' has unknown room '{r.Name}'.");
         foreach (var name in new[] { "town", "classic" }.Where(n => profiles.All(p => p.Name != n)))
             errors.Add($"{ProfilesFile}: the '{name}' profile is missing.");
-        const string vaultSymbols = " %#@*:`/;&+^<>1234567890~$]|=\"!?_-,.";
+        // (AVABand's quest rooms add ( for the quest's feature, ) its monster and [ its item.)
+        const string vaultSymbols = " %#@*:`/;&+^<>1234567890~$]|=\"!?_-,.()[";
         foreach (var v in vaults)
         {
             if (v.Rows.Count == 0 || v.Rows.Any(r => r.Length != v.Width)) errors.Add($"vault '{v.Id}' is not rectangular.");

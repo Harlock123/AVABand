@@ -120,6 +120,9 @@ public sealed record RunCommand(Direction Direction) : GameCommand;
 /// <summary>Enter the store whose entrance the player is standing on (Angband '_').</summary>
 public sealed record EnterStoreCommand : GameCommand;
 
+/// <summary>An answer to the last quest prompt (<see cref="QuestPromptEvent"/>). Takes no time.</summary>
+public sealed record QuestChoiceCommand(string Choice) : GameCommand;
+
 /// <summary>Buy from the current store (at home: take back). Takes no game time.</summary>
 public sealed record BuyCommand(Items.Item Item, int Count = 1) : GameCommand;
 

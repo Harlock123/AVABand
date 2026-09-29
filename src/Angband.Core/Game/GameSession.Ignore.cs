@@ -71,6 +71,11 @@ public sealed partial class GameSession
 
     private int IgnoreItem(Item item, IgnoreChoice choice)
     {
+        if (QuestItemRefusal(item) is { } refusal)
+        {
+            Publish(new MessageEvent(refusal));
+            return 0;
+        }
         var type = Ignoring.TypeOf(item.Kind);
         switch (choice)
         {

@@ -1,0 +1,4 @@
+[
+  {"id": "quest", "name": "Quest item~", "glyph": "*", "color": "Yellow", "breakChance": 0, "flags": ["EASY_KNOW"]},
+  {"id": "relic", "name": "Relic~", "glyph": "\"", "color": "Violet", "slot": "amulet", "breakChance": 0, "flags": ["EASY_KNOW"]}
+]

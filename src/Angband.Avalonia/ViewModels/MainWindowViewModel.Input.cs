@@ -327,7 +327,11 @@ public sealed partial class MainWindowViewModel
 
     partial void OnIsPromptingChanged(bool value)
     {
-        if (!value) return;
+        if (!value)
+        {
+            PromptText = "";
+            return;
+        }
         PromptSelectedIndex = 0;
         AnnouncePrompt();
     }

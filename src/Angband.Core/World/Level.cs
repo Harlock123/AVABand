@@ -51,6 +51,12 @@ public sealed class Level
 
     /// <summary>The vaults built into the level at generation (for Angband's cheat_room; not saved).</summary>
     public List<string> Vaults { get; } = [];
+
+    /// <summary>
+    /// Where an AVABand quest room put its quest symbols — ( its feature, ) its monster, [ its item —
+    /// for the quest to furnish once the level is made (not saved: used straight away).
+    /// </summary>
+    public List<(char Symbol, Geometry.Loc Loc)> QuestSpots { get; } = [];
     /// <summary>What vaults, pits and chambers add to the monster rating (Angband add_to_monster_rating).</summary>
     public long MonsterRatingBonus { get; set; }
     /// <summary>Seed the level was generated from.</summary>

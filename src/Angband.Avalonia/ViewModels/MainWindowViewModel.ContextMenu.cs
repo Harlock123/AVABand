@@ -45,7 +45,10 @@ public sealed partial class MainWindowViewModel
         else OpenContextMenu(_game.Player.Position);
     }
 
-    private void ShowMenu(string title, List<(string Label, Action Act)> entries)
+    /// <summary>A paragraph under the menu's title (a quest's words), or empty.</summary>
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private string _promptText = "";
+
+    private void ShowMenu(string title, List<(string Label, Action Act)> entries, string text = "")
     {
         PromptRows.Clear();
         SpellPromptRows.Clear();
@@ -53,6 +56,7 @@ public sealed partial class MainWindowViewModel
         _menuActions = [.. entries.Select(e => e.Act)];
         for (var i = 0; i < entries.Count; i++) ChoiceRows.Add(new ChoiceRow(((char)('a' + i)).ToString(), entries[i].Label));
         PromptTitle = title.Length > 0 ? title : "Choose:";
+        PromptText = text;
         PromptSelectedIndex = 0;
         IsPrompting = true;
     }

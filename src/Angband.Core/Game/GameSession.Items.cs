@@ -297,6 +297,7 @@ public sealed partial class GameSession
             NoticeKnacks(stack);
             Publish(new MessageEvent($"You have {Describe(stack)}."));
             Publish(new ItemPickedUpEvent(item.Kind.Id, item.Number));
+            QuestPickedUp(stack);
             picked = true;
         }
         if (!picked) return 0;
@@ -356,6 +357,11 @@ public sealed partial class GameSession
     private int Drop(Item item, int count)
     {
         if (!Player.Inventory.Contains(item)) return 0;
+        if (QuestItemRefusal(item) is { } refusal)
+        {
+            Publish(new MessageEvent(refusal));
+            return 0;
+        }
         var dropped = Player.Inventory.Remove(item, Math.Clamp(count, 1, item.Number), () => Objects.NextSerial++);
         DropUnderfoot(dropped);
         Publish(new MessageEvent($"You drop {Describe(dropped)}."));
@@ -430,6 +436,7 @@ public sealed partial class GameSession
     /// <summary>Quaff, read or eat (Angband use_aux). Flavoured kinds become known when their effect is noticed.</summary>
     private int Use(Item item, Loc? target = null, Direction? direction = null)
     {
+        if (item.IsQuestItem) return UseQuestItem(item);
         var onFloor = Level.Objects.At(Player.Position).Contains(item);
         if (IsDevice(item) && !string.IsNullOrEmpty(item.Kind.Effect))
         {
@@ -502,6 +509,11 @@ public sealed partial class GameSession
     {
         var onFloor = Level.Objects.At(Player.Position).Contains(item);
         if (!onFloor && !Player.Inventory.Contains(item)) return 0;
+        if (QuestItemRefusal(item) is { } refusal)
+        {
+            Publish(new MessageEvent(refusal));
+            return 0;
+        }
         var wielded = Player.Inventory.Equipped.Contains(item);
         // Angband obj_can_throw: of worn things, only a melee weapon (it comes off to be thrown).
         if (wielded && (!(item.Base.IsWeapon && item.Base.Slot == EquipSlot.Weapon) || item.IsSticky))
@@ -1223,6 +1235,8 @@ public static class ItemEffects
         "trap_creation", "restore_mana", "gain_stat", "drain_stat", "set_food", "restore_stat", "restore_exp", "gain_exp", "recall",
         "deep_descent", "teleport_level", "enchant", "recharge", "acquirement", "destruction", "earthquake",
         "mass_banishment", "stun",
+        // AVABand's quest items (GameSession.AvaQuests.cs).
+        "quest_use",
         // Special effects (GameSession.Special.cs).
         "damage", "banish", "probe", "destroy_doors", "glyph", "curse_weapon", "curse_armour", "shapechange", "random",
         "lose_hp_fraction",

@@ -1949,6 +1949,20 @@
     "object:lesser_charms": "main:36,6",
     "object:creature_dominion": "main:40,6",
     "object:nature_craft": "main:42,6",
-    "object:wild_forces": "main:44,6"
+    "object:wild_forces": "main:44,6",
+    "terrain:shop_inn": "main:36,22",
+    "terrain:sealed_door": {"lit": "main:4,22", "torch": "main:3,22", "dark": "main:5,22"},
+    "terrain:quest_altar": {"lit": "main:53,22", "torch": "main:52,22", "dark": "main:54,22"},
+    "terrain:dwarven_forge": {"lit": "main:55,24", "torch": "main:56,24", "dark": "main:57,24"},
+    "terrain:hermitage": {"lit": "main:7,22", "torch": "main:6,22", "dark": "main:8,22"},
+    "object-base:quest": "main:85,7",
+    "object-base:relic": "main:38,5",
+    "object:shard_of_the_hilt": "main:3,10",
+    "object:shard_of_the_blade": "main:3,10",
+    "object:shard_of_the_point": "main:3,10",
+    "object:reforged_blade": "main:13,10",
+    "object:water_of_ulmo": "main:26,8",
+    "object:black_market_strongbox": "main:0,7",
+    "object:key_of_belegost": "main:30,7"
   }
 }

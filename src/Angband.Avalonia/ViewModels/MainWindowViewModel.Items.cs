@@ -34,6 +34,8 @@ public enum ItemPromptKind
     UseAny,
     /// <summary>An item from the pack (Angband 'i') or what you wear ('e'), for its menu.</summary>
     InventoryMenu, EquipmentMenu,
+    /// <summary>Reading, looking at or using one of AVABand's quest items.</summary>
+    QuestUse,
 }
 
 /// <summary>One line in the inventory panel or an item prompt.</summary>
@@ -196,7 +198,7 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Eat => 'E', ItemPromptKind.Drop => 'd', ItemPromptKind.Throw => 'v', ItemPromptKind.Pickup => 'g',
         ItemPromptKind.Refuel => 'F', ItemPromptKind.Inspect => 'I', ItemPromptKind.Aim => 'a', ItemPromptKind.UseStaff => 'u',
         ItemPromptKind.Zap => 'z', ItemPromptKind.Activate => 'A', ItemPromptKind.Inscribe => '{', ItemPromptKind.Ignore => 'k',
-        ItemPromptKind.UseAny => 'U', ItemPromptKind.InventoryMenu => 'i', ItemPromptKind.EquipmentMenu => 'e', _ => '}',
+        ItemPromptKind.UseAny => 'U', ItemPromptKind.InventoryMenu => 'i', ItemPromptKind.EquipmentMenu => 'e', ItemPromptKind.QuestUse => 'U', _ => '}',
     };
 
     private static string CommandVerb(ItemPromptKind kind) => kind switch
@@ -206,7 +208,7 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Pickup => "pick up", ItemPromptKind.Refuel => "refuel with", ItemPromptKind.Inspect => "inspect",
         ItemPromptKind.Aim => "aim", ItemPromptKind.UseStaff => "use", ItemPromptKind.Zap => "zap", ItemPromptKind.Activate => "activate",
         ItemPromptKind.Inscribe => "inscribe", ItemPromptKind.Ignore => "ignore", ItemPromptKind.UseAny => "use",
-        ItemPromptKind.InventoryMenu or ItemPromptKind.EquipmentMenu => "choose", _ => "un-inscribe",
+        ItemPromptKind.InventoryMenu or ItemPromptKind.EquipmentMenu => "choose", ItemPromptKind.QuestUse => "use", _ => "un-inscribe",
     };
 
     /// <summary>The command an item is used with, for 'U' (none if it can't be used).</summary>
@@ -218,6 +220,7 @@ public sealed partial class MainWindowViewModel
         "wand" => ItemPromptKind.Aim,
         "staff" => ItemPromptKind.UseStaff,
         "rod" => ItemPromptKind.Zap,
+        "quest" => ItemPromptKind.QuestUse,
         _ => _game.Player.Inventory.Equipped.Contains(item) && item.CanActivate ? ItemPromptKind.Activate : null,
     };
 

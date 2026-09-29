@@ -105,6 +105,7 @@ public static class SaveGame
             Hotbar = [.. g.Hotbar.Select(h => h?.Code)],
             History = [.. g.History.Select(h => new HistorySave { Turn = h.Turn, Depth = h.Depth, Text = h.Text, Artifact = h.Artifact, Lost = h.Lost })],
             QuestKills = new(g.QuestKills),
+            AvaQuests = g.AvaQuests,
             CharacterKills = new(g.CharacterKills),
             JourneyVisits = [.. g.Visits.Select(v => new JourneyVisitSave { Turn = v.Turn, Depth = v.Depth, Profile = v.Profile })],
             JourneyKills = [.. g.Kills.Select(k => new JourneyKillSave { Turn = k.Turn, Depth = k.Depth, Race = k.RaceId, Unique = k.Unique })],
@@ -185,6 +186,7 @@ public static class SaveGame
         Slays = i.Slays.Select(s => new SlaySave { Flag = s.MonsterFlag, Multiplier = s.Multiplier, Verb = s.Verb, Name = s.Name }).ToList(),
         Brands = i.Brands.Select(b => new BrandSave { Element = b.Element, Multiplier = b.Multiplier, Verb = b.Verb, Name = b.Name }).ToList(),
         Resists = [.. i.Resists], Curses = [.. i.Curses], CursePowers = new(i.CursePowers), CurseTimeouts = new(i.CurseTimeouts), Flags = [.. i.Flags], OriginDepth = i.OriginDepth, Note = i.Note, Ignored = i.Ignored, Assessed = i.Assessed,
+        QuestTag = i.QuestTag,
     };
 
     /// <summary>
@@ -273,6 +275,7 @@ public static class SaveGame
         g.RestoreHistory(f.History.Select(h => new HistoryEntry(h.Turn, h.Depth, h.Text, h.Artifact, h.Lost)));
         g.RestoreHotbar(f.Hotbar);
         foreach (var (q, n) in f.QuestKills) g.QuestKills[q] = n;
+        g.RestoreAvaQuests(f.AvaQuests);
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));
@@ -293,6 +296,7 @@ public static class SaveGame
                 Charges = s.Charges, Timeout = s.Timeout, ChestState = s.ChestState,
                 OriginDepth = s.OriginDepth,
                 Note = s.Note,
+                QuestTag = s.QuestTag,
                 Ignored = s.Ignored,
                 Assessed = s.Assessed,
                 Ego = s.Ego is null ? null : data.Egos.FirstOrDefault(e => e.Id == s.Ego),

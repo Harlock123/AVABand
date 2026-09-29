@@ -222,6 +222,7 @@ public sealed partial class GameSession : ITurnHandler
             ThrowCommand throwCmd => Throw(throwCmd.Item, throwCmd.Target),
             RefuelCommand refuel => Refuel(refuel.Fuel),
             EnterStoreCommand => EnterStore(),
+            QuestChoiceCommand qc => ChooseQuest(qc.Choice),
             LeaveStoreCommand => LeaveStore(),
             BuyCommand buy => Buy(buy.Item, buy.Count),
             SellCommand sell => Sell(sell.Item, sell.Count),
@@ -364,6 +365,7 @@ public sealed partial class GameSession : ITurnHandler
         var feature = Level.FeatureAt(target);
         if (feature.Has(TerrainFlags.DoorClosed)) return OpenDoor(target, announceFailure: true);
 
+        if (!feature.Has(TerrainFlags.Passable) && QuestBump(target)) return 0;
         if (!feature.Has(TerrainFlags.Passable))
         {
             var what = feature.Has(TerrainFlags.Rubble) ? "a pile of rubble"
@@ -381,13 +383,18 @@ public sealed partial class GameSession : ITurnHandler
         {
             if (_stores.TryGetValue(shopId, out var store))
             {
-                Publish(new ShopEnteredEvent(store.Id, store.IsHome));
-                GreetInShop(store);
+                if (!QuestAtShop(shopId))
+                {
+                    Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+                    GreetInShop(store);
+                }
             }
+            else if (shopId == "inn") EnterInn();
             else Publish(new MessageEvent($"The {Data.Shops.FirstOrDefault(s => s.Id == shopId)?.Name ?? shopId} is closed."));
         }
         else if (feature.Has(TerrainFlags.Stair))
             Publish(new MessageEvent($"There is {Article(feature.Name)} here."));
+        else QuestStep(target);
 
         // Angband do_autopickup: each object picked up costs a tenth of a turn (at most a turn).
         var picked = Level.Objects.Any(target) ? NoticeFloorObjects() : 0;
@@ -517,6 +524,7 @@ public sealed partial class GameSession : ITurnHandler
     {
         var seed = depth == 0 ? TownSeed : Rng.NextULong();
         var persist = PersistentLevels;
+        var fromDepth = Level is null ? -1 : Player.Depth;
         var from = Player.Position;
         if (Level is not null)
         {
@@ -539,9 +547,11 @@ public sealed partial class GameSession : ITurnHandler
         else
         {
             var joins = persist ? JoinsFor(depth) : default;
+            _questRoomHere = QuestRoomFor(depth);
             var generated = _generator.Generate(new LevelRequest(depth, seed, arrival, ConnectStairs: Options[OptionIds.ConnectStairs],
                 Joins: joins.Joins, OneOffAbove: joins.OneOffAbove, OneOffBelow: joins.OneOffBelow, PreferredStart: persist && Level is not null ? from : null,
                 Persistent: persist, Quest: QuestAt(depth) is not null, NoDiagonalSqueezes: Options[OptionIds.NoDiagonalSqueezes],
+                QuestRoom: _questRoomHere?.Room, QuestRoomOptional: QuestRoomOptional,
                 AboveStored: persist && _storedLevels.ContainsKey(depth - 1), BelowStored: persist && _storedLevels.ContainsKey(depth + 1)));
 
             if (Level is not null) Vision.Reset(Level);
@@ -573,6 +583,8 @@ public sealed partial class GameSession : ITurnHandler
             PopulateObjects();
             DisguiseMonsters();
             PrepareQuestLevel();
+            OnNewLevel();
+            _questRoomHere = null;
             PrepareFeeling();
             CheatPeek();
 
@@ -583,6 +595,7 @@ public sealed partial class GameSession : ITurnHandler
         {
             ApplyTownLighting();
             if (StoreDays > 0) UpdateStores();
+            if (fromDepth > 0) RenewBoard(); // the notice board's untaken postings change while you're away
         }
         _arriving = true;
         try

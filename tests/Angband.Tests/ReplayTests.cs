@@ -36,7 +36,7 @@ public class ReplayTests
     [Fact]
     public void ARecordedGame_PlaysBack_ToExactlyTheSameEnd()
     {
-        var game = GameSession.NewGame(TestData.Game, 77, "warrior");
+        var game = GameSession.NewGame(TestData.Game, 82, "warrior");
         game.Recorder = new ReplayRecorder(game);
         Play(game, 600, seed: 11);
         var file = game.Recorder.ToFile(game);

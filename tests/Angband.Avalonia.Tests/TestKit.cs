@@ -26,4 +26,19 @@ internal static class TestKit
         game.RecalculateBonuses();
         vm.Refresh();
     }
+
+    /// <summary>
+    /// Stands the player on open ground, well away from the town's doors and stairs (which Look would
+    /// find before a monster placed nearby).
+    /// </summary>
+    public static void OpenGround(MainWindowViewModel vm)
+    {
+        var level = vm.Game.Level;
+        var interesting = level.AllLocs().Where(l => level.FeatureAt(l).Has(Angband.Core.Definitions.TerrainFlags.Interesting)).ToList();
+        var spot = level.AllLocs().First(l => level.IsEmptyFloor(l) && interesting.All(i => i.DistanceTo(l) >= 6)
+                                             && level.AllLocs().Where(n => n.DistanceTo(l) <= 4).All(n => level.IsEmptyFloor(n) || n == l));
+        vm.Game.Player.Position = spot;
+        vm.Game.UpdateView();
+        vm.Refresh();
+    }
 }

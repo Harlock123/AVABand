@@ -212,11 +212,13 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     public KnowledgeCategoryViewModel? Home { get; init; }
     public KnowledgeCategoryViewModel? Shapes { get; init; }
     public EquipComparisonViewModel? Equipment { get; init; }
+    /// <summary>AVABand's quest journal (the last tab).</summary>
+    public KnowledgeCategoryViewModel? Quests { get; init; }
 
     /// <summary>The character history, as Angband's history screen and dump show it.</summary>
     public string History { get; init; } = "";
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history).</summary>
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -237,7 +239,21 @@ public sealed partial class MainWindowViewModel
             Shapes = CreateShapeKnowledge(),
             Equipment = new EquipComparisonViewModel(_game, Inspect),
             History = HistoryText(),
+            Quests = CreateQuestJournal(),
         };
+
+    /// <summary>AVABand's quest journal: every quest taken or found, and the notice-board jobs taken.</summary>
+    public KnowledgeCategoryViewModel CreateQuestJournal()
+    {
+        var rows = _game.QuestJournal()
+            .Select(q => new KnowledgeRow(q.Done ? "+" : "!", _cells.Color(q.Done ? "Slate" : "Yellow"), q.Name, q.Done ? "done" : "under way",
+                () => $"{q.Name}{(q.Done ? " (done)" : "")}\n\n{q.Text}"))
+            .ToList();
+        var active = rows.Count(r => r.Note == "under way");
+        return new KnowledgeCategoryViewModel("Quests", rows.Count == 0 ? "No quests yet" : $"{active} under way, {rows.Count - active} done",
+            _game.AvaQuestsOn ? "No quests yet. The Prancing Pony (9) in town has work, and there are things to be found below."
+                : "This character was made without AVABand's quests.", rows);
+    }
 
     /// <summary>
     /// Angband do_cmd_knowledge_features: every terrain feature (not the ones that only pretend to be

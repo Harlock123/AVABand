@@ -259,6 +259,7 @@ public sealed partial class GameSession
     {
         Publish(new WorldTickEvent(gameTurn, Player.Depth, IsDaytime));
         CountStoreDay(gameTurn);
+        QuestUpkeep();
         if (gameTurn % (Data.Constants.DayLength / 2) == 0 && Player.Depth == 0)
         {
             ApplyTownLighting();

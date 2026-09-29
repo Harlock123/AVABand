@@ -39,6 +39,15 @@ public sealed record PlayerHurtEvent(int Damage, int Hp, int MaxHp) : IGameEvent
 /// message line and history add "(N)" to it.
 /// </summary>
 public sealed record DamageNoteEvent(int Damage) : IGameEvent;
+
+/// <summary>One answer to a quest's question (its id comes back in a <see cref="QuestChoiceCommand"/>).</summary>
+public sealed record QuestChoice(string Id, string Label);
+
+/// <summary>
+/// AVABand's quests ask something — at the inn, a sealed door, a forge, a shop — and the UI shows the
+/// text and the choices; the one taken comes back as a <see cref="QuestChoiceCommand"/>.
+/// </summary>
+public sealed record QuestPromptEvent(string Title, string Text, IReadOnlyList<QuestChoice> Choices) : IGameEvent;
 public sealed record PlayerDiedEvent(string KilledBy, int Depth) : IGameEvent;
 
 /// <summary>Word of Recall took the player up to the town, or down into the dungeon.</summary>

@@ -135,6 +135,7 @@ public sealed class IgnoreSettings
     /// </summary>
     public bool IsIgnored(Item item, PlayerKnowledge knowledge)
     {
+        if (item.IsQuestItem) return false; // (AVABand's quest items are never hidden)
         if (item.Ignored) return true;
         if (item.IsArtifact || Inscription.Has(item, "!k") || Inscription.Has(item, "!*")) return false;
         if (item.IsGold) return false;

@@ -330,7 +330,7 @@ public sealed partial class GameSession
         var value = ItemValue.Of(item, Data);
         var adjust = store.Def.BlackMarket ? 150 : 100;
         if (store.Def.BlackMarket) value *= 2;
-        return Math.Max(1, (value * adjust + 50) / 100);
+        return QuestPrice(store, Math.Max(1, (value * adjust + 50) / 100));
     }
 
     /// <summary>
@@ -356,7 +356,7 @@ public sealed partial class GameSession
 
     /// <summary>Whether the store deals in this kind of item.</summary>
     public bool StoreWillBuy(Store store, Item item) =>
-        store.IsHome || store.Def.BlackMarket || store.Def.Buys.Contains(item.Base.Id);
+        !item.IsQuestItem && (store.IsHome || store.Def.BlackMarket || store.Def.Buys.Contains(item.Base.Id));
 
     private int EnterStore()
     {
@@ -364,9 +364,11 @@ public sealed partial class GameSession
             foreach (var item in browsing.Stock) Knowledge.See(item);
         if (StoreHere is not { } store)
         {
-            Publish(new MessageEvent("There is no store here."));
+            if (Level.FeatureAt(Player.Position).Shop == "inn") EnterInn();
+            else Publish(new MessageEvent("There is no store here."));
             return 0;
         }
+        if (QuestAtShop(store.Id)) return 0;
         // A staple the store lacks (one added to the game since the save was made) is in by now.
         if (!store.IsHome && store.Def.Staples.Any(id => !store.Stock.Any(i => i.Kind.Id == id && store.IsAlways(i))))
         {

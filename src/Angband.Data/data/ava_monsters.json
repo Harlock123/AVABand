@@ -1,0 +1,320 @@
+[
+ {
+  "id": "durgash_the_keybearer",
+  "name": "Durgash the Keybearer",
+  "glyph": "o",
+  "color": "Orange",
+  "depth": 12,
+  "rarity": 1,
+  "speed": 5,
+  "hitPoints": 420,
+  "armour": 45,
+  "sleep": 30,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 300,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d12"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d12"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d12"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d12"
+   }
+  ],
+  "flags": [
+   "MALE",
+   "ORC",
+   "EVIL",
+   "UNIQUE",
+   "QUESTOR",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "CLEAR_WEB",
+   "DROP_1",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "cave_orc"
+   }
+  ],
+  "base": "orc",
+  "description": "A broad orc captain with a heavy key hung on a chain about his neck. He guards it as if his life depended on it; it does."
+ },
+ {
+  "id": "hathol_lord_of_the_barrow",
+  "name": "Hathol, Lord of the Barrow",
+  "glyph": "W",
+  "color": "LightPurple",
+  "depth": 22,
+  "rarity": 1,
+  "speed": 5,
+  "hitPoints": 950,
+  "armour": 65,
+  "sleep": 20,
+  "hearing": 20,
+  "smell": 0,
+  "experience": 1100,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "2d8"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "2d8"
+   },
+   {
+    "method": "touch",
+    "effect": "exp_40",
+    "damage": "0"
+   },
+   {
+    "method": "touch",
+    "effect": "terrify",
+    "damage": "0"
+   }
+  ],
+  "flags": [
+   "MALE",
+   "UNDEAD",
+   "EVIL",
+   "COLD_BLOOD",
+   "SPIRIT",
+   "UNIQUE",
+   "QUESTOR",
+   "HURT_LIGHT",
+   "IM_COLD",
+   "IM_POIS",
+   "NO_CONF",
+   "NO_SLEEP",
+   "NO_STUN",
+   "NO_HOLD",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "CLEAR_WEB",
+   "DROP_2",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "spellFrequency": 5,
+  "spells": [
+   "SCARE",
+   "HOLD",
+   "DARKNESS",
+   "WOUND"
+  ],
+  "base": "wraith",
+  "description": "A lord of the old kings' barrows, crowned in tarnished gold, his eyes two cold lights. While his altar lies profaned he cannot die: struck down, he rises again."
+ },
+ {
+  "id": "fengel_the_fence",
+  "name": "Fengel the Fence",
+  "glyph": "p",
+  "color": "LightUmber",
+  "depth": 11,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 260,
+  "armour": 30,
+  "sleep": 40,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 180,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d10"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_gold",
+    "damage": "0"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_item",
+    "damage": "0"
+   }
+  ],
+  "flags": [
+   "MALE",
+   "EVIL",
+   "UNIQUE",
+   "QUESTOR",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "DROP_1",
+   "DROP_GOOD",
+   "ONLY_GOLD"
+  ],
+  "spellFrequency": 5,
+  "spells": [
+   "BLINK",
+   "CONF"
+  ],
+  "base": "person",
+  "description": "A soft-spoken man with quick hands and a dozen purses, none of them his own."
+ },
+ {
+  "id": "nar_the_red_handed",
+  "name": "Nár the Red-Handed",
+  "glyph": "h",
+  "color": "Red",
+  "depth": 14,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 330,
+  "armour": 50,
+  "sleep": 40,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 220,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d12"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d12"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_gold",
+    "damage": "0"
+   }
+  ],
+  "flags": [
+   "MALE",
+   "UNIQUE",
+   "QUESTOR",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "DROP_1",
+   "DROP_GOOD",
+   "ONLY_GOLD"
+  ],
+  "base": "humanoid",
+  "description": "A dwarf with a red-dyed beard and a reputation in every tavern from here to the Blue Mountains, none of it good."
+ },
+ {
+  "id": "skarn_quickfingers",
+  "name": "Skarn Quickfingers",
+  "glyph": "o",
+  "color": "LightGreen",
+  "depth": 9,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 200,
+  "armour": 25,
+  "sleep": 40,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 140,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d9"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_gold",
+    "damage": "0"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_item",
+    "damage": "0"
+   }
+  ],
+  "flags": [
+   "MALE",
+   "ORC",
+   "EVIL",
+   "UNIQUE",
+   "QUESTOR",
+   "HURT_LIGHT",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "DROP_1",
+   "ONLY_GOLD"
+  ],
+  "base": "orc",
+  "description": "A lean snaga with long fingers, who works only by night and flinches from any light."
+ },
+ {
+  "id": "ilse_shadowcloak",
+  "name": "Ilse Shadowcloak",
+  "glyph": "p",
+  "color": "Slate",
+  "depth": 16,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 300,
+  "armour": 35,
+  "sleep": 40,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 260,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d10"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_gold",
+    "damage": "0"
+   },
+   {
+    "method": "touch",
+    "effect": "eat_item",
+    "damage": "0"
+   }
+  ],
+  "flags": [
+   "FEMALE",
+   "EVIL",
+   "UNIQUE",
+   "QUESTOR",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "DROP_1",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "spellFrequency": 4,
+  "spells": [
+   "BLINK",
+   "DARKNESS",
+   "TPORT"
+  ],
+  "base": "person",
+  "description": "A woman in a grey cloak who is never quite where you last saw her."
+ }
+]

@@ -101,6 +101,9 @@ public sealed class GameData
 
     /// <summary>Quests, shallowest first (Angband quest.txt).</summary>
     public IReadOnlyList<QuestDef> Quests { get; init; } = [];
+    /// <summary>AVABand's own quests (ava_quests.json): separate from Angband's, which decide the win.</summary>
+    public IReadOnlyList<AvaQuestDef> AvaQuests { get; init; } = [];
+    public AvaQuestDef? AvaQuest(string id) => AvaQuests.FirstOrDefault(q => q.Id == id);
 
     /// <summary>Chest traps; each gets its bit (1, 2, 4...) from its position in the list.</summary>
     public IReadOnlyList<ChestTrapDef> ChestTraps

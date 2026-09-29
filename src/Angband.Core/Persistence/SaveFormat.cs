@@ -52,6 +52,8 @@ public sealed class SaveFile
     public int CommandedMonster { get; set; }
     public List<string> KilledUniques { get; set; } = [];
     public Dictionary<string, int> QuestKills { get; set; } = [];
+    /// <summary>AVABand's quests (absent in older saves).</summary>
+    public Quests.AvaQuestLog? AvaQuests { get; set; }
     public Dictionary<string, int> CharacterKills { get; set; } = [];
     /// <summary>The journey: levels arrived on and kills, in order (absent from older saves).</summary>
     public List<JourneyVisitSave> JourneyVisits { get; set; } = [];
@@ -91,6 +93,8 @@ public sealed class ItemSave
     public string Kind { get; set; } = "";
     public int Number { get; set; }
     public string? Note { get; set; }
+    /// <summary>AVABand's quests: the quest the item belongs to (absent for other items and in older saves).</summary>
+    public string? QuestTag { get; set; }
     public bool Ignored { get; set; }
     public bool Assessed { get; set; }
     public string Damage { get; set; } = "0";

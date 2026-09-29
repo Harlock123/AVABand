@@ -82,6 +82,39 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 `LevelRequest(depth, seed)` always yields the same level.
 
 ## Implemented so far
+- **AVABand's quests** (`Game/GameSession.AvaQuests*.cs`, `Quests/AvaQuestLog.cs`; data in the
+  `ava_*.json` files beside Angband's — `ava_quests.json`, `ava_objects.json`, `ava_object_bases.json`,
+  `ava_monsters.json`, `ava_terrain.json`, `templates/ava_vaults.json` — which the drift check doesn't
+  read, so Angband's own files stay untouched). On by default; the birth option *AVABand's quests*
+  (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+  - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
+    level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
+    near your depth, or bring 2-4 of a potion, scroll or food no shop sells — two taken at once,
+    renewed whenever you come back up, paid at the inn.
+  - Each story quest has a **room of its own** (`templates/ava_vaults.json`, type "AVABand quest",
+    never chosen at random) built into the level that needs it as its first room — the classic
+    profile, as Angband's quest levels are — with three new vault symbols: `(` the quest's feature,
+    `)` its monster, `[` its item. Its **place** is used by walking into it or onto it, which asks
+    what to do (`QuestPromptEvent`, answered with a `QuestChoiceCommand` — recorded in replays like
+    any command; only the answers just offered count).
+  - *The Sealed Door*: Durgash the Keybearer's hall; his key (straight into your pack when he dies)
+    opens a sealed door 3-5 levels deeper (permanent, no digging or spell moves it), with a great
+    item behind it. *The Burden*: the Seal of Angmar (+4 speed, +2 STR and CON; sticky, with the
+    siren and impaired-healing curses; carried unworn it still calls the level now and then) waits in
+    a shrine on the first level with rooms from 400-700 ft (fixed by the character's seed); a dwarven
+    forge 6-9 levels deeper unmakes it. *The Broken Blade*: three shards at three depths, each with a
+    guardian; the Weapon Smiths make a Reforged Blade (3d5, +10 to +14) with two powers chosen from
+    the slays, brands and resistances whose runes you know (or the smith's suggestions). *Consecration*:
+    Hathol, Lord of the Barrow, rises whole while his altar is profaned; the Water of Ulmo, poured on
+    it, lets him die. *The Letter*: to a hermit below; read it or not, deliver it (a Magic shop
+    discount), show it to the Alchemist (his discount, the Magic shop's prices up) or burn it.
+    *The Thief of the Black Market*: ledger pages on monsters give three clues that fit only one of
+    four suspects, who roam at their depths; only the thief has the strongbox (Black market prices
+    down for returning it).
+  - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
+    `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. The tilesets draw
+    the new terrain and items with their nearest tiles (the sealed door as a closed door, the forge as
+    lava, the relic as an amulet...).
 - **Title screen** (`ViewModels/MainWindowViewModel.Title.cs`): the game opens on Thangorodrim —
   the three smoking peaks over the gates of Angband (`art/title.jpg`, drawn by `tools/title_art.py`)
   under the AVABand logo (`art/title-logo.png`, Cinzel Decorative) — to its own music, "The Pits of

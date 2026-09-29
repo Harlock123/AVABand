@@ -55,7 +55,7 @@ public class ContentTests
         Assert.True(data.Objects.Count >= 340);
         Assert.True(data.Egos.Count >= 80);
         Assert.True(data.Artifacts.Count >= 120);
-        Assert.Equal(96, data.Vaults.Count(v => v.Type != "Interesting room"));
+        Assert.Equal(96, data.Vaults.Count(v => v.Type is not ("Interesting room" or "AVABand quest")));
         Assert.Contains(data.Monsters, m => m.Name == "Morgoth, Lord of Darkness");
         Assert.Contains(data.Artifacts, a => a.Name == "'Ringil'");
         Assert.Contains(data.Objects, k => k.Id == "wand_of_magic_missile");
@@ -186,7 +186,11 @@ public class ContentTests
         var scroll = Carry(game, "scroll_of_word_of_recall");
         game.Execute(new UseCommand(scroll));
         Assert.True(game.Player.RecallTimer > 0);
-        for (var i = 0; i < 400 && game.Player.Depth == 0; i++) game.Execute(new HoldCommand());
+        for (var i = 0; i < 400 && game.Player.Depth == 0; i++)
+        {
+            game.Player.Hp = game.Player.MaxHp; // (the town's residents may not be friendly)
+            game.Execute(new HoldCommand());
+        }
         Assert.Equal(7, game.Player.Depth);
 
         game.ToggleRecall();

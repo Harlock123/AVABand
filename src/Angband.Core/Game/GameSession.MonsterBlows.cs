@@ -345,7 +345,7 @@ public sealed partial class GameSession
         }
         for (var tries = 0; tries < 10; tries++)
         {
-            if (RandomPackSlot() is not { } item || item.IsArtifact) continue;
+            if (RandomPackSlot() is not { } item || item.IsArtifact || item.IsQuestItem) continue;
             var split = item.Number > 1;
             if (item.Slays.Any(s => c.Monster.Race.Has(s.MonsterFlag)))
                 Publish(new MessageEvent($"{Capitalize(MonsterName(c.Monster))} tries to steal {(split ? "one of your" : "your")} "

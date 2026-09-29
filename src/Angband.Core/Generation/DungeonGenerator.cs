@@ -38,7 +38,7 @@ public sealed record LevelRequest(int Depth, ulong Seed, StairArrival Arrival = 
     bool? ConnectStairs = null, IReadOnlyList<StairJoin>? Joins = null, Loc? PreferredStart = null, bool Persistent = false,
     bool Quest = false, bool AboveStored = false, bool BelowStored = false,
     IReadOnlyList<StairJoin>? OneOffAbove = null, IReadOnlyList<StairJoin>? OneOffBelow = null,
-    bool NoDiagonalSqueezes = false);
+    bool NoDiagonalSqueezes = false, string? QuestRoom = null, bool QuestRoomOptional = false);
 
 /// <summary>A staircase a persistent level must have at <see cref="Loc"/> (a down staircase if <see cref="Down"/>).</summary>
 public sealed record StairJoin(Loc Loc, bool Down);
@@ -88,7 +88,7 @@ public sealed class DungeonGenerator
                 if (GenerateTown(request, rng) is { } town) return town with { Attempts = attempt };
                 continue;
             }
-            var profile = ChooseProfile(rng, request.Depth, request.ProfileId, request.Quest);
+            var profile = ChooseProfile(rng, request.Depth, request.ProfileId, request.Quest || request.QuestRoom is not null && !request.QuestRoomOptional);
             var (level, start, why) = new Cave(_data, rng).Build(request, profile);
             if (level is null)
             {

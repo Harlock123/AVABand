@@ -74,6 +74,15 @@ public sealed class Item
     public string? ActivationText => Artifact?.Activation is not null ? Artifact.ActivationText : Kind.ActivationText;
     public bool CanActivate => !string.IsNullOrEmpty(Activation);
     public bool IsArtifact => Artifact is not null;
+
+    /// <summary>
+    /// AVABand's quests: which quest this belongs to (and which piece of it — "broken_blade",
+    /// "thief:page:2"), for quest items and the items they lead to. Saved.
+    /// </summary>
+    public string? QuestTag { get; set; }
+
+    /// <summary>A quest item (QUEST_ITEM): can't be dropped, thrown, sold, ignored, stolen or burnt.</summary>
+    public bool IsQuestItem => Kind.Has("QUEST_ITEM");
     /// <summary>Power of a curse when none is recorded (older saves, data without one).</summary>
     public const int DefaultCursePower = 20;
 
@@ -179,7 +188,8 @@ public sealed class Item
         && Fuel == other.Fuel
         // Angband object_similar: different inscriptions keep stacks apart; an uninscribed one may join.
         && (Note is null || other.Note is null || Note == other.Note)
-        && Ignored == other.Ignored;
+        && Ignored == other.Ignored
+        && QuestTag == other.QuestTag;
 
     /// <summary>
     /// Whether an element can harm it in the pack (Angband EL_INFO_HATES without EL_INFO_IGNORE):
@@ -278,7 +288,7 @@ public sealed class Item
         {
             Damage = Damage, Armour = Armour, ToHit = ToHit, ToDam = ToDam, ToAc = ToAc, Fuel = Fuel, Charges = Charges, Timeout = Timeout, ChestState = ChestState,
             GoldValue = GoldValue, Ego = Ego, Artifact = Artifact, OriginDepth = OriginDepth, Note = Note,
-            Ignored = Ignored, Assessed = Assessed,
+            Ignored = Ignored, Assessed = Assessed, QuestTag = QuestTag,
         };
         copy.Modifiers.Clear();
         foreach (var (k, v) in Modifiers) copy.Modifiers[k] = v;

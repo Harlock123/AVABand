@@ -37,7 +37,8 @@ public sealed partial class MainWindowViewModel
             var label = use switch
             {
                 ItemPromptKind.Aim => "Aim", ItemPromptKind.Zap => "Zap", ItemPromptKind.UseStaff => "Use",
-                ItemPromptKind.Read => "Read", ItemPromptKind.Quaff => "Quaff", ItemPromptKind.Eat => "Eat", _ => "Activate",
+                ItemPromptKind.Read => "Read", ItemPromptKind.Quaff => "Quaff", ItemPromptKind.Eat => "Eat",
+                ItemPromptKind.QuestUse => "Use", _ => "Activate",
             };
             menu.Add((label, () => UseItemAsked(ItemPromptKind.UseAny, item)));
         }

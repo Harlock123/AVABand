@@ -42,11 +42,17 @@ public class ShapeData425Tests
     [Fact]
     public void A_werewolf_howls_the_monsters_into_flight()
     {
-        var game = Arena.Create(5);
-        var orc = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(3, 0));
-        game.UpdateView();
-        Assert.Contains("project_los:scare:{L}", game.Data.Shape("werewolf")!.Effect);
-        game.Shapechange("werewolf");
-        Assert.True(orc.Fear > 0);
+        Assert.Contains("project_los:scare:{L}", TestData.Game.Shape("werewolf")!.Effect);
+        // (A monster gets a saving throw against being scared: one of a few orcs is enough.)
+        var scared = false;
+        for (ulong seed = 5; seed < 15 && !scared; seed++)
+        {
+            var game = Arena.Create(seed);
+            var orc = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(3, 0));
+            game.UpdateView();
+            game.Shapechange("werewolf");
+            scared = orc.Fear > 0;
+        }
+        Assert.True(scared);
     }
 }

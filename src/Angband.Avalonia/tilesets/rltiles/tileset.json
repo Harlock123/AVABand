@@ -1246,6 +1246,20 @@
     "monster-glyph:A": "main:18,7",
     "monster-glyph:~": "main:24,7",
     "monster-glyph:U": "main:15,8",
-    "monster-glyph:D": "main:8,8"
+    "monster-glyph:D": "main:8,8",
+    "terrain:shop_inn": ["main:12,0", "main:15,0"],
+    "terrain:sealed_door": "main:10,0",
+    "terrain:quest_altar": "main:23,0",
+    "terrain:dwarven_forge": "main:9,0",
+    "terrain:hermitage": "main:11,0",
+    "object-base:quest": "main:9,6",
+    "object-base:relic": "main:25,10",
+    "object:shard_of_the_hilt": "main:17,0",
+    "object:shard_of_the_blade": "main:17,0",
+    "object:shard_of_the_point": "main:17,0",
+    "object:reforged_blade": "main:17,0",
+    "object:water_of_ulmo": "main:31,10",
+    "object:black_market_strongbox": "main:24,7",
+    "object:key_of_belegost": "main:11,10"
   }
 }

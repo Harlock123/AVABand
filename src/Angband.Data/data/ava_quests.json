@@ -1,0 +1,68 @@
+[
+ {
+  "id": "sealed_door",
+  "name": "The Sealed Door",
+  "minLevel": 5,
+  "offer": "A dwarf at the end of the bar sets down his mug. \"There's a door of my people below the town, sealed since before your grandfather's grandfather was born, and treasure behind it. The key was lost to an orc captain, Durgash; he keeps his hall about {keyfeet} ft down. Take the key from him and the door at {doorfeet} ft is yours to open. I'm too old for it.\"",
+  "stages": {
+   "hunt": "Durgash the Keybearer holds the key to a sealed dwarven door. His hall is at {keyfeet} ft (level {keydepth}).",
+   "key": "You have the Rune-carved Key of Belegost. The sealed door is at {doorfeet} ft (level {doordepth}): walk into it to open it.",
+   "done": "You opened the sealed door with the Key of Belegost, and took what the dwarves left behind it."
+  }
+ },
+ {
+  "id": "burden",
+  "name": "The Burden",
+  "minLevel": 0,
+  "stages": {
+   "carry": "You carry the Seal of Angmar. It lends speed and strength, but once worn it will not come off, and it calls every evil thing near, worn or not. Only a dwarven forge can unmake it: there is one at {forgefeet} ft (level {forgedepth}). Step onto the forge to cast it in.",
+   "done": "You cast the Seal of Angmar into the dwarven forge, and were free of it."
+  }
+ },
+ {
+  "id": "broken_blade",
+  "name": "The Broken Blade",
+  "minLevel": 10,
+  "offer": "The smith from the Weapon Smiths is drinking alone. \"There was a sword once, a great one, broken in the old wars. Its pieces went down into the dark with the ones who broke it. Bring me all three, the hilt, the blade and the point, and I'll make it whole again, and give it whatever powers you've learned to call on. They were last seen at {feet1}, {feet2} and {feet3} ft.\"",
+  "stages": {
+   "gather": "Find the three shards of the Broken Blade: the hilt at {feet1} ft, the blade at {feet2} ft, the point at {feet3} ft. You have {found} of 3.",
+   "reforge": "You have all three shards of the Broken Blade. Take them to the Weapon Smiths (2) to be reforged.",
+   "done": "The Weapon Smiths reforged the Broken Blade, with the powers you chose for it."
+  }
+ },
+ {
+  "id": "consecration",
+  "name": "Consecration",
+  "minLevel": 15,
+  "offer": "A priest in a stained white robe leans close. \"Hathol, a lord of the old barrows, walks again at {feet} ft. He cannot be killed while his altar lies profaned: strike him down and he rises. Take this phial of the Water of Ulmo, pour it on his altar, and then he can die.\"",
+  "stages": {
+   "hallow": "Hathol, Lord of the Barrow, cannot die while his altar at {feet} ft (level {depth}) lies profaned. Step onto the altar and pour out the Water of Ulmo.",
+   "slay": "The altar is hallowed: Hathol, Lord of the Barrow, can die now. He is at {feet} ft (level {depth}).",
+   "done": "You hallowed Hathol's altar and put the Lord of the Barrow to rest."
+  }
+ },
+ {
+  "id": "letter",
+  "name": "The Letter",
+  "minLevel": 8,
+  "offer": "The innkeeper slides a sealed letter across the bar. \"A regular left this for the hermit who lives down below, {feet} ft or so. Pays well, he said, and asked that nobody read it. Will you take it?\"",
+  "stages": {
+   "deliver": "Take the sealed letter to the hermit at {feet} ft (level {depth}): step onto his door. You were asked not to read it.",
+   "opened": "You read the letter. It's from the owner of the Magic shop, asking the hermit for a poison to spoil the Alchemist's stock, so the town will have nowhere else to buy its potions. Deliver it anyway, show it to the Alchemist (5), or burn it.",
+   "delivered": "You gave the letter to the hermit. The Magic shop is grateful.",
+   "exposed": "You showed the letter to the Alchemist. The Alchemist is grateful, and the Magic shop knows what you did.",
+   "burned": "You burned the letter. Nobody will ever know what it said, or that you had it."
+  }
+ },
+ {
+  "id": "thief",
+  "name": "The Thief of the Black Market",
+  "minLevel": 9,
+  "offer": "The Black Market's keeper finds you, which is never a good sign. \"Someone has taken my strongbox. Pages of my ledger went with it, torn out and scattered; whoever finds them will know who did it. There are four who could have: Fengel the Fence, Nár the Red-Handed, Skarn Quickfingers and Ilse Shadowcloak. Only one of them has my box. Bring it back and my prices will be kinder to you.\"",
+  "stages": {
+   "hunt": "Find the torn pages of the Black Market's ledger (monsters carry them, above 1000 ft); each tells you something about the thief. One of four suspects has the strongbox: Fengel the Fence, Nár the Red-Handed, Skarn Quickfingers or Ilse Shadowcloak.",
+   "return": "You have the Black Market's strongbox. Take it back to the Black market (6).",
+   "done": "You returned the Black Market's strongbox; its prices are kinder to you now."
+  }
+ }
+]

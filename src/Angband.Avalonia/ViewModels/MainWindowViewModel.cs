@@ -242,6 +242,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         CursorMode = CursorMode.None;
         _game.Events.Subscribe<MessageEvent>(m => AddMessage(m.Text));
         _game.Events.Subscribe<DamageNoteEvent>(d => AmendLastMessage(d.Damage));
+        _game.Events.Subscribe<QuestPromptEvent>(OnQuestPrompt);
         _game.Events.Subscribe<ShopEnteredEvent>(OnShopEntered);
         _game.Events.Subscribe<LevelChangedEvent>(OnLevelChanged);
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);

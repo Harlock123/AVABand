@@ -154,7 +154,7 @@ public class MonsterSpell42Tests
         Assert.False(game.IsWebbed(urukAt));
 
         var spiderAt = spider.Position;
-        game.RunMonsterTurn(spider);
+        for (var i = 0; i < 5 && spider.Position == spiderAt; i++) game.RunMonsterTurn(spider); // (its moves are partly random)
         Assert.NotEqual(spiderAt, spider.Position);
     }
 

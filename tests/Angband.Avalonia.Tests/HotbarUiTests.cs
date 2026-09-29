@@ -182,6 +182,7 @@ public class HotbarUiTests
         Assert.Contains("Rest", vm.MenuLabels);
         vm.CancelPrompt();
 
+        TestKit.OpenGround(vm);
         var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 2 && game.Level.IsEmptyFloor(l)
             && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
         new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("jackal")!, at, asleep: true);

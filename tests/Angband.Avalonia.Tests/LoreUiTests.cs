@@ -34,6 +34,7 @@ public sealed class LoreUiTests : IDisposable
     {
         var game = vm.Game;
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        TestKit.OpenGround(vm);
         var p = game.Player.Position;
         var spot = game.Level.AllLocs().First(l => l.DistanceTo(p) is > 2 and < 5 && game.Level.IsEmptyFloor(l)
                                                   && game.Level[l].Has(Angband.Core.World.SquareFlags.Seen));

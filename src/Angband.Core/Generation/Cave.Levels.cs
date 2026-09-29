@@ -149,6 +149,18 @@ public sealed partial class Cave
             error = "could not build the staircase rooms";
             return null;
         }
+        // AVABand's quests: the quest's room goes in first, wherever it fits.
+        if (_request.QuestRoom is { } questRoom)
+        {
+            var room = _data.Vaults.FirstOrDefault(v => v.Id == questRoom)
+                       ?? throw new GameDataException($"No quest room '{questRoom}'.");
+            if (!BuildVault(c, new Loc(c.Width, c.Height), room))
+            {
+                error = "could not fit the quest room";
+                return null;
+            }
+            c.Vaults.Add(room.Name);
+        }
 
         var built = 0;
         while (built < numRooms)

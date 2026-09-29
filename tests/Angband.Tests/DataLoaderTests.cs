@@ -13,7 +13,7 @@ public class DataLoaderTests
         Assert.NotEmpty(data.Traps);
         Assert.Contains(data.Profiles, p => p.Name == "town");
         Assert.Contains(data.Vaults, v => v.Type == "Greater vault");
-        Assert.Equal(8, data.Shops.Count);
+        Assert.Equal(9, data.Shops.Count); // the eight of 4.2.5, and AVABand's Prancing Pony
         Assert.Equal('#', data.Terrain[data.Terrain.Ids.Granite].Glyph);
     }
 

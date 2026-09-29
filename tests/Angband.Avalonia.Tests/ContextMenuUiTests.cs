@@ -184,6 +184,7 @@ public class RecallPanelUiTests
         var game = vm.Game;
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
         vm.Execute(new HoldCommand());
+        TestKit.OpenGround(vm);
         Assert.False(vm.HasRecallPanel); // nothing tracked yet
 
         var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 3 && game.Level.IsEmptyFloor(l)

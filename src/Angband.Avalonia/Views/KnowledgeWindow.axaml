@@ -127,6 +127,7 @@
           <SelectableTextBlock Text="{Binding History}" FontFamily="{StaticResource MonoFont}" Margin="12" FontSize="14" />
         </ScrollViewer>
       </TabItem>
+      <TabItem Header="Quests" Content="{Binding Quests}" />
     </TabControl>
   </DockPanel>
 </Window>
