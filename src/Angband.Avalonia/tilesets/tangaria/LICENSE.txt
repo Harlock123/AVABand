@@ -1,0 +1,33 @@
+Tangaria's tileset (32x32), from Tangaria, the online multiplayer roguelike powered by PWMAngband.
+https://tangaria.com/tileset/
+Files taken from https://github.com/igroglaz/Tangaria_release (lib/tiles/tangaria/: 32x32.png,
+graf-tan.prf, flvr-tan.prf; lib/gamedata/flavor.txt).
+
+Licensed under the Creative Commons Attribution 3.0 licence:
+https://creativecommons.org/licenses/by/3.0/
+
+"You are free to copy, distribute and transmit these tiles (even commercially) as long as you credit
+following:"
+
+  Tangaria - online roguelike game: http://tangaria.com
+  David Gervais - created most of the artwork: http://pousse.rapiere.free.fr/tome/
+  Tangar Igroglaz - tileset designer: http://igroglaz.com/
+  Shtukensia - Tangaria's artist: http://9go.ru
+  Powerwyrm - PWMAngband developer: https://github.com/draconisPW/PWMAngband
+  Terter - terrain/water transitions
+  Repne - severs walls
+  Ayenes - floors, flowers, windows, paintings: https://deviantart.com/ayene-chan
+  Ivan Voirol - grass: https://opengameart.org/users/ivan-voirol
+  Refuzzle - birds: https://opengameart.org/users/refuzzle
+  Nikkita31 - rocks: https://opengameart.org/users/nikkita31
+  Kenny - furniture: http://kenney.nl/
+
+The tileset also includes tiles ported from Dungeon Crawl Stone Soup, whose developers and artists
+published them under CC0; Tangaria thanks them on the page above.
+
+Changes: tangaria.png holds only the tiles AVABand uses, cropped from Tangaria's 4096x4096 32x32.png
+and packed into one sheet (converted to 8 bits per channel). The artwork itself is not altered.
+
+tileset.json (the mapping of AVABand's game ids to tiles) was generated from Tangaria's graf-tan.prf
+and flvr-tan.prf by tools/tangaria_tileset.py (monsters Tangaria lacks or names differently are drawn
+with the nearest Tangaria creature), then given per-glyph fallbacks by tools/tileset_glyph_fallbacks.py.

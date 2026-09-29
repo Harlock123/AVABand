@@ -104,7 +104,7 @@ public class TileRenderingTests
         settings.Height = 560;
 
         var list = settings.GetVisualDescendants().OfType<ListBox>().First();
-        Assert.Equal(3, list.ItemCount);
+        Assert.Equal(9, list.ItemCount);
 
         foreach (var set in Tilesets)
         {
@@ -112,6 +112,30 @@ public class TileRenderingTests
             Assert.Equal(set.Id, saved.TilesetId);
             Capture(settings, $"settings-{set.Id}");
         }
+    }
+
+    public static TheoryData<string> TilesetIds()
+    {
+        var data = new TheoryData<string>();
+        foreach (var s in Tilesets) data.Add(s.Id);
+        return data;
+    }
+
+    [AvaloniaTheory]
+    [MemberData(nameof(TilesetIds))]
+    public void EveryBundledTileset_DrawsTheMap(string id)
+    {
+        var (window, _, _) = Open(tiles: true, tileset: id);
+        var renderer = Assert.IsType<TileRenderer>(Map(window).Renderer);
+        var set = Tilesets.Single(s => s.Id == id);
+        Assert.Equal(set.TileWidth * 2, renderer.CellSize.Width);   // non-square cells (Nomad's 8x16) keep their shape
+        Assert.Equal(set.TileHeight * 2, renderer.CellSize.Height);
+        using var frame = Capture(window, $"map-{id}");
+        using var pixels = frame.Lock();
+        var raw = new int[pixels.RowBytes / 4 * pixels.Size.Height];
+        System.Runtime.InteropServices.Marshal.Copy(pixels.Address, raw, 0, raw.Length);
+        var distinct = raw.Where((_, i) => i % 97 == 0).ToHashSet();
+        Assert.True(distinct.Count > 50, $"{id}: the map looks blank ({distinct.Count} colours)");
     }
 
     [AvaloniaFact]

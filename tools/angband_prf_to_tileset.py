@@ -35,7 +35,12 @@ TRAPS = {
 }
 
 # AVABand monster names Angband 4.2 spells differently.
-MONSTER_ALIASES = {"jackal": "wild dog", "hill_orc": "half-orc", "dark_elven_priest": "priest"}
+MONSTER_ALIASES = {"jackal": "wild dog", "hill_orc": "half-orc", "dark_elven_priest": "priest",
+                   "beorn_the_mountain_bear": "beorn, the shape-changer"}
+
+# A tile a set may lack -> the tile to borrow instead.
+BORROW = {"terrain:rubble": "terrain:passable_rubble", "terrain:passable_rubble": "terrain:rubble",
+          "trap:block_fall_trap": "trap:rock_fall_trap"}
 
 # AVABand object base -> Angband tval
 TVALS = {
@@ -44,6 +49,7 @@ TVALS = {
     "shield": "shield", "helm": "helm", "gloves": "gloves", "boots": "boots", "cloak": "cloak", "light": "light",
     "amulet": "amulet", "ring": "ring", "potion": "potion", "scroll": "scroll", "food": "food", "flask": "flask",
     "magic_book": "magic book", "prayer_book": "prayer book", "nature_book": "nature book",
+    "shadow_book": "shadow book",
     "gold": "gold", "crown": "crown", "dragon_armour": "dragon armor", "mushroom": "mushroom",
     "wand": "wand", "staff": "staff", "rod": "rod", "digger": "digger", "chest": "chest",
 }
@@ -124,6 +130,8 @@ def parse(path):
             m = MONSTER.match(line)
             if m:
                 name, attr, char = m.groups()
+                if int(attr, 16) < 0x80 or int(char, 16) < 0x80:
+                    continue  # a plain character, not a tile (Nomad's set draws a few monsters as letters)
                 if name == "<player>":
                     player = player or ref(attr, char)  # first entry: Human Warrior
                 else:
@@ -152,6 +160,8 @@ def main():
     ap.add_argument("--objects", required=True); ap.add_argument("--bases", required=True)
     ap.add_argument("--flvr", required=True); ap.add_argument("--flavor-txt", required=True)
     ap.add_argument("--flavors", required=True, help="AVABand flavors.json")
+    ap.add_argument("--extra", action="append", default=[], metavar="KEY=REF",
+                    help="a tile the set lacks, e.g. trap:web=web.png (repeatable)")
     a = ap.parse_args()
 
     feats, traps, monsters, _ = parse(a.graf)
@@ -165,7 +175,9 @@ def main():
             tiles[f"terrain:{our_id}"] = lit_variants(feats[code.lower()])
         else:
             missing.append(f"terrain:{our_id}")
-    for our_id, name in TRAPS.items():
+    # 4.2.5's traps go by trap.txt's first name, which is our id with spaces; a few older ids differ.
+    trap_names = {t["id"]: TRAPS.get(t["id"], t["id"].replace("_", " ")) for t in json.load(open(a.traps))}
+    for our_id, name in trap_names.items():
         if name in traps:
             tiles[f"trap:{our_id}"] = lit_variants(traps[name])
         else:
@@ -204,6 +216,14 @@ def main():
             tiles[f"object-base:{base_id}"] = fallback
         else:
             missing.append(f"object-base:{base_id}")
+    # What the set lacks: tiles given on the command line, then a close neighbour's tile.
+    for extra in a.extra:
+        key, _, r = extra.partition("=")
+        tiles[key] = r
+    for key, neighbour in BORROW.items():
+        if key not in tiles and neighbour in tiles:
+            tiles[key] = tiles[neighbour]
+    missing = [k for k in missing if k not in tiles]
     # Every Angband monster by name, so monsters added to the data later find their tile automatically.
     for name, r in sorted(monsters.items()):
         tiles[f"monster-name:{name}"] = r

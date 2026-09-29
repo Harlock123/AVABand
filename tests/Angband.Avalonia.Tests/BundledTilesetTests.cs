@@ -12,7 +12,7 @@ public class BundledTilesetTests
     {
         var problems = new List<string>();
         var sets = TilesetCatalog.Discover([TilesetCatalog.DefaultDirectory], problems);
-        Assert.Empty(problems);
+        Assert.True(problems.Count == 0, string.Join(Environment.NewLine, problems));
         return sets;
     }
 
@@ -24,8 +24,9 @@ public class BundledTilesetTests
     }
 
     [Fact]
-    public void ThreeTilesetsShip() =>
-        Assert.Equal(["adam-bolt", "dcss", "gervais"], Bundled.Select(s => s.Id).Order());
+    public void NineTilesetsShip() =>
+        Assert.Equal(["adam-bolt", "angband-nomad", "angband-old", "dawnlike", "dcss", "gervais", "hexany", "rltiles", "tangaria"],
+            Bundled.Select(s => s.Id).Order());
 
     [Theory]
     [MemberData(nameof(Ids))]

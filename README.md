@@ -69,7 +69,7 @@ AVABand.sln
 ├─ src/Angband.Audio       Sound: OpenAL engine, WAV/Ogg/MP3 decoders, sound packs, event→sound director
 ├─ src/Angband.Input       Input actions, rebindable key/button bindings, SDL2 gamepad provider
 ├─ src/Angband.Avalonia    MVVM front end (CommunityToolkit.Mvvm), DrawingContext map control
-├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter), old-saves/ (save fixtures), perf/ (deep-dungeon speed check), compare_with_angband.py and sync_with_angband.py (data drift from 4.2.5), balance/ (depth tables, bot play, soak, record-replays)
+├─ tools/                       angband_prf_to_tileset.py (Angband tileset converter) and the other tileset builders, old-saves/ (save fixtures), perf/ (deep-dungeon speed check), compare_with_angband.py and sync_with_angband.py (data drift from 4.2.5), balance/ (depth tables, bot play, soak, record-replays)
 ├─ tests/Angband.Tests          xUnit tests for the core systems; Replays/ (bot-played games) and Saves/ (old-version saves) as fixtures
 └─ tests/Angband.Avalonia.Tests Headless UI tests (real window, simulated keyboard)
 ```
@@ -1127,8 +1127,26 @@ Bundled (in `src/Angband.Avalonia/tilesets/`):
 | Adam Bolt (from Angband) | 16×16 | Redistributable for any purpose |
 | David Gervais (from Angband) | 32×32 | CC BY 3.0 — attribution required, see its `LICENSE.txt` |
 | Dungeon Crawl Stone Soup (selection) | 32×32 | CC0 public domain |
+| Original Tiles (from Angband) | 8×8 | GNU GPL v2, as Angband |
+| Nomad (from Angband; "fake ASCII") | 8×16 | GNU GPL v2, as Angband |
+| Tangaria (Gervais-based, with many more artists) | 32×32 | CC BY 3.0 — attribution required, see its `LICENSE.txt` |
+| DawnLike (DragonDePlatino, palette by DawnBringer) | 16×16 | CC BY 4.0 — attribution required, see its `LICENSE.txt` |
+| RLTiles (NetHack and early Crawl art) | 32×32 | Public domain, credit requested |
+| Hexany's Roguelike Tiles (one colour, tinted by AVABand) | 16×16 | CC0 public domain |
 
-Angband's Shockbolt tiles are *not* included: their licence only allows distribution with Angband.
+Every set draws all 623 monsters: Angband's by name, the others matched by name and keyword to
+the nearest fitting art (a dragon of the right colour, an orc for an orc), with a creature per
+monster letter as a last resort. Each folder's `LICENSE.txt` gives its credits and how it was made:
+`tools/angband_extra_tilesets.sh` (Original and Nomad, through `angband_prf_to_tileset.py`),
+`tools/tangaria_tileset.py` (Tangaria's own `.prf` files, from its GitHub release), and
+`tools/dawnlike_tileset.py`, `tools/rltiles_tileset.py` and `tools/hexany_tileset.py`, which pack
+only the cells used into one sheet. Hexany's set is a single off-white, so each monster, item and
+flavour is tinted with its own colour from the game data; RLTiles avoids pictures the Dungeon Crawl
+set already uses, so the two look different. A few things the older sets lack (a web, a tree
+creature) were drawn for AVABand and are CC0.
+
+Not included: Angband's Shockbolt tiles (their licence only allows distribution with Angband),
+Doodle Rogue (no derivatives), and Tangar's 1-bit set (built from art whose licence isn't clear).
 
 A tileset is a folder with a `tileset.json` and its images, placed in `tilesets/` next to the
 game or in `<AppData>/AVABand/tilesets/`:

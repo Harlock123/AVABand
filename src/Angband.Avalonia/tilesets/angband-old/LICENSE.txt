@@ -1,0 +1,22 @@
+Angband's Original Tiles (8x8), from Angband 4.2.5 (lib/tiles/old/8x8.png): the classic
+bitmap by Lars Haugseth, updated with new monsters, items and terrain by Dawnmist and the
+Angband contributors.
+https://github.com/angband/angband/tree/4.2.5/lib/tiles/old
+
+Licence: these tiles are part of Angband and carry no exception in its docs/copying.rst, so they
+are under Angband's terms - the GNU General Public License, version 2
+(https://www.gnu.org/licenses/old-licenses/gpl-2.0.html), which AVABand uses, or the Angband
+licence:
+  Copyright (c) 1997 Ben Harrison, James E. Wilson, Robert A. Koeneke
+  This software may be copied and distributed for educational, research, and not for profit
+  purposes provided that this copyright and statement are included in all such copies. Other
+  copyrights may also apply.
+
+tileset.json was generated from Angband's graf-*.prf, xtra-*.prf and flvr-*.prf by
+tools/angband_prf_to_tileset.py (rebuilt by tools/angband_extra_tilesets.sh), with fallbacks per
+monster letter from tools/tileset_glyph_fallbacks.py. Rubble and the block-fall trap borrow their
+neighbours' tiles.
+
+web.png and tree.png were made for AVABand and are CC0 (public domain): the set has no spider
+web (this is the Adam Bolt folder's web, scaled down) and no tree creature (tree.png stands for
+huorns, ents and Old Man Willow).

@@ -17,6 +17,10 @@ for the first time, death — show a scene for a moment; any key skips it, and O
 at moments of note* turns them off. Your own pictures in the AVABand `art` folder beside your saves
 (`stairs-down.png`, `stairs-up.png`, `recall-town.png`, `unique.png`, `death.png`...) replace them.
 
+**Ctrl+T** switches between letters and pictures, and **F10** (View → Display settings) chooses
+among nine tilesets — Angband's own Original, Nomad, Adam Bolt and David Gervais sets, Dungeon
+Crawl, Tangaria, DawnLike, RLTiles and Hexany's tinted one-colour set — with a live preview.
+
 New to Angband? **Game → Tutorial** teaches the basics on a short level of its own, step by step,
 in a few minutes (it is never saved or scored). Tips also appear at the foot of the map the first time something happens (your first
 shop, monster, trap, bad wound...), each just once. Options → *Hints for new players* turns them off.
