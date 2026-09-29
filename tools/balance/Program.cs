@@ -73,10 +73,10 @@ if (play)
     var cls = args.Length > 2 ? args[2] : "warrior";
     Console.WriteLine($"{count} runs per depth; a clvl-matched {cls} with depth-made gear and potions plays up to {Bot.MaxTurns} turns"
                       + (Bot.Plain ? " (plain bot)" : ""));
-    Console.WriteLine("depth | survived% | left level% | turns | kills | exp gained | level seen% | potions | blinks | rests | shots/casts");
+    Console.WriteLine("depth | survived% | left level% | turns | kills | exp gained | level seen% | potions | blinks | rests | shots/casts | pickups | tried");
     foreach (var depth in depths)
     {
-        double lived = 0, left = 0, turns = 0, kills = 0, exp = 0, seen = 0, potions = 0, blinks = 0, rests = 0, shots = 0;
+        double lived = 0, left = 0, turns = 0, kills = 0, exp = 0, seen = 0, potions = 0, blinks = 0, rests = 0, shots = 0, pickups = 0, tried = 0;
         for (var run = 0; run < count; run++)
         {
             var r = Bot.Play(data, depth, (ulong)(depth * 1000 + run), cls);
@@ -90,9 +90,11 @@ if (play)
             blinks += r.Blinks;
             rests += r.Rests;
             shots += r.Shots;
+            pickups += r.Pickups;
+            tried += r.Tried;
         }
         Console.WriteLine($"{depth,5} | {Num(100 * lived / count),9} | {Num(100 * left / count),11} | {Num(turns / count),5} | {Num(kills / count),5} | "
-                          + $"{Num(exp / count),10} | {Num(seen / count),11} | {Num(potions / count),7} | {Num(blinks / count),6} | {Num(rests / count),5} | {Num(shots / count),11}");
+                          + $"{Num(exp / count),10} | {Num(seen / count),11} | {Num(potions / count),7} | {Num(blinks / count),6} | {Num(rests / count),5} | {Num(shots / count),11} | {Num(pickups / count),7} | {Num(tried / count),5}");
     }
     return;
 }
@@ -134,7 +136,7 @@ foreach (var depth in depths)
 
 /// <summary>What one run of the bot came to.</summary>
 internal readonly record struct BotResult(bool Survived, bool LeftLevel, int Turns, int Kills, long Experience, double SeenPercent, int Potions, int Blinks,
-    int Rests, int Shots, string? KilledBy = null);
+    int Rests, int Shots, int Pickups = 0, int Tried = 0, string? KilledBy = null);
 
 /// <summary>
 /// A simple player: explore, fight what comes (from a corridor if several come, shooting or casting
@@ -161,7 +163,11 @@ internal static class Bot
 
     internal sealed class Tally
     {
-        public int Potions, Blinks, Rests, Shots, Waits, Flights;
+        public int Potions, Blinks, Rests, Shots, Waits, Flights, Pickups, Tried;
+        /// <summary>Squares (and depth) where picking up failed: not tried again.</summary>
+        public HashSet<(int, Loc)> LeftBehind { get; } = [];
+        /// <summary>Kinds whose use failed (they wanted an aim or a choice the bot doesn't give): not tried again.</summary>
+        public HashSet<string> Unusable { get; } = [];
     }
 
     /// <summary>A character of the class at the depth's level, equipped for it, standing on a new level there.</summary>
@@ -213,7 +219,7 @@ internal static class Bot
         var known = game.Level.AllLocs().Count(p => game.Level.IsPassable(p) && game.Known.IsKnown(p));
         return new BotResult(!game.Player.IsDead, !game.Player.IsDead && game.Player.Depth != depth, turns, kills, game.Player.MaxExperience - startExp,
             passable == 0 ? 0 : 100.0 * known / passable, tally.Potions, tally.Blinks, tally.Rests, tally.Shots,
-            game.Player.IsDead ? game.Player.KilledBy : null);
+            tally.Pickups, tally.Tried, game.Player.IsDead ? game.Player.KilledBy : null);
     }
 
     /// <summary>The books of the class's spells up to its level, and every spell it can learn from them.</summary>
@@ -259,7 +265,8 @@ internal static class Bot
         // its own level — but not breeders (a worm mass is a waste of time unless it's in the way).
         var foes = game.Level.Monsters.All
             .Where(m => m.IsVisible && (m.Position.DistanceTo(p.Position) <= 1
-                || (!m.Race.Has("MULTIPLY") && (m.Sleep == 0 || m.Race.Depth <= p.Level))))
+                || (!m.Race.Has("MULTIPLY") && (m.Sleep == 0 || m.Race.Depth <= p.Level)
+                    && (Plain || m.Race.Depth <= p.Level + 10)))) // (not what it can't hope to beat)
             .OrderBy(m => m.Position.DistanceTo(p.Position)).ToList();
         var afraid = p.Timed.Has("afraid") || p.Timed.Has("terror");
 
@@ -294,6 +301,13 @@ internal static class Bot
                 if (route.Count == 0)
                     return game.Execute(new TakeStairsCommand(game.Level.Has(p.Position, TerrainFlags.DownStair)));
                 return game.Execute(new WalkCommand(Toward(p.Position, route[0])));
+            }
+            // Something far deeper than it is awake and coming: blink away rather than meet it.
+            if (game.Level.Monsters.All.FirstOrDefault(m => m.IsVisible && m.Sleep == 0 && m.Race.Depth > p.Level + 10
+                    && m.Position.DistanceTo(p.Position) <= 3) is not null && Find(game, "phase_door") is { } away && !p.Timed.Has("blind"))
+            {
+                tally.Blinks++;
+                return game.Execute(new UseCommand(away));
             }
             // Hungry: eat.
             if (game.HungerLevel <= HungerLevel.Hungry && awake.Count == 0 && p.Inventory.Pack.FirstOrDefault(i => i.Base.Id == "food") is { } food)
@@ -336,6 +350,7 @@ internal static class Bot
                 if (Openness(game, p.Position) <= 2 && tally.Waits++ < 5) return game.Execute(new HoldCommand());
             }
         }
+        if (!Plain && awake.Count == 0 && Loot(game, tally) is { } looted) return looted;
         if (foes.FirstOrDefault() is { } foe && !afraid)
         {
             tally.Waits = 0;
@@ -350,6 +365,41 @@ internal static class Bot
             return game.Execute(new WalkCommand(Toward(p.Position, way[0])));
         explorer.Target = null;
         return false;
+    }
+
+    /// <summary>
+    /// When nothing awake is about: pick up what is underfoot, put on anything for an empty slot,
+    /// try an unknown potion or scroll, or walk to an object in view (within 12 steps). Null when
+    /// there is nothing of the kind to do.
+    /// </summary>
+    private static bool? Loot(GameSession game, Tally tally)
+    {
+        var p = game.Player;
+        if (game.Level.Objects.Any(p.Position) && !tally.LeftBehind.Contains((p.Depth, p.Position))
+            && game.Level.Objects.At(p.Position).FirstOrDefault(i => !i.IsGold && p.Inventory.CanCarry(i)) is not null)
+        {
+            tally.Pickups++;
+            if (game.Execute(new PickupCommand())) return true;
+            tally.LeftBehind.Add((p.Depth, p.Position));
+        }
+        if (p.Inventory.Pack.FirstOrDefault(i => i.IsWearable && !i.IsCursed && game.Knowledge.KnowsKind(i)
+                && p.Inventory.InSlot(i.Base.Slot) is null && i.Base.Slot != EquipSlot.None) is { } wear)
+            return game.Execute(new WieldCommand(wear));
+        if (!p.Timed.Has("blind") && !p.Timed.Has("confused")
+            && p.Inventory.Pack.FirstOrDefault(i => i.Base.Id is "potion" or "scroll" && !game.Knowledge.KnowsKind(i)
+                                                   && !tally.Unusable.Contains(i.Kind.Id)) is { } unknown)
+        {
+            tally.Tried++;
+            if (game.Execute(new UseCommand(unknown))) return true;
+            tally.Unusable.Add(unknown.Kind.Id);
+        }
+        var wanted = game.Level.Objects.All
+            .Where(o => game.Known.IsKnown(o.Loc) && game.Level[o.Loc].Has(Angband.Core.World.SquareFlags.View) && !o.Item.IsGold
+                        && !tally.LeftBehind.Contains((p.Depth, o.Loc)) && p.Inventory.CanCarry(o.Item))
+            .Select(o => o.Loc).Distinct().OrderBy(l => l.DistanceTo(p.Position)).Take(3)
+            .Select(l => game.FindPath(p.Position, l)).OfType<List<Loc>>()
+            .FirstOrDefault(path => path.Count is > 0 and <= 12);
+        return wanted is null ? null : game.Execute(new WalkCommand(Toward(p.Position, wanted[0])));
     }
 
     /// <summary>The way to the nearest known staircase within 15 steps (empty when on one), or null.</summary>

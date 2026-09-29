@@ -222,3 +222,32 @@ awake in the line of fire; otherwise the same gear, potions and play. 20 runs pe
 It lives less often than the warrior at almost every depth, most of all at 50 ft (80% against
 100%): it fights hand to hand with a mage's hit points whenever a monster reaches it or it runs out
 of mana.
+
+## A bot that loots
+
+The bot now also picks up what it finds (walking to objects in view when nothing is awake), puts
+on anything for an empty slot, tries unknown potions and scrolls when it is quiet (once each kind:
+one that wants an aim or a choice it doesn't give is left alone), eats when hungry, keeps away
+from monsters more than ten levels deeper than itself (and blinks when one comes close), and,
+badly hurt with nothing left to drink, runs for the nearest stairs. 20 warrior runs per depth,
+the bot before (ca57e76) → now:
+
+| depth | survived % | turns | kills | level seen % | potions | pickups | tried |
+|---:|---|---|---|---|---|---|---|
+| 1 | 100.0 → 100.0 | 1000.0 → 910.0 | 56.1 → 53.0 | 80.0 → 57.7 | 1.1 → 1.1 | 6.2 | 3.5 |
+| 5 | 95.0 → 100.0 | 977.7 → 933.3 | 132.7 → 129.3 | 63.9 → 51.6 | 1.6 → 1.8 | 9.3 | 3.6 |
+| 10 | 100.0 → 100.0 | 1000.0 → 920.0 | 133.7 → 113.2 | 71.2 → 53.6 | 0.9 → 1.2 | 9.0 | 2.7 |
+| 20 | 65.0 → 65.0 | 810.2 → 775.8 | 99.1 → 72.7 | 42.4 → 36.6 | 4.5 → 4.3 | 8.4 | 3.1 |
+| 30 | 45.0 → 35.0 | 470.8 → 515.6 | 42.2 → 38.2 | 23.0 → 21.6 | 4.8 → 5.0 | 4.5 | 1.2 |
+| 40 | 20.0 → 10.0 | 306.6 → 219.6 | 16.2 → 13.1 | 15.2 → 15.1 | 6.9 → 8.0 | 2.3 | 0.6 |
+| 50 | 10.0 → 10.0 | 175.5 → 151.3 | 6.5 → 6.7 | 7.4 → 6.3 | 7.2 → 6.3 | 1.3 | 0.2 |
+| 60 | 15.0 → 15.0 | 123.3 → 191.8 | 3.6 → 6.1 | 5.4 → 5.8 | 8.5 → 8.4 | 1.4 | 0.5 |
+| 70 | 10.0 → 5.0 | 147.8 → 94.4 | 9.4 → 2.4 | 5.2 → 3.8 | 5.3 → 4.8 | 0.9 | 0.5 |
+| 80 | 10.0 → 5.0 | 53.3 → 54.5 | 4.2 → 3.5 | 2.6 → 6.5 | 5.3 → 5.0 | 1.1 | 0.4 |
+| 90 | 5.0 → 5.0 | 73.7 → 82.1 | 5.1 → 4.9 | 3.3 → 4.5 | 3.8 → 3.4 | 0.6 | 0.1 |
+| 99 | 5.0 → 10.0 | 13.6 → 14.6 | 0.2 → 0.3 | 1.4 → 1.7 | 1.2 → 1.1 | 0.0 | 0.0 |
+
+Within the noise for survival and kills; it sees less of each level (the time goes on looting),
+and in the shallows it leaves one level in eight early — the unknown scrolls it reads include
+Teleport Level and Deep Descent. It isn't a better survivor; what it adds is play that picks up,
+wields and identifies things, which the soak test now covers.
