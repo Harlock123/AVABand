@@ -997,7 +997,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     pick up items matching the pack (each object picked up costs a tenth of a turn), show flavours
     ("an Icky Green Potion of Speed"), disturb whenever a viewable monster moves (a monster coming
     into view always stops running, travel and tunnelling; with this on, one in view moving does too), notify
-    on recharge; and display options: highlight target, highlight player, solid walls, shaded
+    on recharge, and AVABand's own *new levels never need a diagonal step to get anywhere* (off by
+    default; for keyboards without a keypad): once a new level is built, wherever two walkable
+    parts touch only at a corner, one of the walls beside that corner (never a permanent or vault
+    wall) becomes floor, until the four arrow keys reach everything (`Connectivity.OpenDiagonalSqueezes`;
+    it opens some 5–10 squares on most room-and-corridor levels, none on caverns, and levels made
+    with it off are exactly as before); and display options: highlight target, highlight player, solid walls, shaded
     walls, yellow torchlight, centre the map continuously (off: Angband's panel scrolling, when
     within 3 squares of the edge; Ctrl+L, or `@` in the roguelike keys, centres it once, as Angband's
     "Center map" does, also on the View menu), purple uniques, player colour by hit points, mouse movement,

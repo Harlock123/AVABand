@@ -539,7 +539,7 @@ public sealed partial class GameSession : ITurnHandler
             var joins = persist ? JoinsFor(depth) : default;
             var generated = _generator.Generate(new LevelRequest(depth, seed, arrival, ConnectStairs: Options[OptionIds.ConnectStairs],
                 Joins: joins.Joins, OneOffAbove: joins.OneOffAbove, OneOffBelow: joins.OneOffBelow, PreferredStart: persist && Level is not null ? from : null,
-                Persistent: persist, Quest: QuestAt(depth) is not null,
+                Persistent: persist, Quest: QuestAt(depth) is not null, NoDiagonalSqueezes: Options[OptionIds.NoDiagonalSqueezes],
                 AboveStored: persist && _storedLevels.ContainsKey(depth - 1), BelowStored: persist && _storedLevels.ContainsKey(depth + 1)));
 
             if (Level is not null) Vision.Reset(Level);

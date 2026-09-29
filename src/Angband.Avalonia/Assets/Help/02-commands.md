@@ -3,7 +3,10 @@
 ## Moving
 
 - **Walk** with the arrow keys, the keypad, or `h` `j` `k` `l` `y` `u` `b` `n` (AVABand's own
-  keys have both). Walking into a monster attacks it; into a closed door opens it.
+  keys have both — `y` `u` `b` `n` are the diagonals, handy without a keypad). Walking into a
+  monster attacks it; into a closed door opens it. On a laptop, Options → *New levels never need a
+  diagonal step to get anywhere* opens up the places a level would otherwise only let you reach
+  diagonally, from the next new level on.
 - **Run** with Shift and a direction, or `.` then a direction: you keep going until something
   interesting happens — a monster appears, the corridor branches, you reach a door or an object.
 - **Click** a square to travel there along the shortest known path (hold Shift to see the route

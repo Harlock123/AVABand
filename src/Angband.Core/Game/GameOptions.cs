@@ -25,6 +25,8 @@ public static class OptionIds
     public const string ShowFlavors = "show_flavors";
     public const string DisturbNear = "disturb_near";
     public const string NotifyRecharge = "notify_recharge";
+    /// <summary>AVABand's own: open diagonal-only squeezes in new levels (for keyboards without a keypad).</summary>
+    public const string NoDiagonalSqueezes = "gen_no_diagonal_squeezes";
 
     // Birth options.
     public const string Randarts = "birth_randarts";
@@ -61,6 +63,7 @@ public static class OptionCatalog
         new(OptionIds.ShowFlavors, "Show flavors in object descriptions", OptionKind.Interface, false),
         new(OptionIds.DisturbNear, "Disturb whenever viewable monster moves", OptionKind.Interface, true),
         new(OptionIds.NotifyRecharge, "Notify on object recharge", OptionKind.Interface, false),
+        new(OptionIds.NoDiagonalSqueezes, "New levels never need a diagonal step to get anywhere", OptionKind.Interface, false),
 
         new(OptionIds.Randarts, "Generate a new, random artifact set", OptionKind.Birth, false),
         new(OptionIds.ConnectStairs, "Generate connected stairs", OptionKind.Birth, true),
