@@ -100,18 +100,22 @@ public static class ItemNaming
         return sb.ToString();
     }
 
-    /// <summary>Resolves the <c>~</c> plural marker.</summary>
-    /// <summary>Angband chest_trap_name: (Empty), (Unlocked), (Disarmed), (Locked), a trap's name or (Multiple Traps).</summary>
+    /// <summary>
+    /// Angband chest_trap_name: (empty), (unlocked), (disarmed), (locked), a trap's name or
+    /// (multiple traps) — chest_trap.txt's names, in lower case as 4.2.5 has them.
+    /// </summary>
     public static string ChestDescription(Item chest, PlayerKnowledge knowledge)
     {
         var s = chest.ChestState;
-        if (s == 0) return "(Empty)";
-        if (s == -1) return "(Unlocked)";
-        if (s < 0) return "(Disarmed)";
-        if (s == 1) return "(Locked)";
-        var traps = knowledge.ChestTraps.Where(t => t.Bit > 1 && (s & t.Bit) != 0).Select(t => t.Name).Distinct().ToList();
-        return traps.Count == 1 ? $"({traps[0]})" : "(Multiple Traps)";
+        if (s == 0) return "(empty)";
+        if (s == -1) return "(unlocked)";
+        if (s < 0) return "(disarmed)";
+        var traps = knowledge.ChestTraps.Where(t => (s & t.Bit) != 0).Select(t => t.Name).Distinct().ToList();
+        if (traps.Count > 1) traps.Remove(knowledge.ChestTraps.FirstOrDefault(t => t.Bit == 1)?.Name ?? "");
+        return traps.Count switch { 0 => "(locked)", 1 => $"({traps[0]})", _ => "(multiple traps)" };
     }
+
+    /// <summary>Resolves the <c>~</c> plural marker.</summary>
 
     public static string Plain(string name, bool plural)
     {

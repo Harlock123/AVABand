@@ -268,7 +268,6 @@ public sealed class ObjectFactory(GameData data)
         return traps;
     }
 
-    /// <summary>Turns the object into an artifact of the same kind, if one is eligible and rolls its rarity.</summary>
     /// <summary>
     /// Angband make_artifact: the first artifact of the item's kind (not a special one) not yet made
     /// that passes its rolls — made deeper than its minimum only by luck (one in twice the shortfall),

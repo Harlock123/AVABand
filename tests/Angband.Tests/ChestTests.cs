@@ -70,14 +70,14 @@ public class ChestTests
     }
 
     [Theory]
-    [InlineData(0, "(Empty)")]
-    [InlineData(1, "(Locked)")]
-    [InlineData(-1, "(Unlocked)")]
-    [InlineData(-2, "(Disarmed)")]
-    [InlineData(2, "(Gas Trap)")]
-    [InlineData(4, "(Poison Needle)")]
-    [InlineData(4 | 8, "(Poison Needle)")]
-    [InlineData(2 | 64, "(Multiple Traps)")]
+    [InlineData(0, "(empty)")]
+    [InlineData(1, "(locked)")]
+    [InlineData(-1, "(unlocked)")]
+    [InlineData(-2, "(disarmed)")]
+    [InlineData(2, "(gas trap)")]
+    [InlineData(4, "(poison needle)")]
+    [InlineData(4 | 8, "(poison needle)")]
+    [InlineData(2 | 64, "(multiple traps)")]
     public void Chests_say_what_state_they_are_in(int state, string suffix)
     {
         var game = Game();
@@ -97,7 +97,7 @@ public class ChestTests
         Assert.Contains("You have picked the lock.", messages);
         Assert.Equal(0, chest.ChestState);
         Assert.Equal(2, FloorItems(game)); // iron chests hold two things
-        Assert.EndsWith("(Empty)", game.Describe(chest));
+        Assert.EndsWith("(empty)", game.Describe(chest));
         Assert.False(game.Execute(new OpenCommand(Direction.East)));
         Assert.Contains("The chest is empty.", messages);
     }
@@ -147,7 +147,7 @@ public class ChestTests
         var str = game.Player.Stats["str"];
         Assert.True(game.Execute(new DisarmCommand(Direction.East)));
         Assert.Contains("You have disarmed the chest.", messages);
-        Assert.EndsWith("(Disarmed)", game.Describe(chest));
+        Assert.EndsWith("(disarmed)", game.Describe(chest));
         game.Execute(new OpenCommand(Direction.East));
         Assert.Equal(str, game.Player.Stats["str"]);
         Assert.Equal(1, FloorItems(game));

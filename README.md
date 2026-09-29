@@ -553,7 +553,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   small and large, wooden, iron and steel — with its chest traps: one in ten is merely locked,
   the rest get a trap for their level (gas, poison needles, summoning runes, paralysis gas, an
   explosion that destroys the contents), sometimes two or more. The chest shows its state:
-  *(Locked)*, *(Gas Trap)*, *(Multiple Traps)*, *(Disarmed)*, *(Empty)*. `o` opens a chest
+  *(locked)*, *(gas trap)*, *(multiple traps)*, *(disarmed)*, *(empty)*, as 4.2.5 writes it
+  (`chest_traps.json` is synced from and compared with `chest_trap.txt`). `o` opens a chest
   next to you (or underfoot: `o` then `5`): the lock is picked with the disarm skill (less the
   trap value; always at least 2%), the traps go off, and out come one, two or three good objects
   (wooden, iron, steel) from five levels deeper — great ones from large chests. `D` disarms a

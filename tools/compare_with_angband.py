@@ -1764,6 +1764,72 @@ def compare_elements(gd, data):
     return sec
 
 
+CHEST_TRAP_IDS = {"NO_TRAP": "locked", "POISON": "poison_gas", "LOSE_STR": "needle_str", "LOSE_CON": "needle_con",
+                  "SUMMON": "summon", "PARALYZE": "paralysis_gas", "EXPLODE": "explosion"}
+
+
+def chest_trap_effect(e, dice_fn=lambda d: d):
+    """chest_trap.txt's effect/dice lines in AVABand's trap grammar (GameSession.ApplyTrapEffects)."""
+    parts = []
+    lines = [(k, v) for k, v in e["lines"] if k in ("effect", "dice")]
+    for i, (k, v) in enumerate(lines):
+        if k != "effect":
+            continue
+        dice = lines[i + 1][1].replace(" ", "") if i + 1 < len(lines) and lines[i + 1][0] == "dice" else ""
+        verb, _, arg = v.partition(":")
+        if verb == "TIMED_INC":
+            parts.append(f"timed:{OI.TIMED[arg]}:{dice_fn(dice)}")
+        elif verb == "DAMAGE":
+            parts.append(f"damage:{dice_fn(dice)}")
+        elif verb == "DRAIN_STAT":
+            parts.append(f"drain:{arg.lower()}")
+        elif verb == "SUMMON":
+            parts.append(f"summon:{dice}:{arg}")
+        else:
+            parts.append(f"?{v}")
+    return "; ".join(parts)
+
+
+def compare_chest_traps(gd, data):
+    sec = section("chest_traps", "Chest traps", "chest_traps.json", "chest_trap.txt")
+    ours = {x["id"]: x for x in load(data, "chest_traps.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "chest_trap.txt")):
+        code = one(e, "code")
+        cid = CHEST_TRAP_IDS.get(code, slug(code or e["name"]))
+        x = ours.get(cid)
+        if x is None:
+            sec.only_theirs.append(f"{e['name']} ({code})")
+            continue
+        used.add(cid)
+        sec.compared += 1
+        label = f"{code}"
+        sec.cmp(label, "name", x.get("name"), e["name"])
+        sec.cmp(label, "level", x.get("level", 1), int(one(e, "level", "1")))
+
+        def canon_effect(text):
+            out = []
+            for part in (p.strip() for p in (text or "").split(";") if p.strip()):
+                bits = part.split(":")
+                if bits[0] in ("timed", "damage"):
+                    bits[-1] = canon_rv(bits[-1])
+                elif bits[0] == "summon":
+                    bits[1] = canon_rv(bits[1])
+                out.append(":".join(bits))
+            return out
+        sec.cmp(label, "effect", canon_effect(x.get("effect")), canon_effect(chest_trap_effect(e)))
+        sec.cmp(label, "message", x.get("message") or None, one(e, "msg"))
+        sec.cmp(label, "death message", x.get("deathMessage", "a chest trap"), one(e, "msg-death") or "a chest trap")
+        sec.cmp(label, "magic", bool(x.get("magic")), one(e, "magic") == "1")
+        sec.cmp(label, "destroys the contents", bool(x.get("destroy")), one(e, "destroy") == "1")
+    for cid in ours:
+        if cid not in used:
+            sec.only_ours.append(cid)
+    sec.notes += ["Every field of chest_trap.txt is compared; its effects in AVABand's trap grammar. The `code` "
+                  "is matched to AVABand's ids (NO_TRAP → locked, POISON → poison_gas, ...)."]
+    return sec
+
+
 def compare_summons(gd, data):
     sec = section("summons", "Summons", "summons.json", "summon.txt")
     ours = {x["id"]: x for x in load(data, "summons.json")}
@@ -1980,7 +2046,7 @@ def render(gd, data, out):
     w("- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by "
       "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
       "object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
-      "slay.txt, pain.txt, chest_trap.txt, quest.txt, visuals.txt, world.txt, "
+      "slay.txt, pain.txt, quest.txt, visuals.txt, world.txt, "
       "ui_*.txt, blow_methods.txt (methods are only checked for existence).")
     w("- Descriptions and messages everywhere.")
     w("")
@@ -2017,7 +2083,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

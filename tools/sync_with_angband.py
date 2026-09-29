@@ -138,6 +138,8 @@ def plain_dice(text):
     text = text.strip()
     if "d" not in text:
         return text
+    if "+" not in text:
+        return "1" + text if text.startswith("d") else text
     base, _, dice = text.rpartition("+") if "+" in text.split("d")[0] or text.index("+") < text.index("d") else ("", "", text)
     dice = dice if not dice.startswith("d") else "1" + dice
     return f"{dice}+{base}" if base else dice
@@ -1031,6 +1033,26 @@ def sync_elements(gd, data):
     print(f"elements: {len(out)} written ({[x['id'] for x in out if x['id'] not in ours]} new)")
 
 
+def sync_chest_traps(gd, data):
+    """chest_trap.txt, whole, under AVABand's ids (the order is kept: it gives each trap its bit)."""
+    path = os.path.join(data, "chest_traps.json")
+    out = []
+    for e in cw.parse_records(os.path.join(gd, "chest_trap.txt")):
+        code = cw.one(e, "code")
+        x = {"id": cw.CHEST_TRAP_IDS.get(code, cw.slug(code)), "name": e["name"], "level": int(cw.one(e, "level", "1")),
+             "effect": cw.chest_trap_effect(e, plain_dice), "message": cw.one(e, "msg") or ""}
+        if cw.one(e, "msg-death"):
+            x["deathMessage"] = cw.one(e, "msg-death")
+        if cw.one(e, "magic") == "1":
+            x["magic"] = True
+        if cw.one(e, "destroy") == "1":
+            x["destroy"] = True
+        out.append(x)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(x, ensure_ascii=False) for x in out) + "\n]\n")
+    print(f"chest traps: {len(out)} written")
+
+
 def sync_summons(gd, data):
     """summon.txt, whole: the kinds of summons (which monsters answer, and what to fall back on)."""
     path = os.path.join(data, "summons.json")
@@ -1078,7 +1100,8 @@ SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "b
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
             "curses": sync_curses, "constants": sync_constants, "summons": sync_summons,
-            "timed": sync_timed, "elements": sync_elements}
+            "timed": sync_timed, "elements": sync_elements,
+            "chest_traps": sync_chest_traps}
 
 
 def main():
