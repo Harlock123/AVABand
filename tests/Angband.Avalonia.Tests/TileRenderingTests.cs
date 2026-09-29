@@ -138,6 +138,33 @@ public class TileRenderingTests
         Assert.True(distinct.Count > 50, $"{id}: the map looks blank ({distinct.Count} colours)");
     }
 
+    [Fact]
+    public void One_monster_in_a_thousand_has_a_rare_look_that_stays_put()
+    {
+        var rare = Enumerable.Range(0, 200_000).Count(id => MapCellBuilder.HasRareLook(id, 12345));
+        Assert.InRange(rare, 150, 250);
+        Assert.Equal(MapCellBuilder.HasRareLook(77, 9), MapCellBuilder.HasRareLook(77, 9));
+    }
+
+    [AvaloniaFact]
+    public void A_rare_blue_yeek_is_Platino_in_DawnLike_and_a_plain_yeek_elsewhere()
+    {
+        var data = DataLoader.Load(DataLoader.DefaultDataDirectory);
+        var cell = new MapCellBuilder(data).Monster(data.Monster("blue_yeek")!, MapCell.Unknown, rare: true);
+        Assert.Equal("monster-rare:blue_yeek", cell.TileKey);
+        Assert.Equal("monster:blue_yeek", cell.AltTileKey); // what sets without a rare look draw
+
+        var dawnlike = new TileAtlas(Tilesets.Single(s => s.Id == "dawnlike"));
+        Assert.True(dawnlike.TryResolve(cell.TileKey, TileLighting.Lit, out _, out _));
+        foreach (var other in Tilesets.Where(s => s.Id != "dawnlike"))
+        {
+            var atlas = new TileAtlas(other);
+            Assert.False(atlas.TryResolve(cell.TileKey, TileLighting.Lit, out _, out _));
+            Assert.True(atlas.TryResolve(cell.AltTileKey!, TileLighting.Lit, out _, out _)
+                        || atlas.TryResolve(TileRenderer.GlyphKey('y'), TileLighting.Lit, out _, out _), other.Id);
+        }
+    }
+
     [AvaloniaFact]
     public void UnmappedKeys_FallBackToAscii()
     {

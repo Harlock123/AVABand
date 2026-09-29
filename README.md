@@ -1174,6 +1174,10 @@ game or in `<AppData>/AVABand/tilesets/`:
 - `opaque: false` draws terrain beneath creatures and traps (for transparent sprites).
 - Anything a tileset doesn't define is drawn as its ASCII glyph, so partial tilesets work.
 - `monster-name:<name>` keys let a tileset cover monsters added to the data later.
+- `monster-rare:<id>` is a rare look: one monster of that race in a thousand wears it (fixed per
+  monster, by its id and its level's seed); sets without one draw it like the rest. DawnLike uses
+  it to hide its author's Platino sprite, as he asked of every game that uses his tiles — keep an
+  eye on the woodchucks.
 - Objects use `object:<id>`, `flavor:<group>:<flavour>` (e.g. `flavor:potion:cloudy`),
   `object:pile`, and a per-base fallback `object-base:<base>`.
 - `tools/angband_prf_to_tileset.py` converts an Angband 4.2 tileset (`graf-*.prf` + sheet).

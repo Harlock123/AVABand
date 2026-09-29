@@ -513,6 +513,12 @@ def main():
         else:
             unmatched.append(m["name"])
 
+    # DragonDePlatino's request: hide his Platino sprite well. One yeek in a thousand (DawnLike's
+    # woodchucks, as his README suggests: "1/1000 rabid woodchucks will spawn with his sprite").
+    for m in monsters:
+        if tiles.get("monster:" + m["id"]) == ref("woodchuck"):
+            tiles["monster-rare:" + m["id"]] = ref("platino")
+
     # Pack the used cells, 16 to a row.
     loaded = {}
     rows = (len(cells) + 15) // 16

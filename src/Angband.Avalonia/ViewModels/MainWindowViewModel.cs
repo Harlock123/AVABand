@@ -80,7 +80,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
 
         if (_game.Player.Position == p) return _cells.Player(terrain, _game.Player.Hp, _game.Player.MaxHp);
         if (level.Monsters.At(p) is { } monster && (monster.IsVisible || monster.IsDetected || ShowWholeMap))
-            return _cells.Monster(_game.IsHallucinating ? Hallucination(_data.Monsters, p) : monster.Race, terrain);
+            return _game.IsHallucinating
+                ? _cells.Monster(Hallucination(_data.Monsters, p), terrain)
+                : _cells.Monster(monster.Race, terrain, MapCellBuilder.HasRareLook(monster.Id, level.Seed));
         if (terrain.IsUnknown) return terrain;
 
         ref var sq = ref level[x, y];

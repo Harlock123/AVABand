@@ -42,7 +42,7 @@ public sealed class TileRenderer : IMapRenderer
         if (DrawTile(context, dest, cell.TileKey, cell.Lighting)) return;
         if (cell.AltTileKey is { } alt && DrawTile(context, dest, alt, cell.Lighting)) return;
         // Any creature the tileset has no picture for is drawn as a typical one of its kind.
-        if (cell.TileKey.StartsWith("monster:", StringComparison.Ordinal)
+        if (cell.TileKey.StartsWith("monster", StringComparison.Ordinal)
             && DrawTile(context, dest, GlyphKey(cell.Glyph), cell.Lighting)) return;
 
         // No art for this key: keep the terrain (if any) and draw the glyph on top.

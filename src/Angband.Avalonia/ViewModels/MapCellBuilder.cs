@@ -60,9 +60,24 @@ public sealed class MapCellBuilder
         return new MapCell('@', Color(color), Black, "player", TileLighting.Lit, null, under.TileKey, under.Lighting);
     }
 
-    public MapCell Monster(MonsterRaceDef race, MapCell under) =>
-        new(race.Glyph, Color(PurpleUniques && race.IsUnique ? "Violet" : race.Color), Black, "monster:" + race.Id, TileLighting.Lit,
-            "monster-name:" + race.Name.ToLowerInvariant(), under.TileKey, under.Lighting);
+    /// <param name="rare">One of the few of its race (<see cref="HasRareLook"/>) that a tileset may draw its own
+    /// way with a <c>monster-rare:</c> tile; tilesets without one draw it like the rest.</param>
+    public MapCell Monster(MonsterRaceDef race, MapCell under, bool rare = false) =>
+        new(race.Glyph, Color(PurpleUniques && race.IsUnique ? "Violet" : race.Color), Black,
+            (rare ? "monster-rare:" : "monster:") + race.Id, TileLighting.Lit,
+            rare ? "monster:" + race.Id : "monster-name:" + race.Name.ToLowerInvariant(), under.TileKey, under.Lighting);
+
+    /// <summary>
+    /// Whether this monster is the one in a thousand of its race with a rare look — fixed for the
+    /// monster (by its id and its level's seed), so it doesn't flicker between redraws or saves.
+    /// </summary>
+    public static bool HasRareLook(int monsterId, ulong levelSeed)
+    {
+        var h = levelSeed ^ ((ulong)(uint)monsterId * 0x9E3779B97F4A7C15UL);
+        h = (h ^ (h >> 30)) * 0xBF58476D1CE4E5B9UL;
+        h = (h ^ (h >> 27)) * 0x94D049BB133111EBUL;
+        return (h ^ (h >> 31)) % 1000 == 0;
+    }
 
     /// <summary>An object of this kind, unidentified by any flavour (what a hallucinating player "sees").</summary>
     public MapCell ObjectKind(ObjectKindDef kind, ObjectBaseDef objectBase, MapCell under)
