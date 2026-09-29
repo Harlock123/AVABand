@@ -172,7 +172,7 @@ public sealed partial class MainWindowViewModel
         for (var i = 0; i < items.Count && i < 26; i++)
         {
             var item = items[i];
-            var flavor = item.IsFlavored ? _game.Knowledge.Flavor(item.Kind) : null;
+            var flavor = _game.Knowledge.Flavor(item.Kind);
             var price = store.IsHome ? ""
                 : StoreSellMode ? (_game.SellPrice(store, item) is var p and > 0 ? $"{p} gold" : _game.NoSelling ? "" : "no gold")
                 : $"{_game.BuyPrice(store, item)} gold";
@@ -181,7 +181,7 @@ public sealed partial class MainWindowViewModel
                 ? item.Base.Slot is EquipSlot.Weapon or EquipSlot.Bow ? "wielded" : "worn"
                 : "";
             StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),
-                _cells.Color(flavor?.Color ?? item.Base.Color), name, price,
+                _cells.Color(flavor?.Color ?? item.Kind.Color ?? item.Base.Color), name, price,
                 string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped));
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));

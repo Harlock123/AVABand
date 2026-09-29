@@ -208,23 +208,33 @@ public class CombatTests
     [Fact]
     public void FireBlows_AreResisted()
     {
-        int FireDamage(int resist)
-        {
-            var game = Arena.Create(5);
-            game.Player.Hp = game.Player.MaxHp = 100_000;
-            if (resist != 0) game.Player.IntrinsicResists["fire"] = resist;
-            game.RecalculateBonuses();
-            var hurt = 0;
-            using var _ = game.Events.Subscribe<PlayerHurtEvent>(e => hurt += e.Damage);
-            var giant = Arena.AddMonster(game, "fire_spirit", Start.Step(Direction.East)); // fire blows, no spells
-            for (var i = 0; i < 50; i++) game.Execute(new HoldCommand());
-            return hurt;
-        }
-
-        var normal = FireDamage(0);
-        var resisted = FireDamage(1);
-        Assert.Equal(0, FireDamage(3));
+        // A red mold's spores are fire and nothing else (SPORE isn't physical).
+        var normal = FireDamage("red_mold", 0);
+        var resisted = FireDamage("red_mold", 1);
+        Assert.Equal(0, FireDamage("red_mold", 3));
         Assert.InRange(resisted, normal / 4, normal / 2);
+    }
+
+    [Fact]
+    public void A_physical_fire_blow_hurts_even_the_immune()
+    {
+        // Angband melee_effect_elemental: the greater of the element's harm and the blow's own, armour
+        // reduced (with 50 more armour); a fire spirit HITs, so immunity leaves the blow.
+        Assert.True(FireDamage("fire_spirit", 3) > 0);
+        Assert.Equal(0, FireDamage("red_mold", 3));
+    }
+
+    private static int FireDamage(string monster, int resist)
+    {
+        var game = Arena.Create(5);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        if (resist != 0) game.Player.IntrinsicResists["fire"] = resist;
+        game.RecalculateBonuses();
+        var hurt = 0;
+        using var _ = game.Events.Subscribe<PlayerHurtEvent>(e => hurt += e.Damage);
+        Arena.AddMonster(game, monster, Start.Step(Direction.East));
+        for (var i = 0; i < 50; i++) game.Execute(new HoldCommand());
+        return hurt;
     }
 
     [Fact]

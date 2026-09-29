@@ -152,9 +152,9 @@ public sealed partial class GameSession
         foreach (var e in list)
         {
             var item = e.Item;
-            var flavor = item.IsFlavored ? Knowledge.Flavor(item.Kind) : null;
+            var flavor = Knowledge.Flavor(item.Kind);
             rows.Add(new VisibleListRow(ObjectListName(item), ObjectLineColor(item), ListLocation(e.Offset), item.Base.Glyph,
-                flavor?.Color ?? item.Base.Color, "object:" + item.Kind.Id));
+                flavor?.Color ?? item.Kind.Color ?? item.Base.Color, "object:" + item.Kind.Id));
         }
     }
 

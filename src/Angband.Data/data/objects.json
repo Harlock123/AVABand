@@ -11,7 +11,8 @@
     "damage": "1d4",
     "flags": [
       "THROWING"
-    ]
+    ],
+    "color": "LightSlate"
   },
   {
     "id": "main_gauche",
@@ -22,7 +23,8 @@
     "minDepth": 3,
     "cost": 45,
     "weight": 30,
-    "damage": "1d5"
+    "damage": "1d5",
+    "color": "LightSlate"
   },
   {
     "id": "rapier",
@@ -33,7 +35,8 @@
     "minDepth": 5,
     "cost": 70,
     "weight": 40,
-    "damage": "1d6"
+    "damage": "1d6",
+    "color": "LightSlate"
   },
   {
     "id": "short_sword",
@@ -44,7 +47,8 @@
     "minDepth": 5,
     "cost": 90,
     "weight": 80,
-    "damage": "1d7"
+    "damage": "1d7",
+    "color": "LightSlate"
   },
   {
     "id": "cutlass",
@@ -55,7 +59,8 @@
     "minDepth": 5,
     "cost": 120,
     "weight": 110,
-    "damage": "1d8"
+    "damage": "1d8",
+    "color": "LightSlate"
   },
   {
     "id": "long_sword",
@@ -66,7 +71,8 @@
     "minDepth": 10,
     "cost": 300,
     "weight": 130,
-    "damage": "2d5"
+    "damage": "2d5",
+    "color": "LightSlate"
   },
   {
     "id": "broad_sword",
@@ -77,7 +83,8 @@
     "minDepth": 10,
     "cost": 300,
     "weight": 150,
-    "damage": "2d5"
+    "damage": "2d5",
+    "color": "LightSlate"
   },
   {
     "id": "bastard_sword",
@@ -88,7 +95,8 @@
     "minDepth": 15,
     "cost": 400,
     "weight": 140,
-    "damage": "3d4"
+    "damage": "3d4",
+    "color": "LightSlate"
   },
   {
     "id": "zweihander",
@@ -99,7 +107,8 @@
     "minDepth": 30,
     "cost": 700,
     "weight": 200,
-    "damage": "3d6"
+    "damage": "3d6",
+    "color": "LightSlate"
   },
   {
     "id": "whip",
@@ -110,7 +119,8 @@
     "minDepth": 3,
     "cost": 30,
     "weight": 30,
-    "damage": "1d3"
+    "damage": "1d3",
+    "color": "LightDark"
   },
   {
     "id": "mace",
@@ -121,7 +131,8 @@
     "minDepth": 5,
     "cost": 130,
     "weight": 120,
-    "damage": "2d4"
+    "damage": "2d4",
+    "color": "LightDark"
   },
   {
     "id": "war_hammer",
@@ -132,7 +143,8 @@
     "minDepth": 5,
     "cost": 225,
     "weight": 120,
-    "damage": "3d3"
+    "damage": "3d3",
+    "color": "LightDark"
   },
   {
     "id": "morning_star",
@@ -143,7 +155,8 @@
     "minDepth": 10,
     "cost": 396,
     "weight": 150,
-    "damage": "2d6"
+    "damage": "2d6",
+    "color": "LightDark"
   },
   {
     "id": "flail",
@@ -154,7 +167,8 @@
     "minDepth": 10,
     "cost": 353,
     "weight": 150,
-    "damage": "2d6"
+    "damage": "2d6",
+    "color": "LightDark"
   },
   {
     "id": "lead_filled_mace",
@@ -165,7 +179,8 @@
     "minDepth": 15,
     "cost": 502,
     "weight": 180,
-    "damage": "4d3"
+    "damage": "4d3",
+    "color": "LightDark"
   },
   {
     "id": "spear",
@@ -179,7 +194,8 @@
     "damage": "1d6",
     "flags": [
       "THROWING"
-    ]
+    ],
+    "color": "Slate"
   },
   {
     "id": "awl_pike",
@@ -190,7 +206,8 @@
     "minDepth": 10,
     "cost": 340,
     "weight": 160,
-    "damage": "1d8"
+    "damage": "1d8",
+    "color": "Slate"
   },
   {
     "id": "trident",
@@ -201,7 +218,8 @@
     "minDepth": 5,
     "cost": 120,
     "weight": 70,
-    "damage": "1d10"
+    "damage": "1d10",
+    "color": "Yellow"
   },
   {
     "id": "pike",
@@ -212,7 +230,8 @@
     "minDepth": 15,
     "cost": 358,
     "weight": 160,
-    "damage": "2d5"
+    "damage": "2d5",
+    "color": "Slate"
   },
   {
     "id": "halberd",
@@ -223,7 +242,8 @@
     "minDepth": 25,
     "cost": 430,
     "weight": 190,
-    "damage": "3d5"
+    "damage": "3d5",
+    "color": "Slate"
   },
   {
     "id": "sling",
@@ -234,7 +254,8 @@
     "minDepth": 1,
     "cost": 5,
     "weight": 5,
-    "multiplier": 2
+    "multiplier": 2,
+    "color": "Umber"
   },
   {
     "id": "short_bow",
@@ -245,7 +266,8 @@
     "minDepth": 3,
     "cost": 50,
     "weight": 30,
-    "multiplier": 2
+    "multiplier": 2,
+    "color": "LightUmber"
   },
   {
     "id": "long_bow",
@@ -256,7 +278,8 @@
     "minDepth": 10,
     "cost": 120,
     "weight": 40,
-    "multiplier": 3
+    "multiplier": 3,
+    "color": "LightUmber"
   },
   {
     "id": "light_crossbow",
@@ -267,7 +290,8 @@
     "minDepth": 15,
     "cost": 140,
     "weight": 110,
-    "multiplier": 3
+    "multiplier": 3,
+    "color": "Slate"
   },
   {
     "id": "iron_shot",
@@ -282,7 +306,8 @@
     "stackSize": "5d7",
     "flags": [
       "THROWING"
-    ]
+    ],
+    "color": "Slate"
   },
   {
     "id": "arrow",
@@ -294,7 +319,8 @@
     "cost": 1,
     "weight": 2,
     "damage": "1d4",
-    "stackSize": "7d7"
+    "stackSize": "7d7",
+    "color": "LightUmber"
   },
   {
     "id": "bolt",
@@ -306,7 +332,8 @@
     "cost": 2,
     "weight": 3,
     "damage": "1d5",
-    "stackSize": "5d7"
+    "stackSize": "5d7",
+    "color": "Slate"
   },
   {
     "id": "soft_leather_armour",
@@ -317,7 +344,8 @@
     "minDepth": 3,
     "cost": 20,
     "weight": 80,
-    "armour": 8
+    "armour": 8,
+    "color": "LightUmber"
   },
   {
     "id": "hard_leather_armour",
@@ -329,7 +357,8 @@
     "cost": 150,
     "weight": 120,
     "armour": 16,
-    "toHit": -1
+    "toHit": -1,
+    "color": "LightUmber"
   },
   {
     "id": "chain_mail",
@@ -341,7 +370,8 @@
     "cost": 750,
     "weight": 220,
     "armour": 32,
-    "toHit": -2
+    "toHit": -2,
+    "color": "Slate"
   },
   {
     "id": "metal_scale_mail",
@@ -353,7 +383,8 @@
     "cost": 550,
     "weight": 250,
     "armour": 38,
-    "toHit": -2
+    "toHit": -2,
+    "color": "Slate"
   },
   {
     "id": "leather_shield",
@@ -365,7 +396,8 @@
     "cost": 200,
     "damage": "1d3",
     "weight": 90,
-    "armour": 8
+    "armour": 8,
+    "color": "LightUmber"
   },
   {
     "id": "wicker_shield",
@@ -377,7 +409,8 @@
     "cost": 20,
     "damage": "1d1",
     "weight": 30,
-    "armour": 2
+    "armour": 2,
+    "color": "LightUmber"
   },
   {
     "id": "hard_leather_cap",
@@ -388,7 +421,8 @@
     "minDepth": 3,
     "cost": 12,
     "weight": 20,
-    "armour": 2
+    "armour": 2,
+    "color": "Umber"
   },
   {
     "id": "metal_cap",
@@ -399,7 +433,8 @@
     "minDepth": 10,
     "cost": 30,
     "weight": 25,
-    "armour": 3
+    "armour": 3,
+    "color": "Slate"
   },
   {
     "id": "iron_helm",
@@ -410,7 +445,8 @@
     "minDepth": 20,
     "cost": 75,
     "weight": 50,
-    "armour": 7
+    "armour": 7,
+    "color": "Slate"
   },
   {
     "id": "leather_gloves",
@@ -421,7 +457,8 @@
     "minDepth": 1,
     "cost": 5,
     "weight": 10,
-    "armour": 1
+    "armour": 1,
+    "color": "LightUmber"
   },
   {
     "id": "gauntlets",
@@ -432,7 +469,8 @@
     "minDepth": 10,
     "cost": 45,
     "weight": 25,
-    "armour": 3
+    "armour": 3,
+    "color": "Slate"
   },
   {
     "id": "leather_sandals",
@@ -443,7 +481,8 @@
     "minDepth": 1,
     "cost": 4,
     "weight": 15,
-    "armour": 1
+    "armour": 1,
+    "color": "LightUmber"
   },
   {
     "id": "leather_boots",
@@ -454,7 +493,8 @@
     "minDepth": 3,
     "cost": 7,
     "weight": 20,
-    "armour": 2
+    "armour": 2,
+    "color": "LightUmber"
   },
   {
     "id": "cloak",
@@ -465,7 +505,8 @@
     "minDepth": 1,
     "cost": 3,
     "weight": 10,
-    "armour": 1
+    "armour": 1,
+    "color": "Green"
   },
   {
     "id": "fur_cloak",
@@ -476,7 +517,8 @@
     "minDepth": 20,
     "cost": 600,
     "weight": 25,
-    "armour": 3
+    "armour": 3,
+    "color": "Orange"
   },
   {
     "id": "wooden_torch",
@@ -494,7 +536,8 @@
     "flags": [
       "BURNS_OUT",
       "EASY_KNOW"
-    ]
+    ],
+    "color": "Umber"
   },
   {
     "id": "lantern",
@@ -515,7 +558,8 @@
     "flags": [
       "REFUELABLE",
       "EASY_KNOW"
-    ]
+    ],
+    "color": "LightUmber"
   },
   {
     "id": "phial",
@@ -546,7 +590,8 @@
     "flags": [
       "THROWING",
       "EXPLODE"
-    ]
+    ],
+    "color": "Yellow"
   },
   {
     "id": "ration_of_food",
@@ -559,7 +604,8 @@
     "cost": 3,
     "weight": 8,
     "effect": "nourish:6000",
-    "stackSize": "1d5"
+    "stackSize": "1d5",
+    "color": "LightUmber"
   },
   {
     "id": "slime_mold",
@@ -571,7 +617,8 @@
     "cost": 2,
     "weight": 2,
     "effect": "nourish:3000",
-    "stackSize": "2d3"
+    "stackSize": "2d3",
+    "color": "Green"
   },
   {
     "id": "hard_biscuit",
@@ -581,7 +628,8 @@
     "commonness": 0,
     "cost": 1,
     "weight": 2,
-    "effect": "nourish:2000"
+    "effect": "nourish:2000",
+    "color": "LightUmber"
   },
   {
     "id": "first_spells",
@@ -591,7 +639,8 @@
     "commonness": 40,
     "minDepth": 1,
     "cost": 25,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "attacks_and_knowledge",
@@ -601,7 +650,8 @@
     "commonness": 40,
     "minDepth": 10,
     "cost": 400,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "magical_defences",
@@ -611,7 +661,8 @@
     "commonness": 20,
     "minDepth": 30,
     "cost": 1600,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "arcane_control",
@@ -621,7 +672,8 @@
     "commonness": 15,
     "minDepth": 40,
     "cost": 30000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "wizards_tome_of_power",
@@ -631,7 +683,8 @@
     "commonness": 10,
     "minDepth": 60,
     "cost": 50000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "novices_handbook",
@@ -641,7 +694,8 @@
     "commonness": 40,
     "minDepth": 1,
     "cost": 25,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "cleansing_power",
@@ -651,7 +705,8 @@
     "commonness": 40,
     "minDepth": 5,
     "cost": 100,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "healing_and_sanctuary",
@@ -661,7 +716,8 @@
     "commonness": 20,
     "minDepth": 30,
     "cost": 10000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "battle_blessings",
@@ -671,7 +727,8 @@
     "commonness": 15,
     "minDepth": 40,
     "cost": 30000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "wrath_of_the_valar",
@@ -681,7 +738,8 @@
     "commonness": 10,
     "minDepth": 60,
     "cost": 50000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "lesser_charms",
@@ -691,7 +749,8 @@
     "commonness": 40,
     "minDepth": 1,
     "cost": 25,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "gifts_of_nature",
@@ -701,7 +760,8 @@
     "commonness": 40,
     "minDepth": 10,
     "cost": 400,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "creature_dominion",
@@ -711,7 +771,8 @@
     "commonness": 20,
     "minDepth": 30,
     "cost": 10000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "nature_craft",
@@ -721,7 +782,8 @@
     "commonness": 15,
     "minDepth": 40,
     "cost": 30000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "wild_forces",
@@ -731,7 +793,8 @@
     "commonness": 10,
     "minDepth": 60,
     "cost": 50000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "into_the_shadows",
@@ -741,7 +804,8 @@
     "commonness": 40,
     "minDepth": 1,
     "cost": 25,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "dark_rituals",
@@ -751,7 +815,8 @@
     "commonness": 40,
     "minDepth": 10,
     "cost": 400,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "fear_and_torment",
@@ -761,7 +826,8 @@
     "commonness": 20,
     "minDepth": 30,
     "cost": 1600,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "deadly_powers",
@@ -771,7 +837,8 @@
     "commonness": 15,
     "minDepth": 40,
     "cost": 30000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "corruption_of_spirit",
@@ -781,7 +848,8 @@
     "commonness": 10,
     "minDepth": 60,
     "cost": 50000,
-    "weight": 30
+    "weight": 30,
+    "color": "White"
   },
   {
     "id": "cure_light_wounds",
@@ -1115,7 +1183,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Umber"
   },
   {
     "id": "silver",
@@ -1124,7 +1193,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Slate"
   },
   {
     "id": "garnets",
@@ -1133,7 +1203,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Red"
   },
   {
     "id": "gold",
@@ -1142,7 +1213,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Yellow"
   },
   {
     "id": "opals",
@@ -1151,7 +1223,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "LightSlate"
   },
   {
     "id": "sapphires",
@@ -1160,7 +1233,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Blue"
   },
   {
     "id": "rubies",
@@ -1169,7 +1243,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Red"
   },
   {
     "id": "diamonds",
@@ -1178,7 +1253,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "White"
   },
   {
     "id": "emeralds",
@@ -1187,7 +1263,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "Green"
   },
   {
     "id": "mithril",
@@ -1196,7 +1273,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "LightBlue"
   },
   {
     "id": "adamantite",
@@ -1205,7 +1283,8 @@
     "level": 0,
     "commonness": 0,
     "cost": 0,
-    "weight": 0
+    "weight": 0,
+    "color": "LightGreen"
   },
   {
     "id": "apple",
@@ -1220,7 +1299,8 @@
     "description": "Wrinkled, but sound and sweet.",
     "effect": "nourish:2000",
     "stackSize": "1d2",
-    "pileChance": 10
+    "pileChance": 10,
+    "color": "LightRed"
   },
   {
     "id": "handful_of_dried_fruits",
@@ -1233,7 +1313,8 @@
     "cost": 3,
     "weight": 3,
     "description": "Fruit roughly chopped and sun-dried, prepared as marching rations for the rangers of Ithilien.",
-    "effect": "nourish:3000"
+    "effect": "nourish:3000",
+    "color": "Umber"
   },
   {
     "id": "scrap_of_flesh",
@@ -1248,7 +1329,8 @@
     "description": "A grey-looking piece of dried flesh of you dare not guess what creature. You would have to be desperate to eat this.",
     "effect": "random:5; nourish:4000; nourish:4000; nourish:2000; set_food:200; set_food:200",
     "stackSize": "1d3",
-    "pileChance": 50
+    "pileChance": 50,
+    "color": "Slate"
   },
   {
     "id": "slice_of_meat",
@@ -1263,7 +1345,8 @@
     "description": "A thick slice of pork, salted to keep it from spoiling. It is very filling.",
     "effect": "nourish:8000",
     "stackSize": "1d3",
-    "pileChance": 50
+    "pileChance": 50,
+    "color": "LightSlate"
   },
   {
     "id": "honey_cake",
@@ -1279,7 +1362,8 @@
     "effect": "satisfy",
     "power": 1,
     "stackSize": "1d3",
-    "pileChance": 40
+    "pileChance": 40,
+    "color": "Yellow"
   },
   {
     "id": "piece_of_elvish_waybread",
@@ -1295,7 +1379,8 @@
     "effect": "satisfy; cure:poisoned; heal:4d8:0",
     "power": 4,
     "stackSize": "1d3",
-    "pileChance": 10
+    "pileChance": 10,
+    "color": "LightBlue"
   },
   {
     "id": "flask_of_whisky",
@@ -1308,7 +1393,8 @@
     "cost": 1,
     "weight": 5,
     "description": "It raises your spirits.",
-    "effect": "nourish:600; timed:confused:1d5"
+    "effect": "nourish:600; timed:confused:1d5",
+    "color": "Yellow"
   },
   {
     "id": "pint_of_fine_wine",
@@ -1321,7 +1407,8 @@
     "cost": 2,
     "weight": 10,
     "description": "A fine way to wash down some otherwise unappetising rations.",
-    "effect": "nourish:600; timed:bold:1d41+79"
+    "effect": "nourish:600; timed:bold:1d41+79",
+    "color": "Red"
   },
   {
     "id": "sip_of_miruvor",
@@ -1334,7 +1421,8 @@
     "cost": 100,
     "weight": 2,
     "description": "Just a little of this warm and fragrant liquor gives you fresh hope and vigour.",
-    "effect": "nourish:600; restore_stat:str; restore_stat:con"
+    "effect": "nourish:600; restore_stat:str; restore_stat:con",
+    "color": "White"
   },
   {
     "id": "swig_of_orcish_liquor",
@@ -1349,7 +1437,8 @@
     "description": "This is a dirty brown color; you don't trust it.",
     "effect": "nourish:1000; timed:stun:1d3+2; timed:slow:1d3+2",
     "stackSize": "1d3",
-    "pileChance": 10
+    "pileChance": 10,
+    "color": "Mud"
   },
   {
     "id": "draught_of_the_ents",
@@ -1362,7 +1451,8 @@
     "cost": 2000,
     "weight": 10,
     "description": "This looks like pure water, but its scent reminds you of the smell of a distant wood borne from afar by a cool breeze at night.",
-    "effect": "satisfy; restore_stat:str; restore_stat:con; gain_stat:str; gain_stat:con"
+    "effect": "satisfy; restore_stat:str; restore_stat:con; gain_stat:str; gain_stat:con",
+    "color": "White"
   },
   {
     "id": "mushroom_of_second_sight",
@@ -1556,7 +1646,8 @@
     "cost": 170,
     "weight": 100,
     "damage": "2d4",
-    "description": "A wider-bladed cousin of the shamshir, with less of a curve."
+    "description": "A wider-bladed cousin of the shamshir, with less of a curve.",
+    "color": "LightSlate"
   },
   {
     "id": "scimitar",
@@ -1569,7 +1660,8 @@
     "cost": 300,
     "weight": 150,
     "damage": "4d2",
-    "description": "A long sabre with an extreme curve to the blade."
+    "description": "A long sabre with an extreme curve to the blade.",
+    "color": "LightSlate"
   },
   {
     "id": "katana",
@@ -1582,7 +1674,8 @@
     "cost": 600,
     "weight": 120,
     "damage": "3d5",
-    "description": "A slightly curved long-handled slashing sword with a single-edged blade and a chisel tip."
+    "description": "A slightly curved long-handled slashing sword with a single-edged blade and a chisel tip.",
+    "color": "LightSlate"
   },
   {
     "id": "executioners_sword",
@@ -1595,7 +1688,8 @@
     "cost": 850,
     "weight": 260,
     "damage": "4d5",
-    "description": "A giant, curved blade designed to cleave the head cleanly from the body."
+    "description": "A giant, curved blade designed to cleave the head cleanly from the body.",
+    "color": "Red"
   },
   {
     "id": "blade_of_chaos",
@@ -1611,7 +1705,8 @@
     "resists": [
       "chaos"
     ],
-    "description": "This inconstant weapon revels in disorder, hacking and slashing your foes with bloodthirsty glee."
+    "description": "This inconstant weapon revels in disorder, hacking and slashing your foes with bloodthirsty glee.",
+    "color": "Violet"
   },
   {
     "id": "ball_and_chain",
@@ -1624,7 +1719,8 @@
     "cost": 200,
     "weight": 150,
     "damage": "2d4",
-    "description": "A weighty iron ball, suspended by a chain from a sturdy oaken handle."
+    "description": "A weighty iron ball, suspended by a chain from a sturdy oaken handle.",
+    "color": "LightDark"
   },
   {
     "id": "two_handed_great_flail",
@@ -1637,7 +1733,8 @@
     "cost": 590,
     "weight": 280,
     "damage": "3d6",
-    "description": "Two great bars of wood connected by a massive chain, needing two hands to properly wield."
+    "description": "Two great bars of wood connected by a massive chain, needing two hands to properly wield.",
+    "color": "Yellow"
   },
   {
     "id": "quarterstaff",
@@ -1650,7 +1747,8 @@
     "cost": 200,
     "weight": 150,
     "damage": "1d9",
-    "description": "Six feet of oak which can be wielded in both hands to give a drubbing or block one."
+    "description": "Six feet of oak which can be wielded in both hands to give a drubbing or block one.",
+    "color": "LightUmber"
   },
   {
     "id": "throwing_hammer",
@@ -1666,7 +1764,8 @@
     "flags": [
       "THROWING"
     ],
-    "description": "A short-handled iron hammer that can strike hard when thrown."
+    "description": "A short-handled iron hammer that can strike hard when thrown.",
+    "color": "LightDark"
   },
   {
     "id": "maul",
@@ -1679,7 +1778,8 @@
     "cost": 130,
     "weight": 200,
     "damage": "4d4",
-    "description": "A long-handled hammer with a heavy head."
+    "description": "A long-handled hammer with a heavy head.",
+    "color": "LightDark"
   },
   {
     "id": "great_hammer",
@@ -1692,7 +1792,8 @@
     "cost": 500,
     "weight": 180,
     "damage": "8d1",
-    "description": "A mighty hammer with a massive head designed to crush and stun."
+    "description": "A mighty hammer with a massive head designed to crush and stun.",
+    "color": "LightDark"
   },
   {
     "id": "mace_of_disruption",
@@ -1713,7 +1814,8 @@
         "verb": "smite",
         "name": "undead"
       }
-    ]
+    ],
+    "color": "Violet"
   },
   {
     "id": "throwing_axe",
@@ -1729,7 +1831,8 @@
     "flags": [
       "THROWING"
     ],
-    "description": "A short-handled hatchet, balanced for throwing. A classic skirmisher's weapon."
+    "description": "A short-handled hatchet, balanced for throwing. A classic skirmisher's weapon.",
+    "color": "Slate"
   },
   {
     "id": "beaked_axe",
@@ -1742,7 +1845,8 @@
     "cost": 408,
     "weight": 180,
     "damage": "2d6",
-    "description": "A narrow axe head opposed by a crow's beak for penetrating armour."
+    "description": "A narrow axe head opposed by a crow's beak for penetrating armour.",
+    "color": "Slate"
   },
   {
     "id": "broad_axe",
@@ -1755,7 +1859,8 @@
     "cost": 304,
     "weight": 160,
     "damage": "2d6",
-    "description": "A simple, single-bladed war axe capable of chopping though limbs or armour."
+    "description": "A simple, single-bladed war axe capable of chopping though limbs or armour.",
+    "color": "Slate"
   },
   {
     "id": "battle_axe",
@@ -1768,7 +1873,8 @@
     "cost": 334,
     "weight": 170,
     "damage": "2d8",
-    "description": "A double-bladed axe. Very popular among Dwarves."
+    "description": "A double-bladed axe. Very popular among Dwarves.",
+    "color": "Slate"
   },
   {
     "id": "lochaber_axe",
@@ -1781,7 +1887,8 @@
     "cost": 750,
     "weight": 250,
     "damage": "3d8",
-    "description": "A long shaft with a long narrow blade."
+    "description": "A long shaft with a long narrow blade.",
+    "color": "LightDark"
   },
   {
     "id": "great_axe",
@@ -1794,7 +1901,8 @@
     "cost": 500,
     "weight": 230,
     "damage": "4d4",
-    "description": "An enormous two-handed battle axe, carried by Dwarven champions, who compete to see who can cleave the most orc heads."
+    "description": "An enormous two-handed battle axe, carried by Dwarven champions, who compete to see who can cleave the most orc heads.",
+    "color": "Slate"
   },
   {
     "id": "scythe",
@@ -1807,7 +1915,8 @@
     "cost": 800,
     "weight": 250,
     "damage": "5d3",
-    "description": "The long crescent blade stands out from the handle of this polearm, and it is swung with two hands to harvest grain or blood."
+    "description": "The long crescent blade stands out from the handle of this polearm, and it is swung with two hands to harvest grain or blood.",
+    "color": "Slate"
   },
   {
     "id": "glaive",
@@ -1820,7 +1929,8 @@
     "cost": 363,
     "weight": 190,
     "damage": "2d6",
-    "description": "A reinforced wooden pole eight feet long, topped by a massive knife blade that can be used to thrust or chop."
+    "description": "A reinforced wooden pole eight feet long, topped by a massive knife blade that can be used to thrust or chop.",
+    "color": "Slate"
   },
   {
     "id": "lance",
@@ -1833,7 +1943,8 @@
     "cost": 230,
     "weight": 300,
     "damage": "2d8",
-    "description": "A massive, tapered spear used primarily from horseback."
+    "description": "A massive, tapered spear used primarily from horseback.",
+    "color": "Slate"
   },
   {
     "id": "scythe_of_slicing",
@@ -1846,7 +1957,8 @@
     "cost": 3500,
     "weight": 250,
     "damage": "8d4",
-    "description": "A reaper's weapon, the long blade almost hums in anticipation of the blood it will spill."
+    "description": "A reaper's weapon, the long blade almost hums in anticipation of the blood it will spill.",
+    "color": "Red"
   },
   {
     "id": "lucerne_hammer",
@@ -1859,7 +1971,8 @@
     "cost": 376,
     "weight": 120,
     "damage": "2d5",
-    "description": "A long pole with a three- or four-pronged head balanced by a long spike."
+    "description": "A long pole with a three- or four-pronged head balanced by a long spike.",
+    "color": "LightBlue"
   },
   {
     "id": "heavy_crossbow",
@@ -1872,7 +1985,8 @@
     "cost": 300,
     "weight": 200,
     "description": "This arbalest is so powerful it has to be reinforced with metal and requires a crank to be cocked.",
-    "multiplier": 4
+    "multiplier": 4,
+    "color": "Slate"
   },
   {
     "id": "seeker_arrow",
@@ -1886,7 +2000,8 @@
     "weight": 2,
     "damage": "4d4",
     "stackSize": "7d7",
-    "description": "It can be shot with a bow."
+    "description": "It can be shot with a bow.",
+    "color": "LightGreen"
   },
   {
     "id": "mithril_arrow",
@@ -1904,7 +2019,8 @@
     "weight": 2,
     "damage": "3d4",
     "stackSize": "7d7",
-    "description": "It can be shot with a bow."
+    "description": "It can be shot with a bow.",
+    "color": "LightBlue"
   },
   {
     "id": "seeker_bolt",
@@ -1918,7 +2034,8 @@
     "weight": 3,
     "damage": "4d5",
     "stackSize": "5d7",
-    "description": "It can be shot with a crossbow."
+    "description": "It can be shot with a crossbow.",
+    "color": "Green"
   },
   {
     "id": "mithril_bolt",
@@ -1935,7 +2052,8 @@
     "weight": 2,
     "damage": "3d5",
     "stackSize": "5d7",
-    "description": "It can be shot with a crossbow."
+    "description": "It can be shot with a crossbow.",
+    "color": "LightBlue"
   },
   {
     "id": "rounded_pebble",
@@ -1952,7 +2070,8 @@
     "flags": [
       "THROWING"
     ],
-    "description": "It can be shot with a sling or thrown."
+    "description": "It can be shot with a sling or thrown.",
+    "color": "Slate"
   },
   {
     "id": "mithril_shot",
@@ -1971,7 +2090,8 @@
     "flags": [
       "THROWING"
     ],
-    "description": "It can be shot with a sling or thrown."
+    "description": "It can be shot with a sling or thrown.",
+    "color": "LightBlue"
   },
   {
     "id": "shovel",
@@ -1987,7 +2107,8 @@
     "modifiers": {
       "tunnel": 1
     },
-    "description": "A compact and sturdy spade."
+    "description": "A compact and sturdy spade.",
+    "color": "Slate"
   },
   {
     "id": "pick",
@@ -2003,7 +2124,8 @@
     "modifiers": {
       "tunnel": 2
     },
-    "description": "A heavy mining tool with a long, slightly curved head that tapers to chisel points on both ends."
+    "description": "A heavy mining tool with a long, slightly curved head that tapers to chisel points on both ends.",
+    "color": "Green"
   },
   {
     "id": "mattock",
@@ -2019,7 +2141,8 @@
     "modifiers": {
       "tunnel": 3
     },
-    "description": "A digging tool with a broad horizontal blade balanced by a smaller vertical blade. Used as a weapon of war by dwarves."
+    "description": "A digging tool with a broad horizontal blade balanced by a smaller vertical blade. Used as a weapon of war by dwarves.",
+    "color": "LightDark"
   },
   {
     "id": "pair_of_iron_shod_boots",
@@ -2035,7 +2158,8 @@
     "cost": 12,
     "weight": 35,
     "armour": 4,
-    "description": "A set of sturdy leather boots strengthened with iron that will last many weary miles."
+    "description": "A set of sturdy leather boots strengthened with iron that will last many weary miles.",
+    "color": "LightUmber"
   },
   {
     "id": "pair_of_steel_shod_boots",
@@ -2051,7 +2175,8 @@
     "cost": 50,
     "weight": 60,
     "armour": 7,
-    "description": "A set of double-lined leather boots, with toes and heels reinforced with steel."
+    "description": "A set of double-lined leather boots, with toes and heels reinforced with steel.",
+    "color": "Slate"
   },
   {
     "id": "pair_of_mithril_shod_boots",
@@ -2068,7 +2193,8 @@
     "cost": 500,
     "weight": 40,
     "armour": 8,
-    "description": "The enduring dwarves make the finest footgear known, and they march in it for endless miles without wearying."
+    "description": "The enduring dwarves make the finest footgear known, and they march in it for endless miles without wearying.",
+    "color": "LightBlue"
   },
   {
     "id": "pair_of_ethereal_slippers",
@@ -2086,7 +2212,8 @@
     "maxDepth": 100,
     "cost": 4,
     "weight": 0,
-    "description": "Fine quality elvish slippers, hard-wearing but apparently weightless."
+    "description": "Fine quality elvish slippers, hard-wearing but apparently weightless.",
+    "color": "LightUmber"
   },
   {
     "id": "steel_helm",
@@ -2099,7 +2226,8 @@
     "cost": 200,
     "weight": 60,
     "armour": 9,
-    "description": "This great helm covers the head and shoulders with plates of steel and a curtain of mail."
+    "description": "This great helm covers the head and shoulders with plates of steel and a curtain of mail.",
+    "color": "LightSlate"
   },
   {
     "id": "iron_crown",
@@ -2111,7 +2239,8 @@
     "maxDepth": 100,
     "cost": 500,
     "weight": 20,
-    "description": "A plain band of iron, crowned with iron spikes. It is a tyrant's symbol."
+    "description": "A plain band of iron, crowned with iron spikes. It is a tyrant's symbol.",
+    "color": "Slate"
   },
   {
     "id": "golden_crown",
@@ -2126,7 +2255,8 @@
     "maxDepth": 100,
     "cost": 1000,
     "weight": 30,
-    "description": "An elegant golden circlet, with slender spines thrusting upward. It looks like it should be resting over the brow of a king."
+    "description": "An elegant golden circlet, with slender spines thrusting upward. It looks like it should be resting over the brow of a king.",
+    "color": "Yellow"
   },
   {
     "id": "jewel_encrusted_crown",
@@ -2141,7 +2271,8 @@
     "maxDepth": 100,
     "cost": 2000,
     "weight": 40,
-    "description": "An elaboratedly decorated crown of massive gold, studded with a rainbow of gems and jewels; worthy of a High King."
+    "description": "An elaboratedly decorated crown of massive gold, studded with a rainbow of gems and jewels; worthy of a High King.",
+    "color": "Violet"
   },
   {
     "id": "robe",
@@ -2154,7 +2285,8 @@
     "cost": 4,
     "weight": 20,
     "armour": 2,
-    "description": "A practical garment of thick wool or velvet, draping from neck to heels."
+    "description": "A practical garment of thick wool or velvet, draping from neck to heels.",
+    "color": "Blue"
   },
   {
     "id": "studded_leather_armour",
@@ -2168,7 +2300,8 @@
     "weight": 100,
     "armour": 12,
     "description": "A cuirass of pliable leather studded with metal rivets.",
-    "toHit": -1
+    "toHit": -1,
+    "color": "LightUmber"
   },
   {
     "id": "soft_armour_leather_scale_mail",
@@ -2182,7 +2315,8 @@
     "weight": 140,
     "armour": 20,
     "description": "A tunic and skirt sewn with thick, overlapping scales of hardened leather.",
-    "toHit": -1
+    "toHit": -1,
+    "color": "LightUmber"
   },
   {
     "id": "augmented_chain_mail",
@@ -2196,7 +2330,8 @@
     "weight": 270,
     "armour": 42,
     "description": "A hauberk, leggings, and sleeves of interlocking steel rings, strategically reinforced at vital locations with a second layer of chain, all over a layer of heavy padding.",
-    "toHit": -2
+    "toHit": -2,
+    "color": "Slate"
   },
   {
     "id": "bar_chain_mail",
@@ -2210,7 +2345,8 @@
     "weight": 280,
     "armour": 45,
     "description": "A hauberk, leggings, and sleeves of interlocking steel rings, reinforced around the shoulders with segmented plates of steel, all over a layer of heavy padding.",
-    "toHit": -2
+    "toHit": -2,
+    "color": "Slate"
   },
   {
     "id": "metal_brigandine_armour",
@@ -2224,7 +2360,8 @@
     "weight": 290,
     "armour": 48,
     "description": "A stiff suit of armour composed of small metal plates sewn to an inner layer of heavy canvas, and covered with a second layer of cloth.",
-    "toHit": -3
+    "toHit": -3,
+    "color": "Slate"
   },
   {
     "id": "partial_plate_armour",
@@ -2238,7 +2375,8 @@
     "weight": 260,
     "armour": 40,
     "description": "A steel corselet and vambraces over a skirt and leggings of chain.",
-    "toHit": -3
+    "toHit": -3,
+    "color": "LightSlate"
   },
   {
     "id": "metal_lamellar_armour",
@@ -2252,7 +2390,8 @@
     "weight": 340,
     "armour": 58,
     "description": "This unusual armour is a surprisingly light suit of laced and overlapping metal plates.",
-    "toHit": -3
+    "toHit": -3,
+    "color": "LightSlate"
   },
   {
     "id": "full_plate_armour",
@@ -2266,7 +2405,8 @@
     "weight": 360,
     "armour": 62,
     "description": "A full suit of carefully fitted plates, with hinged joints backed by chain, and light padding underneath.",
-    "toHit": -3
+    "toHit": -3,
+    "color": "LightSlate"
   },
   {
     "id": "ribbed_plate_armour",
@@ -2280,7 +2420,8 @@
     "weight": 380,
     "armour": 66,
     "description": "A full suit of finely fitted metal armour consisting of steel plates reinforced ridging.",
-    "toHit": -3
+    "toHit": -3,
+    "color": "LightSlate"
   },
   {
     "id": "mithril_chain_mail",
@@ -2297,7 +2438,8 @@
     "weight": 150,
     "armour": 28,
     "description": "This wondrous suit of fine-linked chain shimmers as though of pure silver.",
-    "toHit": -1
+    "toHit": -1,
+    "color": "LightBlue"
   },
   {
     "id": "mithril_plate_mail",
@@ -2314,7 +2456,8 @@
     "weight": 300,
     "armour": 60,
     "description": "A shimmering suit of true-silver, forged long ago by dwarven smiths of legend. It gleams with purest white as you gaze upon it.",
-    "toHit": -3
+    "toHit": -3,
+    "color": "LightBlue"
   },
   {
     "id": "adamantite_plate_mail",
@@ -2331,7 +2474,8 @@
     "weight": 420,
     "armour": 80,
     "description": "An exquisite suit of nearly impenetrable adamantite.",
-    "toHit": -4
+    "toHit": -4,
+    "color": "LightGreen"
   },
   {
     "id": "elven_cloak",
@@ -2348,7 +2492,8 @@
       "stealth": 1,
       "speed": 1
     },
-    "description": "A mantle made of curious silken material by the Galadrim that wondrously takes on the hues and shapes of its surroundings."
+    "description": "A mantle made of curious silken material by the Galadrim that wondrously takes on the hues and shapes of its surroundings.",
+    "color": "LightDark"
   },
   {
     "id": "ethereal_cloak",
@@ -2367,7 +2512,8 @@
     "cost": 4500,
     "weight": 0,
     "toAc": 10,
-    "description": "This unearthly, completely transparent body mantle folds and drapes in iridescent patterns around you. It weighs absolutely nothing."
+    "description": "This unearthly, completely transparent body mantle folds and drapes in iridescent patterns around you. It weighs absolutely nothing.",
+    "color": "LightSlate"
   },
   {
     "id": "set_of_mithril_gauntlets",
@@ -2384,7 +2530,8 @@
     "cost": 700,
     "weight": 15,
     "armour": 6,
-    "description": "A set of gauntlets wrought of light, shining mithril."
+    "description": "A set of gauntlets wrought of light, shining mithril.",
+    "color": "LightBlue"
   },
   {
     "id": "set_of_caestus",
@@ -2398,7 +2545,8 @@
     "weight": 40,
     "toDam": 3,
     "armour": 5,
-    "description": "An ancient battle glove designed for hand-to-hand fighting. Its layered leather thongs are enhanced for combat by bloody-looking spikes."
+    "description": "An ancient battle glove designed for hand-to-hand fighting. Its layered leather thongs are enhanced for combat by bloody-looking spikes.",
+    "color": "LightUmber"
   },
   {
     "id": "set_of_alchemists_gloves",
@@ -2419,7 +2567,8 @@
     "rolls": {
       "to_a": "5+d5"
     },
-    "description": "Highly protective gloves designed for an alchemist's elemental magics."
+    "description": "Highly protective gloves designed for an alchemist's elemental magics.",
+    "color": "LightRed"
   },
   {
     "id": "small_metal_shield",
@@ -2433,7 +2582,8 @@
     "damage": "1d2",
     "weight": 60,
     "armour": 5,
-    "description": "A round shield of wood reinforced with metal rims and central disk."
+    "description": "A round shield of wood reinforced with metal rims and central disk.",
+    "color": "Slate"
   },
   {
     "id": "large_metal_shield",
@@ -2447,7 +2597,8 @@
     "damage": "1d5",
     "weight": 120,
     "armour": 12,
-    "description": "An oval shield of wood covered by leather and rimmed with metal. A large iron shield boss offers excellent hand protection."
+    "description": "An oval shield of wood covered by leather and rimmed with metal. A large iron shield boss offers excellent hand protection.",
+    "color": "Slate"
   },
   {
     "id": "knights_shield",
@@ -2461,7 +2612,8 @@
     "damage": "1d6",
     "weight": 160,
     "armour": 15,
-    "description": "A kite-shaped shield with rounded corners that covers the wearer from chest to toe, emblazoned with heraldic symbols."
+    "description": "A kite-shaped shield with rounded corners that covers the wearer from chest to toe, emblazoned with heraldic symbols.",
+    "color": "LightSlate"
   },
   {
     "id": "mithril_shield",
@@ -2479,7 +2631,8 @@
     "weight": 100,
     "armour": 16,
     "toAc": 10,
-    "description": "A shield of purest white, made of mithril."
+    "description": "A shield of purest white, made of mithril.",
+    "color": "LightBlue"
   },
   {
     "id": "ring_of_strength",
@@ -5374,7 +5527,8 @@
     "minDepth": 5,
     "maxDepth": 100,
     "cost": 20,
-    "weight": 250
+    "weight": 250,
+    "color": "Slate"
   },
   {
     "id": "large_wooden_chest",
@@ -5385,7 +5539,8 @@
     "minDepth": 15,
     "maxDepth": 100,
     "cost": 60,
-    "weight": 500
+    "weight": 500,
+    "color": "Slate"
   },
   {
     "id": "small_iron_chest",
@@ -5396,7 +5551,8 @@
     "minDepth": 25,
     "maxDepth": 100,
     "cost": 100,
-    "weight": 300
+    "weight": 300,
+    "color": "Slate"
   },
   {
     "id": "large_iron_chest",
@@ -5407,7 +5563,8 @@
     "minDepth": 35,
     "maxDepth": 100,
     "cost": 150,
-    "weight": 1000
+    "weight": 1000,
+    "color": "Slate"
   },
   {
     "id": "small_steel_chest",
@@ -5418,7 +5575,8 @@
     "minDepth": 45,
     "maxDepth": 100,
     "cost": 200,
-    "weight": 500
+    "weight": 500,
+    "color": "Slate"
   },
   {
     "id": "large_steel_chest",
@@ -5429,7 +5587,8 @@
     "minDepth": 55,
     "maxDepth": 100,
     "cost": 250,
-    "weight": 1000
+    "weight": 1000,
+    "color": "Slate"
   },
   {
     "id": "black_dragon_scale_mail",
@@ -5457,7 +5616,8 @@
     "description": "A suit of utterly black scales, against which no metal or wood can rest.",
     "activation": "breath:acid:120",
     "activationText": "lets you breathe acid (120)",
-    "power": 11
+    "power": 11,
+    "color": "Slate"
   },
   {
     "id": "blue_dragon_scale_mail",
@@ -5485,7 +5645,8 @@
     "description": "A suit of scales as blue as sapphires, emitting eerie sparks and coronas as you move about in it.",
     "activation": "breath:elec:150",
     "activationText": "lets you breathe lightning (150)",
-    "power": 18
+    "power": 18,
+    "color": "Blue"
   },
   {
     "id": "white_dragon_scale_mail",
@@ -5513,7 +5674,8 @@
     "description": "A suit of scales, coldly gleaming in frosty white. A shiver runs down through your spine even as you look at it.",
     "activation": "breath:cold:100",
     "activationText": "lets you breathe frost (100)",
-    "power": 10
+    "power": 10,
+    "color": "White"
   },
   {
     "id": "red_dragon_scale_mail",
@@ -5541,7 +5703,8 @@
     "description": "A suit of scales, with all the reds of every fire ever lit. The scar tissue from an old burn aches as you put this armour on.",
     "activation": "breath:fire:200",
     "activationText": "lets you breathe fire (200)",
-    "power": 20
+    "power": 20,
+    "color": "Red"
   },
   {
     "id": "green_dragon_scale_mail",
@@ -5569,7 +5732,8 @@
     "description": "A suit of scales, glistening in sickly green, out from which falls the skeleton of a rat who touched it and died in agony.",
     "activation": "breath:pois:150",
     "activationText": "lets you breathe poison (150)",
-    "power": 19
+    "power": 19,
+    "color": "Green"
   },
   {
     "id": "multi_hued_dragon_scale_mail",
@@ -5601,7 +5765,8 @@
     "description": "A suit of scales that throbs with angry energies; it takes all your energy to master the Elements fighting an endless war trapped inside.",
     "activation": "breath:acid/elec/fire/cold/pois:250",
     "activationText": "lets you breathe acid, lightning, fire, frost or poison (250)",
-    "power": 20
+    "power": 20,
+    "color": "Violet"
   },
   {
     "id": "shining_dragon_scale_mail",
@@ -5630,7 +5795,8 @@
     "description": "A suit of scales shining like a beacon of Light even as it greedily sucks the energy away from everything that glows into Dark insatiate.",
     "activation": "breath:light/dark:200",
     "activationText": "lets you breathe light or darkness (200)",
-    "power": 21
+    "power": 21,
+    "color": "Orange"
   },
   {
     "id": "law_dragon_scale_mail",
@@ -5659,7 +5825,8 @@
     "description": "A suit of scales in stern blue and silver. You feel the slightest tremor as you touch it, like massed trumpets heard and cyclones felt from afar.",
     "activation": "breath:sound/shards:230",
     "activationText": "lets you breathe sound or shards (230)",
-    "power": 23
+    "power": 23,
+    "color": "LightBlue"
   },
   {
     "id": "gold_dragon_scale_mail",
@@ -5687,7 +5854,8 @@
     "description": "A suit of scales in mirror-like gold. You hear nothing unusual as you wear this armour, yet your ears ache as though in the midst of a cacophony.",
     "activation": "breath:sound:150",
     "activationText": "lets you breathe sound (150)",
-    "power": 19
+    "power": 19,
+    "color": "Yellow"
   },
   {
     "id": "chaos_dragon_scale_mail",
@@ -5716,7 +5884,8 @@
     "description": "A suit of scales that ripples and twists through every color and shape imaginable as you stare in fascination.",
     "activation": "breath:chaos/disen:220",
     "activationText": "lets you breathe chaos or disenchantment (220)",
-    "power": 23
+    "power": 23,
+    "color": "Violet"
   },
   {
     "id": "balance_dragon_scale_mail",
@@ -5747,7 +5916,8 @@
     "description": "A suit of scales. Featureless grey to casual inspection, yet a closer look reveals patterns within patterns of iridescence that throb with leashed energies bound as though by chains of adamant.",
     "activation": "breath:sound/shards/chaos/disen:250",
     "activationText": "lets you breathe sound, shards, chaos or disenchantment (250)",
-    "power": 24
+    "power": 24,
+    "color": "Violet"
   },
   {
     "id": "power_dragon_scale_mail",
@@ -5786,7 +5956,8 @@
     "description": "A suit with scales of every color, surrounded in a nimbus of perfectly untrammelled yet inextricably intermingled and utterly mastered powers elemental and ethereal.",
     "activation": "breath:none:300",
     "activationText": "lets you breathe magic (300)",
-    "power": 25
+    "power": 25,
+    "color": "Violet"
   },
   {
     "id": "mighty_hammer",
@@ -5801,7 +5972,8 @@
     "damage": "3d9",
     "flags": [
       "INSTA_ART"
-    ]
+    ],
+    "color": "LightDark"
   },
   {
     "id": "massive_iron_crown",
@@ -5815,7 +5987,8 @@
     "weight": 20,
     "flags": [
       "INSTA_ART"
-    ]
+    ],
+    "color": "LightDark"
   },
   {
     "id": "star",

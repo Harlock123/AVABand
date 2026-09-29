@@ -335,6 +335,7 @@ def sync_objects(gd, data):
         before = json.dumps(o, sort_keys=True)
         ob = o["base"]
         o["level"] = int(cw.one(e, "level", "0"))
+        set_or_pop(o, "color", cw.kind_colour(e, ob, data), None)
         o["cost"] = int(cw.one(e, "cost", "0"))
         o["weight"] = int(cw.one(e, "weight", "0"))
         alloc = cw.one(e, "alloc")
@@ -1221,13 +1222,83 @@ def sync_constants(gd, data):
     print(f"constants: {changed or 'none'} brought into line")
 
 
+def sync_blow_methods(gd, data):
+    """blow_methods.txt, whole."""
+    out = cw.blow_methods_42(gd)
+    write_json(os.path.join(data, "blow_methods.json"), out, None)
+    print(f"blow methods: {len(out)} written")
+
+
+def sync_realms(gd, data):
+    """realm.txt's fields into ours (AVABand's display name kept)."""
+    path = os.path.join(data, "realms.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    theirs = cw.realms_42(gd)
+    for r in ours:
+        r.update(theirs.get(r["id"], {}))
+    write_json(path, ours, 2)
+    print(f"realms: {len(ours)} synced")
+
+
+def sync_object_bases(gd, data):
+    """object_base.txt's colour, break chance, hates and flags into ours."""
+    path = os.path.join(data, "object_bases.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    theirs = cw.object_bases_42(gd)
+    for b in ours:
+        t = theirs.get(b["id"])
+        if t is None:
+            continue
+        b["color"] = t["color"]
+        b["breakChance"] = t["breakChance"]
+        if t["hates"]:
+            b["hates"] = t["hates"]
+        else:
+            b.pop("hates", None)
+        if t["flags"]:
+            b["flags"] = t["flags"]
+        else:
+            b.pop("flags", None)
+    write_json(path, ours, 2)
+    print(f"object bases: {len(ours)} synced")
+
+
+def sync_flavors(gd, data):
+    """flavor.txt's random and fixed flavours; scroll title words from names.txt."""
+    path = os.path.join(data, "flavors.json")
+    ours = json.load(open(path, encoding="utf-8"))
+    theirs = cw.flavors_42(gd, data)
+    for g in ours:
+        t = theirs.get(g["id"])
+        if t is None:
+            continue
+        if g["id"] == "scroll":
+            g.pop("syllables", None)
+            g["titleWords"] = cw.names_42(gd)[2]
+            continue
+        g["flavors"] = t["flavors"]
+        if t["fixed"]:
+            g["fixed"] = [{"kind": k, **v} for k, v in t["fixed"].items()]
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(x, ensure_ascii=False) for x in ours) + "\n]\n")
+    print(f"flavors: {len(ours)} groups synced")
+
+
+def sync_names(gd, data):
+    """names.txt's Tolkien names."""
+    write_json(os.path.join(data, "names.json"), cw.names_42(gd)[1], 0)
+    print("names: synced")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
             "curses": sync_curses, "constants": sync_constants, "summons": sync_summons,
             "timed": sync_timed, "elements": sync_elements,
             "chest_traps": sync_chest_traps, "quests": sync_quests,
-            "profiles": sync_profiles, "vaults": sync_vaults, "room_templates": sync_room_templates, "pits": sync_pits}
+            "profiles": sync_profiles, "vaults": sync_vaults, "room_templates": sync_room_templates, "pits": sync_pits,
+            "blow_methods": sync_blow_methods, "realms": sync_realms, "object_bases": sync_object_bases,
+            "flavors": sync_flavors, "names": sync_names}
 
 
 def main():

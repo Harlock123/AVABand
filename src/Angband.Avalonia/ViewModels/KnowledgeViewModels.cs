@@ -292,7 +292,7 @@ public sealed partial class MainWindowViewModel
     public KnowledgeCategoryViewModel CreateHomeKnowledge()
     {
         var home = _game.Stores.Values.FirstOrDefault(s => s.IsHome);
-        var rows = (home?.Stock ?? []).Select(i => new KnowledgeRow(i.Base.Glyph.ToString(), _cells.Color(_game.Knowledge.Flavor(i.Kind)?.Color ?? i.Base.Color),
+        var rows = (home?.Stock ?? []).Select(i => new KnowledgeRow(i.Base.Glyph.ToString(), _cells.Color(_game.Knowledge.Flavor(i.Kind)?.Color ?? i.Kind.Color ?? i.Base.Color),
                 Capitalize(_game.Describe(i)), i.Number > 1 ? $"x{i.Number}" : "", () => Inspect(i)))
             .ToList();
         return new KnowledgeCategoryViewModel("Home", rows.Count == 1 ? "1 thing at home" : $"{rows.Count} things at home",
@@ -321,7 +321,7 @@ public sealed partial class MainWindowViewModel
             .Select(o =>
             {
                 var flavor = k.Flavor(o);
-                var color = flavor is not null ? _cells.Color(flavor.Color) : BaseColor(o.Base);
+                var color = flavor is not null ? _cells.Color(flavor.Color) : o.Color is { } own ? _cells.Color(own) : BaseColor(o.Base);
                 return new KnowledgeRow(BaseGlyph(o.Base), color, ObjectInfo.KindName(_game, o),
                     BaseName(o.Base), () => ObjectInfo.DescribeKind(_game, o), o);
             })

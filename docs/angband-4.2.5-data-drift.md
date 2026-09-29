@@ -32,6 +32,11 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Vaults](#vaults) — `templates/vaults.json` vs `vault.txt`
 - [Room templates](#room-templates) — `templates/room_templates.json` vs `room_template.txt`
 - [Pit profiles](#pits) — `pits.json` vs `pit.txt`
+- [Blow methods](#blow-methods) — `blow_methods.json` vs `blow_methods.txt`
+- [Realms](#realms) — `realms.json` vs `realm.txt`
+- [Object bases](#object-bases) — `object_bases.json` vs `object_base.txt`
+- [Flavours](#flavors) — `flavors.json` vs `flavor.txt (+ names.txt's scroll words)`
+- [Names](#names) — `names.json` vs `names.txt (section 1)`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -109,7 +114,7 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 - Damage dice are compared for weapons, ammo, diggers, flasks and anything ours gives damage to; the 4.2.5 `attack:1d1`/`1d2` placeholders on wands/staffs/rods are ignored.
 - Effects/activations are compared part by part (keyed by verb and subject, e.g. `heal`, `cure:blind`, `timed:fast`, `bolt:fire`) against the importer's translation of the 4.2.5 effect/dice lines (`effects()` in angband_object_import.py). Parts only in ours that the importer can never produce (e.g. `cure:amnesia`, `timed:bold`) are AVABand extensions and are tallied, not reported. `$` expressions are evaluated at the importer's stand-in values (player level/spell power 20), and teleport `M60` becomes 60, so dice with expressions may differ spuriously.
 - Book kinds come from class.txt `book`/`book-properties` (level = alloc minimum, weight 30, as 4.2.5's init.c sets them).
-- Not compared: `graphics` (AVABand colours objects per base/flavour), `desc`, `msg`, `effect-yx`, `pval` other than launcher multiplier and fuel.
+- The colour is compared for unflavoured kinds (flavoured ones take their flavour's; the glyph is the base's). Not compared: `desc`, `msg`, `effect-yx`, `pval` other than launcher multiplier and fuel.
 
 <a id="egos"></a>
 ## Ego items: `egos.json` vs `ego_item.txt`
@@ -339,6 +344,51 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - Every field of pit.txt is compared.
 
+<a id="blow-methods"></a>
+## Blow methods: `blow_methods.json` vs `blow_methods.txt`
+
+19 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every field of blow_methods.txt but `msg` (the sound played) is compared; the act lines keep their {target}/{oftarget}/{has} tags, filled in as monster_blow_method_action does.
+
+<a id="realms"></a>
+## Realms: `realms.json` vs `realm.txt`
+
+4 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every field of realm.txt is compared. AVABand's `name` (Arcane, Divine...) is its own: 4.2.5 shows the realm by its book noun.
+
+<a id="object-bases"></a>
+## Object bases: `object_bases.json` vs `object_base.txt`
+
+36 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Colour, break chance, hated elements and kind flags (EASY_KNOW) are compared. Names aren't: 4.2.5 names objects in code (obj_desc_get_basename), as AVABand's ItemNaming does, not from this file. SHOW_DICE and SHOW_MULT are how ItemNaming shows weapons and launchers. max-stack is 40 for all; AVABand keeps chests and gold to 1, as object_similar never stacks chests and gold is money, not carried. 4.2.5's one bow base is AVABand's sling, bow and crossbow.
+
+<a id="flavors"></a>
+## Flavours: `flavors.json` vs `flavor.txt (+ names.txt's scroll words)`
+
+8 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Each group's random flavours (name and colour, in order) and fixed ones (the special artifacts' rings and amulets) are compared. Scrolls are titled, not flavoured: 4.2.5 lists 51 white scroll flavours and titles them from names.txt's scroll words, which are compared instead.
+
+<a id="names"></a>
+## Names: `names.json` vs `names.txt (section 1)`
+
+1 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- The words random artifact and character names are made from, in order. names.txt's scroll words are compared under Flavours.
+
 ## Not compared at all
 
 - 4.2.5 files with no comparison here: object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
@@ -374,5 +424,10 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Vaults | 162 | 0 | 0 | 0 | 0 | 0 |
 | Room templates | 500 | 0 | 0 | 0 | 0 | 0 |
 | Pit profiles | 40 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **2621** | **0** | **0** | **0** | **14** | **58** |
+| Blow methods | 19 | 0 | 0 | 0 | 0 | 0 |
+| Realms | 4 | 0 | 0 | 0 | 0 | 0 |
+| Object bases | 36 | 0 | 0 | 0 | 0 | 0 |
+| Flavours | 8 | 0 | 0 | 0 | 0 | 0 |
+| Names | 1 | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **2689** | **0** | **0** | **0** | **14** | **58** |
 

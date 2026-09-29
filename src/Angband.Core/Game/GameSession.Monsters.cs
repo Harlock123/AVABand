@@ -394,6 +394,16 @@ public sealed partial class GameSession
         }
     }
 
+    /// <summary>The blow effects Angband handles with melee_effect_elemental (the rest take their damage as it comes).</summary>
+    private static readonly HashSet<string> MeleeElements = ["poison", "acid", "elec", "fire", "cold"];
+
+    /// <summary>What melee_effect_elemental says as the element strikes.</summary>
+    private static readonly Dictionary<string, string> ElementBlowMessages = new()
+    {
+        ["acid"] = "You are covered in acid!", ["elec"] = "You are struck by electricity!",
+        ["fire"] = "You are enveloped in flames!", ["cold"] = "You are covered with frost!",
+    };
+
     /// <summary>Angband make_attack_normal: each blow tests to hit, then applies its effect.</summary>
     private void MonsterMelee(Monster monster)
     {
@@ -424,18 +434,29 @@ public sealed partial class GameSession
             var chance = effect.Power + race.Depth * 3;
             if (!CombatMath.TestHit(Rng, chance, Player.Armour, visible: true))
             {
-                if (monster.IsVisible && method.Miss) Publish(new MessageEvent($"{name} {method.MissMessage}."));
+                if (monster.IsVisible && method.Miss) Publish(new MessageEvent($"{name} misses you."));
                 Publish(new MonsterAttackEvent(monster.Id, Hit: false, 0, blow.Method));
                 continue;
             }
 
+            var act = method.Act(Rng);
             var rolled = blow.Damage.Roll(Rng);
             var damage = rolled;
-            Publish(new MessageEvent($"{name} {method.Message}."));
+            Publish(new MessageEvent($"{name} {act}{(act.EndsWith('\'') || act.EndsWith('!') ? "" : ".")}"));
 
             if (effect.Element is { } elementId && Data.Element(elementId) is { } element)
             {
-                damage = CombatMath.ResistElement(Rng, element, damage, Player.Resists.GetValueOrDefault(elementId));
+                if (MeleeElements.Contains(effect.Id))
+                {
+                    // Angband melee_effect_elemental: the greater of the blow's physical harm (armour
+                    // counting 50 more, none for a blow that isn't physical) and its element's, resisted.
+                    if (ElementBlowMessages.TryGetValue(elementId, out var feel)) Publish(new MessageEvent(feel));
+                    var physical = method.Phys ? CombatMath.ArmourReduce(damage, Player.Armour + 50) : 0;
+                    var elemental = CombatMath.ResistElement(Rng, element, damage, Player.Resists.GetValueOrDefault(elementId));
+                    damage = Math.Max(physical, elemental);
+                    // Fire, acid, lightning and cold blows harm the pack too.
+                    if (elemental > 0) InventoryDamage(elementId, Math.Min(elemental * 5, 300));
+                }
                 // Being hit by an element reveals gear that resists it.
                 foreach (var item in Player.Inventory.Equipped.Where(i => i.Resists.Contains(elementId)).ToList())
                     LearnRune(RuneIds.Resist(elementId));
@@ -448,8 +469,6 @@ public sealed partial class GameSession
                 foreach (var item in Player.Inventory.Equipped.ToList()) LearnRunesOf(item, RuneIds.ToAc);
             }
 
-            // Angband melee_effect_elemental: fire, acid, lightning and cold blows harm the pack too.
-            if (effect.Element is { } harming && damage > 0) InventoryDamage(harming, Math.Min(damage * 5, 300));
             TakeHit(damage, killer);
             // Angband BLACK_BREATH: one blow in five adds a little of the Black Breath (unresistable).
             if (effect.Id == "black_breath" && !Player.IsDead && Rng.OneIn(5) && damage / 10 > 0)

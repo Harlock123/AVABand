@@ -1,7 +1,9 @@
 [
   {
     "id": "sword",
-    "hates": ["acid"],
+    "hates": [
+      "acid"
+    ],
     "name": "Sword",
     "glyph": "|",
     "color": "White",
@@ -10,7 +12,10 @@
   },
   {
     "id": "hafted",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Hafted Weapon",
     "glyph": "\\",
     "color": "White",
@@ -19,7 +24,10 @@
   },
   {
     "id": "polearm",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Polearm",
     "glyph": "/",
     "color": "White",
@@ -32,7 +40,7 @@
     "glyph": "\\",
     "color": "Slate",
     "slot": "weapon",
-    "breakChance": 0
+    "breakChance": 10
   },
   {
     "id": "sling",
@@ -40,37 +48,54 @@
     "glyph": "}",
     "color": "Umber",
     "slot": "bow",
-    "ammoClass": "shot"
+    "ammoClass": "shot",
+    "breakChance": 10,
+    "hates": [
+      "acid",
+      "fire"
+    ]
   },
   {
     "id": "bow",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Bow",
     "glyph": "}",
     "color": "Umber",
     "slot": "bow",
-    "ammoClass": "arrow"
+    "ammoClass": "arrow",
+    "breakChance": 10
   },
   {
     "id": "crossbow",
     "name": "Crossbow",
     "glyph": "}",
-    "color": "Slate",
+    "color": "Umber",
     "slot": "bow",
-    "ammoClass": "bolt"
+    "ammoClass": "bolt",
+    "breakChance": 10,
+    "hates": [
+      "acid",
+      "fire"
+    ]
   },
   {
     "id": "shot",
     "name": "Shot",
     "glyph": "{",
-    "color": "Slate",
+    "color": "LightUmber",
     "isAmmo": true,
     "ammoClass": "shot",
-    "breakChance": 25
+    "breakChance": 0
   },
   {
     "id": "arrow",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Arrow",
     "glyph": "{",
     "color": "LightUmber",
@@ -80,73 +105,102 @@
   },
   {
     "id": "bolt",
-    "hates": ["acid"],
+    "hates": [
+      "acid"
+    ],
     "name": "Bolt",
     "glyph": "{",
-    "color": "Slate",
+    "color": "LightUmber",
     "isAmmo": true,
     "ammoClass": "bolt",
-    "breakChance": 25
+    "breakChance": 20
   },
   {
     "id": "soft_armour",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Soft Armour",
     "glyph": "(",
     "color": "Slate",
-    "slot": "body"
+    "slot": "body",
+    "breakChance": 10
   },
   {
     "id": "hard_armour",
-    "hates": ["acid"],
+    "hates": [
+      "acid"
+    ],
     "name": "Hard Armour",
     "glyph": "[",
     "color": "Slate",
-    "slot": "body"
+    "slot": "body",
+    "breakChance": 10
   },
   {
     "id": "shield",
-    "hates": ["acid"],
+    "hates": [
+      "acid"
+    ],
     "name": "Shield",
     "glyph": ")",
-    "color": "Umber",
-    "slot": "shield"
+    "color": "LightUmber",
+    "slot": "shield",
+    "breakChance": 10
   },
   {
     "id": "helm",
-    "hates": ["acid"],
+    "hates": [
+      "acid"
+    ],
     "name": "Helm",
     "glyph": "]",
-    "color": "Umber",
-    "slot": "head"
+    "color": "LightUmber",
+    "slot": "head",
+    "breakChance": 10
   },
   {
     "id": "gloves",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Gloves",
     "glyph": "]",
-    "color": "Umber",
-    "slot": "hands"
+    "color": "LightUmber",
+    "slot": "hands",
+    "breakChance": 10
   },
   {
     "id": "boots",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Boots",
     "glyph": "]",
-    "color": "Umber",
-    "slot": "feet"
+    "color": "LightUmber",
+    "slot": "feet",
+    "breakChance": 10
   },
   {
     "id": "cloak",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Cloak",
     "glyph": "(",
-    "color": "Green",
-    "slot": "cloak"
+    "color": "LightUmber",
+    "slot": "cloak",
+    "breakChance": 10
   },
   {
     "id": "light",
-    "hates": ["fire"],
+    "hates": [
+      "fire"
+    ],
     "name": "Light Source",
     "glyph": "~",
     "color": "Yellow",
@@ -159,98 +213,151 @@
     "glyph": "\"",
     "color": "Orange",
     "slot": "amulet",
-    "flavor": "amulet"
+    "flavor": "amulet",
+    "breakChance": 10
   },
   {
     "id": "ring",
-    "hates": ["elec"],
+    "hates": [
+      "elec"
+    ],
     "name": "Ring~",
     "glyph": "=",
     "color": "Red",
     "slot": "ring",
-    "flavor": "ring"
+    "flavor": "ring",
+    "breakChance": 10
   },
   {
     "id": "magic_book",
-    "hates": ["fire"],
+    "hates": [
+      "fire"
+    ],
     "name": "Magic Book~",
     "glyph": "?",
-    "color": "Red",
-    "breakChance": 50
+    "color": "LightRed",
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "prayer_book",
-    "hates": ["fire"],
+    "hates": [
+      "fire"
+    ],
     "name": "Holy Book~",
     "glyph": "?",
     "color": "LightGreen",
-    "breakChance": 50
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "nature_book",
-    "hates": ["fire"],
+    "hates": [
+      "fire"
+    ],
     "name": "Nature Book~",
     "glyph": "?",
-    "color": "Green",
-    "breakChance": 50
+    "color": "Yellow",
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "shadow_book",
-    "hates": ["fire"],
+    "hates": [
+      "fire"
+    ],
     "name": "Necromantic Tome~",
     "glyph": "?",
-    "color": "Violet",
-    "breakChance": 50
+    "color": "LightPurple",
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "potion",
-    "hates": ["cold", "sound", "shards", "ice", "force"],
+    "hates": [
+      "cold",
+      "force",
+      "ice",
+      "shards",
+      "sound"
+    ],
     "name": "Potion~",
     "glyph": "!",
     "color": "LightBlue",
     "flavor": "potion",
-    "breakChance": 100
+    "breakChance": 100,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "scroll",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Scroll~",
     "glyph": "?",
     "color": "White",
     "flavor": "scroll",
-    "breakChance": 50
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "food",
     "name": "Food",
     "glyph": ",",
     "color": "LightUmber",
-    "breakChance": 100
+    "breakChance": 100,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "flask",
-    "hates": ["cold", "sound", "shards", "ice", "force"],
+    "hates": [
+      "cold",
+      "force",
+      "ice",
+      "shards",
+      "sound"
+    ],
     "name": "Flask",
     "glyph": "!",
     "color": "Yellow",
-    "breakChance": 100
+    "breakChance": 100,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "crown",
-    "hates": ["acid"],
+    "hates": [
+      "acid"
+    ],
     "name": "Crown",
     "glyph": "]",
-    "color": "Yellow",
+    "color": "LightUmber",
     "slot": "head",
-    "breakChance": 0
+    "breakChance": 10
   },
   {
     "id": "dragon_armour",
     "name": "Dragon Scale Mail",
     "glyph": "[",
-    "color": "LightGreen",
+    "color": "Slate",
     "slot": "body",
-    "breakChance": 0
+    "breakChance": 10
   },
   {
     "id": "mushroom",
@@ -258,49 +365,72 @@
     "glyph": ",",
     "color": "LightUmber",
     "flavor": "mushroom",
-    "breakChance": 100
+    "breakChance": 100,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "wand",
-    "hates": ["elec"],
+    "hates": [
+      "elec"
+    ],
     "name": "Wand",
     "glyph": "-",
-    "color": "LightSlate",
+    "color": "Green",
     "flavor": "wand",
-    "breakChance": 25
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "staff",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Staff",
     "glyph": "_",
     "color": "LightUmber",
     "flavor": "staff",
-    "breakChance": 10
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "rod",
-    "hates": ["elec"],
+    "hates": [
+      "elec"
+    ],
     "name": "Rod",
     "glyph": "-",
-    "color": "Slate",
+    "color": "LightPurple",
     "flavor": "rod",
-    "breakChance": 15
+    "breakChance": 10,
+    "flags": [
+      "EASY_KNOW"
+    ]
   },
   {
     "id": "chest",
-    "hates": ["acid", "fire"],
+    "hates": [
+      "acid",
+      "fire"
+    ],
     "name": "Chest",
     "glyph": "~",
     "color": "Slate",
-    "breakChance": 0,
+    "breakChance": 10,
     "maxStack": 1
   },
   {
     "id": "gold",
     "name": "Gold",
     "glyph": "$",
-    "color": "Yellow",
-    "maxStack": 1
+    "color": "LightYellow",
+    "maxStack": 1,
+    "breakChance": 10
   }
 ]

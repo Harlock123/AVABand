@@ -601,7 +601,8 @@ public static class DataLoader
         {
             foreach (var f in group.Flavors) CheckColor(colors, f.Color, $"flavor '{group.Id}/{f.Name}'", errors);
             var needed = kinds.Count(k => baseIds.TryGetValue(k.Base, out var b) && b.Flavor == group.Id && !k.IsSpecialArtifactKind);
-            if (group.Syllables.Count == 0 && needed > group.Flavors.Count)
+            foreach (var f in group.Fixed.Where(f => !kindIds.Contains(f.Kind))) errors.Add($"flavor group '{group.Id}' fixes a flavour for unknown object '{f.Kind}'.");
+            if (group.TitleWords.Count == 0 && needed > group.Flavors.Count)
                 errors.Add($"flavor group '{group.Id}' has {group.Flavors.Count} flavours for {needed} kinds.");
         }
         foreach (var b in bases.Where(b => b.Flavor is not null && flavors.All(f => f.Id != b.Flavor)))

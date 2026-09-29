@@ -124,7 +124,7 @@ public static class MonsterRecall
             var parts = blows.Select(x =>
             {
                 var method = data.BlowMethod(x.Blow.Method);
-                var verb = method?.Message.Replace(" you", "").Replace("es you", "es") ?? x.Blow.Method;
+                var verb = method is { Description.Length: > 0 } ? method.Description : x.Blow.Method;
                 var effect = EffectPhrase(x.Blow.Effect);
                 var damage = lore.BlowSeen(x.Index) >= BlowsForDamage || lore.TotalKills >= BlowsForDamage
                     ? $" ({x.Blow.Damage})" : "";

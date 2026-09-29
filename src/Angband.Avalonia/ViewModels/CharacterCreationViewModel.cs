@@ -29,9 +29,6 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     private static readonly (string Id, string Label)[] StatLabels =
         [("str", "Strength"), ("int", "Intelligence"), ("wis", "Wisdom"), ("dex", "Dexterity"), ("con", "Constitution")];
 
-    private static readonly string[] NameSyllables =
-        ["ar", "bor", "cel", "dor", "el", "fin", "gal", "hal", "ith", "lor", "mir", "nar", "or", "rin", "sil", "tha", "ul", "val", "wen", "dil"];
-
     private readonly GameData _data;
     private readonly Random _random = new();
     private Dictionary<string, int> _rolled = [];
@@ -117,11 +114,11 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         Update();
     }
 
+    /// <summary>Angband player_random_name: a made-up word of 4 to 8 letters, built from names.txt's Tolkien names.</summary>
     [RelayCommand]
     private void RandomName()
     {
-        var name = "";
-        for (var i = _random.Next(2, 4); i > 0; i--) name += NameSyllables[_random.Next(NameSyllables.Length)];
+        var name = Angband.Core.Items.RandomName.Make(new GameRandom((ulong)_random.NextInt64()), _data.NameWords, 4, 8);
         Name = char.ToUpperInvariant(name[0]) + name[1..];
     }
 

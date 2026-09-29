@@ -76,13 +76,15 @@ public sealed class PlayerKnowledge
                 .Where(k => data.ObjectBase(k.Base)?.Flavor == group.Id && !k.IsSpecialArtifactKind)
                 .OrderBy(k => k.Id, StringComparer.Ordinal)
                 .ToList();
-            if (group.Syllables.Count > 0)
+            foreach (var fixedFlavor in group.Fixed)
+                _flavors[fixedFlavor.Kind] = new FlavorDef { Name = fixedFlavor.Name, Color = fixedFlavor.Color };
+            if (group.TitleWords.Count > 0)
             {
                 var used = new HashSet<string>();
                 foreach (var kind in kinds)
                 {
                     string title;
-                    do title = ScrollTitle(rng, group.Syllables);
+                    do title = ScrollTitle(rng, group.TitleWords);
                     while (!used.Add(title));
                     _flavors[kind.Id] = new FlavorDef { Name = title, Color = "White" };
                 }
@@ -125,7 +127,7 @@ public sealed class PlayerKnowledge
     public bool KnowsProperty(Item item, string rune)
     {
         if (_runes.Contains(rune)) return true;
-        if (item.Ego is not { } ego || !item.Kind.Has("EASY_KNOW") || !KnowsKind(item)) return false;
+        if (item.Ego is not { } ego || !(item.Kind.Has("EASY_KNOW") || item.Base.Flags.Contains("EASY_KNOW")) || !KnowsKind(item)) return false;
         var colon = rune.IndexOf(':');
         var what = colon < 0 ? "" : rune[(colon + 1)..];
         return (colon < 0 ? rune : rune[..colon]) switch
@@ -163,16 +165,21 @@ public sealed class PlayerKnowledge
     /// <summary>Everything about the object is known (Angband object_fully_known).</summary>
     public bool IsFullyKnown(Item item) => KnowsKind(item) && !UnknownRunes(item).Any();
 
-    private static string ScrollTitle(GameRandom rng, IReadOnlyList<string> syllables)
+    /// <summary>
+    /// Angband flavor_init's scroll titles: made-up words of 2 to 8 letters, added while the title
+    /// stays under 15 characters (its 18-character buffer, less the quotes and the end).
+    /// </summary>
+    private static string ScrollTitle(GameRandom rng, IReadOnlyList<string> words)
     {
-        var words = new List<string>();
-        var words_n = rng.RandRange(1, 3);
-        for (var w = 0; w < words_n; w++)
+        var parts = new List<string>();
+        var length = 0;
+        var word = RandomName.Make(rng, words, 2, 8);
+        while (length + word.Length < 15)
         {
-            var word = "";
-            for (var s = rng.RandRange(1, 3); s > 0; s--) word += rng.Pick(syllables);
-            words.Add(word);
+            parts.Add(word);
+            length += word.Length + 1;
+            word = RandomName.Make(rng, words, 2, 8);
         }
-        return string.Join(' ', words);
+        return string.Join(' ', parts);
     }
 }

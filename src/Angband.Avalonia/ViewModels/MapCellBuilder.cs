@@ -67,7 +67,7 @@ public sealed class MapCellBuilder
     /// <summary>An object of this kind, unidentified by any flavour (what a hallucinating player "sees").</summary>
     public MapCell ObjectKind(ObjectKindDef kind, ObjectBaseDef objectBase, MapCell under)
     {
-        var fg = Color(objectBase.Color);
+        var fg = Color(kind.Color ?? objectBase.Color);
         if (under.Lighting == TileLighting.Dark) fg = Dim(fg);
         return new MapCell(objectBase.Glyph, fg, Black, "object:" + kind.Id, under.Lighting, "object-base:" + objectBase.Id,
             under.TileKey, under.Lighting);
@@ -89,8 +89,8 @@ public sealed class MapCellBuilder
             return new MapCell('&', Color("White"), Black, "object:pile", under.Lighting, "object-base:" + top.Base.Id,
                 under.TileKey, under.Lighting);
 
-        var flavor = top.IsFlavored ? knowledge.Flavor(top.Kind) : null;
-        var fg = Color(flavor?.Color ?? top.Base.Color);
+        var flavor = knowledge.Flavor(top.Kind);
+        var fg = Color(flavor?.Color ?? top.Kind.Color ?? top.Base.Color);
         if (under.Lighting == TileLighting.Dark) fg = Dim(fg);
         var key = flavor is not null && top.Base.Flavor != "scroll"
             ? $"flavor:{top.Base.Flavor}:{flavor.Name.ToLowerInvariant()}"

@@ -148,15 +148,29 @@ public sealed class TimedFailDef
 public sealed class BlowMethodDef
 {
     public required string Id { get; init; }
-    /// <summary>Message after the monster name, e.g. <c>bites you</c>.</summary>
-    public required string Message { get; init; }
-    public string MissMessage { get; init; } = "misses you";
+    /// <summary>
+    /// What the monster does, after its name (Angband's act lines, one chosen at random):
+    /// <c>{target}</c> is you, <c>{oftarget}</c> your, <c>{has}</c> have.
+    /// </summary>
+    public IReadOnlyList<string> Messages { get; init; } = [];
     /// <summary>Hard hits of this kind can cut.</summary>
     public bool Cut { get; init; }
     /// <summary>Hard hits of this kind can stun.</summary>
     public bool Stun { get; init; }
-    /// <summary>The blow only works if the monster can touch the player (future: invisibility, etc.).</summary>
-    public bool Miss { get; init; } = true;
+    /// <summary>A miss is announced ("The orc misses you.").</summary>
+    public bool Miss { get; init; }
+    /// <summary>Physical: an elemental blow of this kind does armour-reduced harm even when the element is resisted.</summary>
+    public bool Phys { get; init; }
+    /// <summary>For monster recall: "It can <c>bite</c> to ...".</summary>
+    public string Description { get; init; } = "";
+
+    /// <summary>Angband monster_blow_method_action for the player: one of the messages, tags filled in.</summary>
+    public string Act(Randomness.GameRandom rng)
+    {
+        if (Messages.Count == 0) return Id;
+        var text = Messages[rng.RandInt0(Messages.Count)];
+        return text.Replace("{target}", "you").Replace("{oftarget}", "your").Replace("{has}", "have");
+    }
 }
 
 /// <summary>What a monster blow does on a hit (Angband blow_effects.txt).</summary>

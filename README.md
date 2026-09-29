@@ -546,9 +546,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
   spells), race, shape, trap, terrain feature, store, curse, constant, summon kind, timed effect,
-  element, chest trap, quest, dungeon profile, vault, room template and pit theme with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
+  element, chest trap, quest, dungeon profile, vault, room template, pit theme, blow method, realm,
+  object base, flavour and name list with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
   differs (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
-  differences across 2,621 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  differences across 2,689 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
   monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
   conversions while keeping ids and AVABand's own fields, and CI checks it on every push: the
   `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with
@@ -557,7 +558,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   aren't traps; launchers' SHOOTS_* come from their base). EASY_KNOW is carried and does what it
   does in 4.2.5: once you know an EASY_KNOW kind (lights, and the rings and amulets that are no
   more than their flavour), its ego's object flags are known too — a Lantern of True Sight shows
-  its see invisible and protection from blindness at once.
+  its see invisible and protection from blindness at once. The last files brought in changed play
+  a little: an elemental blow does the greater of its element's harm and, for a physical blow (a
+  hit, a bite), its own armour-reduced harm, so fire immunity doesn't stop a fire spirit's fists;
+  disenchanting blows aren't resisted; misses of gazes, spores, insults and the like go unannounced;
+  insults and moans have their eight lines; nature magic is chanted in verses; shots don't break
+  and bolts break one time in five; slings and crossbows burn; weapons, armour, food and treasure
+  have their own colours; the rings of power and the like keep their fixed stones; and scrolls are
+  titled with 4.2.5's made-up words, as random names are.
 - **Speed deep down**: `dotnet run -c Release --project tools/perf` holds a character who can't die
   for 1000 turns at 1500, 3000 and 4950 ft among everything that lives there (spells, breaths,
   summons, fights): about a quarter of a millisecond a turn at 3000–4950 ft once warmed up, so

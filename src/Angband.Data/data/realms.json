@@ -19,8 +19,8 @@
     "id": "nature",
     "name": "Nature",
     "stat": "wis",
-    "verb": "invoke",
-    "spellNoun": "charm",
+    "verb": "chant",
+    "spellNoun": "verse",
     "bookBase": "nature_book"
   },
   {

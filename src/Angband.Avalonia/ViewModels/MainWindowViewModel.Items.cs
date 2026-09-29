@@ -352,9 +352,9 @@ public sealed partial class MainWindowViewModel
 
     private ItemRow Row(string letter, Item item)
     {
-        var flavor = item.IsFlavored ? _game.Knowledge.Flavor(item.Kind) : null;
+        var flavor = _game.Knowledge.Flavor(item.Kind);
         var weight = item.IsGold ? "" : string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.TotalWeight / 10.0);
-        return new ItemRow(letter, item.Base.Glyph.ToString(), _cells.Color(flavor?.Color ?? item.Base.Color),
+        return new ItemRow(letter, item.Base.Glyph.ToString(), _cells.Color(flavor?.Color ?? item.Kind.Color ?? item.Base.Color),
             _game.Describe(item), weight, item);
     }
 }

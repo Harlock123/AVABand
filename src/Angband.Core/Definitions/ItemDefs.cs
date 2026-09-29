@@ -32,6 +32,8 @@ public sealed class ObjectBaseDef
     public IReadOnlyList<string> Hates { get; init; } = [];
     /// <summary>% chance to break when thrown or fired and it hits.</summary>
     public int BreakChance { get; init; } = 10;
+    /// <summary>Kind flags every object of the base has (Angband object_base.txt flags: EASY_KNOW).</summary>
+    public IReadOnlyList<string> Flags { get; init; } = [];
     /// <summary>Flavour group ("potion", "scroll", "ring"...) when kinds of this base look alike until learned.</summary>
     public string? Flavor { get; init; }
     /// <summary>Missile fired by this launcher kind ("shot", "arrow", "bolt"), or the ammo class of this base.</summary>
@@ -151,6 +153,8 @@ public sealed class ObjectKindDef
     public required string Id { get; init; }
     public required string Name { get; init; }
     public required string Base { get; init; }
+    /// <summary>Its own colour (Angband object.txt graphics), for kinds without a flavour; null takes the base's.</summary>
+    public string? Color { get; init; }
     /// <summary>Elements this kind is proof against, though its base hates them (Angband IGNORE_*).</summary>
     public IReadOnlyList<string> Ignore { get; init; } = [];
     public int Level { get; init; }
@@ -346,8 +350,21 @@ public sealed class FlavorGroupDef
     /// <summary>How an unknown object is named: <c>{flavor} Potion</c>.</summary>
     public string Pattern { get; init; } = "{flavor} {base}";
     public IReadOnlyList<FlavorDef> Flavors { get; init; } = [];
-    /// <summary>Random titles are built from these syllables instead (scrolls).</summary>
-    public IReadOnlyList<string> Syllables { get; init; } = [];
+    /// <summary>Flavours kept for particular kinds (Angband's fixed lines: the One Ring is always Plain Gold).</summary>
+    public IReadOnlyList<FixedFlavorDef> Fixed { get; init; } = [];
+    /// <summary>
+    /// Scrolls: titles are made instead, of words built letter by letter from these (Angband
+    /// randname_make over names.txt's scroll section).
+    /// </summary>
+    public IReadOnlyList<string> TitleWords { get; init; } = [];
+}
+
+/// <summary>A flavour that always goes to one kind.</summary>
+public sealed class FixedFlavorDef
+{
+    public required string Kind { get; init; }
+    public required string Name { get; init; }
+    public string Color { get; init; } = "White";
 }
 
 public sealed class FlavorDef

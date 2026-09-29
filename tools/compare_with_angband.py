@@ -566,6 +566,19 @@ def class_books(gd):
     return books
 
 
+_FLAVOURED_BASES = None
+
+
+def kind_colour(e, base, data):
+    """object.txt's colour for an unflavoured kind (flavoured ones take their flavour's, as object_kind_attr does)."""
+    global _FLAVOURED_BASES
+    if _FLAVOURED_BASES is None:
+        _FLAVOURED_BASES = {b["id"] for b in load(data, "object_bases.json") if b.get("flavor")}
+    if base in _FLAVOURED_BASES:
+        return None
+    return MI.COLORS.get(graphics(e)[1] or "w")
+
+
 def compare_objects(gd, data):
     sec = section("objects", "Object kinds", "objects.json", "object.txt (+ book lines of class.txt)")
     ours = load(data, "objects.json")
@@ -600,6 +613,7 @@ def compare_objects(gd, data):
         label = f"{o['id']} ({t}: {norm_name(e['name'])})"
         ob = o["base"]
         sec.cmp(label, "level", o.get("level", 0), int(one(e, "level", "0")))
+        sec.cmp(label, "colour", o.get("color"), kind_colour(e, base, data))
         sec.cmp(label, "cost", o.get("cost", 0), int(one(e, "cost", "0")), "cost" not in o)
         sec.cmp(label, "weight (1/10 lb)", o.get("weight", 0), int(one(e, "weight", "0")), "weight" not in o)
         alloc = one(e, "alloc")
@@ -681,7 +695,7 @@ def compare_objects(gd, data):
         "expressions may differ spuriously.",
         "Book kinds come from class.txt `book`/`book-properties` (level = alloc minimum, weight 30, as 4.2.5's "
         "init.c sets them).",
-        "Not compared: `graphics` (AVABand colours objects per base/flavour), `desc`, `msg`, `effect-yx`, "
+        "The colour is compared for unflavoured kinds (flavoured ones take their flavour's; the glyph is the base's). Not compared: `desc`, `msg`, `effect-yx`, "
         "`pval` other than launcher multiplier and fuel.",
     ]
     return sec
@@ -1136,9 +1150,15 @@ DICE_TOKEN = re.compile(r"(?<![\w$])(?:\d+\+)?\d*d\d+(?:[+-]\d+)?(?![\w$])")
 TRAPS_ELSEWHERE = {"decoy": "Level.Decoy (the Decoy spell)", "door lock": "a door's lock power (Square.LockPower)"}
 
 
+# 4.2.5's long colour names (z-color.c) that AVABand spells otherwise.
+COLOUR_NAMES = {"Magenta-Pink": "Magenta", "Mustard": "MustardYellow"}
+
+
 def trap_colour(code):
     code = (code or "w").strip()
-    return MI.COLORS.get(code) if len(code) == 1 else "".join(w.capitalize() for w in code.split())
+    if len(code) == 1:
+        return MI.COLORS.get(code)
+    return COLOUR_NAMES.get(code, "".join(w.capitalize() for w in code.split()))
 
 
 def trap_dice_42(e):
@@ -1832,6 +1852,194 @@ def compare_chest_traps(gd, data):
     return sec
 
 
+# ---------------------------------------------------------------------------------------------------
+# Blow methods, realms, object bases, flavours, names
+
+def blow_methods_42(gd):
+    """blow_methods.txt in AVABand's shape (BlowMethodDef): act lines as they are, tags and all."""
+    out = []
+    for e in parse_records(os.path.join(gd, "blow_methods.txt")):
+        x = {"id": e["name"].lower(), "messages": get(e, "act")}
+        for key in ("cut", "stun", "miss", "phys"):
+            if one(e, key) == "1":
+                x[key] = True
+        x["description"] = one(e, "desc") or ""
+        out.append(x)
+    return out
+
+
+def compare_blow_methods(gd, data):
+    sec = section("blow_methods", "Blow methods", "blow_methods.json", "blow_methods.txt")
+    ours = {x["id"]: x for x in load(data, "blow_methods.json")}
+    theirs = {x["id"]: x for x in blow_methods_42(gd)}
+    for mid, t in theirs.items():
+        x = ours.get(mid)
+        if x is None:
+            sec.only_theirs.append(mid)
+            continue
+        sec.compared += 1
+        sec.cmp(mid, "messages", x.get("messages", []), t["messages"])
+        for key in ("cut", "stun", "miss", "phys"):
+            sec.cmp(mid, key, bool(x.get(key)), bool(t.get(key)))
+        sec.cmp(mid, "description", x.get("description", ""), t["description"])
+    sec.only_ours += [m for m in ours if m not in theirs]
+    sec.notes += ["Every field of blow_methods.txt but `msg` (the sound played) is compared; the act lines keep "
+                  "their {target}/{oftarget}/{has} tags, filled in as monster_blow_method_action does."]
+    return sec
+
+
+def realms_42(gd):
+    """realm.txt: stat, verb, spell noun and the book base (book-noun as an object base id)."""
+    return {e["name"]: {"stat": (one(e, "stat") or "").lower(), "verb": one(e, "verb"), "spellNoun": one(e, "spell-noun"),
+                        "bookBase": slug(one(e, "book-noun") or "")}
+            for e in parse_records(os.path.join(gd, "realm.txt"))}
+
+
+def compare_realms(gd, data):
+    sec = section("realms", "Realms", "realms.json", "realm.txt")
+    ours = {x["id"]: x for x in load(data, "realms.json")}
+    theirs = realms_42(gd)
+    for rid, t in theirs.items():
+        x = ours.get(rid)
+        if x is None:
+            sec.only_theirs.append(rid)
+            continue
+        sec.compared += 1
+        for key, v in t.items():
+            sec.cmp(rid, key, x.get(key), v)
+    sec.only_ours += [r for r in ours if r not in theirs]
+    sec.notes += ["Every field of realm.txt is compared. AVABand's `name` (Arcane, Divine...) is its own: 4.2.5 "
+                  "shows the realm by its book noun."]
+    return sec
+
+
+# 4.2.5's object bases under AVABand's ids: its one bow tval is AVABand's slings, bows and crossbows.
+OBJECT_BASE_IDS = {"soft armor": ["soft_armour"], "hard armor": ["hard_armour"], "dragon armor": ["dragon_armour"],
+                   "bow": ["sling", "bow", "crossbow"]}
+HATES = {"HATES_ACID": "acid", "HATES_ELEC": "elec", "HATES_FIRE": "fire", "HATES_COLD": "cold",
+         "HATES_SOUND": "sound", "HATES_SHARD": "shards", "HATES_ICE": "ice", "HATES_FORCE": "force",
+         "HATES_POIS": "pois", "HATES_PLASMA": "plasma", "HATES_METEOR": "meteor", "HATES_LIGHT": "light",
+         "HATES_DARK": "dark"}
+DISPLAY_FLAGS = {"SHOW_DICE", "SHOW_MULT"}
+
+
+def object_bases_42(gd):
+    """object_base.txt keyed by AVABand base id: colour, break chance, hated elements, kind flags."""
+    path = os.path.join(gd, "object_base.txt")
+    defaults = {}
+    for raw in open(path, encoding="utf-8"):
+        if raw.startswith("default:"):
+            _, key, value = raw.strip().split(":")
+            defaults[key] = int(value)
+    out = {}
+    for e in parse_records(path):
+        tval = e["name"].split(":")[0]
+        flags = flag_list(e, "flags")
+        x = {"color": trap_colour(one(e, "graphics")), "breakChance": int(one(e, "break") or defaults["break-chance"]),
+             "hates": sorted(HATES[f] for f in flags if f in HATES),
+             "flags": sorted(f for f in flags if f not in HATES and f not in DISPLAY_FLAGS)}
+        for bid in OBJECT_BASE_IDS.get(tval, [slug(tval)]):
+            out[bid] = x
+    return out
+
+
+def compare_object_bases(gd, data):
+    sec = section("object_bases", "Object bases", "object_bases.json", "object_base.txt")
+    ours = {x["id"]: x for x in load(data, "object_bases.json")}
+    theirs = object_bases_42(gd)
+    for bid, t in theirs.items():
+        x = ours.get(bid)
+        if x is None:
+            sec.only_theirs.append(bid)
+            continue
+        sec.compared += 1
+        sec.cmp(bid, "colour", x.get("color", "White"), t["color"])
+        sec.cmp(bid, "break chance", x.get("breakChance", 10), t["breakChance"])
+        sec.cmp_set(bid, "hates", x.get("hates", []), t["hates"])
+        sec.cmp_set(bid, "flags", x.get("flags", []), t["flags"])
+    sec.only_ours += [b for b in ours if b not in theirs]
+    sec.notes += ["Colour, break chance, hated elements and kind flags (EASY_KNOW) are compared. Names aren't: 4.2.5 "
+                  "names objects in code (obj_desc_get_basename), as AVABand's ItemNaming does, not from this file. "
+                  "SHOW_DICE and SHOW_MULT are how ItemNaming shows weapons and launchers. max-stack is 40 for "
+                  "all; AVABand keeps chests and gold to 1, as object_similar never stacks chests and gold is "
+                  "money, not carried. 4.2.5's one bow base is AVABand's sling, bow and crossbow."]
+    return sec
+
+
+FLAVOR_GROUPS = {"ring": "ring", "amulet": "amulet", "staff": "staff", "wand": "wand", "rod": "rod",
+                 "mushroom": "mushroom", "potion": "potion", "scroll": "scroll"}
+
+
+def flavors_42(gd, data):
+    """flavor.txt by AVABand group: random flavours [(name, colour)], fixed {kind id: (name, colour)}, scroll count."""
+    kinds = load(data, "objects.json")
+    groups, cur = {}, None
+    for raw in open(os.path.join(gd, "flavor.txt"), encoding="utf-8"):
+        line = raw.rstrip("\n")
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split(":")
+        if parts[0] == "kind":
+            cur = groups.setdefault(FLAVOR_GROUPS[parts[1]], {"flavors": [], "fixed": {}, "count": 0})
+        elif parts[0] == "flavor":
+            cur["count"] += 1
+            if len(parts) > 3:
+                cur["flavors"].append({"name": parts[3], "color": trap_colour(parts[2])})
+        elif parts[0] == "fixed":
+            base = [g for g, grp in groups.items() if grp is cur][0]
+            kind = next((k["id"] for k in kinds if k["base"] == base and norm_name(k["name"]) == norm_name(parts[2])), slug(parts[2]))
+            cur["fixed"][kind] = {"name": parts[4], "color": trap_colour(parts[3])}
+    return groups
+
+
+def names_42(gd):
+    """names.txt: its sections' words (1: Tolkien names, 2: scroll words)."""
+    sections, cur = {}, None
+    for raw in open(os.path.join(gd, "names.txt"), encoding="utf-8"):
+        line = raw.strip()
+        if line.startswith("section:"):
+            cur = sections.setdefault(int(line.split(":")[1]), [])
+        elif line.startswith("word:"):
+            cur.append(line.split(":", 1)[1])
+    return sections
+
+
+def compare_flavors(gd, data):
+    sec = section("flavors", "Flavours", "flavors.json", "flavor.txt (+ names.txt's scroll words)")
+    ours = {x["id"]: x for x in load(data, "flavors.json")}
+    theirs = flavors_42(gd, data)
+    for gid, t in theirs.items():
+        x = ours.get(gid)
+        if x is None:
+            sec.only_theirs.append(gid)
+            continue
+        sec.compared += 1
+        if gid == "scroll":
+            sec.cmp(gid, "title words", x.get("titleWords", []), names_42(gd)[2])
+            continue
+        sec.cmp(gid, "flavours", [(f["name"], f.get("color", "White")) for f in x.get("flavors", [])],
+                [(f["name"], f["color"]) for f in t["flavors"]])
+        sec.cmp(gid, "fixed", {f["kind"]: (f["name"], f.get("color", "White")) for f in x.get("fixed", [])},
+                {k: (v["name"], v["color"]) for k, v in t["fixed"].items()})
+    sec.only_ours += [g for g in ours if g not in theirs]
+    sec.notes += ["Each group's random flavours (name and colour, in order) and fixed ones (the special artifacts' "
+                  "rings and amulets) are compared. Scrolls are titled, not flavoured: 4.2.5 lists "
+                  f"{theirs.get('scroll', {}).get('count', 0)} white scroll flavours and titles them from names.txt's "
+                  "scroll words, which are compared instead."]
+    return sec
+
+
+def compare_names(gd, data):
+    sec = section("names", "Names", "names.json", "names.txt (section 1)")
+    ours = load(data, "names.json")
+    theirs = names_42(gd)[1]
+    sec.compared = 1
+    sec.cmp("Tolkien names", "words", ours, theirs)
+    sec.notes += ["The words random artifact and character names are made from, in order. names.txt's scroll "
+                  "words are compared under Flavours."]
+    return sec
+
+
 def compare_quests(gd, data):
     sec = section("quests", "Quests", "quests.json", "quest.txt")
     ours = {x["id"]: x for x in load(data, "quests.json")}
@@ -2231,7 +2439,8 @@ def main():
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
                compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps, compare_quests,
-               compare_profiles, compare_vaults, compare_room_templates, compare_pits):
+               compare_profiles, compare_vaults, compare_room_templates, compare_pits,
+               compare_blow_methods, compare_realms, compare_object_bases, compare_flavors, compare_names):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:
