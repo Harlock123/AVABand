@@ -129,8 +129,8 @@ What changed, and why:
   4.2.5's budget: a classic level gets Rand_normal(9, 3) objects in rooms, Rand_normal(3, 3)
   anywhere and as much gold, randint1(k)/5 traps in corridors (k being depth/3, at most 10), and
   14 + 1d8 + k monsters with their groups, plus what vaults, pits, nests and room templates hold.
-  AVABand's old generators were more generous with all three. Artifacts per level fall with the
-  object count, and the share of egos is lower too (I haven't pinned down why).
+  AVABand's old generators were more generous with all three. Artifacts per level and the share of
+  egos fell too, but most of that was a bug, since fixed (see below).
 - **Standing still is more dangerous** in the shallows (13 → 27% at 50 ft, 27 → 60% at 500 ft): the
   old spawner kept random monsters more than ten squares from where you start, and 4.2.5's
   `pick_and_place_distant_monster` is called with a distance of 0, so one can be asleep beside you.
@@ -139,7 +139,31 @@ What changed, and why:
   more and explores up to twice as much of each level, from
   500 ft to 2000 ft especially. Deeper than 3000 ft the runs are too short to tell; at 4950 ft
   it is sent up from Sauron's level three times in twenty rather than eight.
-- **Gold per level** is up by a third or so from 2000 ft; I haven't traced why.
+- **Gold per level** is up by a third or so from 2000 ft. Both generators plan about 3.3 piles of
+  gold anywhere (Rand_normal(3, 3), none if it comes out below one); the port adds 4.2.5's gold in
+  vaults and rooms — a quarter of `vault_objects`, the `$` of vaults and room templates. Counting
+  the plans over 100 levels at 3000 ft: 421 piles against the old 323.
 
 The object, trap and monster counts follow 4.2.5's own formulas, so they aren't a reason to
 change the generator.
+
+### A bug, and the egos explained
+
+vault.txt gives most vaults `max-depth:0`, which 4.2.5 reads as no limit; the port read it
+literally, so 129 of the 162 vaults — every lesser vault among them — could never be chosen. With
+that fixed (30 levels per depth, standing still):
+
+| depth | objects | egos % | artifacts per level | gold per level | monsters | traps |
+|---:|---|---|---|---|---|---|
+| 10 | 14.9 | 2.5 | 0.0 | 642 | 53 | 2.5 |
+| 20 | 15.0 | 5.6 | 0.1 | 799 | 72 | 3.9 |
+| 40 | 26.4 | 9.7 | 0.5 | 1274 | 115 | 5.0 |
+| 60 | 22.9 | 15.4 | 0.7 | 2764 | 114 | 6.8 |
+| 80 | 28.9 | 13.4 | 0.5 | 3976 | 118 | 6.8 |
+| 99 | 34.4 | 19.7 | 0.1 | 3889 | 154 | 6.2 |
+
+From 2000 ft the share of egos is back where it was before the port (13-20%). Above 1000 ft it
+stays lower (2.5% against 7.3% at 500 ft), and that is 4.2.5's design: good objects come mostly
+from vault treasure, made 3 to 20 levels deeper, and neither classic nor modified levels have
+lesser vaults before level 20 or medium ones before 30. Over 100 levels at 500 ft the old
+generator planned about 300 good objects and the port plans 2.
