@@ -21,7 +21,7 @@ public class OldSaveTests
     }
 
     [Fact]
-    public void ThereAreOldSavesToTest() => Assert.True(Saves().Count >= 5);
+    public void ThereAreOldSavesToTest() => Assert.True(Saves().Count >= 9);
 
     [Theory]
     [MemberData(nameof(Saves))]
@@ -51,6 +51,20 @@ public class OldSaveTests
         Assert.True(game.GameTurn > turn);
         game.Execute(new DebugJumpCommand(4));
         Assert.Equal(4, game.Player.Depth);
+
+        // A few hundred turns more of walking, resting and holding, with a cure now and then (debug).
+        var dirs = new[] { Direction.East, Direction.South, Direction.West, Direction.North, Direction.NorthEast, Direction.SouthWest };
+        for (var i = 0; i < 300 && !game.IsGameOver; i++)
+        {
+            if (game.Player.Hp < game.Player.MaxHp / 2) game.Execute(new DebugCureAllCommand());
+            game.Execute(i % 7 == 0 ? new HoldCommand() : new WalkCommand(dirs[i / 5 % dirs.Length]));
+        }
+
+        // What later versions added reads as nothing from older saves, and the sheet still builds.
+        var sheet = Angband.Core.Records.CharacterDump.Build(game);
+        if (game.Player.Age == 0) Assert.DoesNotContain(" Age ", sheet);
+        else Assert.StartsWith("You are", game.Player.Background);
+        Assert.Contains("[Abilities]", sheet);
 
         // And saves in today's format, loading back the same.
         using var again = new MemoryStream();
