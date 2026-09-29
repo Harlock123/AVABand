@@ -14,6 +14,8 @@
   <ItemGroup>
     <!-- Saves written by earlier versions of AVABand, which must keep loading. -->
     <None Include="Saves\*.avasave" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Games the soak's bot played, each of which must still play back to the end it was recorded with. -->
+    <None Include="Replays\*.avareplay" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Angband.Core\Angband.Core.csproj" />

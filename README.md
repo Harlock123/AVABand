@@ -553,7 +553,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   drink, runs for the nearest stairs. It fails on an exception, a decision slower than 10
   seconds or a game that hangs, and on a replay that doesn't play back to exactly where its game
   ended — naming the first step where they part. A failing game's replay is kept (in CI, as the
-  `soak-failures` artifact) to watch with Game → *Watch a replay…*.
+  `soak-failures` artifact) to watch with Game → *Watch a replay…*. Four of its games are kept as fixtures
+  (`tests/Angband.Tests/Replays`, ReplayFixtureTests): each must still play back to exactly the end
+  it was recorded with, so any change to how games play out shows in the tests; when that's meant,
+  `dotnet run -c Release --project tools/balance record-replays` records them again.
 - **Persistent levels' stairs**: a new level meets its stored neighbours' stairs square for square;
   one that would land in permanent rock (a vault's wall) goes to the nearest square that fits, so
   every way down still comes out somewhere.

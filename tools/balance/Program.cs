@@ -24,6 +24,9 @@
 // game that hangs, and if the replay doesn't play back to exactly the same end; a failing game's
 // replay is written to soak-failures/ (watch it with Game > Watch a replay...).
 //
+// `record-replays [dir]` — records the four games tests/Angband.Tests/Replays keeps (ReplayFixtureTests),
+// for when a change is meant to change how games play out.
+//
 // Both are kept to the game's plainest API, so the same program runs on older commits to compare.
 // Run: dotnet run -c Release --project tools/balance [levels per depth, default 30]
 //      dotnet run -c Release --project tools/balance play [runs per depth, default 20]
@@ -58,6 +61,17 @@ if (args.Length > 0 && args[0] == "soak")
     }
     Console.WriteLine(failures == 0 ? "Soak: every game played and replayed cleanly." : $"Soak: {failures} game(s) failed.");
     Environment.Exit(failures == 0 ? 0 : 1);
+}
+
+if (args.Length > 0 && args[0] == "record-replays")
+{
+    // The replays tests/Angband.Tests/Replays holds (ReplayFixtureTests): re-record them when a change
+    // is meant to change how games play out.
+    var dir = args.Length > 1 ? args[1] : Path.Combine("tests", "Angband.Tests", "Replays");
+    var ok = true;
+    foreach (var (cls, start, tourist, decisions) in new[] { ("warrior", 1, false, 1500), ("mage", 1, false, 1500), ("ranger", 1, false, 1500), ("warrior", 60, true, 600) })
+        ok &= Soak.Run(data, cls, 707UL, decisions, start, tourist, Path.Combine(dir, $"{cls}-{start * 50}ft{ReplayFile.Extension}"));
+    Environment.Exit(ok ? 0 : 1);
 }
 
 if (args.Length > 0 && args[0] == "one")
@@ -541,7 +555,7 @@ internal static class Soak
     /// See the deep levels rather than survive them: cured (a recorded debug command) whenever below
     /// half health, never killed (cheat_live), and two levels deeper every 60 decisions, to the bottom.
     /// </param>
-    public static bool Run(GameData data, string cls, ulong seed, int decisions, int start, bool tourist = false)
+    public static bool Run(GameData data, string cls, ulong seed, int decisions, int start, bool tourist = false, string? keep = null)
     {
         var game = Bot.Setup(data, start, seed, cls, level: 50);
         // A tourist can't die (Angband cheat_live: death sends it home, healed), so it sees the bottom.
@@ -605,6 +619,11 @@ internal static class Soak
         }
 
         var file = game.Recorder.ToFile(game);
+        if (keep is not null)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(keep)!);
+            file.Write(keep);
+        }
         var end = $"{done} decisions, to {maxDepth * 50} ft, {(game.Player.IsDead ? "killed by " + game.Player.KilledBy : "alive")}, "
                   + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms";
         if (failure is not null)
