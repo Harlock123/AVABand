@@ -359,6 +359,7 @@ public sealed partial class GameSession
     /// <summary>Pulls the player to a square next to <paramref name="caster"/> (Angband TELE_TO).</summary>
     private void TeleportPlayerTo(Loc caster)
     {
+        if (TeleportForbidden()) return;
         var spots = Level.Neighbors(caster)
             .Where(p => Level.IsPassable(p) && Level[p].Monster == 0)
             .OrderBy(p => p.Y).ThenBy(p => p.X)
@@ -395,6 +396,7 @@ public sealed partial class GameSession
     /// <summary>Sends the player to the next level up or down (Angband TELE_LEVEL).</summary>
     public void TeleportPlayerLevel()
     {
+        if (TeleportForbidden()) return;
         if (ArenaForbids()) return;
         // Angband TELEPORT_LEVEL: up or down at random; never up in the town or with forced descent,
         // never down from a quest level or the bottom of the dungeon.

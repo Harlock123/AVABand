@@ -216,11 +216,7 @@ public sealed class ObjectFactory(GameData data)
             {
                 var curse = rng.Pick(data.Curses);
                 if (curse.Bases.Count > 0 && !curse.Bases.Contains(item.Base.Id)) continue;
-                if (!item.Curses.Contains(curse.Id))
-                {
-                    item.Curses.Add(curse.Id);
-                    newLevel += rng.RandInt1(1 + power / 10);
-                }
+                if (AddCurse(rng, item, curse, power)) newLevel += rng.RandInt1(1 + power / 10);
                 break;
             }
         }
@@ -331,7 +327,10 @@ public sealed class ObjectFactory(GameData data)
         foreach (var r in art.Resists) item.Resists.Add(r);
         foreach (var f in art.Flags) item.Flags.Add(f);
         foreach (var c in art.Curses)
+        {
             if (!item.Curses.Contains(c)) item.Curses.Add(c);
+            item.CursePowers[c] = art.CursePowers.GetValueOrDefault(c, Item.DefaultCursePower);
+        }
         item.Fuel = 0; // artifact lights never run out
         CreatedArtifacts.Add(art.Id);
     }
@@ -383,7 +382,10 @@ public sealed class ObjectFactory(GameData data)
         item.Brands.AddRange(ego.Brands);
         foreach (var r in ego.Resists) item.Resists.Add(r);
         foreach (var c in ego.Curses)
+        {
             if (!item.Curses.Contains(c)) item.Curses.Add(c);
+            item.CursePowers[c] = ego.CursePowers.GetValueOrDefault(c, Item.DefaultCursePower);
+        }
         ApplyEgoMinimums(item);
     }
 
@@ -433,15 +435,45 @@ public sealed class ObjectFactory(GameData data)
         else item.Flags.Add(id);
     }
 
-    public void AddRandomCurses(GameRandom rng, Item item, int count)
+    /// <summary>Curses that fit the item, <paramref name="count"/> tries, each of apply_curse's power at <paramref name="level"/>.</summary>
+    public void AddRandomCurses(GameRandom rng, Item item, int count, int level = 20)
     {
         var eligible = data.Curses.Where(c => c.Bases.Count == 0 || c.Bases.Contains(item.Base.Id)).ToList();
         for (var i = 0; i < count && eligible.Count > 0; i++)
-        {
-            var curse = rng.Pick(eligible);
-            if (!item.Curses.Contains(curse.Id)) item.Curses.Add(curse.Id);
-        }
+            AddCurse(rng, item, rng.Pick(eligible), rng.RandInt1(9) + 10 * MagicBonus(rng, 9, level));
     }
+
+    // What protects against each curse's status (Angband player_timed.txt fail lines), as object properties.
+    private static readonly Dictionary<string, string> TimedProtection = new(StringComparer.Ordinal)
+    {
+        ["poisoned"] = "pois", ["paralyzed"] = "free_act", ["confused"] = "conf", ["blind"] = "blind",
+        ["afraid"] = "fear", ["image"] = "chaos", ["stun"] = "stun", ["slow"] = "free_act",
+    };
+
+    /// <summary>
+    /// Angband append_object_curse: a curse goes on unless it conflicts with one already there, or
+    /// with the object's own properties (a paralysing curse on something giving free action, cowardice
+    /// on something protecting from fear); a curse already there only grows stronger. True if it took.
+    /// </summary>
+    public bool AddCurse(GameRandom rng, Item item, CurseDef curse, int power)
+    {
+        foreach (var other in item.Curses)
+            if (curse.Conflicts.Contains(other) || data.Curse(other)?.Conflicts.Contains(curse.Id) == true) return false;
+        if (curse.Effect is { } effect && effect.StartsWith("timed:", StringComparison.Ordinal)
+            && TimedProtection.TryGetValue(effect.Split(':')[1], out var protection) && item.Resists.Contains(protection))
+            return false;
+        foreach (var flag in curse.ConflictFlags)
+            if (item.Flags.Contains(flag) || flag == "PROT_FEAR" && item.Resists.Contains("fear")) return false;
+
+        if (item.Curses.Contains(curse.Id) && power <= item.CursePower(curse.Id)) return false;
+        if (!item.Curses.Contains(curse.Id)) item.Curses.Add(curse.Id);
+        item.CursePowers[curse.Id] = power;
+        item.CurseTimeouts[curse.Id] = RollCurseTime(rng, curse);
+        return true;
+    }
+
+    /// <summary>A curse's time until it next acts (Angband randcalc of its time).</summary>
+    public static int RollCurseTime(GameRandom rng, CurseDef curse) => Math.Max(1, RandomValue.Parse(curse.Time).Roll(rng, 0));
 
     /// <summary>
     /// Angband make_gold: value grows with depth (16 at the surface, 80 at 2000 ft), with rare large

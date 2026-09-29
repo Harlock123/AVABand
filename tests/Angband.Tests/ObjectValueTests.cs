@@ -70,8 +70,8 @@ public class ObjectValueTests
     public void Curses_TakeTheirObjectsPowerAway()
     {
         var sword = Objects.Create("long_sword");
-        sword.Curses.Add("vulnerability"); // its object: -20 to AC, worth -20
-        Assert.Equal(15 - 20, ObjectPower.Of(sword, TestData.Game));
+        sword.Curses.Add("vulnerability"); // its object (4.2.5): -50 to AC and aggravation, worth -50 and -20
+        Assert.Equal(15 - 50 - 20, ObjectPower.Of(sword, TestData.Game));
         Assert.Equal(0, Value(sword)); // negative power: worthless
     }
 

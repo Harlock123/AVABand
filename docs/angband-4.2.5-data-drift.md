@@ -21,6 +21,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Traps](#traps) — `traps.json` vs `trap.txt`
 - [Terrain](#terrain) — `terrain.json` vs `terrain.txt`
 - [Stores](#stores) — `stores.json` vs `store.txt`
+- [Curses](#curses) — `curses.json` vs `curse.txt`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -83,7 +84,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 ### 4.2.5 properties AVABand's format can't express (not reported as differences)
 
 - flag EASY_KNOW: 22
-- flag GOOD: 5
 - flag QUEST_ART: 2
 - flag SHOOTS_ARROWS: 2
 - flag SHOOTS_BOLTS: 2
@@ -117,10 +117,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 ## Artifacts: `artifacts.json` vs `artifact.txt (+ activation.txt)`
 
 138 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
-
-### 4.2.5 properties AVABand's format can't express (not reported as differences)
-
-- curse air swing: 1
 
 ### Notes: normalisation and fields not compared
 
@@ -213,9 +209,19 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 - Store items are resolved to AVABand object ids by (base, name); unresolvable ones are shown as `tval:name (no such kind in ours)`. A whole-tval `always:` line stands for every town book of that tval.
 - Not compared: `slots` for the home (ours `capacity`), `buy-flag`.
 
+<a id="curses"></a>
+## Curses: `curses.json` vs `curse.txt`
+
+27 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Matched by the importer's curse ids (the slug of the name; `burning up` → burning_up, `chilled to the bone` → chilled). Effects are AVABand trap-effect strings: compared by kind, amount, time and message; the treacherous weapon's WEAPON_DAMAGE is `damage:weapon`.
+- Not compared: `desc`.
+
 ## Not compared at all
 
-- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, curse.txt, object_base.txt, object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, summon.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
+- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, summon.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
 - Descriptions and messages everywhere.
 
 <a id="summary"></a>
@@ -227,9 +233,9 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Monster bases | 56 | 0 | 0 | 0 | 0 | 0 |
 | Monster spells | 91 | 0 | 0 | 0 | 0 | 4 |
 | Blow effects | 30 | 0 | 0 | 0 | 0 | 0 |
-| Object kinds | 391 | 0 | 0 | 0 | 14 | 37 |
+| Object kinds | 391 | 0 | 0 | 0 | 14 | 32 |
 | Ego items | 107 | 0 | 0 | 0 | 0 | 0 |
-| Artifacts | 138 | 0 | 0 | 0 | 0 | 1 |
+| Artifacts | 138 | 0 | 0 | 0 | 0 | 0 |
 | Classes | 9 | 0 | 0 | 0 | 0 | 1 |
 | Class spells | 163 | 0 | 0 | 0 | 0 | 0 |
 | Races | 11 | 0 | 0 | 0 | 0 | 0 |
@@ -237,5 +243,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Traps | 37 | 0 | 0 | 0 | 0 | 2 |
 | Terrain | 25 | 0 | 0 | 0 | 0 | 0 |
 | Stores | 8 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **1697** | **0** | **0** | **0** | **14** | **45** |
+| Curses | 27 | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **1724** | **0** | **0** | **0** | **14** | **39** |
 

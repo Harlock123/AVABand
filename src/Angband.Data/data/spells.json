@@ -1470,7 +1470,7 @@
     "name": "Remove Curse",
     "realm": "divine",
     "book": "cleansing_power",
-    "effect": "remove_curse",
+    "effect": "remove_curse:{L}+1d{L}",
     "description": "Tries to remove a curse.",
     "classes": {
       "priest": {
@@ -1616,7 +1616,7 @@
     "name": "Remove Curse",
     "realm": "divine",
     "book": "healing_and_sanctuary",
-    "effect": "remove_curse",
+    "effect": "remove_curse:{L}+1d{L}",
     "description": "Tries to remove a curse.",
     "classes": {
       "paladin": {

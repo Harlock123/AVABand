@@ -170,7 +170,7 @@ public sealed partial class GameSession
             return true;
         }
         var count = item.Curses.Count;
-        Objects.AddRandomCurses(Rng, item, 1);
+        Objects.AddRandomCurses(Rng, item, 1, Math.Max(1, Level.Depth));
         Publish(new MessageEvent(item.Curses.Count > count
             ? $"A terrible black aura blasts your {Describe(item, withArticle: false)}!"
             : "You feel a malevolent presence, but it passes."));

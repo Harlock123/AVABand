@@ -184,7 +184,7 @@ public static class SaveGame
         Ego = i.Ego?.Id, Artifact = i.Artifact?.Id, Modifiers = new(i.Modifiers),
         Slays = i.Slays.Select(s => new SlaySave { Flag = s.MonsterFlag, Multiplier = s.Multiplier, Verb = s.Verb, Name = s.Name }).ToList(),
         Brands = i.Brands.Select(b => new BrandSave { Element = b.Element, Multiplier = b.Multiplier, Verb = b.Verb, Name = b.Name }).ToList(),
-        Resists = [.. i.Resists], Curses = [.. i.Curses], Flags = [.. i.Flags], OriginDepth = i.OriginDepth, Note = i.Note, Ignored = i.Ignored, Assessed = i.Assessed,
+        Resists = [.. i.Resists], Curses = [.. i.Curses], CursePowers = new(i.CursePowers), CurseTimeouts = new(i.CurseTimeouts), Flags = [.. i.Flags], OriginDepth = i.OriginDepth, Note = i.Note, Ignored = i.Ignored, Assessed = i.Assessed,
     };
 
     /// <summary>
@@ -309,6 +309,12 @@ public static class SaveGame
             foreach (var r in s.Resists) item.Resists.Add(r);
             item.Curses.Clear();
             item.Curses.AddRange(s.Curses);
+            item.CursePowers.Clear();
+            foreach (var c in s.Curses)
+                item.CursePowers[c] = s.CursePowers.TryGetValue(c, out var power) ? power
+                    : kind.CursePowers.GetValueOrDefault(c, Item.DefaultCursePower); // an older save: the data's, else the default
+            item.CurseTimeouts.Clear();
+            foreach (var (c, t) in s.CurseTimeouts) item.CurseTimeouts[c] = t;
             if (s.Flags is { } flags)
             {
                 item.Flags.Clear();

@@ -23,6 +23,7 @@ public sealed class Item
         Slays.AddRange(kind.Slays);
         Brands.AddRange(kind.Brands);
         Curses.AddRange(kind.Curses);
+        foreach (var c in kind.Curses) CursePowers[c] = kind.CursePowers.GetValueOrDefault(c, DefaultCursePower);
         foreach (var flag in kind.Flags) Flags.Add(flag);
     }
 
@@ -73,6 +74,28 @@ public sealed class Item
     public string? ActivationText => Artifact?.Activation is not null ? Artifact.ActivationText : Kind.ActivationText;
     public bool CanActivate => !string.IsNullOrEmpty(Activation);
     public bool IsArtifact => Artifact is not null;
+    /// <summary>Power of a curse when none is recorded (older saves, data without one).</summary>
+    public const int DefaultCursePower = 20;
+
+    /// <summary>
+    /// The power of each curse (Angband curse_data.power): how hard it is to remove; 100 or more
+    /// is permanent.
+    /// </summary>
+    public Dictionary<string, int> CursePowers { get; } = new(StringComparer.Ordinal);
+
+    /// <summary>Player turns until each curse next acts (Angband curse_data.timeout).</summary>
+    public Dictionary<string, int> CurseTimeouts { get; } = new(StringComparer.Ordinal);
+
+    public int CursePower(string curse) => CursePowers.GetValueOrDefault(curse, DefaultCursePower);
+
+    /// <summary>A curse broken or gone: its power and timer go with it.</summary>
+    public void RemoveCurse(string curse)
+    {
+        Curses.Remove(curse);
+        CursePowers.Remove(curse);
+        CurseTimeouts.Remove(curse);
+    }
+
     public bool IsCursed => Curses.Count > 0;
     public bool IsWearable => Base.IsWearable;
     public bool IsAmmo => Base.IsAmmo;
@@ -147,7 +170,7 @@ public sealed class Item
         && Ego == other.Ego
         && ToHit == other.ToHit && ToDam == other.ToDam && ToAc == other.ToAc
         && Damage == other.Damage && Armour == other.Armour
-        && Curses.SequenceEqual(other.Curses)
+        && Curses.SequenceEqual(other.Curses) && Curses.All(c => CursePower(c) == other.CursePower(c))
         && Flags.SetEquals(other.Flags) && ChestState == other.ChestState
         && Modifiers.Count == other.Modifiers.Count && Modifiers.All(m => other.Modifier(m.Key) == m.Value)
         && Resists.SetEquals(other.Resists)
@@ -267,6 +290,10 @@ public sealed class Item
         foreach (var r in Resists) copy.Resists.Add(r);
         copy.Curses.Clear();
         copy.Curses.AddRange(Curses);
+        copy.CursePowers.Clear();
+        foreach (var (k, v) in CursePowers) copy.CursePowers[k] = v;
+        copy.CurseTimeouts.Clear();
+        foreach (var (k, v) in CurseTimeouts) copy.CurseTimeouts[k] = v;
         copy.Flags.Clear();
         foreach (var f in Flags) copy.Flags.Add(f);
         return copy;

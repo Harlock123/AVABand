@@ -977,7 +977,7 @@
     "minDepth": 10,
     "cost": 100,
     "weight": 5,
-    "effect": "remove_curse",
+    "effect": "remove_curse:20+d20",
     "power": 8,
     "stackSize": "2",
     "pileChance": 25
@@ -1043,7 +1043,10 @@
     },
     "curses": [
       "teleportation"
-    ]
+    ],
+    "cursePowers": {
+      "teleportation": 100
+    }
   },
   {
     "id": "amulet_of_resist_lightning",
@@ -3169,7 +3172,10 @@
     "weight": 3,
     "curses": [
       "teleportation"
-    ]
+    ],
+    "cursePowers": {
+      "teleportation": 100
+    }
   },
   {
     "id": "amulet_of_adornment",
@@ -3314,7 +3320,7 @@
     "maxDepth": 100,
     "cost": 8000,
     "weight": 5,
-    "effect": "remove_curse",
+    "effect": "remove_curse:50+d50",
     "power": 20,
     "stackSize": "2",
     "pileChance": 25
@@ -4926,7 +4932,7 @@
     "cost": 500,
     "weight": 50,
     "charges": "4+d3",
-    "effect": "remove_curse",
+    "effect": "remove_curse:20+d20",
     "power": 8
   },
   {

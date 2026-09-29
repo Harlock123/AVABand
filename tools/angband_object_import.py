@@ -35,11 +35,14 @@ FLAG_ABILITIES = {"REGEN": "REGEN", "SLOW_DIGEST": "SLOW_DIGEST", "HOLD_LIFE": "
                   "FEATHER": "FEATHER", "AFRAID": "AFRAID", "IMPAIR_HP": "IMPAIR_HP", "AGGRAVATE": "AGGRAVATE",
                   "DRAIN_EXP": "DRAIN_EXP", "IMPACT": "IMPACT", "TRAP_IMMUNE": "TRAP_IMMUNE",
                   "THROWING": "THROWING"}
-CURSES = {"vulnerability": "vulnerability", "teleportation": "teleportation", "dullness": None, "sickliness": None,
-          "enveloping": None, "irritation": None, "weakness": "weakness", "clumsiness": "clumsiness",
-          "slowness": "slowness", "annoyance": "annoyance", "poison": "poison", "siphoning": None,
-          "hallucination": None, "paralysis": "paralysis", "cowardice": "cowardice", "burning up": "burning_up",
-          "chilled to the bone": "chilled"}
+# Every 4.2.5 curse (curse.txt) by AVABand's id: the slug of its name, but for two older ids.
+_CURSE_NAMES = ["vulnerability", "teleportation", "dullness", "sickliness", "enveloping", "irritation", "weakness",
+                "clumsiness", "slowness", "annoyance", "poison", "siren", "hallucination", "paralysis", "dragon summon",
+                "demon summon", "undead summon", "impair mana recovery", "impair hitpoint recovery", "cowardice",
+                "stone", "anti-teleportation", "treacherous weapon", "burning up", "chilled to the bone", "steelskin",
+                "air swing"]
+CURSES = {n: {"burning up": "burning_up", "chilled to the bone": "chilled"}.get(n, re.sub(r"[^a-z0-9]+", "_", n).strip("_"))
+          for n in _CURSE_NAMES}
 TIMED = {"FAST": "fast", "BLESSED": "blessed", "HERO": "hero", "SHERO": "berserk", "OPP_FIRE": "oppose_fire",
          "OPP_COLD": "oppose_cold", "OPP_POIS": "oppose_pois", "OPP_ACID": "oppose_acid", "OPP_ELEC": "oppose_elec",
          "PROTEVIL": "prot_evil", "SINVIS": "see_invisible", "SINFRA": "infravision", "TELEPATHY": "telepathy",
@@ -246,7 +249,7 @@ def effects(e, level_exprs=False):
         elif name == "RECALL":
             t = "recall"
         elif name == "REMOVE_CURSE":
-            t = "remove_curse"
+            t = f"remove_curse:{dice.replace(' ', '')}" if dice and "$" not in dice else "remove_curse"
         elif name == "IDENTIFY":
             t = "identify"
         elif name == "ENCHANT":

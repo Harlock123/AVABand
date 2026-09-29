@@ -318,10 +318,12 @@ def props_42(e, sec, *, abilities_skip=(), values_key="values", flags_key="flags
             p["random"] = RANDOM_POWERS[f]
         else:
             sec.unmodelled[f"flag {f}"] += 1
+    p["cursePowers"] = {}
     for line in get(e, "curse"):
-        cname = line.split(":")[0]
+        cname, _, power = line.partition(":")
         if OI.CURSES.get(cname):
             p["curses"].add(OI.CURSES[cname])
+            p["cursePowers"][OI.CURSES[cname]] = int(power or 0)
         else:
             sec.unmodelled[f"curse {cname}"] += 1
     for line in get(e, "slay"):
@@ -348,11 +350,13 @@ def props_ours(o):
             "ignore": set(o.get("ignore") or []), "curses": set(o.get("curses") or []),
             "slays": {f"{s['monsterFlag']}x{s.get('multiplier', 2)}" for s in o.get("slays") or []},
             "brands": {f"{b['element']}x{b.get('multiplier', 3)}" for b in o.get("brands") or []},
-            "immunities": set(o.get("immunities") or [])}
+            "immunities": set(o.get("immunities") or []), "cursePowers": dict(o.get("cursePowers") or {})}
 
 
 def cmp_props(sec, entry, ours, theirs, keys=("mods", "resists", "flags", "ignore", "curses", "slays", "brands",
                                               "immunities")):
+    if "curses" in keys and theirs.get("cursePowers") is not None:
+        sec.cmp(entry, "curse powers", ours.get("cursePowers") or {}, theirs["cursePowers"])
     for k in keys:
         if k == "mods":
             o, t = ours["mods"], theirs["mods"]
@@ -1237,6 +1241,65 @@ def compare_traps(gd, data):
 TERRAIN_ALIASES = {"lava": "lava stream"}
 
 
+def compare_curses(gd, data):
+    sec = section("curses", "Curses", "curses.json", "curse.txt")
+    ours = {c["id"]: c for c in load(data, "curses.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "curse.txt")):
+        cid = OI.CURSES.get(e["name"], slug(e["name"]))
+        c = ours.get(cid)
+        if c is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(cid)
+        sec.compared += 1
+        label = f"{cid} ({e['name']})"
+        bases = set()
+        for t in get(e, "type"):
+            b = TYPE_TO_BASE.get(t)
+            bases |= {"sling", "bow", "crossbow"} if b == "bow" else {b} if b else set()
+        sec.cmp_set(label, "bases", c.get("bases", []), bases)
+        combat = [int(x) for x in (one(e, "combat") or "0:0:0").split(":")]
+        for key, v in zip(("toHit", "toDam", "toAc"), combat):
+            sec.cmp(label, key, c.get(key, 0), v)
+        mods, res, vul = {}, set(), set()
+        for line in get(e, "values"):
+            for part in (x.strip() for x in line.split("|")):
+                m = re.fullmatch(r"([A-Z_]+)\[(-?\d+)\]", part)
+                if m and m.group(1) in OI.RESISTS:
+                    (vul if int(m.group(2)) < 0 else res).add(OI.RESISTS[m.group(1)])
+                elif m and m.group(1) in OI.MODIFIERS:
+                    mods[OI.MODIFIERS[m.group(1)]] = int(m.group(2))
+        sec.cmp(label, "modifiers", c.get("modifiers") or {}, mods)
+        sec.cmp_set(label, "resists", c.get("resists", []), res)
+        sec.cmp_set(label, "vulnerabilities", c.get("vulnerabilities", []), vul)
+        sec.cmp_set(label, "flags", c.get("flags", []), flag_list(e, "flags"))
+        sec.cmp_set(label, "conflicts", c.get("conflicts", []),
+                    [OI.CURSES.get(x.strip(), slug(x.strip())) for x in (one(e, "conflict") or "").split("|") if x.strip()])
+        sec.cmp_set(label, "conflict flags", c.get("conflictFlags", []), flag_list(e, "conflict-flags"))
+        effect = one(e, "effect")
+        sec.cmp(label, "has an effect", bool(c.get("effect")), bool(effect))
+        if effect:
+            dice = (one(e, "dice") or "").replace(" ", "")
+            ours_eff = c.get("effect") or ""
+            if "$" not in dice and dice:
+                sec.cmp(label, "effect amount", canon_rv(ours_eff.split(":")[-1] if not ours_eff.startswith("summon")
+                                                         else ours_eff.split(":")[1]), canon_rv(dice))
+            sec.cmp(label, "effect kind", ours_eff.split(":")[0],
+                    {"TIMED_INC": "timed", "TELEPORT": "teleport", "SUMMON": "summon", "WAKE": "wake",
+                     "DAMAGE": "damage"}.get(effect.split(":")[0], effect))
+            sec.cmp(label, "time", canon_rv(c.get("time", "0")), canon_rv((one(e, "time") or "0").replace(" ", "")))
+            sec.cmp(label, "message", c.get("effectMessage") or None, one(e, "msg"))
+    for cid, c in ours.items():
+        if cid not in used:
+            sec.only_ours.append(cid)
+    sec.notes += ["Matched by the importer's curse ids (the slug of the name; `burning up` → burning_up, `chilled to the "
+                  "bone` → chilled). Effects are AVABand trap-effect strings: compared by kind, amount, time and message; "
+                  "the treacherous weapon's WEAPON_DAMAGE is `damage:weapon`.",
+                  "Not compared: `desc`."]
+    return sec
+
+
 def compare_terrain(gd, data):
     sec = section("terrain", "Terrain", "terrain.json", "terrain.txt")
     ours = load(data, "terrain.json")
@@ -1625,7 +1688,7 @@ def render(gd, data, out):
     w("## Not compared at all")
     w("")
     w("- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by "
-      "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, curse.txt, object_base.txt, "
+      "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
       "object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath "
       "divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
       "slay.txt, summon.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, "
@@ -1662,7 +1725,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores):
+               compare_traps, compare_terrain, compare_stores, compare_curses):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

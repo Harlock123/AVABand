@@ -181,7 +181,7 @@ public static class DataLoader
                          .Where(s => !Angband.Core.Game.CharacterSpec.StatIds.Contains(s)))
                 errors.Add($"race or class uses unknown stat '{stat}' (use {string.Join(", ", Angband.Core.Game.CharacterSpec.StatIds)}).");
         CheckItemReferences(objectBases.Items, objects.Items, egos.Items, artifacts.Items, curses.Items, flavors.Items,
-            startingKit ?? [], elements.Items, timedEffects.Items, colors, errors);
+            startingKit ?? [], elements.Items, timedEffects.Items, colors, trapDefs, errors);
 
         TerrainRegistry? registry = null;
         try
@@ -471,7 +471,8 @@ public static class DataLoader
     private static void CheckItemReferences(IReadOnlyList<ObjectBaseDef> bases, IReadOnlyList<ObjectKindDef> kinds,
         IReadOnlyList<EgoItemDef> egos, IReadOnlyList<ArtifactDef> artifacts, IReadOnlyList<CurseDef> curses,
         IReadOnlyList<FlavorGroupDef> flavors, IReadOnlyList<StartItemDef> kit, IReadOnlyList<ElementDef> elements,
-        IReadOnlyList<TimedEffectDef> timed, IReadOnlyDictionary<string, string> colors, List<string> errors)
+        IReadOnlyList<TimedEffectDef> timed, IReadOnlyDictionary<string, string> colors, IReadOnlyList<TrapDef> traps,
+        List<string> errors)
     {
         var baseIds = bases.ToDictionary(b => b.Id);
         var kindIds = kinds.Select(k => k.Id).ToHashSet();
@@ -522,7 +523,19 @@ public static class DataLoader
             CheckEffect(a.Activation, $"artifact '{a.Id}' activation");
             CheckBrands(a.Brands, $"artifact '{a.Id}'");
         }
-        foreach (var c in curses) CheckEffect(c.Effect, $"curse '{c.Id}'");
+        void CheckTrapEffect(string? effect, string owner)
+        {
+            if (string.IsNullOrWhiteSpace(effect)) return;
+            foreach (var e in Angband.Core.Game.ItemEffects.Parse(effect))
+            {
+                if (!Angband.Core.Game.GameSession.TrapEffectVerbs.Contains(e.Name))
+                    errors.Add($"{owner}: unknown trap effect '{e.Name}'.");
+                else if (e.Name is "timed" or "timed_nores" && !timedIds.Contains(e.Arg(0)))
+                    errors.Add($"{owner}: unknown timed effect '{e.Arg(0)}'.");
+            }
+        }
+        foreach (var c in curses) CheckTrapEffect(c.Effect, $"curse '{c.Id}'");
+        foreach (var t in traps) { CheckTrapEffect(t.Effect, $"trap '{t.Id}'"); CheckTrapEffect(t.Extra, $"trap '{t.Id}'"); }
         foreach (var s in kit.Where(s => !kindIds.Contains(s.Kind))) errors.Add($"starting kit names unknown object '{s.Kind}'.");
 
         foreach (var group in flavors)

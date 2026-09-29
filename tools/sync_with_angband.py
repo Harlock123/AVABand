@@ -292,6 +292,7 @@ def sync_props(o, tp):
         if op[key] != tp[key]:
             kept = [x for x in (o.get(key) or []) if x in tp[key]]
             set_or_pop(o, key, kept + sorted(tp[key] - set(kept)) or None, None)
+    set_or_pop(o, "cursePowers", tp.get("cursePowers") or None, None)
     if op["slays"] != tp["slays"]:
         set_or_pop(o, "slays", [slay_def(t) for t in sorted(tp["slays"])] or None, None)
     if op["brands"] != tp["brands"]:
@@ -797,9 +798,98 @@ def sync_terrain(gd, data):
     print(f"terrain: {changed} of {len(ours)} brought into line")
 
 
+# 4.2.5 curse names AVABand spells otherwise; the rest are slugs of the name.
+CURSE_IDS = {"chilled to the bone": "chilled", "burning up": "burning_up"}
+# 4.2.5 curse effects in AVABand's trap grammar (GameSession.ApplyTrapEffects), "damage:weapon" being a
+# blow of the wielded weapon (4.2.5's WEAPON_DAMAGE).
+CURSE_EFFECTS = {"TELEPORT": "teleport:{dice}", "WAKE": "wake", "DAMAGE": "damage:weapon"}
+
+
+def curse_id(name):
+    return CURSE_IDS.get(name, cw.slug(name))
+
+
+def curse_effect(e):
+    effect = cw.one(e, "effect")
+    if not effect:
+        return None
+    parts = effect.split(":")
+    dice = (cw.one(e, "dice") or "").replace(" ", "")
+    if parts[0] == "TIMED_INC":
+        return f"timed:{oi.TIMED[parts[1]]}:{dice}"
+    if parts[0] == "SUMMON":
+        return f"summon:{dice}:{parts[1]}"
+    return CURSE_EFFECTS[parts[0]].format(dice=dice)
+
+
+def curse_bases(e):
+    bases = []
+    for t in cw.get(e, "type"):
+        b = cw.TYPE_TO_BASE.get(t)
+        for x in (["sling", "bow", "crossbow"] if b == "bow" else [b] if b else []):
+            if x not in bases:
+                bases.append(x)
+    return bases
+
+
+def sync_curses(gd, data):
+    path = os.path.join(data, "curses.json")
+    ours = {c["id"]: c for c in json.load(open(path, encoding="utf-8"))}
+    records = cw.parse_records(os.path.join(gd, "curse.txt"))
+    scratch = cw.Section("curses", "", "", "")
+    out = []
+    for e in records:
+        cid = curse_id(e["name"])
+        c = {"id": cid, "name": e["name"]}
+        desc = " ".join(v.strip() for v in cw.get(e, "desc"))
+        c["description"] = desc or ours.get(cid, {}).get("description", "")
+        c["bases"] = curse_bases(e)
+        combat = [int(x) for x in (cw.one(e, "combat") or "0:0:0").split(":")]
+        for key, v in zip(("toHit", "toDam", "toAc"), combat):
+            if v:
+                c[key] = v
+        mods, resists, vulns = {}, [], []
+        for line in cw.get(e, "values"):
+            for part in (x.strip() for x in line.split("|")):
+                m = re.fullmatch(r"([A-Z_]+)\[(-?\d+)\]", part)
+                if not m:
+                    continue
+                key, val = m.group(1), int(m.group(2))
+                if key in oi.RESISTS:
+                    (vulns if val < 0 else resists).append(oi.RESISTS[key])
+                elif key in oi.MODIFIERS:
+                    mods[oi.MODIFIERS[key]] = val
+        if mods:
+            c["modifiers"] = mods
+        if resists:
+            c["resists"] = resists
+        if vulns:
+            c["vulnerabilities"] = vulns
+        flags = cw.flag_list(e, "flags")
+        if flags:
+            c["flags"] = flags
+        effect = curse_effect(e)
+        if effect:
+            c["effect"] = effect
+            c["time"] = (cw.one(e, "time") or "0").replace(" ", "")
+            if cw.one(e, "msg"):
+                c["effectMessage"] = cw.one(e, "msg")
+        conflicts = [curse_id(x) for x in (cw.one(e, "conflict") or "").split("|") if x.strip()]
+        if conflicts:
+            c["conflicts"] = conflicts
+        cflags = cw.flag_list(e, "conflict-flags")
+        if cflags:
+            c["conflictFlags"] = cflags
+        out.append(c)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(c, ensure_ascii=False) for c in out) + "\n]\n")
+    print(f"curses: {len(out)} written ({len([c for c in out if c['id'] not in ours])} new)")
+
+
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
-            "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain}
+            "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
+            "curses": sync_curses}
 
 
 def main():

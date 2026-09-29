@@ -257,6 +257,7 @@ public sealed partial class GameSession
     /// <summary>Nexus: to a square next to the monster that cast it (Angband TELEPORT_TO).</summary>
     private void TeleportPlayerNextTo(Loc caster)
     {
+        if (TeleportForbidden()) return;
         var spots = Level.Neighbors(caster).Where(p => Level.IsPassable(p) && Level[p].Monster == 0 && p != Player.Position).ToList();
         if (spots.Count == 0) return;
         var from = Player.Position;

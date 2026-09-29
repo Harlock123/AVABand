@@ -77,9 +77,13 @@ public static class ItemFlags
     public const string Impact = "IMPACT";
     /// <summary>Immunity to traps (Angband TRAP_IMMUNE).</summary>
     public const string TrapImmune = "TRAP_IMMUNE";
+    /// <summary>Slow mana recovery (Angband IMPAIR_MANA).</summary>
+    public const string ImpairMana = "IMPAIR_MANA";
+    /// <summary>No teleporting (Angband NO_TELEPORT, the curse of anti-teleportation).</summary>
+    public const string NoTeleport = "NO_TELEPORT";
 
     public static readonly IReadOnlySet<string> Abilities = new HashSet<string>(StringComparer.Ordinal)
-        { Regen, SlowDigest, HoldLife, Telepathy, Feather, Afraid, ImpairHp, Aggravate, DrainExp, Impact, TrapImmune };
+        { Regen, SlowDigest, HoldLife, Telepathy, Feather, Afraid, ImpairHp, Aggravate, DrainExp, Impact, TrapImmune, ImpairMana, NoTeleport };
 
     public static string Name(string flag) => flag switch
     {
@@ -94,6 +98,8 @@ public static class ItemFlags
         DrainExp => "experience drain",
         Impact => "earthquakes",
         TrapImmune => "trap immunity",
+        ImpairMana => "impaired mana recovery",
+        NoTeleport => "no teleportation",
         _ => flag.ToLowerInvariant().Replace('_', ' '),
     };
 }
@@ -175,6 +181,8 @@ public sealed class ObjectKindDef
     /// <summary>Curses every object of this kind carries.</summary>
     public IReadOnlyList<string> Curses { get; init; } = [];
     public IReadOnlyList<string> Flags { get; init; } = [];
+    /// <summary>The power of each of its curses (Angband curse:name:power; 100 is permanent).</summary>
+    public IReadOnlyDictionary<string, int> CursePowers { get; init; } = new Dictionary<string, int>();
     /// <summary>What using it does, e.g. <c>heal:20; cure:blind</c>. See <see cref="Items.ItemEffects"/>.</summary>
     public string? Effect { get; init; }
     /// <summary>Starting fuel for light sources, in player turns (0 = needs none).</summary>
@@ -249,6 +257,7 @@ public sealed class EgoItemDef
     public IReadOnlyList<string> Flags { get; init; } = [];
     /// <summary>Curses the ego always carries (e.g. a "Morgul" weapon).</summary>
     public IReadOnlyList<string> Curses { get; init; } = [];
+    public IReadOnlyDictionary<string, int> CursePowers { get; init; } = new Dictionary<string, int>();
 
     /// <summary>Whether it can be made on <paramref name="kind"/>: its bases, or its particular kinds.</summary>
     public bool Fits(ObjectKindDef kind) => Bases.Contains(kind.Base) || Kinds.Contains(kind.Id);
@@ -287,6 +296,7 @@ public sealed class ArtifactDef
     /// <summary>Ability flags (see <see cref="ItemFlags"/>).</summary>
     public IReadOnlyList<string> Flags { get; init; } = [];
     public IReadOnlyList<string> Curses { get; init; } = [];
+    public IReadOnlyDictionary<string, int> CursePowers { get; init; } = new Dictionary<string, int>();
     /// <summary>Activation effect string (Angband artifact "act"), with its description and recharge time.</summary>
     public string? Activation { get; init; }
     public string? ActivationText { get; init; }
@@ -308,16 +318,25 @@ public sealed class CurseDef
     public int ToHit { get; init; }
     public int ToDam { get; init; }
     public int ToAc { get; init; }
+    /// <summary>Stats, speed, stealth... it changes (Angband curse values).</summary>
     public IReadOnlyDictionary<string, int> Modifiers { get; init; } = new Dictionary<string, int>();
-    /// <summary>Resistances this curse takes away (sets vulnerability).</summary>
+    /// <summary>Elements it makes you vulnerable to (Angband RES_x[-1]).</summary>
     public IReadOnlyList<string> Vulnerabilities { get; init; } = [];
-    /// <summary>1-in-N chance per player turn of <see cref="Effect"/> firing.</summary>
-    public int EffectChance { get; init; }
-    /// <summary>Effect string, same syntax as object effects (e.g. <c>teleport:40</c>, <c>timed:poisoned:10</c>).</summary>
+    /// <summary>Elements it makes you resist, in exchange (burning up resists cold).</summary>
+    public IReadOnlyList<string> Resists { get; init; } = [];
+    /// <summary>Flags it gives: AGGRAVATE, IMPAIR_HP, IMPAIR_MANA, AFRAID, NO_TELEPORT.</summary>
+    public IReadOnlyList<string> Flags { get; init; } = [];
+    /// <summary>What it does now and then: a trap effect string (e.g. <c>teleport:40</c>, <c>timed:poisoned:10+d10</c>).</summary>
     public string? Effect { get; init; }
+    /// <summary>How long between its effects, in player turns (a random value, rolled afresh each time).</summary>
+    public string Time { get; init; } = "0";
     public string EffectMessage { get; init; } = "";
     /// <summary>Which object bases can carry it (empty = any wearable).</summary>
     public IReadOnlyList<string> Bases { get; init; } = [];
+    /// <summary>Curses it can't share an object with (teleportation and anti-teleportation).</summary>
+    public IReadOnlyList<string> Conflicts { get; init; } = [];
+    /// <summary>Object properties that keep it off (cowardice won't go on what protects from fear).</summary>
+    public IReadOnlyList<string> ConflictFlags { get; init; } = [];
 }
 
 /// <summary>Unknown-object appearances for one flavour group (potion colours, ring stones...).</summary>

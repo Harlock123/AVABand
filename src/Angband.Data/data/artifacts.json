@@ -1064,7 +1064,13 @@
     "description": "This sword has runes of power incused on its ornate hilt, and a single blood channel that gleams coldly blue as you grasp this mighty weapon of peril.",
     "flags": [
       "AGGRAVATE"
-    ]
+    ],
+    "curses": [
+      "air_swing"
+    ],
+    "cursePowers": {
+      "air_swing": 30
+    }
   },
   {
     "id": "of_eowyn",

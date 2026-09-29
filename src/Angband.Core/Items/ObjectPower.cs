@@ -318,10 +318,11 @@ public static class ObjectPower
         return p;
     }
 
-    /// <summary>A curse's own object (Angband curse.txt "obj"): its bonuses, modifiers and vulnerabilities.</summary>
+    /// <summary>A curse's own object (Angband curse.txt "obj"): its bonuses, modifiers, flags, resists and vulnerabilities.</summary>
     private static PowerProfile CurseProfile(CurseDef curse) => new()
     {
         ToHit = curse.ToHit, ToDam = curse.ToDam, ToAc = curse.ToAc,
-        Modifiers = curse.Modifiers, Vulnerabilities = [.. curse.Vulnerabilities],
+        Modifiers = curse.Modifiers, Flags = [.. curse.Flags], Resists = [.. curse.Resists],
+        Vulnerabilities = [.. curse.Vulnerabilities],
     };
 }

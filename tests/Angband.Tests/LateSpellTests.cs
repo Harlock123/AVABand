@@ -176,7 +176,7 @@ public class LateSpellTests
         for (var i = 0; i < 30 && game.Commanded != servant; i++) Cast(game, "command", servant.Position);
         Assert.Same(servant, game.Commanded);
         // (Failed casts can wake it to wander: put it back beside you, in the open.)
-        game.Level.Monsters.Move(servant, game.Player.Position + new Loc(2, 0));
+        if (servant.Position != game.Player.Position + new Loc(2, 0)) game.Level.Monsters.Move(servant, game.Player.Position + new Loc(2, 0));
         var victim = Foe(game, "jackal", servant.Position + new Loc(2, 0) - game.Player.Position, hp: 1000, awake: false);
         victim.Held = 10_000; // it stays put to be bitten
 

@@ -110,6 +110,9 @@ public sealed class ItemSave
     public List<BrandSave> Brands { get; set; } = [];
     public List<string> Resists { get; set; } = [];
     public List<string> Curses { get; set; } = [];
+    /// <summary>Each curse's power and time to act (none in older saves: they get the default power).</summary>
+    public Dictionary<string, int> CursePowers { get; set; } = [];
+    public Dictionary<string, int> CurseTimeouts { get; set; } = [];
     /// <summary>Null in saves from before per-item flags (the kind's flags are used).</summary>
     public List<string>? Flags { get; set; }
     public int OriginDepth { get; set; }

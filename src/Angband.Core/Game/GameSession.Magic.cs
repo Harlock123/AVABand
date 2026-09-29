@@ -236,6 +236,7 @@ public sealed partial class GameSession
             return;
         }
         var percent = RegenNormal * (Player.IsResting ? 2 : 1);
+        if (Player.HasGearFlag(ItemFlags.ImpairMana)) percent /= 2; // Angband player_regen_mana: IMPAIR_MANA
         var gain = (long)Player.MaxMana * percent + ManaRegenBase;
         Player.Mana += (int)(gain >> 16);
         Player.ManaFraction += (int)(gain & 0xFFFF);

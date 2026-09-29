@@ -64,7 +64,7 @@ public sealed partial class GameSession
             if (!p.NaturalStats.TryGetValue(stat, out var natural)) natural = p.NaturalStats[stat] = p.Stats.GetValueOrDefault(stat, 15);
             // Scrambled stats read from another stat's natural value (Angband SCRAMBLE).
             if (p.StatScramble.TryGetValue(stat, out var source)) natural = p.NaturalStats.GetValueOrDefault(source, natural);
-            var bonus = gear.Sum(i => i.Modifier(stat)) + (PlayerShape?.Modifiers.GetValueOrDefault(stat) ?? 0);
+            var bonus = gear.Sum(i => i.Modifier(stat) + CurseModifier(i, stat)) + (PlayerShape?.Modifiers.GetValueOrDefault(stat) ?? 0);
             p.Stats[stat] = Math.Clamp(natural - p.StatDrain.GetValueOrDefault(stat) + bonus, 3, 40);
         }
 
@@ -110,13 +110,18 @@ public sealed partial class GameSession
 
             foreach (var curseId in item.Curses)
             {
+                // Angband calc_bonuses: a curse's own object adds its penalties, flags and resists.
                 if (Data.Curse(curseId) is not { } curse) continue;
                 p.Armour += curse.ToAc;
                 p.ToHit += curse.ToHit;
                 p.ToDam += curse.ToDam;
                 speed += curse.Modifiers.GetValueOrDefault(ItemModifiers.Speed);
                 p.Stealth += curse.Modifiers.GetValueOrDefault(ItemModifiers.Stealth);
+                infravision += curse.Modifiers.GetValueOrDefault(ItemModifiers.Infravision);
+                light += curse.Modifiers.GetValueOrDefault(ItemModifiers.Light);
                 foreach (var v in curse.Vulnerabilities) vulnerable.Add(v);
+                foreach (var r in curse.Resists) resists[r] = Math.Max(resists.GetValueOrDefault(r), 1);
+                foreach (var f in curse.Flags) p.GearFlags.Add(f);
             }
         }
 
@@ -375,7 +380,7 @@ public sealed partial class GameSession
         foreach (var rune in item.Runes().Where(r => r.StartsWith("mod:") || r.StartsWith("flag:")))
             LearnRune(rune);
         foreach (var curse in item.Curses)
-            if (Data.Curse(curse) is { EffectChance: 0 }) LearnRune(RuneIds.Curse(curse)); // passive curses show at once
+            if (Data.Curse(curse) is { Effect: null }) LearnRune(RuneIds.Curse(curse)); // passive curses show at once
 
         Publish(new MessageEvent($"You are {(item.Base.Slot == EquipSlot.Weapon ? "wielding" : "wearing")} {Describe(item)}."));
         Publish(new ItemWieldedEvent(item.Kind.Id));
@@ -712,7 +717,7 @@ public sealed partial class GameSession
             case "identify":
                 return IdentifyRune();
             case "remove_curse":
-                return RemoveCurse();
+                return RemoveCurse(e.Arg(0).Length > 0 ? RandomValue.Parse(e.Arg(0)).Roll(Rng, Player.Level) : 20 + Rng.RandInt1(20));
             case "fire_damage":
                 TakeHit(e.Dice(0).Roll(Rng), "a burning flask of oil");
                 return true;
@@ -736,8 +741,18 @@ public sealed partial class GameSession
         return int.TryParse(arg, out var range) ? range : 0;
     }
 
+    /// <summary>Angband OF_NO_TELEPORT (the curse of anti-teleportation): no teleport takes you anywhere.</summary>
+    private bool TeleportForbidden()
+    {
+        if (!Player.HasGearFlag(ItemFlags.NoTeleport)) return false;
+        LearnRune(RuneIds.Flag(ItemFlags.NoTeleport));
+        Publish(new MessageEvent("Teleportation forbidden!"));
+        return true;
+    }
+
     public bool TeleportPlayer(int range)
     {
+        if (TeleportForbidden()) return true;
         var from = Player.Position;
         var spots = Level.AllLocs()
             .Where(p => Level.IsPassable(p) && Level[p].Monster == 0 && p != from && p.DistanceTo(from) <= range
@@ -837,19 +852,84 @@ public sealed partial class GameSession
         return true;
     }
 
-    private bool RemoveCurse()
+    /// <summary>A curse's stat or other modifier on an item (Angband: the curse's own object).</summary>
+    private int CurseModifier(Item item, string mod) =>
+        item.Curses.Sum(c => Data.Curse(c)?.Modifiers.GetValueOrDefault(mod) ?? 0);
+
+    /// <summary>
+    /// Angband uncurse_object: the weakest breakable curse on your gear against the spell's strength.
+    /// Strength enough breaks it; otherwise the item turns fragile, and a fragile one may be
+    /// destroyed (one time in four) with a bang. Curses of power 100 are permanent.
+    /// </summary>
+    private bool RemoveCurse(int strength)
     {
-        var item = Player.Inventory.Equipped.FirstOrDefault(i => i.IsCursed);
-        if (item is null)
+        var cursed = Player.Inventory.Equipped.Where(i => i.IsCursed).ToList();
+        if (cursed.Count == 0)
         {
             Publish(new MessageEvent("You feel as if someone is watching over you."));
             return true;
         }
-        var curse = item.Curses[0];
-        item.Curses.RemoveAt(0);
-        Publish(new MessageEvent($"The {Data.Curse(curse)?.Name ?? curse} curse on your {Describe(item, withArticle: false)} is broken!"));
+        var target = cursed.SelectMany(i => i.Curses.Select(c => (Item: i, Curse: c, Power: i.CursePower(c))))
+            .Where(t => t.Power < 100).OrderBy(t => t.Power).ThenBy(t => t.Item.Serial).FirstOrDefault();
+        if (target.Item is null)
+        {
+            Publish(new MessageEvent("The curse is too powerful to break."));
+            return true;
+        }
+        var (item, curse, power) = target;
+        var name = Describe(item, withArticle: false);
+        if (strength >= power)
+        {
+            item.RemoveCurse(curse);
+            Publish(new MessageEvent($"The {Data.Curse(curse)?.Name ?? curse} curse is removed!"));
+        }
+        else if (!item.Flags.Contains("FRAGILE"))
+        {
+            Publish(new MessageEvent($"The spell fails; your {name} is now fragile."));
+            item.Flags.Add("FRAGILE");
+        }
+        else if (Rng.OneIn(4))
+        {
+            Publish(new MessageEvent("There is a bang and a flash!"));
+            Player.Inventory.Remove(item, 1, () => Objects.NextSerial++);
+            if (item.Artifact is { } art) LoseArtifact(art);
+            TakeHit(Rng.Damroll(5, 5), "Failed uncursing");
+        }
+        else Publish(new MessageEvent("The removal fails."));
         RecalculateBonuses();
         return true;
+    }
+
+    /// <summary>
+    /// Angband process_world (decrease_timeouts): each curse on your gear counts down its time, then
+    /// acts — teleporting, poisoning, summoning — and learns you its rune when you see what it did.
+    /// </summary>
+    private void CurseUpkeep()
+    {
+        foreach (var item in Player.Inventory.Equipped.ToList())
+        foreach (var curseId in item.Curses.ToList())
+        {
+            if (Player.IsDead) return;
+            if (Data.Curse(curseId) is not { Effect: { } effect } curse) continue;
+            if (!item.CurseTimeouts.TryGetValue(curseId, out var left)) left = ObjectFactory.RollCurseTime(Rng, curse);
+            if (--left > 0)
+            {
+                item.CurseTimeouts[curseId] = left;
+                continue;
+            }
+            item.CurseTimeouts[curseId] = ObjectFactory.RollCurseTime(Rng, curse);
+            if (curse.EffectMessage.Length > 0) Publish(new MessageEvent(curse.EffectMessage));
+            // WEAPON_DAMAGE: a blow of the wielded weapon, turned on you.
+            if (effect.Contains("damage:weapon", StringComparison.Ordinal))
+            {
+                var weapon = Player.Inventory.Weapon;
+                var blow = weapon is null ? 0 : Math.Max(0, weapon.Damage.Roll(Rng) + weapon.ToDam);
+                effect = effect.Replace("damage:weapon", $"damage:{blow}", StringComparison.Ordinal);
+            }
+            ApplyTrapEffects(effect, $"a curse of {curse.Name}");
+            Disturb();
+            LearnRune(RuneIds.Curse(curseId));
+        }
     }
 
     // --- Upkeep --------------------------------------------------------------------------------
@@ -870,15 +950,7 @@ public sealed partial class GameSession
             if (light.Fuel is 0 or 99) { RecalculateBonuses(); UpdateView(); }
         }
 
-        foreach (var item in Player.Inventory.Equipped.ToList())
-        foreach (var curseId in item.Curses.ToList())
-        {
-            if (Data.Curse(curseId) is not { EffectChance: > 0, Effect: { } effect } curse) continue;
-            if (!Rng.OneIn(curse.EffectChance)) continue;
-            if (curse.EffectMessage.Length > 0) Publish(new MessageEvent(curse.EffectMessage));
-            ApplyEffects(effect);
-            LearnRune(RuneIds.Curse(curseId));
-        }
+        CurseUpkeep();
     }
 
     // --- Level population and monster drops ------------------------------------------------------

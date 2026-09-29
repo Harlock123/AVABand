@@ -191,7 +191,8 @@ public class ItemPlayTests
         game.Execute(new WieldCommand(cloak));
 
         Assert.True(game.Knowledge.KnowsRune(RuneIds.Curse("vulnerability")));
-        Assert.Equal(armour + 1 - 20, game.Player.Armour);
+        Assert.Equal(armour + 1 - 50, game.Player.Armour); // 4.2.5: -50, and it aggravates
+        Assert.True(game.Player.HasGearFlag(ItemFlags.Aggravate));
         Assert.Contains("{cursed}", game.Describe(cloak));
     }
 
@@ -215,10 +216,29 @@ public class ItemPlayTests
         Assert.True(teleported);
         Assert.True(game.Knowledge.KnowsRune(RuneIds.Curse("teleportation")));
 
-        var scroll = game.Objects.Create("remove_curse");
-        game.Player.Inventory.Add(scroll);
-        game.Execute(new UseCommand(scroll));
-        Assert.False(ring.IsCursed);
+        // Its curse is 4.2.5's power 100: permanent, beyond any Remove Curse.
+        var said = Messages(game);
+        game.Execute(new UseCommand(game.Player.Inventory.Add(game.Objects.Create("scroll_of_remove_curse"))!));
+        Assert.True(ring.IsCursed);
+        Assert.Contains("The curse is too powerful to break.", said);
+    }
+
+    [Fact]
+    public void RemoveCurse_BreaksAWeakCurse_AndAFailureLeavesTheItemFragile()
+    {
+        var game = Arena.Create(3);
+        var cloak = game.Player.Inventory.Add(game.Objects.Create("cloak"))!;
+        cloak.Curses.Add("vulnerability");
+        cloak.CursePowers["vulnerability"] = 10;
+        game.Execute(new WieldCommand(cloak));
+        game.Execute(new UseCommand(game.Player.Inventory.Add(game.Objects.Create("remove_curse"))!)); // 20+d20
+        Assert.False(cloak.IsCursed);
+
+        cloak.Curses.Add("vulnerability");
+        cloak.CursePowers["vulnerability"] = 99; // too strong for 20+d20
+        game.Execute(new UseCommand(game.Player.Inventory.Add(game.Objects.Create("remove_curse"))!));
+        Assert.True(cloak.IsCursed);
+        Assert.Contains("FRAGILE", cloak.Flags);
     }
 
     [Fact]

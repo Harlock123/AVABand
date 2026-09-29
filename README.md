@@ -255,8 +255,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - What you know (`object_value`): unlearned runes and curses don't count, and unfamiliar
     flavours are guessed at by type (20 for a potion or scroll, 45 for jewellery, 50 for a wand...).
   - Random artifacts are balanced with the same power.
-  - Not modelled: items ignoring elements (only artifacts do, as in Angband), and each curse's own
-    strength (AVABand's curses have none), so a curse costs its object's power.
+  - Not modelled: items ignoring elements (only artifacts do, as in Angband). A curse costs its
+    object's power (its bonuses, flags and resistances), whatever its strength.
 - **Classes, levels & magic** (`Game/GameSession.Magic.cs`, `classes.json`, `realms.json`, `spells.json`):
   Warrior, Mage and Rogue (arcane), Priest and Paladin (divine), Ranger and Druid (nature),
   Necromancer and Blackguard (necromantic), each with skills that grow
@@ -374,7 +374,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   `tools/angband_ego_artifact_import.py`, kept in line by `tools/sync_with_angband.py`). Egos are
   4.2.5's in full: lantern and torch egos (*of Brightness*, *of Shadows*, *(Everburning)*, *of True
   Sight*), random extra sustains, powers and high resistances, minimum values, extra might, and
-  the *of Morgul* blades' aggravation and experience drain. 11 curses, per-game flavours (potion colours, ring
+  the *of Morgul* blades' aggravation and experience drain. All 27 of 4.2.5's curses (`curses.json`,
+  from `curse.txt`): each on an item has a power and its own timer — dullness and sickliness sap
+  stats, vulnerability and irritation aggravate, anti-teleportation forbids teleporting, impaired
+  recovery slows healing or mana, and the active ones teleport, poison, paralyse, summon demons,
+  dragons or undead, blare like a siren, turn your skin to stone or turn your weapon on you, each
+  when its time comes. Curses conflict (teleportation and anti-teleportation), won't go on what
+  would foil them, and grow stronger when repeated. Remove Curse (20+d20; *Remove Curse* 50+d50;
+  the priests' by level) breaks the weakest breakable curse if its strength is enough; failure
+  makes the item fragile, and a fragile one may be destroyed. A curse of power 100 (the Rings and
+  Amulets of Teleportation) is permanent. Per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to
   mithril and dragon scale mail, crowns; rings and amulets with rolled bonuses (Angband's
   `B+dXMY` values: Strength `1+M5`, Protection `5+d5M10`...); gear can raise stats and grant

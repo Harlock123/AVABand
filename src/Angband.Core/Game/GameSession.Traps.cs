@@ -28,6 +28,13 @@ public sealed partial class GameSession
     /// <c>drain_mana:1d10</c>, <c>cut</c>. <c>{D/2}</c> is worked out from the dungeon level
     /// (Angband's DUNGEON_LEVEL expressions).
     /// </summary>
+    /// <summary>The verbs <see cref="ApplyTrapEffects"/> knows (traps, chest traps and curses use them).</summary>
+    public static readonly IReadOnlySet<string> TrapEffectVerbs = new HashSet<string>(StringComparer.Ordinal)
+    {
+        "damage", "cut", "timed", "timed_nores", "drain", "element", "spot", "teleport", "summon", "aggravate", "wake",
+        "project_los", "earthquake", "rubble", "granite", "drain_light", "drain_mana",
+    };
+
     private void ApplyTrapEffects(string effects, string killer, Loc? at = null)
     {
         var depth = Math.Max(1, Level.Depth);
