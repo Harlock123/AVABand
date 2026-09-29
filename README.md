@@ -502,7 +502,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   many generated levels, the objects (egos, artifacts, curses), gold, monsters and traps, and how
   often a warrior of the depth's level dies holding still there. `docs/balance.md` compares the
   game before and after the 4.2.5 data sync: egos and artifacts are several times commoner, as
-  4.2.5 makes them; the rest is within the noise.
+  4.2.5 makes them; the rest is within the noise. `tools/balance play` has a bot play each depth — a warrior of
+  the depth's level with depth-made gear, potions and Phase Door exploring, fighting, quaffing and
+  blinking for 1000 turns — and reports survival, kills, experience, how much it saw and the
+  potions it drank; `docs/balance.md` compares it before and after this round of ports (within the
+  noise but for Sauron's level). It's a poor player, for comparing versions rather than judging
+  difficulty; `one <depth> <seed>` with `BOT_TRACE=1` shows how a run ended.
 - **Persistent levels' stairs**: a new level meets its stored neighbours' stairs square for square;
   one that would land in permanent rock (a vault's wall) goes to the nearest square that fits, so
   every way down still comes out somewhere.
