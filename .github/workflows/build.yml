@@ -30,6 +30,24 @@ jobs:
       - name: Test
         run: dotnet test AVABand.sln -c Release --no-build
 
+  soak:
+    # Long bot-played games at every depth, each recorded and replayed (tools/balance soak): fails on
+    # a crash, a hang, or a replay that doesn't end where its game did. Failing replays are kept.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - name: Soak
+        run: dotnet run -c Release --project tools/balance soak
+      - name: Keep failing replays
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: soak-failures
+          path: soak-failures/
+
   drift:
     # AVABand's game data must match Angband 4.2.5's (tools/compare_with_angband.py); the release
     # is pinned by checksum.
@@ -51,7 +69,7 @@ jobs:
           path: ${{ runner.temp }}/drift.md
 
   publish:
-    needs: [test, drift]
+    needs: [test, drift, soak]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

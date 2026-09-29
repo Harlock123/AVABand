@@ -17,6 +17,12 @@
 // (BOT_TRACE=1 shows its end); BOT_PLAIN=1 plays as the first bot did (no resting, corridors or
 // launcher), to compare.
 //
+// `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each, played by the bot
+// for that many decisions (default 4000), jumping deeper whenever a level is done, while a replay
+// records the game. It fails on an exception, on a decision that takes more than 10 seconds or a
+// game that hangs, and if the replay doesn't play back to exactly the same end; a failing game's
+// replay is written to soak-failures/ (watch it with Game > Watch a replay...).
+//
 // Both are kept to the game's plainest API, so the same program runs on older commits to compare.
 // Run: dotnet run -c Release --project tools/balance [levels per depth, default 30]
 //      dotnet run -c Release --project tools/balance play [runs per depth, default 20]
@@ -27,6 +33,7 @@ using Angband.Core.Game;
 using Angband.Core.Geometry;
 using Angband.Core.Items;
 using Angband.Core.Monsters;
+using Angband.Core.Persistence;
 using Angband.Core.Randomness;
 using Angband.Data;
 
@@ -35,6 +42,17 @@ var play = args.Length > 0 && args[0] == "play";
 var count = args.Length > (play ? 1 : 0) && int.TryParse(args[play ? 1 : 0], CultureInfo.InvariantCulture, out var n) ? n : play ? 20 : 30;
 var depths = new[] { 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
 string Num(double x) => x.ToString("0.0", CultureInfo.InvariantCulture);
+
+if (args.Length > 0 && args[0] == "soak")
+{
+    var decisions = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 4000;
+    var failures = 0;
+    foreach (var cls in new[] { "warrior", "mage", "ranger" })
+    foreach (var seed in new[] { 101UL, 202UL, 303UL, 404UL, 505UL })
+        if (!Soak.Run(data, cls, seed, decisions)) failures++;
+    Console.WriteLine(failures == 0 ? "Soak: every game played and replayed cleanly." : $"Soak: {failures} game(s) failed.");
+    Environment.Exit(failures == 0 ? 0 : 1);
+}
 
 if (args.Length > 0 && args[0] == "one")
 {
@@ -135,24 +153,34 @@ internal static class Bot
 
     private static string? Kind(GameData data, string[] ids) => ids.FirstOrDefault(id => data.Object(id) is not null);
 
-    private sealed class Tally
+    internal sealed class Tally
     {
         public int Potions, Blinks, Rests, Shots, Waits;
     }
 
-    public static BotResult Play(GameData data, int depth, ulong seed, string cls = "warrior")
+    /// <summary>A character of the class at the depth's level, equipped for it, standing on a new level there.</summary>
+    public static GameSession Setup(GameData data, int depth, ulong seed, string cls, int? level = null)
     {
         var game = GameSession.NewGame(data, seed, cls);
         game.MarkDebugUsed();
-        var clvl = Math.Clamp(depth, 1, 50);
+        var clvl = level ?? Math.Clamp(depth, 1, 50);
         if (clvl > 1) game.GainExperience(game.ExperienceForLevel(clvl - 1) - game.Player.Experience);
-        Equip(game, depth, seed);
+        Equip(game, Math.Max(depth, clvl), seed);
         Give(game, Kind(data, Healing[depth < 20 ? 0 : depth < 40 ? 1 : 2]), 5 + depth / 10);
         Give(game, "phase_door", 5);
         if (!Plain) LearnSpells(game);
         game.Player.Hp = game.Player.MaxHp;
+        // (Items given straight into the pack: count their weight, as a loaded game would.)
+        game.RecalculateBonuses();
+        game.Player.Hp = game.Player.MaxHp;
         game.Player.Mana = game.Player.MaxMana;
         game.Execute(new DebugJumpCommand(depth));
+        return game;
+    }
+
+    public static BotResult Play(GameData data, int depth, ulong seed, string cls = "warrior")
+    {
+        var game = Setup(data, depth, seed, cls);
         if (Environment.GetEnvironmentVariable("BOT_TRACE") is { Length: > 0 })
             Console.WriteLine($"{cls} clvl {game.Player.Level} hp {game.Player.Hp}/{game.Player.MaxHp} sp {game.Player.Mana} ac {game.Player.Armour} "
                 + $"blows {game.Player.Blows} weapon {(game.Player.Inventory.Weapon is { } w ? game.Describe(w) : "none")} "
@@ -193,6 +221,26 @@ internal static class Bot
             if (!learned) break;
         }
         game.RecalculateMana();
+    }
+
+    /// <summary>The bot's state from one decision to the next.</summary>
+    public sealed class Mind
+    {
+        internal Explorer Explorer { get; set; } = new();
+        internal Tally Tally { get; } = new();
+        internal int Depth { get; set; } = -1;
+    }
+
+    /// <summary>One decision for a game the caller drives (a new level starts a new exploration). False when there was nothing to do.</summary>
+    public static bool Decide(GameSession game, Mind mind)
+    {
+        if (game.Player.Depth != mind.Depth)
+        {
+            mind.Explorer = new Explorer();
+            mind.Depth = game.Player.Depth;
+        }
+        mind.Explorer.Visited.Add(game.Player.Position);
+        return Act(game, mind.Explorer, mind.Tally);
     }
 
     /// <summary>One decision. False when there was nothing to do (the level is explored and quiet).</summary>
@@ -324,7 +372,7 @@ internal static class Bot
     }
 
     /// <summary>Where the bot is headed, and where it has been (a spot it has stood on is explored).</summary>
-    private sealed class Explorer
+    internal sealed class Explorer
     {
         public HashSet<Loc> Visited { get; } = [];
         public Loc? Target { get; set; }
@@ -398,5 +446,116 @@ internal static class Bot
                     .OrderBy(k => k.Level).FirstOrDefault() is { } ammo)
                 Give(game, ammo.Id, 40);
         }
+    }
+}
+
+/// <summary>Long bot-played games, recorded and replayed, for CI: crashes, hangs and nondeterminism.</summary>
+internal static class Soak
+{
+    private const int DecisionsPerLevel = 250;
+    private static readonly TimeSpan SlowDecision = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan GameTimeout = TimeSpan.FromMinutes(10);
+
+    public static bool Run(GameData data, string cls, ulong seed, int decisions)
+    {
+        var game = Bot.Setup(data, 1, seed, cls, level: 50);
+        game.Recorder = new ReplayRecorder(game);
+        var mind = new Bot.Mind();
+        var done = 0;
+        var maxDepth = 1;
+        string? failure = null;
+        var slowest = TimeSpan.Zero;
+        var marks = new List<(int Steps, ReplayEnd State)>();
+
+        var thread = new Thread(() =>
+        {
+            try
+            {
+                var onLevel = 0;
+                var clock = new System.Diagnostics.Stopwatch();
+                for (; done < decisions && !game.IsGameOver; done++)
+                {
+                    var depth = game.Player.Depth;
+                    clock.Restart();
+                    var acted = Bot.Decide(game, mind);
+                    if (!acted) game.Execute(new HoldCommand());
+                    onLevel = game.Player.Depth == depth ? onLevel + 1 : 0;
+                    // Explored, or long enough here: on down (a debug jump, so the replay has it).
+                    if (!acted || onLevel >= DecisionsPerLevel)
+                    {
+                        game.Execute(new DebugJumpCommand(Math.Min(game.Player.Depth + 6, 98)));
+                        onLevel = 0;
+                    }
+                    clock.Stop();
+                    marks.Add((game.Recorder.StepCount, ReplayCodec.EndOf(game)));
+                    if (clock.Elapsed > slowest) slowest = clock.Elapsed;
+                    if (clock.Elapsed > SlowDecision)
+                    {
+                        failure = $"decision {done} at {depth * 50} ft took {clock.Elapsed.TotalSeconds:0.0}s";
+                        return;
+                    }
+                    maxDepth = Math.Max(maxDepth, game.Player.Depth);
+                }
+            }
+            catch (Exception e)
+            {
+                failure = $"decision {done}: {e}";
+            }
+        }, 64 * 1024 * 1024) { IsBackground = true };
+        thread.Start();
+        if (!thread.Join(GameTimeout))
+        {
+            Console.WriteLine($"{cls} {seed}: HUNG after {done} decisions at {game.Player.Depth * 50} ft");
+            Save(game, cls, seed);
+            return false;
+        }
+
+        var file = game.Recorder.ToFile(game);
+        var end = $"{done} decisions, to {maxDepth * 50} ft, {(game.Player.IsDead ? "killed by " + game.Player.KilledBy : "alive")}, "
+                  + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms";
+        if (failure is not null)
+        {
+            Console.WriteLine($"{cls} {seed}: FAILED — {failure}\n  ({end})");
+            Save(game, cls, seed);
+            return false;
+        }
+
+        // Back through a file, as a player would watch it: the same end, the same history.
+        var path = Path.Combine(Path.GetTempPath(), $"avaband-soak-{cls}-{seed}{ReplayFile.Extension}");
+        file.Write(path);
+        var player = new ReplayPlayer(data, ReplayFile.Read(path));
+        File.Delete(path);
+        var next = 0;
+        string? divergence = null;
+        while (player.Step())
+        {
+            while (next < marks.Count && marks[next].Steps < player.Position) next++;
+            if (divergence is null && next < marks.Count && marks[next].Steps == player.Position
+                && ReplayCodec.EndOf(player.Game) != marks[next].State)
+            {
+                var from = Math.Max(0, (next > 0 ? marks[next - 1].Steps : 0));
+                divergence = $"first differs after step {player.Position}: recorded {marks[next].State}, replayed {ReplayCodec.EndOf(player.Game)}; "
+                             + $"steps {from}..{player.Position - 1}: "
+                             + string.Join(" | ", file.Steps.Skip(from).Take(player.Position - from).Select(x => x!.ToJsonString()));
+            }
+        }
+        var same = player.Matches == true
+                   && player.Game.History.Select(h => h.Text).SequenceEqual(game.History.Select(h => h.Text));
+        if (!same)
+        {
+            Console.WriteLine($"{cls} {seed}: REPLAY DIFFERS — recorded {file.End}, replayed {ReplayCodec.EndOf(player.Game)}\n  ({end})\n  {divergence}");
+            Save(game, cls, seed);
+            return false;
+        }
+        Console.WriteLine($"{cls} {seed}: ok — {end}; replay matches");
+        return true;
+    }
+
+    private static void Save(GameSession game, string cls, ulong seed)
+    {
+        Directory.CreateDirectory("soak-failures");
+        var path = Path.Combine("soak-failures", $"{cls}-{seed}{ReplayFile.Extension}");
+        game.Recorder!.ToFile(game).Write(path);
+        Console.WriteLine($"  replay written to {path}");
     }
 }

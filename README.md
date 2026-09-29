@@ -537,9 +537,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   4.2.5 makes them; the rest is within the noise. `tools/balance play` has a bot play each depth — a warrior of
   the depth's level with depth-made gear, potions and Phase Door exploring, fighting, quaffing and
   blinking for 1000 turns — and reports survival, kills, experience, how much it saw and the
-  potions it drank; `docs/balance.md` compares it before and after this round of ports (within the
-  noise but for Sauron's level). It's a poor player, for comparing versions rather than judging
-  difficulty; `one <depth> <seed>` with `BOT_TRACE=1` shows how a run ended.
+  potions it drank. It rests when things are quiet, backs into a corridor when several foes come at
+  it in the open and shoots them with the launcher it's given; `play [runs] mage` plays a mage
+  casting its strongest bolt or ball instead, and `BOT_PLAIN=1` the first, simpler bot.
+  `docs/balance.md` compares versions with it. It's a poor player, for comparing versions rather
+  than judging difficulty; `one <depth> <seed> [class]` with `BOT_TRACE=1` shows how a run ended.
+- **Soak test** (`dotnet run -c Release --project tools/balance soak`, and CI's `soak` job on every
+  push): a warrior, a mage and a ranger of level 50, five fixed seeds each, played by the bot for
+  up to 4000 decisions, jumping deeper whenever a level is done (they reach 1000 to 5000 ft before
+  they die), each game recorded as a replay. It fails on an exception, a decision slower than 10
+  seconds or a game that hangs, and on a replay that doesn't play back to exactly where its game
+  ended — naming the first step where they part. A failing game's replay is kept (in CI, as the
+  `soak-failures` artifact) to watch with Game → *Watch a replay…*.
 - **Persistent levels' stairs**: a new level meets its stored neighbours' stairs square for square;
   one that would land in permanent rock (a vault's wall) goes to the nearest square that fits, so
   every way down still comes out somewhere.
