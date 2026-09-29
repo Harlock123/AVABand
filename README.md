@@ -112,7 +112,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     four suspects, who roam at their depths; only the thief has the strongbox (Black market prices
     down for returning it).
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
-    `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. The tilesets draw
+    `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. One a monster
+    drops on a full pack's account and left behind on the level turns up at the Prancing Pony
+    ("Someone found this down below with your name on it"), so no quest can be lost that way. The tilesets draw
     the new terrain and items with their nearest tiles (the sealed door as a closed door, the forge as
     lava, the relic as an amulet...).
 - **Title screen** (`ViewModels/MainWindowViewModel.Title.cs`): the game opens on Thangorodrim —

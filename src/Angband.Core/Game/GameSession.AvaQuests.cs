@@ -140,7 +140,37 @@ public sealed partial class GameSession
             Publish(new MessageEvent("The Prancing Pony's common room is quiet: there's no work to be had here."));
             return;
         }
+        ReturnLostQuestItems();
         InnChoice("");
+    }
+
+    /// <summary>
+    /// Leaving a level: quest items left on its floor (a monster's, dropped when the pack was full)
+    /// are kept for you, so a quest can't be lost that way; they turn up at the Prancing Pony.
+    /// </summary>
+    private void KeepLostQuestItems()
+    {
+        if (!AvaQuestsOn || Level is null) return;
+        foreach (var (at, item) in Level.Objects.All.Where(o => o.Item.IsQuestItem && o.Item.QuestTag is not null).ToList())
+        {
+            // (A quest room's own item is made again with the room; only what a monster dropped is kept.)
+            if (item.Kind.Id is not ("key_of_belegost" or "black_market_strongbox" or "journal_page")) continue;
+            Level.Objects.Remove(at, item);
+            AvaQuests.LostAndFound.Add(new LostQuestItem { Kind = item.Kind.Id, Tag = item.QuestTag! });
+        }
+    }
+
+    private void ReturnLostQuestItems()
+    {
+        if (AvaQuests.LostAndFound.Count == 0) return;
+        Publish(new MessageEvent("Butterbur hands you a parcel. \"Someone found this down below with your name on it.\""));
+        foreach (var lost in AvaQuests.LostAndFound.ToList())
+        {
+            AvaQuests.LostAndFound.Remove(lost);
+            var item = QuestItem(lost.Kind, lost.Tag);
+            GiveQuestItem(item);
+            if (Player.Inventory.Contains(item) || Carrying(lost.Kind, lost.Tag) is not null) QuestPickedUp(Carrying(lost.Kind, lost.Tag)!);
+        }
     }
 
     private void InnChoice(string what)

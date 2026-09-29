@@ -384,4 +384,30 @@ public class AvaQuestTests
         game.Execute(new DebugJumpCommand(game.BurdenDepth));
         Assert.DoesNotContain(game.Level.Objects.All, o => o.Item.Kind.Id == "seal_of_angmar");
     }
+
+    [Fact]
+    public void A_quest_item_left_on_the_floor_turns_up_at_the_inn()
+    {
+        var q = Start();
+        var game = q.Game;
+        q.TakeQuest("sealed_door");
+        var state = game.AvaQuests.Get("sealed_door")!;
+        q.Jump(state.N("keydepth"));
+        // A full pack: the key falls to the floor when Durgash dies.
+        var key = game.Objects.Create("key_of_belegost");
+        foreach (var kind in game.Data.Objects.Where(k => k.Base is "scroll" or "potion").Take(40))
+            if (game.Player.Inventory.CanCarry(key)) game.Player.Inventory.Add(game.Objects.Create(kind.Id));
+        Assert.False(game.Player.Inventory.CanCarry(key));
+        q.Game.DamageMonster(q.Find("durgash_the_keybearer")!, 100_000);
+        Assert.Null(q.Carried("key_of_belegost"));
+        Assert.Contains(game.Level.Objects.All, o => o.Item.Kind.Id == "key_of_belegost");
+
+        q.Jump(1); // left behind
+        foreach (var item in game.Player.Inventory.Pack.Where(i => i.Base.Id is "scroll" or "potion").ToList())
+            game.Player.Inventory.Remove(item, item.Number, () => game.Objects.NextSerial++);
+        q.EnterShop("inn");
+        Assert.Contains(q.Said, s => s.Contains("with your name on it"));
+        Assert.NotNull(q.Carried("key_of_belegost"));
+        Assert.Equal("key", state.Stage);
+    }
 }

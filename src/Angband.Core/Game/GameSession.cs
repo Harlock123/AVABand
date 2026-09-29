@@ -526,6 +526,7 @@ public sealed partial class GameSession : ITurnHandler
         var persist = PersistentLevels;
         var fromDepth = Level is null ? -1 : Player.Depth;
         var from = Player.Position;
+        KeepLostQuestItems();
         if (Level is not null)
         {
             if (persist && !fresh) StoreCurrentLevel(); // (its artifacts stay with it)

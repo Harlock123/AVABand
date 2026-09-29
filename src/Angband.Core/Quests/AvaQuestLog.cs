@@ -37,6 +37,15 @@ public sealed class AvaQuestLog
     public int JobsDone { get; set; }
     /// <summary>Percent added to a store's prices (negative: a discount), for what you did for or against it.</summary>
     public Dictionary<string, int> PriceAdjust { get; set; } = new();
+    /// <summary>Quest items left behind on a level (kind, tag), which turn up at the Prancing Pony.</summary>
+    public List<LostQuestItem> LostAndFound { get; set; } = [];
 
     public AvaQuestState? Get(string id) => Quests.GetValueOrDefault(id);
+}
+
+/// <summary>A quest item left behind on a level: what it was and which quest it belongs to.</summary>
+public sealed class LostQuestItem
+{
+    public string Kind { get; set; } = "";
+    public string Tag { get; set; } = "";
 }

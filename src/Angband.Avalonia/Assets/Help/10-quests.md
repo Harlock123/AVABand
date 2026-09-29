@@ -35,5 +35,6 @@ inn.
   Black market (6).
 
 Quest items can't be dropped, sold, thrown, ignored or stolen; one carried by a monster goes into
-your pack when it dies. A quest's place turns up on the level it names; if you leave before
+your pack when it dies (or, if your pack is full, falls beside it — leave it behind and Butterbur
+will have it for you at the inn). A quest's place turns up on the level it names; if you leave before
 you're done, it's there again next time you arrive.
