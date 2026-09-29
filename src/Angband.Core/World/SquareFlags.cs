@@ -31,6 +31,12 @@ public enum SquareFlags : ushort
     NoTrap = 1 << 11,
     /// <summary>Lit this turn by a carried light source (the player's torch, later glowing monsters).</summary>
     Lit = 1 << 12,
+    /// <summary>No teleporting here (Angband SQUARE_NO_TELEPORT: a gauntlet's arrival cavern and maze).</summary>
+    NoTeleport = 1 << 13,
+    /// <summary>Magic mapping and detection pass it by (Angband SQUARE_NO_MAP: a gauntlet's maze).</summary>
+    NoMap = 1 << 14,
+    /// <summary>No random monsters are placed here (Angband SQUARE_MON_RESTRICT; generation only).</summary>
+    MonRestrict = 1 << 15,
 
     AnyWallMarker = WallInner | WallOuter | WallSolid,
 }

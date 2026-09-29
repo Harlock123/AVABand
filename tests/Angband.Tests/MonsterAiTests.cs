@@ -410,26 +410,20 @@ public class MonsterAiTests
     }
 
     [Fact]
-    public void PitsAndNests_AreFilledWithOneKindOfMonster()
+    public void PitsAndNests_AreFilledWithOneThemesMonsters()
     {
+        // Angband build_pit / build_nest: every monster fits one pit.txt theme.
         var generator = new Angband.Core.Generation.DungeonGenerator(TestData.Game);
-        var spawner = new MonsterSpawner(TestData.Game);
         var checkedRooms = 0;
-        for (ulong seed = 0; seed < 60 && checkedRooms < 3; seed++)
+        for (ulong seed = 0; seed < 200 && checkedRooms < 3; seed++)
         {
-            var level = generator.Generate(new Angband.Core.Generation.LevelRequest(40, seed, ProfileId: "fortress")).Level;
-            var hints = level.SpawnHints.Where(h => h.Kind is Angband.Core.World.SpawnKind.PitMonster or Angband.Core.World.SpawnKind.NestMonster).ToList();
-            if (hints.Count == 0) continue;
-
-            spawner.Populate(level, new Angband.Core.Randomness.GameRandom(seed), new Loc(1, 1), new HashSet<string>());
-            var clusters = MonsterSpawner.PitClusters(hints);
-            foreach (var room in hints.GroupBy(h => clusters[h.Loc]))
-            {
-                var glyphs = room.Select(h => level.Monsters.At(h.Loc)).OfType<Monster>().Select(m => m.Race.Glyph).Distinct().ToList();
-                if (glyphs.Count == 0) continue;
-                Assert.Single(glyphs);
-                checkedRooms++;
-            }
+            var level = generator.Generate(new Angband.Core.Generation.LevelRequest(40, seed, ProfileId: "classic")).Level;
+            var races = level.SpawnHints.Where(h => h.Kind == Angband.Core.World.SpawnKind.Race)
+                .Select(h => TestData.Game.Monster(h.Tag!.Split('|')[0])!).ToList();
+            if (races.Count == 0) continue;
+            Assert.Contains(TestData.Game.Pits, p => races.Distinct().All(r => Angband.Core.Generation.Cave.PitHook(p, r))
+                || races.Count > 70); // two pits on one level may have two themes
+            checkedRooms++;
         }
         Assert.True(checkedRooms > 0, "no pits or nests were generated");
     }

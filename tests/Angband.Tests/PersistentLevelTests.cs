@@ -166,7 +166,9 @@ public class PersistentLevelTests
             Assert.True(level[new Loc(12, 10)].Has(Angband.Core.World.SquareFlags.Room));
             Assert.True(level[new Loc(150, 50)].Has(Angband.Core.World.SquareFlags.Room));
         }
-        var rng = new GameRandom(3);
-        for (var i = 0; i < 300; i++) Assert.NotEqual("labyrinth", generator.ChooseProfile(rng, 20, persistent: true).Generator);
+        // Angband labyrinth_gen, gauntlet_gen, hard_centre_gen: never in a persistent dungeon.
+        for (ulong seed = 1; seed <= 60; seed++)
+            Assert.DoesNotContain(generator.Generate(new LevelRequest(39, seed, Persistent: true)).Level.ProfileId,
+                new[] { "labyrinth", "gauntlet", "hard_centre" });
     }
 }

@@ -101,10 +101,6 @@ public class MonsterGroupTests
     [Fact]
     public void RoomLetters_AreAtTheLevelsDepth_AwakeAndAlone()
     {
-        Assert.Equal(0, TemplateLegend.LetterDepthBonus(MapTemplateKind.Room));
-        Assert.Equal((2, 4, 6), (TemplateLegend.LetterDepthBonus(MapTemplateKind.LesserVault),
-            TemplateLegend.LetterDepthBonus(MapTemplateKind.MediumVault), TemplateLegend.LetterDepthBonus(MapTemplateKind.GreaterVault)));
-
         // "Birds of a feather" deeper down: nine birds of about that level, awake, with no escorts.
         var birds = 0;
         for (ulong seed = 1; seed <= 40; seed++)
@@ -112,7 +108,7 @@ public class MonsterGroupTests
             var level = Room(10);
             for (var y = 0; y < 3; y++)
             for (var x = 0; x < 3; x++)
-                level.SpawnHints.Add(new SpawnHint(new Loc(10 + x, 10 + y), SpawnKind.Monster, 0, "glyph:B"));
+                level.SpawnHints.Add(new SpawnHint(new Loc(10 + x, 10 + y), SpawnKind.Monster, 0, "awake,base:B,uniques"));
             new MonsterSpawner(Data).Populate(level, new GameRandom(seed), new Loc(50, 25), new HashSet<string>());
             var placed = level.Monsters.All.ToList();
             Assert.Equal(9, placed.Count);
@@ -128,21 +124,11 @@ public class MonsterGroupTests
         for (ulong seed = 1; seed <= 40; seed++)
         {
             var level = Room(1);
-            for (var x = 0; x < 9; x++) level.SpawnHints.Add(new SpawnHint(new Loc(10 + x, 10), SpawnKind.Monster, 0, "glyph:B"));
+            for (var x = 0; x < 9; x++) level.SpawnHints.Add(new SpawnHint(new Loc(10 + x, 10), SpawnKind.Monster, 0, "awake,base:B,uniques"));
             new MonsterSpawner(Data).Populate(level, new GameRandom(seed), new Loc(50, 25), new HashSet<string>());
             Assert.All(level.Monsters.All, m => Assert.Equal('B', m.Race.Glyph));
             shallow += level.Monsters.All.Count();
         }
         Assert.InRange(shallow, 0, 360 / 10);
-    }
-
-    [Fact]
-    public void InterestingRooms_AreRare_AsInAngband()
-    {
-        // Angband 4.2 ("modified" profile): about 1.7% of rooms on level 1.
-        var classic = Data.Profiles.Single(p => p.Id == "classic");
-        var eligible = classic.Rooms.Where(r => r.MinDepth <= 1).ToList();
-        var share = (double)eligible.Single(r => r.Type == "template").Weight / eligible.Sum(r => r.Weight);
-        Assert.InRange(share, 0.012, 0.025);
     }
 }

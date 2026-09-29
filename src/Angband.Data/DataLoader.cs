@@ -26,6 +26,9 @@ public static class DataLoader
     public const string ColorsFile = "colors.json";
     public const string ConstantsFile = "constants.json";
     public const string TemplatesFolder = "templates";
+    public const string VaultsFile = "vaults.json";
+    public const string RoomTemplatesFile = "room_templates.json";
+    public const string PitsFile = "pits.json";
     public const string ElementsFile = "elements.json";
     public const string TimedEffectsFile = "timed_effects.json";
     public const string BlowMethodsFile = "blow_methods.json";
@@ -79,7 +82,9 @@ public static class DataLoader
         var terrain = new Merged<TerrainJson>(t => t.Id);
         var traps = new Merged<TrapJson>(t => t.Id);
         var profiles = new Merged<DungeonProfileDef>(p => p.Id);
-        var templates = new Merged<TemplateJson>(t => t.Id);
+        var vaults = new Merged<VaultDef>(t => t.Id);
+        var roomTemplates = new Merged<RoomTemplateDef>(t => t.Id);
+        var pits = new Merged<PitProfileDef>(t => t.Id);
         var elements = new Merged<ElementDef>(e => e.Id);
         var timedEffects = new Merged<TimedEffectDef>(t => t.Id);
         var blowMethods = new Merged<BlowMethodDef>(m => m.Id);
@@ -143,9 +148,9 @@ public static class DataLoader
                 colors[name] = hex;
 
             var templateDir = Path.Combine(dir, TemplatesFolder);
-            if (Directory.Exists(templateDir))
-                foreach (var file in Directory.GetFiles(templateDir, "*.json").Order(StringComparer.Ordinal))
-                    templates.AddRange(Read<List<TemplateJson>>(templateDir, Path.GetFileName(file), errors));
+            vaults.AddRange(Read<List<VaultDef>>(templateDir, VaultsFile, errors));
+            roomTemplates.AddRange(Read<List<RoomTemplateDef>>(templateDir, RoomTemplatesFile, errors));
+            pits.AddRange(Read<List<PitProfileDef>>(dir, PitsFile, errors));
         }
 
         if (town is null) errors.Add($"{TownFile} is missing.");
@@ -154,7 +159,7 @@ public static class DataLoader
 
         var terrainDefs = terrain.Items.Select(t => ToTerrain(t, colors, errors)).ToList();
         var trapDefs = traps.Items.Select(t => ToTrap(t, colors, errors)).ToList();
-        var templateDefs = templates.Items.Select(t => ToTemplate(t, errors)).OfType<MapTemplateDef>().ToList();
+        CheckGenerationData(profiles.Items, vaults.Items, roomTemplates.Items, pits.Items, monsterBases.Items, objectBases.Items, errors);
         var monsterDefs = monsters.Items.Select(m => ToMonster(m, colors, errors)).ToList();
         CheckCombatReferences(elements.Items, timedEffects.Items, blowMethods.Items, blowEffects.Items, monsterDefs, errors);
         CheckSpellReferences(monsterSpells.Items, monsterDefs, elements.Items, timedEffects.Items, errors);
@@ -220,7 +225,7 @@ public static class DataLoader
             Shops = town.Shops.Select(s => s.Terrain).ToList(),
         };
 
-        var data = new GameData(registry!, trapDefs, profiles.Items, templateDefs, townDef, shops, colors,
+        var data = new GameData(registry!, trapDefs, profiles.Items, townDef, shops, colors,
             constants ?? new GameConstants())
         {
             Elements = elements.Items,
@@ -239,6 +244,9 @@ public static class DataLoader
             Egos = egos.Items,
             Artifacts = artifacts.Items,
             Curses = curses.Items,
+            Vaults = vaults.Items,
+            RoomTemplates = roomTemplates.Items,
+            Pits = pits.Items,
             Summons = summons.Items,
             Flavors = flavors.Items,
             ChestTraps = chestTraps.Items,
@@ -322,30 +330,40 @@ public static class DataLoader
         };
     }
 
-    private static MapTemplateDef? ToTemplate(TemplateJson t, List<string> errors)
+    /// <summary>
+    /// The generation data holds together: profiles name rooms the generator has, vaults and room
+    /// templates are rectangular in known symbols, pit themes name real monster bases.
+    /// </summary>
+    private static void CheckGenerationData(IReadOnlyList<DungeonProfileDef> profiles, IReadOnlyList<VaultDef> vaults,
+        IReadOnlyList<RoomTemplateDef> rooms, IReadOnlyList<PitProfileDef> pits, IReadOnlyList<MonsterBaseDef> bases,
+        IReadOnlyList<ObjectBaseDef> objectBases, List<string> errors)
     {
-        if (t.Rows is not { Count: > 0 })
+        foreach (var p in profiles)
+            foreach (var r in p.Rooms.Where(r => !Angband.Core.Generation.DungeonGenerator.RoomNames.Contains(r.Name)))
+                errors.Add($"profile '{p.Id}' has unknown room '{r.Name}'.");
+        foreach (var name in new[] { "town", "classic" }.Where(n => profiles.All(p => p.Name != n)))
+            errors.Add($"{ProfilesFile}: the '{name}' profile is missing.");
+        const string vaultSymbols = " %#@*:`/;&+^<>1234567890~$]|=\"!?_-,.";
+        foreach (var v in vaults)
         {
-            errors.Add($"template '{t.Id}' has no rows.");
-            return null;
+            if (v.Rows.Count == 0 || v.Rows.Any(r => r.Length != v.Width)) errors.Add($"vault '{v.Id}' is not rectangular.");
+            foreach (var bad in v.Rows.SelectMany(r => r).Where(c => !vaultSymbols.Contains(c) && !char.IsAsciiLetter(c)).Distinct())
+                errors.Add($"vault '{v.Id}' uses unknown symbol '{bad}'.");
         }
-
-        var width = t.Rows.Max(r => r.Length);
-        var rows = t.Rows.Select(r => r.PadRight(width)).ToList();
-        foreach (var bad in rows.SelectMany(r => r).Where(c => !TemplateLegend.IsKnown(c)).Distinct())
-            errors.Add($"template '{t.Id}' uses unknown symbol '{bad}'.");
-
-        return new MapTemplateDef
+        const string roomSymbols = " %#^+123456x()89[.";
+        var baseIds = objectBases.Select(b => b.Id).ToHashSet();
+        foreach (var r in rooms)
         {
-            Id = t.Id,
-            Name = t.Name ?? t.Id,
-            Kind = t.Kind,
-            MinDepth = t.MinDepth,
-            MaxDepth = t.MaxDepth,
-            Weight = t.Weight,
-            Rotatable = t.Rotatable,
-            Rows = rows,
-        };
+            if (r.Rows.Count == 0 || r.Rows.Any(row => row.Length != r.Width)) errors.Add($"room template '{r.Id}' is not rectangular.");
+            foreach (var bad in r.Rows.SelectMany(row => row).Where(c => !roomSymbols.Contains(c)).Distinct())
+                errors.Add($"room template '{r.Id}' uses unknown symbol '{bad}'.");
+            if (r.Tval is { } t && !Angband.Core.Generation.Tvals.Bases(t).All(baseIds.Contains))
+                errors.Add($"room template '{r.Id}' asks for unknown object kind '{t}'.");
+        }
+        var monsterBaseIds = bases.Select(b => b.Id).ToHashSet();
+        foreach (var pit in pits)
+            foreach (var b in pit.Bases.Where(b => !monsterBaseIds.Contains(b)))
+                errors.Add($"pit '{pit.Id}' names unknown monster base '{b}'.");
     }
 
     private static MonsterRaceDef ToMonster(MonsterJson m, IReadOnlyDictionary<string, string> colors, List<string> errors)
@@ -671,17 +689,6 @@ public static class DataLoader
         public string? Description { get; init; }
     }
 
-    private sealed class TemplateJson
-    {
-        public required string Id { get; init; }
-        public string? Name { get; init; }
-        public MapTemplateKind Kind { get; init; }
-        public int MinDepth { get; init; }
-        public int MaxDepth { get; init; } = 127;
-        public int Weight { get; init; } = 1;
-        public bool Rotatable { get; init; } = true;
-        public List<string>? Rows { get; init; }
-    }
 
     private sealed class MonsterJson
     {

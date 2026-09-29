@@ -85,3 +85,61 @@ What changed, and why:
   caster's level) changes who is around Sauron.
 - **Kills at 50 ft** rose (15 → 51). The one death there (a run of 883 turns and 257 kills) was a
   warrior walled in by breeding giant white mice; how much of the rise is breeders is not measured.
+
+## Level generation as 4.2.5 has it
+
+Before (56e4c58, AVABand's own generators) and after the port of 4.2.5's `generate.c` and
+`gen-*.c`. Standing still, 30 levels per depth:
+
+| depth | objects | egos % | artifacts per level | cursed % | gold per level | monsters | traps | deaths % |
+|---:|---|---|---|---|---|---|---|---|
+| 1 | 15.2 → 12.9 | 2.0 → 1.8 | 0.1 → 0.0 | 0.4 → 0.3 | 58.9 → 52.7 | 28.9 → 29.1 | 1.9 → 1.2 | 13.3 → 26.7 |
+| 5 | 19.5 → 13.1 | 6.7 → 4.8 | 0.0 → 0.0 | 1.2 → 1.0 | 471.3 → 470.8 | 41.2 → 39.9 | 4.7 → 2.0 | 26.7 → 33.3 |
+| 10 | 25.0 → 14.5 | 7.3 → 1.8 | 0.1 → 0.0 | 3.7 → 3.0 | 516.3 → 603.8 | 65.4 → 53.2 | 8.5 → 2.5 | 26.7 → 60.0 |
+| 20 | 31.3 → 14.2 | 8.1 → 7.0 | 0.4 → 0.1 | 2.0 → 2.8 | 884.3 → 876.7 | 170.1 → 77.5 | 12.5 → 2.5 | 43.3 → 73.3 |
+| 30 | 34.2 → 15.2 | 9.5 → 4.6 | 0.4 → 0.0 | 2.9 → 2.2 | 1487.5 → 1907.8 | 202.4 → 107.9 | 14.7 → 3.4 | 73.3 → 70.0 |
+| 40 | 59.0 → 16.4 | 14.1 → 5.5 | 1.5 → 0.1 | 2.7 → 3.3 | 1353.7 → 2278.7 | 265.8 → 111.8 | 29.5 → 2.9 | 86.7 → 63.3 |
+| 50 | 50.4 → 16.4 | 13.0 → 6.7 | 0.8 → 0.2 | 2.6 → 1.0 | 1962.0 → 3445.7 | 222.8 → 98.0 | 39.8 → 4.3 | 83.3 → 80.0 |
+| 60 | 40.9 → 14.7 | 14.6 → 7.3 | 1.0 → 0.2 | 2.1 → 1.1 | 1999.7 → 2647.8 | 216.8 → 103.2 | 34.6 → 5.2 | 90.0 → 86.7 |
+| 70 | 48.2 → 14.7 | 14.3 → 8.4 | 1.1 → 0.2 | 2.5 → 2.5 | 2174.2 → 3222.3 | 219.1 → 96.6 | 23.3 → 4.7 | 93.3 → 86.7 |
+| 80 | 48.2 → 19.5 | 19.0 → 10.9 | 1.5 → 0.2 | 1.8 → 1.7 | 2911.0 → 3316.0 | 203.5 → 104.3 | 36.0 → 7.0 | 93.3 → 96.7 |
+| 90 | 41.8 → 15.2 | 15.3 → 8.6 | 0.9 → 0.1 | 2.2 → 1.1 | 4045.8 → 3556.2 | 204.6 → 103.9 | 45.6 → 4.0 | 96.7 → 90.0 |
+| 99 | 43.6 → 13.6 | 15.9 → 11.5 | 0.4 → 0.1 | 2.1 → 1.2 | 3265.7 → 3299.3 | 207.1 → 108.7 | 28.9 → 3.0 | 100.0 → 93.3 |
+
+Playing, 20 runs per depth:
+
+| depth | survived % | left level % | turns | kills | exp gained | level seen % | potions | blinks |
+|---:|---|---|---|---|---|---|---|---|
+| 1 | 95.0 → 95.0 | 0.0 → 0.0 | 994.2 → 983.5 | 51.1 → 70.8 | 42.5 → 48.0 | 47.1 → 77.8 | 1.2 → 2.2 | 0.3 → 0.3 |
+| 5 | 100.0 → 90.0 | 0.0 → 0.0 | 1000.0 → 939.1 | 66.2 → 150.0 | 132.5 → 225.6 | 46.6 → 66.6 | 0.9 → 2.2 | 0.1 → 0.5 |
+| 10 | 85.0 → 75.0 | 5.0 → 0.0 | 940.0 → 862.0 | 59.9 → 115.9 | 224.8 → 382.2 | 39.2 → 65.4 | 3.2 → 3.3 | 0.5 → 1.3 |
+| 20 | 30.0 → 35.0 | 5.0 → 5.0 | 471.9 → 574.2 | 38.7 → 43.3 | 552.6 → 624.6 | 19.9 → 33.4 | 6.2 → 5.4 | 2.8 → 1.8 |
+| 30 | 10.0 → 20.0 | 10.0 → 5.0 | 209.8 → 316.3 | 13.4 → 16.7 | 283.8 → 524.5 | 9.0 → 20.5 | 7.1 → 6.5 | 2.9 → 2.8 |
+| 40 | 0.0 → 20.0 | 0.0 → 0.0 | 137.6 → 317.8 | 9.4 → 23.3 | 358.9 → 804.2 | 6.5 → 11.1 | 7.3 → 7.8 | 2.1 → 1.3 |
+| 50 | 5.0 → 5.0 | 0.0 → 5.0 | 186.5 → 167.9 | 9.1 → 8.2 | 361.9 → 824.9 | 6.3 → 9.9 | 7.2 → 6.7 | 1.5 → 1.4 |
+| 60 | 5.0 → 0.0 | 5.0 → 0.0 | 59.3 → 97.0 | 2.6 → 4.5 | 234.8 → 564.7 | 4.2 → 10.7 | 5.8 → 7.1 | 1.1 → 1.3 |
+| 70 | 0.0 → 0.0 | 0.0 → 0.0 | 64.5 → 58.6 | 4.6 → 3.4 | 609.0 → 586.9 | 7.0 → 10.0 | 6.2 → 7.2 | 1.0 → 1.7 |
+| 80 | 0.0 → 5.0 | 0.0 → 5.0 | 79.6 → 65.5 | 2.2 → 4.0 | 109.0 → 251.3 | 3.8 → 6.2 | 5.3 → 3.6 | 0.8 → 0.5 |
+| 90 | 5.0 → 0.0 | 5.0 → 0.0 | 44.1 → 33.7 | 1.4 → 2.2 | 85.3 → 135.6 | 2.3 → 3.3 | 2.2 → 4.3 | 0.4 → 1.0 |
+| 99 | 40.0 → 15.0 | 40.0 → 15.0 | 8.0 → 13.6 | 0.4 → 0.8 | 2.4 → 63.9 | 0.7 → 1.3 | 0.9 → 1.3 | 0.2 → 0.3 |
+
+What changed, and why:
+
+- **Objects, traps and monsters** are about half, a tenth and a half of what they were. That is
+  4.2.5's budget: a classic level gets Rand_normal(9, 3) objects in rooms, Rand_normal(3, 3)
+  anywhere and as much gold, randint1(k)/5 traps in corridors (k being depth/3, at most 10), and
+  14 + 1d8 + k monsters with their groups, plus what vaults, pits, nests and room templates hold.
+  AVABand's old generators were more generous with all three. Artifacts per level fall with the
+  object count, and the share of egos is lower too (I haven't pinned down why).
+- **Standing still is more dangerous** in the shallows (13 → 27% at 50 ft, 27 → 60% at 500 ft): the
+  old spawner kept random monsters more than ten squares from where you start, and 4.2.5's
+  `pick_and_place_distant_monster` is called with a distance of 0, so one can be asleep beside you.
+  Deeper, fewer monsters make it a little less deadly.
+- **Playing is easier and the bot sees more**: with half the monsters it survives longer, kills
+  more and explores up to twice as much of each level, from
+  500 ft to 2000 ft especially. Deeper than 3000 ft the runs are too short to tell; at 4950 ft
+  it is sent up from Sauron's level three times in twenty rather than eight.
+- **Gold per level** is up by a third or so from 2000 ft; I haven't traced why.
+
+The object, trap and monster counts follow 4.2.5's own formulas, so they aren't a reason to
+change the generator.

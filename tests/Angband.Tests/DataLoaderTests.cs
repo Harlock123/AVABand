@@ -11,8 +11,8 @@ public class DataLoaderTests
         var data = TestData.Game;
         Assert.True(data.Terrain.Count > 10);
         Assert.NotEmpty(data.Traps);
-        Assert.Contains(data.Profiles, p => p.Generator == "town");
-        Assert.Contains(data.Templates, t => t.Kind == MapTemplateKind.GreaterVault);
+        Assert.Contains(data.Profiles, p => p.Name == "town");
+        Assert.Contains(data.Vaults, v => v.Type == "Greater vault");
         Assert.Equal(8, data.Shops.Count);
         Assert.Equal('#', data.Terrain[data.Terrain.Ids.Granite].Glyph);
     }
@@ -68,7 +68,7 @@ public class DataLoaderTests
     {
         using var mod = new TempDir();
         File.WriteAllText(Path.Combine(mod.Path, DataLoader.ProfilesFile), """
-            [ { "id": "classic", "generator": "classic", "rooms": [ { "type": "ballroom" } ] } ]
+            [ { "id": "classic", "name": "classic", "rooms": [ { "name": "ballroom" } ] } ]
             """);
 
         var ex = Assert.Throws<GameDataException>(() => DataLoader.Load(DataLoader.DefaultDataDirectory, mod.Path));
@@ -80,8 +80,8 @@ public class DataLoaderTests
     {
         using var mod = new TempDir();
         Directory.CreateDirectory(Path.Combine(mod.Path, DataLoader.TemplatesFolder));
-        File.WriteAllText(Path.Combine(mod.Path, DataLoader.TemplatesFolder, "bad.json"), """
-            [ { "id": "bad", "kind": "room", "rows": [ "%%%", "%?%", "%%%" ] } ]
+        File.WriteAllText(Path.Combine(mod.Path, DataLoader.TemplatesFolder, DataLoader.RoomTemplatesFile), """
+            [ { "id": "bad", "type": 1, "rating": 1, "rows": [ "%%%", "%?%", "%%%" ] } ]
             """);
 
         var ex = Assert.Throws<GameDataException>(() => DataLoader.Load(DataLoader.DefaultDataDirectory, mod.Path));

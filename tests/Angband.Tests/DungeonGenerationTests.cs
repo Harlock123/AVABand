@@ -29,8 +29,8 @@ public class DungeonGenerationTests
 
     public static TheoryData<string, int> Profiles() => new()
     {
-        { "classic", 1 }, { "classic", 45 }, { "fortress", 50 }, { "cavern", 20 }, { "cavern", 80 },
-        { "labyrinth", 5 }, { "labyrinth", 70 },
+        { "classic", 1 }, { "classic", 45 }, { "modified", 5 }, { "modified", 50 }, { "moria", 20 }, { "lair", 30 },
+        { "gauntlet", 40 }, { "hard_centre", 60 }, { "cavern", 20 }, { "cavern", 80 }, { "labyrinth", 5 }, { "labyrinth", 70 },
     };
 
     [Theory]
@@ -123,22 +123,26 @@ public class DungeonGenerationTests
     }
 
     [Fact]
-    public void Levels_ReceivePopulationBudget()
+    public void Levels_AreGivenTheirMonstersAndObjects()
     {
-        var level = Generator.Generate(new LevelRequest(30, 3)).Level;
-        Assert.True(level.Population.Monsters >= 14);
+        // Angband classic_gen: 14 + 1d8 + k random monsters (sleeping, with their groups), and
+        // objects in rooms and anywhere, all planned at generation.
+        var level = Generator.Generate(new LevelRequest(30, 3, ProfileId: "classic")).Level;
+        Assert.True(level.SpawnHints.Count(h => h.Kind == SpawnKind.Monster) >= 14);
+        Assert.Contains(level.SpawnHints, h => h.Kind == SpawnKind.Object);
+        Assert.Contains(level.SpawnHints, h => h.Kind == SpawnKind.Gold);
     }
 
     [Fact]
-    public void DeepFortressLevels_EventuallyContainVaults()
+    public void DeepLevels_EventuallyContainVaults()
     {
         var found = false;
         for (ulong seed = 0; seed < 30 && !found; seed++)
         {
-            var level = Generator.Generate(new LevelRequest(50, seed, ProfileId: "fortress")).Level;
+            var level = Generator.Generate(new LevelRequest(50, seed, ProfileId: "modified")).Level;
             found = level.AllLocs().Any(p => level[p].Has(SquareFlags.Vault));
         }
-        Assert.True(found, "no vault in 30 fortress levels at depth 50");
+        Assert.True(found, "no vault in 30 modified levels at depth 50");
     }
 
     [Fact]
@@ -146,8 +150,10 @@ public class DungeonGenerationTests
     {
         for (ulong seed = 0; seed < 40; seed++)
         {
+            // Angband choose_profile: classic and modified from the start; caverns from 15, lairs and
+            // gauntlets from 20, hard centres from 50; labyrinths from 13; moria levels 10-39.
             var level = Generator.Generate(new LevelRequest(2, seed)).Level;
-            Assert.Equal("classic", level.ProfileId); // cavern ≥15, labyrinth ≥5, fortress ≥30
+            Assert.Contains(level.ProfileId, new[] { "classic", "modified" });
         }
     }
 

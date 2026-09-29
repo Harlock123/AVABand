@@ -773,8 +773,18 @@ public sealed partial class GameSession
     }
 
     /// <summary>Angband OF_NO_TELEPORT (the curse of anti-teleportation): no teleport takes you anywhere.</summary>
-    private bool TeleportForbidden()
+    /// <summary>
+    /// Angband: teleporting is forbidden from a no-teleport grid (a gauntlet's arrival cavern and
+    /// maze — though a blink of ten squares or less still works there) and while wearing a curse of
+    /// anti-teleportation. <paramref name="range"/> 0 means to another level or to a monster.
+    /// </summary>
+    private bool TeleportForbidden(int range = 0)
     {
+        if (Level[Player.Position].Has(SquareFlags.NoTeleport) && (range > 10 || range == 0))
+        {
+            Publish(new MessageEvent("Teleportation forbidden!"));
+            return true;
+        }
         if (!Player.HasGearFlag(ItemFlags.NoTeleport)) return false;
         LearnRune(RuneIds.Flag(ItemFlags.NoTeleport));
         Publish(new MessageEvent("Teleportation forbidden!"));
@@ -783,7 +793,7 @@ public sealed partial class GameSession
 
     public bool TeleportPlayer(int range)
     {
-        if (TeleportForbidden()) return true;
+        if (TeleportForbidden(range)) return true;
         var from = Player.Position;
         var spots = Level.AllLocs()
             .Where(p => Level.IsPassable(p) && Level[p].Monster == 0 && p != from && p.DistanceTo(from) <= range
@@ -860,6 +870,7 @@ public sealed partial class GameSession
     {
         foreach (var p in Level.AllLocs().Where(p => p.ChebyshevTo(Player.Position) <= radius))
         {
+            if (Level[p].Has(SquareFlags.NoMap)) continue; // Angband effect_handler_MAP_AREA: a gauntlet's maze can't be mapped
             var f = Level.FeatureAt(p);
             if (f.Has(TerrainFlags.Passable) || f.HasAny(TerrainFlags.DoorAny | TerrainFlags.Stair | TerrainFlags.Rubble)
                 || Level.Neighbors(p).Any(Level.IsPassable))
@@ -1038,13 +1049,14 @@ public sealed partial class GameSession
         foreach (var hint in Level.SpawnHints)
         {
             if (!Level.InBounds(hint.Loc) || !Level.Has(hint.Loc, TerrainFlags.Object)) continue;
+            var bases = hint.Tag is { } tag && tag.StartsWith("tval:", StringComparison.Ordinal)
+                ? Generation.Tvals.Bases(tag[5..]) : null;
             var item = hint.Kind switch
             {
-                SpawnKind.Object => Objects.Make(Rng, depth + hint.DepthBonus),
-                SpawnKind.GoodObject => Objects.Make(Rng, depth + hint.DepthBonus, good: true),
-                SpawnKind.GreatObject => Objects.Make(Rng, depth + hint.DepthBonus, good: true, great: true),
+                SpawnKind.Object => Objects.Make(Rng, depth + hint.DepthBonus, bases: bases),
+                SpawnKind.GoodObject => Objects.Make(Rng, depth + hint.DepthBonus, good: true, bases: bases),
+                SpawnKind.GreatObject => Objects.Make(Rng, depth + hint.DepthBonus, good: true, great: true, bases: bases),
                 SpawnKind.Gold => MakeLevelGold(depth + hint.DepthBonus),
-                SpawnKind.MonsterOrObject when Level[hint.Loc].Monster == 0 => Objects.Make(Rng, depth + hint.DepthBonus),
                 _ => null,
             };
             if (item is not null) Level.Objects.Add(hint.Loc, item);

@@ -176,44 +176,45 @@ public sealed class MonsterSpawner(GameData data)
         [new(0, 1), new(0, -1), new(1, 0), new(-1, 0), new(1, 1), new(-1, 1), new(1, -1), new(-1, -1)];
 
     /// <summary>
-    /// Fills generator spawn hints (vault guardians, pits, nests) and then scatters the level's
-    /// monster budget away from the player.
+    /// Places what the generator planned (Angband places it as it builds): each monster hint as
+    /// its tag says — asleep or awake, with or without its group, restricted to a symbol or a pit
+    /// theme, uniques allowed rarely — or the exact race chosen for a pit or nest; then the level's
+    /// random monsters, if it has a budget (the town).
     /// </summary>
     public void Populate(Level level, GameRandom rng, Loc player, ISet<string> unavailableUniques)
     {
-        // Each pit or nest is a connected block of hints; give each block a single theme (monster glyph).
-        var clusters = PitClusters(level.SpawnHints);
-        var themes = new Dictionary<int, char?>();
         foreach (var hint in level.SpawnHints)
         {
-            if (!level.InBounds(hint.Loc) || !level.IsPassable(hint.Loc) || level[hint.Loc].Monster != 0) continue;
-            if (hint.Loc.ChebyshevTo(player) <= 1) continue;
-
+            if (!level.InBounds(hint.Loc) || !level.IsPassable(hint.Loc) || level[hint.Loc].Monster != 0 || hint.Loc == player) continue;
             switch (hint.Kind)
             {
-                case SpawnKind.Monster when hint.Tag is ['g', 'l', 'y', 'p', 'h', ':', var g]:
-                    // A vault's letter: a monster of that kind — or nothing, if none is native this
-                    // shallow. Angband get_vault_monsters places these awake and without escorts.
-                    if (PickRace(rng, level.Depth + hint.DepthBonus, unavailableUniques, r => r.Glyph == g) is { } kind)
-                    {
-                        Place(level, rng, kind, hint.Loc, asleep: false);
-                        if (kind.IsUnique) unavailableUniques.Add(kind.Id);
-                    }
+                case SpawnKind.Race when hint.Tag is { } tag:
+                {
+                    var bar = tag.IndexOf('|');
+                    var race = data.Monster(bar < 0 ? tag : tag[..bar]);
+                    var opts = bar < 0 ? "sleep" : tag[(bar + 1)..];
+                    if (race is null || (race.IsUnique && unavailableUniques.Contains(race.Id))) break;
+                    Put(race, opts.Contains("sleep", StringComparison.Ordinal), opts.Contains("group", StringComparison.Ordinal));
                     break;
+                }
                 case SpawnKind.Monster:
-                case SpawnKind.MonsterOrObject when rng.OneIn(2):
-                    if (PickRace(rng, level.Depth + hint.DepthBonus, unavailableUniques) is { } race)
-                        PlaceWithFriends(level, rng, race, hint.Loc, unavailableUniques);
+                {
+                    var opts = (hint.Tag ?? "sleep,group").Split(',');
+                    var filter = HintFilter(opts, level.Depth, rng);
+                    if (PickRace(rng, Math.Max(1, level.Depth + hint.DepthBonus), unavailableUniques, filter) is { } race)
+                        Put(race, opts.Contains("sleep"), opts.Contains("group"));
                     break;
+                }
+            }
 
-                case SpawnKind.PitMonster:
-                case SpawnKind.NestMonster:
-                    var glyph = ThemeFor(hint.Loc);
-                    if (glyph is null) break;
-                    var member = PickRace(rng, level.Depth + hint.DepthBonus, unavailableUniques,
-                        r => r.Glyph == glyph && !r.IsUnique, allowOutOfDepth: false);
-                    if (member is not null) Place(level, rng, member, hint.Loc);
-                    break;
+            void Put(MonsterRaceDef race, bool asleep, bool group)
+            {
+                if (group) PlaceWithFriends(level, rng, race, hint.Loc, unavailableUniques, asleep);
+                else
+                {
+                    Place(level, rng, race, hint.Loc, asleep);
+                    if (race.IsUnique) unavailableUniques.Add(race.Id);
+                }
             }
         }
 
@@ -225,40 +226,34 @@ public sealed class MonsterSpawner(GameData data)
             if (PickRace(rng, level.Depth, unavailableUniques) is { } race)
                 PlaceWithFriends(level, rng, race, s, unavailableUniques);
         }
-
-        char? ThemeFor(Loc p)
-        {
-            var cluster = clusters[p];
-            if (!themes.TryGetValue(cluster, out var glyph))
-                themes[cluster] = glyph = PickRace(rng, level.Depth + 5, unavailableUniques, r => !r.IsUnique, allowOutOfDepth: false)?.Glyph;
-            return glyph;
-        }
     }
 
-    /// <summary>Labels 8-connected groups of pit/nest hints; each group is one pit or nest room.</summary>
-    public static Dictionary<Loc, int> PitClusters(IEnumerable<SpawnHint> hints)
+    /// <summary>
+    /// A monster hint's restriction: <c>base:X</c> (Angband mon_select — monsters of that symbol, no
+    /// invisible undead above level 40, uniques only with <c>uniques</c> and then one time in five)
+    /// or <c>pit:id</c> (Angband mon_pit_hook); none means any monster.
+    /// </summary>
+    private Func<MonsterRaceDef, bool>? HintFilter(string[] opts, int currentDepth, GameRandom rng)
     {
-        var locs = hints.Where(h => h.Kind is SpawnKind.PitMonster or SpawnKind.NestMonster).Select(h => h.Loc).ToHashSet();
-        var labels = new Dictionary<Loc, int>();
-        var next = 0;
-        foreach (var start in locs.OrderBy(l => l.Y).ThenBy(l => l.X))
+        var allowUnique = opts.Contains("uniques");
+        foreach (var o in opts)
         {
-            if (labels.ContainsKey(start)) continue;
-            var queue = new Queue<Loc>([start]);
-            labels[start] = next;
-            while (queue.Count > 0)
+            if (o.StartsWith("base:", StringComparison.Ordinal) && o.Length > 5)
             {
-                var p = queue.Dequeue();
-                foreach (var d in DirectionExtensions.Compass)
-                {
-                    var n = p.Step(d);
-                    if (locs.Contains(n) && labels.TryAdd(n, next)) queue.Enqueue(n);
-                }
+                var symbol = o[5];
+                return r => BaseSymbol(r) == symbol
+                            && !(currentDepth < 40 && r.Has(MonsterFlags.Undead) && r.Has("INVISIBLE"))
+                            && (!r.IsUnique || (allowUnique && rng.RandInt0(5) == 0));
             }
-            next++;
+            if (o.StartsWith("pit:", StringComparison.Ordinal) && data.Pits.FirstOrDefault(p => p.Id == o[4..]) is { } pit)
+                return r => Generation.Cave.PitHook(pit, r);
         }
-        return labels;
+        return null;
     }
+
+    /// <summary>A race's monster base symbol (Angband race->base->d_char).</summary>
+    private char BaseSymbol(MonsterRaceDef race) =>
+        data.MonsterBases.FirstOrDefault(b => b.Id == race.Base)?.Glyph is { Length: > 0 } g ? g[0] : race.Glyph;
 
     /// <summary>
     /// Angband pick_and_place_distant_monster: a monster of the depth (with its friends) on an empty

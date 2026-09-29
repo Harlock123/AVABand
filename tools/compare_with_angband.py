@@ -1343,7 +1343,7 @@ CONSTANT_HOMES = {
     "obj-make:default-lamp": ("json", "defaultLampFuel"),
     "obj-make:fuel-torch": ("kind", "wooden_torch", "fuel"),
     "obj-make:fuel-lamp": ("kind", "lantern", "fuel"),
-    "mon-gen:level-min": ("cs", "Definitions/DungeonProfileDef.cs", "MonsterMin"),
+    "mon-gen:level-min": ("cs", "Generation/Cave.cs", "LevelMonsterMin"),
     "mon-gen:ood-chance": ("cs", "Monsters/MonsterSpawner.cs", "OutOfDepthChance"),
     "mon-gen:ood-amount": ("cs", "Monsters/MonsterSpawner.cs", "OutOfDepthAmount"),
     "mon-gen:group-max": ("cs", "Monsters/MonsterSpawner.cs", "GroupMax"),
@@ -1355,8 +1355,16 @@ CONSTANT_HOMES = {
     "world:feeling-total": ("cs", "Game/LevelFeelings.cs", "FeelingTotal"),
     "world:feeling-need": ("cs", "Game/LevelFeelings.cs", "FeelingNeed"),
     "world:move-energy": ("cs", "Time/EnergyTable.cs", "MoveEnergy"),
-    "world:dungeon-hgt": ("cs", "Definitions/DungeonProfileDef.cs", "Height"),
-    "world:dungeon-wid": ("cs", "Definitions/DungeonProfileDef.cs", "Width"),
+    "world:dungeon-hgt": ("cs", "Generation/Cave.cs", "DungeonHeight"),
+    "world:dungeon-wid": ("cs", "Generation/Cave.cs", "DungeonWidth"),
+    "dun-gen:cent-max": ("cs", "Generation/Cave.cs", "LevelRoomMax"),
+    "dun-gen:door-max": ("cs", "Generation/Cave.cs", "LevelDoorMax"),
+    "dun-gen:wall-max": ("cs", "Generation/Cave.cs", "WallPierceMax"),
+    "dun-gen:tunn-max": ("cs", "Generation/Cave.cs", "TunnGridMax"),
+    "dun-gen:amt-room": ("cs", "Generation/Cave.cs", "RoomItemAv"),
+    "dun-gen:amt-item": ("cs", "Generation/Cave.cs", "BothItemAv"),
+    "dun-gen:amt-gold": ("cs", "Generation/Cave.cs", "BothGoldAv"),
+    "dun-gen:pit-max": ("cs", "Generation/Cave.cs", "LevelPitMax"),
     "carry-cap:thrown-quiver-mult": ("cs", "Items/Inventory.cs", "ThrownQuiverMultiplier"),
     "obj-make:max-depth": ("cs", "Items/ObjectFactory.cs", "MaxObjectDepth"),
     "obj-make:great-obj": ("cs", "Items/ObjectFactory.cs", "GreatObjectChance"),
@@ -1367,16 +1375,10 @@ CONSTANT_HOMES = {
 CONSTANTS_ELSEWHERE = {
     "level-max:monsters": "AVABand's monster roster grows as needed",
     "player:food-value": "AVABand's hunger is Angband 4.1's model (constants.json food*)",
-    "dun-gen:cent-max": "an array size in 4.2.5's generator", "dun-gen:door-max": "an array size in 4.2.5's generator",
-    "dun-gen:wall-max": "an array size in 4.2.5's generator", "dun-gen:tunn-max": "an array size in 4.2.5's generator",
     "carry-cap:floor-size": "AVABand floor piles have no limit",
     "world:stair-skip": "the birth option's default (Angband birth_levels_skip); AVABand has none",
     "world:town-hgt": "AVABand's town is its own layout (town.json)",
     "world:town-wid": "AVABand's town is its own layout (town.json)",
-    "dun-gen:amt-room": "dungeon_profile.json allocation (compared there)",
-    "dun-gen:amt-item": "dungeon_profile.json allocation (compared there)",
-    "dun-gen:amt-gold": "dungeon_profile.json allocation (compared there)",
-    "dun-gen:pit-max": "dungeon_profile.json (compared there)",
 }
 CRITICAL_PREFIXES = {"melee-critical": "Melee", "ranged-critical": "Ranged", "o-melee-critical": "OMelee",
                      "o-ranged-critical": "ORanged"}
@@ -1853,6 +1855,129 @@ def compare_quests(gd, data):
     return sec
 
 
+def compare_profiles(gd, data):
+    sec = section("profiles", "Dungeon profiles", "dungeon_profiles.json", "dungeon_profile.txt")
+    ours = {x["id"]: x for x in load(data, "dungeon_profiles.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "dungeon_profile.txt")):
+        pid = slug(e["name"])
+        x = ours.get(pid)
+        if x is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(pid)
+        sec.compared += 1
+        label = e["name"]
+        p = x.get("params", {})
+        sec.cmp(label, "params (block:rooms:unusual:rarity)",
+                f"{p.get('blockSize', 1)}:{p.get('rooms', 0)}:{p.get('unusual', 200)}:{p.get('maxRarity', 0)}", one(e, "params"))
+        t = x.get("tunnel")
+        if one(e, "tunnel") or t:
+            t = t or {}
+            sec.cmp(label, "tunnel (rnd:chg:con:pen:jct)",
+                    f"{t.get('random')}:{t.get('change')}:{t.get('continue')}:{t.get('pierceDoor')}:{t.get('junctionDoor')}",
+                    one(e, "tunnel"))
+        s = x.get("streamers")
+        if one(e, "streamer") or s:
+            s = s or {}
+            sec.cmp(label, "streamer (den:rng:mag:mc:qua:qc)",
+                    f"{s.get('density')}:{s.get('range')}:{s.get('magma')}:{s.get('magmaTreasure')}:{s.get('quartz')}:{s.get('quartzTreasure')}",
+                    one(e, "streamer"))
+        sec.cmp(label, "alloc", x.get("alloc", 0), int(one(e, "alloc", "0")))
+        sec.cmp(label, "min-level", x.get("minLevel", 0), int(one(e, "min-level", "0")))
+        mine = [f"{r['name']}:{r.get('rating', 0)}:{r.get('height', 0)}:{r.get('width', 0)}:{r.get('level', 0)}:"
+                f"{1 if r.get('pit') else 0}:{r.get('rarity', 0)}:{r.get('cutoff', 0)}" for r in x.get("rooms", [])]
+        sec.cmp(label, "rooms, in order", mine, get(e, "room"))
+    for pid in ours:
+        if pid not in used:
+            sec.only_ours.append(pid)
+    sec.notes += ["Every field of dungeon_profile.txt is compared, the rooms in their order (it matters: they are "
+                  "tried in turn). The town profile's parameters are carried but AVABand's town is its own (town.json)."]
+    return sec
+
+
+def compare_vaults(gd, data):
+    sec = section("vaults", "Vaults", "templates/vaults.json", "vault.txt")
+    ours = load(data, os.path.join("templates", "vaults.json"))
+    theirs = parse_records(os.path.join(gd, "vault.txt"))
+    sec.compared = min(len(ours), len(theirs))
+    for i, e in enumerate(theirs):
+        if i >= len(ours):
+            sec.only_theirs.append(e["name"])
+            continue
+        x = ours[i]
+        label = f"{e['name']} (#{i + 1})"
+        sec.cmp(label, "name", x.get("name"), e["name"])
+        sec.cmp(label, "type", x.get("type"), one(e, "type"))
+        sec.cmp(label, "rating", x.get("rating", 0), int(one(e, "rating", "0")))
+        sec.cmp(label, "depths", (x.get("minDepth", 0), x.get("maxDepth", 0)), (int(one(e, "min-depth", "0")), int(one(e, "max-depth", "0"))))
+        sec.cmp_set(label, "flags", x.get("flags", []), flag_list(e, "flags"))
+        width = int(one(e, "columns"))
+        sec.cmp(label, "layout", x.get("rows"), [r.ljust(width) for r in get(e, "D")])
+    for x in ours[len(theirs):]:
+        sec.only_ours.append(x["id"])
+    sec.notes += ["Every vault is compared whole, in order: name, type, rating, depths, flags and its layout symbol for "
+                  "symbol (AVABand keeps 4.2.5's own symbols)."]
+    return sec
+
+
+def compare_room_templates(gd, data):
+    sec = section("room_templates", "Room templates", "templates/room_templates.json", "room_template.txt")
+    ours = load(data, os.path.join("templates", "room_templates.json"))
+    theirs = parse_records(os.path.join(gd, "room_template.txt"))
+    sec.compared = min(len(ours), len(theirs))
+    for i, e in enumerate(theirs):
+        if i >= len(ours):
+            sec.only_theirs.append(e["name"])
+            continue
+        x = ours[i]
+        label = f"{e['name']} (#{i + 1})"
+        sec.cmp(label, "name", x.get("name"), e["name"])
+        sec.cmp(label, "type:rating:doors", f"{x.get('type', 1)}:{x.get('rating', 0)}:{x.get('doors', 0)}",
+                f"{one(e, 'type', '1')}:{one(e, 'rating', '0')}:{one(e, 'doors', '0')}")
+        tval = one(e, "tval", "0")
+        sec.cmp(label, "tval", x.get("tval"), None if tval == "0" else slug(tval))
+        sec.cmp_set(label, "flags", x.get("flags", []), flag_list(e, "flags"))
+        width = int(one(e, "columns"))
+        sec.cmp(label, "layout", x.get("rows"), [r.ljust(width) for r in get(e, "D")])
+    for x in ours[len(theirs):]:
+        sec.only_ours.append(x["id"])
+    sec.notes += ["Every room template is compared whole, in order (the layout symbol for symbol)."]
+    return sec
+
+
+def compare_pits(gd, data):
+    sec = section("pits", "Pit profiles", "pits.json", "pit.txt")
+    ours = {x["id"]: x for x in load(data, "pits.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "pit.txt")):
+        pid = slug(e["name"])
+        x = ours.get(pid)
+        if x is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(pid)
+        sec.compared += 1
+        label = e["name"]
+        rarity, ave = (int(v) for v in one(e, "alloc").split(":"))
+        sec.cmp(label, "room", x.get("room", 0), int(one(e, "room", "0")))
+        sec.cmp(label, "alloc (rarity:level)", (x.get("rarity", 1), x.get("averageLevel", 0)), (rarity, ave))
+        sec.cmp(label, "object rarity", x.get("objectRarity", 0), int(one(e, "obj-rarity", "0")))
+        sec.cmp_set(label, "colours", x.get("colors", []), [MI.COLORS[c] for c in get(e, "color")])
+        sec.cmp_set(label, "monster bases", x.get("bases", []), [slug(b) for b in get(e, "mon-base")])
+        sec.cmp_set(label, "required flags", x.get("flags", []), flag_list(e, "flags-req"))
+        sec.cmp_set(label, "forbidden flags", x.get("forbiddenFlags", []), flag_list(e, "flags-ban"))
+        sec.cmp_set(label, "required spells", x.get("spells", []), flag_list(e, "spell-req"))
+        sec.cmp_set(label, "forbidden spells", x.get("forbiddenSpells", []), flag_list(e, "spell-ban"))
+        sec.cmp(label, "innate frequency", x.get("innateFrequency", 0), int(one(e, "innate-freq", "0")))
+        sec.cmp_set(label, "forbidden monsters", x.get("forbiddenMonsters", []), [MI.slug(m) for m in get(e, "mon-ban")])
+    for pid in ours:
+        if pid not in used:
+            sec.only_ours.append(pid)
+    sec.notes += ["Every field of pit.txt is compared."]
+    return sec
+
+
 def compare_summons(gd, data):
     sec = section("summons", "Summons", "summons.json", "summon.txt")
     ours = {x["id"]: x for x in load(data, "summons.json")}
@@ -2066,8 +2191,7 @@ def render(gd, data, out):
             w("")
     w("## Not compared at all")
     w("")
-    w("- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by "
-      "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
+    w("- 4.2.5 files with no comparison here: object_base.txt, "
       "object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
       "slay.txt, pain.txt, visuals.txt, world.txt, "
       "ui_*.txt, blow_methods.txt (methods are only checked for existence).")
@@ -2106,7 +2230,8 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps, compare_quests):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps, compare_quests,
+               compare_profiles, compare_vaults, compare_room_templates, compare_pits):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

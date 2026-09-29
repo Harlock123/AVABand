@@ -55,7 +55,7 @@ public class ContentTests
         Assert.True(data.Objects.Count >= 340);
         Assert.True(data.Egos.Count >= 80);
         Assert.True(data.Artifacts.Count >= 120);
-        Assert.True(data.Templates.Count(t => t.Kind != MapTemplateKind.Room) >= 40);
+        Assert.Equal(96, data.Vaults.Count(v => v.Type != "Interesting room"));
         Assert.Contains(data.Monsters, m => m.Name == "Morgoth, Lord of Darkness");
         Assert.Contains(data.Artifacts, a => a.Name == "'Ringil'");
         Assert.Contains(data.Objects, k => k.Id == "wand_of_magic_missile");
@@ -391,12 +391,14 @@ public class ContentTests
     }
 
     [Fact]
-    public void Vault_letters_are_monster_glyphs()
+    public void Vault_letters_are_monster_base_symbols()
     {
-        Assert.True(TemplateLegend.IsMonsterGlyph('o'));
-        Assert.True(TemplateLegend.IsMonsterGlyph('T'));
-        Assert.False(TemplateLegend.IsMonsterGlyph('D'));
-        Assert.False(TemplateLegend.IsMonsterGlyph('X'));
+        // Angband build_vault: letters other than x and X are the symbols of monster bases.
+        var symbols = TestData.Game.MonsterBases.Select(b => b.Glyph[0]).ToHashSet();
+        var letters = TestData.Game.Vaults.SelectMany(v => v.Rows).SelectMany(r => r)
+            .Where(c => char.IsAsciiLetter(c) && c is not ('x' or 'X')).Distinct().ToList();
+        Assert.NotEmpty(letters);
+        Assert.All(letters, l => Assert.Contains(l, symbols));
     }
 
     [Fact]

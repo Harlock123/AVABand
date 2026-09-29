@@ -82,12 +82,43 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 `LevelRequest(depth, seed)` always yields the same level.
 
 ## Implemented so far
-- **Level generation** (`Angband.Core/Generation`), chosen per depth from `dungeon_profiles.json`:
-  - `classic`: block-grid room placement, wandering tunnels that pierce room walls, junction doors,
-    magma/quartz streamers with treasure. Rooms: simple, overlap, crossed, large (5 inner-room
-    variants), circular, monster pits/nests, JSON templates, lesser/medium/greater vaults.
-  - `fortress` (a classic-generator theme for depth 30+), `cavern` (cellular automata),
-    `labyrinth` (perfect maze, may be lit/known/permanent), and `town` (8 shops, fixed per game).
+- **Level generation** (`Angband.Core/Generation`, the `Cave` class): a port of Angband 4.2.5's
+  `generate.c`, `gen-cave.c`, `gen-room.c`, `gen-util.c`, `gen-chunk.c` and `gen-monster.c`, driven by
+  4.2.5's own data — `dungeon_profiles.json` (`dungeon_profile.txt`), `templates/vaults.json`
+  (`vault.txt`, all 162, in 4.2.5's symbols), `templates/room_templates.json` (`room_template.txt`,
+  all 500) and `pits.json` (`pit.txt`, all 40 themes), each synced and compared with the original.
+  - **Choosing a level** (`choose_profile`): the town; classic on a quest level; now and then a
+    labyrinth (2 in 100 from level 13, more on levels divisible by 3, 5, 7, 11 or 13); between
+    levels 10 and 39 one time in forty a moria level; otherwise by the profiles' allocations among
+    those deep enough — classic and modified from the start, caverns from 15, lairs and gauntlets
+    from 20, hard centres from 50. A hundred attempts, each its builder's.
+  - **Classic**: 198 × 66, rooms placed block by block (each block tried once in random order, the
+    room chosen by a percentile key against each room profile's cutoff at a rolled rarity), joined
+    in a scrambled ring by `build_tunnel` (turning, sometimes at random, piercing room walls — through
+    a room's marked entrances where it has them — noting junctions, perhaps stopping at one), doors
+    at junctions and piercings, all regions joined, magma and quartz streamers with treasure, 3-4
+    down and 1-2 up stairs a quarter of the level apart, rubble and a few traps in corridors.
+  - **Modified** and **moria**: sized 75-100% of the dungeon, rooms that find their own space until
+    a seventh of the area is floor; moria levels use ragged starburst rooms and fill with Moria
+    dwellers. **Lair**: half a modified level, half a cavern crowded with one pit theme's monsters.
+    **Gauntlet**: two caverns either side of a hard, unmappable labyrinth — no teleporting in the
+    arrival cavern or the maze (a blink of ten squares still works), up stairs on the left, down on
+    the right. **Hard centre**: a greater vault in the middle, caverns all round. **Cavern**:
+    cellular automata, small pockets filled, the rest joined. **Labyrinth**: randomised Kruskal,
+    lit, known, soft or permanent at random; unlit ones hide good objects, hard ones great.
+  - **Rooms**: simple (sometimes pillared or ragged), overlapping, crossed (solid middle, inner
+    vault, pinched, plus or pillar), large (five inner rooms), circular (with a middle chamber),
+    moria rooms and huge rooms (starbursts), rooms of chambers (magma chambers hollowed into a
+    maze of doors), room templates (optional walls, numbered secret doors, treasure of a kind),
+    interesting rooms and lesser, medium and greater vaults (old and new), pits (ranked, toughest
+    in the middle) and nests (a jumble) of one `pit.txt` theme, and staircase rooms joining
+    persistent levels. Vaults, pits and chambers add to the level's danger rating; no random
+    monsters go in vaults or chambers.
+  - **What's on it**: monsters, objects, gold and traps are planned as 4.2.5 places them — vault
+    symbols (0-9, `&`, `~`, `$`, `]`, `|`, `=`, `"`, `!`, `?`, `_`, `-`, `,`, letters for a
+    monster of that symbol), guardians about room treasure, 14 + 1d8 + k sleeping monsters with
+    their groups anywhere but vaults and the player's square, objects in rooms and anywhere, gold
+    — and put in place when you arrive. The town is AVABand's own (`town`: 8 shops, fixed per game).
   - Stairs, rubble, depth-gated traps, connected stairs, spawn hints and population budgets for
     the future monster/object systems. Every level is checked by `LevelValidator` (permanent border,
     stairs present, all walkable squares reachable); failed attempts are retried.
@@ -135,7 +166,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   `GameSession.MonsterPowers.cs`): 624 races in `monsters.json` — Angband 4.2's whole bestiary from
   the town to Morgoth, imported with `tools/angband_monster_import.py`
   (see *Game data from Angband* below) alongside 27 hand-written ones, with depth/rarity
-  allocation with out-of-depth rolls, packs, vault/pit/nest population (one theme per pit).
+  allocation with out-of-depth rolls, packs, and vault, pit, nest, chamber and lair monsters as
+  4.2.5 chooses them.
   - **Groups and escorts**, as Angband 4.2 places them (`mon-make.c` `place_new_monster`,
     `place_friends`): each race's `friends` entries, imported from `monster.txt`, give a percent
     chance, a number (dice) and who comes — more of the same race, a named race, or any race of a
@@ -514,9 +546,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
   spells), race, shape, trap, terrain feature, store, curse, constant, summon kind, timed effect,
-  element, chest trap and quest with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
+  element, chest trap, quest, dungeon profile, vault, room template and pit theme with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
   differs (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
-  differences across 1,902 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  differences across 2,621 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
   monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
   conversions while keeping ids and AVABand's own fields, and CI checks it on every push: the
   `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with
@@ -677,7 +709,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     recorded, and a replay is never saved, scored or recorded itself.
   - **Ambience** (AVABand's own; Settings → Sound: *Ambience on/off* and its own volume): a quiet loop
     under the music for where you are — the town by day or by night, the dungeon by depth (shallow to
-    1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and fortresses their own,
+    1000 ft, deep to 3000 ft, the abyss below), and caverns, labyrinths and hard centres (the
+    fortress loop) their own,
     each falling back to the one before (the abyss to the deep, a cavern to its depth's). It crossfades
     on each change of place. Loops named `ambient-town-day`, `ambient-town-night`,
     `ambient-dungeon-shallow`, `-deep`, `-abyss`, `ambient-cavern`, `ambient-labyrinth` and
@@ -693,7 +726,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - **Scenes** (AVABand's own; the option *Show scenes at moments of note*, on by default): a moment's
     full-window scene, fading in and out, with a caption — taking the stairs down ("Descending… 250
     ft (level 5)") or up ("Up into the town, by night"), Word of Recall taking you up or down,
-    arriving in a cavern, labyrinth or fortress, a level whose feeling is deadly ("Omens of death
+    arriving in a cavern, labyrinth or hard centre (a fortress), a level whose feeling is deadly ("Omens of death
     haunt this place."), meeting a unique for the very first time (its name), and death (a tombstone,
     behind the game-over menu). Several queue — the stairs, then the cavern you arrive in; a click
     ends one, a key ends them all and still does what it does. Only the stairs show the stair scenes
@@ -768,18 +801,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   character dump). A winner can keep playing and retire when ready (`Q` or Game → Retire, with a
   confirmation): the game ends and the victory goes on the high-score table as *Retired
   victorious*. Quest progress is saved and shown on the character sheet.
-- **Vaults & rooms** (`templates/*.json`): 69 interesting rooms and 93 lesser, medium and greater
-  vaults (65 and 89 of them Angband's, via `tools/angband_vault_import.py` — all but 8 sealed by
-  permanent rock). Many vaults, as in Angband, are entered by tunnelling through their granite,
-  and some treasure pockets are sealed: level generation leaves those alone instead of carving a
-  way in. The template legend gained Angband's deeper monster/object symbols and letters for
-  monsters of a given kind. As in Angband 4.2 (`get_vault_monsters`, `build_vault`): a letter's
-  monster is drawn at the level's depth in an interesting room and 2/4/6 deeper in a
-  lesser/medium/greater vault, placed awake and without escorts, and left out if no monster of
-  that symbol is native that shallow (the "Birds of a feather" room stays mostly empty on level 1,
-  where no bird is native); `,` (Angband's `1`) is a monster (50%), else an object (50%), else a
-  trap (25%), at the level's depth. Interesting rooms are as rare as in 4.2's usual profile —
-  about 1 room in 60 on level 1.
+- **Vaults & rooms** (`templates/vaults.json`, `templates/room_templates.json`): all of 4.2.5's
+  vault.txt (66 interesting rooms, 96 lesser, medium and greater vaults, old and new) and
+  room_template.txt (500), kept in 4.2.5's own symbols and built by its `build_vault` and
+  `build_room_template` — turned and reflected at random (tall ones likelier to be laid on their
+  side), a vault's letters placed as monsters of that symbol at the level's depth in an
+  interesting room and 2/4/6 deeper in a lesser/medium/greater vault, awake and alone.
 - **Tunnelling** (`Game/GameSession.Tunnel.cs`; `T` + direction): Angband 4.2's digging. Skill
   comes from race (dwarves +40), Strength (`adj_str_dig`) and the best tool carried — the wielded
   weapon or any digger in the pack (shovel, pick, mattock: +20 per point of digging, plus a tenth
@@ -904,15 +931,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     the dice (evil ×1.8, animals ×2, the ×3 slays ×2.5, the ×5 ones ×3.5, brands ×1.5 or ×2.5) and
     add their extra, a critical adds up to five whole dice, and everyone has two blows at least.
     And **persistent levels** (4.2's experimental `birth_levels_persist`, off by default;
-    `Game/GameSession.PersistentLevels.cs`, `Generation/StairJoins.cs`): every level you leave is
+    `Game/GameSession.PersistentLevels.cs`, `Generation/Cave.Levels.cs`): every level you leave is
     kept, with your map of it, the monsters and the things on the floor, and is there again when you
     come back — its monsters having healed and shaken off confusion, fear and the rest for the time
     you were away; uniques alive on a kept level can't turn up elsewhere meanwhile. The stairs line
     up: a new level has an up staircase under each down staircase of the level above (and a down
     staircase over each up staircase of the level below), each in a little walled staircase room
-    built before the other rooms so the tunnels reach it (in caverns, dug through to the nearest
-    cave), and no others of that kind, and you arrive on the square you left from — so going back up lands
-    you on the staircase you came down. No labyrinths are made for a persistent dungeon (as in 4.2);
+    built before the other rooms so the tunnels reach it (in caverns, built in with floor toward the
+    middle), and no others of that kind, and you arrive on the square you left from — so going back up lands
+    you on the staircase you came down. No labyrinths, gauntlets or hard centres are made for a
+    persistent dungeon (as in 4.2.5), and a lair keeps its two halves apart from the joins;
     the debug menu's *Regenerate level* still makes a new one. Kept levels are in the save. Word
     of Recall read in town asks "Which level do you wish to return to?" (the deepest kept level
     by default; only a level you have visited will do).
@@ -1104,7 +1132,7 @@ The music moods: `town` by day, `town_night`, `dungeon` for levels 1-19 and `dee
 ## Modding
 Data loads from `data/` next to the executable, then from each folder in
 `<AppData>/AVABand/mods/*`. Entries with the same `id` replace base entries; new ids are added.
-Templates use Angband vault.txt-style symbols (see `TemplateLegend`).
+Vaults and room templates are 4.2.5's own formats and symbols (see `VaultDef` and `RoomTemplateDef`).
 
 ## Controls and input
 Every device produces the same `InputAction`s (`Angband.Input`), and one router in the view model
@@ -1208,7 +1236,8 @@ Most monsters, objects, egos, artifacts, shop lists and vaults are converted fro
 fetch them from https://github.com/angband/angband). Angband is distributed under the GNU GPL
 version 2 or the Angband licence, and data derived from it carries the same terms. What AVABand
 can't model yet is left out and listed by the importers:
-the mushroom of Turbulence, the wand of Dragon's Breath, and eight vaults sealed by permanent rock.
+the mushroom of Turbulence and the wand of Dragon's Breath. Vaults, room templates, pit themes and
+dungeon profiles come across whole (`tools/sync_with_angband.py --only profiles,vaults,room_templates,pits`).
 
 Tiles for the new content: the Adam Bolt and Gervais sets map every Angband monster and object by
 name (`tools/angband_prf_to_tileset.py`); DCSS monsters and items are matched by name and keyword

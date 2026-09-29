@@ -28,6 +28,10 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Elements](#elements) — `elements.json` vs `projection.txt (type:element)`
 - [Chest traps](#chest-traps) — `chest_traps.json` vs `chest_trap.txt`
 - [Quests](#quests) — `quests.json` vs `quest.txt`
+- [Dungeon profiles](#profiles) — `dungeon_profiles.json` vs `dungeon_profile.txt`
+- [Vaults](#vaults) — `templates/vaults.json` vs `vault.txt`
+- [Room templates](#room-templates) — `templates/room_templates.json` vs `room_template.txt`
+- [Pit profiles](#pits) — `pits.json` vs `pit.txt`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -227,19 +231,11 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 <a id="constants"></a>
 ## Constants: `constants.json and C# constants` vs `constants.txt`
 
-75 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+83 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
 
 ### 4.2.5 properties AVABand's format can't express (not reported as differences)
 
 - carry-cap:floor-size (AVABand floor piles have no limit): 1
-- dun-gen:amt-gold (dungeon_profile.json allocation (compared there)): 1
-- dun-gen:amt-item (dungeon_profile.json allocation (compared there)): 1
-- dun-gen:amt-room (dungeon_profile.json allocation (compared there)): 1
-- dun-gen:cent-max (an array size in 4.2.5's generator): 1
-- dun-gen:door-max (an array size in 4.2.5's generator): 1
-- dun-gen:pit-max (dungeon_profile.json (compared there)): 1
-- dun-gen:tunn-max (an array size in 4.2.5's generator): 1
-- dun-gen:wall-max (an array size in 4.2.5's generator): 1
 - level-max:monsters (AVABand's monster roster grows as needed): 1
 - player:food-value (AVABand's hunger is Angband 4.1's model (constants.json food*)): 1
 - world:stair-skip (the birth option's default (Angband birth_levels_skip); AVABand has none): 1
@@ -307,9 +303,45 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - Every field of quest.txt is compared (the race by the importer's monster id).
 
+<a id="profiles"></a>
+## Dungeon profiles: `dungeon_profiles.json` vs `dungeon_profile.txt`
+
+9 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every field of dungeon_profile.txt is compared, the rooms in their order (it matters: they are tried in turn). The town profile's parameters are carried but AVABand's town is its own (town.json).
+
+<a id="vaults"></a>
+## Vaults: `templates/vaults.json` vs `vault.txt`
+
+162 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every vault is compared whole, in order: name, type, rating, depths, flags and its layout symbol for symbol (AVABand keeps 4.2.5's own symbols).
+
+<a id="room-templates"></a>
+## Room templates: `templates/room_templates.json` vs `room_template.txt`
+
+500 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every room template is compared whole, in order (the layout symbol for symbol).
+
+<a id="pits"></a>
+## Pit profiles: `pits.json` vs `pit.txt`
+
+40 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every field of pit.txt is compared.
+
 ## Not compared at all
 
-- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
+- 4.2.5 files with no comparison here: object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
 - Descriptions and messages everywhere.
 
 <a id="summary"></a>
@@ -332,11 +364,15 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Terrain | 25 | 0 | 0 | 0 | 0 | 0 |
 | Stores | 8 | 0 | 0 | 0 | 0 | 0 |
 | Curses | 27 | 0 | 0 | 0 | 0 | 0 |
-| Constants | 75 | 0 | 0 | 0 | 0 | 14 |
+| Constants | 83 | 0 | 0 | 0 | 0 | 6 |
 | Summons | 17 | 0 | 0 | 0 | 0 | 0 |
 | Timed effects | 52 | 0 | 0 | 0 | 0 | 4 |
 | Elements | 25 | 0 | 0 | 0 | 0 | 31 |
 | Chest traps | 7 | 0 | 0 | 0 | 0 | 0 |
 | Quests | 2 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **1902** | **0** | **0** | **0** | **14** | **66** |
+| Dungeon profiles | 9 | 0 | 0 | 0 | 0 | 0 |
+| Vaults | 162 | 0 | 0 | 0 | 0 | 0 |
+| Room templates | 500 | 0 | 0 | 0 | 0 | 0 |
+| Pit profiles | 40 | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **2621** | **0** | **0** | **0** | **14** | **58** |
 

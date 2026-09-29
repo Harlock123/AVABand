@@ -7,7 +7,7 @@ namespace Angband.Core.Generation;
 /// <summary>Structural checks every generated level must pass.</summary>
 public static class LevelValidator
 {
-    public static IReadOnlyList<string> Validate(Level level, Loc start, GameConstants constants)
+    public static IReadOnlyList<string> Validate(Level level, Loc start, GameConstants constants, bool quest = false)
     {
         var errors = new List<string>();
 
@@ -27,7 +27,7 @@ public static class LevelValidator
         var down = level.FindFeature(TerrainFlags.DownStair).Count();
         if (level.Depth == 0 && up > 0) errors.Add("The town must not have up staircases.");
         if (level.Depth > 0 && up == 0) errors.Add("No up staircase.");
-        if (level.Depth < constants.MaxDepth && down == 0) errors.Add("No down staircase.");
+        if (level.Depth < constants.MaxDepth && !quest && down == 0) errors.Add("No down staircase.");
 
         var reachable = Connectivity.Reachable(level, start);
         var unreachable = 0;

@@ -80,16 +80,24 @@ public sealed class ObjectFactory(GameData data)
     /// A random object for the floor or a monster drop (Angband make_object). <paramref name="extraRoll"/>
     /// gives two more chances at an artifact (a unique's drop, acquirement).
     /// </summary>
-    public Item? Make(GameRandom rng, int level, bool good = false, bool great = false, bool extraRoll = false)
+    public Item? Make(GameRandom rng, int level, bool good = false, bool great = false, bool extraRoll = false,
+        IReadOnlyCollection<string>? bases = null)
     {
         // Angband make_object: now and then a special artifact (the Phial, the Star, a ring of
         // power...) — one time in ten for a good object; failing that, the object is good.
         if (rng.OneIn(good ? 10 : 1000))
         {
-            if (MakeSpecialArtifact(rng, level) is { } special) return special;
+            if (MakeSpecialArtifact(rng, level, bases) is { } special) return special;
             good = true;
         }
-        Func<ObjectKindDef, bool>? filter = good || great ? IsGoodKind : null;
+        // Of a given kind if asked (Angband's tval argument: a vault's ring, a room's potion).
+        Func<ObjectKindDef, bool>? filter = (good || great, bases) switch
+        {
+            (true, null) => IsGoodKind,
+            (true, { } b) => k => b.Contains(k.Base) && IsGoodKind(k),
+            (false, { } b) => k => b.Contains(k.Base),
+            _ => null,
+        };
         // Angband make_object: three tries at a kind, rejecting most books the player can't read
         // (one in five is kept all the same).
         ObjectKindDef? kind = null;
@@ -300,12 +308,13 @@ public sealed class ObjectFactory(GameData data)
     }
 
     /// <summary>Angband make_artifact_special: one of the artifacts only ever made as themselves.</summary>
-    public Item? MakeSpecialArtifact(GameRandom rng, int level)
+    public Item? MakeSpecialArtifact(GameRandom rng, int level, IReadOnlyCollection<string>? bases = null)
     {
         if (!AllowArtifacts || level <= 0) return null;
         foreach (var art in Artifacts.Where(a => !CreatedArtifacts.Contains(a.Id)))
         {
             if (data.Object(art.Kind) is not { IsSpecialArtifactKind: true } kind) continue;
+            if (bases is not null && !bases.Contains(kind.Base)) continue;
             if (!PassesArtifactRolls(rng, art, level)) continue;
             var item = Create(kind);
             item.OriginDepth = level;

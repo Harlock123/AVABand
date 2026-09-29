@@ -7,7 +7,6 @@ public sealed class GameData
         TerrainRegistry terrain,
         IReadOnlyList<TrapDef> traps,
         IReadOnlyList<DungeonProfileDef> profiles,
-        IReadOnlyList<MapTemplateDef> templates,
         TownDef town,
         IReadOnlyList<ShopDef> shops,
         IReadOnlyDictionary<string, string> colors,
@@ -17,7 +16,6 @@ public sealed class GameData
         Traps = traps;
         for (var i = 0; i < traps.Count; i++) traps[i].Index = (ushort)(i + 1);
         Profiles = profiles;
-        Templates = templates;
         Town = town;
         Shops = shops;
         Colors = colors;
@@ -27,7 +25,12 @@ public sealed class GameData
     public TerrainRegistry Terrain { get; }
     public IReadOnlyList<TrapDef> Traps { get; }
     public IReadOnlyList<DungeonProfileDef> Profiles { get; }
-    public IReadOnlyList<MapTemplateDef> Templates { get; }
+    /// <summary>Angband vault.txt: vaults and interesting rooms.</summary>
+    public IReadOnlyList<VaultDef> Vaults { get; init; } = [];
+    /// <summary>Angband room_template.txt.</summary>
+    public IReadOnlyList<RoomTemplateDef> RoomTemplates { get; init; } = [];
+    /// <summary>Angband pit.txt: themes for pits, nests, chambers, lairs and gauntlets.</summary>
+    public IReadOnlyList<PitProfileDef> Pits { get; init; } = [];
     public TownDef Town { get; }
     public IReadOnlyList<ShopDef> Shops { get; }
     /// <summary>Colour name to <c>#RRGGBB</c>.</summary>

@@ -1,81 +1,43 @@
-using Angband.Core.Definitions;
 using Angband.Core.Generation;
+using Angband.Core.Geometry;
 
 namespace Angband.Tests;
 
+/// <summary>4.2.5's vaults and room templates, as vault.txt and room_template.txt have them.</summary>
 public class TemplateTests
 {
-    public static TheoryData<string> TemplateIds()
+    [Fact]
+    public void All_of_4_2_5s_vaults_and_room_templates()
     {
-        var data = new TheoryData<string>();
-        foreach (var t in TestData.Game.Templates) data.Add(t.Id);
-        return data;
-    }
-
-    [Theory]
-    [MemberData(nameof(TemplateIds))]
-    public void Template_IsInternallyConnected(string id)
-    {
-        // Walking or tunnelling: vault pockets may be sealed by granite, never by permanent rock.
-        var rows = TestData.Game.Templates.Single(t => t.Id == id).Rows;
-        var cells = new List<(int X, int Y)>();
-        for (var y = 0; y < rows.Count; y++)
-        for (var x = 0; x < rows[y].Length; x++)
-            if (TemplateLegend.TraversableSymbols.Contains(rows[y][x]) || rows[y][x] == '#') cells.Add((x, y));
-
-        Assert.NotEmpty(cells);
-        var open = cells.ToHashSet();
-        var seen = new HashSet<(int, int)> { cells[0] };
-        var queue = new Queue<(int X, int Y)>([cells[0]]);
-        while (queue.Count > 0)
-        {
-            var (x, y) = queue.Dequeue();
-            for (var dy = -1; dy <= 1; dy++)
-            for (var dx = -1; dx <= 1; dx++)
-            {
-                var n = (x + dx, y + dy);
-                if (open.Contains(n) && seen.Add(n)) queue.Enqueue(n);
-            }
-        }
-
-        Assert.Equal(open.Count, seen.Count);
-    }
-
-    [Theory]
-    [MemberData(nameof(TemplateIds))]
-    public void Template_HasAnEntrance(string id)
-    {
-        // Some walkable (or diggable) square must touch a pierceable outer wall ('%'), so tunnels
-        // can get in — many of Angband's vaults are entered by tunnelling through their granite.
-        var rows = TestData.Game.Templates.Single(t => t.Id == id).Rows;
-        var entrance = false;
-        for (var y = 0; y < rows.Count && !entrance; y++)
-        for (var x = 0; x < rows[y].Length && !entrance; x++)
-        {
-            if (!TemplateLegend.TraversableSymbols.Contains(rows[y][x]) && rows[y][x] != '#') continue;
-            foreach (var (dx, dy) in new[] { (0, -1), (0, 1), (-1, 0), (1, 0) })
-            {
-                int nx = x + dx, ny = y + dy;
-                if (ny >= 0 && ny < rows.Count && nx >= 0 && nx < rows[ny].Length && rows[ny][nx] == '%')
-                    entrance = true;
-            }
-        }
-        Assert.True(entrance);
+        var data = TestData.Game;
+        Assert.Equal(162, data.Vaults.Count);
+        Assert.Equal(500, data.RoomTemplates.Count);
+        Assert.Equal(66, data.Vaults.Count(v => v.Type == "Interesting room"));
+        Assert.All(data.Vaults, v => Assert.All(v.Rows, r => Assert.Equal(v.Width, r.Length)));
+        Assert.Contains(data.Vaults, v => v.Has("FEW_ENTRANCES"));
+        Assert.Contains(data.RoomTemplates, r => r.Tval == "potion");
     }
 
     [Fact]
-    public void Rotation_FourTimes_IsIdentity()
+    public void Four_quarter_turns_are_no_turn()
     {
-        var rows = TestData.Game.Templates.First(t => t.Kind == MapTemplateKind.MediumVault).Rows;
-        IReadOnlyList<string> r = rows;
-        for (var i = 0; i < 4; i++) r = TemplateLegend.RotateClockwise(r);
-        Assert.Equal(rows, r);
+        var g = new Loc(3, 1);
+        int h = 5, w = 8;
+        var p = g;
+        for (var i = 0; i < 4; i++)
+        {
+            p = Cave.SymmetryTransform(p, 0, 0, h, w, 1, false);
+            (h, w) = (w, h);
+        }
+        Assert.Equal(g, p);
     }
 
     [Fact]
-    public void Rotation_SwapsDimensions()
+    public void A_quarter_turn_swaps_the_sides()
     {
-        var rotated = TemplateLegend.RotateClockwise(["ab", "cd", "ef"]);
-        Assert.Equal(["eca", "fdb"], rotated);
+        // A 2-row, 3-column block turned clockwise: its top-left corner goes to the top-right.
+        Assert.Equal(new Loc(1, 0), Cave.SymmetryTransform(new Loc(0, 0), 0, 0, 2, 3, 1, false));
+        Assert.Equal(new Loc(0, 2), Cave.SymmetryTransform(new Loc(2, 1), 0, 0, 2, 3, 1, false));
+        Assert.Equal(new Loc(2, 0), Cave.SymmetryTransform(new Loc(0, 0), 0, 0, 2, 3, 0, true));
     }
 }

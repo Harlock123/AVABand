@@ -256,7 +256,9 @@ public sealed class SoundDirector : IDisposable
             _ => [band],
         };
         if (depth == 0) return day ? ["ambient-town-day"] : ["ambient-town-night", "ambient-town-day"];
-        return profile is "cavern" or "labyrinth" or "fortress" ? ["ambient-" + profile, .. bands] : bands;
+        // A hard centre (4.2.5's great vault in the middle of the level) sounds like a fortress.
+        if (profile == "hard_centre") return ["ambient-fortress", .. bands];
+        return profile is "cavern" or "labyrinth" ? ["ambient-" + profile, .. bands] : bands;
     }
 
     /// <summary>The loop for where you are now, if there is one in the folders.</summary>

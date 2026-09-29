@@ -51,6 +51,8 @@ public sealed class Level
 
     /// <summary>The vaults built into the level at generation (for Angband's cheat_room; not saved).</summary>
     public List<string> Vaults { get; } = [];
+    /// <summary>What vaults, pits and chambers add to the monster rating (Angband add_to_monster_rating).</summary>
+    public long MonsterRatingBonus { get; set; }
     /// <summary>Seed the level was generated from.</summary>
     public ulong Seed { get; set; }
     /// <summary>Whole level lit (lit labyrinths, daytime town).</summary>

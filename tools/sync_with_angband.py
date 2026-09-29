@@ -1063,6 +1063,121 @@ def sync_quests(gd, data):
     print(f"quests: {len(out)} written")
 
 
+def profile_id(name):
+    return cw.slug(name)
+
+
+def sync_profiles(gd, data):
+    """dungeon_profile.txt, whole: each profile's parameters and room profiles, in 4.2.5's order."""
+    path = os.path.join(data, "dungeon_profiles.json")
+    out = []
+    for e in cw.parse_records(os.path.join(gd, "dungeon_profile.txt")):
+        x = {"id": profile_id(e["name"]), "name": e["name"]}
+        block, rooms, unusual, rarity = (int(v) for v in cw.one(e, "params").split(":"))
+        x["params"] = {"blockSize": block, "rooms": rooms, "unusual": unusual, "maxRarity": rarity}
+        if cw.one(e, "tunnel"):
+            rnd, chg, con, pen, jct = (int(v) for v in cw.one(e, "tunnel").split(":"))
+            x["tunnel"] = {"random": rnd, "change": chg, "continue": con, "pierceDoor": pen, "junctionDoor": jct}
+        if cw.one(e, "streamer"):
+            den, rng, mag, mc, qua, qc = (int(v) for v in cw.one(e, "streamer").split(":"))
+            x["streamers"] = {"density": den, "range": rng, "magma": mag, "magmaTreasure": mc, "quartz": qua,
+                              "quartzTreasure": qc}
+        x["alloc"] = int(cw.one(e, "alloc", "0"))
+        if cw.one(e, "min-level"):
+            x["minLevel"] = int(cw.one(e, "min-level"))
+        rooms_out = []
+        for r in cw.get(e, "room"):
+            name, rating, height, width, level, pit, rar, cutoff = r.split(":")
+            rooms_out.append({"name": name, "rating": int(rating), "height": int(height), "width": int(width),
+                              "level": int(level), "pit": pit == "1", "rarity": int(rar), "cutoff": int(cutoff)})
+        if rooms_out:
+            x["rooms"] = rooms_out
+        out.append(x)
+    write_json(path, out, None)
+    print(f"dungeon profiles: {len(out)} written")
+
+
+def template_rows(e, width):
+    rows = [r for r in cw.get(e, "D")]
+    return [r.ljust(width) for r in rows]
+
+
+def sync_vaults(gd, data):
+    """vault.txt, whole and verbatim (4.2.5's own symbols)."""
+    path = os.path.join(data, "templates", "vaults.json")
+    out = []
+    seen = {}
+    for e in cw.parse_records(os.path.join(gd, "vault.txt")):
+        vid = cw.slug(e["name"])
+        seen[vid] = seen.get(vid, 0) + 1
+        if seen[vid] > 1:
+            vid = f"{vid}_{seen[vid]}"
+        width = int(cw.one(e, "columns"))
+        x = {"id": vid, "name": e["name"], "type": cw.one(e, "type"), "rating": int(cw.one(e, "rating", "0")),
+             "minDepth": int(cw.one(e, "min-depth", "0")), "maxDepth": int(cw.one(e, "max-depth", "0"))}
+        flags = cw.flag_list(e, "flags")
+        if flags:
+            x["flags"] = flags
+        x["rows"] = template_rows(e, width)
+        out.append(x)
+    write_json(path, out, None)
+    print(f"vaults: {len(out)} written")
+
+
+def sync_room_templates(gd, data):
+    """room_template.txt, whole and verbatim."""
+    path = os.path.join(data, "templates", "room_templates.json")
+    out = []
+    seen = {}
+    for e in cw.parse_records(os.path.join(gd, "room_template.txt")):
+        rid = cw.slug(e["name"])
+        seen[rid] = seen.get(rid, 0) + 1
+        if seen[rid] > 1:
+            rid = f"{rid}_{seen[rid]}"
+        width = int(cw.one(e, "columns"))
+        x = {"id": rid, "name": e["name"], "type": int(cw.one(e, "type", "1")), "rating": int(cw.one(e, "rating", "0")),
+             "doors": int(cw.one(e, "doors", "0"))}
+        tval = cw.one(e, "tval", "0")
+        if tval != "0":
+            x["tval"] = cw.slug(tval)
+        flags = cw.flag_list(e, "flags")
+        if flags:
+            x["flags"] = flags
+        x["rows"] = template_rows(e, width)
+        out.append(x)
+    write_json(path, out, None)
+    print(f"room templates: {len(out)} written")
+
+
+def sync_pits(gd, data):
+    """pit.txt, whole: the monster pit, nest and lair profiles."""
+    path = os.path.join(data, "pits.json")
+    out = []
+    for e in cw.parse_records(os.path.join(gd, "pit.txt")):
+        rarity, ave = (int(v) for v in cw.one(e, "alloc").split(":"))
+        x = {"id": cw.slug(e["name"]), "name": e["name"], "room": int(cw.one(e, "room", "0")), "rarity": rarity,
+             "averageLevel": ave, "objectRarity": int(cw.one(e, "obj-rarity", "0"))}
+        colors = [mi.COLORS[c] for c in cw.get(e, "color")]
+        if colors:
+            x["colors"] = colors
+        bases = [cw.slug(b) for b in cw.get(e, "mon-base")]
+        if bases:
+            x["bases"] = bases
+        for key, field in (("flags-req", "flags"), ("flags-ban", "forbiddenFlags"), ("spell-req", "spells"),
+                           ("spell-ban", "forbiddenSpells")):
+            v = cw.flag_list(e, key)
+            if v:
+                x[field] = v
+        if cw.one(e, "innate-freq"):
+            x["innateFrequency"] = int(cw.one(e, "innate-freq"))
+        banned = [mi.slug(m) for m in cw.get(e, "mon-ban")]
+        if banned:
+            x["forbiddenMonsters"] = banned
+        out.append(x)
+    write_json(path, out, None)
+    print(f"pits: {len(out)} written")
+
+
 def sync_summons(gd, data):
     """summon.txt, whole: the kinds of summons (which monsters answer, and what to fall back on)."""
     path = os.path.join(data, "summons.json")
@@ -1111,7 +1226,8 @@ SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "b
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
             "curses": sync_curses, "constants": sync_constants, "summons": sync_summons,
             "timed": sync_timed, "elements": sync_elements,
-            "chest_traps": sync_chest_traps, "quests": sync_quests}
+            "chest_traps": sync_chest_traps, "quests": sync_quests,
+            "profiles": sync_profiles, "vaults": sync_vaults, "room_templates": sync_room_templates, "pits": sync_pits}
 
 
 def main():

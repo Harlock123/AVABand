@@ -107,7 +107,8 @@ public sealed partial class MainWindowViewModel
         {
             case "cavern": AddScene(SceneKind.Cavern, $"A cavern… {where}", pictures: ["level-cavern"]); break;
             case "labyrinth": AddScene(SceneKind.Labyrinth, $"A labyrinth… {where}", pictures: ["level-labyrinth"]); break;
-            case "fortress": AddScene(SceneKind.Fortress, $"A fortress… {where}", pictures: ["level-fortress"]); break;
+            // 4.2.5's hard centre: a greater vault in the middle of the level, walled round by caverns.
+            case "hard_centre": AddScene(SceneKind.Fortress, $"A fortress… {where}", pictures: ["level-fortress"]); break;
         }
         // Angband's monster feelings 1-3: omens of death, murderous, terribly dangerous.
         if (e.Depth > 0 && _game.FeelingStatus is not null && _game.Level.Feeling % 10 is >= 1 and <= 3)
