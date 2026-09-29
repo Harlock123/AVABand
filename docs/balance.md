@@ -48,8 +48,8 @@ for that depth, with healing potions (Cure Light Wounds shallow, Serious from 10
 spot at the edge of what it knows), walks up to and hits whatever is awake or no deeper than itself
 (leaving breeders alone unless they are in the way), quaffs below half its hit points or when blind
 or confused, blinks when nearly dead or afraid with something close, for up to 1000 turns. It is a
-poor player — it never retreats into a corridor, never uses a launcher, never rests — so its
-numbers are for comparing versions, not for judging the game's difficulty absolutely.
+poor player, so its numbers are for comparing versions, not for judging the game's difficulty
+absolutely.
 `one <depth> <seed>` plays one run; with `BOT_TRACE=1` it prints the character and the last 60
 messages.
 
@@ -167,3 +167,58 @@ stays lower (2.5% against 7.3% at 500 ft), and that is 4.2.5's design: good obje
 from vault treasure, made 3 to 20 levels deeper, and neither classic nor modified levels have
 lesser vaults before level 20 or medium ones before 30. Over 100 levels at 500 ft the old
 generator planned about 300 good objects and the port plans 2.
+
+## A better bot
+
+The bot now rests when nothing awake is in view and it is below 70% of its hit points (or half its
+mana), backs into a corridor (a square with two open neighbours or fewer, within eight steps and
+no nearer the foes) when two or more awake monsters come at it in the open, waits there a few
+turns for them, and shoots what is awake and in the line of fire: it wields the launcher with the
+most might among thirty good ones made for the depth and carries 40 plain missiles for it.
+`BOT_PLAIN=1` plays as before. 20 warrior runs per depth, plain → better, on the same levels
+(after the vault fix):
+
+| depth | survived % | turns | kills | exp gained | level seen % | potions | rests | shots |
+|---:|---|---|---|---|---|---|---|---|
+| 1 | 100.0 → 100.0 | 1000.0 → 1000.0 | 61.0 → 62.3 | 48.2 → 43.9 | 80.1 → 79.3 | 2.0 → 1.1 | 0.3 | 10.6 |
+| 5 | 90.0 → 95.0 | 939.1 → 981.0 | 135.6 → 116.9 | 187.1 → 180.0 | 68.2 → 68.6 | 2.3 → 1.3 | 3.5 | 19.5 |
+| 10 | 70.0 → 95.0 | 830.3 → 995.6 | 110.0 → 136.3 | 373.8 → 399.5 | 63.4 → 65.2 | 3.6 → 1.8 | 2.9 | 24.4 |
+| 20 | 40.0 → 55.0 | 664.2 → 738.7 | 41.0 → 64.4 | 614.2 → 712.4 | 36.5 → 38.8 | 5.3 → 5.3 | 18.9 | 23.3 |
+| 30 | 10.0 → 40.0 | 321.9 → 511.3 | 23.6 → 41.7 | 574.6 → 519.7 | 22.3 → 22.4 | 7.0 → 6.1 | 9.7 | 13.8 |
+| 40 | 25.0 → 10.0 | 364.3 → 192.7 | 25.1 → 8.9 | 809.8 → 423.1 | 12.9 → 11.7 | 7.4 → 7.9 | 6.9 | 12.8 |
+| 50 | 10.0 → 15.0 | 163.5 → 234.9 | 8.2 → 8.8 | 400.4 → 445.3 | 10.3 → 11.5 | 6.6 → 6.9 | 4.7 | 9.1 |
+| 60 | 0.0 → 15.0 | 133.2 → 154.8 | 8.2 → 3.9 | 509.1 → 309.5 | 13.0 → 5.4 | 7.0 → 6.2 | 5.2 | 7.7 |
+| 70 | 0.0 → 10.0 | 64.6 → 159.8 | 2.8 → 6.3 | 419.4 → 1047.5 | 10.6 → 5.7 | 6.9 → 5.1 | 0.7 | 4.2 |
+| 80 | 0.0 → 0.0 | 70.4 → 39.3 | 5.1 → 3.5 | 183.1 → 172.0 | 6.0 → 2.8 | 4.8 → 3.7 | 0.4 | 4.6 |
+| 90 | 0.0 → 5.0 | 28.8 → 72.4 | 1.4 → 4.7 | 108.4 → 501.5 | 3.1 → 3.3 | 3.3 → 2.7 | 0.4 | 2.9 |
+| 99 | 15.0 → 10.0 | 14.7 → 17.8 | 1.3 → 0.5 | 122.6 → 124.9 | 1.1 → 1.9 | 1.6 → 1.8 | 0.0 | 0.5 |
+
+Better between 500 and 1500 ft (70 → 95%, 40 → 55%, 10 → 40% alive), with fewer potions
+drunk; deeper, 20 runs are too few to tell (at 2000 ft it did worse, 25 → 10%, which is within
+their noise). It is still a poor player: it doesn't read unknown scrolls, pick things up, flee
+up stairs or avoid what it can't beat.
+
+### A mage
+
+`play [runs] mage` gives the bot a mage: the class's books up to its level, every spell it can
+learn from them, and the strongest of mana storm, mana bolt, fire ball, acid spray, frost bolt and
+magic missile it knows, can pay for and fails no more than one time in four, cast at anything
+awake in the line of fire; otherwise the same gear, potions and play. 20 runs per depth:
+
+| depth | survived % | turns | kills | exp gained | level seen % | potions | blinks | rests | casts and shots |
+|---:|---|---|---|---|---|---|---|---|---|
+| 1 | 80.0 | 933.1 | 86.5 | 54.9 | 70.3 | 3.5 | 1.1 | 7.1 | 13.0 |
+| 5 | 70.0 | 869.3 | 141.0 | 210.1 | 57.7 | 3.5 | 1.6 | 16.3 | 27.9 |
+| 10 | 45.0 | 693.8 | 64.6 | 219.0 | 37.1 | 4.6 | 2.8 | 17.6 | 19.7 |
+| 20 | 15.0 | 332.4 | 28.8 | 459.6 | 20.2 | 6.1 | 2.8 | 13.3 | 20.3 |
+| 30 | 10.0 | 224.9 | 22.9 | 242.6 | 10.6 | 5.4 | 1.7 | 8.2 | 9.2 |
+| 40 | 10.0 | 219.0 | 7.7 | 958.4 | 8.0 | 6.9 | 1.8 | 4.0 | 6.2 |
+| 50 | 5.0 | 132.1 | 10.7 | 864.5 | 7.1 | 5.7 | 1.6 | 2.8 | 4.7 |
+| 60 | 0.0 | 83.1 | 4.6 | 883.1 | 8.9 | 5.5 | 1.3 | 3.1 | 4.0 |
+| 70 | 0.0 | 51.1 | 3.2 | 645.6 | 3.2 | 2.8 | 0.8 | 4.7 | 4.0 |
+| 80 | 0.0 | 65.1 | 1.9 | 507.8 | 1.9 | 3.1 | 0.5 | 0.9 | 2.5 |
+| 90 | 15.0 | 51.1 | 4.1 | 397.8 | 2.3 | 1.5 | 0.5 | 0.7 | 1.8 |
+| 99 | 5.0 | 9.1 | 0.3 | 314.0 | 0.9 | 1.0 | 0.1 | 0.0 | 0.6 |
+
+It lives less often than the warrior at every depth, most of all at 50 ft (80% against 100%): it
+fights hand to hand with a mage's hit points whenever a monster reaches it or it runs out of mana.
