@@ -58,10 +58,14 @@ public class HintsUiTests
     [AvaloniaFact]
     public void Hints_NameTheKeysOfTheKeysetInUse()
     {
-        var (_, vm, _) = Open(InputBindings.Preset(InputBindings.Keyset.Original));
+        var (_, vm, settings) = Open(InputBindings.Preset(InputBindings.Keyset.Original));
         vm.Game.MarkDebugUsed();
         vm.Execute(new DebugJumpCommand(1));
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m); // the jackal is the first seen
         vm.DismissHint();
+        vm.Execute(new HoldCommand()); // whatever else a first dungeon level has to say, said
+        vm.DismissHint();
+        settings.SeenHints.Remove("monster"); // (a monster in view on arrival would have had it already)
         var game = vm.Game;
         var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 2 && game.Level.IsEmptyFloor(l)
             && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));

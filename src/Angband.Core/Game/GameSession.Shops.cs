@@ -16,7 +16,7 @@ public sealed class Store(StoreDef def, ShopDef shop, StoreOwnerDef? owner)
     public bool IsHome => Def.Home;
 
     /// <summary>Whether the store always stocks this kind (Angband store_is_staple).</summary>
-    public bool IsStaple(ObjectKindDef kind) => Def.Always.Contains(kind.Id);
+    public bool IsStaple(ObjectKindDef kind) => Def.Staples.Contains(kind.Id);
 
     /// <summary>
     /// A plain staple the store never runs out of: buying it leaves the pile as it is (Angband's
@@ -114,26 +114,32 @@ public sealed partial class GameSession
             var stock = Math.Clamp(store.Stock.Count - Rng.RandInt1(def.Turnover), 0, def.MaxItems);
             while (store.Stock.Count > stock) DeleteRandom(store);
         }
-        else if (def.Always.Count > 0 && store.Stock.Count > 0)
+        else if (def.Staples.Count > 0 && store.Stock.Count > 0)
         {
             // The bookseller occasionally sells a book or two.
             for (var sales = Rng.RandInt1(store.Stock.Count); sales > 0 && store.Stock.Count > 0; sales--) DeleteRandom(store);
         }
 
-        foreach (var id in def.Always)
+        StockStaples(store);
+
+        if (def.Turnover > 0)
+        {
+            var stock = Math.Clamp(store.Stock.Count + Rng.RandInt1(def.Turnover),
+                def.MinItems + def.Staples.Count, def.MaxItems + def.Staples.Count);
+            for (var attempts = 0; store.Stock.Count < stock && attempts < 10_000; attempts++) CreateRandom(store);
+        }
+        SortStock(store);
+    }
+
+    /// <summary>Missing staples are made and every staple piled high (store_maint).</summary>
+    private void StockStaples(Store store)
+    {
+        foreach (var id in store.Def.Staples)
         {
             if (Data.Object(id) is not { } kind) continue;
             var staple = store.Stock.FirstOrDefault(i => i.Kind == kind && store.IsAlways(i)) ?? CreateStaple(store, kind);
             if (staple is not null) staple.Number = staple.Base.MaxStack;
         }
-
-        if (def.Turnover > 0)
-        {
-            var stock = Math.Clamp(store.Stock.Count + Rng.RandInt1(def.Turnover),
-                def.MinItems + def.Always.Count, def.MaxItems + def.Always.Count);
-            for (var attempts = 0; store.Stock.Count < stock && attempts < 10_000; attempts++) CreateRandom(store);
-        }
-        SortStock(store);
     }
 
     /// <summary>
@@ -360,6 +366,12 @@ public sealed partial class GameSession
         {
             Publish(new MessageEvent("There is no store here."));
             return 0;
+        }
+        // A staple the store lacks (one added to the game since the save was made) is in by now.
+        if (!store.IsHome && store.Def.Staples.Any(id => !store.Stock.Any(i => i.Kind.Id == id && store.IsAlways(i))))
+        {
+            StockStaples(store);
+            SortStock(store);
         }
         Publish(new ShopEnteredEvent(store.Id, store.IsHome));
         GreetInShop(store);

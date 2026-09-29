@@ -44,7 +44,7 @@ public sealed partial class MainWindowViewModel
         else if (inv.Quiver.Contains(item) && inv.Bow is { } bow && item.Base.AmmoClass == bow.Base.AmmoClass)
             menu.Add(("Fire", () => FireChosen(item)));
 
-        if (inv.Pack.Contains(item) && Candidates(ItemPromptKind.Refuel).Contains(item))
+        if (_game.CanRefillFrom(item))
             menu.Add(("Refill", () => UseItemAsked(ItemPromptKind.Refuel, item)));
         if (equipped && !item.IsSticky) menu.Add(("Take off", () => UseItemAsked(ItemPromptKind.TakeOff, item)));
         else if (!equipped && item.IsWearable) menu.Add(("Equip", () => UseItemAsked(ItemPromptKind.Wield, item)));

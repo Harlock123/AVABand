@@ -37,18 +37,23 @@ public class DeviceUiTests
         var wand = Give(vm, "wand_of_magic_missile", 3);
         var p = vm.Game.Player.Position;
         var spot = vm.Game.Level.AllLocs().First(l => l.DistanceTo(p) is > 1 and < 4 && vm.Game.Level.IsEmptyFloor(l)
-                                                     && vm.Game.Level[l].Has(Angband.Core.World.SquareFlags.Seen));
+                                                     && vm.Game.Level[l].Has(Angband.Core.World.SquareFlags.Seen)
+                                                     && Angband.Core.Combat.ProjectionPath.Projectable(vm.Game.Level, p, l, 20));
         var spawner = new Angband.Core.Monsters.MonsterSpawner(vm.Game.Data);
         var target = spawner.Place(vm.Game.Level, vm.Game.Rng, vm.Game.Data.Monster("cave_orc")!, spot, asleep: false);
         target.Hp = target.MaxHp = 1000;
         vm.Game.Scheduler.Add(target);
         vm.Game.UpdateView();
 
-        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
-        Assert.True(vm.IsPrompting);
-        var row = Assert.Single(vm.PromptRows);
-        Assert.Contains("Magic Missile", row.Name);
-        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        // (A device can fail in unskilled hands: try until it goes off.)
+        for (var tries = 0; tries < 20 && wand.Charges == 3; tries++)
+        {
+            window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+            Assert.True(vm.IsPrompting);
+            var row = Assert.Single(vm.PromptRows);
+            Assert.Contains("Magic Missile", row.Name);
+            window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        }
 
         Assert.Equal(2, wand.Charges);
         Assert.True(target.Hp < 1000);

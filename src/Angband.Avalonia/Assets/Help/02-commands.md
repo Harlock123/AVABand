@@ -21,7 +21,9 @@
 ## Commands worth knowing first
 
 - `g` pick up, `d` drop, `w` wear or wield, `t` take off; your pack and gear are always on the right.
-- `q` quaff a potion, `r` read a scroll, `E` eat, `F` refuel your light.
+- `q` quaff a potion, `r` read a scroll, `E` eat, `F` refuel your light — a
+  lantern takes oil from a Flask of Oil or from another lantern (a torch can't be refilled). The
+  General Store (1) always sells lanterns and oil.
 - `f` fire your launcher's missiles (Tab fires at the nearest monster, `'` targets it), `v` throw, `a` aim a wand, `Z` or `u` use a staff, `z` zap a
   rod, `A` activate.
 - `X` uses any item, whatever it is.

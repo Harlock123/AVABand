@@ -62,6 +62,11 @@ public sealed partial class MainWindowViewModel
     /// <summary>Starts an item prompt; if nothing fits, says so instead.</summary>
     public void BeginItemPrompt(ItemPromptKind kind)
     {
+        if (kind == ItemPromptKind.Refuel && _game.RefillProblem() is { } why)
+        {
+            AddMessage(why);
+            return;
+        }
         var candidates = Candidates(kind).ToList();
         if (candidates.Count == 0)
         {
@@ -72,7 +77,7 @@ public sealed partial class MainWindowViewModel
                 ItemPromptKind.Quaff => "You have no potions to quaff.",
                 ItemPromptKind.Read => "You have no scrolls to read.",
                 ItemPromptKind.Eat => "You have nothing to eat.",
-                ItemPromptKind.Refuel => "You have no fuel.",
+                ItemPromptKind.Refuel => "You have nothing you can refuel with.",
                 ItemPromptKind.Pickup => "There is nothing here to pick up.",
                 ItemPromptKind.Aim => "You have no wand to aim.",
                 ItemPromptKind.UseStaff => "You have no staff to use.",
@@ -112,7 +117,7 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Drop => "Drop which item?",
             ItemPromptKind.Throw => "Throw which item?",
             ItemPromptKind.Pickup => "Pick up which item?",
-            ItemPromptKind.Refuel => "Refuel with which fuel?",
+            ItemPromptKind.Refuel => "Refuel with which fuel source?",
             ItemPromptKind.Aim => "Aim which wand?",
             ItemPromptKind.UseStaff => "Use which staff?",
             ItemPromptKind.Zap => "Zap which rod?",
@@ -317,7 +322,7 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Throw => carried.Concat(floor).OrderBy(i => !i.IsThrowing ? 2 : inv.Quiver.Contains(i) ? 0 : 1)
                 .Concat(inv.Weapon is { } weapon ? [weapon] : []),
             ItemPromptKind.Pickup => floor,
-            ItemPromptKind.Refuel => inv.Pack.Where(i => i.IsFuel),
+            ItemPromptKind.Refuel => carried.Concat(floor).Where(_game.CanRefillFrom),
             ItemPromptKind.Inscribe => inv.Equipped.Concat(carried).Concat(floor),
             ItemPromptKind.Uninscribe => inv.Equipped.Concat(carried).Concat(floor).Where(i => i.Note is not null),
             ItemPromptKind.Ignore => inv.Equipped.Concat(carried).Concat(floor),

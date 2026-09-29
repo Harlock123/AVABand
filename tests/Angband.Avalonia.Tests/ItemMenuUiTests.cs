@@ -175,6 +175,26 @@ public class ItemMenuUiTests
     }
 
     [AvaloniaFact]
+    public void Flasks_offer_Refill_only_with_a_lantern_to_fill()
+    {
+        var vm = Start();
+        var game = vm.Game;
+        var flask = game.Player.Inventory.Pack.First(i => i.IsFuel);
+        vm.OpenItemMenu(flask);
+        Assert.DoesNotContain("Refill", vm.MenuLabels); // a torch can't take oil
+        vm.CancelPrompt();
+
+        var lantern = game.Objects.Create("lantern");
+        lantern.Fuel = 1000;
+        game.Player.Inventory.Add(lantern);
+        game.Execute(new WieldCommand(lantern));
+        vm.Refresh();
+        vm.OpenItemMenu(flask);
+        Choose(vm, "Refill");
+        Assert.True(lantern.Fuel > 8000);
+    }
+
+    [AvaloniaFact]
     public void With_no_junk_it_says_so()
     {
         var vm = Start();

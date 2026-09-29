@@ -30,6 +30,9 @@
       "arrow",
       "bolt"
     ],
+    "avabandAlways": [
+      "lantern"
+    ],
     "normal": [
       "pint_of_fine_wine",
       "slime_mold",

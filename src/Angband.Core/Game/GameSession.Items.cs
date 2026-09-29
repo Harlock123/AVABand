@@ -614,24 +614,75 @@ public sealed partial class GameSession
     }
 
     /// <summary>Refuels the wielded lantern from a flask of oil.</summary>
-    private int Refuel(Item flask)
+    /// <summary>
+    /// Angband do_cmd_refill's first checks: why the light worn can't be refilled, or null if it can.
+    /// (An Everburning lantern, 4.2.5's flags-off TAKES_FUEL / NO_FUEL, can't be.)
+    /// </summary>
+    public string? RefillProblem()
     {
         var light = Player.Inventory.Light;
-        // An Everburning lantern (Angband flags-off TAKES_FUEL, NO_FUEL) can't be refilled.
-        if (light is null || !light.Flags.Contains("REFUELABLE") || !light.UsesFuel)
+        if (light is null || light.Base.Id != "light") return "You are not wielding a light.";
+        if (!light.Flags.Contains("REFUELABLE") || !light.UsesFuel) return "Your light cannot be refilled.";
+        return null;
+    }
+
+    /// <summary>
+    /// Angband obj_can_refill: a lantern takes fuel from a flask of oil, or from another lantern that
+    /// still has some.
+    /// </summary>
+    public bool CanRefillFrom(Item source)
+    {
+        if (RefillProblem() is not null || source.Flags.Contains("NO_FUEL") || source == Player.Inventory.Light) return false;
+        if (source.IsFuel) return true;
+        return source.Base.Id == "light" && source.Flags.Contains("REFUELABLE") && source.Fuel > 0;
+    }
+
+    /// <summary>
+    /// Angband do_cmd_refill and refill_lamp: the fuel goes into the lantern (up to its 15000
+    /// turns), from a flask (used up) or another lantern (left empty), carried or underfoot.
+    /// </summary>
+    private int Refuel(Item source)
+    {
+        if (RefillProblem() is { } why)
         {
-            Publish(new MessageEvent("Your light cannot be refilled."));
+            Publish(new MessageEvent(why));
             return 0;
         }
-        if (!Player.Inventory.Contains(flask) || !flask.IsFuel)
+        var here = Player.Position;
+        var onFloor = Level.Objects.At(here).Contains(source);
+        if (!(Player.Inventory.Contains(source) || onFloor) || !CanRefillFrom(source))
         {
-            Publish(new MessageEvent("That is not fuel."));
+            Publish(new MessageEvent("You have nothing you can refuel with."));
             return 0;
         }
-        light.Fuel = Math.Min(light.Kind.Fuel, light.Fuel + flask.Kind.Fuel);
-        flask.Number--;
-        Player.Inventory.Prune();
-        Publish(new MessageEvent(light.Fuel >= light.Kind.Fuel ? "Your lamp is full." : "You fuel your lamp."));
+        var light = Player.Inventory.Light!;
+        light.Fuel += source.IsFuel ? source.Kind.Fuel : source.Fuel;
+        Publish(new MessageEvent("You fuel your lamp."));
+        if (light.Fuel >= light.Kind.Fuel)
+        {
+            light.Fuel = light.Kind.Fuel;
+            Publish(new MessageEvent("Your lamp is full."));
+        }
+        if (!source.IsFuel)
+        {
+            // Refilled from a lantern: one of a stack is emptied and set apart.
+            if (source.Number > 1)
+            {
+                var used = source.Split(Objects.NextSerial++, 1);
+                used.Fuel = 0;
+                if (onFloor || Player.Inventory.Add(used) is null) DropNear(used, here);
+            }
+            else source.Fuel = 0;
+        }
+        else if (onFloor)
+        {
+            if (--source.Number <= 0) Level.Objects.Remove(here, source);
+        }
+        else
+        {
+            source.Number--;
+            Player.Inventory.Prune();
+        }
         RecalculateBonuses();
         return EnergyTable.MoveEnergy / 2;
     }

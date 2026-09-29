@@ -285,6 +285,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     Store's food, oil, torches, cloaks, shovels, picks and ammunition; the Alchemist's Cure Light
     Wounds, Phase Door, Word of Recall and Remove Curse; and every one of the ten town books at the
     Bookseller (the dungeon books are only found below). Enchanted copies of a staple sell out.
+  - AVABand's one addition: the General Store also always has **lanterns** (`avabandAlways` in
+    `stores.json`, kept apart from 4.2.5's `always` list so the drift check still compares that
+    untouched). In 4.2.5 no shop sells them — the black market might, and the dungeon has plenty
+    from dlvl 5 — so the oil the store sells had nothing to go in until then. A new lantern comes
+    half full (7500 turns). A store in an older save gets any staple it lacks as you walk in.
   - Other stock (`normal`) comes and goes: each store day up to `turnover` piles are sold to other
     customers (ammunition whole or down to a multiple of five; other piles one, half or all) and as
     many new ones made, keeping between the store's `minItems` and `maxItems` piles besides its
@@ -517,7 +522,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     being struck teaches armour's, element damage teaches resistances; flavours are learned by use.
   - Pack (23 slots), quiver (up to 10 stacks; every 40 missiles use a slot), 12 equipment slots, weight limit with
     speed penalty. Equipment drives armour, to-hit/dam, speed, stealth, blows, shots (counted in
-    tenths, as Angband's SHOTS[10] is one extra shot) light and resistances. Torches burn out; lanterns refuel from flasks of oil.
+    tenths, as Angband's SHOTS[10] is one extra shot) light and resistances. Torches burn out; lanterns refuel
+    (`F`, or *Refill* on the item menu; Angband's `do_cmd_refill`) from a flask of oil (+7500
+    turns) or another lantern (it gives up all its oil; from a stack, one is emptied and set
+    apart), carried or underfoot, up to 15000 turns — "You fuel your lamp.", and "Your lamp is
+    full." when it is; a torch can't be refilled.
   - Stacking follows 4.2's `object_stackable`: the same kind with the same enchantments, dice,
     modifiers, resistances, flags, curses and ego stacks (up to 40), so identical armour and
     weapons stack too ("2 Soft Leather Armours"; wielding takes one); artifacts and chests never do,

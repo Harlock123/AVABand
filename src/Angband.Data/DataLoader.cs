@@ -197,7 +197,7 @@ public static class DataLoader
         foreach (var store in stores.Items)
         {
             if (town is not null && town.Shops.All(sh => sh.Id != store.Id)) errors.Add($"store '{store.Id}' has no shop in the town.");
-            foreach (var k in store.Always.Concat(store.Normal).Where(k => !kindIds.Contains(k)))
+            foreach (var k in store.Staples.Concat(store.Normal).Where(k => !kindIds.Contains(k)))
                 errors.Add($"store '{store.Id}' stocks unknown object '{k}'.");
             foreach (var b in store.Buys.Where(b => !baseIds.Contains(b)))
                 errors.Add($"store '{store.Id}' buys unknown object base '{b}'.");
