@@ -55,6 +55,9 @@ public sealed record TakeStairsCommand(bool Down) : GameCommand;
 /// <summary>Debug: jump straight to a depth.</summary>
 public sealed record DebugJumpCommand(int Depth) : GameCommand;
 
+/// <summary>Debug: cure everything (Angband do_cmd_wiz_cure_all).</summary>
+public sealed record DebugCureAllCommand : GameCommand;
+
 /// <summary>Fire the launcher at a square (or the nearest visible monster), using given or first matching ammo.</summary>
 public sealed record FireCommand(Loc? Target = null, Items.Item? Ammo = null) : GameCommand;
 

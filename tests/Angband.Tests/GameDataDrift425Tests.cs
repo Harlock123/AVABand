@@ -1,4 +1,5 @@
 using Angband.Core.Definitions;
+using Angband.Core.Effects;
 using Angband.Core.Game;
 using Angband.Core.Magic;
 using Angband.Core.Items;
@@ -182,5 +183,21 @@ public class GameDataDrift425Tests
         }
         Assert.Contains(said, m => Data.Hints.Any(h => m == $"\"{h}\""));
         Assert.Contains(said, m => m.Contains(": \"") && !Data.Hints.Any(h => m == $"\"{h}\""));
+    }
+
+    [Fact]
+    public void Cure_all_heals_cures_and_feeds_as_the_wizard_command_does()
+    {
+        var game = GameSession.NewGame(Data, 4, "warrior");
+        game.Player.Hp = 1;
+        game.IncreaseTimed(TimedIds.Blind, 20);
+        game.IncreaseTimed(TimedIds.Poisoned, 20);
+        game.Player.Food = 100;
+        game.Execute(new DebugCureAllCommand());
+        Assert.Equal(game.Player.MaxHp, game.Player.Hp);
+        Assert.False(game.Player.Timed.Has(TimedIds.Blind));
+        Assert.False(game.Player.Timed.Has(TimedIds.Poisoned));
+        Assert.Equal(Data.Constants.FoodFull - 1, game.Player.Food);
+        Assert.True(game.IsCheater); // a debug command, so not scored
     }
 }

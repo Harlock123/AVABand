@@ -227,6 +227,7 @@ public sealed partial class GameSession : ITurnHandler
             StudyCommand study => Study(study.SpellId, study.Book),
             CastCommand cast => WithUncurse(cast.Uncurse, () => Cast(cast.SpellId, cast.Target, cast.Direction, cast.AllowOverexert)),
             DebugJumpCommand jump => DebugJump(jump.Depth),
+            DebugCureAllCommand => DebugCureAll(),
             _ => 0,
         };
         if (energy <= 0) return false;
@@ -483,6 +484,32 @@ public sealed partial class GameSession : ITurnHandler
         depth = Math.Clamp(depth, 0, Data.Constants.MaxDepth);
         ChangeLevel(depth, StairArrival.None, fresh: depth == Player.Depth); // "regenerate level" makes a new one even when levels persist
         return EnergyTable.MoveEnergy;
+    }
+
+    /// <summary>
+    /// Angband do_cmd_wiz_cure_all: worn curses gone, stats and experience restored, hit points and
+    /// mana full, blindness, confusion, poison, fear, paralysis, hallucination, stunning, cuts,
+    /// slowness and amnesia cured, and fed. Takes no time.
+    /// </summary>
+    private int DebugCureAll()
+    {
+        MarkDebugUsed();
+        foreach (var item in Player.Inventory.Equipped)
+        {
+            item.Curses.Clear();
+            item.CursePowers.Clear();
+        }
+        foreach (var stat in CharacterSpec.StatIds) RestoreStat(stat);
+        RestoreExperience();
+        Player.Hp = Player.MaxHp;
+        Player.HpFraction = 0;
+        Player.Mana = Player.MaxMana;
+        foreach (var id in new[] { Effects.TimedIds.Blind, Effects.TimedIds.Confused, Effects.TimedIds.Poisoned, Effects.TimedIds.Afraid, Effects.TimedIds.Paralyzed,
+                     Effects.TimedIds.Image, Effects.TimedIds.Stun, Effects.TimedIds.Cut, Effects.TimedIds.Slow, Effects.TimedIds.Amnesia })
+            if (Player.Timed.Has(id) && Data.Timed(id) is { } def && Player.Timed.Set(def, 0) is { } ended) Publish(new MessageEvent(ended));
+        Player.Food = Data.Constants.FoodFull - 1;
+        RecalculateBonuses();
+        return 0;
     }
 
     /// <param name="fresh">Throw the current level away and build a new one, even in a persistent dungeon.</param>

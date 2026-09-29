@@ -293,6 +293,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     private void RegenerateLevel() => Debug(() => Execute(new DebugJumpCommand(_game.Player.Depth)));
 
     [RelayCommand]
+    private void CureAll() => Debug(() => Execute(new DebugCureAllCommand()));
+
+    [RelayCommand]
     private void JumpDeeper() => Debug(() => Execute(new DebugJumpCommand(_game.Player.Depth + 5)));
 
     /// <summary>Debug: straight down to the next level, at a random open spot (no stairs under you).</summary>

@@ -17,7 +17,8 @@
 // (BOT_TRACE=1 shows its end); BOT_PLAIN=1 plays as the first bot did (no resting, corridors or
 // launcher), to compare.
 //
-// `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each, played by the bot
+// `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each from the
+// top and one from 3000 ft, played by the bot (fleeing up or down stairs when beaten, cured between levels)
 // for that many decisions (default 4000), jumping deeper whenever a level is done, while a replay
 // records the game. It fails on an exception, on a decision that takes more than 10 seconds or a
 // game that hangs, and if the replay doesn't play back to exactly the same end; a failing game's
@@ -48,8 +49,13 @@ if (args.Length > 0 && args[0] == "soak")
     var decisions = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 4000;
     var failures = 0;
     foreach (var cls in new[] { "warrior", "mage", "ranger" })
-    foreach (var seed in new[] { 101UL, 202UL, 303UL, 404UL, 505UL })
-        if (!Soak.Run(data, cls, seed, decisions)) failures++;
+    {
+        foreach (var seed in new[] { 101UL, 202UL, 303UL, 404UL, 505UL })
+            if (!Soak.Run(data, cls, seed, decisions, 1)) failures++;
+        // And one each from 3000 ft to the bottom, cured as it goes, to see the deepest levels (Sauron's
+        // and Morgoth's among them).
+        if (!Soak.Run(data, cls, 606UL, decisions, 60, tourist: true)) failures++;
+    }
     Console.WriteLine(failures == 0 ? "Soak: every game played and replayed cleanly." : $"Soak: {failures} game(s) failed.");
     Environment.Exit(failures == 0 ? 0 : 1);
 }
@@ -155,7 +161,7 @@ internal static class Bot
 
     internal sealed class Tally
     {
-        public int Potions, Blinks, Rests, Shots, Waits;
+        public int Potions, Blinks, Rests, Shots, Waits, Flights;
     }
 
     /// <summary>A character of the class at the depth's level, equipped for it, standing on a new level there.</summary>
@@ -168,6 +174,7 @@ internal static class Bot
         Equip(game, Math.Max(depth, clvl), seed);
         Give(game, Kind(data, Healing[depth < 20 ? 0 : depth < 40 ? 1 : 2]), 5 + depth / 10);
         Give(game, "phase_door", 5);
+        if (!Plain) Give(game, "ration_of_food", 5);
         if (!Plain) LearnSpells(game);
         game.Player.Hp = game.Player.MaxHp;
         // (Items given straight into the pack: count their weight, as a loaded game would.)
@@ -279,6 +286,18 @@ internal static class Bot
         var awake = foes.Where(m => m.Sleep == 0).ToList();
         if (!Plain)
         {
+            // Badly hurt with nothing left to drink: make for the nearest known stairs and take them.
+            var noCure = Healing.All(h => Kind(game.Data, h) is not { } id || Find(game, id) is null);
+            if (hurt < 30 && noCure && awake.Count > 0 && Stairs(game) is { } route)
+            {
+                tally.Flights++;
+                if (route.Count == 0)
+                    return game.Execute(new TakeStairsCommand(game.Level.Has(p.Position, TerrainFlags.DownStair)));
+                return game.Execute(new WalkCommand(Toward(p.Position, route[0])));
+            }
+            // Hungry: eat.
+            if (game.HungerLevel <= HungerLevel.Hungry && awake.Count == 0 && p.Inventory.Pack.FirstOrDefault(i => i.Base.Id == "food") is { } food)
+                return game.Execute(new UseCommand(food));
             // Quiet and hurt (or low on mana): rest.
             if (awake.Count == 0 && (hurt < 70 || (p.MaxMana > 0 && p.Mana * 2 < p.MaxMana)) && !dazed)
             {
@@ -331,6 +350,18 @@ internal static class Bot
             return game.Execute(new WalkCommand(Toward(p.Position, way[0])));
         explorer.Target = null;
         return false;
+    }
+
+    /// <summary>The way to the nearest known staircase within 15 steps (empty when on one), or null.</summary>
+    private static List<Loc>? Stairs(GameSession game)
+    {
+        var at = game.Player.Position;
+        if (game.Level.Has(at, TerrainFlags.UpStair) || game.Level.Has(at, TerrainFlags.DownStair)) return [];
+        return game.Level.AllLocs()
+            .Where(l => game.Known.IsKnown(l) && (game.Level.Has(l, TerrainFlags.UpStair) || game.Level.Has(l, TerrainFlags.DownStair)))
+            .OrderBy(l => l.DistanceTo(at)).Take(5)
+            .Select(l => game.FindPath(at, l)).OfType<List<Loc>>()
+            .Where(path => path.Count is > 0 and <= 15).OrderBy(path => path.Count).FirstOrDefault();
     }
 
     /// <summary>The strongest attack spell learned that the bot has the mana for and fails no more than one time in four.</summary>
@@ -456,9 +487,16 @@ internal static class Soak
     private static readonly TimeSpan SlowDecision = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan GameTimeout = TimeSpan.FromMinutes(10);
 
-    public static bool Run(GameData data, string cls, ulong seed, int decisions)
+    /// <param name="tourist">
+    /// See the deep levels rather than survive them: cured (a recorded debug command) whenever below
+    /// half health, never killed (cheat_live), and two levels deeper every 60 decisions, to the bottom.
+    /// </param>
+    public static bool Run(GameData data, string cls, ulong seed, int decisions, int start, bool tourist = false)
     {
-        var game = Bot.Setup(data, 1, seed, cls, level: 50);
+        var game = Bot.Setup(data, start, seed, cls, level: 50);
+        // A tourist can't die (Angband cheat_live: death sends it home, healed), so it sees the bottom.
+        if (tourist) game.Options[OptionIds.CheatLive] = true;
+        var target = start;
         game.Recorder = new ReplayRecorder(game);
         var mind = new Bot.Mind();
         var done = 0;
@@ -480,10 +518,16 @@ internal static class Soak
                     var acted = Bot.Decide(game, mind);
                     if (!acted) game.Execute(new HoldCommand());
                     onLevel = game.Player.Depth == depth ? onLevel + 1 : 0;
+                    if (tourist && !game.IsGameOver && game.Player.Hp * 2 < game.Player.MaxHp) game.Execute(new DebugCureAllCommand());
+                    // Cheated death and sent home: straight back down.
+                    if (tourist && game.Player.Depth == 0) game.Execute(new DebugJumpCommand(target));
                     // Explored, or long enough here: on down (a debug jump, so the replay has it).
-                    if (!acted || onLevel >= DecisionsPerLevel)
+                    if (!acted || onLevel >= (tourist ? 60 : DecisionsPerLevel))
                     {
-                        game.Execute(new DebugJumpCommand(Math.Min(game.Player.Depth + 6, 98)));
+                        if (tourist && target >= data.Constants.MaxDepth) break;
+                        target = Math.Min(game.Player.Depth + (tourist ? 2 : 6), tourist ? data.Constants.MaxDepth : 99);
+                        game.Execute(new DebugJumpCommand(target));
+                        game.Execute(new DebugCureAllCommand()); // (recorded, like the jump)
                         onLevel = 0;
                     }
                     clock.Stop();
@@ -547,7 +591,7 @@ internal static class Soak
             Save(game, cls, seed);
             return false;
         }
-        Console.WriteLine($"{cls} {seed}: ok — {end}; replay matches");
+        Console.WriteLine($"{cls} {seed} from {start * 50} ft: ok — {end}; replay matches");
         return true;
     }
 
