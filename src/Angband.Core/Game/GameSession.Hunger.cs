@@ -91,6 +91,6 @@ public sealed partial class GameSession
             Publish(new StatusChangedEvent(TimedIds.Paralyzed, Player.Timed[TimedIds.Paralyzed]));
         }
         // Starve: damage grows as the counter falls.
-        if (food < c.FoodStarve) TakeHit((c.FoodStarve - food) / 10, "starvation");
+        if (food < c.FoodStarve) TakeHit((c.FoodStarve - food) / 10, "starvation", note: false);
     }
 }

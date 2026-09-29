@@ -50,14 +50,15 @@ public class OptionsUiTests
     public void InterfaceOptions_ApplyAtOnce_AndAreSaved()
     {
         var (_, vm, settings, saves) = Open();
-        Row(vm.InterfaceOptionRows, OptionIds.ShowDamage).IsChecked = true;
-        Assert.True(vm.Game.Options[OptionIds.ShowDamage]);
-        Assert.True(settings.Options[OptionIds.ShowDamage]);
+        Assert.True(vm.Game.Options[OptionIds.ShowDamage]); // on by default in AVABand
+        Row(vm.InterfaceOptionRows, OptionIds.ShowDamage).IsChecked = false;
+        Assert.False(vm.Game.Options[OptionIds.ShowDamage]);
+        Assert.False(settings.Options[OptionIds.ShowDamage]);
         Assert.NotEmpty(saves);
 
         // A new game (or a loaded one) takes the settings' options.
         vm.StartGame(43);
-        Assert.True(vm.Game.Options[OptionIds.ShowDamage]);
+        Assert.False(vm.Game.Options[OptionIds.ShowDamage]);
     }
 
     [AvaloniaFact]

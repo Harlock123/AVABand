@@ -33,6 +33,12 @@ public sealed record ProjectionEvent(Loc From, IReadOnlyList<Loc> Path, IReadOnl
 public sealed record MonsterDamagedEvent(int MonsterId, Loc Loc, int Damage) : IGameEvent;
 public sealed record MonsterKilledEvent(string RaceId, Loc Loc, int Experience, bool IsUnique = false) : IGameEvent;
 public sealed record PlayerHurtEvent(int Damage, int Hp, int MaxHp) : IGameEvent;
+
+/// <summary>
+/// The damage just dealt to the player belongs to the message just shown (show_damage_taken): the
+/// message line and history add "(N)" to it.
+/// </summary>
+public sealed record DamageNoteEvent(int Damage) : IGameEvent;
 public sealed record PlayerDiedEvent(string KilledBy, int Depth) : IGameEvent;
 
 /// <summary>Word of Recall took the player up to the town, or down into the dungeon.</summary>

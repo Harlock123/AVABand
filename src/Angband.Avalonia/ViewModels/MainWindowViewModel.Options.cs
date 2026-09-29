@@ -43,6 +43,8 @@ public static class DisplayOptions
     public const string LightAndShadow = "light_and_shadow";
     /// <summary>AVABand's own: record every game as a replay (replays/ beside the saves).</summary>
     public const string RecordReplays = "record_replays";
+    /// <summary>AVABand's own: the message area shows the two messages before the newest too.</summary>
+    public const string ThreeMessageLines = "three_message_lines";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -71,6 +73,7 @@ public static class DisplayOptions
         new(ScenePictures, "Scenes use the bundled pictures (off: painted scenes)", OptionKind.Interface, true),
         new(LightAndShadow, "Light and shadow on the map (torchlight fades and flickers)", OptionKind.Interface, true),
         new(RecordReplays, "Record every game as a replay", OptionKind.Interface, true),
+        new(ThreeMessageLines, "Show three lines of messages (off: just the newest)", OptionKind.Interface, true),
     ];
 }
 
@@ -166,6 +169,7 @@ public sealed partial class MainWindowViewModel
             SaveSettings();
             _game.SetOption(id, value); // ignored for display-only options
             ApplyDisplayOptions();
+            UpdateMessageLines();
             // Angband rogue_like_commands: switching it puts in the whole keyset.
             if (id == DisplayOptions.RoguelikeKeys)
                 UseKeyset(value ? InputBindings.Keyset.Roguelike : InputBindings.Keyset.Original);
@@ -179,6 +183,7 @@ public sealed partial class MainWindowViewModel
     {
         _game.ApplyInterfaceOptions(OptionCatalog.OfKind(OptionKind.Interface).ToDictionary(o => o.Id, o => OptionValue(o.Id)));
         ApplyDisplayOptions();
+        UpdateMessageLines();
         RefreshOptionRows();
     }
 

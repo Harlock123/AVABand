@@ -15,8 +15,13 @@ public sealed partial class GameSession
     private const int RegenNormal = 197;
     private const int RegenBase = 1442;
 
-    /// <summary>Hurts the player (Angband take_hit). Death happens below zero hit points.</summary>
-    public void TakeHit(int damage, string killer)
+    /// <summary>
+    /// Hurts the player (Angband take_hit). Death happens below zero hit points. With
+    /// show_damage_taken the amount is noted on the message that said what hit (or, if nothing
+    /// was said this turn, a message of its own) — unless <paramref name="note"/> is off, as for the
+    /// ticks of poison, bleeding and hunger.
+    /// </summary>
+    public void TakeHit(int damage, string killer, bool note = true)
     {
         // Angband take_hit: invulnerability shrugs off all but the mightiest blows; damage
         // reduction (DAM_RED gear or shape) comes off every other hurt.
@@ -27,6 +32,7 @@ public sealed partial class GameSession
         Disturb();
         CombatRegenOnWound(damage, killer);
         Publish(new PlayerHurtEvent(damage, Player.Hp, Player.MaxHp));
+        if (note && Options[OptionIds.ShowDamageTaken]) NoteDamage(damage);
 
         if (Player.Hp < 0)
         {
@@ -262,10 +268,10 @@ public sealed partial class GameSession
         if (Player.IsDead) return;
 
         var timed = Player.Timed;
-        if (timed.Has(TimedIds.Poisoned)) TakeHit(1, "poison");
+        if (timed.Has(TimedIds.Poisoned)) TakeHit(1, "poison", note: false);
         // Angband PF_ROCK (the Púkel-man's shape): a stone body neither bleeds nor heals its cuts.
         if (timed.Has(TimedIds.Cut) && !IsRock)
-            TakeHit(timed[TimedIds.Cut] switch { > 200 => 3, > 100 => 2, _ => 1 }, "a fatal wound");
+            TakeHit(timed[TimedIds.Cut] switch { > 200 => 3, > 100 => 2, _ => 1 }, "a fatal wound", note: false);
 
         HungerTick(gameTurn);
         if (Player.IsDead) return;
@@ -382,5 +388,20 @@ public sealed partial class GameSession
         var covertracks = Player.Timed.Has("covertracks");
         Noise.Update(Level, Player.Position, covertracks ? 4 : 1);
         Scent.Lay(Level, Player.Position, covertracks);
+    }
+
+    // Messages said this turn, for noting damage on them (show_damage_taken).
+    private long _messagesSaid, _turnMessageMark, _notedMessage = -1;
+
+    /// <summary>A new turn (the player's command, or a monster's move): messages before it aren't this hit's.</summary>
+    private void MarkTurnForDamageNotes() => _turnMessageMark = _messagesSaid;
+
+    private void NoteDamage(int damage)
+    {
+        if (_messagesSaid > _turnMessageMark && _notedMessage != _messagesSaid)
+            Publish(new DamageNoteEvent(damage));
+        else
+            Publish(new MessageEvent($"You take {damage} damage."));
+        _notedMessage = _messagesSaid;
     }
 }

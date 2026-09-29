@@ -173,6 +173,7 @@ public sealed partial class GameSession : ITurnHandler
     private bool ExecuteOnce(GameCommand command)
     {
         if (IsGameOver) return false;
+        MarkTurnForDamageNotes();
         foreach (var m in Level.Monsters.All) m.IsDetected = false; // detection lasts until the next action
         if (RefusedByShape(command)) return false;
         if (CommandedAction(command) is { } commandedEnergy)
@@ -264,6 +265,7 @@ public sealed partial class GameSession : ITurnHandler
     /// <summary>Angband process_monsters: the monster's turn, then (as for the player) the terrain's harm.</summary>
     private int MonsterTurnThenTerrain(Monster monster)
     {
+        MarkTurnForDamageNotes();
         var energy = MonsterTurn(monster);
         // (Its turn may have taken the player to another level: it burns only if it is still here.)
         if (monster.IsActive && Level.InBounds(monster.Position) && Level.Monsters.At(monster.Position) == monster)
@@ -629,7 +631,11 @@ public sealed partial class GameSession : ITurnHandler
         UpdateView();
     }
 
-    private void Publish<T>(T evt) where T : IGameEvent => Events.Publish(evt);
+    private void Publish<T>(T evt) where T : IGameEvent
+    {
+        if (evt is MessageEvent) _messagesSaid++;
+        Events.Publish(evt);
+    }
 
     private static string Article(string noun) =>
         noun.Length > 0 && "aeiouAEIOU".Contains(noun[0]) ? $"an {noun}" : $"a {noun}";

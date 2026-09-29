@@ -10,6 +10,11 @@ multiplies the weapon's to-dam too. Fighting bare-handed does 1 a blow and never
 **Slays** (e.g. *slay orc*) and **brands** (e.g. *fire*) multiply a weapon's dice against the
 right monsters. You learn a weapon's runes by fighting with it.
 
+The numbers in brackets are the damage: "You hit the cave orc (7)." for yours, "The cave orc
+hits you (5)." for what you take (poison, bleeding and hunger go unnumbered). Both can be turned
+off in Options. The message area shows the newest message and the two before it (dimmer if from
+an earlier turn); Ctrl+P shows the whole history, numbers and all.
+
 ## Missiles
 
 Wield a sling, bow or crossbow and keep its ammunition in the quiver: `f` fires the first

@@ -10,6 +10,13 @@ public sealed record LoggedMessage(string Text, int Count, long Turn)
     public string Display => Count > 1 ? $"{Text} <x{Count}>" : Text;
 }
 
+/// <summary>An earlier line in the message area: brighter if said this turn, dimmer if before.</summary>
+public sealed record MessageLine(string Text, bool ThisTurn)
+{
+    public global::Avalonia.Media.IBrush Brush { get; } = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(
+        ThisTurn ? global::Avalonia.Media.Color.FromRgb(0xC8, 0xC8, 0xC8) : global::Avalonia.Media.Color.FromRgb(0x78, 0x78, 0x78));
+}
+
 /// <summary>
 /// The message history (Angband Ctrl+P): everything said this game, oldest first so the newest is at
 /// the bottom, with a Find box to narrow it.

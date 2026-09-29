@@ -9,6 +9,7 @@ public class ProjectMonster425Tests
     private static (GameSession Game, List<string> Said) Game()
     {
         var game = Arena.Create(9);
+        game.Options[OptionIds.ShowDamage] = false; // 4.2.5's messages as they are, without numbers
         var said = new List<string>();
         game.Events.Subscribe<MessageEvent>(m => said.Add(m.Text));
         return (game, said);

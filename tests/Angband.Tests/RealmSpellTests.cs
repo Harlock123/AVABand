@@ -157,6 +157,7 @@ public class RealmSpellTests
         var near = Foe(game, "cave_orc", new Loc(2, 0));
         var hp = game.Player.Hp;
         var said = Messages(game);
+        game.Options[OptionIds.ShowDamage] = false; // 4.2.5's pain message as it is, without a number
         Cast(game, "volcanic_eruption");
         // (Checked by the message: a 10,000 hit point orc can regenerate the damage over the failed casts.)
         Assert.Contains("The cave orc shrugs off the attack.", said); // (4.2.5's pain message, from > 95% health)

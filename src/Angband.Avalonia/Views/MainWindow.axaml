@@ -110,7 +110,17 @@
     <LayoutTransformControl DockPanel.Dock="Top" LayoutTransform="{Binding InterfaceTransform}">
     <Border Background="#101010" Padding="8,4">
       <Panel>
-        <TextBlock Text="{Binding LastMessage}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
+        <StackPanel>
+          <ItemsControl ItemsSource="{Binding EarlierMessages}" IsHitTestVisible="False">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:MessageLine">
+                <TextBlock Text="{Binding Text}" Foreground="{Binding Brush}" FontFamily="{StaticResource MonoFont}"
+                           TextTrimming="CharacterEllipsis" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Text="{Binding LastMessage}" Foreground="White" FontFamily="{StaticResource MonoFont}" />
+        </StackPanel>
         <!-- Screen reader support: a live region, read out whenever it changes (it is not drawn). -->
         <TextBlock x:Name="LiveRegion" Text="{Binding Announcement}" AutomationProperties.LiveSetting="Assertive"
                    AutomationProperties.Name="{Binding Announcement}" Width="1" Height="1" Opacity="0"

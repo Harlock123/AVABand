@@ -46,7 +46,11 @@ public sealed partial class MainWindowViewModel
         _speech.Clear();
     }
 
-    partial void OnLastMessageChanged(string value) => Announce(value);
+    partial void OnLastMessageChanged(string value)
+    {
+        Announce(value);
+        UpdateMessageLines();
+    }
 
     partial void OnHintTextChanged(string value)
     {

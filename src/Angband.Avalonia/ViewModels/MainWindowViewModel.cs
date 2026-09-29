@@ -241,6 +241,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Lore = _lore;
         CursorMode = CursorMode.None;
         _game.Events.Subscribe<MessageEvent>(m => AddMessage(m.Text));
+        _game.Events.Subscribe<DamageNoteEvent>(d => AmendLastMessage(d.Damage));
         _game.Events.Subscribe<ShopEnteredEvent>(OnShopEntered);
         _game.Events.Subscribe<LevelChangedEvent>(OnLevelChanged);
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);
@@ -267,6 +268,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         if (AskAboutRecall(command) || AskAboutLava(command) || TutorialStairs(command)) return;
         command = WithCount(command);
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
+        _messagesAtCommand = _messagesAdded;
         var fromDepth = _game.Player.Depth;
         NoteForRepeat(command, _game.Execute(command));
         ShowScenes(command, fromDepth);
@@ -425,7 +427,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     private string? _lineText;
     private int _lineCount;
 
-    private void AddMessage(string text)
+    internal void AddMessage(string text)
     {
         // A message said again straight away is counted on the line, as the history does ("<x5>"),
         // unless something else has been shown there since.
@@ -440,6 +442,63 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         if (_history.Count > 0 && _history[^1].Text == text) _history[^1] = _history[^1] with { Count = _history[^1].Count + 1 };
         else _history.Add(new LoggedMessage(text, 1, _game?.NormalTurns ?? 0));
         if (_history.Count > MaxHistory) _history.RemoveRange(0, _history.Count - MaxHistory);
+        _messagesAdded++;
+        UpdateMessageLines();
+    }
+
+    /// <summary>
+    /// show_damage_taken: the damage goes on the message just said, before its closing punctuation
+    /// ("The cave orc hits you (5)."), on the message line and in the history alike.
+    /// </summary>
+    private void AmendLastMessage(int damage)
+    {
+        if (Messages.Count == 0) return;
+        var text = Messages[0];
+        var note = $" ({damage})";
+        var amended = text.Length > 0 && text[^1] is '.' or '!' or '?' ? text[..^1] + note + text[^1] : text + note;
+        Messages[0] = amended;
+        if (_history.Count > 0 && _history[^1].Text == text)
+        {
+            if (_history[^1].Count > 1)
+            {
+                _history[^1] = _history[^1] with { Count = _history[^1].Count - 1 };
+                _history.Add(new LoggedMessage(amended, 1, _game?.NormalTurns ?? 0));
+            }
+            else _history[^1] = _history[^1] with { Text = amended };
+        }
+        if (_lineText == text)
+        {
+            _lineText = amended;
+            _lineCount = 1;
+            LastMessage = amended;
+        }
+        UpdateMessageLines();
+    }
+
+    // --- The message area: the newest message, and (by default) the two before it --------------------
+
+    private long _messagesAdded, _messagesAtCommand;
+
+    /// <summary>The lines above the newest message (older first); dimmer when from before this turn.</summary>
+    public ObservableCollection<MessageLine> EarlierMessages { get; } = [];
+
+    private void UpdateMessageLines()
+    {
+        EarlierMessages.Clear();
+        if (!OptionValue(DisplayOptions.ThreeMessageLines)) return;
+        // Consecutive repeats count as one line ("<x3>"), as on the line itself.
+        var groups = new List<(string Text, int Count, int Newest)>();
+        for (var i = 0; i < Messages.Count && groups.Count < 4; i++)
+        {
+            if (groups.Count > 0 && groups[^1].Text == Messages[i]) groups[^1] = groups[^1] with { Count = groups[^1].Count + 1 };
+            else groups.Add((Messages[i], 1, i));
+        }
+        var skip = groups.Count > 0 && LineDisplay(groups[0].Text, groups[0].Count) == LastMessage ? 1 : 0;
+        var thisTurn = (int)Math.Min(int.MaxValue, _messagesAdded - _messagesAtCommand);
+        var lines = groups.Skip(skip).Take(2).Reverse().Select(g => new MessageLine(LineDisplay(g.Text, g.Count), g.Newest < thisTurn)).ToList();
+        // Always two lines, blank at the top until there are messages for them, so the map doesn't move.
+        while (lines.Count < 2) lines.Insert(0, new MessageLine(" ", false));
+        foreach (var line in lines) EarlierMessages.Add(line);
     }
 
     private static string LineDisplay(string text, int count) => count > 1 ? $"{text} <x{count}>" : text;

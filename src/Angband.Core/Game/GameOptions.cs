@@ -25,6 +25,8 @@ public static class OptionIds
     public const string ShowFlavors = "show_flavors";
     public const string DisturbNear = "disturb_near";
     public const string NotifyRecharge = "notify_recharge";
+    /// <summary>AVABand's own: the damage monsters and effects deal you, on their messages.</summary>
+    public const string ShowDamageTaken = "show_damage_taken";
     /// <summary>AVABand's own: open diagonal-only squeezes in new levels (for keyboards without a keypad).</summary>
     public const string NoDiagonalSqueezes = "gen_no_diagonal_squeezes";
 
@@ -56,7 +58,9 @@ public static class OptionCatalog
 {
     public static readonly IReadOnlyList<OptionDef> All =
     [
-        new(OptionIds.ShowDamage, "Show damage player deals to monsters", OptionKind.Interface, false),
+        // (AVABand shows damage by default; Angband's show_damage starts off.)
+        new(OptionIds.ShowDamage, "Show damage player deals to monsters", OptionKind.Interface, true),
+        new(OptionIds.ShowDamageTaken, "Show damage monsters and effects deal to you", OptionKind.Interface, true),
         new(OptionIds.UseOldTarget, "Use old target by default", OptionKind.Interface, true),
         new(OptionIds.PickupAlways, "Always pickup items", OptionKind.Interface, false),
         new(OptionIds.PickupInven, "Always pickup items matching inventory", OptionKind.Interface, true),

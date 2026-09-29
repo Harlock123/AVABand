@@ -1014,7 +1014,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   `ViewModels/MainWindowViewModel.Options.cs`; `=` or Game → Options, the last tab of Settings):
   Angband 4.2.5's options menu (`list-options.h`), each behaving as in its source.
   - *User interface* (kept in `settings.json`, for every character): show damage ("You hit the
-    orc (12).", and the number floats up from the monster on the map), use old target (off: aimed commands take the nearest monster), always pick up /
+    orc (12).", and the number floats up from the monster on the map; on by default in AVABand),
+    AVABand's own *show damage monsters and effects deal to you* (on by default: the amount goes on
+    the message that said what hit, before its closing mark — "The cave orc hits you (5).", "You
+    are covered in acid (12)!" — in the message area and the history alike; damage with nothing said
+    this turn gets "You take 7 damage."; the ticks of poison, bleeding and hunger go unnumbered), use old target (off: aimed commands take the nearest monster), always pick up /
     pick up items matching the pack (each object picked up costs a tenth of a turn), show flavours
     ("an Icky Green Potion of Speed"), disturb whenever a viewable monster moves (a monster coming
     into view always stops running, travel and tunnelling; with this on, one in view moving does too), notify
@@ -1027,8 +1031,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     walls, yellow torchlight, centre the map continuously (off: Angband's panel scrolling, when
     within 3 squares of the edge; Ctrl+L, or `@` in the roguelike keys, centres it once, as Angband's
     "Center map" does, also on the View menu), purple uniques, player colour by hit points, mouse movement,
-    and speed as a multiplier ("Fast (x2.0)"). Defaults are Angband's, except that use old target,
-    yellow torchlight and centring start on, as AVABand has always behaved.
+    and speed as a multiplier ("Fast (x2.0)"), and AVABand's *show three lines of messages* (on by
+    default: the two messages before the newest sit above it, light grey if said this turn and
+    dimmer if before, a repeat counted "<x3>" as on the line itself; the area keeps its three lines'
+    height so the map doesn't move). Defaults are Angband's, except that use old target,
+    yellow torchlight, centring and show damage start on.
   - *Birth* (chosen on the creation screen, fixed for the character's life, saved with it, listed
     in the character dump): random artifacts (below), connected stairs, forced descent (up stairs do nothing; stairs, recall
     and teleport level go below the deepest level reached), no recall (until Morgoth is dead), no
