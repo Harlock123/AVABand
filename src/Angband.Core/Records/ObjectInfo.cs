@@ -212,6 +212,8 @@ public static class ObjectInfo
         if (!k.KnowsKind(item))
         {
             sb.Append(k.HasTried(item.Kind) ? "You have tried it, but don't know what it does.\n" : "You don't know what it does.\n");
+            // What you have learned of it all the same — a curse that showed itself (Angband obj->known).
+            if (!sampleOnly && KnownProperties(game, item) is { Count: > 0 } learned) sb.Append(string.Join(" ", learned)).Append('\n');
             return sb.ToString().TrimEnd();
         }
 
@@ -272,8 +274,9 @@ public static class ObjectInfo
         if (immune.Count > 0) lines.Add($"It makes you immune to {Join(immune)}.");
         var abilities = item.Flags.Where(f => ItemFlags.Abilities.Contains(f) && k.KnowsRune(RuneIds.Flag(f))).Select(ItemFlags.Name).ToList();
         if (abilities.Count > 0) lines.Add($"It grants {Join(abilities)}.");
+        // Angband describe_curses: what each known curse does, and whether it can be broken.
         foreach (var c in item.Curses.Where(c => k.KnowsRune(RuneIds.Curse(c))))
-            lines.Add($"It is cursed with {data.Curse(c)?.Name} ({data.Curse(c)?.Description}).");
+            lines.Add($"It {data.Curse(c)?.Description ?? c}{(item.CursePower(c) >= 100 ? "; this curse cannot be removed" : "")}.");
         return lines;
     }
 

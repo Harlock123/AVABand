@@ -216,11 +216,12 @@ public class ItemPlayTests
         Assert.True(teleported);
         Assert.True(game.Knowledge.KnowsRune(RuneIds.Curse("teleportation")));
 
-        // Its curse is 4.2.5's power 100: permanent, beyond any Remove Curse.
+        // Its curse is 4.2.5's power 100: permanent, beyond any Remove Curse (which doesn't offer it).
         var said = Messages(game);
         game.Execute(new UseCommand(game.Player.Inventory.Add(game.Objects.Create("scroll_of_remove_curse"))!));
         Assert.True(ring.IsCursed);
-        Assert.Contains("The curse is too powerful to break.", said);
+        Assert.Contains("You have no curses to remove.", said);
+        Assert.Contains("It randomly makes you teleport; this curse cannot be removed.", Angband.Core.Records.ObjectInfo.DescribeItem(game, ring));
     }
 
     [Fact]

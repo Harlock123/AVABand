@@ -26,6 +26,14 @@ ignoring for weapons and armour.
 **Egos** are items with a name ("of Slay Evil", "of Resistance"); **artifacts** are unique items
 with a name and their own powers. The Knowledge screen lists all you have found.
 
+## Curses
+
+Some gear carries curses: a sticky, draining or treacherous rune you learn when it shows itself.
+The item's description says what each curse you know does. **Remove Curse** (scroll, staff or
+spell) asks which item, then which curse, showing each curse's strength against the spell's; if
+the spell is too weak the item turns fragile, and a fragile item may be destroyed. Curses that
+"cannot be removed" never go.
+
 ## Floor stacking
 
 With the birth option *Stack objects on the floor* off, a square holds only one object (or one

@@ -197,6 +197,7 @@ public static class ReplayCodec
         null => null,
         GameCommand c => Encode(c),
         Item item => new JsonObject { ["item"] = item.Serial },
+        CurseChoice choice => new JsonObject { ["item"] = choice.Item.Serial, ["curse"] = choice.Curse },
         Loc l => new JsonObject { ["x"] = l.X, ["y"] = l.Y },
         Enum e => JsonValue.Create(e.ToString()),
         string s => JsonValue.Create(s),
@@ -223,6 +224,7 @@ public static class ReplayCodec
         if (node is null) return null;
         if (typeof(GameCommand).IsAssignableFrom(target)) return DecodeCommand(game, node);
         if (target == typeof(Item)) return FindItem(game, node["item"]!.GetValue<long>());
+        if (target == typeof(CurseChoice)) return new CurseChoice(FindItem(game, node["item"]!.GetValue<long>()), node["curse"]!.GetValue<string>());
         if (target == typeof(Loc)) return new Loc(node["x"]!.GetValue<int>(), node["y"]!.GetValue<int>());
         if (target.IsEnum) return Enum.Parse(target, node.GetValue<string>());
         if (target == typeof(char)) return node.GetValue<string>()[0];

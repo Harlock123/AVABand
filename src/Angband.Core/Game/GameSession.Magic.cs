@@ -357,6 +357,11 @@ public sealed partial class GameSession
             Publish(new MessageEvent("You must choose a direction."));
             return 0;
         }
+        if (NeedsCurseChoice(spell.Effect) && UncursableItems().Count == 0)
+        {
+            Publish(new MessageEvent("You have no curses to remove."));
+            return 0;
+        }
         if (SpellNeedsTarget(spell) && target is null && AimPoint() is null)
         {
             Publish(new MessageEvent("You have no target."));

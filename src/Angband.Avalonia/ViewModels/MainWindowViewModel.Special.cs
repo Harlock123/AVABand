@@ -51,6 +51,28 @@ public sealed partial class MainWindowViewModel
         LastMessage = "Choose a monster race (by symbol) to banish:";
     }
 
+    /// <summary>
+    /// Remove Curse (Angband effect_handler_REMOVE_CURSE): "Uncurse which item?", then "Remove which
+    /// curse (spell strength 20+d20)?" with each curse's strength, then the command with the choice.
+    /// With nothing to uncurse, the command goes ahead and says so.
+    /// </summary>
+    private void BeginUncurse(Func<CurseChoice?, GameCommand> command, string strength)
+    {
+        var items = _game.UncursableItems();
+        if (items.Count == 0)
+        {
+            Execute(command(null));
+            return;
+        }
+        ShowMenu("Uncurse which item?", [.. items.Select(item => (_game.Describe(item), (Action)(() =>
+            ShowMenu($"Remove which curse (spell strength {strength})?",
+            [
+                .. _game.RemovableCurses(item).Select(c => (
+                    $"{_data.Curse(c.Curse)?.Name ?? c.Curse} (curse strength {c.Power})",
+                    (Action)(() => Execute(command(new CurseChoice(item, c.Curse)))))),
+            ]))))]);
+    }
+
     /// <summary>The key typed after a banishment prompt: a monster letter, or Escape to cancel.</summary>
     public bool ChooseGlyph(string symbol)
     {

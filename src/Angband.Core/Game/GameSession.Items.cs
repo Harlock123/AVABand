@@ -450,6 +450,12 @@ public sealed partial class GameSession
             Publish(new MessageEvent("You must choose a monster symbol to banish."));
             return 0;
         }
+        // Angband effect_handler_REMOVE_CURSE: known to break curses, it waits for one to break.
+        if (NeedsCurseChoice(item.Kind.Effect) && Knowledge.KnowsKind(item) && UncursableItems().Count == 0)
+        {
+            Publish(new MessageEvent("You have no curses to remove."));
+            return 0;
+        }
         if (item.Base.Id == "scroll" && CannotRead() is { } why)
         {
             Publish(new MessageEvent(why));
@@ -881,27 +887,71 @@ public sealed partial class GameSession
     private int CurseModifier(Item item, string mod) =>
         item.Curses.Sum(c => Data.Curse(c)?.Modifiers.GetValueOrDefault(mod) ?? 0);
 
+    // The curse chosen for Remove Curse (set while the command's effects run).
+    private CurseChoice? _uncurse;
+
+    private int WithUncurse(CurseChoice? choice, Func<int> run)
+    {
+        _uncurse = choice;
+        try
+        {
+            return run();
+        }
+        finally
+        {
+            _uncurse = null;
+        }
+    }
+
+    public static bool NeedsCurseChoice(string? effect) =>
+        effect is { } e && ItemEffects.Parse(e).Any(x => x.Name == "remove_curse");
+
     /// <summary>
-    /// Angband uncurse_object: the weakest breakable curse on your gear against the spell's strength.
-    /// Strength enough breaks it; otherwise the item turns fragile, and a fragile one may be
-    /// destroyed (one time in four) with a bang. Curses of power 100 are permanent.
+    /// What Remove Curse can work on (Angband item_tester_uncursable): gear, pack, quiver and the
+    /// floor underfoot, wherever a curse you know of could be broken (power under 100).
+    /// </summary>
+    public IReadOnlyList<Item> UncursableItems() =>
+        [.. Player.Inventory.Equipped.Concat(Player.Inventory.Pack).Concat(Player.Inventory.Quiver)
+            .Concat(Level.Objects.At(Player.Position)).Where(i => RemovableCurses(i).Count > 0)];
+
+    /// <summary>
+    /// The curses on an item Remove Curse could break, and their strength (Angband curse_menu): known
+    /// ones under power 100.
+    /// </summary>
+    public IReadOnlyList<(string Curse, int Power)> RemovableCurses(Item item) =>
+        [.. item.Curses.Where(c => Knowledge.KnowsRune(RuneIds.Curse(c)) && item.CursePower(c) is > 0 and < 100)
+            .Select(c => (c, item.CursePower(c)))];
+
+    /// <summary>The spell strength of a Remove Curse effect, as Angband shows it ("20+d20").</summary>
+    public string UncurseStrengthText(string? effect)
+    {
+        var e = effect is null ? null : ItemEffects.Parse(effect).FirstOrDefault(x => x.Name == "remove_curse");
+        var text = e?.Arg(0) is { Length: > 0 } a ? a : "20+d20";
+        return text.Replace("{L}", Player.Level.ToString(System.Globalization.CultureInfo.InvariantCulture)).Replace("+1d", "+d");
+    }
+
+    /// <summary>
+    /// Angband uncurse_object: the chosen curse (or, when none was chosen, the weakest you could
+    /// break) against the spell's strength. Strength enough breaks it; otherwise the item turns
+    /// fragile, and a fragile one may be destroyed (one time in four) with a bang. Curses of power
+    /// 100 can't be chosen.
     /// </summary>
     private bool RemoveCurse(int strength)
     {
-        var cursed = Player.Inventory.Equipped.Where(i => i.IsCursed).ToList();
-        if (cursed.Count == 0)
+        Item? item = null;
+        string? curse = null;
+        if (_uncurse is { } choice && UncursableItems().Contains(choice.Item)
+            && RemovableCurses(choice.Item).Any(c => c.Curse == choice.Curse))
+            (item, curse) = (choice.Item, choice.Curse);
+        else if (UncursableItems().SelectMany(i => RemovableCurses(i).Select(c => (Item: i, c.Curse, c.Power)))
+                     .OrderBy(t => t.Power).ThenBy(t => t.Item.Serial).FirstOrDefault() is { Item: not null } weakest)
+            (item, curse) = (weakest.Item, weakest.Curse);
+        if (item is null || curse is null)
         {
-            Publish(new MessageEvent("You feel as if someone is watching over you."));
+            Publish(new MessageEvent("You have no curses to remove."));
             return true;
         }
-        var target = cursed.SelectMany(i => i.Curses.Select(c => (Item: i, Curse: c, Power: i.CursePower(c))))
-            .Where(t => t.Power < 100).OrderBy(t => t.Power).ThenBy(t => t.Item.Serial).FirstOrDefault();
-        if (target.Item is null)
-        {
-            Publish(new MessageEvent("The curse is too powerful to break."));
-            return true;
-        }
-        var (item, curse, power) = target;
+        var power = item.CursePower(curse);
         var name = Describe(item, withArticle: false);
         if (strength >= power)
         {
@@ -916,7 +966,8 @@ public sealed partial class GameSession
         else if (Rng.OneIn(4))
         {
             Publish(new MessageEvent("There is a bang and a flash!"));
-            Player.Inventory.Remove(item, 1, () => Objects.NextSerial++);
+            if (Level.Objects.At(Player.Position).Contains(item)) Level.Objects.Remove(Player.Position, item);
+            else Player.Inventory.Remove(item, 1, () => Objects.NextSerial++);
             if (item.Artifact is { } art) LoseArtifact(art);
             TakeHit(Rng.Damroll(5, 5), "Failed uncursing");
         }

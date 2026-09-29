@@ -4,6 +4,15 @@ namespace Angband.Tests;
 
 internal static class TestGames
 {
+    /// <summary>A dagger in the pack with a weak curse the player knows of — something for Remove Curse to break.</summary>
+    public static Angband.Core.Items.Item GiveCursedItem(GameSession game, string curse = "vulnerability", int power = 5)
+    {
+        var dagger = game.Objects.Create("dagger");
+        Assert.True(game.Objects.AddCurse(new Angband.Core.Randomness.GameRandom(1), dagger, game.Data.Curse(curse)!, power));
+        game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.Curse(curse));
+        return game.Player.Inventory.Add(dagger)!;
+    }
+
     public static void ClearMonsters(GameSession game)
     {
         foreach (var monster in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(monster);

@@ -251,6 +251,10 @@ public sealed partial class MainWindowViewModel
                 or ItemPromptKind.UseStaff or ItemPromptKind.Zap when GameSession.NeedsGlyph(item.Kind.Effect):
                 BeginGlyphChoice(item, activate: false);
                 break;
+            case ItemPromptKind.Read or ItemPromptKind.UseStaff
+                when GameSession.NeedsCurseChoice(item.Kind.Effect) && _game.Knowledge.KnowsKind(item):
+                BeginUncurse(choice => new UseCommand(item, Uncurse: choice), _game.UncurseStrengthText(item.Kind.Effect));
+                break;
             default:
                 Execute(kind switch
                 {

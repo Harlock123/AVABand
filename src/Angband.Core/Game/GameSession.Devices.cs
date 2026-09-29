@@ -85,6 +85,11 @@ public sealed partial class GameSession
             Publish(new MessageEvent("You must choose a monster symbol to banish."));
             return 0;
         }
+        if (NeedsCurseChoice(item.Kind.Effect) && Knowledge.KnowsKind(item) && UncursableItems().Count == 0)
+        {
+            Publish(new MessageEvent("You have no curses to remove."));
+            return 0;
+        }
         // Don't waste a charge on nothing: aimed devices need something to aim at (once known).
         if (NeedsAim(item.Kind) && !NeedsDirection(item.Kind) && target is null && AimPoint() is null
             && Knowledge.KnowsKind(item))

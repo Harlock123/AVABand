@@ -108,6 +108,7 @@ public class ClassTests
             var foe = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(1, 0));
             foe.Hp = foe.MaxHp = 5000;
             game.UpdateView();
+            if (GameSession.NeedsCurseChoice(spell.Effect)) TestGames.GiveCursedItem(game);
             CastUntilItWorks(game, spell.Id, dir: spell.NeedsDirection ? Direction.East : null);
             Assert.False(game.Player.IsDead, $"{cls} died casting {spell.Id}");
         }

@@ -231,6 +231,12 @@ public sealed partial class MainWindowViewModel
 
     private void CastOrAim(string spellId, bool allowOverexert)
     {
+        if (_data.Spell(spellId) is { } s && GameSession.NeedsCurseChoice(s.Effect))
+        {
+            BeginUncurse(choice => new CastCommand(spellId, AllowOverexert: allowOverexert, Uncurse: choice),
+                _game.UncurseStrengthText(s.Effect));
+            return;
+        }
         if (_data.Spell(spellId) is { NeedsDirection: true })
         {
             PendingSpellDirection = spellId;

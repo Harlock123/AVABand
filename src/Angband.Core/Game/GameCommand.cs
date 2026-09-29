@@ -75,7 +75,12 @@ public sealed record ActivateCommand(Items.Item Item, Loc? Target = null, Direct
 public sealed record ResumeShapeCommand : GameCommand;
 
 /// <param name="Glyph">For banishment: the monster letter to banish.</param>
-public sealed record UseCommand(Items.Item Item, Loc? Target = null, Direction? Direction = null, char? Glyph = null) : GameCommand;
+/// <param name="Uncurse">For Remove Curse: the item and the curse on it to break.</param>
+public sealed record UseCommand(Items.Item Item, Loc? Target = null, Direction? Direction = null, char? Glyph = null,
+    CurseChoice? Uncurse = null) : GameCommand;
+
+/// <summary>A curse chosen for Remove Curse to attack (Angband get_item, then get_curse).</summary>
+public sealed record CurseChoice(Items.Item Item, string Curse);
 
 /// <summary>Throw an item at a square, or the nearest visible monster when null.</summary>
 public sealed record ThrowCommand(Items.Item Item, Loc? Target = null) : GameCommand;
@@ -97,7 +102,8 @@ public sealed record StudyCommand(string? SpellId = null, string? Book = null) :
 /// Cast a learned spell at a target (or the nearest visible monster), or in a direction for spells
 /// that need one. Casting without enough mana must be allowed explicitly: it may make you faint.
 /// </summary>
-public sealed record CastCommand(string SpellId, Loc? Target = null, Direction? Direction = null, bool AllowOverexert = false) : GameCommand;
+public sealed record CastCommand(string SpellId, Loc? Target = null, Direction? Direction = null, bool AllowOverexert = false,
+    CurseChoice? Uncurse = null) : GameCommand;
 
 /// <summary>
 /// Walk to a known square along the shortest known path (mouse click travel). Stops when a

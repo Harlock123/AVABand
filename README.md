@@ -414,9 +414,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   dragons or undead, blare like a siren, turn your skin to stone or turn your weapon on you, each
   when its time comes. Curses conflict (teleportation and anti-teleportation), won't go on what
   would foil them, and grow stronger when repeated. Remove Curse (20+d20; *Remove Curse* 50+d50;
-  the priests' by level) breaks the weakest breakable curse if its strength is enough; failure
-  makes the item fragile, and a fragile one may be destroyed. A curse of power 100 (the Rings and
-  Amulets of Teleportation) is permanent. Per-game flavours (potion colours, ring
+  the priests' by level) asks, as 4.2.5 does, which item (worn, carried or underfoot, with a curse
+  you know of) and then which curse — "Remove which curse (spell strength 50+d50)?", each listed
+  with its curse strength — and breaks it if the spell's strength is enough; failure makes the item
+  fragile, and a fragile one may be destroyed. A known Remove Curse with nothing to work on isn't
+  used up ("You have no curses to remove."). A curse of power 100 (the Rings and Amulets of
+  Teleportation) is permanent and never offered; an item's description says what each known curse
+  does ("It randomly makes you teleport; this curse cannot be removed."), even before you know
+  what kind of item it is. Per-game flavours (potion colours, ring
   stones, wand metals, staff woods, mushroom caps, random scroll titles). Weapons and armour up to
   mithril and dragon scale mail, crowns; rings and amulets with rolled bonuses (Angband's
   `B+dXMY` values: Strength `1+M5`, Protection `5+d5M10`...); gear can raise stats and grant

@@ -84,6 +84,7 @@ public class RealmSpellTests
             Foe(game, "cave_orc", new Loc(1, 0), 5000);
             Foe(game, "jackal", new Loc(3, 1), 5000);
             game.Player.Inventory.Add(game.Objects.Create("staff_of_detect_evil"));
+            if (GameSession.NeedsCurseChoice(spell.Effect)) TestGames.GiveCursedItem(game);
             Cast(game, spell.Id, dir: spell.NeedsDirection ? Direction.East : null);
             Assert.False(game.Player.IsDead, $"{cls} died casting {spell.Id}");
         }

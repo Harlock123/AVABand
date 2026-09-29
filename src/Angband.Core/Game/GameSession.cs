@@ -214,7 +214,7 @@ public sealed partial class GameSession : ITurnHandler
             DropCommand drop => Drop(drop.Item, drop.Count),
             WieldCommand wield => Wield(wield.Item),
             TakeOffCommand takeOff => TakeOff(takeOff.Item),
-            UseCommand use => WithGlyph(use.Glyph, () => Use(use.Item, use.Target, use.Direction)),
+            UseCommand use => WithUncurse(use.Uncurse, () => WithGlyph(use.Glyph, () => Use(use.Item, use.Target, use.Direction))),
             ActivateCommand activate => WithGlyph(activate.Glyph, () => Activate(activate.Item, activate.Target, activate.Direction)),
             ResumeShapeCommand => ResumeNormalShape(),
             ThrowCommand throwCmd => Throw(throwCmd.Item, throwCmd.Target),
@@ -224,7 +224,7 @@ public sealed partial class GameSession : ITurnHandler
             BuyCommand buy => Buy(buy.Item, buy.Count),
             SellCommand sell => Sell(sell.Item, sell.Count),
             StudyCommand study => Study(study.SpellId, study.Book),
-            CastCommand cast => Cast(cast.SpellId, cast.Target, cast.Direction, cast.AllowOverexert),
+            CastCommand cast => WithUncurse(cast.Uncurse, () => Cast(cast.SpellId, cast.Target, cast.Direction, cast.AllowOverexert)),
             DebugJumpCommand jump => DebugJump(jump.Depth),
             _ => 0,
         };
