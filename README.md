@@ -494,10 +494,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   every way down still comes out somewhere.
 - **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
-  spells), race, shape, trap, terrain feature, store, curse, constant and summon kind with 4.2.5's
-  own files, reusing the importers' parsing, and writes a Markdown report of every field that
+  spells), race, shape, trap, terrain feature, store, curse, constant, summon kind, timed effect,
+  element, chest trap and quest with 4.2.5's own files, reusing the importers' parsing, and writes a Markdown report of every field that
   differs (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
-  differences across 1,816 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  differences across 1,919 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
   monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
   conversions while keeping ids and AVABand's own fields, and CI checks it on every push: the
   `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with

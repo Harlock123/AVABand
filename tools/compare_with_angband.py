@@ -1830,6 +1830,29 @@ def compare_chest_traps(gd, data):
     return sec
 
 
+def compare_quests(gd, data):
+    sec = section("quests", "Quests", "quests.json", "quest.txt")
+    ours = {x["id"]: x for x in load(data, "quests.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "quest.txt")):
+        qid = slug(e["name"])
+        x = ours.get(qid)
+        if x is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(qid)
+        sec.compared += 1
+        sec.cmp(e["name"], "name", x.get("name"), e["name"])
+        sec.cmp(e["name"], "level", x.get("level"), int(one(e, "level", "0")))
+        sec.cmp(e["name"], "race", x.get("race"), slug(one(e, "race", "")))
+        sec.cmp(e["name"], "number", x.get("number", 1), int(one(e, "number", "1")))
+    for qid in ours:
+        if qid not in used:
+            sec.only_ours.append(qid)
+    sec.notes += ["Every field of quest.txt is compared (the race by the importer's monster id)."]
+    return sec
+
+
 def compare_summons(gd, data):
     sec = section("summons", "Summons", "summons.json", "summon.txt")
     ours = {x["id"]: x for x in load(data, "summons.json")}
@@ -2046,7 +2069,7 @@ def render(gd, data, out):
     w("- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by "
       "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
       "object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
-      "slay.txt, pain.txt, quest.txt, visuals.txt, world.txt, "
+      "slay.txt, pain.txt, visuals.txt, world.txt, "
       "ui_*.txt, blow_methods.txt (methods are only checked for existence).")
     w("- Descriptions and messages everywhere.")
     w("")
@@ -2083,7 +2106,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons, compare_timed, compare_elements, compare_chest_traps, compare_quests):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

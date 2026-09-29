@@ -1053,6 +1053,16 @@ def sync_chest_traps(gd, data):
     print(f"chest traps: {len(out)} written")
 
 
+def sync_quests(gd, data):
+    """quest.txt, whole."""
+    path = os.path.join(data, "quests.json")
+    out = [{"id": cw.slug(e["name"]), "name": e["name"], "level": int(cw.one(e, "level", "0")),
+            "race": cw.slug(cw.one(e, "race", "")), "number": int(cw.one(e, "number", "1"))}
+           for e in cw.parse_records(os.path.join(gd, "quest.txt"))]
+    write_json(path, out, 2)
+    print(f"quests: {len(out)} written")
+
+
 def sync_summons(gd, data):
     """summon.txt, whole: the kinds of summons (which monsters answer, and what to fall back on)."""
     path = os.path.join(data, "summons.json")
@@ -1101,7 +1111,7 @@ SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "b
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
             "curses": sync_curses, "constants": sync_constants, "summons": sync_summons,
             "timed": sync_timed, "elements": sync_elements,
-            "chest_traps": sync_chest_traps}
+            "chest_traps": sync_chest_traps, "quests": sync_quests}
 
 
 def main():

@@ -27,6 +27,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Timed effects](#timed) — `timed_effects.json` vs `player_timed.txt`
 - [Elements](#elements) — `elements.json` vs `projection.txt (type:element)`
 - [Chest traps](#chest-traps) — `chest_traps.json` vs `chest_trap.txt`
+- [Quests](#quests) — `quests.json` vs `quest.txt`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -298,9 +299,18 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - Every field of chest_trap.txt is compared; its effects in AVABand's trap grammar. The `code` is matched to AVABand's ids (NO_TRAP → locked, POISON → poison_gas, ...).
 
+<a id="quests"></a>
+## Quests: `quests.json` vs `quest.txt`
+
+2 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every field of quest.txt is compared (the race by the importer's monster id).
+
 ## Not compared at all
 
-- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, quest.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
+- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
 - Descriptions and messages everywhere.
 
 <a id="summary"></a>
@@ -328,5 +338,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Timed effects | 52 | 0 | 0 | 0 | 0 | 4 |
 | Elements | 25 | 0 | 0 | 0 | 0 | 31 |
 | Chest traps | 7 | 0 | 0 | 0 | 0 | 0 |
-| **Total** | **1900** | **0** | **0** | **0** | **14** | **88** |
+| Quests | 2 | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **1902** | **0** | **0** | **0** | **14** | **88** |
 
