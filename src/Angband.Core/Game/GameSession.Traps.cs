@@ -72,7 +72,7 @@ public sealed partial class GameSession
                     TeleportPlayer(TeleportDistance(e.Arg(0)));
                     break;
                 case "summon":
-                    SummonNearPlayer(Amount(e.Arg(0)), e.Arg(1) is "" or "none" ? null : e.Arg(1), e.Int(2));
+                    SummonNearPlayer(Amount(e.Arg(0)), e.Arg(1), e.Int(2));
                     break;
                 case "aggravate":
                     foreach (var m in Level.Monsters.All) m.Sleep = 0;

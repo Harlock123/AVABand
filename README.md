@@ -144,10 +144,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
       nothing but hold: trying to move out of one clears it instead ("You clear the web.", a
       turn); a run stops at one; monsters in a web pass through (`PASS_WEB`, ghosts), tear it
       down (wall-borers), spend a turn clearing it (`CLEAR_WEB`) or are stuck.
-    - The greater summons follow `summon.txt`: an Ainu (never a unique), greater demons (`U`),
-      greater undead (`V`, `W`, `L`), ancient dragons (`D`), the Ringwraiths (unique `W`) and
-      uniques — the last two falling back on greater undead when none can come. Summons are drawn
-      for (depth + caster level) / 2 + 5, as in 4.2 (the +5 was missing before).
+    - Summoning is 4.2.5's (`GameSession.Summons.cs`, `summons.json` from `summon.txt`): each
+      kind names the monster bases (`base` in `monster.txt`: hounds are zephyr hounds and
+      canines, greater undead vampires, wraiths and liches) or the flag that may answer, whether
+      uniques may, and a fallback (the Ringwraiths and uniques fall back on greater undead when
+      none came); kin share the caster's base and are never unique. A monster keeps summoning —
+      up to the spell's dice in tries — until the summoned levels, squared and added up, reach
+      depth × its level, so a deep caster calls more; "But nothing comes." when none answer.
+      Summons appear up to four squares from the caster (in view of it), drawn for
+      (depth + caster level) / 2 + 5. Traps, curses and the scroll and staff summon around you
+      instead: the newcomers wait for you to act (a faster one is held for the turns it would
+      gain), and one time in four a monster of the kind already on the level, out of sight, is
+      called over instead.
   - **Mimics & lurkers** (`GameSession.Mimics.cs`, Angband `UNAWARE`): creeping coins look like a
     pile of gold, potion/scroll/ring/chest mimics like a tempting potion, scroll, ring or chest (drawn with that
     object's tile, named by look, remembered on the map and found by object detection), and lurkers
@@ -463,10 +471,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   every way down still comes out somewhere.
 - **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
-  spells), race, shape, trap, terrain feature, store and curse with 4.2.5's own files, reusing the
-  importers' parsing, and writes a Markdown report of every field that differs
-  (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
-  differences across 1,724 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
+  spells), race, shape, trap, terrain feature, store, curse, constant and summon kind with 4.2.5's
+  own files, reusing the importers' parsing, and writes a Markdown report of every field that
+  differs (`docs/angband-4.2.5-data-drift.md` is its latest run). Every category matches: 0 field
+  differences across 1,816 entries. `python3 tools/sync_with_angband.py <gamedata> [--only
   monsters,objects,...]` keeps it so, rebuilding each entry from 4.2.5 with the importers'
   conversions while keeping ids and AVABand's own fields, and CI checks it on every push: the
   `drift` job fetches Angband 4.2.5 (pinned by checksum) and runs the comparison with

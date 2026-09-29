@@ -36,6 +36,7 @@ public static class DataLoader
     public const string EgosFile = "egos.json";
     public const string ArtifactsFile = "artifacts.json";
     public const string CursesFile = "curses.json";
+    public const string SummonsFile = "summons.json";
     public const string FlavorsFile = "flavors.json";
     public const string StartingKitFile = "starting_kit.json";
     public const string MonsterSpellsFile = "monster_spells.json";
@@ -95,6 +96,7 @@ public static class DataLoader
         var egos = new Merged<EgoItemDef>(e => e.Id);
         var artifacts = new Merged<ArtifactDef>(a => a.Id);
         var curses = new Merged<CurseDef>(c => c.Id);
+        var summons = new Merged<SummonDef>(s => s.Id);
         var flavors = new Merged<FlavorGroupDef>(f => f.Id);
         var chestTraps = new Merged<ChestTrapDef>(t => t.Id);
         var quests = new Merged<QuestDef>(q => q.Id);
@@ -127,6 +129,7 @@ public static class DataLoader
             egos.AddRange(Read<List<EgoItemDef>>(dir, EgosFile, errors));
             artifacts.AddRange(Read<List<ArtifactDef>>(dir, ArtifactsFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, CursesFile, errors));
+            summons.AddRange(Read<List<SummonDef>>(dir, SummonsFile, errors));
             flavors.AddRange(Read<List<FlavorGroupDef>>(dir, FlavorsFile, errors));
             chestTraps.AddRange(Read<List<ChestTrapDef>>(dir, ChestTrapsFile, errors));
             quests.AddRange(Read<List<QuestDef>>(dir, QuestsFile, errors));
@@ -155,6 +158,7 @@ public static class DataLoader
         var monsterDefs = monsters.Items.Select(m => ToMonster(m, colors, errors)).ToList();
         CheckCombatReferences(elements.Items, timedEffects.Items, blowMethods.Items, blowEffects.Items, monsterDefs, errors);
         CheckSpellReferences(monsterSpells.Items, monsterDefs, elements.Items, timedEffects.Items, errors);
+        CheckSummons(summons.Items, monsterSpells.Items, monsterBases.Items, monsterDefs, errors);
         CheckMagicReferences(realms.Items, classes.Items, spells.Items, objects.Items, objectBases.Items, timedEffects.Items, errors);
         var kindIds = objects.Items.Select(o => o.Id).ToHashSet();
         var baseIds = objectBases.Items.Select(b => b.Id).ToHashSet();
@@ -181,7 +185,7 @@ public static class DataLoader
                          .Where(s => !Angband.Core.Game.CharacterSpec.StatIds.Contains(s)))
                 errors.Add($"race or class uses unknown stat '{stat}' (use {string.Join(", ", Angband.Core.Game.CharacterSpec.StatIds)}).");
         CheckItemReferences(objectBases.Items, objects.Items, egos.Items, artifacts.Items, curses.Items, flavors.Items,
-            startingKit ?? [], elements.Items, timedEffects.Items, colors, trapDefs, errors);
+            startingKit ?? [], elements.Items, timedEffects.Items, colors, trapDefs, summons.Items, chestTraps.Items, errors);
 
         TerrainRegistry? registry = null;
         try
@@ -229,6 +233,7 @@ public static class DataLoader
             Egos = egos.Items,
             Artifacts = artifacts.Items,
             Curses = curses.Items,
+            Summons = summons.Items,
             Flavors = flavors.Items,
             ChestTraps = chestTraps.Items,
             Quests = quests.Items.OrderBy(q => q.Level).ToList(),
@@ -346,6 +351,7 @@ public static class DataLoader
             Name = m.Name,
             Plural = m.Plural,
             Glyph = ParseGlyph(m.Glyph, $"monster '{m.Id}'", errors),
+            Base = m.Base ?? "",
             Color = m.Color,
             Depth = m.Depth,
             Rarity = Math.Max(1, m.Rarity),
@@ -404,6 +410,29 @@ public static class DataLoader
                     errors.Add($"monster '{monster.Id}' uses unknown blow effect '{blow.Effect}'.");
             }
         }
+    }
+
+    /// <summary>
+    /// Summon kinds name real monster bases, flags and fallbacks, and every summoning spell names a
+    /// summon kind.
+    /// </summary>
+    private static void CheckSummons(IReadOnlyList<SummonDef> summons, IReadOnlyList<MonsterSpellDef> spells,
+        IReadOnlyList<MonsterBaseDef> bases, IReadOnlyList<MonsterRaceDef> monsters, List<string> errors)
+    {
+        var ids = summons.Select(s => s.Id).ToHashSet();
+        var baseIds = bases.Select(b => b.Id).ToHashSet();
+        var flags = monsters.SelectMany(m => m.Flags).ToHashSet();
+        foreach (var s in summons)
+        {
+            foreach (var b in s.Bases.Where(b => !baseIds.Contains(b))) errors.Add($"summon '{s.Id}' names unknown monster base '{b}'.");
+            if (s.RaceFlag is { } f && !flags.Contains(f)) errors.Add($"summon '{s.Id}' names a flag no monster has, '{f}'.");
+            if (s.Fallback is { } fb && !ids.Contains(fb)) errors.Add($"summon '{s.Id}' falls back on unknown summon '{fb}'.");
+        }
+        foreach (var sp in spells.Where(sp => sp.Kind == MonsterSpellKind.Summon))
+            if (sp.Summon is not { } t || !ids.Contains(t))
+                errors.Add($"monster spell '{sp.Id}' summons unknown kind '{sp.Summon}'.");
+        foreach (var m in monsters.Where(m => m.Base.Length > 0 && !baseIds.Contains(m.Base)))
+            errors.Add($"monster '{m.Id}' has unknown base '{m.Base}'.");
     }
 
     private static void CheckSpellReferences(IReadOnlyList<MonsterSpellDef> spells, IReadOnlyList<MonsterRaceDef> monsters,
@@ -472,8 +501,9 @@ public static class DataLoader
         IReadOnlyList<EgoItemDef> egos, IReadOnlyList<ArtifactDef> artifacts, IReadOnlyList<CurseDef> curses,
         IReadOnlyList<FlavorGroupDef> flavors, IReadOnlyList<StartItemDef> kit, IReadOnlyList<ElementDef> elements,
         IReadOnlyList<TimedEffectDef> timed, IReadOnlyDictionary<string, string> colors, IReadOnlyList<TrapDef> traps,
-        List<string> errors)
+        IReadOnlyList<SummonDef> summons, IReadOnlyList<ChestTrapDef> chestTraps, List<string> errors)
     {
+        var summonIds = summons.Select(s => s.Id).ToHashSet();
         var baseIds = bases.ToDictionary(b => b.Id);
         var kindIds = kinds.Select(k => k.Id).ToHashSet();
         var curseIds = curses.Select(c => c.Id).ToHashSet();
@@ -489,6 +519,8 @@ public static class DataLoader
                     errors.Add($"{owner}: unknown effect '{e.Name}'.");
                 else if (e.Name is "timed" or "cure" or "reduce" && !timedIds.Contains(e.Arg(0)))
                     errors.Add($"{owner}: unknown timed effect '{e.Arg(0)}'.");
+                else if (e.Name == "summon" && !summonIds.Contains(e.Arg(1)))
+                    errors.Add($"{owner}: unknown summon '{e.Arg(1)}'.");
             }
         }
         void CheckBrands(IEnumerable<BrandDef> brands, string owner)
@@ -532,9 +564,12 @@ public static class DataLoader
                     errors.Add($"{owner}: unknown trap effect '{e.Name}'.");
                 else if (e.Name is "timed" or "timed_nores" && !timedIds.Contains(e.Arg(0)))
                     errors.Add($"{owner}: unknown timed effect '{e.Arg(0)}'.");
+                else if (e.Name == "summon" && !summonIds.Contains(e.Arg(1)))
+                    errors.Add($"{owner}: unknown summon '{e.Arg(1)}'.");
             }
         }
         foreach (var c in curses) CheckTrapEffect(c.Effect, $"curse '{c.Id}'");
+        foreach (var t in chestTraps) CheckTrapEffect(t.Effect, $"chest trap '{t.Id}'");
         foreach (var t in traps) { CheckTrapEffect(t.Effect, $"trap '{t.Id}'"); CheckTrapEffect(t.Extra, $"trap '{t.Id}'"); }
         foreach (var s in kit.Where(s => !kindIds.Contains(s.Kind))) errors.Add($"starting kit names unknown object '{s.Kind}'.");
 
@@ -648,6 +683,7 @@ public static class DataLoader
         public required string Name { get; init; }
         public string? Plural { get; init; }
         public string? Glyph { get; init; }
+        public string? Base { get; init; }
         public string Color { get; init; } = "White";
         public int Depth { get; init; }
         public int Rarity { get; init; } = 1;

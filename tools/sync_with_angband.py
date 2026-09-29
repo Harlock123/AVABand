@@ -187,6 +187,12 @@ def sync_monster_spells(gd, data):
                 s.pop(old, None)
         elif kind == "TIMED_INC" and s.get("timed") and dice and "$" not in dice:
             s["duration"] = plain_dice(dice)
+        elif kind == "SUMMON":
+            # 4.2.5 effect_handler_SUMMON: the type (summons.json) and the most attempts.
+            for old in ("kin", "summonGlyphs", "summonFlag", "summonNoUniques", "summonUniquesOnly", "summonFallbackGlyphs"):
+                s.pop(old, None)
+            s["summon"] = arg
+            s["count"] = plain_dice(dice or "1")
         changed += json.dumps(s, sort_keys=True) != before
     write_json(path, ours, None)
     print(f"monster spells: {changed} of {len(ours)} brought into line")
@@ -675,8 +681,8 @@ TRAP_EFFECTS = {
     "pit": ("damage:2d6", None),
     "spiked pit": ("damage:2d6", "damage:2d6; timed:cut:4d6"),
     "poison pit": ("damage:2d6", "timed:cut:4d6; timed:poisoned:8d6"),
-    "rune of summon foe": ("summon:1:none:5", None),
-    "rune of summoning": ("summon:2+1d3", None),
+    "rune of summon foe": ("summon:1:MONSTER:5", None),
+    "rune of summoning": ("summon:2+1d3:ANY", None),
     "rune of necromancy": ("summon:1d3M2:UNDEAD", None),
     "rune of dragonsong": ("summon:1d3:DRAGON", None),
     "hellhole": ("summon:1+1d3:DEMON", None),
@@ -903,6 +909,26 @@ def sync_curses(gd, data):
     print(f"curses: {len(out)} written ({len([c for c in out if c['id'] not in ours])} new)")
 
 
+def sync_summons(gd, data):
+    """summon.txt, whole: the kinds of summons (which monsters answer, and what to fall back on)."""
+    path = os.path.join(data, "summons.json")
+    out = []
+    for e in cw.parse_records(os.path.join(gd, "summon.txt")):
+        s = {"id": e["name"], "sound": cw.one(e, "msgt") or "SUM_MONSTER", "uniques": cw.one(e, "uniques") == "1"}
+        bases = [cw.slug(b) for b in cw.get(e, "base")]
+        if bases:
+            s["bases"] = bases
+        if cw.one(e, "race-flag"):
+            s["raceFlag"] = cw.one(e, "race-flag")
+        if cw.one(e, "fallback"):
+            s["fallback"] = cw.one(e, "fallback")
+        s["description"] = cw.one(e, "desc") or ""
+        out.append(s)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("[\n" + ",\n".join("  " + json.dumps(x, ensure_ascii=False) for x in out) + "\n]\n")
+    print(f"summons: {len(out)} written")
+
+
 def sync_constants(gd, data):
     """The constants AVABand keeps in constants.json take 4.2.5's values (the rest live in code)."""
     path = os.path.join(data, "constants.json")
@@ -929,7 +955,7 @@ def sync_constants(gd, data):
 SECTIONS = {"monsters": sync_monsters, "monster_spells": sync_monster_spells, "blow_effects": sync_blow_effects,
             "objects": sync_objects, "egos": sync_egos, "artifacts": sync_artifacts, "classes": sync_classes,
             "races": sync_races, "shapes": sync_shapes, "traps": sync_traps, "terrain": sync_terrain,
-            "curses": sync_curses, "constants": sync_constants}
+            "curses": sync_curses, "constants": sync_constants, "summons": sync_summons}
 
 
 def main():

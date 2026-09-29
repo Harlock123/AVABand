@@ -23,6 +23,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 - [Stores](#stores) — `stores.json` vs `store.txt`
 - [Curses](#curses) — `curses.json` vs `curse.txt`
 - [Constants](#constants) — `constants.json and C# constants` vs `constants.txt`
+- [Summons](#summons) — `summons.json` vs `summon.txt`
 - [Summary](#summary)
 
 <a id="monsters"></a>
@@ -61,7 +62,7 @@ Each difference is shown as **field: ours → 4.2.5**. For set-valued fields (fl
 
 - AVABand scales spell damage on the monster's *depth* (damage + depth/levelDivisor + depth×levelPercent/100); 4.2.5 on its *spell power* (usually = depth). Average damage is compared at powers 10/30/50/70/90 with both formulas and reported when they differ by more than max(1, 3%).
 - Breaths are compared through projection.txt's divisor and damage cap (ours defaults: 3 and 1600). Player-status durations are compared only when 4.2.5's dice have no `$` expression.
-- Not compared: `hit` chance, `power-cutoff` message tiers, messages, lore, WOUND (`powerScaled`), damage of spells with several damaging effects (STORM...), LASH element (it comes from the caster's blows), summons (4.2.5's dice is a cap on attempts under a depth × level budget; AVABand's `count` is a plain number — different models), MON_TIMED_INC (HASTE, SHAPECHANGE), teleport distances.
+- Not compared: `hit` chance, `power-cutoff` message tiers, messages, lore, WOUND (`powerScaled`), damage of spells with several damaging effects (STORM...), LASH element (it comes from the caster's blows), MON_TIMED_INC (HASTE, SHAPECHANGE), teleport distances.
 
 <a id="blow-effects"></a>
 ## Blow effects: `blow_effects.json` vs `blow_effects.txt`
@@ -246,9 +247,18 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 
 - Each 4.2.5 constant is compared with where AVABand keeps it: constants.json, an object kind, or a named C# constant read from the source (critical hits: Combat/CriticalTables.cs). `world:max-depth` counts levels; AVABand's `maxDepth` is the deepest level (one less).
 
+<a id="summons"></a>
+## Summons: `summons.json` vs `summon.txt`
+
+17 entries matched; 0 with differences (0 field differences); 0 only in 4.2.5; 0 only in ours.
+
+### Notes: normalisation and fields not compared
+
+- Every field of summon.txt is compared. Monster spells are checked to summon the kind their `effect:SUMMON:<kind>` names, with 4.2.5's dice as the most attempts.
+
 ## Not compared at all
 
-- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, summon.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
+- 4.2.5 files with no comparison here: vault.txt and room_template.txt (imported by angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, slay.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, ui_*.txt, blow_methods.txt (methods are only checked for existence).
 - Descriptions and messages everywhere.
 
 <a id="summary"></a>
@@ -272,5 +282,6 @@ phial (light: Phial~) [INSTA_ART special kind: 4.2.5 makes these from artifact.t
 | Stores | 8 | 0 | 0 | 0 | 0 | 0 |
 | Curses | 27 | 0 | 0 | 0 | 0 | 0 |
 | Constants | 75 | 0 | 0 | 0 | 0 | 14 |
-| **Total** | **1799** | **0** | **0** | **0** | **14** | **53** |
+| Summons | 17 | 0 | 0 | 0 | 0 | 0 |
+| **Total** | **1816** | **0** | **0** | **0** | **14** | **53** |
 

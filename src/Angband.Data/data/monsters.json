@@ -25,7 +25,8 @@
    "RAND_25"
   ],
   "description": "A thin flea-ridden mutt, growling as you get close.",
-  "smell": 50
+  "smell": 50,
+  "base": "canine"
  },
  {
   "id": "village_idiot",
@@ -55,7 +56,8 @@
    "TAKE_ITEM"
   ],
   "description": "Drooling and comical, but then, what do you expect?",
-  "smell": 0
+  "smell": 0,
+  "base": "townsfolk"
  },
  {
   "id": "grey_mold",
@@ -93,7 +95,8 @@
    "STUPID"
   ],
   "description": "A small strange grey growth.",
-  "smell": 0
+  "smell": 0,
+  "base": "mold"
  },
  {
   "id": "jackal",
@@ -128,7 +131,8 @@
    }
   ],
   "description": "It is a yapping snarling dog, dangerous when in a pack.",
-  "smell": 50
+  "smell": 50,
+  "base": "canine"
  },
  {
   "id": "rock_lizard",
@@ -156,7 +160,8 @@
    "CLEAR_WEB"
   ],
   "description": "It is a small lizard with a hardened hide.",
-  "smell": 20
+  "smell": 20,
+  "base": "reptile"
  },
  {
   "id": "soldier_ant",
@@ -184,7 +189,8 @@
    "BASH_DOOR"
   ],
   "description": "A large ant with powerful mandibles.",
-  "smell": 20
+  "smell": 20,
+  "base": "ant"
  },
  {
   "id": "floating_eye",
@@ -213,7 +219,8 @@
    "NO_FEAR"
   ],
   "description": "A disembodied eye, floating a few feet above the ground.",
-  "smell": 0
+  "smell": 0,
+  "base": "eye"
  },
  {
   "id": "small_kobold",
@@ -245,7 +252,8 @@
    "DROP_60"
   ],
   "description": "It is a squat and ugly humanoid figure with a canine face.",
-  "smell": 20
+  "smell": 20,
+  "base": "kobold"
  },
  {
   "id": "white_worm_mass",
@@ -279,7 +287,8 @@
    "NO_FEAR"
   ],
   "description": "It is a large slimy mass of worms.",
-  "smell": 0
+  "smell": 0,
+  "base": "worm"
  },
  {
   "id": "fang",
@@ -312,7 +321,8 @@
    "NO_SLEEP"
   ],
   "description": "A rather vicious dog belonging to Farmer Maggot. It thinks you are stealing mushrooms.",
-  "smell": 50
+  "smell": 50,
+  "base": "canine"
  },
  {
   "id": "grip",
@@ -345,7 +355,8 @@
    "NO_SLEEP"
   ],
   "description": "A rather vicious dog belonging to Farmer Maggot. It thinks you are stealing mushrooms.",
-  "smell": 50
+  "smell": 50,
+  "base": "canine"
  },
  {
   "id": "kobold",
@@ -377,7 +388,8 @@
    "DROP_60"
   ],
   "description": "It is a small, dog-headed humanoid.",
-  "smell": 20
+  "smell": 20,
+  "base": "kobold"
  },
  {
   "id": "cave_spider",
@@ -414,7 +426,8 @@
    }
   ],
   "description": "It is a black spider that moves in fits and starts.",
-  "smell": 0
+  "smell": 0,
+  "base": "spider"
  },
  {
   "id": "green_naga",
@@ -454,7 +467,8 @@
    "IM_ACID"
   ],
   "description": "A large green serpent with a female's torso. Her green skin glistens with acid.",
-  "smell": 0
+  "smell": 0,
+  "base": "naga"
  },
  {
   "id": "cave_orc",
@@ -504,7 +518,8 @@
   "spells": [
    "ARROW"
   ],
-  "innateFrequency": 13
+  "innateFrequency": 13,
+  "base": "orc"
  },
  {
   "id": "snaga",
@@ -554,7 +569,8 @@
   "spells": [
    "ARROW"
   ],
-  "innateFrequency": 15
+  "innateFrequency": 15,
+  "base": "orc"
  },
  {
   "id": "bullroarer",
@@ -600,7 +616,8 @@
    }
   ],
   "description": "He is a sturdy hobbit who is renowned for his unusual strength and vigour. He can prove a troublesome opponent.",
-  "smell": 0
+  "smell": 0,
+  "base": "humanoid"
  },
  {
   "id": "wolf",
@@ -638,7 +655,8 @@
   ],
   "description": "It howls and snaps at you.",
   "smell": 50,
-  "plural": "wolves"
+  "plural": "wolves",
+  "base": "canine"
  },
  {
   "id": "ghoul",
@@ -699,7 +717,8 @@
    "HOLD",
    "SCARE"
   ],
-  "spellFrequency": 9
+  "spellFrequency": 9,
+  "base": "zombie"
  },
  {
   "id": "fire_giant",
@@ -753,7 +772,8 @@
   "spells": [
    "BOULDER"
   ],
-  "innateFrequency": 8
+  "innateFrequency": 8,
+  "base": "giant"
  },
  {
   "id": "kobold_archer",
@@ -803,7 +823,8 @@
     "glyph": "k"
    }
   ],
-  "description": "It is an ugly dog-headed humanoid wielding a bow."
+  "description": "It is an ugly dog-headed humanoid wielding a bow.",
+  "base": "kobold"
  },
  {
   "id": "kobold_shaman",
@@ -856,7 +877,8 @@
     "glyph": "k"
    }
   ],
-  "description": "It is a kobold dressed in skins and gesturing wildly."
+  "description": "It is a kobold dressed in skins and gesturing wildly.",
+  "base": "kobold"
  },
  {
   "id": "hill_orc",
@@ -915,7 +937,8 @@
   "spells": [
    "ARROW"
   ],
-  "innateFrequency": 10
+  "innateFrequency": 10,
+  "base": "orc"
  },
  {
   "id": "baby_blue_dragon",
@@ -965,7 +988,8 @@
    "IM_ELEC"
   ],
   "description": "This hatchling dragon is still soft, its eyes unaccustomed to light and its scales a pale blue.",
-  "smell": 0
+  "smell": 0,
+  "base": "dragon"
  },
  {
   "id": "orfax",
@@ -1046,7 +1070,8 @@
    }
   ],
   "description": "He's just like his daddy! He knows mighty spells, but fortunately he is a yeek.",
-  "smell": 20
+  "smell": 20,
+  "base": "yeek"
  },
  {
   "id": "wormtongue",
@@ -1108,7 +1133,8 @@
    "FORCE_SLEEP"
   ],
   "description": "He's been spying for Saruman. He is a snivelling wretch with no morals and disgusting habits.",
-  "smell": 0
+  "smell": 0,
+  "base": "person"
  },
  {
   "id": "filthy_street_urchin",
@@ -1161,7 +1187,8 @@
     "race": "same"
    }
   ],
-  "description": "He looks squalid and thoroughly revolting."
+  "description": "He looks squalid and thoroughly revolting.",
+  "base": "townsfolk"
  },
  {
   "id": "scrawny_cat",
@@ -1189,7 +1216,8 @@
    "CLEAR_WEB",
    "RAND_25"
   ],
-  "description": "A skinny little furball with sharp claws and a menacing look."
+  "description": "A skinny little furball with sharp claws and a menacing look.",
+  "base": "feline"
  },
  {
   "id": "farmer_maggot",
@@ -1230,7 +1258,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "He's lost his dogs. He's had his mushrooms stolen. He's not a happy hobbit!"
+  "description": "He's lost his dogs. He's had his mushrooms stolen. He's not a happy hobbit!",
+  "base": "humanoid"
  },
  {
   "id": "blubbering_idiot",
@@ -1260,7 +1289,8 @@
    "RAND_25",
    "TAKE_ITEM"
   ],
-  "description": "He tends to blubber a lot."
+  "description": "He tends to blubber a lot.",
+  "base": "townsfolk"
  },
  {
   "id": "boil_covered_wretch",
@@ -1293,7 +1323,8 @@
    "TAKE_ITEM"
   ],
   "description": "Ugly doesn't begin to describe him.",
-  "plural": "boil-covered wretches"
+  "plural": "boil-covered wretches",
+  "base": "townsfolk"
  },
  {
   "id": "pitiful_looking_beggar",
@@ -1324,7 +1355,8 @@
    "OPEN_DOOR",
    "TAKE_ITEM"
   ],
-  "description": "You just can't help feeling sorry for him."
+  "description": "You just can't help feeling sorry for him.",
+  "base": "townsfolk"
  },
  {
   "id": "mangy_looking_leper",
@@ -1355,7 +1387,8 @@
    "OPEN_DOOR",
    "TAKE_ITEM"
   ],
-  "description": "You feel it isn't safe to touch him."
+  "description": "You feel it isn't safe to touch him.",
+  "base": "townsfolk"
  },
  {
   "id": "squint_eyed_rogue",
@@ -1397,7 +1430,8 @@
    "BASH_DOOR",
    "TAKE_ITEM"
   ],
-  "description": "A hardy, street-wise crook that knows an easy catch when it sees one."
+  "description": "A hardy, street-wise crook that knows an easy catch when it sees one.",
+  "base": "townsfolk"
  },
  {
   "id": "singing_happy_drunk",
@@ -1431,7 +1465,8 @@
    "BASH_DOOR",
    "TAKE_ITEM"
   ],
-  "description": "He makes you glad to be sober."
+  "description": "He makes you glad to be sober.",
+  "base": "townsfolk"
  },
  {
   "id": "aimless_looking_merchant",
@@ -1472,7 +1507,8 @@
     "race": "filthy_street_urchin"
    }
   ],
-  "description": "The typical ponce around town, with purse jingling, and looking for more amulets of adornment to buy."
+  "description": "The typical ponce around town, with purse jingling, and looking for more amulets of adornment to buy.",
+  "base": "townsfolk"
  },
  {
   "id": "mean_looking_mercenary",
@@ -1507,7 +1543,8 @@
    "TAKE_ITEM"
   ],
   "description": "No job is too low for him.",
-  "plural": "mean-looking mercenaries"
+  "plural": "mean-looking mercenaries",
+  "base": "townsfolk"
  },
  {
   "id": "battle_scarred_veteran",
@@ -1540,7 +1577,8 @@
    "BASH_DOOR",
    "TAKE_ITEM"
   ],
-  "description": "He doesn't take to strangers kindly."
+  "description": "He doesn't take to strangers kindly.",
+  "base": "townsfolk"
  },
  {
   "id": "red_hatted_elf",
@@ -1578,7 +1616,8 @@
    }
   ],
   "description": "It's Yuletide and this elf has had a few too many.",
-  "plural": "red-hatted elves"
+  "plural": "red-hatted elves",
+  "base": "humanoid"
  },
  {
   "id": "father_christmas",
@@ -1613,7 +1652,8 @@
   "spells": [
    "BLINK",
    "HEAL"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "grey_mushroom_patch",
@@ -1647,7 +1687,8 @@
    "NEVER_MOVE"
   ],
   "description": "Yum! It looks quite tasty.",
-  "plural": "grey mushroom patches"
+  "plural": "grey mushroom patches",
+  "base": "mushroom"
  },
  {
   "id": "giant_yellow_centipede",
@@ -1679,7 +1720,8 @@
    "ANIMAL",
    "WEIRD_MIND"
   ],
-  "description": "It is about four feet long and carnivorous."
+  "description": "It is about four feet long and carnivorous.",
+  "base": "centipede"
  },
  {
   "id": "giant_white_centipede",
@@ -1713,7 +1755,8 @@
    "RAND_50",
    "BASH_DOOR"
   ],
-  "description": "It is about four feet long and carnivorous."
+  "description": "It is about four feet long and carnivorous.",
+  "base": "centipede"
  },
  {
   "id": "white_icky_thing",
@@ -1741,7 +1784,8 @@
    "EMPTY_MIND",
    "RAND_25"
   ],
-  "description": "It is a smallish, slimy, icky creature."
+  "description": "It is a smallish, slimy, icky creature.",
+  "base": "icky_thing"
  },
  {
   "id": "clear_icky_thing",
@@ -1771,7 +1815,8 @@
    "RAND_25",
    "ATTR_CLEAR"
   ],
-  "description": "It is a smallish, slimy, icky, blobby creature."
+  "description": "It is a smallish, slimy, icky, blobby creature.",
+  "base": "icky_thing"
  },
  {
   "id": "giant_white_mouse",
@@ -1801,7 +1846,8 @@
    "RAND_50"
   ],
   "description": "It is about three feet long with large teeth.",
-  "plural": "giant white mice"
+  "plural": "giant white mice",
+  "base": "rodent"
  },
  {
   "id": "large_white_snake",
@@ -1836,7 +1882,8 @@
    "CLEAR_WEB",
    "RAND_50"
   ],
-  "description": "It is about eight feet long."
+  "description": "It is about eight feet long.",
+  "base": "snake"
  },
  {
   "id": "fruit_bat",
@@ -1863,7 +1910,8 @@
    "ANIMAL",
    "RAND_25"
   ],
-  "description": "A fast-moving pest."
+  "description": "A fast-moving pest.",
+  "base": "bat"
  },
  {
   "id": "shrieker_mushroom_patch",
@@ -1897,7 +1945,8 @@
   "innateFrequency": 4,
   "spells": [
    "SHRIEK"
-  ]
+  ],
+  "base": "mushroom"
  },
  {
   "id": "blubbering_icky_thing",
@@ -1932,7 +1981,8 @@
    "TAKE_ITEM",
    "IM_POIS"
   ],
-  "description": "It is a smallish, slimy, icky, hungry creature."
+  "description": "It is a smallish, slimy, icky, hungry creature.",
+  "base": "icky_thing"
  },
  {
   "id": "metallic_green_centipede",
@@ -1966,7 +2016,8 @@
    "RAND_50",
    "BASH_DOOR"
   ],
-  "description": "It is about four feet long and carnivorous."
+  "description": "It is about four feet long and carnivorous.",
+  "base": "centipede"
  },
  {
   "id": "soldier",
@@ -2027,7 +2078,8 @@
     "race": "same"
    }
   ],
-  "description": "An inexperienced but tough warrior."
+  "description": "An inexperienced but tough warrior.",
+  "base": "person"
  },
  {
   "id": "cutpurse",
@@ -2090,7 +2142,8 @@
     "race": "same"
    }
   ],
-  "description": "A rather shifty individual."
+  "description": "A rather shifty individual.",
+  "base": "person"
  },
  {
   "id": "acolyte",
@@ -2152,7 +2205,8 @@
   "spells": [
    "HEAL",
    "SCARE"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "apprentice",
@@ -2216,7 +2270,8 @@
    "BLINK",
    "CONF",
    "MISSILE"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "yellow_mushroom_patch",
@@ -2250,7 +2305,8 @@
    "IM_POIS"
   ],
   "description": "Yum! It looks quite tasty.",
-  "plural": "yellow mushroom patches"
+  "plural": "yellow mushroom patches",
+  "base": "mushroom"
  },
  {
   "id": "white_jelly",
@@ -2286,7 +2342,8 @@
    "NO_SLEEP"
   ],
   "description": "It's a large pile of white flesh.",
-  "plural": "white jellies"
+  "plural": "white jellies",
+  "base": "jelly"
  },
  {
   "id": "giant_green_frog",
@@ -2316,7 +2373,8 @@
    "RAND_25",
    "BASH_DOOR"
   ],
-  "description": "It is as big as a wolf."
+  "description": "It is as big as a wolf.",
+  "base": "reptile"
  },
  {
   "id": "giant_black_ant",
@@ -2345,7 +2403,8 @@
    "BASH_DOOR",
    "RAND_25"
   ],
-  "description": "It is about three feet long."
+  "description": "It is about three feet long.",
+  "base": "ant"
  },
  {
   "id": "salamander",
@@ -2375,7 +2434,8 @@
    "RAND_25",
    "IM_FIRE"
   ],
-  "description": "A small black and orange lizard."
+  "description": "A small black and orange lizard.",
+  "base": "reptile"
  },
  {
   "id": "white_harpy",
@@ -2416,7 +2476,8 @@
    "RAND_50"
   ],
   "description": "A flying, screeching bird with a woman's face.",
-  "plural": "white harpies"
+  "plural": "white harpies",
+  "base": "hybrid"
  },
  {
   "id": "blue_yeek",
@@ -2448,7 +2509,8 @@
    "IM_ACID",
    "DROP_60"
   ],
-  "description": "A small humanoid figure."
+  "description": "A small humanoid figure.",
+  "base": "yeek"
  },
  {
   "id": "green_worm_mass",
@@ -2482,7 +2544,8 @@
    "IM_ACID",
    "NO_FEAR"
   ],
-  "description": "It is a large slimy mass of worms."
+  "description": "It is a large slimy mass of worms.",
+  "base": "worm"
  },
  {
   "id": "wild_cat",
@@ -2515,7 +2578,8 @@
    "CLEAR_WEB",
    "BASH_DOOR"
   ],
-  "description": "A larger than normal feline, hissing loudly. Its velvet paws conceal a fistful of needles."
+  "description": "A larger than normal feline, hissing loudly. Its velvet paws conceal a fistful of needles.",
+  "base": "feline"
  },
  {
   "id": "crow",
@@ -2547,7 +2611,8 @@
    "ANIMAL",
    "CLEAR_WEB"
   ],
-  "description": "It is a hooded crow, gray except for the black wings and head."
+  "description": "It is a hooded crow, gray except for the black wings and head.",
+  "base": "bird"
  },
  {
   "id": "smeagol",
@@ -2587,7 +2652,8 @@
    "TAKE_ITEM",
    "HURT_LIGHT"
   ],
-  "description": "Usually known as Gollum. He's been sneaking, and he wants his 'precious.'"
+  "description": "Usually known as Gollum. He's been sneaking, and he wants his 'precious.'",
+  "base": "humanoid"
  },
  {
   "id": "green_ooze",
@@ -2624,7 +2690,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "It's green and it's oozing."
+  "description": "It's green and it's oozing.",
+  "base": "jelly"
  },
  {
   "id": "poltergeist",
@@ -2671,7 +2738,8 @@
   "spellFrequency": 15,
   "spells": [
    "BLINK"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "metallic_blue_centipede",
@@ -2705,7 +2773,8 @@
    "RAND_50",
    "BASH_DOOR"
   ],
-  "description": "It is about four feet long and carnivorous."
+  "description": "It is about four feet long and carnivorous.",
+  "base": "centipede"
  },
  {
   "id": "giant_white_louse",
@@ -2736,7 +2805,8 @@
    "RAND_25"
   ],
   "description": "It is six inches long.",
-  "plural": "giant white lice"
+  "plural": "giant white lice",
+  "base": "insect"
  },
  {
   "id": "black_naga",
@@ -2769,7 +2839,8 @@
    "DROP_60",
    "RAND_25"
   ],
-  "description": "A large black serpent's body with a female torso."
+  "description": "A large black serpent's body with a female torso.",
+  "base": "naga"
  },
  {
   "id": "spotted_mushroom_patch",
@@ -2803,7 +2874,8 @@
    "IM_POIS"
   ],
   "description": "Yum! It looks quite tasty.",
-  "plural": "spotted mushroom patches"
+  "plural": "spotted mushroom patches",
+  "base": "mushroom"
  },
  {
   "id": "silver_jelly",
@@ -2847,7 +2919,8 @@
   "spellFrequency": 15,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "jelly"
  },
  {
   "id": "yellow_jelly",
@@ -2887,7 +2960,8 @@
   "spellFrequency": 15,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "jelly"
  },
  {
   "id": "scruffy_looking_hobbit",
@@ -2925,7 +2999,8 @@
    "DROP_60",
    "TAKE_ITEM"
   ],
-  "description": "A short little guy, in bedraggled clothes. He appears to be looking for a good tavern."
+  "description": "A short little guy, in bedraggled clothes. He appears to be looking for a good tavern.",
+  "base": "humanoid"
  },
  {
   "id": "giant_white_ant",
@@ -2960,7 +3035,8 @@
     "race": "same"
    }
   ],
-  "description": "It is about two feet long and has sharp pincers."
+  "description": "It is about two feet long and has sharp pincers.",
+  "base": "ant"
  },
  {
   "id": "yellow_mold",
@@ -2993,7 +3069,8 @@
    "EMPTY_MIND",
    "STUPID"
   ],
-  "description": "It is a strange yellow growth on the dungeon floor."
+  "description": "It is a strange yellow growth on the dungeon floor.",
+  "base": "mold"
  },
  {
   "id": "metallic_red_centipede",
@@ -3027,7 +3104,8 @@
    "RAND_25",
    "BASH_DOOR"
   ],
-  "description": "It is about four feet long and carnivorous."
+  "description": "It is about four feet long and carnivorous.",
+  "base": "centipede"
  },
  {
   "id": "yellow_worm_mass",
@@ -3060,7 +3138,8 @@
    "HURT_LIGHT",
    "NO_FEAR"
   ],
-  "description": "It is a large slimy mass of worms."
+  "description": "It is a large slimy mass of worms.",
+  "base": "worm"
  },
  {
   "id": "clear_worm_mass",
@@ -3096,7 +3175,8 @@
    "NO_FEAR",
    "ATTR_CLEAR"
   ],
-  "description": "It is a disgusting mass of poisonous worms."
+  "description": "It is a disgusting mass of poisonous worms.",
+  "base": "worm"
  },
  {
   "id": "radiation_eye",
@@ -3129,7 +3209,8 @@
   "spellFrequency": 11,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "cave_lizard",
@@ -3157,7 +3238,8 @@
    "HURT_COLD",
    "CLEAR_WEB"
   ],
-  "description": "It is an armoured lizard with a powerful bite."
+  "description": "It is an armoured lizard with a powerful bite.",
+  "base": "reptile"
  },
  {
   "id": "scout",
@@ -3225,7 +3307,8 @@
   "spells": [
    "HASTE",
    "ARROW"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "gallant",
@@ -3291,7 +3374,8 @@
   "spellFrequency": 9,
   "spells": [
    "HEAL"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "tamer",
@@ -3357,7 +3441,8 @@
    "HASTE",
    "SLOW",
    "CONF"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "blue_jelly",
@@ -3393,7 +3478,8 @@
    "NO_SLEEP"
   ],
   "description": "It's a large pile of pulsing blue flesh.",
-  "plural": "blue jellies"
+  "plural": "blue jellies",
+  "base": "jelly"
  },
  {
   "id": "creeping_copper_coins",
@@ -3439,7 +3525,8 @@
   "plural": "piles of creeping copper coins",
   "mimics": [
    "copper"
-  ]
+  ],
+  "base": "creeping_coins"
  },
  {
   "id": "giant_white_rat",
@@ -3468,7 +3555,8 @@
    "MULTIPLY",
    "RAND_25"
   ],
-  "description": "It is a very vicious rodent."
+  "description": "It is a very vicious rodent.",
+  "base": "rodent"
  },
  {
   "id": "blue_worm_mass",
@@ -3503,7 +3591,8 @@
    "IM_COLD",
    "NO_FEAR"
   ],
-  "description": "It is a large slimy mass of worms."
+  "description": "It is a large slimy mass of worms.",
+  "base": "worm"
  },
  {
   "id": "large_grey_snake",
@@ -3538,7 +3627,8 @@
    "CLEAR_WEB",
    "RAND_25"
   ],
-  "description": "It is about ten feet long."
+  "description": "It is about ten feet long.",
+  "base": "snake"
  },
  {
   "id": "silver_mouse",
@@ -3568,7 +3658,8 @@
    "RAND_50"
   ],
   "description": "It is about three feet long with large teeth. As the light of your lamp falls on it, it seems to grow stronger.",
-  "plural": "silver mice"
+  "plural": "silver mice",
+  "base": "rodent"
  },
  {
   "id": "blue_ooze",
@@ -3603,7 +3694,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "It's blue and it's oozing."
+  "description": "It's blue and it's oozing.",
+  "base": "jelly"
  },
  {
   "id": "green_glutton_ghost",
@@ -3643,7 +3735,8 @@
    "RAND_25",
    "RAND_50"
   ],
-  "description": "It is a very ugly green ghost with a voracious appetite."
+  "description": "It is a very ugly green ghost with a voracious appetite.",
+  "base": "ghost"
  },
  {
   "id": "green_jelly",
@@ -3679,7 +3772,8 @@
    "NO_SLEEP"
   ],
   "description": "It is a large pile of pulsing green flesh.",
-  "plural": "green jellies"
+  "plural": "green jellies",
+  "base": "jelly"
  },
  {
   "id": "large_kobold",
@@ -3725,7 +3819,8 @@
     "glyph": "k"
    }
   ],
-  "description": "It is a man-sized figure with the all too recognizable face of a kobold."
+  "description": "It is a man-sized figure with the all too recognizable face of a kobold.",
+  "base": "kobold"
  },
  {
   "id": "skeleton_kobold",
@@ -3763,7 +3858,8 @@
    "OPEN_DOOR",
    "BASH_DOOR"
   ],
-  "description": "It is a small animated kobold skeleton."
+  "description": "It is a small animated kobold skeleton.",
+  "base": "skeleton"
  },
  {
   "id": "grey_icky_thing",
@@ -3790,7 +3886,8 @@
    "RAND_50",
    "EMPTY_MIND"
   ],
-  "description": "It is a smallish, slimy, icky, nasty creature."
+  "description": "It is a smallish, slimy, icky, nasty creature.",
+  "base": "icky_thing"
  },
  {
   "id": "disenchanter_eye",
@@ -3825,7 +3922,8 @@
   "spellFrequency": 9,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "red_worm_mass",
@@ -3860,7 +3958,8 @@
    "IM_FIRE",
    "NO_FEAR"
   ],
-  "description": "It is a large slimy mass of worms."
+  "description": "It is a large slimy mass of worms.",
+  "base": "worm"
  },
  {
   "id": "copperhead_snake",
@@ -3891,7 +3990,8 @@
    "RAND_50",
    "IM_POIS"
   ],
-  "description": "It has a copper head and sharp venomous fangs."
+  "description": "It has a copper head and sharp venomous fangs.",
+  "base": "snake"
  },
  {
   "id": "giant_white_dragon_fly",
@@ -3927,7 +4027,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_COLD"
-  ]
+  ],
+  "base": "dragon_fly"
  },
  {
   "id": "giant_green_dragon_fly",
@@ -3964,7 +4065,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon_fly"
  },
  {
   "id": "rot_jelly",
@@ -4005,7 +4107,8 @@
    "NO_SLEEP"
   ],
   "description": "It is a large pile of rotting flesh, whose touch spoils your food. The terrible smell it exudes is also very hard to get rid of...",
-  "plural": "rot jellies"
+  "plural": "rot jellies",
+  "base": "jelly"
  },
  {
   "id": "purple_mushroom_patch",
@@ -4048,7 +4151,8 @@
    "NEVER_MOVE"
   ],
   "description": "Yum! It looks quite tasty.",
-  "plural": "purple mushroom patches"
+  "plural": "purple mushroom patches",
+  "base": "mushroom"
  },
  {
   "id": "brown_mold",
@@ -4081,7 +4185,8 @@
    "EMPTY_MIND",
    "STUPID"
   ],
-  "description": "A strange brown growth on the dungeon floor."
+  "description": "A strange brown growth on the dungeon floor.",
+  "base": "mold"
  },
  {
   "id": "giant_brown_bat",
@@ -4108,7 +4213,8 @@
    "ANIMAL",
    "RAND_50"
   ],
-  "description": "It screeches as it attacks."
+  "description": "It screeches as it attacks.",
+  "base": "bat"
  },
  {
   "id": "creeping_silver_coins",
@@ -4154,7 +4260,8 @@
   "plural": "piles of creeping silver coins",
   "mimics": [
    "silver"
-  ]
+  ],
+  "base": "creeping_coins"
  },
  {
   "id": "rattlesnake",
@@ -4185,7 +4292,8 @@
    "RAND_50",
    "IM_POIS"
   ],
-  "description": "It is recognized by the hard-scaled end of its body that is often rattled to frighten its prey."
+  "description": "It is recognized by the hard-scaled end of its body that is often rattled to frighten its prey.",
+  "base": "snake"
  },
  {
   "id": "giant_black_dragon_fly",
@@ -4217,7 +4325,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_ACID"
-  ]
+  ],
+  "base": "dragon_fly"
  },
  {
   "id": "giant_gold_dragon_fly",
@@ -4255,7 +4364,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon_fly"
  },
  {
   "id": "crow_of_durthang",
@@ -4293,7 +4403,8 @@
   "spellFrequency": 9,
   "spells": [
    "WOUND"
-  ]
+  ],
+  "base": "bird"
  },
  {
   "id": "wood_spider",
@@ -4336,7 +4447,8 @@
     "race": "same"
    }
   ],
-  "description": "It scuttles towards you."
+  "description": "It scuttles towards you.",
+  "base": "spider"
  },
  {
   "id": "bloodshot_eye",
@@ -4369,7 +4481,8 @@
   "spellFrequency": 7,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "red_naga",
@@ -4408,7 +4521,8 @@
    "RAND_25",
    "TAKE_ITEM"
   ],
-  "description": "A large red snake with a woman's torso."
+  "description": "A large red snake with a woman's torso.",
+  "base": "naga"
  },
  {
   "id": "red_jelly",
@@ -4443,7 +4557,8 @@
    "NO_SLEEP"
   ],
   "description": "It is a large pulsating mound of red flesh.",
-  "plural": "red jellies"
+  "plural": "red jellies",
+  "base": "jelly"
  },
  {
   "id": "giant_red_frog",
@@ -4473,7 +4588,8 @@
    "RAND_50",
    "BASH_DOOR"
   ],
-  "description": "It looks poisonous."
+  "description": "It looks poisonous.",
+  "base": "reptile"
  },
  {
   "id": "green_icky_thing",
@@ -4501,7 +4617,8 @@
    "EMPTY_MIND",
    "IM_ACID"
   ],
-  "description": "It is a smallish, slimy, icky, acidic creature."
+  "description": "It is a smallish, slimy, icky, acidic creature.",
+  "base": "icky_thing"
  },
  {
   "id": "zombified_kobold",
@@ -4545,7 +4662,8 @@
    "EMPTY_MIND",
    "NO_FEAR"
   ],
-  "description": "It is an animated kobold corpse. Flesh falls off in large chunks as it shambles forward."
+  "description": "It is an animated kobold corpse. Flesh falls off in large chunks as it shambles forward.",
+  "base": "zombie"
  },
  {
   "id": "lost_soul",
@@ -4596,7 +4714,8 @@
   "spells": [
    "DRAIN_MANA",
    "TPORT"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "eastern_dwarf",
@@ -4640,7 +4759,8 @@
   "spells": [
    "CONF",
    "DARKNESS"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "night_lizard",
@@ -4673,7 +4793,8 @@
    "HURT_COLD",
    "CLEAR_WEB"
   ],
-  "description": "It is a black lizard with overlapping scales and a powerful jaw."
+  "description": "It is a black lizard with overlapping scales and a powerful jaw.",
+  "base": "reptile"
  },
  {
   "id": "mughash_the_kobold_lord",
@@ -4748,7 +4869,8 @@
     "role": "bodyguard"
    }
   ],
-  "description": "Strong and powerful, for a kobold."
+  "description": "Strong and powerful, for a kobold.",
+  "base": "kobold"
  },
  {
   "id": "lagduf_the_snaga",
@@ -4812,7 +4934,8 @@
     "race": "snaga"
    }
   ],
-  "description": "A captain of a regiment of weaker orcs, Lagduf keeps his troop in order with displays of excessive violence."
+  "description": "A captain of a regiment of weaker orcs, Lagduf keeps his troop in order with displays of excessive violence.",
+  "base": "orc"
  },
  {
   "id": "terrified_yeek",
@@ -4844,7 +4967,8 @@
   "innateFrequency": 9,
   "spells": [
    "SHRIEK"
-  ]
+  ],
+  "base": "yeek"
  },
  {
   "id": "giant_salamander",
@@ -4879,7 +5003,8 @@
   "innateFrequency": 9,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "reptile"
  },
  {
   "id": "green_mold",
@@ -4913,7 +5038,8 @@
    "STUPID",
    "IM_ACID"
   ],
-  "description": "It is a strange growth on the dungeon floor."
+  "description": "It is a strange growth on the dungeon floor.",
+  "base": "mold"
  },
  {
   "id": "skeleton_orc",
@@ -4952,7 +5078,8 @@
    "OPEN_DOOR",
    "BASH_DOOR"
   ],
-  "description": "It is an animated orc skeleton."
+  "description": "It is an animated orc skeleton.",
+  "base": "skeleton"
  },
  {
   "id": "lemure",
@@ -4992,7 +5119,8 @@
     "race": "same"
    }
   ],
-  "description": "It is a minor but aggressive demon."
+  "description": "It is a minor but aggressive demon.",
+  "base": "minor_demon"
  },
  {
   "id": "orc_tracker",
@@ -5030,7 +5158,8 @@
   "innateFrequency": 12,
   "spells": [
    "ARROW"
-  ]
+  ],
+  "base": "orc"
  },
  {
   "id": "ruffian",
@@ -5073,7 +5202,8 @@
   "spells": [
    "SHOT",
    "WHIP"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "giant_black_louse",
@@ -5104,7 +5234,8 @@
    "RAND_25"
   ],
   "description": "It makes you itch just to look at it.",
-  "plural": "giant black lice"
+  "plural": "giant black lice",
+  "base": "insect"
  },
  {
   "id": "yeti",
@@ -5145,7 +5276,8 @@
    "IM_COLD"
   ],
   "description": "A large white figure covered in shaggy fur.",
-  "plural": "yeti"
+  "plural": "yeti",
+  "base": "yeti"
  },
  {
   "id": "bloodshot_icky_thing",
@@ -5181,7 +5313,8 @@
   "spellFrequency": 11,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "icky_thing"
  },
  {
   "id": "giant_grey_rat",
@@ -5210,7 +5343,8 @@
    "MULTIPLY",
    "RAND_25"
   ],
-  "description": "It is a rodent of unusual size."
+  "description": "It is a rodent of unusual size.",
+  "base": "rodent"
  },
  {
   "id": "black_harpy",
@@ -5251,7 +5385,8 @@
    "RAND_25"
   ],
   "description": "A woman's face on the body of a vicious black bird.",
-  "plural": "black harpies"
+  "plural": "black harpies",
+  "base": "hybrid"
  },
  {
   "id": "orc_shaman",
@@ -5297,7 +5432,8 @@
    "BLINK",
    "WOUND",
    "MISSILE"
-  ]
+  ],
+  "base": "orc"
  },
  {
   "id": "baby_white_dragon",
@@ -5347,7 +5483,8 @@
   "innateFrequency": 12,
   "spells": [
    "BR_COLD"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "baby_green_dragon",
@@ -5397,7 +5534,8 @@
   "innateFrequency": 12,
   "spells": [
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "baby_black_dragon",
@@ -5447,7 +5585,8 @@
   "innateFrequency": 12,
   "spells": [
    "BR_ACID"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "baby_red_dragon",
@@ -5497,7 +5636,8 @@
   "innateFrequency": 12,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "giant_red_ant",
@@ -5530,7 +5670,8 @@
    "WEIRD_MIND",
    "BASH_DOOR"
   ],
-  "description": "It is large and has venomous mandibles."
+  "description": "It is large and has venomous mandibles.",
+  "base": "ant"
  },
  {
   "id": "brodda_the_easterling",
@@ -5580,7 +5721,8 @@
    "ONLY_ITEM",
    "OPEN_DOOR"
   ],
-  "description": "A nasty piece of work, Brodda picks on defenseless women and children."
+  "description": "A nasty piece of work, Brodda picks on defenseless women and children.",
+  "base": "person"
  },
  {
   "id": "king_cobra",
@@ -5620,7 +5762,8 @@
   "innateFrequency": 4,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "snake"
  },
  {
   "id": "baby_gold_dragon",
@@ -5670,7 +5813,8 @@
   "innateFrequency": 12,
   "spells": [
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "cave_bear",
@@ -5709,7 +5853,8 @@
    "ANIMAL",
    "RAND_25"
   ],
-  "description": "A large bear appears to have made its home in this cave. It is hungry, and you are trespassing in its territory."
+  "description": "A large bear appears to have made its home in this cave. It is hungry, and you are trespassing in its territory.",
+  "base": "quadruped"
  },
  {
   "id": "giant_spider",
@@ -5758,7 +5903,8 @@
    "WEIRD_MIND",
    "IM_POIS"
   ],
-  "description": "It is a vast black spider whose bulbous body is bloated with poison."
+  "description": "It is a vast black spider whose bulbous body is bloated with poison.",
+  "base": "spider"
  },
  {
   "id": "blacklock_mage",
@@ -5805,7 +5951,8 @@
    "DARKNESS",
    "MISSILE",
    "BA_POIS"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "stonefoot_warrior",
@@ -5842,7 +5989,8 @@
    "EVIL",
    "DROP_60"
   ],
-  "description": "A dwarf of the east in a coat of iron rings and wielding an axe."
+  "description": "A dwarf of the east in a coat of iron rings and wielding an axe.",
+  "base": "humanoid"
  },
  {
   "id": "clear_mushroom_patch",
@@ -5879,7 +6027,8 @@
    "ATTR_CLEAR"
   ],
   "description": "Yum! It looks quite tasty.",
-  "plural": "clear mushroom patches"
+  "plural": "clear mushroom patches",
+  "base": "mushroom"
  },
  {
   "id": "grishnakh_the_hill_orc",
@@ -5948,7 +6097,8 @@
     "race": "grishnakh_the_hill_orc"
    }
   ],
-  "description": "He is a cunning and devious orc with a chaotic nature."
+  "description": "He is a cunning and devious orc with a chaotic nature.",
+  "base": "orc"
  },
  {
   "id": "giant_white_tick",
@@ -5978,7 +6128,8 @@
    "WEIRD_MIND",
    "IM_POIS"
   ],
-  "description": "It is moving slowly towards you."
+  "description": "It is moving slowly towards you.",
+  "base": "spider"
  },
  {
   "id": "hairy_mold",
@@ -6011,7 +6162,8 @@
    "EMPTY_MIND",
    "STUPID"
   ],
-  "description": "It is a strange hairy growth on the dungeon floor."
+  "description": "It is a strange hairy growth on the dungeon floor.",
+  "base": "mold"
  },
  {
   "id": "disenchanter_mold",
@@ -6050,7 +6202,8 @@
   "spellFrequency": 11,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "mold"
  },
  {
   "id": "pseudo_dragon",
@@ -6100,7 +6253,8 @@
    "SCARE",
    "BR_DARK",
    "BR_LIGHT"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "tengu",
@@ -6139,7 +6293,8 @@
   "spells": [
    "BLINK",
    "TELE_TO"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "creeping_gold_coins",
@@ -6186,7 +6341,8 @@
   "plural": "piles of creeping gold coins",
   "mimics": [
    "gold"
-  ]
+  ],
+  "base": "creeping_coins"
  },
  {
   "id": "giant_fruit_fly",
@@ -6217,7 +6373,8 @@
    "RAND_25"
   ],
   "description": "A fast-breeding, annoying pest.",
-  "plural": "giant fruit flies"
+  "plural": "giant fruit flies",
+  "base": "insect"
  },
  {
   "id": "panther",
@@ -6250,7 +6407,8 @@
    "CLEAR_WEB",
    "BASH_DOOR"
   ],
-  "description": "A large black cat, stalking you with intent. It thinks you're its next meal."
+  "description": "A large black cat, stalking you with intent. It thinks you're its next meal.",
+  "base": "feline"
  },
  {
   "id": "witch",
@@ -6314,7 +6472,8 @@
    "WOUND",
    "SCARE",
    "DARKNESS"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "baby_multi_hued_dragon",
@@ -6373,7 +6532,8 @@
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "hippogriff",
@@ -6406,7 +6566,8 @@
    "ANIMAL",
    "BASH_DOOR"
   ],
-  "description": "A strange hybrid of eagle and horse. It looks weird."
+  "description": "A strange hybrid of eagle and horse. It looks weird.",
+  "base": "hybrid"
  },
  {
   "id": "zombified_orc",
@@ -6456,7 +6617,8 @@
    "EMPTY_MIND",
    "NO_FEAR"
   ],
-  "description": "It is a shambling orcish corpse leaving behind a trail of flesh."
+  "description": "It is a shambling orcish corpse leaving behind a trail of flesh.",
+  "base": "zombie"
  },
  {
   "id": "druadan_mage",
@@ -6501,7 +6663,8 @@
    "DARKNESS",
    "BO_COLD",
    "S_MONSTER"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "old_forest_tree",
@@ -6548,7 +6711,8 @@
   "spellFrequency": 12,
   "spells": [
    "CONF"
-  ]
+  ],
+  "base": "tree"
  },
  {
   "id": "black_mamba",
@@ -6583,7 +6747,8 @@
   "innateFrequency": 4,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "snake"
  },
  {
   "id": "white_wolf",
@@ -6627,7 +6792,8 @@
    }
   ],
   "description": "A large and muscled wolf from the northern wastes. Its breath is cold and icy and its fur coated in frost.",
-  "plural": "white wolves"
+  "plural": "white wolves",
+  "base": "canine"
  },
  {
   "id": "grape_jelly",
@@ -6667,7 +6833,8 @@
   "spellFrequency": 11,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "jelly"
  },
  {
   "id": "nether_worm_mass",
@@ -6702,7 +6869,8 @@
    "NO_FEAR",
    "IM_NETHER"
   ],
-  "description": "It is a disgusting mass of dark worms, eating each other, the floor, the air, you...."
+  "description": "It is a disgusting mass of dark worms, eating each other, the floor, the air, you....",
+  "base": "worm"
  },
  {
   "id": "golfimbul_the_hill_orc_chief",
@@ -6785,7 +6953,8 @@
     "race": "grishnakh_the_hill_orc"
    }
   ],
-  "description": "A leader of a band of raiding orcs, he picks on hobbits."
+  "description": "A leader of a band of raiding orcs, he picks on hobbits.",
+  "base": "orc"
  },
  {
   "id": "master_yeek",
@@ -6828,7 +6997,8 @@
    "TPORT",
    "BA_POIS",
    "S_MONSTER"
-  ]
+  ],
+  "base": "yeek"
  },
  {
   "id": "priest",
@@ -6898,7 +7068,8 @@
    "BA_LIGHT",
    "BA_HOLY",
    "S_KIN"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "ironfist_priest",
@@ -6946,7 +7117,8 @@
    "CONF",
    "DARKNESS",
    "HEAL"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "air_spirit",
@@ -6984,7 +7156,8 @@
    "BASH_DOOR",
    "IM_ELEC"
   ],
-  "description": "A whirlwind of sentient air."
+  "description": "A whirlwind of sentient air.",
+  "base": "elemental"
  },
  {
   "id": "skeleton_human",
@@ -7022,7 +7195,8 @@
    "OPEN_DOOR",
    "BASH_DOOR"
   ],
-  "description": "It is an animated human skeleton."
+  "description": "It is an animated human skeleton.",
+  "base": "skeleton"
  },
  {
   "id": "zombified_human",
@@ -7066,7 +7240,8 @@
    "EMPTY_MIND",
    "NO_FEAR"
   ],
-  "description": "It is a shambling human corpse dropping chunks of flesh behind it."
+  "description": "It is a shambling human corpse dropping chunks of flesh behind it.",
+  "base": "zombie"
  },
  {
   "id": "tiger",
@@ -7104,7 +7279,8 @@
    "CLEAR_WEB",
    "BASH_DOOR"
   ],
-  "description": "One of the largest of its species, a sleek orange and black shape creeps towards you, ready to pounce."
+  "description": "One of the largest of its species, a sleek orange and black shape creeps towards you, ready to pounce.",
+  "base": "feline"
  },
  {
   "id": "moaning_spirit",
@@ -7155,7 +7331,8 @@
   "spells": [
    "SCARE",
    "TPORT"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "warrior",
@@ -7217,7 +7394,8 @@
   "innateFrequency": 10,
   "spells": [
    "BOLT"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "stegocentipede",
@@ -7255,7 +7433,8 @@
    "WEIRD_MIND",
    "BASH_DOOR"
   ],
-  "description": "It is a vast armoured centipede with massive mandibles and a spiked tail."
+  "description": "It is a vast armoured centipede with massive mandibles and a spiked tail.",
+  "base": "centipede"
  },
  {
   "id": "spotted_jelly",
@@ -7303,7 +7482,8 @@
    "NO_SLEEP"
   ],
   "description": "A strange jelly thing, covered in discoloured blotches.",
-  "plural": "spotted jellies"
+  "plural": "spotted jellies",
+  "base": "jelly"
  },
  {
   "id": "killer_brown_beetle",
@@ -7331,7 +7511,8 @@
    "WEIRD_MIND",
    "BASH_DOOR"
   ],
-  "description": "It is a vicious insect with a tough carapace."
+  "description": "It is a vicious insect with a tough carapace.",
+  "base": "killer_beetle"
  },
  {
   "id": "ochre_jelly",
@@ -7380,7 +7561,8 @@
    "NO_SLEEP"
   ],
   "description": "A fast moving highly acidic jelly thing, that is eating away the floor it rests on.",
-  "plural": "ochre jellies"
+  "plural": "ochre jellies",
+  "base": "jelly"
  },
  {
   "id": "boldor_king_of_the_yeeks",
@@ -7463,7 +7645,8 @@
    "TPORT",
    "S_KIN",
    "S_MONSTER"
-  ]
+  ],
+  "base": "yeek"
  },
  {
   "id": "ogre",
@@ -7508,7 +7691,8 @@
     "race": "same"
    }
   ],
-  "description": "A hideous, smallish giant that is often found near or with orcs."
+  "description": "A hideous, smallish giant that is often found near or with orcs.",
+  "base": "ogre"
  },
  {
   "id": "creeping_mithril_coins",
@@ -7555,7 +7739,8 @@
   "plural": "piles of creeping mithril coins",
   "mimics": [
    "mithril"
-  ]
+  ],
+  "base": "creeping_coins"
  },
  {
   "id": "illusionist",
@@ -7622,7 +7807,8 @@
    "HOLD",
    "SLOW",
    "TPORT"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "druid",
@@ -7672,7 +7858,8 @@
    "BO_FIRE",
    "SHAPECHANGE",
    "S_ANIMAL"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "orc_archer",
@@ -7723,7 +7910,8 @@
   "innateFrequency": 3,
   "spells": [
    "ARROW"
-  ]
+  ],
+  "base": "orc"
  },
  {
   "id": "giant_flea",
@@ -7754,7 +7942,8 @@
    "RAND_25",
    "BASH_DOOR"
   ],
-  "description": "It makes you itch just to look at it."
+  "description": "It makes you itch just to look at it.",
+  "base": "insect"
  },
  {
   "id": "ufthak_of_cirith_ungol",
@@ -7823,7 +8012,8 @@
     "race": "cave_orc"
    }
   ],
-  "description": "A strong orc guarding the pass of Cirith Ungol. He is mortally afraid of spiders."
+  "description": "A strong orc guarding the pass of Cirith Ungol. He is mortally afraid of spiders.",
+  "base": "orc"
  },
  {
   "id": "blue_icky_thing",
@@ -7876,7 +8066,8 @@
    "BLIND",
    "CONF",
    "SCARE"
-  ]
+  ],
+  "base": "icky_thing"
  },
  {
   "id": "flesh_golem",
@@ -7914,7 +8105,8 @@
    "NONLIVING",
    "BASH_DOOR"
   ],
-  "description": "A shambling humanoid monster with long scars."
+  "description": "A shambling humanoid monster with long scars.",
+  "base": "golem"
  },
  {
   "id": "warg",
@@ -7952,7 +8144,8 @@
     "race": "same"
    }
   ],
-  "description": "It is a large wolf with eyes full of cunning."
+  "description": "It is a large wolf with eyes full of cunning.",
+  "base": "canine"
  },
  {
   "id": "lurker",
@@ -7990,7 +8183,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "A strange creature that merges with the dungeon floor, trapping its victims by enveloping them within its perfectly disguised form."
+  "description": "A strange creature that merges with the dungeon floor, trapping its victims by enveloping them within its perfectly disguised form.",
+  "base": "lurker"
  },
  {
   "id": "wererat",
@@ -8040,7 +8234,8 @@
    "WOUND",
    "BA_POIS",
    "BO_COLD"
-  ]
+  ],
+  "base": "rodent"
  },
  {
   "id": "black_ogre",
@@ -8090,7 +8285,8 @@
     "race": "same"
    }
   ],
-  "description": "A massive orc-like figure with black skin and powerful arms."
+  "description": "A massive orc-like figure with black skin and powerful arms.",
+  "base": "ogre"
  },
  {
   "id": "magic_mushroom_patch",
@@ -8146,7 +8342,8 @@
    "DARKNESS",
    "SCARE",
    "SLOW"
-  ]
+  ],
+  "base": "mushroom"
  },
  {
   "id": "guardian_naga",
@@ -8191,7 +8388,8 @@
    "RAND_25",
    "OPEN_DOOR"
   ],
-  "description": "A giant snake-like figure with a woman's torso."
+  "description": "A giant snake-like figure with a woman's torso.",
+  "base": "naga"
  },
  {
   "id": "light_hound",
@@ -8242,7 +8440,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_LIGHT"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "dark_hound",
@@ -8293,7 +8492,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_DARK"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "giant_tarantula",
@@ -8333,7 +8533,8 @@
    "WEIRD_MIND",
    "IM_POIS"
   ],
-  "description": "A giant, fast-moving spider with hairy black and red legs."
+  "description": "A giant, fast-moving spider with hairy black and red legs.",
+  "base": "spider"
  },
  {
   "id": "giant_clear_centipede",
@@ -8368,7 +8569,8 @@
    "BASH_DOOR",
    "ATTR_CLEAR"
   ],
-  "description": "It is about four feet long and carnivorous."
+  "description": "It is about four feet long and carnivorous.",
+  "base": "centipede"
  },
  {
   "id": "griffon",
@@ -8401,7 +8603,8 @@
    "ANIMAL",
    "BASH_DOOR"
   ],
-  "description": "It is half lion, half eagle. It flies menacingly towards you."
+  "description": "It is half lion, half eagle. It flies menacingly towards you.",
+  "base": "hybrid"
  },
  {
   "id": "homunculus",
@@ -8440,7 +8643,8 @@
    "NO_FEAR"
   ],
   "description": "It is a small demonic spirit full of malevolence.",
-  "plural": "homunculi"
+  "plural": "homunculi",
+  "base": "minor_demon"
  },
  {
   "id": "clear_hound",
@@ -8488,7 +8692,8 @@
     "race": "same"
    }
   ],
-  "description": "A completely translucent hound."
+  "description": "A completely translucent hound.",
+  "base": "zephyr_hound"
  },
  {
   "id": "clay_golem",
@@ -8531,7 +8736,8 @@
    "IM_FIRE",
    "IM_POIS"
   ],
-  "description": "It is a massive animated statue made out of hardened clay."
+  "description": "It is a massive animated statue made out of hardened clay.",
+  "base": "golem"
  },
  {
   "id": "giant_tan_bat",
@@ -8576,7 +8782,8 @@
     "race": "same"
    }
   ],
-  "description": "A giant bat, the beating of whose wings produces a strangely unnerving noise."
+  "description": "A giant bat, the beating of whose wings produces a strangely unnerving noise.",
+  "base": "bat"
  },
  {
   "id": "umber_hulk",
@@ -8627,7 +8834,8 @@
    "BASH_DOOR",
    "KILL_WALL"
   ],
-  "description": "This bizarre creature has glaring eyes and large mandibles capable of slicing through rock."
+  "description": "This bizarre creature has glaring eyes and large mandibles capable of slicing through rock.",
+  "base": "xorn"
  },
  {
   "id": "gelatinous_cube",
@@ -8678,7 +8886,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "It is a strange, vast gelatinous structure that assumes cubic proportions as it lines all four walls of the corridors it patrols. Through its transparent jelly structure you can see treasures it has engulfed, and a few corpses as well."
+  "description": "It is a strange, vast gelatinous structure that assumes cubic proportions as it lines all four walls of the corridors it patrols. Through its transparent jelly structure you can see treasures it has engulfed, and a few corpses as well.",
+  "base": "jelly"
  },
  {
   "id": "rogue",
@@ -8747,7 +8956,8 @@
   "innateFrequency": 8,
   "spells": [
    "SHOT"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "ulfast_son_of_ulfang",
@@ -8806,7 +9016,8 @@
     "race": "warrior"
    }
   ],
-  "description": "A short and swarthy Easterling."
+  "description": "A short and swarthy Easterling.",
+  "base": "person"
  },
  {
   "id": "quasit",
@@ -8863,7 +9074,8 @@
    "TELE_LEVEL",
    "TELE_TO",
    "TPORT"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "uruk",
@@ -8933,7 +9145,8 @@
   "spells": [
    "ARROW",
    "WHIP"
-  ]
+  ],
+  "base": "orc"
  },
  {
   "id": "grizzly_bear",
@@ -8976,7 +9189,8 @@
    "CLEAR_WEB",
    "ANIMAL"
   ],
-  "description": "A huge, beastly bear, more savage than most of its kind."
+  "description": "A huge, beastly bear, more savage than most of its kind.",
+  "base": "quadruped"
  },
  {
   "id": "craban",
@@ -9021,7 +9235,8 @@
   "innateFrequency": 8,
   "spells": [
    "SHRIEK"
-  ]
+  ],
+  "base": "bird"
  },
  {
   "id": "imp",
@@ -9074,7 +9289,8 @@
    "TELE_LEVEL",
    "TELE_TO",
    "TPORT"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "forest_troll",
@@ -9125,7 +9341,8 @@
     "race": "same"
    }
   ],
-  "description": "He is green skinned, ugly and stupid."
+  "description": "He is green skinned, ugly and stupid.",
+  "base": "troll"
  },
  {
   "id": "nar_the_dwarf",
@@ -9190,7 +9407,8 @@
    "CONF",
    "HEAL",
    "MIND_BLAST"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "2_headed_hydra",
@@ -9232,7 +9450,8 @@
   "spellFrequency": 11,
   "spells": [
    "SCARE"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "water_spirit",
@@ -9274,7 +9493,8 @@
    "IM_ACID",
    "IM_WATER"
   ],
-  "description": "A whirlpool of sentient liquid."
+  "description": "A whirlpool of sentient liquid.",
+  "base": "elemental"
  },
  {
   "id": "giant_red_scorpion",
@@ -9314,7 +9534,8 @@
    "WEIRD_MIND",
    "IM_POIS"
   ],
-  "description": "It is fast and poisonous."
+  "description": "It is fast and poisonous.",
+  "base": "spider"
  },
  {
   "id": "earth_spirit",
@@ -9358,7 +9579,8 @@
    "IM_ELEC",
    "IM_FIRE"
   ],
-  "description": "A whirling form of sentient rock."
+  "description": "A whirling form of sentient rock.",
+  "base": "elemental"
  },
  {
   "id": "hummerhorn",
@@ -9389,7 +9611,8 @@
    "RAND_25",
    "MOVE_BODY"
   ],
-  "description": "A giant buzzing wasp, its stinger drips venom."
+  "description": "A giant buzzing wasp, its stinger drips venom.",
+  "base": "insect"
  },
  {
   "id": "orc_captain",
@@ -9476,7 +9699,8 @@
   "innateFrequency": 9,
   "spells": [
    "ARROW"
-  ]
+  ],
+  "base": "orc"
  },
  {
   "id": "blackguard",
@@ -9543,7 +9767,8 @@
    "DARKNESS",
    "SCARE",
    "BOLT"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "fire_spirit",
@@ -9584,7 +9809,8 @@
    "IM_FIRE",
    "HURT_COLD"
   ],
-  "description": "A whirlwind of sentient flame."
+  "description": "A whirlwind of sentient flame.",
+  "base": "elemental"
  },
  {
   "id": "fire_hound",
@@ -9637,7 +9863,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "cold_hound",
@@ -9690,7 +9917,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_COLD"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "energy_hound",
@@ -9742,7 +9970,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_ELEC"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "potion_mimic",
@@ -9803,7 +10032,8 @@
    "potion_of_experience",
    "potion_of_augmentation",
    "speed"
-  ]
+  ],
+  "base": "mimic"
  },
  {
   "id": "blink_dog",
@@ -9846,7 +10076,8 @@
   "spells": [
    "BLINK",
    "TELE_TO"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "shambling_mound",
@@ -9898,7 +10129,8 @@
   "innateFrequency": 4,
   "spells": [
    "SHRIEK"
-  ]
+  ],
+  "base": "mushroom"
  },
  {
   "id": "evil_eye",
@@ -9938,7 +10170,8 @@
   "spells": [
    "HOLD",
    "TELE_TO"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "shagrat_the_orc_captain",
@@ -10017,7 +10250,8 @@
     "race": "uruk"
    }
   ],
-  "description": "He is an orc of power and great cunning, leader of the garrison at Cirith Ungol."
+  "description": "He is an orc of power and great cunning, leader of the garrison at Cirith Ungol.",
+  "base": "orc"
  },
  {
   "id": "gorbag_the_orc_captain",
@@ -10096,7 +10330,8 @@
     "race": "uruk"
    }
   ],
-  "description": "He is an orc of power and great cunning, leader of the garrison at Minas Morgul."
+  "description": "He is an orc of power and great cunning, leader of the garrison at Minas Morgul.",
+  "base": "orc"
  },
  {
   "id": "stone_golem",
@@ -10139,7 +10374,8 @@
    "IM_FIRE",
    "IM_POIS"
   ],
-  "description": "It is a massive animated statue."
+  "description": "It is a massive animated statue.",
+  "base": "golem"
  },
  {
   "id": "red_mold",
@@ -10172,7 +10408,8 @@
    "STUPID",
    "IM_FIRE"
   ],
-  "description": "It is a strange red growth on the dungeon floor; it seems to burn with flame."
+  "description": "It is a strange red growth on the dungeon floor; it seems to burn with flame.",
+  "base": "mold"
  },
  {
   "id": "old_man_willow",
@@ -10228,7 +10465,8 @@
   "spells": [
    "TELE_TO",
    "HOLD"
-  ]
+  ],
+  "base": "tree"
  },
  {
   "id": "blood_falcon",
@@ -10266,7 +10504,8 @@
    "CLEAR_WEB",
    "NO_FEAR"
   ],
-  "description": "A blinding whirlwind of fear and feathers. Its razor sharp beak and talons fill its foes with terror as it seeks to rend flesh from bone with unbridled ferocity."
+  "description": "A blinding whirlwind of fear and feathers. Its razor sharp beak and talons fill its foes with terror as it seeks to rend flesh from bone with unbridled ferocity.",
+  "base": "bird"
  },
  {
   "id": "mirkwood_spider",
@@ -10319,7 +10558,8 @@
     "race": "same"
    }
   ],
-  "description": "A strong and powerful spider from Mirkwood forest. Cunning and evil, it seeks to taste your juicy insides."
+  "description": "A strong and powerful spider from Mirkwood forest. Cunning and evil, it seeks to taste your juicy insides.",
+  "base": "spider"
  },
  {
   "id": "bolg_son_of_azog",
@@ -10400,7 +10640,8 @@
     "role": "bodyguard"
    }
   ],
-  "description": "A large and powerful orc, he looks just like his father. He is tall and fast, but fortunately blessed with orcish brains."
+  "description": "A large and powerful orc, he looks just like his father. He is tall and fast, but fortunately blessed with orcish brains.",
+  "base": "orc"
  },
  {
   "id": "3_headed_hydra",
@@ -10448,7 +10689,8 @@
   "spellFrequency": 9,
   "spells": [
    "SCARE"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "earth_hound",
@@ -10504,7 +10746,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_SHAR"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "air_hound",
@@ -10561,7 +10804,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_POIS"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "sabre_tooth_tiger",
@@ -10604,7 +10848,8 @@
    "CLEAR_WEB",
    "BASH_DOOR"
   ],
-  "description": "A fierce and dangerous cat, its huge tusks and sharp claws would lacerate even the strongest armour."
+  "description": "A fierce and dangerous cat, its huge tusks and sharp claws would lacerate even the strongest armour.",
+  "base": "feline"
  },
  {
   "id": "water_hound",
@@ -10661,7 +10906,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_ACID"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "chimaera",
@@ -10704,7 +10950,8 @@
   "innateFrequency": 10,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "hybrid"
  },
  {
   "id": "quylthulg",
@@ -10737,7 +10984,8 @@
   "spells": [
    "BLINK",
    "S_MONSTER"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "sasquatch",
@@ -10778,7 +11026,8 @@
    "IM_COLD"
   ],
   "description": "A tall shaggy, furry humanoid, it could call the yeti brother.",
-  "plural": "sasquatches"
+  "plural": "sasquatches",
+  "base": "yeti"
  },
  {
   "id": "werewolf",
@@ -10821,7 +11070,8 @@
    "TAKE_ITEM"
   ],
   "description": "It is a huge wolf with eyes that glow with manly intelligence.",
-  "plural": "werewolves"
+  "plural": "werewolves",
+  "base": "canine"
  },
  {
   "id": "dark_dwarven_lord",
@@ -10891,7 +11141,8 @@
    "HASTE",
    "BO_COLD",
    "BO_FIRE"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "ranger",
@@ -10964,7 +11215,8 @@
    "HASTE",
    "BO_COLD",
    "S_ANIMAL"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "paladin",
@@ -11033,7 +11285,8 @@
   "spells": [
    "HEAL",
    "SLOW"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "lugdush_the_uruk",
@@ -11107,7 +11360,8 @@
     "race": "uruk"
    }
   ],
-  "description": "A large and powerful orc, captain of one of Saruman's orcish regiments."
+  "description": "A large and powerful orc, captain of one of Saruman's orcish regiments.",
+  "base": "orc"
  },
  {
   "id": "blue_dragon_bat",
@@ -11141,7 +11395,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_ELEC"
-  ]
+  ],
+  "base": "bat"
  },
  {
   "id": "scroll_mimic",
@@ -11208,7 +11463,8 @@
    "scroll_of_acquirement",
    "scroll_scroll_of_acquirement",
    "scroll_of_destruction"
-  ]
+  ],
+  "base": "mimic"
  },
  {
   "id": "fire_vortex",
@@ -11252,7 +11508,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "water_vortex",
@@ -11296,7 +11553,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_ACID"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "cold_vortex",
@@ -11340,7 +11598,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_COLD"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "mummified_orc",
@@ -11386,7 +11645,8 @@
    "DROP_20",
    "NO_FEAR"
   ],
-  "description": "It is an orcish figure covered in wrappings."
+  "description": "It is an orcish figure covered in wrappings.",
+  "base": "zombie"
  },
  {
   "id": "neekerbreeker",
@@ -11421,7 +11681,8 @@
   "innateFrequency": 12,
   "spells": [
    "SHRIEK"
-  ]
+  ],
+  "base": "insect"
  },
  {
   "id": "ugluk_the_uruk",
@@ -11508,7 +11769,8 @@
     "race": "lugdush_the_uruk"
    }
   ],
-  "description": "A strong and cunning orc warrior, the commander of Saruman's orcish horde."
+  "description": "A strong and cunning orc warrior, the commander of Saruman's orcish horde.",
+  "base": "orc"
  },
  {
   "id": "killer_stag_beetle",
@@ -11542,7 +11804,8 @@
    "BASH_DOOR",
    "RAND_25"
   ],
-  "description": "It is a giant beetle with vicious claws."
+  "description": "It is a giant beetle with vicious claws.",
+  "base": "killer_beetle"
  },
  {
   "id": "iron_golem",
@@ -11584,7 +11847,8 @@
   "spellFrequency": 7,
   "spells": [
    "SLOW"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "giant_yellow_scorpion",
@@ -11624,7 +11888,8 @@
    "WEIRD_MIND",
    "IM_POIS"
   ],
-  "description": "It is a giant scorpion with a sharp stinger."
+  "description": "It is a giant scorpion with a sharp stinger.",
+  "base": "spider"
  },
  {
   "id": "wyvern",
@@ -11671,7 +11936,8 @@
    "MOVE_BODY",
    "IM_POIS"
   ],
-  "description": "A fast-moving and deadly draconian animal. Beware its poisonous sting!"
+  "description": "A fast-moving and deadly draconian animal. Beware its poisonous sting!",
+  "base": "dragon"
  },
  {
   "id": "phase_spider",
@@ -11726,7 +11992,8 @@
    "BLINK",
    "TELE_TO",
    "TELE_SELF_TO"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "black_ooze",
@@ -11768,7 +12035,8 @@
   "spellFrequency": 11,
   "spells": [
    "DRAIN_MANA"
-  ]
+  ],
+  "base": "jelly"
  },
  {
   "id": "easterling_champion",
@@ -11832,7 +12100,8 @@
   "innateFrequency": 6,
   "spells": [
    "BOLT"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "azog_enemy_of_the_dwarves",
@@ -11918,7 +12187,8 @@
     "race": "bolg_son_of_azog"
    }
   ],
-  "description": "A great orc with a huge iron-clad head, agile and strong. He is notorious for starting the War of the Dwarves and Orcs by killing Durin's heir, Thrór."
+  "description": "A great orc with a huge iron-clad head, agile and strong. He is notorious for starting the War of the Dwarves and Orcs by killing Durin's heir, Thrór.",
+  "base": "orc"
  },
  {
   "id": "brigand",
@@ -11992,7 +12262,8 @@
   "innateFrequency": 4,
   "spells": [
    "SHOT"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "red_dragon_bat",
@@ -12026,7 +12297,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "bat"
  },
  {
   "id": "giant_silver_ant",
@@ -12064,7 +12336,8 @@
   "innateFrequency": 6,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "ant"
  },
  {
   "id": "forest_wight",
@@ -12122,7 +12395,8 @@
   "spells": [
    "DRAIN_MANA",
    "SCARE"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "ibun_son_of_mim",
@@ -12184,7 +12458,8 @@
    "HEAL",
    "SLOW",
    "BO_FIRE"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "khim_son_of_mim",
@@ -12246,7 +12521,8 @@
    "HEAL",
    "SLOW",
    "BO_FIRE"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "4_headed_hydra",
@@ -12300,7 +12576,8 @@
   "spellFrequency": 7,
   "spells": [
    "SCARE"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "mummified_human",
@@ -12346,7 +12623,8 @@
    "ONLY_ITEM",
    "NO_FEAR"
   ],
-  "description": "It is a human form encased in mouldy wrappings."
+  "description": "It is a human form encased in mouldy wrappings.",
+  "base": "zombie"
  },
  {
   "id": "vampire_bat",
@@ -12387,7 +12665,8 @@
    "NO_SLEEP",
    "NO_STUN"
   ],
-  "description": "A blood-sucking bat that flies at your neck hungrily."
+  "description": "A blood-sucking bat that flies at your neck hungrily.",
+  "base": "bat"
  },
  {
   "id": "sangahyando_of_umbar",
@@ -12456,7 +12735,8 @@
   "spells": [
    "CONF",
    "SLOW"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "angamaite_of_umbar",
@@ -12525,7 +12805,8 @@
   "spells": [
    "CONF",
    "SLOW"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "banshee",
@@ -12576,7 +12857,8 @@
   "spells": [
    "DRAIN_MANA",
    "TPORT"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "werebear",
@@ -12622,7 +12904,8 @@
    "DROP_1",
    "OPEN_DOOR"
   ],
-  "description": "In the eyes of this bear, there glimmers the faintest light of intelligence. And then its form begins to change... The combination of animal cunning, human intelligence and the great physical strength of the bear makes for a dangerous enemy."
+  "description": "In the eyes of this bear, there glimmers the faintest light of intelligence. And then its form begins to change... The combination of animal cunning, human intelligence and the great physical strength of the bear makes for a dangerous enemy.",
+  "base": "quadruped"
  },
  {
   "id": "nruling",
@@ -12677,7 +12960,8 @@
    "WOUND",
    "WHIP",
    "BO_FIRE"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "necromancer",
@@ -12734,7 +13018,8 @@
    "SCARE",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "hill_giant",
@@ -12787,7 +13072,8 @@
   "innateFrequency": 10,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "pukelman",
@@ -12838,7 +13124,8 @@
    "CONF",
    "SLOW",
    "BO_ACID"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "stone_troll",
@@ -12895,7 +13182,8 @@
     "race": "same"
    }
   ],
-  "description": "He is a large, lumpish troll with scabrous black skin."
+  "description": "He is a large, lumpish troll with scabrous black skin.",
+  "base": "troll"
  },
  {
   "id": "carrion_crawler",
@@ -12937,7 +13225,8 @@
     "race": "same"
    }
   ],
-  "description": "A hideous centipede covered in slime and with glowing tentacles around its head."
+  "description": "A hideous centipede covered in slime and with glowing tentacles around its head.",
+  "base": "centipede"
  },
  {
   "id": "killer_red_beetle",
@@ -12971,7 +13260,8 @@
    "BASH_DOOR",
    "RAND_25"
   ],
-  "description": "It is a giant beetle with poisonous mandibles."
+  "description": "It is a giant beetle with poisonous mandibles.",
+  "base": "killer_beetle"
  },
  {
   "id": "abyss_worm_mass",
@@ -13009,7 +13299,8 @@
    "COLD_BLOOD",
    "INVISIBLE"
   ],
-  "description": "A writhing wormlike shimmer of blackness, large as your arm. It squirms through air and walls with equal facility, leaving void in its wake."
+  "description": "A writhing wormlike shimmer of blackness, large as your arm. It squirms through air and walls with equal facility, leaving void in its wake.",
+  "base": "worm"
  },
  {
   "id": "giant_firefly",
@@ -13040,7 +13331,8 @@
    "RAND_25"
   ],
   "description": "Clouds of these monsters light up the dungeon - so brightly that you can barely see through them.",
-  "plural": "giant fireflies"
+  "plural": "giant fireflies",
+  "base": "insect"
  },
  {
   "id": "giant_grey_ant",
@@ -13075,7 +13367,8 @@
    "RAND_25",
    "KILL_BODY"
   ],
-  "description": "It is an ant encased in an impenetrable exoskeleton."
+  "description": "It is an ant encased in an impenetrable exoskeleton.",
+  "base": "ant"
  },
  {
   "id": "ulwarth_son_of_ulfang",
@@ -13134,7 +13427,8 @@
     "race": "ulfast_son_of_ulfang"
    }
   ],
-  "description": "A short and swarthy Easterling."
+  "description": "A short and swarthy Easterling.",
+  "base": "person"
  },
  {
   "id": "displacer_beast",
@@ -13178,7 +13472,8 @@
    "INVISIBLE",
    "BASH_DOOR"
   ],
-  "description": "It is a huge black panther, clubbed tentacles sprouting from its shoulders."
+  "description": "It is a huge black panther, clubbed tentacles sprouting from its shoulders.",
+  "base": "feline"
  },
  {
   "id": "giant_fire_tick",
@@ -13213,7 +13508,8 @@
   "innateFrequency": 20,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "cave_ogre",
@@ -13267,7 +13563,8 @@
     "race": "same"
    }
   ],
-  "description": "A giant orc-like figure with an awesomely muscled frame."
+  "description": "A giant orc-like figure with an awesomely muscled frame.",
+  "base": "ogre"
  },
  {
   "id": "disenchanter_bat",
@@ -13297,7 +13594,8 @@
    "ATTR_MULTI",
    "FORCE_SLEEP"
   ],
-  "description": "A giant bat which feeds on raw magical energy."
+  "description": "A giant bat which feeds on raw magical energy.",
+  "base": "bat"
  },
  {
   "id": "wolf_chieftain",
@@ -13372,7 +13670,8 @@
   "spellFrequency": 8,
   "spells": [
    "DARKNESS"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "mim_betrayer_of_turin",
@@ -13452,7 +13751,8 @@
    "SCARE",
    "BA_ACID",
    "BO_ACID"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "killer_fire_beetle",
@@ -13490,7 +13790,8 @@
   "innateFrequency": 5,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "killer_beetle"
  },
  {
   "id": "creeping_adamantite_coins",
@@ -13547,7 +13848,8 @@
   "plural": "piles of creeping adamantite coins",
   "mimics": [
    "adamantite"
-  ]
+  ],
+  "base": "creeping_coins"
  },
  {
   "id": "troll_scavenger",
@@ -13603,7 +13905,8 @@
     "race": "same"
    }
   ],
-  "description": "A powerful, man-eating troll, its claws foul with the traces of its last kill."
+  "description": "A powerful, man-eating troll, its claws foul with the traces of its last kill.",
+  "base": "troll"
  },
  {
   "id": "vibration_hound",
@@ -13662,7 +13965,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_SOUN"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "nexus_hound",
@@ -13721,7 +14025,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_NEXU"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "vampire",
@@ -13788,7 +14093,8 @@
    "TELE_TO",
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "vampire"
  },
  {
   "id": "gorgimaera",
@@ -13831,7 +14137,8 @@
   "innateFrequency": 8,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "hybrid"
  },
  {
   "id": "ogre_shaman",
@@ -13885,7 +14192,8 @@
    "TRAPS",
    "BO_FIRE",
    "S_MONSTER"
-  ]
+  ],
+  "base": "ogre"
  },
  {
   "id": "shimmering_mold",
@@ -13925,7 +14233,8 @@
    "ATTR_FLICKER",
    "IM_ELEC"
   ],
-  "description": "It is a strange growth on the dungeon floor, glowing and crackling with sparks."
+  "description": "It is a strange growth on the dungeon floor, glowing and crackling with sparks.",
+  "base": "mold"
  },
  {
   "id": "frost_giant",
@@ -13979,7 +14288,8 @@
   "innateFrequency": 10,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "spirit_naga",
@@ -14040,7 +14350,8 @@
    "DARKNESS",
    "HEAL",
    "MIND_BLAST"
-  ]
+  ],
+  "base": "naga"
  },
  {
   "id": "5_headed_hydra",
@@ -14100,7 +14411,8 @@
   "spellFrequency": 5,
   "spells": [
    "SCARE"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "black_knight",
@@ -14177,7 +14489,8 @@
    "WOUND",
    "DARKNESS",
    "SCARE"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "uldor_the_accursed",
@@ -14232,7 +14545,8 @@
   "spellFrequency": 10,
   "spells": [
    "S_KIN"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "mage",
@@ -14290,7 +14604,8 @@
    "BO_ELEC",
    "BO_FIRE",
    "S_MONSTER"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "mind_flayer",
@@ -14340,7 +14655,8 @@
    "HOLD",
    "MIND_BLAST",
    "SCARE"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "draebor_the_imp",
@@ -14432,7 +14748,8 @@
    "TELE_TO",
    "TPORT",
    "S_KIN"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "basilisk",
@@ -14487,7 +14804,8 @@
   "innateFrequency": 8,
   "spells": [
    "BR_POIS"
-  ]
+  ],
+  "base": "reptile"
  },
  {
   "id": "snow_troll",
@@ -14554,7 +14872,8 @@
     "race": "same"
    }
   ],
-  "description": "He is a white troll with shaggy fur and powerfully clawed hands."
+  "description": "He is a white troll with shaggy fur and powerfully clawed hands.",
+  "base": "troll"
  },
  {
   "id": "bat_of_gorgoroth",
@@ -14606,7 +14925,8 @@
    "SCARE",
    "BR_DARK",
    "BR_POIS"
-  ]
+  ],
+  "base": "bat"
  },
  {
   "id": "spectator",
@@ -14654,7 +14974,8 @@
    "FORGET",
    "HOLD",
    "SLOW"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "beorn_the_shape_changer",
@@ -14729,7 +15050,8 @@
   ],
   "shapes": [
    "beorn_the_mountain_bear"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "beorn_the_mountain_bear",
@@ -14778,7 +15100,8 @@
    "SPIRIT",
    "MOVE_BODY"
   ],
-  "description": "Beorn in his form as a great black bear of the mountains, grown to giant-size in wrath. The roar of his voice is like drums, and no weapon seems to bite upon him."
+  "description": "Beorn in his form as a great black bear of the mountains, grown to giant-size in wrath. The roar of his voice is like drums, and no weapon seems to bite upon him.",
+  "base": "quadruped"
  },
  {
   "id": "green_elf_archer",
@@ -14829,7 +15152,8 @@
    "HEAL",
    "BLINK",
    "ARROW"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "giant_black_scorpion",
@@ -14874,7 +15198,8 @@
    "WEIRD_MIND",
    "IM_POIS"
   ],
-  "description": "A gleaming black scorpion as large as a lion, with a pulsating stinger and two great deadly claws."
+  "description": "A gleaming black scorpion as large as a lion, with a pulsating stinger and two great deadly claws.",
+  "base": "spider"
  },
  {
   "id": "purple_worm",
@@ -14913,7 +15238,8 @@
    "IM_ACID",
    "IM_POIS"
   ],
-  "description": "It is a massive worm form, many feet in length. Its vast maw drips acid and poison."
+  "description": "It is a massive worm form, many feet in length. Its vast maw drips acid and poison.",
+  "base": "worm"
  },
  {
   "id": "catoblepas",
@@ -14960,7 +15286,8 @@
    "IM_POIS"
   ],
   "description": "A strange ox-like form with a huge head but a thin, weak neck, it looks like the creation of some deranged alchemist.",
-  "plural": "catoblepones"
+  "plural": "catoblepones",
+  "base": "quadruped"
  },
  {
   "id": "ring_mimic",
@@ -15029,7 +15356,8 @@
    "ring_of_resist_poison",
    "ring_of_free_action",
    "ring_of_see_invisible"
-  ]
+  ],
+  "base": "mimic"
  },
  {
   "id": "young_blue_dragon",
@@ -15079,7 +15407,8 @@
   "spells": [
    "SCARE",
    "BR_ELEC"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "young_white_dragon",
@@ -15129,7 +15458,8 @@
   "spells": [
    "SCARE",
    "BR_COLD"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "young_green_dragon",
@@ -15179,7 +15509,8 @@
   "spells": [
    "SCARE",
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "energy_vortex",
@@ -15225,7 +15556,8 @@
   "spells": [
    "BR_ELEC",
    "BE_ELEC"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "mithril_golem",
@@ -15280,7 +15612,8 @@
    "IM_FIRE",
    "IM_POIS"
   ],
-  "description": "It is a massive statue of purest mithril. It looks expensive!"
+  "description": "It is a massive statue of purest mithril. It looks expensive!",
+  "base": "golem"
  },
  {
   "id": "skeleton_troll",
@@ -15330,7 +15663,8 @@
    "OPEN_DOOR",
    "BASH_DOOR"
   ],
-  "description": "It is a troll skeleton animated by dark dweomers."
+  "description": "It is a troll skeleton animated by dark dweomers.",
+  "base": "skeleton"
  },
  {
   "id": "manticore",
@@ -15378,7 +15712,8 @@
   "innateFrequency": 5,
   "spells": [
    "ARROW"
-  ]
+  ],
+  "base": "hybrid"
  },
  {
   "id": "giant_blue_ant",
@@ -15420,7 +15755,8 @@
   "innateFrequency": 6,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "ant"
  },
  {
   "id": "giant_army_ant",
@@ -15463,7 +15799,8 @@
     "race": "same"
    }
   ],
-  "description": "An armoured form moving with purpose. Powerful on its own, flee when hordes of them march."
+  "description": "An armoured form moving with purpose. Powerful on its own, flee when hordes of them march.",
+  "base": "ant"
  },
  {
   "id": "grave_wight",
@@ -15522,7 +15859,8 @@
    "WOUND",
    "DARKNESS",
    "SCARE"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "killer_slicer_beetle",
@@ -15555,7 +15893,8 @@
    "WEIRD_MIND",
    "BASH_DOOR"
   ],
-  "description": "It is a beetle with deadly sharp cutting mandibles and a rock-hard carapace."
+  "description": "It is a beetle with deadly sharp cutting mandibles and a rock-hard carapace.",
+  "base": "killer_beetle"
  },
  {
   "id": "ogre_chieftain",
@@ -15633,7 +15972,8 @@
     "race": "ogre_shaman"
    }
   ],
-  "description": "This ogre is leader of his tribe. He sneers at you as he advances towards you, wielding a huge club and pushing his own followers rudely aside."
+  "description": "This ogre is leader of his tribe. He sneers at you as he advances towards you, wielding a huge club and pushing his own followers rudely aside.",
+  "base": "ogre"
  },
  {
   "id": "ghast",
@@ -15724,7 +16064,8 @@
   "spells": [
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "zombie"
  },
  {
   "id": "bert_the_stone_troll",
@@ -15791,7 +16132,8 @@
   "innateFrequency": 7,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "troll"
  },
  {
   "id": "bill_the_stone_troll",
@@ -15858,7 +16200,8 @@
   "innateFrequency": 7,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "troll"
  },
  {
   "id": "tom_the_stone_troll",
@@ -15925,7 +16268,8 @@
   "innateFrequency": 7,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "troll"
  },
  {
   "id": "ghost",
@@ -15988,7 +16332,8 @@
    "BLIND",
    "DRAIN_MANA",
    "HOLD"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "death_watch_beetle",
@@ -16026,7 +16371,8 @@
    "WEIRD_MIND",
    "BASH_DOOR"
   ],
-  "description": "It is a giant beetle that produces a chilling sound."
+  "description": "It is a giant beetle that produces a chilling sound.",
+  "base": "killer_beetle"
  },
  {
   "id": "young_black_dragon",
@@ -16076,7 +16422,8 @@
   "spells": [
    "SCARE",
    "BR_ACID"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "young_gold_dragon",
@@ -16126,7 +16473,8 @@
   "spells": [
    "SCARE",
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "young_red_dragon",
@@ -16176,7 +16524,8 @@
   "spells": [
    "SCARE",
    "BR_FIRE"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "huorn",
@@ -16235,7 +16584,8 @@
    "HASTE",
    "TELE_TO",
    "DARKNESS"
-  ]
+  ],
+  "base": "tree"
  },
  {
   "id": "serpent_of_the_brownlands",
@@ -16288,7 +16638,8 @@
    "HOLD",
    "BLIND",
    "CONF"
-  ]
+  ],
+  "base": "snake"
  },
  {
   "id": "ogre_mage",
@@ -16344,7 +16695,8 @@
    "TRAPS",
    "BA_COLD",
    "S_MONSTER"
-  ]
+  ],
+  "base": "ogre"
  },
  {
   "id": "nexus_quylthulg",
@@ -16378,7 +16730,8 @@
   "spells": [
    "BLINK",
    "TELE_AWAY"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "southron_assassin",
@@ -16439,7 +16792,8 @@
     "race": "blackguard"
    }
   ],
-  "description": "A man of Harad clothed in black who moves with blinding speed."
+  "description": "A man of Harad clothed in black who moves with blinding speed.",
+  "base": "person"
  },
  {
   "id": "memory_moss",
@@ -16481,7 +16835,8 @@
   "spellFrequency": 6,
   "spells": [
    "FORGET"
-  ]
+  ],
+  "base": "mushroom"
  },
  {
   "id": "young_multi_hued_dragon",
@@ -16540,7 +16895,8 @@
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "doombat",
@@ -16579,7 +16935,8 @@
    "BASH_DOOR",
    "IM_FIRE"
   ],
-  "description": "It is a fast moving creature of chaos, a gigantic black bat surrounded by flickering bright red flames."
+  "description": "It is a fast moving creature of chaos, a gigantic black bat surrounded by flickering bright red flames.",
+  "base": "bat"
  },
  {
   "id": "druadan_druid",
@@ -16637,7 +16994,8 @@
    "S_ANIMAL",
    "S_MONSTER",
    "S_SPIDER"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "stone_giant",
@@ -16691,7 +17049,8 @@
   "innateFrequency": 5,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "shadow_drake",
@@ -16747,7 +17106,8 @@
    "SCARE",
    "SLOW",
    "BR_NETH"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "cave_troll",
@@ -16813,7 +17173,8 @@
     "race": "same"
    }
   ],
-  "description": "He is a vicious monster, feared for his ferocity."
+  "description": "He is a vicious monster, feared for his ferocity.",
+  "base": "troll"
  },
  {
   "id": "mystic",
@@ -16881,7 +17242,8 @@
    "HEAL",
    "S_ANIMAL",
    "S_SPIDER"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "barrow_wight",
@@ -16946,7 +17308,8 @@
    "DARKNESS",
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "skeleton_etten",
@@ -17001,7 +17364,8 @@
    "OPEN_DOOR",
    "BASH_DOOR"
   ],
-  "description": "It is the animated form of a massive two-headed troll."
+  "description": "It is the animated form of a massive two-headed troll.",
+  "base": "skeleton"
  },
  {
   "id": "chaos_drake",
@@ -17059,7 +17423,8 @@
    "SLOW",
    "BR_CHAO",
    "BR_DISE"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "law_drake",
@@ -17116,7 +17481,8 @@
    "SLOW",
    "BR_SHAR",
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "balance_drake",
@@ -17177,7 +17543,8 @@
    "BR_DISE",
    "BR_SHAR",
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "ethereal_drake",
@@ -17232,7 +17599,8 @@
    "SLOW",
    "BR_DARK",
    "BR_LIGHT"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "fire_elemental",
@@ -17282,7 +17650,8 @@
   "spellFrequency": 6,
   "spells": [
    "BO_FIRE"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "water_elemental",
@@ -17338,7 +17707,8 @@
   "spellFrequency": 6,
   "spells": [
    "BO_COLD"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "crystal_drake",
@@ -17393,7 +17763,8 @@
    "SCARE",
    "SLOW",
    "BR_SHAR"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "troll_priest",
@@ -17452,7 +17823,8 @@
    "WOUND",
    "DARKNESS",
    "SCARE"
-  ]
+  ],
+  "base": "troll"
  },
  {
   "id": "maia",
@@ -17517,7 +17889,8 @@
    "HASTE",
    "HEAL",
    "SCARE"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "troll_blackguard",
@@ -17580,7 +17953,8 @@
    "HASTE",
    "SCARE",
    "DARKNESS"
-  ]
+  ],
+  "base": "troll"
  },
  {
   "id": "shade",
@@ -17638,7 +18012,8 @@
    "BLIND",
    "DRAIN_MANA",
    "HOLD"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "master_thief",
@@ -17711,7 +18086,8 @@
    "SHOT",
    "BLINK",
    "TRAPS"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "ulfang_the_black",
@@ -17789,7 +18165,8 @@
   "spellFrequency": 10,
   "spells": [
    "S_KIN"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "lich",
@@ -17868,7 +18245,8 @@
    "SLOW",
    "TELE_AWAY",
    "TELE_TO"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "earth_elemental",
@@ -17923,7 +18301,8 @@
   "spellFrequency": 8,
   "spells": [
    "BO_ACID"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "air_elemental",
@@ -17978,7 +18357,8 @@
   "spellFrequency": 8,
   "spells": [
    "BO_ELEC"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "eog_golem",
@@ -18032,7 +18412,8 @@
    "IM_FIRE",
    "IM_POIS"
   ],
-  "description": "It is a massive deep brown statue, striding towards you with an all-too-familiar purpose. Your magic surprisingly feels much less powerful now."
+  "description": "It is a massive deep brown statue, striding towards you with an all-too-familiar purpose. Your magic surprisingly feels much less powerful now.",
+  "base": "golem"
  },
  {
   "id": "wereworm",
@@ -18075,7 +18456,8 @@
    "BASH_DOOR",
    "IM_ACID"
   ],
-  "description": "A huge wormlike shape dripping acid, twisted by evil sorcery into a foul monster that breeds on death."
+  "description": "A huge wormlike shape dripping acid, twisted by evil sorcery into a foul monster that breeds on death.",
+  "base": "worm"
  },
  {
   "id": "lokkak_the_ogre_chieftain",
@@ -18156,7 +18538,8 @@
     "race": "ogre_chieftain"
    }
   ],
-  "description": "An ogre renowned for acts of surpassing cruelty, Lokkak quickly became the leader of a large band of violent ogres."
+  "description": "An ogre renowned for acts of surpassing cruelty, Lokkak quickly became the leader of a large band of violent ogres.",
+  "base": "ogre"
  },
  {
   "id": "hill_troll",
@@ -18211,7 +18594,8 @@
     "race": "same"
    }
   ],
-  "description": "Clad only in close-fitting mesh of horny scales (unless that is his skin) this troll strides toward you roaring like a beast, wielding a heavy hammer in his knotted hand."
+  "description": "Clad only in close-fitting mesh of horny scales (unless that is his skin) this troll strides toward you roaring like a beast, wielding a heavy hammer in his knotted hand.",
+  "base": "troll"
  },
  {
   "id": "invisible_stalker",
@@ -18260,7 +18644,8 @@
    "BASH_DOOR",
    "IM_ELEC"
   ],
-  "description": "It is impossible to define its form but its violence is legendary."
+  "description": "It is impossible to define its form but its violence is legendary.",
+  "base": "elemental"
  },
  {
   "id": "gravity_hound",
@@ -18318,7 +18703,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_GRAV"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "inertia_hound",
@@ -18377,7 +18763,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_INER"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "impact_hound",
@@ -18436,7 +18823,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_WALL"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "mumak",
@@ -18482,7 +18870,8 @@
    }
   ],
   "description": "A massive elephantine form with eyes twisted by madness.",
-  "plural": "mûmakil"
+  "plural": "mûmakil",
+  "base": "quadruped"
  },
  {
   "id": "giant_fire_ant",
@@ -18529,7 +18918,8 @@
   "innateFrequency": 6,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "ant"
  },
  {
   "id": "chest_mimic",
@@ -18596,7 +18986,8 @@
    "large_iron_chest",
    "small_steel_chest",
    "large_steel_chest"
-  ]
+  ],
+  "base": "mimic"
  },
  {
   "id": "silent_watcher",
@@ -18662,7 +19053,8 @@
    "SHRIEK",
    "S_MONSTER",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "olog",
@@ -18717,7 +19109,8 @@
     "race": "olog"
    }
   ],
-  "description": "It is a massive intelligent troll with needle-sharp fangs."
+  "description": "It is a massive intelligent troll with needle-sharp fangs.",
+  "base": "troll"
  },
  {
   "id": "colbran",
@@ -18765,7 +19158,8 @@
    "BO_ELEC",
    "BE_ELEC",
    "TELE_SELF_TO"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "cloud_giant",
@@ -18820,7 +19214,8 @@
   "innateFrequency": 8,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "master_vampire",
@@ -18888,7 +19283,8 @@
    "BO_NETH",
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "vampire"
  },
  {
   "id": "ooze_elemental",
@@ -18944,7 +19340,8 @@
   "spells": [
    "BA_ACID",
    "BO_ACID"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "smoke_elemental",
@@ -18993,7 +19390,8 @@
   "spells": [
    "DARKNESS",
    "BO_FIRE"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "xorn",
@@ -19045,7 +19443,8 @@
    "IM_ELEC",
    "IM_FIRE"
   ],
-  "description": "A huge creature of the element Earth. Able to merge with its element, it has four huge arms protruding from its enormous torso."
+  "description": "A huge creature of the element Earth. Able to merge with its element, it has four huge arms protruding from its enormous torso.",
+  "base": "xorn"
  },
  {
   "id": "colossus",
@@ -19098,7 +19497,8 @@
    "IM_POIS"
   ],
   "description": "An enormous construct resembling a titan made from stone. It strides purposefully towards you, swinging its slow fists with earth-shattering power.",
-  "plural": "colossi"
+  "plural": "colossi",
+  "base": "golem"
  },
  {
   "id": "trapper",
@@ -19146,7 +19546,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "A larger cousin of the lurker, this creature traps unsuspecting victims and paralyzes them, to be slowly digested later."
+  "description": "A larger cousin of the lurker, this creature traps unsuspecting victims and paralyzes them, to be slowly digested later.",
+  "base": "lurker"
  },
  {
   "id": "bodak",
@@ -19199,7 +19600,8 @@
    "BA_FIRE",
    "BO_FIRE",
    "S_DEMON"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "dunadan_of_angmar",
@@ -19259,7 +19661,8 @@
    "TPORT",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "lorgan_chief_of_the_easterlings",
@@ -19338,7 +19741,8 @@
   "spells": [
    "TELE_TO",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "demonologist",
@@ -19403,7 +19807,8 @@
    "TPORT",
    "BO_FIRE",
    "S_DEMON"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "gauth",
@@ -19457,7 +19862,8 @@
    "TELE_AWAY",
    "BA_COLD",
    "BO_ELEC"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "ice_elemental",
@@ -19514,7 +19920,8 @@
   "spells": [
    "BA_COLD",
    "BO_ICE"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "mummified_troll",
@@ -19560,7 +19967,8 @@
    "DROP_20",
    "NO_FEAR"
   ],
-  "description": "It is a massive figure clothed in wrappings. You are wary of its massive fists."
+  "description": "It is a massive figure clothed in wrappings. You are wary of its massive fists.",
+  "base": "zombie"
  },
  {
   "id": "spectre",
@@ -19618,7 +20026,8 @@
    "BLIND",
    "DRAIN_MANA",
    "HOLD"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "magma_elemental",
@@ -19674,7 +20083,8 @@
   "spells": [
    "BA_FIRE",
    "BO_PLAS"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "killer_iridescent_beetle",
@@ -19718,7 +20128,8 @@
   "innateFrequency": 6,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "killer_beetle"
  },
  {
   "id": "nexus_vortex",
@@ -19762,7 +20173,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_NEXU"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "plasma_vortex",
@@ -19813,7 +20225,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_PLAS"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "mountain_troll",
@@ -19863,7 +20276,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "A massive troll, larger and stronger than many men together. It needs no weapons aside from its massive hands and feet."
+  "description": "A massive troll, larger and stronger than many men together. It needs no weapons aside from its massive hands and feet.",
+  "base": "troll"
  },
  {
   "id": "shardstorm",
@@ -19904,7 +20318,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_SHAR"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "emperor_wight",
@@ -19976,7 +20391,8 @@
    "HOLD",
    "SCARE",
    "BO_NETH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "mummified_chieftain",
@@ -20074,7 +20490,8 @@
    "BA_POIS",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "zombie"
  },
  {
   "id": "will_o_the_wisp",
@@ -20132,7 +20549,8 @@
    "WOUND",
    "CONF",
    "TPORT"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "death_knight",
@@ -20193,7 +20611,8 @@
    "SCARE",
    "BO_NETH",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "castamir_the_usurper",
@@ -20255,7 +20674,8 @@
    "BO_ELEC",
    "BO_FIRE",
    "BO_ICE"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "time_vortex",
@@ -20298,7 +20718,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_TIME"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "shimmering_vortex",
@@ -20348,7 +20769,8 @@
   "spells": [
    "SHRIEK",
    "BR_LIGHT"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "white_wraith",
@@ -20410,7 +20832,8 @@
    "WOUND",
    "DARKNESS",
    "SCARE"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "etten",
@@ -20460,7 +20883,8 @@
    "NO_CONF",
    "NO_SLEEP"
   ],
-  "description": "A massive two-headed troll of huge strength, ettens are stupid but violent. They are also living proof that two heads are not more intelligent than one..."
+  "description": "A massive two-headed troll of huge strength, ettens are stupid but violent. They are also living proof that two heads are not more intelligent than one...",
+  "base": "troll"
  },
  {
   "id": "abyss_spider",
@@ -20518,7 +20942,8 @@
    "BLIND",
    "BR_POIS",
    "BR_DARK"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "southron_archer",
@@ -20578,7 +21003,8 @@
   "innateFrequency": 2,
   "spells": [
    "ARROW"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "mature_white_dragon",
@@ -20641,7 +21067,8 @@
   "spells": [
    "SCARE",
    "BR_COLD"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "mature_blue_dragon",
@@ -20704,7 +21131,8 @@
   "spells": [
    "SCARE",
    "BR_ELEC"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "mature_green_dragon",
@@ -20767,7 +21195,8 @@
   "spells": [
    "SCARE",
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "6_headed_hydra",
@@ -20834,7 +21263,8 @@
   "spells": [
    "SCARE",
    "BR_POIS"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "night_mare",
@@ -20887,7 +21317,8 @@
    "NO_SLEEP",
    "NO_STUN"
   ],
-  "description": "A fearsome skeletal horse with glowing eyes, that watch you with little more than a hatred of all that lives."
+  "description": "A fearsome skeletal horse with glowing eyes, that watch you with little more than a hatred of all that lives.",
+  "base": "quadruped"
  },
  {
   "id": "beholder",
@@ -20949,7 +21380,8 @@
    "BO_COLD",
    "BO_ELEC",
    "BO_FIRE"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "disenchanter_worm_mass",
@@ -20984,7 +21416,8 @@
    "NO_FEAR",
    "ATTR_MULTI"
   ],
-  "description": "It is a strange mass of squirming worms. Magical energy crackles around its disgusting form."
+  "description": "It is a strange mass of squirming worms. Magical energy crackles around its disgusting form.",
+  "base": "worm"
  },
  {
   "id": "spirit_troll",
@@ -21035,7 +21468,8 @@
    "DROP_60",
    "IM_ELEC"
   ],
-  "description": "A weird ghostly troll-like being."
+  "description": "A weird ghostly troll-like being.",
+  "base": "ghost"
  },
  {
   "id": "phantom",
@@ -21094,7 +21528,8 @@
   "spellFrequency": 5,
   "spells": [
    "FORGET"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "7_headed_hydra",
@@ -21168,7 +21603,8 @@
    "SCARE",
    "BR_POIS",
    "BR_FIRE"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "enchantress",
@@ -21249,7 +21685,8 @@
    "ancient_multi_hued_dragon",
    "dracolich",
    "dracolisk"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "sorcerer",
@@ -21333,7 +21770,8 @@
    "S_DRAGON",
    "S_MONSTER",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "xaren",
@@ -21387,7 +21825,8 @@
    "IM_ELEC",
    "IM_FIRE"
   ],
-  "description": "It is a tougher relative of the Xorn. Its hide glitters with metal ores."
+  "description": "It is a tougher relative of the Xorn. Its hide glitters with metal ores.",
+  "base": "xorn"
  },
  {
   "id": "giant_roc",
@@ -21426,7 +21865,8 @@
    "BASH_DOOR",
    "IM_ELEC"
   ],
-  "description": "A vast legendary bird, its iron talons rake the most impenetrable of surfaces and its screech echoes through the many winding dungeon corridors."
+  "description": "A vast legendary bird, its iron talons rake the most impenetrable of surfaces and its screech echoes through the many winding dungeon corridors.",
+  "base": "bird"
  },
  {
   "id": "minotaur",
@@ -21469,7 +21909,8 @@
    "EVIL",
    "BASH_DOOR"
   ],
-  "description": "It is a cross between a human and a bull."
+  "description": "It is a cross between a human and a bull.",
+  "base": "hybrid"
  },
  {
   "id": "vrock",
@@ -21529,7 +21970,8 @@
   "spells": [
    "BLIND",
    "CONF"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "death_quasit",
@@ -21588,7 +22030,8 @@
    "CONF",
    "SCARE",
    "S_DEMON"
-  ]
+  ],
+  "base": "minor_demon"
  },
  {
   "id": "patriarch",
@@ -21668,7 +22111,8 @@
    "BA_ELEC",
    "BA_HOLY",
    "S_KIN"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "troll_chieftain",
@@ -21751,7 +22195,8 @@
     "race": "olog"
    }
   ],
-  "description": "This troll's great strength and size have won it the place of chieftain of its tribe. It fears nothing."
+  "description": "This troll's great strength and size have won it the place of chieftain of its tribe. It fears nothing.",
+  "base": "troll"
  },
  {
   "id": "mature_red_dragon",
@@ -21815,7 +22260,8 @@
    "CONF",
    "SCARE",
    "BR_FIRE"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "mature_gold_dragon",
@@ -21879,7 +22325,8 @@
    "CONF",
    "SCARE",
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "mature_black_dragon",
@@ -21942,7 +22389,8 @@
   "spells": [
    "SCARE",
    "BR_ACID"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "stiffbeard_sorcerer",
@@ -22006,7 +22454,8 @@
    "S_DEMON",
    "S_MONSTER",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "master_lich",
@@ -22091,7 +22540,8 @@
    "SCARE",
    "TELE_TO",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "gorlim_betrayer_of_barahir",
@@ -22156,7 +22606,8 @@
    "WOUND",
    "BO_MANA",
    "BO_WATE"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "ranger_chieftain",
@@ -22239,7 +22690,8 @@
    "HEAL",
    "BA_COLD",
    "S_ANIMAL"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "kavlax_the_many_headed",
@@ -22312,7 +22764,8 @@
    "BR_NEXU",
    "BR_SHAR",
    "BR_SOUN"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "hellhound",
@@ -22367,7 +22820,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_FIRE"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "black_hearted_huorn",
@@ -22430,7 +22884,8 @@
    "DARKNESS",
    "SCARE",
    "BLIND"
-  ]
+  ],
+  "base": "tree"
  },
  {
   "id": "the_queen_ant",
@@ -22520,7 +22975,8 @@
   "spellFrequency": 2,
   "spells": [
    "S_KIN"
-  ]
+  ],
+  "base": "ant"
  },
  {
   "id": "rogrog_the_black_troll",
@@ -22607,7 +23063,8 @@
   "innateFrequency": 7,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "troll"
  },
  {
   "id": "maia_of_nienna",
@@ -22679,7 +23136,8 @@
   "shapes": [
    "air_elemental",
    "nexus_vortex"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "maia_of_mandos",
@@ -22750,7 +23208,8 @@
   "shapes": [
    "will_o_the_wisp",
    "time_vortex"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "mature_multi_hued_dragon",
@@ -22824,7 +23283,8 @@
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS"
-  ]
+  ],
+  "base": "dragon"
  },
  {
   "id": "vargo_tyrant_of_fire",
@@ -22888,7 +23348,8 @@
   "spells": [
    "BA_FIRE",
    "BO_PLAS"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "waldern_king_of_water",
@@ -22955,7 +23416,8 @@
    "BA_WATE",
    "BO_ICE",
    "BO_WATE"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "glabrezu",
@@ -23004,7 +23466,8 @@
   "spells": [
    "BO_FIRE",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "quaker_master_of_earth",
@@ -23070,7 +23533,8 @@
    "BA_ACID",
    "BA_SHAR",
    "BO_ACID"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "ariel_queen_of_air",
@@ -23136,7 +23600,8 @@
    "BA_COLD",
    "BA_ELEC",
    "BO_ELEC"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "multi_hued_hound",
@@ -23204,7 +23669,8 @@
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "8_headed_hydra",
@@ -23283,7 +23749,8 @@
    "BR_FIRE",
    "BR_POIS",
    "BR_ACID"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "dread",
@@ -23350,7 +23817,8 @@
    "DRAIN_MANA",
    "HOLD",
    "BO_NETH"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "killer_white_beetle",
@@ -23393,7 +23861,8 @@
   "innateFrequency": 4,
   "spells": [
    "SPIT"
-  ]
+  ],
+  "base": "killer_beetle"
  },
  {
   "id": "rotting_quylthulg",
@@ -23427,7 +23896,8 @@
    "BLINK",
    "TPORT",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "nalfeshnee",
@@ -23484,7 +23954,8 @@
    "CONF",
    "BR_FIRE",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "undead_beholder",
@@ -23555,7 +24026,8 @@
    "BO_MANA",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "demonic_quylthulg",
@@ -23589,7 +24061,8 @@
    "BLINK",
    "TPORT",
    "S_DEMON"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "draconic_quylthulg",
@@ -23623,7 +24096,8 @@
    "BLINK",
    "TPORT",
    "S_DRAGON"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "greater_basilisk",
@@ -23684,7 +24158,8 @@
    "BR_DARK",
    "BR_NEXU",
    "BR_POIS"
-  ]
+  ],
+  "base": "reptile"
  },
  {
   "id": "berserker",
@@ -23756,7 +24231,8 @@
   "spells": [
    "HASTE",
    "SCARE"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "cyclops",
@@ -23804,7 +24280,8 @@
   "innateFrequency": 8,
   "spells": [
    "BOULDER"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "grey_wraith",
@@ -23864,7 +24341,8 @@
    "HOLD",
    "SCARE",
    "BO_COLD"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "lord_of_carn_dum",
@@ -23944,7 +24422,8 @@
    "HOLD",
    "S_MONSTER",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "vampire_lord",
@@ -24019,7 +24498,8 @@
    "BO_NETH",
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "vampire"
  },
  {
   "id": "marilith",
@@ -24079,7 +24559,8 @@
    "BLIND",
    "WOUND",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "death_mold",
@@ -24131,7 +24612,8 @@
    "FORCE_SLEEP",
    "ATTR_FLICKER"
   ],
-  "description": "It is the epitome of all that is evil, in a mold. Its lifeless form draws power from sucking the souls of those that approach it, a nimbus of pure evil surrounds it. Luckily for you, it can't move."
+  "description": "It is the epitome of all that is evil, in a mold. Its lifeless form draws power from sucking the souls of those that approach it, a nimbus of pure evil surrounds it. Luckily for you, it can't move.",
+  "base": "mold"
  },
  {
   "id": "ancient_spider",
@@ -24200,7 +24682,8 @@
    "BR_DARK",
    "S_KIN",
    "S_SPIDER"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "winged_horror",
@@ -24251,7 +24734,8 @@
    "BR_DARK",
    "BR_NETH",
    "BR_POIS"
-  ]
+  ],
+  "base": "bird"
  },
  {
   "id": "gorgon",
@@ -24319,7 +24803,8 @@
    "BO_PLAS",
    "S_HYDRA",
    "S_KIN"
-  ]
+  ],
+  "base": "naga"
  },
  {
   "id": "storm_giant",
@@ -24389,7 +24874,8 @@
    "BO_ELEC",
    "STORM",
    "BOULDER"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "lesser_balrog",
@@ -24452,7 +24938,8 @@
    "CONF",
    "BR_FIRE",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "black_wraith",
@@ -24517,7 +25004,8 @@
    "HOLD",
    "SCARE",
    "BO_NETH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "eol_the_dark_elf",
@@ -24592,7 +25080,8 @@
    "S_DRAGON",
    "S_MONSTERS",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "ancient_blue_dragon",
@@ -24649,7 +25138,8 @@
    "CONF",
    "SCARE",
    "BR_ELEC"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ancient_white_dragon",
@@ -24706,7 +25196,8 @@
    "CONF",
    "SCARE",
    "BR_COLD"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ancient_green_dragon",
@@ -24763,7 +25254,8 @@
    "CONF",
    "SCARE",
    "BR_POIS"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "death_drake",
@@ -24825,7 +25317,8 @@
    "SCARE",
    "SLOW",
    "BR_NETH"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_crystal_drake",
@@ -24884,7 +25377,8 @@
    "SCARE",
    "SLOW",
    "BR_SHAR"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ethereal_dragon",
@@ -24942,7 +25436,8 @@
    "CONF",
    "BR_DARK",
    "BR_LIGHT"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "master_mystic",
@@ -25013,7 +25508,8 @@
   "spells": [
    "HEAL",
    "S_ANIMAL"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "shadow",
@@ -25074,7 +25570,8 @@
    "SLOW",
    "TELE_TO",
    "BO_NETH"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "the_balrog_of_moria",
@@ -25153,7 +25650,8 @@
    "BR_FIRE",
    "S_DEMON",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "ancient_black_dragon",
@@ -25210,7 +25708,8 @@
    "CONF",
    "SCARE",
    "BR_ACID"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ancient_red_dragon",
@@ -25267,7 +25766,8 @@
    "CONF",
    "SCARE",
    "BR_FIRE"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ancient_gold_dragon",
@@ -25324,7 +25824,8 @@
    "CONF",
    "SCARE",
    "BR_SOUN"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "nether_hound",
@@ -25384,7 +25885,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_NETH"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "time_hound",
@@ -25445,7 +25947,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_TIME"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "plasma_hound",
@@ -25509,7 +26012,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_PLAS"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "harowen_the_black_hand",
@@ -25574,7 +26078,8 @@
    "DARKNESS",
    "BLIND",
    "HOLD"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "maia_of_orome",
@@ -25647,7 +26152,8 @@
    "lesser_titan",
    "greater_titan",
    "huan_wolfhound_of_the_valar"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "hasty_ent",
@@ -25709,7 +26215,8 @@
     "race": "huorn"
    }
   ],
-  "description": "Ents are not altogether on anybody's side, because nobody is altogether on their side. This one seems quite roused, and does not seem to be on your side."
+  "description": "Ents are not altogether on anybody's side, because nobody is altogether on their side. This one seems quite roused, and does not seem to be on your side.",
+  "base": "tree"
  },
  {
   "id": "itangast_the_fire_drake",
@@ -25774,7 +26281,8 @@
    "WOUND",
    "CONF",
    "BR_FIRE"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "hezrou",
@@ -25841,7 +26349,8 @@
    "BR_FIRE",
    "BR_ACID",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "ancient_multi_hued_dragon",
@@ -25908,7 +26417,8 @@
    "BR_ELEC",
    "BR_FIRE",
    "BR_POIS"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "chaos_vortex",
@@ -25967,7 +26477,8 @@
   "innateFrequency": 4,
   "spells": [
    "BR_CHAO"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "scatha_the_worm",
@@ -26032,7 +26543,8 @@
    "WOUND",
    "CONF",
    "BR_COLD"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "the_phoenix",
@@ -26100,7 +26612,8 @@
    "BR_LIGHT",
    "BR_PLAS",
    "S_KIN"
-  ]
+  ],
+  "base": "bird"
  },
  {
   "id": "drolem",
@@ -26164,7 +26677,8 @@
    "CONF",
    "SLOW",
    "BR_POIS"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "demilich",
@@ -26239,7 +26753,8 @@
    "TPORT",
    "S_DEMON",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "dreadmaster",
@@ -26308,7 +26823,8 @@
    "TELE_LEVEL",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "nether_wraith",
@@ -26375,7 +26891,8 @@
    "SCARE",
    "BO_NETH",
    "BE_NETH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "shelob_spider_of_darkness",
@@ -26460,7 +26977,8 @@
    "BR_DARK",
    "BR_POIS",
    "S_KIN"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "dracolich",
@@ -26525,7 +27043,8 @@
    "SCARE",
    "BR_COLD",
    "BR_NETH"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "dracolisk",
@@ -26591,7 +27110,8 @@
    "SCARE",
    "BR_FIRE",
    "BR_NEXU"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ar_pharazon_the_golden",
@@ -26657,7 +27177,8 @@
    "TELE_AWAY",
    "S_KIN",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "barbazu",
@@ -26723,7 +27244,8 @@
   "spells": [
    "SCARE",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "lesser_titan",
@@ -26783,7 +27305,8 @@
    "TELE_TO",
    "BOULDER",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "grand_master_mystic",
@@ -26857,7 +27380,8 @@
    "S_ANIMAL",
    "S_HOUND",
    "S_SPIDER"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "hand_druj",
@@ -26906,7 +27430,8 @@
    "BO_COLD",
    "BO_ELEC",
    "BO_FIRE"
-  ]
+  ],
+  "base": "skeleton"
  },
  {
   "id": "9_headed_hydra",
@@ -27000,7 +27525,8 @@
    "BR_NETH",
    "S_HYDRA",
    "S_KIN"
-  ]
+  ],
+  "base": "hydra"
  },
  {
   "id": "baphomet_the_minotaur_lord",
@@ -27064,7 +27590,8 @@
    "BO_MANA",
    "BO_PLAS",
    "BR_WALL"
-  ]
+  ],
+  "base": "hybrid"
  },
  {
   "id": "elder_vampire",
@@ -27142,7 +27669,8 @@
    "S_UNDEAD",
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "vampire"
  },
  {
   "id": "fundin_bluecloak",
@@ -27211,7 +27739,8 @@
    "SCARE",
    "S_ANIMAL",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "gilim_the_giant_of_eruman",
@@ -27276,7 +27805,8 @@
    "BO_ICE",
    "STORM",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "maia_of_yavanna",
@@ -27346,7 +27876,8 @@
   ],
   "shapes": [
    "hasty_ent"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "maia_of_aule",
@@ -27417,7 +27948,8 @@
    "shardstorm",
    "great_earth_elemental",
    "quaker_master_of_earth"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "great_earth_elemental",
@@ -27478,7 +28010,8 @@
    "BOULDER",
    "BR_SHAR",
    "BA_SHAR"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "aether_vortex",
@@ -27562,7 +28095,8 @@
    "BR_SOUN",
    "BR_TIME",
    "BR_WALL"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "saruman_of_many_colours",
@@ -27655,7 +28189,8 @@
    "S_HI_DRAGON",
    "S_MONSTERS",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "nightwing",
@@ -27725,7 +28260,8 @@
    "BO_MANA",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "bile_demon",
@@ -27785,7 +28321,8 @@
    "BR_ACID",
    "BR_POIS",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "dreadlord",
@@ -27862,7 +28399,8 @@
    "TPORT",
    "BA_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "smaug_the_golden",
@@ -27927,7 +28465,8 @@
    "WOUND",
    "CONF",
    "BR_FIRE"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "werewolf_of_sauron",
@@ -28002,7 +28541,8 @@
    "BR_NETH",
    "BR_DARK",
    "S_HOUND"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "spider_of_gorgoroth",
@@ -28081,7 +28621,8 @@
    "BR_DARK",
    "BR_POIS",
    "S_KIN"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "chaos_hound",
@@ -28141,7 +28682,8 @@
   "innateFrequency": 5,
   "spells": [
    "BR_CHAO"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "archlich",
@@ -28216,7 +28758,8 @@
    "BA_NETH",
    "S_DEMON",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "maia_of_ulmo",
@@ -28290,7 +28833,8 @@
    "great_water_elemental",
    "water_vortex",
    "cold_vortex"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "great_water_elemental",
@@ -28352,7 +28896,8 @@
    "BA_WATE",
    "BO_WATE",
    "BR_COLD"
-  ]
+  ],
+  "base": "elemental"
  },
  {
   "id": "the_mouth_of_sauron",
@@ -28426,7 +28971,8 @@
    "BO_PLAS",
    "S_HI_DEMON",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "person"
  },
  {
   "id": "osyluth",
@@ -28494,7 +29040,8 @@
    "BA_ELEC",
    "BO_ICE",
    "S_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "feanorian_raider",
@@ -28550,7 +29097,8 @@
   "innateFrequency": 3,
   "spells": [
    "BOLT"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "eye_druj",
@@ -28594,7 +29142,8 @@
    "BO_MANA",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "skeleton"
  },
  {
   "id": "greater_titan",
@@ -28653,7 +29202,8 @@
    "TELE_TO",
    "BOULDER",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "tevildo_prince_of_cats",
@@ -28733,7 +29283,8 @@
   "spells": [
    "TELE_TO",
    "S_KIN"
-  ]
+  ],
+  "base": "feline"
  },
  {
   "id": "thuringwethil_the_vampire_messenger",
@@ -28807,7 +29358,8 @@
    "S_KIN",
    "HOLD",
    "SCARE"
-  ]
+  ],
+  "base": "vampire"
  },
  {
   "id": "beholder_hive_mother",
@@ -28873,7 +29425,8 @@
    "BO_MANA",
    "BO_NETH",
    "S_KIN"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "jabberwock",
@@ -28928,7 +29481,8 @@
   "spells": [
    "WOUND",
    "BR_CHAO"
-  ]
+  ],
+  "base": "hybrid"
  },
  {
   "id": "tselakus_the_dreadlord",
@@ -28997,7 +29551,8 @@
    "BA_NETH",
    "S_HI_UNDEAD",
    "S_KIN"
-  ]
+  ],
+  "base": "ghost"
  },
  {
   "id": "bone_golem",
@@ -29062,7 +29617,8 @@
    "TELE_TO",
    "BA_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "hound_of_tindalos",
@@ -29127,7 +29683,8 @@
    "BR_NETH",
    "BR_DISE",
    "BR_TIME"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "nan_the_giant",
@@ -29192,7 +29749,8 @@
    "BO_PLAS",
    "BA_FIRE",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "giant"
  },
  {
   "id": "nightcrawler",
@@ -29266,7 +29824,8 @@
    "BO_NETH",
    "BR_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "snake"
  },
  {
   "id": "gelugon",
@@ -29333,7 +29892,8 @@
    "BR_COLD",
    "BR_SHAR",
    "S_HI_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "great_storm_wyrm",
@@ -29397,7 +29957,8 @@
    "CONF",
    "SCARE",
    "BR_ELEC"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_ice_wyrm",
@@ -29461,7 +30022,8 @@
    "CONF",
    "SCARE",
    "BR_COLD"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_swamp_wyrm",
@@ -29525,7 +30087,8 @@
    "CONF",
    "SCARE",
    "BR_POIS"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "maia_of_manwe",
@@ -29598,7 +30161,8 @@
    "great_earth_elemental",
    "great_water_elemental",
    "aether_vortex"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "maia_of_varda",
@@ -29670,7 +30234,8 @@
    "great_earth_elemental",
    "great_water_elemental",
    "aether_vortex"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "greater_demonic_quylthulg",
@@ -29705,7 +30270,8 @@
    "BLINK",
    "TELE_TO",
    "S_HI_DEMON"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "greater_draconic_quylthulg",
@@ -29740,7 +30306,8 @@
    "BLINK",
    "TELE_TO",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "greater_rotting_quylthulg",
@@ -29775,7 +30342,8 @@
    "BLINK",
    "TELE_TO",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "horned_reaper",
@@ -29841,7 +30409,8 @@
    "SCARE",
    "SLOW",
    "S_HI_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "osse_herald_of_ulmo",
@@ -29919,7 +30488,8 @@
    "BO_WATE",
    "BR_DISE",
    "S_AINU"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "great_hell_wyrm",
@@ -29983,7 +30553,8 @@
    "CONF",
    "SCARE",
    "BR_FIRE"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_bile_wyrm",
@@ -30047,7 +30618,8 @@
    "CONF",
    "SCARE",
    "BR_ACID"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_wyrm_of_thunder",
@@ -30112,7 +30684,8 @@
    "CONF",
    "SCARE",
    "BR_SOUN"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "nightwalker",
@@ -30183,7 +30756,8 @@
    "BO_MANA",
    "BO_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "omarax_the_eye_tyrant",
@@ -30254,7 +30828,8 @@
    "BA_NETH",
    "BO_MANA",
    "S_KIN"
-  ]
+  ],
+  "base": "eye"
  },
  {
   "id": "skull_druj",
@@ -30300,7 +30875,8 @@
    "BO_NETH",
    "BO_PLAS",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "skeleton"
  },
  {
   "id": "black_reaver",
@@ -30372,7 +30948,8 @@
    "BA_MANA",
    "BA_NETH",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "aether_hound",
@@ -30460,7 +31037,8 @@
    "BR_SOUN",
    "BR_TIME",
    "BR_WALL"
-  ]
+  ],
+  "base": "zephyr_hound"
  },
  {
   "id": "great_wyrm_of_chaos",
@@ -30529,7 +31107,8 @@
    "BR_DISE",
    "S_DRAGON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_wyrm_of_law",
@@ -30598,7 +31177,8 @@
    "BR_SOUN",
    "S_DRAGON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "ungoliant_the_unlight",
@@ -30670,7 +31250,8 @@
    "BR_DARK",
    "BR_POIS",
    "S_KIN"
-  ]
+  ],
+  "base": "spider"
  },
  {
   "id": "bronze_golem",
@@ -30735,7 +31316,8 @@
    "BO_PLAS",
    "BR_FIRE",
    "S_DEMON"
-  ]
+  ],
+  "base": "golem"
  },
  {
   "id": "glaurung_father_of_the_dragons",
@@ -30806,7 +31388,8 @@
    "BR_FIRE",
    "BR_POIS",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "master_quylthulg",
@@ -30845,7 +31428,8 @@
    "S_HI_DRAGON",
    "S_HI_UNDEAD",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "makar_the_warrior",
@@ -30909,7 +31493,8 @@
    "IM_ACID",
    "IM_ELEC"
   ],
-  "description": "A battle-hungry spirit from amongst the Ainur, who built a grim hall in the early days of Arda to host endless battles. When not at home, he and his sister Meássë hunt and seek out the turmoils caused by Morgoth."
+  "description": "A battle-hungry spirit from amongst the Ainur, who built a grim hall in the early days of Arda to host endless battles. When not at home, he and his sister Meássë hunt and seek out the turmoils caused by Morgoth.",
+  "base": "ainu"
  },
  {
   "id": "feagwath_the_undead_sorcerer",
@@ -31020,7 +31605,8 @@
    "S_KIN",
    "S_MONSTERS",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "pit_fiend",
@@ -31089,7 +31675,8 @@
    "BR_POIS",
    "S_HI_DEMON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "uvatha_the_horseman",
@@ -31161,7 +31748,8 @@
    "BO_NETH",
    "S_MONSTER",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "serpent_of_chaos",
@@ -31205,7 +31793,8 @@
    "BLINK",
    "TELE_TO",
    "BR_CHAO"
-  ]
+  ],
+  "base": "snake"
  },
  {
   "id": "adunaphel_the_quiet",
@@ -31280,7 +31869,8 @@
    "BO_NETH",
    "S_MONSTER",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "qlzqqlzuup_the_emperor_quylthulg",
@@ -31328,7 +31918,8 @@
    "S_MONSTERS",
    "S_SPIDER",
    "S_UNIQUE"
-  ]
+  ],
+  "base": "quylthulg"
  },
  {
   "id": "akhorahil_the_blind",
@@ -31402,7 +31993,8 @@
    "BO_NETH",
    "S_MONSTERS",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "fury",
@@ -31469,7 +32061,8 @@
    "BLINK",
    "TELE_SELF_TO",
    "S_HI_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "great_wyrm_of_annihilation",
@@ -31540,7 +32133,8 @@
    "BR_TIME",
    "S_DRAGON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "sky_dragon",
@@ -31611,7 +32205,8 @@
    "BR_WALL",
    "S_DRAGON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "wiruin_the_maelstrom",
@@ -31668,7 +32263,8 @@
    "BR_COLD",
    "BR_SOUN",
    "S_KIN"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "ren_the_unclean",
@@ -31743,7 +32339,8 @@
    "BO_NETH",
    "S_MONSTER",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "maeglin_the_traitor_of_gondolin",
@@ -31813,7 +32410,8 @@
    "S_HI_UNDEAD",
    "S_MONSTERS",
    "S_UNIQUE"
-  ]
+  ],
+  "base": "humanoid"
  },
  {
   "id": "ji_indur_dawndeath",
@@ -31890,7 +32488,8 @@
    "BA_NETH",
    "S_UNDEAD",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "great_wyrm_of_balance",
@@ -31963,7 +32562,8 @@
    "BR_SOUN",
    "S_DRAGON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "great_wyrm_of_many_colours",
@@ -32038,7 +32638,8 @@
    "BR_POIS",
    "S_DRAGON",
    "S_HI_DRAGON"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "pazuzu_lord_of_air",
@@ -32115,7 +32716,8 @@
    "BO_ELEC",
    "BO_MANA",
    "S_HI_DEMON"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "dwar_dog_lord_of_waw",
@@ -32190,7 +32792,8 @@
    "S_HOUND",
    "S_UNDEAD",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "hoarmurath_of_dir",
@@ -32265,7 +32868,8 @@
    "BE_NETH",
    "S_UNDEAD",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "draugluin_sire_of_all_werewolves",
@@ -32339,7 +32943,8 @@
    "SCARE",
    "S_HOUND",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "khamul_the_black_easterling",
@@ -32418,7 +33023,8 @@
    "BO_MANA",
    "S_HI_UNDEAD",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "cantoras_the_skeletal_lord",
@@ -32495,7 +33101,8 @@
    "BO_ICE",
    "BO_MANA",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "skeleton"
  },
  {
   "id": "greater_balrog",
@@ -32567,7 +33174,8 @@
    "BR_PLAS",
    "S_HI_DEMON",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "the_witch_king_of_angmar",
@@ -32654,7 +33262,8 @@
    "S_KIN",
    "S_MONSTERS",
    "S_WRAITH"
-  ]
+  ],
+  "base": "wraith"
  },
  {
   "id": "ancalagon_the_black",
@@ -32755,7 +33364,8 @@
    "BR_POIS",
    "S_HI_DRAGON",
    "S_KIN"
-  ]
+  ],
+  "base": "ancient_dragon"
  },
  {
   "id": "the_tarrasque",
@@ -32819,7 +33429,8 @@
    "BR_COLD",
    "BR_DISE",
    "BR_FIRE"
-  ]
+  ],
+  "base": "reptile"
  },
  {
   "id": "measse_the_bloody",
@@ -32921,7 +33532,8 @@
    "BR_SOUN",
    "S_KIN",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "lungorthin_the_balrog_of_white_fire",
@@ -33009,7 +33621,8 @@
    "BR_PLAS",
    "S_HI_DEMON",
    "S_UNDEAD"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "huan_wolfhound_of_the_valar",
@@ -33078,7 +33691,8 @@
    "BR_LIGHT",
    "BR_SHAR",
    "BR_SOUN"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "carcharoth_the_jaws_of_thirst",
@@ -33148,7 +33762,8 @@
    "BR_NETH",
    "BR_POIS",
    "S_HOUND"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "vecna_the_emperor_lich",
@@ -33280,7 +33895,8 @@
    "S_HI_UNDEAD",
    "S_KIN",
    "S_MONSTERS"
-  ]
+  ],
+  "base": "lich"
  },
  {
   "id": "storm_of_unmagic",
@@ -33342,7 +33958,8 @@
    "BR_CHAO",
    "BR_DISE",
    "BR_TIME"
-  ]
+  ],
+  "base": "vortex"
  },
  {
   "id": "gothmog_the_high_captain_of_balrogs",
@@ -33453,7 +34070,8 @@
    "BR_PLAS",
    "S_HI_DEMON",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "major_demon"
  },
  {
   "id": "sauron_the_sorcerer",
@@ -33558,7 +34176,8 @@
    "wolf_sauron",
    "serpent_sauron",
    "vampire_sauron"
-  ]
+  ],
+  "base": "ainu"
  },
  {
   "id": "wolf_sauron",
@@ -33638,7 +34257,8 @@
    "S_DRAGON",
    "S_HI_DEMON",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "canine"
  },
  {
   "id": "serpent_sauron",
@@ -33719,7 +34339,8 @@
    "S_DRAGON",
    "S_HI_DEMON",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "snake"
  },
  {
   "id": "vampire_sauron",
@@ -33803,7 +34424,8 @@
    "S_DRAGON",
    "S_HI_DEMON",
    "S_HI_UNDEAD"
-  ]
+  ],
+  "base": "vampire"
  },
  {
   "id": "morgoth_lord_of_darkness",
@@ -33881,6 +34503,7 @@
    "S_HI_UNDEAD",
    "S_MONSTERS",
    "S_UNIQUE"
-  ]
+  ],
+  "base": "morgoth"
  }
 ]

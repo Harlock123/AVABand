@@ -436,8 +436,8 @@ public static class MonsterRecall
             MonsterSpellKind.TeleportAway => "teleport you away",
             MonsterSpellKind.TeleportLevel => "teleport you to another level",
             MonsterSpellKind.TeleportSelfTo => "teleport to you",
-            MonsterSpellKind.Summon => s.Kin ? "summon its kin" : s.SummonFlag is { } f ? $"summon {f.ToLowerInvariant()}s"
-                : s.SummonGlyphs is not null ? "summon allies" : "summon monsters",
+            MonsterSpellKind.Summon => s.Summon == "KIN" ? "summon its kin"
+                : data.Summon(s.Summon ?? "") is { Description.Length: > 0 } k ? $"summon {k.Description}" : "summon monsters",
             MonsterSpellKind.Shriek => "shriek for help",
             MonsterSpellKind.DrainMana => "drain mana",
             MonsterSpellKind.Forget => "cause amnesia",

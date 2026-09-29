@@ -120,6 +120,8 @@ public sealed class MonsterRaceDef
     public required string Name { get; init; }
     public string? Plural { get; init; }
     public char Glyph { get; init; } = '?';
+    /// <summary>Its kind (Angband monster_base.txt, e.g. <c>zephyr_hound</c>, <c>major_demon</c>): summons go by it.</summary>
+    public string Base { get; init; } = "";
     public string Color { get; init; } = "White";
     /// <summary>Native dungeon level.</summary>
     public int Depth { get; init; }
@@ -318,20 +320,11 @@ public sealed class MonsterSpellDef
     /// (<see cref="Damage"/> is unused).
     /// </summary>
     public bool PowerScaled { get; init; }
-    /// <summary>For summons: no uniques (Angband summon.txt <c>uniques:0</c>).</summary>
-    public bool SummonNoUniques { get; init; }
-    /// <summary>For summons: uniques only (the Ringwraiths, "summon uniques").</summary>
-    public bool SummonUniquesOnly { get; init; }
-    /// <summary>For summons: glyphs to fall back on when nothing suitable is found (Angband <c>fallback</c>).</summary>
-    public string? SummonFallbackGlyphs { get; init; }
     /// <summary>Resist/protection id that negates the status (e.g. <c>free_act</c>, <c>conf</c>).</summary>
     public string? PreventedBy { get; init; }
-    /// <summary>For summons: same glyph as the caster ("kin").</summary>
-    public bool Kin { get; init; }
-    /// <summary>For summons: only monsters shown with one of these glyphs (e.g. <c>Z</c> for hounds).</summary>
-    public string? SummonGlyphs { get; init; }
-    /// <summary>For summons: only monsters with this flag (e.g. <c>UNDEAD</c>).</summary>
-    public string? SummonFlag { get; init; }
+    /// <summary>For summons: the kind of summons (a <see cref="SummonDef"/> id, e.g. <c>KIN</c>, <c>HI_UNDEAD</c>).</summary>
+    public string? Summon { get; init; }
+    /// <summary>For summons: the most attempts (Angband summon_max), under the depth × level budget.</summary>
     public Dice Count { get; init; } = Dice.Constant(1);
     /// <summary>Hit points healed per monster level.</summary>
     public int HealPerLevel { get; init; } = 6;
@@ -371,4 +364,25 @@ public sealed class MonsterSpellLore
     public string? ImmuneColor { get; init; }
     /// <summary>The player gets a saving throw against it (Angband: the level has a save message).</summary>
     public bool Save { get; init; }
+}
+
+/// <summary>
+/// A kind of summons (Angband summon.txt): which monsters answer — uniques allowed or not, only
+/// certain monster bases, only monsters with a flag — and what to try when none came.
+/// </summary>
+public sealed record SummonDef
+{
+    public required string Id { get; init; }
+    /// <summary>The sound (Angband msgt).</summary>
+    public string Sound { get; init; } = "SUM_MONSTER";
+    /// <summary>Uniques may answer (Angband <c>uniques:1</c>).</summary>
+    public bool Uniques { get; init; }
+    /// <summary>Only monsters of these bases (monster_base ids), when any are given.</summary>
+    public IReadOnlyList<string> Bases { get; init; } = [];
+    /// <summary>Only monsters with this flag (Angband <c>race-flag</c>).</summary>
+    public string? RaceFlag { get; init; }
+    /// <summary>The kind to try when none of these came (Angband <c>fallback</c>).</summary>
+    public string? Fallback { get; init; }
+    /// <summary>What they are, for monster recall ("greater undead").</summary>
+    public string Description { get; init; } = "";
 }

@@ -267,7 +267,7 @@ def effects(e, level_exprs=False):
         elif name == "EARTHQUAKE":
             t = "earthquake:10"
         elif name == "SUMMON":
-            t = f"summon:{d if d != '0' else 1}" + (":UNDEAD" if arg == "UNDEAD" else "")
+            t = f"summon:{d if d != '0' else 1}:{arg}"
         elif name == "WAKE":
             t = "aggravate"
         elif name == "TOUCH" and arg == "MAKE_TRAP":

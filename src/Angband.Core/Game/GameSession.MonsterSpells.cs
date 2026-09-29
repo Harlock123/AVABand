@@ -459,44 +459,4 @@ public sealed partial class GameSession
         Level[p].Trap = 0;
         Level[p].Flags &= ~World.SquareFlags.TrapVisible;
     }
-
-    /// <summary>Summons monsters of the level's depth (or the caster's kin) next to the player.</summary>
-    private void SummonMonsters(Monster caster, MonsterSpellDef spell)
-    {
-        var unavailable = new HashSet<string>(KilledUniques);
-        foreach (var m in Level.Monsters.All.Where(m => m.Race.IsUnique)) unavailable.Add(m.Race.Id);
-
-        var count = Math.Max(1, spell.Count.Roll(Rng));
-        var summoned = 0;
-        for (var i = 0; i < count; i++)
-        {
-            Func<MonsterRaceDef, bool>? filter = spell.Kin ? r => r.Glyph == caster.Race.Glyph
-                : spell.SummonGlyphs is { } glyphs ? r => glyphs.Contains(r.Glyph)
-                : spell.SummonFlag is { } flag ? r => r.Has(flag)
-                : null;
-            // Angband summon.txt: some summon no uniques, some nothing but uniques.
-            if (spell.SummonNoUniques) filter = Both(filter, r => !r.IsUnique);
-            if (spell.SummonUniquesOnly) filter = Both(filter, r => r.IsUnique);
-            var level = Math.Max(1, (Level.Depth + caster.Race.Depth) / 2 + 5); // Angband summon_specific
-
-            var race = _spawner.PickRace(Rng, level, unavailable, filter);
-            // ...falling back on another kind when there is none (the Ringwraiths → greater undead).
-            if (race is null && spell.SummonFallbackGlyphs is { } fallback)
-                race = _spawner.PickRace(Rng, level, unavailable, r => fallback.Contains(r.Glyph));
-            var spot = Level.Neighbors(Player.Position)
-                .Where(p => Level.IsPassable(p) && Level[p].Monster == 0)
-                .OrderBy(_ => Rng.RandInt0(1000))
-                .Cast<Loc?>()
-                .FirstOrDefault();
-            if (race is null || spot is not { } s) break;
-
-            var m = _spawner.Place(Level, Rng, race, s, asleep: false);
-            if (race.IsUnique) unavailable.Add(race.Id);
-            Scheduler.Add(m);
-            summoned++;
-        }
-        DisguiseMonsters();
-        UpdateView();
-        if (summoned == 0) Publish(new MessageEvent("Nothing appears."));
-    }
 }

@@ -148,6 +148,7 @@ def convert(entry, bases, names=()):
         "id": slug(entry["name"]),
         "name": entry["name"],
         "glyph": one(entry, "glyph", base.get("glyph", "?")),
+        "base": slug(one(entry, "base", "")),
         "color": COLORS.get(color[0], "White"),
         "depth": depth,
         **({"spellPower": int(one(entry, "spell-power"))} if one(entry, "spell-power", str(depth)) != str(depth) else {}),

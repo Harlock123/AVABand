@@ -437,6 +437,7 @@ def compare_monsters(gd, data):
         col = one(e, "color", "w")
         depth = int(one(e, "depth", "0"))
         sec.cmp(label, "base glyph/glyph", m.get("glyph"), glyph)
+        sec.cmp(label, "base", m.get("base", ""), slug(one(e, "base", "")))
         sec.cmp(label, "colour", m.get("color", "White"), MI.COLORS.get(col[0], f"?{col}"))
         sec.cmp(label, "depth", m.get("depth", 0), depth)
         sec.cmp(label, "rarity", m.get("rarity", 1), int(one(e, "rarity", "1")))
@@ -1646,6 +1647,32 @@ def spell_avg_42(e, power):
     return rv_avg(dice)
 
 
+def compare_summons(gd, data):
+    sec = section("summons", "Summons", "summons.json", "summon.txt")
+    ours = {x["id"]: x for x in load(data, "summons.json")}
+    used = set()
+    for e in parse_records(os.path.join(gd, "summon.txt")):
+        x = ours.get(e["name"])
+        if x is None:
+            sec.only_theirs.append(e["name"])
+            continue
+        used.add(e["name"])
+        sec.compared += 1
+        label = e["name"]
+        sec.cmp(label, "sound (msgt)", x.get("sound", "SUM_MONSTER"), one(e, "msgt"))
+        sec.cmp(label, "uniques allowed", bool(x.get("uniques")), one(e, "uniques") == "1")
+        sec.cmp_set(label, "bases", x.get("bases", []), [slug(b) for b in get(e, "base")])
+        sec.cmp(label, "race flag", x.get("raceFlag"), one(e, "race-flag"))
+        sec.cmp(label, "fallback", x.get("fallback"), one(e, "fallback"))
+        sec.cmp(label, "description", x.get("description", ""), one(e, "desc", ""))
+    for sid in ours:
+        if sid not in used:
+            sec.only_ours.append(sid)
+    sec.notes += ["Every field of summon.txt is compared. Monster spells are checked to summon the kind their "
+                  "`effect:SUMMON:<kind>` names, with 4.2.5's dice as the most attempts."]
+    return sec
+
+
 def compare_monster_spells(gd, data):
     sec = section("monster_spells", "Monster spells", "monster_spells.json", "monster_spell.txt (+ projection.txt, list-mon-spells.h)")
     ours = {s["id"]: s for s in load(data, "monster_spells.json")}
@@ -1717,6 +1744,9 @@ def compare_monster_spells(gd, data):
                 sec.cmp(label, "duration", canon_rv(s.get("duration")), canon_rv(d))
             tt = OI.TIMED.get(arg, arg.lower())
             sec.cmp(label, "timed effect", s.get("timed"), tt)
+        elif kind == "SUMMON":
+            sec.cmp(label, "summon kind", s.get("summon"), arg)
+            sec.cmp(label, "most summons (dice)", canon_rv(s.get("count", "1")), canon_rv(one(e, "dice") or "1"))
         elif kind in ("MON_HEAL_HP", "MON_HEAL_KIN"):
             t = spell_avg_42(e, 10)
             if t is not None and s.get("healPerLevel"):
@@ -1732,8 +1762,7 @@ def compare_monster_spells(gd, data):
         "Player-status durations are compared only when 4.2.5's dice have no `$` expression.",
         "Not compared: `hit` chance, `power-cutoff` message tiers, messages, lore, WOUND (`powerScaled`), "
         "damage of spells with several damaging effects (STORM...), LASH element (it comes from the caster's "
-        "blows), summons (4.2.5's dice is a cap on attempts under a depth × level budget; AVABand's `count` "
-        "is a plain number — different models), MON_TIMED_INC (HASTE, SHAPECHANGE), teleport distances.",
+        "blows), MON_TIMED_INC (HASTE, SHAPECHANGE), teleport distances.",
     ]
     return sec
 
@@ -1835,7 +1864,7 @@ def render(gd, data, out):
       "angband_vault_import.py but not compared), pit.txt, dungeon_profile.txt, object_base.txt, "
       "object_property.txt, player_property.txt, player_timed.txt, projection.txt (except breath "
       "divisors/caps), realm.txt, flavor.txt, names.txt, history.txt, hints.txt, body.txt, brand.txt, "
-      "slay.txt, summon.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, "
+      "slay.txt, pain.txt, chest_trap.txt, quest.txt, constants.txt, visuals.txt, world.txt, "
       "ui_*.txt, blow_methods.txt (methods are only checked for existence).")
     w("- Descriptions and messages everywhere.")
     w("")
@@ -1872,7 +1901,7 @@ def main():
     gd, data = args.gamedata, args.data
     for fn in (compare_monsters, compare_monster_bases, compare_monster_spells, compare_blow_effects,
                compare_objects, compare_egos, compare_artifacts, compare_classes_and_spells, compare_shapes,
-               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants):
+               compare_traps, compare_terrain, compare_stores, compare_curses, compare_constants, compare_summons):
         fn(gd, data)
     render(gd, data, args.out)
     if args.out:

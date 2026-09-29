@@ -57,6 +57,7 @@ public sealed class GameData
     public IReadOnlyList<EgoItemDef> Egos { get; init; } = [];
     public IReadOnlyList<ArtifactDef> Artifacts { get; init; } = [];
     public IReadOnlyList<CurseDef> Curses { get; init; } = [];
+    public IReadOnlyList<SummonDef> Summons { get; init; } = [];
     public IReadOnlyList<FlavorGroupDef> Flavors { get; init; } = [];
 
     /// <summary>Forms the player can take (Angband shape.txt).</summary>
@@ -87,6 +88,7 @@ public sealed class GameData
     public ObjectBaseDef? ObjectBase(string id) => ObjectBases.FirstOrDefault(b => b.Id == id);
     public ObjectKindDef? Object(string id) => Objects.FirstOrDefault(o => o.Id == id);
     public CurseDef? Curse(string id) => Curses.FirstOrDefault(c => c.Id == id);
+    public SummonDef? Summon(string id) => Summons.FirstOrDefault(s => s.Id == id);
 
     public ElementDef? Element(string id) => Elements.FirstOrDefault(e => e.Id == id);
     public TimedEffectDef? Timed(string id) => TimedEffects.FirstOrDefault(t => t.Id == id);

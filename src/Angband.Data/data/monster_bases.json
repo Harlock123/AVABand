@@ -54,5 +54,5 @@
   {"id": "zephyr_hound", "glyph": "Z", "description": "Zephyr Hound"},
   {"id": "zombie", "glyph": "z", "description": "Zombie/Mummy"},
   {"id": "player", "glyph": "@", "description": "You"},
-  {"id": "Morgoth", "glyph": "P", "description": "Morgoth"}
+  {"id": "morgoth", "glyph": "P", "description": "Morgoth"}
 ]

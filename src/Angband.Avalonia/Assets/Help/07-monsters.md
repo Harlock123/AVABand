@@ -15,6 +15,9 @@ what it resists. You learn more each time you meet or kill one. `~` keeps all of
 - They wake when you are noisy (stealth helps) and follow your scent and sound.
 - Some cast spells or breathe; breaths do damage from the monster's current hit points, so a
   wounded dragon breathes weaker.
+- Summoners call more the deeper you are and the stronger they are, around themselves (up to
+  four squares away): hounds bring hounds, kin their own kind, the Nine each other. "But nothing
+  comes." means none could answer. Monsters summoned by a trap or scroll wait for you to act first.
 - Frightened monsters run and come back when they recover. Group monsters surround you in the
   open — fight them in corridors.
 - **Monsters learn**: with the birth option on (the default), a monster that sees you resist fire

@@ -1,0 +1,19 @@
+[
+  {"id": "ANY", "sound": "SUM_MONSTER", "uniques": true, "description": "a monster"},
+  {"id": "KIN", "sound": "SUM_MONSTER", "uniques": false, "description": "similar monsters"},
+  {"id": "MONSTER", "sound": "SUM_MONSTER", "uniques": false, "description": "a monster"},
+  {"id": "MONSTERS", "sound": "SUM_MONSTER", "uniques": false, "description": "monsters"},
+  {"id": "ANIMAL", "sound": "SUM_ANIMAL", "uniques": false, "raceFlag": "ANIMAL", "description": "animals"},
+  {"id": "SPIDER", "sound": "SUM_SPIDER", "uniques": false, "bases": ["spider"], "description": "spiders"},
+  {"id": "HOUND", "sound": "SUM_HOUND", "uniques": false, "bases": ["zephyr_hound", "canine"], "description": "hounds"},
+  {"id": "HYDRA", "sound": "SUM_HYDRA", "uniques": false, "bases": ["hydra"], "description": "hydras"},
+  {"id": "AINU", "sound": "SUM_AINU", "uniques": false, "bases": ["ainu"], "description": "ainur"},
+  {"id": "DEMON", "sound": "SUM_DEMON", "uniques": false, "raceFlag": "DEMON", "description": "demons"},
+  {"id": "UNDEAD", "sound": "SUM_UNDEAD", "uniques": false, "raceFlag": "UNDEAD", "description": "undead"},
+  {"id": "DRAGON", "sound": "SUM_DRAGON", "uniques": false, "raceFlag": "DRAGON", "description": "dragons"},
+  {"id": "HI_DEMON", "sound": "SUM_HI_DEMON", "uniques": true, "bases": ["major_demon"], "description": "greater demons"},
+  {"id": "HI_UNDEAD", "sound": "SUM_HI_UNDEAD", "uniques": true, "bases": ["vampire", "wraith", "lich"], "description": "greater undead"},
+  {"id": "HI_DRAGON", "sound": "SUM_HI_DRAGON", "uniques": true, "bases": ["ancient_dragon"], "description": "ancient dragons"},
+  {"id": "WRAITH", "sound": "SUM_WRAITH", "uniques": true, "bases": ["wraith"], "raceFlag": "UNIQUE", "fallback": "HI_UNDEAD", "description": "ringwraiths"},
+  {"id": "UNIQUE", "sound": "SUM_UNIQUE", "uniques": true, "raceFlag": "UNIQUE", "fallback": "HI_UNDEAD", "description": "unique monsters"}
+]

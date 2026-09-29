@@ -356,7 +356,7 @@ public sealed partial class GameSession
                 Publish(new MessageEvent("There is a high pitched humming noise."));
                 return true;
             case "summon":
-                return SummonNearPlayer(Math.Max(1, e.Dice(0).Roll(Rng)), NullIfNone(e.Arg(1)));
+                return SummonNearPlayer(Math.Max(1, e.Dice(0).Roll(Rng)), e.Arg(1), e.Int(2));
             case "trap_creation":
                 CreateTrapsAround(Player.Position);
                 return true;
@@ -709,27 +709,6 @@ public sealed partial class GameSession
         }
         if (any) Publish(new MessageEvent("You hear a click."));
         return any;
-    }
-
-    /// <summary>Monsters (of a kind) appear around the player — the cursed staff or scroll of summoning.</summary>
-    private bool SummonNearPlayer(int count, string? flag, int levelBoost = 0)
-    {
-        var unavailable = new HashSet<string>(KilledUniques);
-        foreach (var m in Level.Monsters.All.Where(m => m.Race.IsUnique)) unavailable.Add(m.Race.Id);
-        var summoned = 0;
-        for (var i = 0; i < count; i++)
-        {
-            var race = _spawner.PickRace(Rng, Math.Max(1, Level.Depth + levelBoost), unavailable, flag is null ? null : r => r.Has(flag));
-            var spots = Level.Neighbors(Player.Position).Where(p => Level.IsPassable(p) && Level[p].Monster == 0).ToList();
-            if (race is null || spots.Count == 0) break;
-            var m = _spawner.Place(Level, Rng, race, Rng.Pick(spots), asleep: false);
-            if (race.IsUnique) unavailable.Add(race.Id);
-            Scheduler.Add(m);
-            summoned++;
-        }
-        DisguiseMonsters();
-        UpdateView();
-        return summoned > 0;
     }
 
     /// <summary>

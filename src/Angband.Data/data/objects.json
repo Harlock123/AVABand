@@ -3335,7 +3335,7 @@
     "maxDepth": 100,
     "cost": 0,
     "weight": 5,
-    "effect": "summon:1d3",
+    "effect": "summon:1d3:ANY",
     "stackSize": "1d3",
     "pileChance": 70
   },
@@ -4627,7 +4627,7 @@
     "cost": 0,
     "weight": 50,
     "charges": "2d3",
-    "effect": "summon:1d3"
+    "effect": "summon:1d3:ANY"
   },
   {
     "id": "staff_of_haste_monsters",
