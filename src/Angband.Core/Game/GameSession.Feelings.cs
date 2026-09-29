@@ -22,7 +22,7 @@ public sealed partial class GameSession
 
         var floorItems = Level.Objects.All.Select(o => o.Item).Where(i => !i.IsGold).ToList();
         var monsterRating = LevelFeelings.MonsterRating(Level.Monsters.All.Select(m => m.Race), Level.Depth);
-        var objectRating = LevelFeelings.ObjectRating(floorItems, Data);
+        var objectRating = LevelFeelings.ObjectRating(floorItems, Data, Level.Depth);
         var artifact = floorItems.Any(i => i.IsArtifact);
         Level.Feeling = LevelFeelings.ObjectFeeling(objectRating, Level.Depth, artifact, Options[OptionIds.LoseArtifacts])
                         + LevelFeelings.MonsterFeeling(monsterRating, Level.Depth);

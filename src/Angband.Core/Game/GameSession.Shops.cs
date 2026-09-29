@@ -203,7 +203,8 @@ public sealed partial class GameSession
             var item = Objects.Create(kind);
             Objects.ApplyMagic(Rng, item, level, artifacts: false);
             if ((item.Base.IsWeapon || item.Base.IsAmmo || item.Base.Slot == EquipSlot.Bow) && (item.ToHit < 0 || item.ToDam < 0)) continue;
-            if (item.IsWearable && item.ToAc < 0) continue;
+            if (item.Base.IsWearable && item.Base.Slot is EquipSlot.Body or EquipSlot.Cloak or EquipSlot.Shield or EquipSlot.Head
+                    or EquipSlot.Hands or EquipSlot.Feet && item.ToAc < 0) continue; // Angband tval_is_armor
             if (item.IsCursed) continue;
             if (def.BlackMarket && !BlackMarketOk(item)) continue;
             if (ItemValue.Of(item, Data) < 1) continue;

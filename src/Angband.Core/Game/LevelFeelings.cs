@@ -50,11 +50,18 @@ public static class LevelFeelings
     public static long MonsterRating(IEnumerable<MonsterRaceDef> races, int depth) =>
         races.Sum(r => (long)r.Depth * r.Depth + (r.Depth > depth ? (long)(r.Depth - depth) * r.Depth * r.Depth : 0));
 
-    /// <summary>Angband gen-util.c place_object: each object adds (value / 100)², its value capped at 2,500,000.</summary>
-    public static long ObjectRating(IEnumerable<Item> items, GameData data) =>
+    /// <summary>
+    /// Angband gen-util.c place_object: each object adds (value / 100)², its value capped at 2,500,000;
+    /// make_object first boosts an uncursed object's value by a fifth for each level its kind is
+    /// out of depth.
+    /// </summary>
+    public static long ObjectRating(IEnumerable<Item> items, GameData data, int depth) =>
         items.Sum(i =>
         {
-            var value = Math.Clamp(ItemValue.Real(i, data, i.Number), -2_500_000, 2_500_000);
+            var value = ItemValue.Real(i, data, i.Number);
+            var ood = (i.Kind.MinDepth ?? i.Kind.Level) - depth;
+            if (!i.IsCursed && ood > 0) value += ood * (Math.Max(value, 0) / 5);
+            value = Math.Clamp(value, -2_500_000, 2_500_000);
             return value / 100 * (value / 100);
         });
 

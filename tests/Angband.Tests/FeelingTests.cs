@@ -52,7 +52,30 @@ public class FeelingTests
         var factory = new Angband.Core.Items.ObjectFactory(TestData.Game);
         var ring = factory.Create("ring_of_protection");
         var value = Angband.Core.Items.ItemValue.Of(ring, TestData.Game);
-        Assert.Equal(value / 100 * (value / 100), LevelFeelings.ObjectRating([ring], TestData.Game));
+        var home = ring.Kind.MinDepth ?? ring.Kind.Level;
+        Assert.Equal(value / 100 * (value / 100), LevelFeelings.ObjectRating([ring], TestData.Game, home));
+        // Three levels out of depth: its value counts for 1 + 3/5 of itself (Angband make_object).
+        var boosted = value + 3 * (value / 5);
+        Assert.Equal(boosted / 100 * (boosted / 100), LevelFeelings.ObjectRating([ring], TestData.Game, home - 3));
+    }
+
+    [Fact]
+    public void Books_the_class_cant_read_are_mostly_passed_over()
+    {
+        int Books(string cls, bool anyReader = false)
+        {
+            var game = GameSession.NewGame(TestData.Game, 5, cls);
+            if (anyReader) game.Objects.CanBrowse = null;
+            var rng = new Angband.Core.Randomness.GameRandom(11);
+            var books = 0;
+            for (var i = 0; i < 4000; i++)
+                if (game.Objects.Make(rng, 10) is { } o && game.Objects.IsBook(o.Kind)) books++;
+            return books;
+        }
+        var all = Books("warrior", anyReader: true);
+        var warrior = Books("warrior"); // reads no book: most are rerolled (a fifth kept, three tries)
+        Assert.True(warrior * 3 < all, $"warrior {warrior} of {all}");
+        Assert.True(Books("mage") > warrior); // the mage keeps the magic books
     }
 
     [Fact]

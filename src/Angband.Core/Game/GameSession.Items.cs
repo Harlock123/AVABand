@@ -27,7 +27,7 @@ public sealed partial class GameSession
     /// </summary>
     private void InitItems(bool generalKit = true)
     {
-        Objects = new ObjectFactory(Data);
+        Objects = new ObjectFactory(Data) { CanBrowse = PlayerCanBrowse };
         Knowledge = new PlayerKnowledge(Data, Seed) { IgnoredCheck = IsMarkedIgnored };
         Player.Inventory = new Inventory(Data.Constants.PackSize, Data.Constants.QuiverSlotSize, Data.Constants.QuiverSize);
         _keptBasics.Clear();

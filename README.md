@@ -454,7 +454,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   great drop, two more for a unique's or acquirement); one wearable in twenty is cursed; great
   melee weapons may get bigger dice and great ammunition an extra side; a Ring of Speed may be
   super-charged; good drops come from 4.2.5's good kinds, ten levels deeper; kinds are allocated no
-  deeper than level 100, and now and then from much deeper (egos too). Artifacts are 4.2.5's: each has its alloc chance and
+  deeper than level 100, and now and then from much deeper (egos too). Books your class can't
+  read are mostly passed over (three tries, one in five kept anyway), and for the level feeling an
+  uncursed object from deeper than it is found counts a fifth more per level out of depth, as
+  make_object has it. (4.2.5 parses an ego's `info` cost and rating but prices by object power;
+  so does AVABand.) Stores are 4.2.5's too: `mass_produce` piles, `price_item` (the black market
+  twice the value at half as much again, paying a sixth), `store_create_random` (only damaged
+  weapons and armour, curses and worthless things refused) and `black_market_ok`. Artifacts are 4.2.5's: each has its alloc chance and
   depth range (deeper than its minimum only by luck, never past its maximum), its own weight, and
   immunities where 4.2.5 gives them; the special artifacts (the Phial, the Star, the Arkenstone,
   the rings of power...) turn up as themselves one object in a thousand (one good one in ten), as

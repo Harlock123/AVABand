@@ -37,7 +37,7 @@ public class ReplayTests
     {
         var game = GameSession.NewGame(TestData.Game, 77, "warrior");
         game.Recorder = new ReplayRecorder(game);
-        Play(game, 600, seed: 5);
+        Play(game, 600, seed: 9);
         var file = game.Recorder.ToFile(game);
         Assert.True(file.Steps.Count > 150, $"{file.Steps.Count} steps"); // (the warrior may die first: a real game)
 

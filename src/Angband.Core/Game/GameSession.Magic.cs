@@ -253,6 +253,10 @@ public sealed partial class GameSession
 
     public bool HasBookFor(SpellDef spell) => Player.Inventory.Pack.Any(i => i.Kind.Id == spell.Book);
 
+    /// <summary>Angband obj_kind_can_browse: a book of the player's class (one holding spells they could learn).</summary>
+    public bool PlayerCanBrowse(ObjectKindDef kind) =>
+        Player.Class is { } cls && Data.Spells.Any(s => s.Book == kind.Id && s.Classes.ContainsKey(cls.Id));
+
     /// <summary>Spells the player could learn now (level reached, book carried, not yet learned).</summary>
     public IEnumerable<SpellDef> StudyableSpells() =>
         ClassSpells.Where(s => SpellInfo(s)!.Level <= Player.Level && !Player.LearnedSpells.Contains(s.Id) && HasBookFor(s));

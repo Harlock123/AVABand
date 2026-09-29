@@ -118,6 +118,7 @@ public class ObjectData425Tests
         // 4.2.5's Scroll of Teleportation is "M60": 60% of the level's larger side, give or take.
         var game = GameSession.NewGame(TestData.Game, 13);
         game.Execute(new DebugJumpCommand(5));
+        for (var depth = 6; game.Level.Width < 150; depth++) game.Execute(new DebugJumpCommand(depth)); // a full-sized level
         Assert.Equal("teleport:M60", game.Data.Object("teleportation")!.Effect);
         var reach = Math.Max(game.Level.Width, game.Level.Height) * 60 / 100;
         var far = 0;

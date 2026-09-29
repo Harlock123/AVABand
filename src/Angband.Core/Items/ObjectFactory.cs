@@ -27,6 +27,9 @@ public sealed class ObjectFactory(GameData data)
     /// <summary>False with Angband's birth_no_artifacts: no artifacts are generated.</summary>
     public bool AllowArtifacts { get; set; } = true;
 
+    /// <summary>Whether the player could read a book of this kind (Angband obj_kind_can_browse); null: any.</summary>
+    public Func<ObjectKindDef, bool>? CanBrowse { get; set; }
+
     public Item Create(ObjectKindDef kind, int number = 1)
     {
         var item = new Item(NextSerial++, kind, data.ObjectBase(kind.Base) ?? throw new GameDataException($"Object '{kind.Id}' has unknown base '{kind.Base}'."), number);
@@ -87,7 +90,15 @@ public sealed class ObjectFactory(GameData data)
             good = true;
         }
         Func<ObjectKindDef, bool>? filter = good || great ? IsGoodKind : null;
-        var kind = PickKind(rng, good ? level + 10 : level, filter);
+        // Angband make_object: three tries at a kind, rejecting most books the player can't read
+        // (one in five is kept all the same).
+        ObjectKindDef? kind = null;
+        for (var tries = 3; tries > 0; tries--)
+        {
+            kind = PickKind(rng, good ? level + 10 : level, filter);
+            if (kind is null || CanBrowse is null || !IsBook(kind) || CanBrowse(kind) || rng.OneIn(5)) break;
+            kind = null;
+        }
         if (kind is null) return null;
 
         var item = Create(kind, 1);
@@ -98,6 +109,9 @@ public sealed class ObjectFactory(GameData data)
             item.Number = Math.Max(1, kind.StackSize.Roll(rng));
         return item;
     }
+
+    /// <summary>Angband tval_is_book_k: a magic, prayer, nature or shadow book.</summary>
+    public bool IsBook(ObjectKindDef kind) => kind.Base is "magic_book" or "prayer_book" or "nature_book" or "shadow_book";
 
     /// <summary>
     /// Angband kind_is_good: what a good drop may be — armour and weapons that don't start damaged,
