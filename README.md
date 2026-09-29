@@ -940,7 +940,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     built before the other rooms so the tunnels reach it (in caverns, built in with floor toward the
     middle), and no others of that kind, and you arrive on the square you left from — so going back up lands
     you on the staircase you came down. No labyrinths, gauntlets or hard centres are made for a
-    persistent dungeon (as in 4.2.5), and a lair keeps its two halves apart from the joins;
+    persistent dungeon (as in 4.2.5), and a lair keeps its two halves apart from the joins.
+    A level with no kept neighbour on one side but a kept level two away keeps its stairs that way
+    well clear of that level's (Angband's one-off lists), so the level made between them later can
+    meet both;
     the debug menu's *Regenerate level* still makes a new one. Kept levels are in the save. Word
     of Recall read in town asks "Which level do you wish to return to?" (the deepest kept level
     by default; only a level you have visited will do).

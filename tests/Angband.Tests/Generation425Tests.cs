@@ -68,6 +68,18 @@ public class Generation425Tests
     }
 
     [Fact]
+    public void Vaults_with_no_max_depth_turn_up_at_any_depth()
+    {
+        // vault.txt's max-depth:0 is no limit (parse_vault_max_depth), so lesser and medium vaults appear.
+        var types = new HashSet<string>();
+        for (ulong seed = 1; seed <= 150; seed++)
+            foreach (var name in Generator.Generate(new LevelRequest(40, seed, ProfileId: "classic")).Level.Vaults)
+                types.Add(TestData.Game.Vaults.First(v => v.Name == name).Type);
+        Assert.Contains("Lesser vault", types);
+        Assert.Contains("Medium vault", types);
+    }
+
+    [Fact]
     public void A_hard_centre_holds_a_greater_vault_whose_rating_counts()
     {
         var level = Generator.Generate(new LevelRequest(70, 7, ProfileId: "hard_centre")).Level;
@@ -149,5 +161,56 @@ public class Generation425Tests
         Assert.True(game.Level.Monsters.All.Count() >= 14);
         Assert.NotEmpty(game.Level.Objects.All);
         for (var i = 0; i < 50 && !game.IsGameOver; i++) game.Execute(new HoldCommand());
+    }
+
+    [Fact]
+    public void Up_stairs_keep_clear_of_the_down_stairs_of_a_level_kept_two_above()
+    {
+        var far = new List<StairJoin>();
+        for (var x = 20; x <= 100; x += 10)
+        for (var y = 10; y <= 60; y += 10)
+            far.Add(new StairJoin(new Loc(x, y), Down: true));
+        for (ulong seed = 1; seed <= 10; seed++)
+        {
+            var level = Generator.Generate(new LevelRequest(10, seed, ProfileId: "classic", Persistent: true,
+                OneOffAbove: far)).Level;
+            foreach (var up in level.FindFeature(TerrainFlags.UpStair))
+                Assert.DoesNotContain(far, f => Math.Abs(f.Loc.X - up.X) <= 16 && Math.Abs(f.Loc.Y - up.Y) <= 16);
+        }
+    }
+
+    [Fact]
+    public void The_level_between_two_kept_levels_meets_both()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5, "warrior");
+        game.Options[OptionIds.LevelsPersist] = true;
+        game.Player.Hp = game.Player.MaxHp = 1_000_000;
+        game.MarkDebugUsed();
+        game.Execute(new DebugJumpCommand(12));
+        var twelve = game.Level;
+        game.Execute(new DebugJumpCommand(10));
+        var ten = game.Level;
+        var stair = ten.FindFeature(TerrainFlags.DownStair).First();
+        game.Player.Position = stair;
+        TestGames.ClearMonsters(game);
+        Assert.True(game.Execute(new TakeStairsCommand(true)));
+        Assert.Equal(11, game.Player.Depth);
+        var eleven = game.Level;
+        foreach (var p in ten.FindFeature(TerrainFlags.DownStair)) Assert.True(eleven.Has(p, TerrainFlags.UpStair));
+        foreach (var p in twelve.FindFeature(TerrainFlags.UpStair)) Assert.True(eleven.Has(p, TerrainFlags.DownStair));
+    }
+
+    [Fact]
+    public void A_turned_vaults_letter_monsters_go_where_the_letters_would_be_unturned()
+    {
+        // 4.2.5 reads the vault's text row by row into the turned rectangle (get_vault_monsters).
+        foreach (var (level, seed) in Enumerable.Range(1, 400).Select(s => (Generator.Generate(
+                     new LevelRequest(40, (ulong)s, ProfileId: "modified")).Level, s)))
+        {
+            foreach (var hint in level.SpawnHints.Where(h => h.Tag?.StartsWith("awake,base:") == true))
+                Assert.True(level.Has(hint.Loc, TerrainFlags.Passable), $"seed {seed}: {hint.Loc}");
+            if (level.SpawnHints.Any(h => h.Tag?.StartsWith("awake,base:") == true)) return;
+        }
+        Assert.Fail("no vault with letter monsters in 400 levels");
     }
 }

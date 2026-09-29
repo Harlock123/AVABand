@@ -28,9 +28,16 @@ public enum StairArrival
 /// <param name="Quest">A quest level (Sauron's, Morgoth's): always classic, and its stairs only go up.</param>
 /// <param name="AboveStored">A persistent level: the level above is kept (so its joins are this level's up stairs).</param>
 /// <param name="BelowStored">A persistent level: the level below is kept.</param>
+/// <param name="OneOffAbove">
+/// Persistent levels with no level kept above but one kept two above (Angband one_off_above): that
+/// level's down staircases, which this level's up staircases keep clear of, so the level between
+/// can meet both when it is made.
+/// </param>
+/// <param name="OneOffBelow">Likewise the up staircases of a level kept two below (Angband one_off_below).</param>
 public sealed record LevelRequest(int Depth, ulong Seed, StairArrival Arrival = StairArrival.None, string? ProfileId = null,
     bool? ConnectStairs = null, IReadOnlyList<StairJoin>? Joins = null, Loc? PreferredStart = null, bool Persistent = false,
-    bool Quest = false, bool AboveStored = false, bool BelowStored = false);
+    bool Quest = false, bool AboveStored = false, bool BelowStored = false,
+    IReadOnlyList<StairJoin>? OneOffAbove = null, IReadOnlyList<StairJoin>? OneOffBelow = null);
 
 /// <summary>A staircase a persistent level must have at <see cref="Loc"/> (a down staircase if <see cref="Down"/>).</summary>
 public sealed record StairJoin(Loc Loc, bool Down);

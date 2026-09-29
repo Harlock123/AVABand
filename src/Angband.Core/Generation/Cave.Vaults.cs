@@ -53,14 +53,18 @@ public sealed partial class Cave
         return (rotate, low >= 4, turned ? width : height, turned ? height : width);
     }
 
-    /// <summary>Angband random_vault: one of the type for this depth, each as likely as another.</summary>
+    /// <summary>
+    /// Angband random_vault: one of the type for this depth, each as likely as another. A max-depth
+    /// of 0 is no limit (parse_vault_max_depth reads it as the dungeon's depth).
+    /// </summary>
     private VaultDef? RandomVault(int depth, string type)
     {
         VaultDef? r = null;
         var n = 1;
         foreach (var v in _data.Vaults)
         {
-            if (v.Type != type || v.MinDepth > depth || v.MaxDepth < depth) continue;
+            var maxDepth = v.MaxDepth == 0 ? _data.Constants.MaxDepth : v.MaxDepth;
+            if (v.Type != type || v.MinDepth > depth || maxDepth < depth) continue;
             if (_rng.OneIn(n)) r = v;
             n++;
         }
@@ -339,7 +343,7 @@ public sealed partial class Cave
             }
         }
 
-        GetVaultMonsters(c, racialSymbols, v, y0, x0, tr.Rotate, tr.Reflect);
+        GetVaultMonsters(c, racialSymbols, v, new Loc(x0, y0), tr.Height, tr.Width);
         return true;
     }
 
@@ -360,19 +364,25 @@ public sealed partial class Cave
     /// <summary>
     /// Angband get_vault_monsters: for each letter, monsters of that symbol (awake, alone) at the
     /// vault type's depth — the level's in an interesting room, +2/+4/+6 in lesser/medium/greater
-    /// vaults. (4.2.5 walks the untransformed layout here; the letters' own grids are used.)
+    /// vaults. As in 4.2.5, the vault's text is read row by row into the turned rectangle, so in a
+    /// rotated or reflected vault a letter's monster goes where the letter would be unturned — on
+    /// that grid if a monster can stand there (place_new_monster_one), and nowhere if not.
     /// </summary>
-    private void GetVaultMonsters(Level c, List<char> racialSymbols, VaultDef v, int y0, int x0, int rotate, bool reflect)
+    private void GetVaultMonsters(Level c, List<char> racialSymbols, VaultDef v, Loc topLeft, int thgt, int twid)
     {
         var depth = c.Depth + (v.Type.Contains("Lesser vault") ? 2 : v.Type.Contains("Medium vault") ? 4
             : v.Type.Contains("Greater vault") ? 6 : 0);
+        var text = string.Concat(v.Rows);
         foreach (var symbol in racialSymbols)
-            for (var y = 0; y < v.Height; y++)
-            for (var x = 0; x < v.Width; x++)
+            for (int y = 0, t = 0; y < thgt; y++)
+            for (var x = 0; x < twid; x++, t++)
             {
-                if (v.Rows[y][x] != symbol) continue;
-                var g = SymmetryTransform(new Loc(x, y), y0, x0, v.Height, v.Width, rotate, reflect);
-                PickAndPlaceMonster(c, g, depth, false, false, $"base:{symbol},uniques");
+                if (text[t] != symbol) continue;
+                var g = new Loc(topLeft.X + x, topLeft.Y + y);
+                if (!InBounds(c, g) || !IsPassable(c, g) || g == _playerStart
+                    || c.SpawnHints.Any(h => h.Loc == g && h.Kind is SpawnKind.Monster or SpawnKind.Race)) continue;
+                c.SpawnHints.Add(new SpawnHint(g, SpawnKind.Monster, depth - c.Depth, $"awake,base:{symbol},uniques"));
+                Occupied(c).Add(g);
             }
     }
 

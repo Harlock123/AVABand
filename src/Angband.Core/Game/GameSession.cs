@@ -506,8 +506,9 @@ public sealed partial class GameSession : ITurnHandler
         }
         else
         {
+            var joins = persist ? JoinsFor(depth) : default;
             var generated = _generator.Generate(new LevelRequest(depth, seed, arrival, ConnectStairs: Options[OptionIds.ConnectStairs],
-                Joins: persist ? JoinsFor(depth) : null, PreferredStart: persist && Level is not null ? from : null,
+                Joins: joins.Joins, OneOffAbove: joins.OneOffAbove, OneOffBelow: joins.OneOffBelow, PreferredStart: persist && Level is not null ? from : null,
                 Persistent: persist, Quest: QuestAt(depth) is not null,
                 AboveStored: persist && _storedLevels.ContainsKey(depth - 1), BelowStored: persist && _storedLevels.ContainsKey(depth + 1)));
 

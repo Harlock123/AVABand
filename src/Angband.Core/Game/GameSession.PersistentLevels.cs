@@ -34,15 +34,25 @@ public sealed partial class GameSession
         _storedLevels[Level.Depth] = new StoredLevel(Level, Known, GameTurn);
     }
 
-    /// <summary>Angband get_join_info: the stairs a new level must have to meet its stored neighbours.</summary>
-    private List<StairJoin> JoinsFor(int depth)
+    /// <summary>
+    /// Angband get_join_info: the stairs a new level must have to meet its stored neighbours, and
+    /// where there is no neighbour kept but one two away, that level's stairs facing this way, which
+    /// this level's own stairs must keep clear of.
+    /// </summary>
+    private (List<StairJoin> Joins, List<StairJoin> OneOffAbove, List<StairJoin> OneOffBelow) JoinsFor(int depth)
     {
         var joins = new List<StairJoin>();
+        var oneOffAbove = new List<StairJoin>();
+        var oneOffBelow = new List<StairJoin>();
         if (_storedLevels.TryGetValue(depth - 1, out var above))
             joins.AddRange(above.Level.FindFeature(TerrainFlags.DownStair).Select(p => new StairJoin(p, Down: false)));
+        else if (_storedLevels.TryGetValue(depth - 2, out var twoAbove))
+            oneOffAbove.AddRange(twoAbove.Level.FindFeature(TerrainFlags.DownStair).Select(p => new StairJoin(p, Down: true)));
         if (_storedLevels.TryGetValue(depth + 1, out var below))
             joins.AddRange(below.Level.FindFeature(TerrainFlags.UpStair).Select(p => new StairJoin(p, Down: true)));
-        return joins;
+        else if (_storedLevels.TryGetValue(depth + 2, out var twoBelow))
+            oneOffBelow.AddRange(twoBelow.Level.FindFeature(TerrainFlags.UpStair).Select(p => new StairJoin(p, Down: false)));
+        return (joins, oneOffAbove, oneOffBelow);
     }
 
     /// <summary>Uniques alive on a stored level, who can't turn up anywhere else meanwhile.</summary>

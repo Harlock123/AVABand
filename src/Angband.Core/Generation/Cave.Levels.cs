@@ -14,6 +14,8 @@ public sealed partial class Cave
     /// One attempt (Angband cave_generate's loop body): the profile's builder makes the level, or
     /// says why it couldn't.
     /// </summary>
+    private Connector ToConnector(StairJoin j) => new(j.Loc, j.Down ? _f.DownStair : _f.UpStair);
+
     public (Level? Level, Loc Start, string? Error) Build(LevelRequest request, DungeonProfileDef profile)
     {
         _request = request;
@@ -21,7 +23,9 @@ public sealed partial class Cave
         {
             Persist = request.Persistent,
             Quest = request.Quest,
-            Join = [.. (request.Joins ?? []).Select(j => new Connector(j.Loc, j.Down ? _f.DownStair : _f.UpStair))],
+            Join = [.. (request.Joins ?? []).Select(ToConnector)],
+            OneOffAbove = [.. (request.OneOffAbove ?? []).Select(ToConnector)],
+            OneOffBelow = [.. (request.OneOffBelow ?? []).Select(ToConnector)],
         };
         _occupied.Clear();
         _floors.Clear();
