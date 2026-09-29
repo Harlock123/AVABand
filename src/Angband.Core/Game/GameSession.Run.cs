@@ -67,6 +67,12 @@ public sealed partial class GameSession
         for (var step = 0; step < MaxRunSteps && !IsGameOver; step++)
         {
             if (step > 0 && RunTest()) break;
+            // Angband move_player: running into lava asks first ("Lava blocks your path"); a run stops short.
+            if (ExpectedTerrainDamage(Player.Position.Step(FromKeypad(_runCurDir))) > 0 && !Player.Timed.Has(Effects.TimedIds.Confused))
+            {
+                if (step == 0) Publish(new MessageEvent("Lava blocks your path."));
+                break;
+            }
             var from = Player.Position;
             // Only the first step can be sent astray by confusion (Angband player_confuse_dir).
             var energy = Walk(FromKeypad(_runCurDir), confuse: step == 0);

@@ -98,6 +98,28 @@ public sealed partial class GameSession
     public bool CanSmell(Monster monster) =>
         monster.Race.Smell > 0 && Scent.Age(monster.Position) <= monster.Race.Smell;
 
+    /// <summary>
+    /// Angband monster_take_terrain_damage: lava burns a monster that isn't immune to fire (100 + 1d100);
+    /// one that dies of it is gone, dropping what it carried, and no one earns anything.
+    /// </summary>
+    private void MonsterTerrainDamage(Monster monster)
+    {
+        if (!Level.Has(monster.Position, TerrainFlags.Fiery) || monster.Race.Has("IM_FIRE")) return;
+        var name = Capitalize(MonsterName(monster));
+        monster.Hp -= 100 + Rng.RandInt1(100);
+        if (monster.Hp >= 0)
+        {
+            if (monster.IsVisible) Publish(new MessageEvent($"{name} catches fire!"));
+            return;
+        }
+        if (monster.IsVisible) Publish(new MessageEvent($"{name} disintegrates!"));
+        QuestKill(monster);
+        Level.Monsters.Remove(monster);
+        DropCarried(monster);
+        DropMonsterLoot(monster);
+        if (monster == Commanded) ReleaseCommand(announce: false);
+    }
+
     /// <summary>Angband monster_hates_grid: lava, for a monster that isn't immune to fire.</summary>
     private bool HatesGrid(Monster monster, Loc p) =>
         Level.Has(p, TerrainFlags.Fiery) && !monster.Race.Has("IM_FIRE");

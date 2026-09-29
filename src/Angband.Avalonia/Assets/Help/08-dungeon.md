@@ -15,7 +15,9 @@ magical, disarmed with your magical disarming skill; the rest with the physical 
 falling lets you float down pits and trap doors unhurt, and trap immunity keeps you safe from all.
 Locked doors may take several tries (opening retries by itself). Rubble and walls can be
 tunnelled (`T`), faster with a digger. Lava burns whoever stands in it (fire resistance and
-feather falling soften it); most monsters won't set foot in it.
+feather falling soften it): a step that would cost more than a third of your hit points asks
+first, running stops short of it and travel goes round. Monsters that fear fire won't set foot
+in it, and one left in it burns. Monsters never set off traps (nor do they in Angband 4.2.5).
 
 ## Stairs
 

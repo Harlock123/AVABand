@@ -64,6 +64,7 @@ public sealed partial class GameSession
                 var walkable = feature.Has(TerrainFlags.Passable) || feature.Has(TerrainFlags.DoorClosed);
                 if (!walkable) continue;
                 if (n != to && Level[n].Trap != 0 && Level[n].Has(SquareFlags.TrapVisible)) continue;
+                if (feature.Has(TerrainFlags.Fiery)) continue; // Angband is_valid_pf: no damaging terrain
                 prev[n] = p;
                 queue.Enqueue(n);
             }

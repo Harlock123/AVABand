@@ -258,7 +258,17 @@ public sealed partial class GameSession : ITurnHandler
     bool ITurnHandler.NeedsInput(IActor actor) => actor is Player;
 
     int ITurnHandler.TakeTurn(IActor actor) =>
-        actor is Monster monster ? MonsterTurn(monster) : EnergyTable.MoveEnergy;
+        actor is Monster monster ? MonsterTurnThenTerrain(monster) : EnergyTable.MoveEnergy;
+
+    /// <summary>Angband process_monsters: the monster's turn, then (as for the player) the terrain's harm.</summary>
+    private int MonsterTurnThenTerrain(Monster monster)
+    {
+        var energy = MonsterTurn(monster);
+        // (Its turn may have taken the player to another level: it burns only if it is still here.)
+        if (monster.IsActive && Level.InBounds(monster.Position) && Level.Monsters.At(monster.Position) == monster)
+            MonsterTerrainDamage(monster);
+        return energy;
+    }
 
     void ITurnHandler.OnWorldTick(long gameTurn) => WorldTick(gameTurn);
 

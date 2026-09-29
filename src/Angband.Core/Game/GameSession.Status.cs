@@ -1,3 +1,4 @@
+using Angband.Core.Geometry;
 using Angband.Core.Effects;
 using Angband.Core.Time;
 
@@ -95,6 +96,37 @@ public sealed partial class GameSession
         if (Player.Experience > 0 && Rng.OneIn(10))
             LoseExperience((Rng.Damroll(10, 6) + Player.Experience / 100 * LifeDrainPercent) / 10);
         LearnRune(Definitions.RuneIds.Flag(Definitions.ItemFlags.DrainExp));
+    }
+
+    /// <summary>
+    /// Angband player_check_terrain_damage, not rolled: what a turn in lava would do to you — 150 fire,
+    /// as your resistance takes it, halved by feather falling.
+    /// </summary>
+    public int ExpectedTerrainDamage(Loc p)
+    {
+        if (!Level.InBounds(p) || !Level.Has(p, Definitions.TerrainFlags.Fiery)) return 0;
+        var damage = Player.Resists.GetValueOrDefault("fire") switch
+        {
+            >= 3 => 0,
+            2 => 150 / 9,
+            1 => 150 / 3,
+            < 0 => 150 * 4 / 3,
+            _ => 150,
+        };
+        return Player.HasGearFlag(Definitions.ItemFlags.Feather) ? damage / 2 : damage;
+    }
+
+    /// <summary>
+    /// Angband move_player's question before damaging terrain: the warning to ask about, when (not
+    /// confused) this step would cost more than a third of your hit points; null when no need.
+    /// </summary>
+    public string? DangerousStepWarning(GameCommand command)
+    {
+        var dir = command switch { WalkCommand w => w.Direction, JumpCommand j => j.Direction, _ => (Direction?)null };
+        if (dir is not { } d || Player.Timed.Has(TimedIds.Confused)) return null;
+        var to = Player.Position.Step(d);
+        if (Level.Monsters.At(to) is not null) return null;
+        return ExpectedTerrainDamage(to) > Player.Hp / 3 ? "The lava will scald you!  Really step in?" : null;
     }
 
     /// <summary>

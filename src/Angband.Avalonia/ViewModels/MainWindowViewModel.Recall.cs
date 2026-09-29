@@ -47,6 +47,29 @@ public sealed partial class MainWindowViewModel
         return false;
     }
 
+    private bool _lavaAnswered;
+
+    /// <summary>
+    /// Angband move_player: stepping into lava that would cost more than a third of your hit points
+    /// asks first ("The lava will scald you! Really step in?"); true if it asked.
+    /// </summary>
+    private bool AskAboutLava(GameCommand command)
+    {
+        if (_lavaAnswered)
+        {
+            _lavaAnswered = false;
+            return false;
+        }
+        if (_game.DangerousStepWarning(command) is not { } warning) return false;
+        AskYesNo(warning, yes =>
+        {
+            if (!yes) return;
+            _lavaAnswered = true;
+            Execute(command);
+        });
+        return true;
+    }
+
     private void AskRecallLevel(GameCommand command, int suggested) =>
         BeginNumberPrompt("Which level do you wish to return to (0 to cancel)?", suggested, level =>
         {
