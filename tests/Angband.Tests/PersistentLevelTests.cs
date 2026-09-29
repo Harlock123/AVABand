@@ -57,11 +57,34 @@ public class PersistentLevelTests
         Assert.True(game.Level.Has(game.Player.Position, TerrainFlags.DownStair)); // back where the way down is
     }
 
+    [Theory]
+    [InlineData(11)]
+    [InlineData(13)]
+    [InlineData(14)]
+    [InlineData(15)]
+    [InlineData(16)]
+    [InlineData(17)]
+    [InlineData(18)]
+    [InlineData(19)]
+    [InlineData(20)]
+    [InlineData(21)]
+    public void EveryWayDown_ComesOutOnTheLevelBelow_EvenWhereItDoesNotFit(int seed)
+    {
+        // A join in permanent rock (a vault's wall) is moved to the nearest square that fits.
+        var game = Game(seed: (ulong)seed);
+        TakeStairs(game, down: true);
+        var downs = game.Level.FindFeature(TerrainFlags.DownStair).ToList();
+        TakeStairs(game, down: true);
+        var ups = game.Level.FindFeature(TerrainFlags.UpStair).ToList();
+        Assert.Equal(downs.Count, ups.Count);
+        Assert.All(downs, d => Assert.Contains(ups, u => u.DistanceTo(d) <= 10));
+    }
+
     [Fact]
     public void ANewLevel_MeetsItsNeighbours_Stairs()
     {
-        // (A join that doesn't fit the new level — outside it, or in permanent rock — is dropped, so
-        // this needs a seed whose level 2 takes both of level 1's stairs.)
+        // (A join in permanent rock is moved to the nearest square that fits — see the test above —
+        // so the squares match exactly only where all fit, as they do for this seed.)
         var game = Game(seed: 12);
         TakeStairs(game, down: true);                     // town -> 1
         var downs = game.Level.FindFeature(TerrainFlags.DownStair).ToHashSet();

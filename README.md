@@ -451,6 +451,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   version that changed the save format (named by commit), and `OldSaveTests` loads each, plays on,
   goes down a level and saves it again in today's format. `tools/old-saves/make-old-save.sh
   <commit>` builds that commit in a scratch worktree and writes a new one.
+- **Persistent levels' stairs**: a new level meets its stored neighbours' stairs square for square;
+  one that would land in permanent rock (a vault's wall) goes to the nearest square that fits, so
+  every way down still comes out somewhere.
 - **Drift from 4.2.5's data**: `python3 tools/compare_with_angband.py <angband-4.2.5/lib/gamedata>`
   compares every monster, monster spell, blow effect, object kind, ego, artifact, class (and its
   spells), race, shape, trap, terrain feature and store with 4.2.5's own files, reusing the
