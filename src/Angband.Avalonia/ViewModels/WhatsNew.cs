@@ -5,7 +5,8 @@ namespace Angband.Avalonia.ViewModels;
 
 /// <summary>
 /// What's new (AVABand's own): Assets/Help/11-whats-new.md, a dated section ("## 2026-10-01") for
-/// each round of changes, newest first. After an update the sections newer than the last one the
+/// each round of changes, newest first — a second round on the same day is "## 2026-10-01.2", which
+/// sorts after it (players see just the date). After an update the sections newer than the last one the
 /// player saw are shown once; the whole page is in Help (Help → What's new...).
 /// </summary>
 public static class WhatsNew
@@ -27,8 +28,7 @@ public static class WhatsNew
         var lines = new List<string>();
         foreach (var line in markdown.Replace("\r", "").Split('\n'))
         {
-            if (line.StartsWith("## ", StringComparison.Ordinal)
-                && DateOnly.TryParseExact(line[3..].Trim(), "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+            if (line.StartsWith("## ", StringComparison.Ordinal) && IsStamp(line[3..].Trim()))
             {
                 if (date is not null) sections.Add((date, string.Join('\n', lines).Trim()));
                 date = line[3..].Trim();
@@ -38,6 +38,15 @@ public static class WhatsNew
         }
         if (date is not null) sections.Add((date, string.Join('\n', lines).Trim()));
         return sections.OrderByDescending(s => s.Item1, StringComparer.Ordinal).ToList();
+    }
+
+    /// <summary>A section's stamp: a date, and perhaps ".2", ".3"... for later rounds that day.</summary>
+    private static bool IsStamp(string text)
+    {
+        var date = text.Length >= 10 ? text[..10] : text;
+        var rest = text[date.Length..];
+        return DateOnly.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)
+               && (rest.Length == 0 || rest[0] == '.' && rest.Length > 1 && rest[1..].All(char.IsAsciiDigit));
     }
 
     /// <summary>The newest section's date: what the player has seen, once shown.</summary>
@@ -54,7 +63,7 @@ public static class WhatsNew
             : sections.Where(s => string.CompareOrdinal(s.Date, lastSeen) > 0).ToList();
         if (fresh.Count == 0) return null;
         var text = "# What's new since you last played\n\nThe whole list is in Help → What's new...\n\n"
-                   + string.Join("\n\n", fresh.Select(s => $"## {s.Date}\n\n{s.Text}"));
+                   + string.Join("\n\n", fresh.Select(s => $"## {s.Date[..10]}\n\n{s.Text}"));
         return HelpViewModel.Parse(text);
     }
 }

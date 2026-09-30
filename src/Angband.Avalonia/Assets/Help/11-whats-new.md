@@ -3,11 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
-## 2026-10-01
+## 2026-09-30.2
 
 - **Every quest monster has its picture**: Durgash, Hathol, the Black Market's four suspects and
   the Shade of the Stair now show in every tileset, not as letters.
 - **What's new**: this page, shown once after each update.
+- **Heroic characters' scores count 75%**, since heroic stats make the game easier.
 - **Feats**: milestones across all your characters (deep levels, great foes slain, quests, a win
   with each class), on the Knowledge screen's new Feats page.
 
@@ -21,7 +22,6 @@ played; this page keeps it all (Help → What's new...).
 - **Scenes have sounds**: footsteps on the stairs, the rent tearing and a thunderclap for Word of
   Recall, a bell at death, and more.
 - **Save backups**: earlier saves of each character are kept; roll one back from the Load dialog.
-- **Heroic characters' scores count 75%**, since heroic stats make the game easier.
 - **Option**: check GitHub for a newer AVABand when the game starts (off unless you turn it on).
 
 ## 2026-09-29

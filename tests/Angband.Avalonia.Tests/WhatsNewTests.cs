@@ -35,6 +35,18 @@ public class WhatsNewTests
     }
 
     [Fact]
+    public void ASecondRoundTheSameDay_SortsAfterTheFirst()
+    {
+        const string page = "# What's new\n\n## 2026-09-30.2\n\n- Later.\n\n## 2026-09-30\n\n- Earlier.\n";
+        Assert.Equal(["2026-09-30.2", "2026-09-30"], WhatsNew.Sections(page).Select(s => s.Date));
+        var topic = WhatsNew.Since(page, "2026-09-30")!;
+        var text = string.Join(" ", topic.Blocks.SelectMany(b => b.Spans).Select(s => s.Text));
+        Assert.Contains("Later.", text);
+        Assert.DoesNotContain("Earlier.", text);
+        Assert.Contains(topic.Blocks, b => b.Kind == HelpBlockKind.Heading && b.Spans[0].Text == "2026-09-30");
+    }
+
+    [Fact]
     public void OnlyWhatIsNewer_IsShown()
     {
         var topic = WhatsNew.Since(Page, "2026-09-29")!;
