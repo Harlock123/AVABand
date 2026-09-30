@@ -151,9 +151,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     — whether he makes it is settled then (the deeper, the worse his odds) and learned at the
     Alchemy shop. *The Cartographer*: map three quarters of a cavern, a labyrinth and one of the old
     mines (magic mapping counts; checked as you go), then the Bookseller pays, with a Rod of
-    Treasure Location and a discount. *The Warden's Fires*: the Shade of the Stair can't be harmed
+    Treasure Location and a discount. He names where each is, a few levels past your deepest, and
+    the first new level made at each of those depths is that kind (any other you find counts too) —
+    left to chance they're rare, and never above 750 ft (`docs/quest-playtest.md`). *The Warden's Fires*: the Shade of the Stair can't be harmed
     while its hall's three braziers are cold; step onto each with the Warden's Taper to light it —
-    and the Shade, lingering by a lit one, puts it out again (about one turn in four).
+    and the Shade, lingering by a lit one, puts it out again (about one turn in six).
+    `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
     `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. One a monster
     drops on a full pack's account and left behind on the level turns up at the Prancing Pony

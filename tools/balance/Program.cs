@@ -34,6 +34,10 @@
 // roll, once from the heroic roll (HeroicBirth) — and how much more often the heroic ones live, what
 // more they kill and gain.
 //
+// `profiles [levels]` — how often each kind of level (classic, cavern, labyrinth, moria, lair,
+// gauntlet...) is made at each depth: the Cartographer's quest needs a cavern, a labyrinth and one of
+// the old mines, so it can only be done as fast as they turn up.
+//
 // `record-replays [dir]` — records the four games tests/Angband.Tests/Replays keeps (ReplayFixtureTests),
 // for when a change is meant to change how games play out.
 //
@@ -126,6 +130,29 @@ if (args.Length > 0 && args[0] == "heroic")
         string Pair(int k, double scale) => $"{Num(scale * sums[0, k] / runs),6} → {Num(scale * sums[1, k] / runs),-6}";
         Console.WriteLine($"{cls,-11} {depth,5} | {Pair(0, 100),25} | {Pair(1, 1),21} | {Pair(2, 1),26} | {Pair(3, 1),23}");
     }
+    return;
+}
+
+if (args.Length > 0 && args[0] == "profiles")
+{
+    var levels = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 200;
+    var kinds = new SortedSet<string>(StringComparer.Ordinal);
+    var counts = new Dictionary<(int, string), int>();
+    var profileDepths = new[] { 3, 5, 8, 10, 15, 20, 25, 30, 40 };
+    foreach (var depth in profileDepths)
+        for (var run = 0; run < levels; run++)
+        {
+            var game = GameSession.NewGame(data, (ulong)(depth * 100_000 + run), "warrior");
+            game.MarkDebugUsed();
+            game.Execute(new DebugJumpCommand(depth));
+            var id = game.Level.ProfileId;
+            kinds.Add(id);
+            counts[(depth, id)] = counts.GetValueOrDefault((depth, id)) + 1;
+        }
+    Console.WriteLine($"{levels} levels per depth: % of each kind");
+    Console.WriteLine("depth | " + string.Join(" | ", kinds.Select(k => $"{k,10}")));
+    foreach (var depth in profileDepths)
+        Console.WriteLine($"{depth,5} | " + string.Join(" | ", kinds.Select(k => $"{Num(100.0 * counts.GetValueOrDefault((depth, k)) / levels),10}")));
     return;
 }
 

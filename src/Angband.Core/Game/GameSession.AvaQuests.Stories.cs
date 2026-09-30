@@ -120,7 +120,8 @@ public sealed partial class GameSession
         if (Active("letter") is { Stage: "deliver" or "opened" } letter && depth == letter.N("depth")) return ("letter", "quest_hermitage");
         if (MoreRoomFor(depth) is { } more) return more;
         // (Last: the other quests' rooms have fixed depths; the Seal's shrine can wait for a level free.)
-        if (AvaQuests.Get("burden") is null && depth >= BurdenDepth) return ("burden", "quest_relic_shrine");
+        // (The shrine gives way to the cartographer's kind of level; it waits for another.)
+        if (AvaQuests.Get("burden") is null && depth >= BurdenDepth && QuestProfileFor(depth) is null) return ("burden", "quest_relic_shrine");
         return null;
     }
 

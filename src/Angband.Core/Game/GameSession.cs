@@ -552,7 +552,8 @@ public sealed partial class GameSession : ITurnHandler
         {
             var joins = persist ? JoinsFor(depth) : default;
             _questRoomHere = QuestRoomFor(depth);
-            var generated = _generator.Generate(new LevelRequest(depth, seed, arrival, ConnectStairs: Options[OptionIds.ConnectStairs],
+            var generated = _generator.Generate(new LevelRequest(depth, seed, arrival,
+                ProfileId: _questRoomHere is null && QuestAt(depth) is null ? QuestProfileFor(depth) : null, ConnectStairs: Options[OptionIds.ConnectStairs],
                 Joins: joins.Joins, OneOffAbove: joins.OneOffAbove, OneOffBelow: joins.OneOffBelow, PreferredStart: persist && Level is not null ? from : null,
                 Persistent: persist, Quest: QuestAt(depth) is not null, NoDiagonalSqueezes: Options[OptionIds.NoDiagonalSqueezes],
                 QuestRoom: _questRoomHere?.Room, QuestRoomOptional: QuestRoomOptional,

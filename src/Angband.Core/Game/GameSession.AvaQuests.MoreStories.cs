@@ -35,6 +35,10 @@ public sealed partial class GameSession
                 s.Stage = "find";
                 return true;
             case "cartographer":
+                // Where he's heard each kind is to be found, a few levels on from your deepest.
+                s.Numbers["cavern_depth"] = QuestDepth(2, 5, 30);
+                s.Numbers["labyrinth_depth"] = s.N("cavern_depth") + 2 + Rng.RandInt0(3);
+                s.Numbers["moria_depth"] = s.N("labyrinth_depth") + 2 + Rng.RandInt0(3);
                 foreach (var kind in MapKinds) s.Numbers[kind] = 0;
                 s.Numbers["mapped"] = 0;
                 s.Texts["which"] = "none yet";
@@ -60,6 +64,16 @@ public sealed partial class GameSession
         if (Active("warden") is { } warden && depth == warden.N("depth") && !KilledUniques.Contains("the_shade_of_the_stair"))
             return ("warden", "quest_warden_hall");
         return null;
+    }
+
+    /// <summary>
+    /// The kind of level a quest wants made at this depth (null: as the dungeon chooses): the
+    /// cartographer's cavern, labyrinth and old mines, each at the depth he named, until mapped.
+    /// </summary>
+    private string? QuestProfileFor(int depth)
+    {
+        if (!AvaQuestsOn || depth <= 0 || Active("cartographer") is not { Stage: "map" } maps) return null;
+        return MapKinds.FirstOrDefault(kind => maps.N(kind) == 0 && maps.N(kind + "_depth") == depth);
     }
 
     private IEnumerable<Loc> QuestSpots(char symbol) => Level.QuestSpots.Where(s => s.Symbol == symbol).Select(s => s.Loc);
@@ -237,10 +251,10 @@ public sealed partial class GameSession
 
     private void MoreUpkeep()
     {
-        // The Shade puts out a fire it lingers by (while it still can): about one turn in four at normal speed.
+        // The Shade puts out a fire it lingers by (while it still can): about one turn in six at normal speed.
         if (GameTurn % 10 == 0 && Active("warden") is { Stage: "light" } warden && warden.N("lit") > 0
             && Level.Monsters.All.FirstOrDefault(m => m.Race.Id == "the_shade_of_the_stair") is { } shade
-            && NextToLitBrazier(shade.Position) && Rng.OneIn(4))
+            && NextToLitBrazier(shade.Position) && Rng.OneIn(6))
             foreach (var d in DirectionExtensions.Compass)
             {
                 var at = shade.Position.Step(d);

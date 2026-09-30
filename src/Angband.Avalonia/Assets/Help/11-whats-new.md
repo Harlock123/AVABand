@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-09-30.3
 
+- **The Cartographer** now tells you where to find each kind of level he wants; they were too rare
+  to find by chance. **The Warden's Fires**' Shade is a little less brutal while you light the fires.
 - **The tutorial teaches more**: Word of Recall, the Prancing Pony's quests and notice board, and the
   Knowledge screen's Quests and Feats pages.
 - **The graveyard**: a headstone for every character who died or retired, with an epitaph and their

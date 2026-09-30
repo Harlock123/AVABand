@@ -35,7 +35,8 @@ inn.
   them together, and hunt the one they point to — only the thief has the box. Bring it back to the
   Black market (6).
 - **The Cartographer** (from level 6): map most (three quarters) of a cavern, a labyrinth and one
-  of the old mines — magic mapping counts — and take the maps to the Bookseller (4).
+  of the old mines — magic mapping counts — and take the maps to the Bookseller (4). He tells you
+  the depth of each; any other you come across counts too.
 - **The Apprentice** (from level 12): the Alchemist's apprentice is trapped behind a rockfall, and
   something has found him. Step onto him. Give him your own Scroll of Word of Recall and he is home
   at once (but you'll need another way back); or show him the way and let him go alone — the

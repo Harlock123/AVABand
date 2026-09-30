@@ -85,11 +85,11 @@ public partial class AvaQuestTests
         for (var i = 0; i < 20; i++) game.Execute(new HoldCommand());
         Assert.Equal(0, state.N("mapped"));
 
+        Assert.Contains($"a cavern at {state.N("cavern_depth") * 50} ft", q.Prompts.First(p => p.Title == "The Cartographer").Text);
         foreach (var (profile, n) in new[] { ("cavern", 1), ("labyrinth", 2), ("moria", 3) })
         {
-            q.Jump(5 + n);
-            game.Level.ProfileId = profile;
-            Assert.True(game.MappedFraction() < 0.75);
+            q.Jump(state.N(profile + "_depth"));                  // the depth he named: that kind of level
+            Assert.Equal(profile, game.Level.ProfileId);           // (a labyrinth may come already known: it counts at once)
             game.Known.RememberAll(game.Level);                 // as a Rod of Magic Mapping, or a long walk
             Assert.True(game.MappedFraction() >= 0.75);
             for (var i = 0; i < 20 && state.N("mapped") < n; i++) game.Execute(new HoldCommand());

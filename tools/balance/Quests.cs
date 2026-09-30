@@ -45,7 +45,9 @@ internal static class QuestBot
     public static Outcome Play(GameData data, string quest, string cls, ulong seed, bool record = false, List<(int, ReplayEnd)>? marks = null,
         Action<GameSession>? started = null)
     {
-        var game = Bot.Setup(data, 1, seed, cls, level: Levels[quest]);
+        // (QUEST_LEVEL=n plays it at another character level: e.g. the lowest the inn offers it at.)
+        var level = int.TryParse(Environment.GetEnvironmentVariable("QUEST_LEVEL"), out var chosen) ? chosen : Levels[quest];
+        var game = Bot.Setup(data, 1, seed, cls, level: level);
         if (record) game.Recorder = new ReplayRecorder(game);
         started?.Invoke(game);
         var run = new Run { Game = game };

@@ -82,9 +82,9 @@
   "id": "cartographer",
   "name": "The Cartographer",
   "minLevel": 6,
-  "offer": "A thin man with ink to the elbows is copying a map at the corner table. \"The Bookseller pays me for maps, and nobody ever maps the strange levels: the caverns, the labyrinths, the old mines. Map most of one of each, three quarters or more, and bring them to the Bookseller. I'll see you're paid.\"",
+  "offer": "A thin man with ink to the elbows is copying a map at the corner table. \"The Bookseller pays me for maps, and nobody ever maps the strange levels. I hear there's a cavern at {cavern_feet} ft, a labyrinth at {labyrinth_feet} ft, and one of the old mines at {moria_feet} ft. Map most of each, three quarters or more, and bring them to the Bookseller. I'll see you're paid.\"",
   "stages": {
-   "map": "Map three quarters of a cavern, a labyrinth and one of the old mines, for the cartographer: {mapped} of 3 so far ({which}). Magic mapping counts. Then go to the Bookseller (4).",
+   "map": "Map three quarters of a cavern (one is at {cavern_feet} ft), a labyrinth ({labyrinth_feet} ft) and one of the old mines ({moria_feet} ft), for the cartographer: {mapped} of 3 so far ({which}). Any cavern, labyrinth or old mines you come across counts, and magic mapping does too. Then go to the Bookseller (4).",
    "deliver": "You have maps of a cavern, a labyrinth and the old mines. Take them to the Bookseller (4).",
    "done": "The Bookseller has the cartographer's maps, and pays for good work."
   }
