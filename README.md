@@ -63,7 +63,11 @@ deepest depth, what killed it and where, a date, and an epitaph chosen to suit i
 to 1650 ft, and did not come back."), over the death scene at dusk. Choose a stone to read that
 character's last dump beside it, or **Watch their last moments**: the game's replay (every game is
 recorded), fast-forwarded to when they came to the level where they fell (or its last 150 steps,
-if they were there long) and played on from there in the main window. Kept in `graveyard.json` beside the scores; the first time, the
+if they were there long) and played on from there in the main window. **Character cards**: Game →
+*Save a character card...* (the character in play) and the graveyard's *Save a card* (a headstone's
+words) draw a 1200×675 picture to share — name, race and class, level, depths, points, uniques or
+what killed them and the epitaph, over the scene that suits (the kind of level they're on, or the
+graveyard at dusk) — saved in `cards/` beside the records and opened in your picture viewer. Kept in `graveyard.json` beside the scores; the first time, the
 dead the high scores remember are brought in. Cheats, the tutorial and replays aren't buried.
 
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest

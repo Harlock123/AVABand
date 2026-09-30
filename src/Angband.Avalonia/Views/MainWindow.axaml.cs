@@ -237,6 +237,7 @@ public partial class MainWindow : Window
             _subscribed.CharacterSheetRequested -= OnCharacterSheetRequested;
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
             _subscribed.GraveyardRequested -= OnGraveyardRequested;
+            _subscribed.CardRequested -= OnCardRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
             _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
             _subscribed.HelpRequested -= OnHelpRequested;
@@ -259,6 +260,7 @@ public partial class MainWindow : Window
         vm.CharacterSheetRequested += OnCharacterSheetRequested;
         vm.HighScoresRequested += OnHighScoresRequested;
         vm.GraveyardRequested += OnGraveyardRequested;
+        vm.CardRequested += OnCardRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
         vm.KeyCommandsRequested += OnKeyCommandsRequested;
         vm.HelpRequested += OnHelpRequested;
@@ -322,6 +324,25 @@ public partial class MainWindow : Window
 
     private void OnJourneyRequested(JourneyViewModel journey) =>
         DialogFit.Show(new JourneyWindow { DataContext = journey }, this);
+
+    /// <summary>A character card: drawn, saved, and opened in the picture viewer.</summary>
+    private void OnCardRequested(CharacterCardViewModel card, string path)
+    {
+        try
+        {
+            CharacterCard.Save(card, path, this.FindControl<Canvas>("CardHost")!);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            (DataContext as MainWindowViewModel)?.CardSaved($"(could not save it: {ex.Message})");
+            return;
+        }
+        (DataContext as MainWindowViewModel)?.CardSaved(path);
+        if (!Design.IsDesignMode && OpenSavedCards) _ = Launcher.LaunchUriAsync(new Uri(path));
+    }
+
+    /// <summary>Whether a saved card opens in the picture viewer (not in tests).</summary>
+    public static bool OpenSavedCards { get; set; } = true;
 
     private void OnGraveyardRequested(GraveyardViewModel yard) => DialogFit.Show(new GraveyardWindow { DataContext = yard }, this);
 

@@ -205,4 +205,30 @@ public sealed class GameOverUiTests : IDisposable
         Assert.Contains("last moments", vm.LastMessage);
         vm.StopReplay();
     }
+
+    /// <summary>Character cards: the living character in play, and a fallen one from the graveyard, saved as pictures.</summary>
+    [AvaloniaFact]
+    public void CharacterCards_AreSaved_ForTheLiving_AndTheFallen()
+    {
+        MainWindow.OpenSavedCards = false;
+        var (_, vm) = Open();
+        vm.Game.Player.Name = "Wren";
+        vm.SaveCharacterCardCommand.Execute(null);
+        Assert.StartsWith("Character card saved: ", vm.LastMessage);
+        var living = vm.LastMessage["Character card saved: ".Length..];
+        Assert.True(File.Exists(living));
+        using (var png = new global::Avalonia.Media.Imaging.Bitmap(living)) Assert.Equal(1200, png.PixelSize.Width);
+
+        vm.Game.TakeHit(100_000, "a Cave orc");
+        var yard = vm.CreateGraveyard();
+        yard.SaveCardCommand.Execute(null);
+        var fallen = Directory.GetFiles(vm.CardDirectory!, "*.png").Single(f => f != living);
+        Assert.StartsWith("Wren-", Path.GetFileName(fallen));
+        var shots = Environment.GetEnvironmentVariable("AVABAND_SCREENSHOTS");
+        if (shots is not null)
+        {
+            File.Copy(living, Path.Combine(shots, "card-living.png"), true);
+            File.Copy(fallen, Path.Combine(shots, "card-fallen.png"), true);
+        }
+    }
 }

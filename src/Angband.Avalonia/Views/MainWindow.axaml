@@ -58,6 +58,7 @@
         <MenuItem Header="_Character sheet..." Command="{Binding ShowCharacterSheetCommand}" InputGesture="Shift+C" />
         <MenuItem Header="_High scores..." Command="{Binding ShowHighScoresCommand}" InputGesture="Ctrl+H" />
         <MenuItem Header="The _graveyard..." Command="{Binding ShowGraveyardCommand}" />
+        <MenuItem Header="Save a character _card..." Command="{Binding SaveCharacterCardCommand}" />
         <MenuItem Header="_Knowledge..." Command="{Binding ShowKnowledgeCommand}" InputGesture="Shift+OemTilde" />
         <MenuItem Header="_Repeat last command" Command="{Binding RepeatLastCommandCommand}" InputGesture="Ctrl+V" />
         <MenuItem Header="_Message history..." Command="{Binding ShowMessageHistoryCommand}" InputGesture="Ctrl+P" />
@@ -386,6 +387,8 @@
   </DockPanel>
 
   <!-- A moment's scene at moments of note (the option "Show scenes at moments of note"). -->
+  <!-- Where a character card is laid out (unseen: it has no size) to be drawn to a picture. -->
+  <Canvas x:Name="CardHost" Width="0" Height="0" ClipToBounds="True" IsHitTestVisible="False" HorizontalAlignment="Left" VerticalAlignment="Top" />
   <controls:SceneView x:Name="SceneView" Scene="{Binding Scene}" IsVisible="{Binding HasScene}" />
 
   <!-- The title screen: Thangorodrim, the logo, and what to do. -->

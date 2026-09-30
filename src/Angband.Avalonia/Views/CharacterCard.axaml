@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Angband.Avalonia.ViewModels"
+             x:Class="Angband.Avalonia.Views.CharacterCard"
+             x:DataType="vm:CharacterCardViewModel"
+             Width="1200" Height="675">
+  <!-- A card to share: the scene behind, a dark band, the character's words set on it. -->
+  <Panel Background="#0b0909">
+    <Image Source="{Binding Background}" Stretch="UniformToFill" />
+    <Border>
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+          <GradientStop Offset="0" Color="#E6080607" />
+          <GradientStop Offset="0.55" Color="#B3080607" />
+          <GradientStop Offset="1" Color="#10080607" />
+        </LinearGradientBrush>
+      </Border.Background>
+    </Border>
+    <DockPanel Margin="64,56,64,40">
+      <TextBlock DockPanel.Dock="Bottom" Text="{Binding Footer}" Foreground="#a0907e" FontSize="16" />
+      <StackPanel Spacing="10" VerticalAlignment="Center" MaxWidth="720" HorizontalAlignment="Left">
+        <TextBlock Text="{Binding Mark}" Foreground="#e8a25a" FontSize="18" LetterSpacing="3" />
+        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="72" FontWeight="SemiBold"
+                   Foreground="#f0e2c0" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding Title}" FontFamily="{StaticResource TitleFont}" FontSize="30" Foreground="#d8c8a8" />
+        <ItemsControl ItemsSource="{Binding Lines}" Margin="0,18,0,0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+              <TextBlock Text="{Binding}" FontSize="24" Foreground="#ece3d6" Margin="0,3" TextWrapping="Wrap" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock Text="{Binding Epitaph, StringFormat='“{0}”'}" IsVisible="{Binding HasEpitaph}" FontSize="24" FontStyle="Italic"
+                   Foreground="#e2d3ae" TextWrapping="Wrap" Margin="0,16,0,0" />
+      </StackPanel>
+    </DockPanel>
+  </Panel>
+</UserControl>

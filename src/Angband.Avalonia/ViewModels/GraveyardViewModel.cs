@@ -48,6 +48,15 @@ public sealed partial class GraveyardViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(WatchCommand))]
     private HeadstoneRow? _selected;
 
+    /// <summary>Raised to save the chosen stone as a character card.</summary>
+    public event Action<FallenRecord>? CardRequested;
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private void SaveCard()
+    {
+        if (Selected is { } stone) CardRequested?.Invoke(stone.Fallen);
+    }
+
     /// <summary>Raised with a replay to watch their last moments in (the window closes, the main window plays it).</summary>
     public event Action<string>? WatchRequested;
 
@@ -102,6 +111,7 @@ public sealed partial class MainWindowViewModel
         }
         var yard = new GraveyardViewModel(_records?.LoadGraveyard() ?? new Graveyard(), background);
         yard.WatchRequested += path => PlayLastMoments(path);
+        yard.CardRequested += SaveFallenCard;
         return yard;
     }
 }

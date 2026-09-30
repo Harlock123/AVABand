@@ -6,6 +6,7 @@ played; this page keeps it all (Help → What's new...).
 ## 2026-09-30.4
 
 - **Watch their last moments**: a headstone in the graveyard can replay how that character fell.
+- **Character cards**: save a picture of your character (or a headstone) to share with friends.
 
 ## 2026-09-30.3
 
