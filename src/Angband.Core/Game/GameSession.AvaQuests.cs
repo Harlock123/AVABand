@@ -97,7 +97,10 @@ public sealed partial class GameSession
     {
         state.Stage = stage;
         if (announce && QuestDef(state.Id) is { } def)
+        {
             Publish(new MessageEvent(state.IsDone ? $"Quest complete: {def.Name}." : $"Your journal notes something new about {def.Name}."));
+            if (state.IsDone) Publish(new AvaQuestCompletedEvent(state.Id, def.Name));
+        }
     }
 
     // --- Taking a quest -----------------------------------------------------------------------------

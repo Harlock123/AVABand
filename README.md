@@ -926,11 +926,21 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     flash of its light takes you (3.6 s). The artwork is rendered by `tools/recall_portal_art.py`
     (CC0: the rooms are lit 3-D surfaces in perspective; the hand is drawn as light through smoke)
     and animated by `SceneView`; your own `recall-town` / `recall-dungeon` picture replaces it.
+    Four more moments have rendered scenes of their own (`tools/scene_art.py`, CC0, animated by
+    `SceneView`): **falling through a trap door** (planks round a dark chute, the trap door hanging
+    open) and **Deep Descent** (straight down a shaft toward a red glow, the floor's rubble falling
+    with you), both rushing in with debris streaming past; a **quest done** (AVABand's, on a good
+    ending: its letter of thanks, sealed, by candlelight, gold motes rising); and a **great foe
+    slain** (a unique from 500 ft down, or a quest's own: a fallen crown and a broken blade in a
+    shaft of light, dust turning in it). The engine says so with `FellEvent` and
+    `AvaQuestCompletedEvent`; your own `deep-descent`, `trapdoor`, `quest-complete` and
+    `boss-slain` pictures replace them.
     Scenes have **sounds** (`scene-sounds/`, synthesised by `tools/scene_sounds.py`, CC0), cued by
     `SceneView` as they play: the rent tearing and a rising rush as the hand reaches, then its grasp
     and a thunderclap timed to the flash (not while the scene holds for Space); footsteps down or up
     the stairs, fainter and echoing going down, nearer and into open air coming up; a funeral bell
-    at death; a swelling chord for a first unique; a rumble for a deadly level. They play as effects
+    at death; a swelling chord for a first unique; a rumble for a deadly level; a crack, a rush and a
+    landing for a fall; a fanfare of bells for a quest done; a gong and a low choir for a great foe. They play as effects
     (the effects volume; silent with effects off or muted), and your own files of the same names in
     `<AppData>/AVABand/scene-sounds/` replace them. With the option *Scenes stay until
     you press Space* (off by default) each scene fades in and holds, "Press Space to continue" in

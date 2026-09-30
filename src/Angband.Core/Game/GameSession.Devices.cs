@@ -256,6 +256,7 @@ public sealed partial class GameSession
         {
             var target = CapDepth(Player.Depth, Math.Min(Data.Constants.MaxDepth, Math.Max(Player.Depth, 1) + 5));
             Publish(new MessageEvent("The floor opens beneath you!"));
+            Publish(new FellEvent(DeepDescent: true, target));
             ChangeLevel(target, StairArrival.None);
         }
     }

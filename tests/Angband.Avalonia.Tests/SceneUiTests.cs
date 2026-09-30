@@ -190,7 +190,7 @@ public sealed class SceneUiTests : IDisposable
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         var view = window.GetVisualDescendants().OfType<SceneView>().Single();
-        string[] names = ["stairs-down", "stairs-up", "stairs-up-town", "unique", "danger", "death",
+        string[] names = ["stairs-down", "stairs-up", "stairs-up-town", "unique", "danger", "death", "deep-descent", "trapdoor", "quest-complete", "boss-slain",
             "level-cavern", "level-labyrinth", "level-fortress", "level-moria", "level-lair", "level-gauntlet"];
         foreach (var name in names)
         {
@@ -398,5 +398,91 @@ public sealed class SceneUiTests : IDisposable
         scene.Advance(SceneView.DurationFor(SceneKind.RecallUp) * 3);
         Assert.True(scene.IsHolding);
         Assert.Equal(["recall-reach"], SceneSounds(engine));
+    }
+
+    /// <summary>
+    /// The newer scenes, each with its picture and sound: a trap door, Deep Descent, a quest done, a
+    /// great foe slain (not a small one) — and every picture draws with its motion over it.
+    /// </summary>
+    [AvaloniaFact]
+    public void Falls_AQuestDone_AndAGreatFoeSlain_HaveTheirScenes()
+    {
+        var (window, vm, scene) = Open();
+        vm.BundledArtDirectory = Path.Combine(AppContext.BaseDirectory, "art");
+        var engine = new RecordingEngine();
+        vm.UseAudio(new AudioServices(engine, new Angband.Audio.SoundDirector(engine), []));
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+
+        // A trap door, a level down.
+        vm.Execute(new DebugJumpCommand(3));
+        vm.SkipScenes();
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        var next = game.Level.Neighbors(game.Player.Position).First(p => game.Level.IsEmptyFloor(p));
+        game.Level[next].Trap = game.Data.Traps.Single(t => t.Id == "trap_door").Index;
+        game.Level[next].Flags |= Angband.Core.World.SquareFlags.TrapVisible;
+        engine.Played.Clear();
+        vm.Execute(new JumpCommand(Angband.Core.Geometry.DirectionExtensions.FromOffset(next.X - game.Player.Position.X, next.Y - game.Player.Position.Y)));
+        Assert.Equal(4, game.Player.Depth);
+        Assert.Equal(SceneKind.Trapdoor, vm.Scene!.Kind);
+        Assert.Equal("You fall through a trap door… 200 ft (level 4)", vm.Scene.Caption);
+        Assert.EndsWith("trapdoor.jpg", vm.Scene.Picture);
+        Assert.Contains("fall", SceneSounds(engine));
+        Shot(window, scene, "scene-trapdoor");
+        vm.SkipScenes();
+
+        // Deep Descent, five levels down.
+        game.Player.DeepDescentTimer = 1;
+        for (var i = 0; i < 10 && game.Player.Depth == 4; i++) vm.Execute(new HoldCommand());
+        Assert.Equal(SceneKind.DeepDescent, vm.Scene!.Kind);
+        Assert.Equal($"The floor opens beneath you… down to {game.Player.Depth * 50} ft", vm.Scene.Caption);
+        Shot(window, scene, "scene-deep-descent");
+        vm.SkipScenes();
+
+        // A great foe: Golfimbul (600 ft) has his scene; Grip and Bullroarer, shallower, don't.
+        foreach (var (id, scened) in new[] { ("grip", false), ("bullroarer", false), ("golfimbul_the_hill_orc_chief", true) })
+        {
+            var race = game.Data.Monster(id)!;
+            Assert.True(race.IsUnique);
+            var spot = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l) && l.DistanceTo(game.Player.Position) > 3);
+            var foe = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, race, spot);
+            vm.Execute(new HoldCommand());
+            vm.SkipScenes();
+            game.DamageMonster(foe, 1_000_000);
+            vm.Execute(new HoldCommand());
+            Assert.Equal(scened, vm.Scene?.Kind == SceneKind.BossSlain);
+            if (scened)
+            {
+                Assert.Equal("Golfimbul, the Hill Orc Chief is slain", vm.Scene!.Caption);
+                Shot(window, scene, "scene-boss-slain");
+            }
+            vm.SkipScenes();
+        }
+
+        // A quest done.
+        vm.Scene = new AmbientScene(SceneKind.QuestComplete, "Quest complete: The Letter", 0, true, vm.PictureFor("quest-complete"),
+            Subtitle: "Your journal is in Knowledge (~).");
+        Shot(window, scene, "scene-quest-complete");
+    }
+
+    [Fact]
+    public void AQuestDone_IsAScene_ButALostOneIsNot()
+    {
+        var events = new List<Angband.Core.Game.AvaQuestCompletedEvent>();
+        var game = Angband.Core.Game.GameSession.NewGame(DataLoader.Load(DataLoader.DefaultDataDirectory), 3, "warrior");
+        game.Events.Subscribe<Angband.Core.Game.AvaQuestCompletedEvent>(events.Add);
+        game.MarkDebugUsed();
+        game.GainExperience(game.ExperienceForLevel(9));
+        game.Player.Position = game.Level.AllLocs().First(l => game.Level.FeatureAt(l).Shop == "inn");
+        game.Execute(new EnterStoreCommand());
+        game.Execute(new QuestChoiceCommand("inn:work"));
+        game.Execute(new QuestChoiceCommand("offer:letter"));
+        game.Execute(new QuestChoiceCommand("accept:letter"));
+        var letter = game.Player.Inventory.Pack.First(i => i.Kind.Id == "sealed_letter");
+        game.Execute(new UseCommand(letter));
+        game.Execute(new QuestChoiceCommand("letter:burn"));
+        var done = Assert.Single(events);
+        Assert.Equal(("letter", "The Letter"), (done.QuestId, done.Name));
     }
 }

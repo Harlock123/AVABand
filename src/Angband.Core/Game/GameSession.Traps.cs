@@ -251,6 +251,7 @@ public sealed partial class GameSession
 
         if (trap.IsTrapDoor && Player.Depth > 0 && Player.Depth < Data.Constants.MaxDepth && QuestAt(Player.Depth) is null)
         {
+            Publish(new FellEvent(DeepDescent: false, Player.Depth + 1));
             ChangeLevel(Player.Depth + 1, StairArrival.None);
             return;
         }

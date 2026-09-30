@@ -18,8 +18,8 @@ letter, the arrows and Enter, a click or the gamepad pick.
 Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
 then read out, and **Ctrl+Shift+D** describes what is around you (Windows, macOS and Linux).
 
-Moments of note — the stairs, Word of Recall, a cavern, labyrinth, moria level, lair, gauntlet or hard centre, a deadly level, a unique met
-for the first time, death — show a scene for a moment; any key skips it, and Options → *Show scenes
+Moments of note — the stairs, Word of Recall, a trap door or Deep Descent, a cavern, labyrinth, moria level, lair, gauntlet or hard centre, a deadly level, a unique met
+for the first time, a great foe slain, a quest done, death — show a scene for a moment; any key skips it, and Options → *Show scenes
 at moments of note* turns them off. Word of Recall has its own: a rent torn in the room (or the town square) where you read it, and a
 vast ghostly hand reaching out of it to take you. Scenes have sounds too (footsteps on the stairs,
 a bell at death, the rent tearing and a thunderclap), at the effects volume. Too quick? Options → *Scenes stay until you press Space* holds

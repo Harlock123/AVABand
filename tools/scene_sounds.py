@@ -9,6 +9,9 @@ oscillators. SceneView cues them as a scene plays (Controls/SceneView.cs, SceneV
   death          a single deep funeral bell
   unique         an ominous low brass chord, swelling
   danger         a low rumble under a dissonant drone
+  fall           stone cracking, a rushing fall, and a heavy landing
+  quest-complete a bright rising fanfare of bells over a warm chord
+  boss-slain     a great gong, and a low choir-like swell dying away
 
 Needs numpy, scipy and soundfile. Usage: scene_sounds.py <out folder>
 """
@@ -199,10 +202,64 @@ def danger():
     return reverb((rumble + drone * 0.5) * wobble * shape, 1.8, 2000, 0.4)
 
 
+def fall():
+    """A crack (0 s), a rush of air falling (0.1-1.3 s), and the landing thud (1.35 s)."""
+    total = 2.0
+    buf = np.zeros(int(total * SR))
+    n = int(0.25 * SR)
+    tt = np.arange(n) / SR
+    place(buf, highpass(RNG.standard_normal(n), 900) * np.exp(-tt / 0.03) * 1.2
+          + lowpass(RNG.standard_normal(n), 300) * np.exp(-tt / 0.08), 0.0)
+    n = int(1.3 * SR)
+    tt = np.arange(n) / SR
+    noise = RNG.standard_normal(n)
+    rush = np.zeros(n)
+    for c in range(16):
+        a, b = c * n // 16, (c + 1) * n // 16
+        centre = 300 + 1800 * c / 16
+        rush[a:b] = bandpass(noise, centre * 0.6, centre * 1.5)[a:b]
+    place(buf, rush * (tt / tt[-1]) ** 1.2 * 0.9, 0.1)
+    n = int(0.6 * SR)
+    tt = np.arange(n) / SR
+    f = 55 * (1 + 0.6 * np.exp(-tt / 0.03))
+    thud = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt / 0.15) + lowpass(RNG.standard_normal(n), 500) * np.exp(-tt / 0.03)
+    place(buf, thud * 1.4, 1.35)
+    return reverb(buf, 1.2, 3000, 0.3)
+
+
+def quest_complete():
+    """A rising arpeggio of bell tones over a warm major chord."""
+    total = 2.6
+    buf = np.zeros(int(total * SR))
+    for k, f in enumerate((523.25, 659.25, 783.99, 1046.5)):
+        n = int(1.6 * SR)
+        tt = np.arange(n) / SR
+        tone = sum(a * np.sin(2 * np.pi * f * r * tt) * np.exp(-tt / d) for r, a, d in ((1, 1, 0.9), (2.0, 0.4, 0.5), (3.01, 0.2, 0.3)))
+        place(buf, tone * 0.5, 0.05 + k * 0.14)
+    tt = t_of(total)
+    pad = sum(np.sin(2 * np.pi * f * tt) for f in (261.63, 329.63, 392.0)) * np.clip(tt / 0.5, 0, 1) * np.exp(-np.clip(tt - 1.2, 0, None) / 0.6)
+    buf += lowpass(pad, 1500) * 0.25
+    return reverb(buf, 2.0, 5000, 0.4)
+
+
+def boss_slain():
+    """A deep gong, then a low 'ah' swell (formant-filtered chords) that dies away."""
+    total = 3.0
+    tt = t_of(total)
+    gong = sum(a * np.sin(2 * np.pi * 73.4 * r * tt * (1 + 0.003 * np.sin(2 * np.pi * 0.7 * tt))) * np.exp(-tt / d)
+               for r, a, d in ((1, 1, 2.2), (1.52, 0.6, 1.6), (2.15, 0.5, 1.2), (2.9, 0.35, 0.8), (4.1, 0.25, 0.5)))
+    gong += highpass(RNG.standard_normal(len(tt)), 1500) * np.exp(-tt / 0.02) * 0.3
+    voices = sum(signal.sawtooth(2 * np.pi * f * tt * (1 + 0.004 * np.sin(2 * np.pi * (4.5 + i) * tt))) for i, f in enumerate((110.0, 164.8, 220.0)))
+    choir = bandpass(voices, 500, 1100) * 0.6 + bandpass(voices, 700, 900)
+    choir *= np.clip((tt - 0.3) / 0.8, 0, 1) * np.exp(-np.clip(tt - 1.4, 0, None) / 0.6) * 0.3
+    return reverb(gong + choir, 2.6, 3500, 0.4)
+
+
 SOUNDS = {
     "recall-reach": recall_reach, "recall-take": recall_take,
     "stairs-down": lambda: stairs(True), "stairs-up": lambda: stairs(False),
     "death": death, "unique": unique, "danger": danger,
+    "fall": fall, "quest-complete": quest_complete, "boss-slain": boss_slain,
 }
 
 

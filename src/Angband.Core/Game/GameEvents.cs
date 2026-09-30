@@ -83,6 +83,10 @@ public sealed record DigEvent(Loc Loc, bool Done) : IGameEvent;
 public sealed record MonsterRevealedEvent(int MonsterId, string RaceId) : IGameEvent;
 public sealed record TrapSprungEvent(Loc Loc, string TrapId) : IGameEvent;
 public sealed record QuestCompletedEvent(string QuestId) : IGameEvent;
+/// <summary>Falling to the level below, not by the stairs: a trap door, or Deep Descent (AVABand's scenes show it).</summary>
+public sealed record FellEvent(bool DeepDescent, int ToDepth) : IGameEvent;
+/// <summary>One of AVABand's quests brought to a good end (its name, for the scene).</summary>
+public sealed record AvaQuestCompletedEvent(string QuestId, string Name) : IGameEvent;
 public sealed record GameWonEvent : IGameEvent;
 /// <summary>The player took a shape (or returned to their own, when null).</summary>
 public sealed record PlayerShapeChangedEvent(string? ShapeId) : IGameEvent;

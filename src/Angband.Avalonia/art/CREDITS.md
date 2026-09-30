@@ -1,6 +1,6 @@
 # Credits: art
 
-The pictures AVABand shows at moments of note. All but the Word of Recall cutscene's (made for AVABand, CC0) are public-domain works (their artists died more than a century ago), from scans on Wikimedia Commons; the licence tag on each file's Commons page is given below. The three Piranesi plates were trimmed to the printed area. Your own pictures of the same names, in `<AppData>/AVABand/art/`, are shown instead.
+The pictures AVABand shows at moments of note. All but the Word of Recall cutscene's and the falls', quest's and slain foe's (made for AVABand, CC0) are public-domain works (their artists died more than a century ago), from scans on Wikimedia Commons; the licence tag on each file's Commons page is given below. The three Piranesi plates were trimmed to the printed area. Your own pictures of the same names, in `<AppData>/AVABand/art/`, are shown instead.
 
 ## danger.jpg
 
@@ -57,6 +57,11 @@ The pictures AVABand shows at moments of note. All but the Word of Recall cutsce
 - Source: https://commons.wikimedia.org/wiki/File:Philipp_Jakob_Loutherbourg_d._J._002.jpg
 - Licence: Public domain (Wikimedia Commons licence tags: {{PD-old-100}}, {{PD-Art-YorckProject}}; Commons LicenseShortName: 'Public domain')
 - Notes: Oil; furnaces and ironworks blazing at night — the fires of the old mines. Science Museum, London. 1920px Commons thumbnail, re-encoded.
+
+## deep-descent.jpg, trapdoor.jpg, quest-complete.jpg, boss-slain.jpg
+
+- **Falls, a quest done, a great foe slain** — made for AVABand, rendered by `tools/scene_art.py` (no source images; it reuses the Word of Recall renderer): a shaft falling away to a red glow with the floor's rubble; a trap door fallen open over a dark chute; a sealed letter of thanks on the Prancing Pony's table; a fallen crown and a broken blade in a shaft of light. The game animates them (`Controls/SceneView.cs`).
+- Licence: CC0 1.0 (public-domain dedication).
 
 ## recall-portal-room.jpg, recall-portal-square-day.jpg, recall-portal-square-night.jpg, recall-portal-rim.png, recall-hand-open.png, recall-hand-grasp.png
 

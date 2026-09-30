@@ -24,6 +24,8 @@ public sealed class SceneView : Control
         SceneKind.Death => 3200,
         SceneKind.Unique => 2200,
         SceneKind.RecallUp or SceneKind.RecallDown => 3600,
+        SceneKind.DeepDescent or SceneKind.Trapdoor => 1800,
+        SceneKind.QuestComplete or SceneKind.BossSlain => 2600,
         _ => DurationMs,
     };
 
@@ -65,6 +67,9 @@ public sealed class SceneView : Control
         SceneKind.StairsDown => [(0, "stairs-down")],
         SceneKind.StairsUp => [(0, "stairs-up")],
         SceneKind.Death => [(0, "death")],
+        SceneKind.DeepDescent or SceneKind.Trapdoor => [(0, "fall")],
+        SceneKind.QuestComplete => [(0, "quest-complete")],
+        SceneKind.BossSlain => [(0, "boss-slain")],
         SceneKind.Unique => [(0, "unique")],
         SceneKind.Danger => [(0, "danger")],
         _ => [],
@@ -141,8 +146,10 @@ public sealed class SceneView : Control
             context.FillRectangle(Brushes.Black, new Rect(Bounds.Size));
             if (scene.Picture is { } path && Picture(path) is { } bitmap)
             {
-                var dest = DrawPicture(context, bitmap, p);
+                var falling = scene.Kind is SceneKind.DeepDescent or SceneKind.Trapdoor;
+                var dest = DrawPicture(context, bitmap, p, falling ? 0.45 * p * p : 0.08 * p);
                 if (scene.PortalArt is { } art) DrawRecallPortal(context, dest, art, p);
+                DrawPictureMotion(context, scene.Kind, p);
             }
             else Paint(context, scene, p);
             DrawCaption(context, scene.Caption, scene.Subtitle);
@@ -166,15 +173,65 @@ public sealed class SceneView : Control
     }
 
     /// <summary>The picture, filling the view and zooming in a little as it plays; returns where it went.</summary>
-    private Rect DrawPicture(DrawingContext context, Bitmap bitmap, double p)
+    private Rect DrawPicture(DrawingContext context, Bitmap bitmap, double p, double zoom)
     {
         var view = Bounds.Size;
         var src = bitmap.Size;
-        var scale = Math.Max(view.Width / src.Width, view.Height / src.Height) * (1 + 0.08 * p);
+        var scale = Math.Max(view.Width / src.Width, view.Height / src.Height) * (1 + zoom);
         var size = new Size(src.Width * scale, src.Height * scale);
         var dest = new Rect(new Point((view.Width - size.Width) / 2, (view.Height - size.Height) / 2), size);
         context.DrawImage(bitmap, new Rect(src), dest);
         return dest;
+    }
+
+    /// <summary>
+    /// What moves over the pictures of the newer scenes: falling, rubble streams past and out of the
+    /// view and it shudders; a quest done, gold motes rise; a great foe slain, dust turns in the light.
+    /// </summary>
+    private void DrawPictureMotion(DrawingContext context, SceneKind kind, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var t = Elapsed / 1000;
+        switch (kind)
+        {
+            case SceneKind.DeepDescent or SceneKind.Trapdoor:
+                foreach (var (x, y, z) in Scatter(28, kind == SceneKind.Trapdoor ? 51 : 52))
+                {
+                    // From near the middle outward, faster and bigger as they pass: you fall past them.
+                    var a = x * Math.PI * 2;
+                    var r = (y + p * (1.2 + z)) % 1;
+                    var at = new Point(w / 2 + Math.Cos(a) * w * 0.6 * r * r, h / 2 + Math.Sin(a) * h * 0.6 * r * r);
+                    var size = 2 + 26 * r * r * (0.4 + z);
+                    var colour = kind == SceneKind.DeepDescent ? Color.FromArgb((byte)(200 * r), 60, 40, 30) : Color.FromArgb((byte)(200 * r), 70, 50, 34);
+                    context.DrawEllipse(new SolidColorBrush(colour), null, at, size, size * 0.7);
+                }
+                if (p < 0.3) // the jolt as the floor goes
+                {
+                    var jolt = (0.3 - p) / 0.3;
+                    context.FillRectangle(new SolidColorBrush(Color.FromArgb((byte)(60 * jolt * Math.Abs(Math.Sin(t * 40))), 0, 0, 0)), new Rect(Bounds.Size));
+                }
+                break;
+            case SceneKind.QuestComplete:
+                foreach (var (x, y, z) in Scatter(50, 53))
+                {
+                    var rise = (y + p * (0.5 + z)) % 1;
+                    var at = new Point(w * (0.15 + 0.7 * x) + Math.Sin(t * 2 + x * 9) * 12, h * (1 - rise));
+                    var glint = 0.5 + 0.5 * Math.Sin(t * 5 + z * 20);
+                    context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(90 + 140 * glint * (1 - rise)), 255, 214, 120)), null, at,
+                        1 + 2.5 * z, 1 + 2.5 * z);
+                }
+                break;
+            case SceneKind.BossSlain:
+                foreach (var (x, y, z) in Scatter(60, 54))
+                {
+                    // Motes in the shaft of light, turning slowly.
+                    var sway = Math.Sin(t * (0.4 + z) + x * 12);
+                    var at = new Point(w * (0.44 + 0.12 * x) + sway * 18 * (0.4 + y), h * (0.08 + 0.72 * ((y + p * 0.12 * (z - 0.5) + 1) % 1)));
+                    context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(60 + 120 * z), 255, 250, 235)), null, at, 0.8 + 1.6 * z, 0.8 + 1.6 * z);
+                }
+                break;
+        }
     }
 
     // --- Word of Recall: the rent and the hand ------------------------------------------------------
@@ -485,6 +542,9 @@ public sealed class SceneView : Control
         {
             case SceneKind.StairsDown or SceneKind.StairsUp: DrawStairwell(context, scene, p); break;
             case SceneKind.RecallUp or SceneKind.RecallDown: DrawRecall(context, scene.Kind == SceneKind.RecallUp, p); break;
+            case SceneKind.DeepDescent or SceneKind.Trapdoor: DrawRecall(context, false, p); break;
+            case SceneKind.QuestComplete: DrawRecall(context, true, p); break;
+            case SceneKind.BossSlain: DrawUnique(context, scene, p); break;
             case SceneKind.Cavern or SceneKind.Moria or SceneKind.Lair: DrawCavern(context, p); break;
             case SceneKind.Labyrinth or SceneKind.Gauntlet: DrawLabyrinth(context, p); break;
             case SceneKind.Fortress: DrawFortress(context, p); break;

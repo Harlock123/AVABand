@@ -1,3 +1,4 @@
+using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -5,7 +6,12 @@ using CommunityToolkit.Mvvm.ComponentModel;
 namespace Angband.Avalonia.ViewModels;
 
 /// <summary>The moments that show a scene.</summary>
-public enum SceneKind { StairsDown, StairsUp, RecallUp, RecallDown, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, Unique, Death }
+/// (Several at once queue in this order: how you got here, where you are, what happened, death last.)
+public enum SceneKind
+{
+    StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, Unique,
+    BossSlain, QuestComplete, Death,
+}
 
 /// <summary>
 /// A scene shown for a moment (AVABand's own): its kind, caption, the depth, whether the town is in
@@ -159,6 +165,30 @@ public sealed partial class MainWindowViewModel
         // Angband's monster feelings 1-3: omens of death, murderous, terribly dangerous.
         if (e.Depth > 0 && _game.FeelingStatus is not null && _game.Level.Feeling % 10 is >= 1 and <= 3)
             AddScene(SceneKind.Danger, LevelFeelings.MonsterTexts[_game.Level.Feeling % 10] + ".", pictures: ["danger"]);
+    }
+
+    /// <summary>Falling through the floor: a trap door, or Deep Descent's floor opening.</summary>
+    private void OnFell(FellEvent e)
+    {
+        var depth = e.ToDepth;
+        if (e.DeepDescent) AddScene(SceneKind.DeepDescent, $"The floor opens beneath you… down to {depth * 50} ft", pictures: ["deep-descent"]);
+        else AddScene(SceneKind.Trapdoor, $"You fall through a trap door… {depth * 50} ft (level {depth})", pictures: ["trapdoor"]);
+    }
+
+    /// <summary>One of AVABand's quests brought to a good end.</summary>
+    private void OnAvaQuestCompleted(AvaQuestCompletedEvent e) =>
+        AddScene(SceneKind.QuestComplete, $"Quest complete: {e.Name}", subtitle: "Your journal is in Knowledge (~).", pictures: ["quest-complete"]);
+
+    /// <summary>
+    /// A great foe slain: a unique from 500 ft down, or a quest's own (Durgash, Hathol, the Shade,
+    /// Sauron, Morgoth) — shallower uniques are many and small, and pass without one.
+    /// </summary>
+    private void OnMonsterKilledForScene(MonsterKilledEvent e)
+    {
+        if (!e.IsUnique || _data.Monster(e.RaceId) is not { } race || race.Depth < 10 && !race.Has(MonsterFlags.Questor)) return;
+        var where = _game.Player.Depth == 0 ? "in the town" : $"at {_game.Player.Depth * 50} ft";
+        AddScene(SceneKind.BossSlain, $"{char.ToUpperInvariant(race.Name[0])}{race.Name[1..]} is slain", race.Glyph.ToString(),
+            _cells.Color(race.Color), where, "boss-slain");
     }
 
     private void OnUniqueFirstSeen(UniqueFirstSeenEvent e)

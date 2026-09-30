@@ -265,6 +265,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);
         _game.Events.Subscribe<RecalledEvent>(OnRecalled);
         _game.Events.Subscribe<UniqueFirstSeenEvent>(OnUniqueFirstSeen);
+        _game.Events.Subscribe<FellEvent>(OnFell);
+        _game.Events.Subscribe<AvaQuestCompletedEvent>(OnAvaQuestCompleted);
+        _game.Events.Subscribe<MonsterKilledEvent>(OnMonsterKilledForScene);
         _game.Events.Subscribe<ProjectionEvent>(OnProjection);
         _game.Events.Subscribe<MonsterDamagedEvent>(OnMonsterDamaged);
         Effects.Clear();
