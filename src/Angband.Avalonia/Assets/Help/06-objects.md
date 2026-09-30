@@ -9,6 +9,11 @@ the resistance of your armour. Once you know a rune you recognise it on everythi
 Potions, scrolls, rings, amulets, wands, staffs, rods and mushrooms are known by their
 **flavour** (an "Icky Green Potion") until you try one; then every one of that kind is known.
 
+In a hurry? The **Alchemist** (5) will identify things for gold: go in carrying anything you
+don't fully know and they'll offer to tell you all about it — what it is and every rune on it,
+curses too — at 50 gold, plus 50 for each rune you don't know (and 50 if you don't know what it
+is). A Scroll of Identify Rune, or selling the thing, teaches you too.
+
 ## Bags of holding
 
 A **Sack**, **Bag** or **Greater Bag of Holding** does its work from your pack — you don't wear

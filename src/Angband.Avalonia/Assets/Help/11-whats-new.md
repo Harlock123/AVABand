@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.14
+
+- **The Alchemist identifies**: go into the Alchemy shop (5) with something you don't fully know
+  and the alchemist will tell you all about it — what it is and everything it does, curses too —
+  for gold. One thing, or everything at once.
+
 ## 2026-09-30.13
 
 - **Bags of holding**: carried in your pack, a Sack, Bag or Greater Bag of Holding lets you carry

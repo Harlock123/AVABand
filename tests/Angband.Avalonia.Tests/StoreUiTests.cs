@@ -70,6 +70,28 @@ public class StoreUiTests
         Assert.Equal(MapCellBuilder.ColorBlindPalette["LightGreen"], Colour(better));
     }
 
+    /// <summary>The Alchemist's identify service: asked on the way in when you carry something unknown.</summary>
+    [AvaloniaFact]
+    public void The_Alchemist_offers_to_identify_what_you_dont_know()
+    {
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var game = vm.Game;
+        var ring = game.Player.Inventory.Add(game.Objects.Create("ring_of_resist_fire_and_cold"))!;
+        game.Player.Gold = 5000;
+        game.Player.Position = game.Level.AllLocs().First(p => game.Level.FeatureAt(p).Shop == "alchemist");
+        vm.HandleAction(InputAction.EnterStore);
+        Assert.Equal("The Alchemy shop", vm.PromptTitle);
+        vm.PromptKey(vm.ChoiceRows.First(r => r.Text == "Have something identified").Letter[0]);
+        Assert.Contains(vm.ChoiceRows, r => r.Text.EndsWith("gold)") && r.Text.Contains("Ring"));
+        TileRenderingTests.Save(window, "alchemist-identify");
+        vm.PromptKey(vm.ChoiceRows.First(r => r.Text.Contains("Ring")).Letter[0]);
+        Assert.True(game.Knowledge.IsFullyKnown(ring));
+        Assert.True(vm.IsInStore); // nothing else unknown: on into the shop
+    }
+
     [AvaloniaFact]
     public void Store_OpensWithItsStock()
     {

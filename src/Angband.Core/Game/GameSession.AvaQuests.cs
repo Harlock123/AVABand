@@ -50,6 +50,7 @@ public sealed partial class GameSession
             case "board": BoardChoice(parts); break;
             case "store": OpenStoreAfterAsking(parts[1]); break;
             case "gem": GemChoice(parts); break;
+            case "ident": IdentifyChoice(parts); break;
             default: StoryChoice(parts); break;
         }
         return 0;

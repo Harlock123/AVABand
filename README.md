@@ -465,6 +465,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     carries a badge — **for you** if the class can read it (`GameSession.BookNote`, Angband's
     `obj_kind_can_browse`), else "not for a Priest" — so a newcomer doesn't buy the wrong realm's
     book or sell their own.
+  - **The Alchemist identifies** (AVABand's own, `GameSession.Identify.cs`): going in with anything
+    carried or worn that you don't fully know (an untried flavour, or runes you haven't learned),
+    you're offered "Have something identified" — then each such item with its price (50 gold, 50
+    more for each unknown rune and 50 for an unknown kind; untried flavours listed once each), or
+    everything at once. The item's kind and every rune on it become known, curses included (so a
+    Bag of Devouring is found out), as selling it would teach you; you're asked again while
+    anything unknown is left, then go on into the shop. 4.2.5 has no *Identify*; this is a paid
+    shortcut to what use would show.
   - **Will this suit me?** (`GameSession.ShopAdvice.cs`): under anything you could wear or wield, a
     line says how it compares with what it would replace ("Better — vs your Dagger: +17 damage a turn
     (about 26), +3 to hit"; "Better — for your empty helm slot: +7 armour"; "Mixed — vs your Soft
