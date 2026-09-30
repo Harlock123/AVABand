@@ -14,6 +14,7 @@ scene_art.py: surfaces in one-point perspective, lit by point lights.
   level-gauntlet.jpg   a narrow trapped corridor: plates in the floor, fire from the walls
   danger.jpg           a hall lit red from its far end, and many eyes
   death.jpg            a grave at dusk: a headstone, a dead tree, candles in the grass
+  unique.jpg           a figure in a doorway at the end of a hall, lit from behind, its eyes shining
 
 Needs numpy, scipy and Pillow. Usage: scene_art_levels.py <art folder> [name ...]
 """
@@ -151,9 +152,10 @@ def cave(seed, rock, tint_light, far_glow, water=True):
     light raking across bumps in it; pools on the floor. Returns the picture and its centre."""
     xs, ys = grid()
     # Warp where each pixel looks, so the chamber's edges and floor line come out ragged, like rock.
-    warp = 64
-    wx = (R.value_noise((H, W), 6, 4, seed=seed) - 0.5) * warp
-    wy = (R.value_noise((H, W), 6, 4, seed=seed + 1) - 0.5) * warp
+    # Two warps: a broad one that bends the chamber's straight lines into curves, and a fine one
+    # that roughens them.
+    wx = (R.value_noise((H, W), 2, 2, seed=seed + 20) - 0.5) * 260 + (R.value_noise((H, W), 9, 4, seed=seed) - 0.5) * 48
+    wy = (R.value_noise((H, W), 2, 2, seed=seed + 21) - 0.5) * 200 + (R.value_noise((H, W), 9, 4, seed=seed + 1) - 0.5) * 48
     kind, X, Y, Z, N = R.surfaces(-1.3, 0.8, 1.9, 10.0)
     ix = np.clip(xs + wx, 0, W - 1).astype(int)
     iy = np.clip(ys + wy, 0, H - 1).astype(int)
@@ -180,7 +182,48 @@ def cave(seed, rock, tint_light, far_glow, water=True):
     rgb = R.vignette(rgb, 0.55)
     img = R.to_image(rgb).convert("RGBA")
     stalactites(img, seed, VP)
+    stalagmites(img, seed, VP, tint_light)
     return img.convert("RGB"), VP
+
+
+def stalagmites(img, seed, centre, light):
+    """Rock rising from the floor, and boulders: dark, lit on the side toward your torch."""
+    rng = np.random.default_rng(seed + 80)
+    cx, cy = centre
+    rocks = sorted(((rng.uniform(1.4, 8.0), rng.uniform(-1.7, 1.7), rng.random()) for _ in range(16)), reverse=True)
+    lit = tuple(int(40 + 120 * c) for c in light)
+    for z, xw, kind in rocks:
+        if abs(xw) < 0.35 and z < 4:
+            continue                                            # (keep the way ahead clear)
+        x, base = cx + F * xw / z, cy + F * 0.8 / z
+        near = float(np.clip(1 - z / 8, 0, 1))
+        tone = int(12 + 34 * near)
+        layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+        d = ImageDraw.Draw(layer)
+        if kind < 0.55:   # a stalagmite
+            hgt, wid = F * rng.uniform(0.25, 0.6) / z, F * rng.uniform(0.07, 0.14) / z
+            pts = [(x - wid / 2, base), (x - wid * 0.2, base - hgt * 0.6), (x, base - hgt), (x + wid * 0.25, base - hgt * 0.55), (x + wid / 2, base)]
+        else:             # a boulder, rounded: dark, with a softer lit face toward the torch
+            if z < 2.5:
+                continue
+            r = F * rng.uniform(0.1, 0.2) / z
+            pts = [(x + math.cos(t) * r * rng.uniform(0.85, 1.1), base - r * 0.5 + math.sin(t) * r * 0.62 * rng.uniform(0.85, 1.1))
+                   for t in np.linspace(0, 2 * math.pi, 13)[:-1]]
+            d.polygon(pts, fill=(tone, tone - 3, tone - 5, 255))
+            face = Image.new("RGBA", img.size, (0, 0, 0, 0))
+            ImageDraw.Draw(face).ellipse([x - r * 0.75, base - r * 1.0, x + r * 0.15, base - r * 0.2], fill=lit + (int(40 + 70 * near),))
+            layer.alpha_composite(face.filter(ImageFilter.GaussianBlur(float(r / 3))))
+            mask = Image.new("L", img.size, 0)
+            ImageDraw.Draw(mask).polygon(pts, fill=255)
+            clipped = Image.new("RGBA", img.size, (0, 0, 0, 0))
+            clipped.paste(layer, (0, 0), mask)
+            img.alpha_composite(clipped.filter(ImageFilter.GaussianBlur(float(0.6 + 1.2 * (1 - near)))))
+            continue
+        d.polygon(pts, fill=(tone, tone - 3, tone - 5, 255))
+        side = [p for p in pts if p[0] <= x]
+        if len(side) > 1:
+            d.line(side, fill=lit + (int(90 + 100 * near),), width=max(1, int(3 * near + 1)))
+        img.alpha_composite(layer.filter(ImageFilter.GaussianBlur(float(0.7 + 1.3 * (1 - near)))))
 
 
 def stalactites(img, seed, centre):
@@ -452,6 +495,52 @@ def death():
     return img.convert("RGB")
 
 
+def unique():
+    """Meeting a unique: a hall ending in an arch, cold light behind it, and in the arch a tall
+    cloaked figure, its eyes shining, its shadow reaching down the floor toward you."""
+    back_z, half = 8.0, 1.6
+    kind, X, Y, Z, N = R.surfaces(-2.2, 0.7, half, back_z)
+    xs, ys = grid()
+    alb = np.zeros((H, W, 3))
+    wall = (0.33, 0.31, 0.3)
+    for k, u in ((0, X), (3, Z), (4, Z)):
+        m = kind == k
+        alb[m] = R.stone_blocks(u, Y, 0.34, 0.15, 110 + k, wall, 0.5)[m]
+    m = kind == 1
+    alb[m] = R.flagstones(X, Z, 0.5, 115, (0.3, 0.28, 0.27))[m]
+    m = kind == 2
+    alb[m] = R.stone_blocks(X, Z, 0.5, 0.5, 116, (0.14, 0.13, 0.13), 0.3)[m]
+    alb *= (R.value_noise((H, W), 50, 4, seed=117) * 0.5 + 0.75)[..., None]
+    # The arch in the far wall: a doorway (1.3 wide, 2.2 high, round-topped), open on cold light.
+    ax, aw, top = 0.0, 0.65, -1.5
+    arch = (kind == 0) & (np.abs(X - ax) < aw) & ((Y > top + aw) | (np.hypot(X - ax, Y - (top + aw)) < aw)) & (Y < 0.7)
+    lights = [((0.0, -0.8, back_z + 0.5), (0.7, 0.8, 1.0), 3.0, 2.6), ((0.3, -0.3, 0.5), (1.0, 0.65, 0.4), 0.7, 0.9)]
+    rgb = R.shade(alb, kind, X, Y, Z, N, lights, (0.002, 0.002, 0.003), 10.0)
+    glow = np.exp(-((xs - VP[0]) ** 2 / (2 * 90 ** 2) + (ys - (VP[1] + F * -0.3 / back_z)) ** 2 / (2 * 140 ** 2)))
+    rgb[arch] = (np.array([0.55, 0.64, 0.85]) * (0.55 + 0.9 * glow[..., None]))[arch]
+    # Its long shadow down the floor, toward you.
+    shadow = (kind == 1) & (np.abs(X - ax) < 0.18 + 0.05 * (back_z - Z)) & (Z < back_z)
+    rgb[shadow] *= np.clip(0.25 + 0.75 * (1 - (back_z - Z[shadow]) / back_z)[..., None] * 0 + 0.3, 0, 1)
+    rgb = R.vignette(rgb, 0.6)
+    img = R.to_image(rgb).convert("RGBA")
+    d = ImageDraw.Draw(img)
+    # The figure in the doorway: black against the light, tall, cloaked, a little hunched.
+    fx, fy = VP[0], VP[1] + F * 0.7 / back_z                     # its feet, on the far floor
+    h, w = F * 1.9 / back_z, F * 0.62 / back_z
+    body = [(fx - w * 0.5, fy), (fx - w * 0.42, fy - h * 0.45), (fx - w * 0.36, fy - h * 0.72), (fx - w * 0.2, fy - h * 0.86),
+            (fx - w * 0.16, fy - h * 0.98), (fx, fy - h * 1.04), (fx + w * 0.18, fy - h * 0.97), (fx + w * 0.22, fy - h * 0.85),
+            (fx + w * 0.4, fy - h * 0.7), (fx + w * 0.47, fy - h * 0.42), (fx + w * 0.55, fy)]
+    d.polygon(body, fill=(6, 6, 8, 255))
+    rim = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(rim).line(body + [body[0]], fill=(170, 190, 230, 120), width=3)
+    img.alpha_composite(rim.filter(ImageFilter.GaussianBlur(2)))
+    d.polygon(body, fill=(6, 6, 8, 255))                          # (the rim light only shows outside)
+    for ex in (fx - w * 0.07, fx + w * 0.07):
+        glow_sprite(img, ex, fy - h * 0.9, 9, (255, 70, 30), 200)
+        ImageDraw.Draw(img).ellipse([ex - 3, fy - h * 0.9 - 2, ex + 3, fy - h * 0.9 + 2], fill=(255, 200, 120, 255))
+    return img.convert("RGB")
+
+
 def main():
     out = sys.argv[1]
     wanted = sys.argv[2:]
@@ -475,6 +564,7 @@ PICTURES = {
     "level-gauntlet": level_gauntlet,
     "danger": danger,
     "death": death,
+    "unique": unique,
 }
 
 if __name__ == "__main__":

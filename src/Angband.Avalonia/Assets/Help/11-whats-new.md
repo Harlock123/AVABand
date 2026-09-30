@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-09-30.3
 
+- **Meeting a unique** has a new picture too: a cloaked figure in a lit doorway. Every scene is now
+  rendered in the one style. The caverns and lairs are rounder, with rocks on the floor.
 - **Feats you'd already done** are filled in from your high scores: the depths, levels and wins
   of characters from before there were feats.
 

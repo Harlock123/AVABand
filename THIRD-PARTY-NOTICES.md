@@ -50,9 +50,7 @@ See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.
 ## Scene pictures (`src/Angband.Avalonia/art`)
 
 The scene pictures are rendered for AVABand (`tools/scene_art_levels.py`, `tools/scene_art.py`,
-`tools/recall_portal_art.py`; no source images) and are CC0 — all but `unique.jpg`, a public-domain
-engraving by Gustave Doré (*Inferno*, Canto XXXIV) from a scan on Wikimedia Commons, whose title,
-source page and exact licence tag are in `art/CREDITS.md`.
+`tools/recall_portal_art.py`; no source images) and are CC0 (`art/CREDITS.md`).
 
 The title screen's picture (`title.jpg`, Thangorodrim over the gates of Angband) and logo
 (`title-logo.png`) were drawn for AVABand by `tools/title_art.py` and are CC0; the logo is set in

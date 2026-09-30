@@ -972,8 +972,7 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     `recall-dungeon`, `level-cavern`, `level-labyrinth`, `level-fortress`, `level-moria`,
     `level-lair`, `level-gauntlet`, `danger`, `unique` and `death`, as `.png`, `.jpg` or `.jpeg`
     (the bundled pictures are rendered for AVABand by `tools/scene_art_levels.py`, `scene_art.py` and
-    `recall_portal_art.py`, all in one style, CC0 — only the first-unique scene is still a
-    public-domain painting; `art/CREDITS.md` has them all).
+    `recall_portal_art.py`, all in one style, CC0; `art/CREDITS.md` has them all).
   - **Screen reader support** (AVABand's own; the option *Screen reader support*, **off by
     default**): the map is drawn, so a screen reader can't read it; with the option on, a live
     region announces what is said — every message of a turn together, each prompt with its question
@@ -1562,6 +1561,6 @@ Copyright (c) 2026 Lonnie Watson. AVABand is free software, released under the G
 License, version 2 (`LICENSE`) — the licence Angband itself is available under, since AVABand's
 game data is converted from Angband 4.2.5 and its rules follow Angband's source. The bundled
 tilesets and sounds carry their own (Creative Commons and similar) licences; the scene pictures are
-rendered for AVABand and CC0 (but for one public-domain painting), and the ambience loops and scene
+rendered for AVABand and CC0, and the ambience loops and scene
 sounds are CC0 (`art/CREDITS.md`, `ambience/CREDITS.md`, `scene-sounds/CREDITS.md`). See
 `THIRD-PARTY-NOTICES.md` for the details and credits.
