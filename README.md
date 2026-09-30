@@ -908,6 +908,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     given the resistances, protections and saving throw you know you have (gear whose rune you
     haven't learned doesn't count), as Angband's `spell_color` does; resistances are umber and
     weaknesses violet. The recall window (now wrapped) and the Monsters tab of `~` both show them.
+  - **Danger** (AVABand's own, `MonsterRecall.Danger`): the recall ends with how dangerous the
+    monster is to you — the worst you *know* it can do in a turn (a breath or spell at its known
+    damage, or a round of the blows whose damage you know), cut by the resistances you know you
+    have, against your hit points: "could kill you outright" (red), "could kill you as you are now",
+    "could take half your life or more at once" (orange), "a real threat" (a fifth or more; yellow),
+    or "no great threat, as far as you know" (green) — and "you don't yet know enough" when nothing
+    is known, with a note when not everything it can do is. Looking at one (`x`) adds "could kill
+    you" or "dangerous" to its states: "Skorvath the Cold-drake (unhurt, asleep, could kill you)".
   `x` looks at everything of interest nearby in turn, nearest first, as Angband's look does — the
   monsters in view ("The cave orc (wounded, asleep)", `r` for the recall), the traps you know of,
   the objects you remember, and the doors, stairs, shops, rubble and treasure veins — with space or

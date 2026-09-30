@@ -137,10 +137,81 @@ public static class MonsterRecall
         else if (race.Blows.Count > 0 && !race.Has(MonsterFlags.NeverBlow))
             sb.Append($"Nothing is known about {pronoun switch { "He" => "his", "She" => "her", _ => "its" }} attack.\n");
 
+        // AVABand: how dangerous it is to you, from what you know of it.
+        if (viewer.MaxHitPoints > 0) sb.Append('\n').Append(DangerMarked(data, race, lore, viewer)).Append('\n');
+
         // Tidy: no trailing spaces, at most one blank line between paragraphs.
         var lines = sb.ToString().Split('\n').Select(l => l.TrimEnd());
         return System.Text.RegularExpressions.Regex.Replace(string.Join("\n", lines), "\n{3,}", "\n\n").Trim();
     }
+
+    /// <summary>How bad it looks, from green (no great threat) to red (could kill you outright).</summary>
+    public enum DangerLevel { Unknown, Slight, Threat, Serious, Deadly }
+
+    /// <summary>
+    /// AVABand's danger reading: the worst the player knows this monster can do in one turn — a known
+    /// breath or spell at its known damage, or a round of the blows whose damage is known — cut by
+    /// the resistances the player knows they have, against their hit points. Nothing that isn't
+    /// known is guessed at.
+    /// </summary>
+    public static (DangerLevel Level, int Damage, string What) Danger(GameData data, MonsterRaceDef race, RaceLore lore, RecallViewer viewer)
+    {
+        if (lore.Probed) lore = Everything(race, lore);
+        var knowHp = lore.TotalKills > 0;
+        var worst = (Damage: 0, What: "");
+        foreach (var spell in race.Spells.Where(lore.SpellsSeen.Contains).Select(data.MonsterSpell).OfType<MonsterSpellDef>())
+        {
+            var damage = LoreDamage(spell, race, knowHp);
+            if (damage <= 0) continue;
+            if (spell.Element is { } element && data.Element(element) is { } el)
+            {
+                var res = viewer.Resist(element);
+                if (res >= 3) damage = 0;
+                else if (res > 0 && el.Numerator > 0 && el.Denominator.AverageTimesTwo > 0)
+                    damage = damage * el.Numerator * 2 / el.Denominator.AverageTimesTwo;
+            }
+            var what = spell.Kind == MonsterSpellKind.Breath ? $"{SpellPhrase(data, spell)} breath" : SpellPhrase(data, spell);
+            if (damage > worst.Damage) worst = (damage, what);
+        }
+        var known = race.Blows.Select((b, i) => (Blow: b, Index: i))
+            .Where(x => lore.BlowSeen(x.Index) >= BlowsForDamage || lore.TotalKills >= BlowsForDamage).ToList();
+        var round = known.Sum(x => x.Blow.Damage.Max);
+        if (round > worst.Damage) worst = (round, known.Count == 1 ? "blow" : "blows");
+        if (worst.Damage <= 0) return (DangerLevel.Unknown, 0, "");
+        var level = worst.Damage >= viewer.MaxHitPoints || worst.Damage >= viewer.HitPoints ? DangerLevel.Deadly
+            : worst.Damage * 2 >= viewer.MaxHitPoints ? DangerLevel.Serious
+            : worst.Damage * 5 >= viewer.MaxHitPoints ? DangerLevel.Threat
+            : DangerLevel.Slight;
+        return (level, worst.Damage, worst.What);
+    }
+
+    /// <summary>The danger reading as a line of the recall, coloured.</summary>
+    public static string DangerMarked(GameData data, MonsterRaceDef race, RaceLore lore, RecallViewer viewer)
+    {
+        var (level, damage, what) = Danger(data, race, lore, viewer);
+        var hp = viewer.MaxHitPoints;
+        var its = race.Has(MonsterFlags.Male) ? "His" : race.Has(MonsterFlags.Female) ? "Her" : "Its";
+        var text = level switch
+        {
+            DangerLevel.Unknown => "You don't yet know enough of what it can do to judge how dangerous it is.",
+            DangerLevel.Deadly when damage >= hp => $"{its} {what} could kill you outright: up to {damage}, and you have {hp} hit points at most.",
+            DangerLevel.Deadly => $"{its} {what} could kill you as you are now: up to {damage}, and you have {viewer.HitPoints} hit points left.",
+            DangerLevel.Serious => $"{its} {what} could take half your life or more at once: up to {damage} of your {hp} hit points.",
+            DangerLevel.Threat => $"{its} {what} is a real threat: up to {damage} of your {hp} hit points at once.",
+            _ => $"No great threat to you, as far as you know: its worst ({what}) does up to {damage} of your {hp} hit points.",
+        };
+        var color = level switch
+        {
+            DangerLevel.Deadly => "Red", DangerLevel.Serious => "Orange", DangerLevel.Threat => "Yellow",
+            DangerLevel.Slight => "Green", _ => "Slate",
+        };
+        return RecallMarkup.Color("Danger: ", RecallColors.Verb) + RecallMarkup.Color(text, color)
+               + (level != DangerLevel.Unknown && !KnowsAll(race, lore) ? " (You may not know all it can do.)" : "");
+    }
+
+    private static bool KnowsAll(MonsterRaceDef race, RaceLore lore) =>
+        lore.Probed || (race.Spells.All(lore.SpellsSeen.Contains)
+                        && race.Blows.Select((_, i) => i).All(i => lore.BlowSeen(i) >= BlowsForDamage || lore.TotalKills >= BlowsForDamage));
 
     /// <summary>A copy of the lore with everything about the race known (after probing).</summary>
     private static RaceLore Everything(MonsterRaceDef race, RaceLore lore)
@@ -454,7 +525,8 @@ public static class MonsterRecall
 /// What monster recall knows of the player (Angband known_state): resistance levels (by element or
 /// protection id, as far as the player knows them) and the saving throw.
 /// </summary>
-public sealed record RecallViewer(Func<string, int> Resist, int SavingThrow)
+/// <param name="HitPoints">The player's hit points now, and at most, for the danger reading (0: not shown).</param>
+public sealed record RecallViewer(Func<string, int> Resist, int SavingThrow, int HitPoints = 0, int MaxHitPoints = 0)
 {
     public static readonly RecallViewer Unprotected = new(_ => 0, 0);
 }

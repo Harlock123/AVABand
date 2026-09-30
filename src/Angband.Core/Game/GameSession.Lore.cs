@@ -32,7 +32,7 @@ public sealed partial class GameSession
         MonsterRecall.DescribeMarked(Data, race, Lore.Find(race.Id), Player.Level, CharacterKills.GetValueOrDefault(race.Id), RecallViewer);
 
     /// <summary>The player as monster recall sees them: known resistances and saving throw.</summary>
-    public RecallViewer RecallViewer => new(KnownResist, Player.SkillSave);
+    public RecallViewer RecallViewer => new(KnownResist, Player.SkillSave, Player.Hp, Player.MaxHp);
 
     /// <summary>
     /// A resistance level as far as the player knows it (Angband known_state): a resistance that
@@ -83,6 +83,10 @@ public sealed partial class GameSession
         if (m.Held > 0) states.Add("held");
         if (m.Slow > 0) states.Add("slowed");
         if (m.Fast > 0) states.Add("hasted");
+        // AVABand: what you know of it says it's a danger to you (the recall's Danger line says why).
+        var danger = MonsterRecall.Danger(Data, m.Race, Lore.Find(m.Race.Id) ?? new RaceLore(), RecallViewer).Level;
+        if (danger == MonsterRecall.DangerLevel.Deadly) states.Add("could kill you");
+        else if (danger == MonsterRecall.DangerLevel.Serious) states.Add("dangerous");
         return $"{MonsterName(m)} ({string.Join(", ", states)})";
     }
 

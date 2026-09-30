@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.10
+
+- **How dangerous is it?** A monster's recall now ends with a Danger line — from what you know of
+  its breath, spells and blows, and your resistances, how much of your life it could take in one
+  turn — and looking at one that could kill you says so.
+
 ## 2026-09-30.9
 
 - **Tips when things go wrong**: the first time you're blinded, confused, poisoned, paralysed,

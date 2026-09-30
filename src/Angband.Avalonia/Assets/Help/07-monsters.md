@@ -10,6 +10,12 @@ Not sure what a letter is? `/` then the letter says ("o - Orc.") and offers the 
 you have met. Look at a monster (`x` or `l`) to read its **recall**: what you have seen it do, how hard it hits,
 what it resists. You learn more each time you meet or kill one. `~` keeps all of it.
 
+The recall ends with a **Danger** line: from what you know it can do (its breath, its spells, its
+blows) and the resistances you have, how much of your life it could take in one turn — from "no
+great threat" to "could kill you outright". When you look at a monster (`x`), one that could kill
+you or take half your life says so: "(unhurt, asleep, could kill you)". It only judges by what you
+have seen, so a monster you know nothing about may still be deadly.
+
 ## How monsters behave
 
 - They wake when you are noisy (stealth helps) and follow your scent and sound. A monster that
