@@ -15,6 +15,41 @@ public sealed class RecordStore(string directory)
     /// <summary>Monster memory, shared by every character (as Angband 4.2's lore.txt).</summary>
     public string LorePath => Path.Combine(Directory, "lore.json");
 
+    /// <summary>Every character that died or retired (AVABand's own).</summary>
+    public string GraveyardPath => Path.Combine(Directory, "graveyard.json");
+
+    /// <summary>The graveyard; the first time, with the deaths the high scores remember brought in.</summary>
+    public Graveyard LoadGraveyard()
+    {
+        var yard = Graveyard.Load(GraveyardPath);
+        if (!yard.Backfilled)
+        {
+            yard.Backfill(LoadScores().Entries);
+            SaveGraveyard(yard);
+        }
+        return yard;
+    }
+
+    public void SaveGraveyard(Graveyard yard)
+    {
+        try
+        {
+            yard.Save(GraveyardPath);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // The graveyard is a memorial, not a record the game needs.
+        }
+    }
+
+    /// <summary>A character's end, laid in the graveyard.</summary>
+    public void Bury(FallenRecord record)
+    {
+        var yard = LoadGraveyard();
+        yard.Add(record);
+        SaveGraveyard(yard);
+    }
+
     /// <summary>The feats done across every character (AVABand's own).</summary>
     public string FeatsPath => Path.Combine(Directory, "feats.json");
 

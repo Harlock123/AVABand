@@ -67,6 +67,7 @@ public sealed partial class MainWindowViewModel
         if (_saves?.List().Any(e => !e.Summary.IsDead) == true)
             choices.Add(("Load a saved character", null, () => LoadRequested?.Invoke()));
         if (_records is not null) choices.Add(("High scores", null, ShowHighScores));
+        if (_records?.LoadGraveyard().Fallen.Count > 0) choices.Add(("The graveyard", "those who went before", ShowGraveyard));
         choices.Add(("Exit", null, () => ExitRequested?.Invoke()));
         for (var i = 0; i < choices.Count; i++)
             TitleChoices.Add(new TitleChoice(((char)('a' + i)).ToString(), choices[i].Label, choices[i].Detail, choices[i].Act));

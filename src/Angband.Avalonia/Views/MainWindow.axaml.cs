@@ -236,6 +236,7 @@ public partial class MainWindow : Window
             _subscribed.ReplayFileRequested -= OnReplayFileRequested;
             _subscribed.CharacterSheetRequested -= OnCharacterSheetRequested;
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
+            _subscribed.GraveyardRequested -= OnGraveyardRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
             _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
             _subscribed.HelpRequested -= OnHelpRequested;
@@ -257,6 +258,7 @@ public partial class MainWindow : Window
         vm.ReplayFileRequested += OnReplayFileRequested;
         vm.CharacterSheetRequested += OnCharacterSheetRequested;
         vm.HighScoresRequested += OnHighScoresRequested;
+        vm.GraveyardRequested += OnGraveyardRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
         vm.KeyCommandsRequested += OnKeyCommandsRequested;
         vm.HelpRequested += OnHelpRequested;
@@ -320,6 +322,8 @@ public partial class MainWindow : Window
 
     private void OnJourneyRequested(JourneyViewModel journey) =>
         DialogFit.Show(new JourneyWindow { DataContext = journey }, this);
+
+    private void OnGraveyardRequested(GraveyardViewModel yard) => DialogFit.Show(new GraveyardWindow { DataContext = yard }, this);
 
     private void OnHighScoresRequested(HighScoresViewModel scores) =>
         DialogFit.Show(new HighScoresWindow { DataContext = scores }, this);

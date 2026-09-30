@@ -63,7 +63,8 @@ shop, monster, trap, bad wound...), each just once. Options → *Hints for new p
 - A monster you don't know is dangerous until you know it isn't. Look at it (`x` or `l`, as your
   keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all —
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,
-  quests, a win with each class), with who reached each first.
+  quests, a win with each class), with who reached each first. **Game → The graveyard** keeps a
+  headstone for every character who died or retired, with their story.
 
 ## Where to learn more
 

@@ -147,4 +147,32 @@ public sealed class GameOverUiTests : IDisposable
         quiet.Execute(new Angband.Core.Game.HoldCommand());
         Assert.Empty(none.List());
     }
+
+    /// <summary>A death is laid in the graveyard, with its dump; the graveyard window shows its stone and its story.</summary>
+    [AvaloniaFact]
+    public void ADeath_IsBuried_AndItsStoneRead_InTheGraveyard()
+    {
+        var (window, vm) = Open();
+        vm.Game.Player.Name = "Bramble";
+        vm.Game.TakeHit(100_000, "a Cave orc");
+        var records = new RecordStore(Path.Combine(_dir, "records"));
+        var fallen = Assert.Single(records.LoadGraveyard().Fallen);
+        Assert.Equal("Bramble", fallen.Name);
+        Assert.Equal("a Cave orc", fallen.KilledBy);
+        Assert.True(File.Exists(fallen.DumpPath));
+
+        var yard = vm.CreateGraveyard();
+        Assert.Equal("One adventurer rests here.", yard.Summary);
+        var stone = Assert.Single(yard.Stones);
+        Assert.Equal("Slain by a Cave orc in the town", stone.End);
+        Assert.Contains("Bramble", yard.Story);
+        Assert.Contains("Killed by a Cave orc", yard.Story);              // the dump follows the stone's words
+        Assert.True(yard.Story.Length > 400);
+
+        var graveyard = new GraveyardWindow { DataContext = yard };
+        DialogFit.Show(graveyard, window);
+        TileRenderingTests.Save(graveyard, "graveyard");
+        vm.ShowTitle();
+        Assert.Contains(vm.TitleChoices, c => c.Label == "The graveyard");
+    }
 }

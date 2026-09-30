@@ -1,0 +1,93 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.GraveyardWindow"
+        x:DataType="vm:GraveyardViewModel"
+        Title="The graveyard"
+        Width="1180" Height="720"
+        WindowStartupLocation="CenterOwner">
+  <!-- Headstones over the death scene at dusk; the chosen one's story beside them. -->
+  <Window.Styles>
+    <Style Selector="ListBoxItem">
+      <Setter Property="Padding" Value="6" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#40e2d3ae" />
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#20e2d3ae" />
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="Border.stone">
+      <Setter Property="Background">
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Offset="0" Color="#8a8680" />
+          <GradientStop Offset="1" Color="#57544f" />
+        </LinearGradientBrush>
+      </Setter>
+    </Style>
+    <Style Selector="Border.stone.won">
+      <Setter Property="Background">
+        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+          <GradientStop Offset="0" Color="#b8a574" />
+          <GradientStop Offset="1" Color="#7a6a42" />
+        </LinearGradientBrush>
+      </Setter>
+    </Style>
+    <Style Selector="TextBlock.carved">
+      <Setter Property="Foreground" Value="#26231f" />
+      <Setter Property="TextAlignment" Value="Center" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+  </Window.Styles>
+  <Panel Background="#0c0a0c">
+    <Image Source="{Binding Background}" Stretch="UniformToFill" Opacity="0.55" />
+    <Border Background="#99080608" />
+    <DockPanel Margin="16">
+      <DockPanel DockPanel.Dock="Top" Margin="4,0,4,10">
+        <Button DockPanel.Dock="Right" Content="Close" Classes="accent" Click="OnClose" />
+        <StackPanel>
+          <TextBlock Text="The graveyard" FontFamily="{StaticResource TitleFont}" FontSize="26" Foreground="#e2d3ae" />
+          <TextBlock Text="{Binding Summary}" Foreground="#b8a898" FontStyle="Italic" />
+        </StackPanel>
+      </DockPanel>
+      <Grid ColumnDefinitions="*,12,520">
+        <Panel>
+          <TextBlock Text="No one rests here yet. May it stay that way."
+                     IsVisible="{Binding IsEmpty}" Foreground="#b8a898" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <ListBox x:Name="Stones" ItemsSource="{Binding Stones}" SelectedItem="{Binding Selected}" Background="Transparent">
+            <ListBox.ItemsPanel>
+              <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:HeadstoneRow">
+                <Border Classes="stone" Classes.won="{Binding Won}" Width="196" Height="248" CornerRadius="96,96,6,6"
+                        BorderBrush="#3a3733" BorderThickness="2" Padding="14,26,14,10">
+                  <StackPanel Spacing="4">
+                    <Path Data="M 6,0 L 10,0 L 10,6 L 16,6 L 16,10 L 10,10 L 10,22 L 6,22 L 6,10 L 0,10 L 0,6 L 6,6 Z"
+                          Fill="#3a3632" HorizontalAlignment="Center" Margin="0,0,0,2" />
+                    <TextBlock Classes="carved" Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="17" FontWeight="SemiBold" />
+                    <TextBlock Classes="carved" Text="{Binding Title}" FontSize="11" />
+                    <TextBlock Classes="carved" Text="{Binding Deeds}" FontSize="10" Margin="0,4,0,0" />
+                    <TextBlock Classes="carved" Text="{Binding End}" FontSize="10" />
+                    <TextBlock Classes="carved" Text="{Binding Epitaph}" FontSize="10" FontStyle="Italic" Margin="0,6,0,0" />
+                    <TextBlock Classes="carved" Text="{Binding Date}" FontSize="10" Opacity="0.8" />
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Panel>
+        <Border Grid.Column="2" Background="#cc110e0e" CornerRadius="6" BorderBrush="#3a2f28" BorderThickness="1">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <SelectableTextBlock Text="{Binding Story}" FontFamily="{StaticResource MonoFont}" FontSize="11" Foreground="#e6ddd0"
+                                 TextWrapping="NoWrap" Margin="12" />
+          </ScrollViewer>
+        </Border>
+      </Grid>
+    </DockPanel>
+  </Panel>
+</Window>

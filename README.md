@@ -56,6 +56,14 @@ tutorial and replays earn none. The first time, the feats characters did before 
 are filled in from the high-score table (the depths, levels and wins it records; no cheat ever
 enters it), each credited to the first to do it.
 
+**The graveyard** (AVABand's own, `Records/Graveyard.cs`; Game → The graveyard..., and on the title
+screen once someone lies there): a headstone for every character that died or retired — not just
+the hundred best the high-score table keeps — carved with its name, race and class, level and
+deepest depth, what killed it and where, a date, and an epitaph chosen to suit its end ("Went down
+to 1650 ft, and did not come back."), over the death scene at dusk. Choose a stone to read that
+character's last dump beside it. Kept in `graveyard.json` beside the scores; the first time, the
+dead the high scores remember are brought in. Cheats, the tutorial and replays aren't buried.
+
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest
 first): after an update, the sections newer than the last one you were shown open once over the
 title screen (a new player is spared it; `WhatsNewSeen` in the settings remembers); the whole page
