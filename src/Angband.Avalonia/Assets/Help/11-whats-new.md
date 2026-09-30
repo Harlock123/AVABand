@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.9
+
+- **Tips when things go wrong**: the first time you're blinded, confused, poisoned, paralysed,
+  frightened, stunned, bleeding, slowed, in the dark or drained, a tip says what cures it (and which
+  key to press). Each shows once; Options → *Hints for new players* turns them off.
+
 ## 2026-09-30.8
 
 - **New feats**: *Friend of Belegost*, *The Horns of the West* and *The Eye Looks Back* for the deep

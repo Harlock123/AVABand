@@ -260,6 +260,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _pendingScenes.Clear();
         SkipScenes(); // a scene left from the last game (a death scene holding for Space) goes with it
         _game.Events.Subscribe<MessageEvent>(m => AddMessage(m.Text));
+        _sawParalysis = false;
+        _game.Events.Subscribe<MessageEvent>(m => { if (m.Text == "You are paralysed!") _sawParalysis = true; });
         _game.Events.Subscribe<DamageNoteEvent>(d => AmendLastMessage(d.Damage));
         _game.Events.Subscribe<QuestPromptEvent>(OnQuestPrompt);
         _game.Events.Subscribe<ShopEnteredEvent>(OnShopEntered);

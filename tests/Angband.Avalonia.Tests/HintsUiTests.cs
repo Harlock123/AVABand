@@ -113,4 +113,55 @@ public class HintsUiTests
         next.Execute(new HoldCommand());
         Assert.DoesNotContain("badly hurt", next.HintText);
     }
+
+    /// <summary>Each condition that kills new characters has a hint, naming what cures it and the key to use.</summary>
+    [AvaloniaFact]
+    public void Conditions_BringUpAHint_WithTheirCure()
+    {
+        foreach (var (timed, hint, cure) in new[]
+                 {
+                     ("blind", "You are blind", "Cure Light Wounds cures it (q)"),
+                     ("confused", "You are confused", "Cure Serious Wounds cures it (q"),
+                     ("poisoned", "You are poisoned", "Neutralize Poison or Cure Critical Wounds"),
+                     ("afraid", "You are afraid", "Boldness, Heroism or Berserk Strength"),
+                     ("stun", "You are stunned", "Cure Critical Wounds cures it"),
+                     ("cut", "You are bleeding", "Cure Serious Wounds stops it"),
+                     ("slow", "You are slowed", "Speed"),
+                     ("amnesia", "You are amnesiac", "Cure Critical Wounds"),
+                 })
+        {
+            var (_, vm, settings) = Open();
+            vm.Game.Player.Timed.Set(vm.Game.Data.Timed(timed)!, 50, notify: false);
+            vm.Game.Player.Hp = vm.Game.Player.MaxHp;
+            vm.Execute(new HoldCommand());
+            Assert.StartsWith(hint, vm.HintText);
+            Assert.Contains(cure, vm.HintText);
+            Assert.Contains(timed, settings.SeenHints); // (each hint's id is its condition's)
+        }
+    }
+
+    [AvaloniaFact]
+    public void Paralysis_And_Darkness_And_Drain_BringUpHints()
+    {
+        var (_, vm, settings) = Open();
+        Assert.True(vm.Game.IncreaseTimed("paralyzed", 2, check: false)); // (says "You are paralysed!")
+        vm.Game.Player.Hp = vm.Game.Player.MaxHp;
+        vm.Execute(new HoldCommand());
+        Assert.StartsWith("You were paralysed", vm.HintText);
+        Assert.Contains("Free Action", vm.HintText);
+
+        (_, vm, settings) = Open(settings: new AppSettings());
+        vm.Execute(new DebugJumpCommand(3));
+        vm.DismissHint();
+        settings.SeenHints.AddRange(["stairs", "monster", "floor", "trap", "hidden_traps"]);
+        var light = vm.Game.Player.Inventory.Light!;
+        vm.Game.Player.Inventory.Remove(light, 1, () => vm.Game.Objects.NextSerial++);
+        vm.Execute(new HoldCommand());
+        Assert.StartsWith("You have no light", vm.HintText);
+
+        vm.DismissHint();
+        vm.Game.Player.StatDrain["str"] = 2;
+        vm.Execute(new HoldCommand());
+        Assert.StartsWith("One of your stats was drained", vm.HintText);
+    }
 }

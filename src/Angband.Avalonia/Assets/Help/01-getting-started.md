@@ -41,7 +41,8 @@ Visual C++ Redistributable it names). The game plays on in silence either way.
 New to Angband? **Game → Tutorial** teaches the basics on a short level of its own, step by step,
 in a few minutes (it is never saved or scored): moving and picking up, doors, traps, fighting, Word
 of Recall, the Prancing Pony's quests, and the Knowledge screen. Tips also appear at the foot of the map the first time something happens (your first
-shop, monster, trap, bad wound...), each just once. Options → *Hints for new players* turns them off.
+shop, monster, trap, bad wound...), and the first time you are blinded, confused, poisoned,
+paralysed, frightened, stunned or left in the dark — saying what cures it — each just once. Options → *Hints for new players* turns them off.
 
 - **Make a character**: Game → New character (Ctrl+N) picks a race, a class, stats and birth
   options. If you are new, a Human or Dwarf **Warrior** is the forgiving choice.

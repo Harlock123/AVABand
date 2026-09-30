@@ -1049,7 +1049,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   - **Hints for new players** (AVABand's own; the option *Hints for new players*, on by default): the
     first time you are badly hurt, enter a shop, meet a monster in the dungeon, see a trap, stand on
     an item, get hungry, run low on light, wear something with unknown runes, gain a level or go
-    down the stairs, a short tip appears at the foot of the map, naming the keys of the keyset in use
+    down the stairs — and the first time you are blinded, confused, poisoned, paralysed, frightened,
+    stunned, cut, slowed, left without light, made to hallucinate or forget, or drained of a stat or
+    experience, with what cures it as this game's potions do (Cure Light Wounds for blindness, Cure
+    Serious Wounds for confusion and cuts, Cure Critical Wounds for poison and stunning, Boldness or
+    Heroism for fear, Free Action gear against paralysis...) — a short tip appears at the foot of the map, naming the keys of the keyset in use
     ("l looks at it" with Angband's keys, "x" with AVABand's). Each is shown once — remembered in the
     settings, so not again for the next character — and goes after eight commands or with ×.
   - AVABand remembers only the top object of a pile out of view, so such piles list that one item.
