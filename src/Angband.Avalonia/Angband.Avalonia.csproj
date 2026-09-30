@@ -3,6 +3,9 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Angband.Avalonia</RootNamespace>
     <AssemblyName>AVABand</AssemblyName>
+    <!-- The commit goes into the informational version ("1.0.0+sha") for Help → Check for updates;
+         the SDK finds it from git, and CI's GITHUB_SHA covers a checkout it can't read. -->
+    <SourceRevisionId Condition="'$(SourceRevisionId)' == '' and '$(GITHUB_SHA)' != ''">$(GITHUB_SHA)</SourceRevisionId>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationManifest>app.manifest</ApplicationManifest>

@@ -243,6 +243,7 @@ public partial class MainWindow : Window
             _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
             _subscribed.JourneyRequested -= OnJourneyRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
+            _subscribed.OpenUrlRequested -= OnOpenUrlRequested;
         }
         _subscribed = DataContext as MainWindowViewModel;
         if (_subscribed is { } viewModel) viewModel.ViewportCells = () => Map.VisibleCells;
@@ -263,6 +264,7 @@ public partial class MainWindow : Window
         vm.MessageHistoryRequested += OnMessageHistoryRequested;
         vm.JourneyRequested += OnJourneyRequested;
         vm.OverviewRequested += OnOverviewRequested;
+        vm.OpenUrlRequested += OnOpenUrlRequested;
 
         // "New game as" lists the classes from the game data.
         if (this.FindControl<MenuItem>("NewGameAsMenu") is { } menu)
@@ -306,6 +308,8 @@ public partial class MainWindow : Window
 
     private void OnKeyCommandsRequested(KeyCommandsViewModel commands) =>
         DialogFit.Show(new KeyCommandsWindow { DataContext = commands }, this);
+
+    private void OnOpenUrlRequested(string url) => _ = Launcher.LaunchUriAsync(new Uri(url));
 
     private void OnOverviewRequested(OverviewMapSource overview) =>
         DialogFit.Show(new OverviewMapWindow { DataContext = overview }, this);

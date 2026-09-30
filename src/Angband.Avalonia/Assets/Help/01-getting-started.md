@@ -25,6 +25,9 @@ at moments of note* turns them off. Your own pictures in the AVABand `art` folde
 among nine tilesets — Angband's own Original, Nomad, Adam Bolt and David Gervais sets, Dungeon
 Crawl, Tangaria, DawnLike, RLTiles and Hexany's tinted one-colour set — with a live preview.
 
+**Help → Check for updates...** asks GitHub whether a newer AVABand is out, and if one is, offers
+to open its download page. It only goes online when you choose it.
+
 **No sound?** Its Sound tab says why: no audio device found, the device busy, or OpenAL's library
 unable to load (on Windows on ARM, usually a missing Microsoft Visual C++ runtime; install the
 Visual C++ Redistributable it names). The game plays on in silence either way.

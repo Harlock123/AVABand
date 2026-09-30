@@ -45,6 +45,13 @@ pre-release, and tagging a commit `v*` (e.g. `v0.1.0`) makes a proper release. U
 saves, scores, monster memory and settings go to your user folder (`AVABand` under the system's
 application-data folder).
 
+**Help → Check for updates...** asks GitHub (only when you choose it) for the newest release and
+compares its commit with the one your build was made from (stamped into the program as
+`1.0.0+<commit>`), using GitHub's compare API. It says you are up to date, or that a newer build
+is out and how many changes newer, and offers to open the download page, naming the file for your
+platform. Builds newer than the release, or local builds GitHub hasn't seen, are said as such
+(`Services/UpdateChecker.cs`).
+
 Notes: the musl builds have no sound or gamepad support (OpenAL Soft and SDL ship no musl
 libraries; the game runs silently without them). The macOS builds are not signed, so the first
 run needs right-click → Open (or `xattr -d com.apple.quarantine AVABand`).

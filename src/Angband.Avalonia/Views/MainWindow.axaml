@@ -94,6 +94,8 @@
       <MenuItem Header="_Help">
         <MenuItem Header="_Help topics..." Command="{Binding ShowHelpCommand}" />
         <MenuItem Header="Keyboard _commands..." Command="{Binding ShowKeyCommandsCommand}" InputGesture="F1" />
+        <Separator />
+        <MenuItem Header="Check for _updates..." Command="{Binding CheckForUpdatesCommand}" />
       </MenuItem>
       <MenuItem Header="_Debug">
         <MenuItem Header="_Regenerate level" Command="{Binding RegenerateLevelCommand}" InputGesture="F5" />
