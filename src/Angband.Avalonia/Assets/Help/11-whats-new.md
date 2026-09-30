@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.6
+
+- **Spellbooks say what they are**: "a Holy Book of [Novice's Handbook]", "a Magic Book of [First
+  Spells]", and in the shops each book is marked **for you** or "not for a Warrior", so you won't
+  buy the wrong kind or sell one you need.
+
 ## 2026-09-30.5
 
 - **Three deep quests** at the Prancing Pony for seasoned characters: **The Heart of the Mountain**

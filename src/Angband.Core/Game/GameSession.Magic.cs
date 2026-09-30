@@ -287,6 +287,18 @@ public sealed partial class GameSession
     public bool PlayerCanBrowse(ObjectKindDef kind) =>
         Player.Class is { } cls && Data.Spells.Any(s => s.Book == kind.Id && s.Classes.ContainsKey(cls.Id));
 
+    /// <summary>
+    /// For a book, whether it's the player's (so a newcomer doesn't buy, or sell, the wrong kind):
+    /// "for you", or "not for a Warrior"; null for anything else.
+    /// </summary>
+    public string? BookNote(Item item)
+    {
+        if (!ItemNaming.IsBook(item.Base.Id)) return null;
+        if (PlayerCanBrowse(item.Kind)) return "for you";
+        var cls = Player.Class?.Name ?? "you";
+        return $"not for {("AEIOU".Contains(cls[0]) ? "an" : "a")} {cls}";
+    }
+
     /// <summary>Spells the player could learn now (level reached, book carried, not yet learned).</summary>
     public IEnumerable<SpellDef> StudyableSpells() =>
         ClassSpells.Where(s => SpellInfo(s)!.Level <= Player.Level && !Player.LearnedSpells.Contains(s.Id) && HasBookFor(s));

@@ -297,6 +297,12 @@
                     <Border IsVisible="{Binding IsEquipped}" Background="#5a3a10" CornerRadius="3" Padding="5,0" VerticalAlignment="Center">
                       <TextBlock Text="{Binding Equipped}" Foreground="#ffcc66" FontSize="11" FontWeight="SemiBold" />
                     </Border>
+                    <Border IsVisible="{Binding IsBookForYou}" Background="#1f4a2a" CornerRadius="3" Padding="5,0" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding BookNote}" Foreground="#8fe0a0" FontSize="11" FontWeight="SemiBold" />
+                    </Border>
+                    <Border IsVisible="{Binding IsBookNotForYou}" Background="#3a3a3a" CornerRadius="3" Padding="5,0" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding BookNote}" Foreground="#aaaaaa" FontSize="11" />
+                    </Border>
                   </StackPanel>
                   <TextBlock Grid.Column="3" Text="{Binding Price}" Foreground="#e6c35c" Margin="12,0" />
                   <TextBlock Grid.Column="4" Text="{Binding Weight}" Foreground="#888" FontSize="12" HorizontalAlignment="Right" />

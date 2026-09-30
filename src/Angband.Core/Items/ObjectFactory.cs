@@ -119,7 +119,7 @@ public sealed class ObjectFactory(GameData data)
     }
 
     /// <summary>Angband tval_is_book_k: a magic, prayer, nature or shadow book.</summary>
-    public bool IsBook(ObjectKindDef kind) => kind.Base is "magic_book" or "prayer_book" or "nature_book" or "shadow_book";
+    public bool IsBook(ObjectKindDef kind) => ItemNaming.IsBook(kind.Base);
 
     /// <summary>
     /// Angband kind_is_good: what a good drop may be — armour and weapons that don't start damaged,

@@ -6,6 +6,11 @@ Casters learn spells from books of their realm: arcane (mages, rogues, rangers),
 (priests, paladins), nature (druids, rangers) and necromantic (necromancers, blackguards). The
 first books are sold in town, the deeper ones found in the dungeon.
 
+A book's name says its kind — a **Magic Book** (arcane), **Holy Book** (divine), **Nature Book**
+or **Necromantic Tome** — as in "a Holy Book of [Novice's Handbook]". In the shops, buying or
+selling, each book is marked **for you** if your class can read it, or "not for a Warrior" (or
+whatever you are) if not, so you don't buy the wrong one or sell one you need.
+
 - `G` learns a spell once you reach its level. Mages and most casters choose; **priests and
   paladins** choose a book and are granted a random prayer from it, as in 4.2.
 - `m` casts, `B` browses. Each spell costs mana and may **fail**: the chance, shown in the list,

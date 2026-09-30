@@ -422,6 +422,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     Store's food, oil, torches, cloaks, shovels, picks and ammunition; the Alchemist's Cure Light
     Wounds, Phase Door, Word of Recall and Remove Curse; and every one of the ten town books at the
     Bookseller (the dungeon books are only found below). Enchanted copies of a staple sell out.
+  - Books are named with their kind, as in 4.2 ("a Magic Book of [First Spells]", "a Holy Book of
+    [Novice's Handbook]", a Nature Book, a Necromantic Tome), and in a shop, buying or selling, each
+    carries a badge — **for you** if the class can read it (`GameSession.BookNote`, Angband's
+    `obj_kind_can_browse`), else "not for a Priest" — so a newcomer doesn't buy the wrong realm's
+    book or sell their own.
   - AVABand's one addition: the General Store also always has **lanterns** (`avabandAlways` in
     `stores.json`, kept apart from 4.2.5's `always` list so the drift check still compares that
     untouched). In 4.2.5 no shop sells them — the black market might, and the dungeon has plenty

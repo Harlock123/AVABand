@@ -11,10 +11,10 @@ namespace Angband.Avalonia.Tests;
 
 public class StoreUiTests
 {
-    private static (MainWindow Window, MainWindowViewModel Vm, GameSession Game) OpenAt(string storeId)
+    private static (MainWindow Window, MainWindowViewModel Vm, GameSession Game) OpenAt(string storeId, string cls = "warrior")
     {
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
-        vm.StartGame(42, "warrior");
+        vm.StartGame(42, cls);
         TestKit.Give(vm);
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
@@ -24,6 +24,22 @@ public class StoreUiTests
         game.Player.Gold = 5000;
         vm.HandleAction(InputAction.EnterStore);
         return (window, vm, game);
+    }
+
+    /// <summary>A newcomer can tell a holy book from a magic one, and which are theirs, buying or selling.</summary>
+    [AvaloniaFact]
+    public void The_Bookseller_says_which_books_are_yours()
+    {
+        var (window, vm, game) = OpenAt("bookseller", "priest");
+        var books = vm.StoreRows.Where(r => r.HasBookNote).ToList();
+        Assert.Contains(books, r => System.Text.RegularExpressions.Regex.IsMatch(r.Name, @"Holy Books? of \[") && r.IsBookForYou);
+        Assert.Contains(books, r => System.Text.RegularExpressions.Regex.IsMatch(r.Name, @"Magic Books? of \[") && r.BookNote == "not for a Priest" && r.IsBookNotForYou);
+        Assert.All(books, r => Assert.Equal(r.Item.Base.Id == "prayer_book", r.IsBookForYou));
+        TileRenderingTests.Save(window, "store-bookseller");
+
+        // Selling too: the priest's own book is marked as theirs.
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+        Assert.Contains(vm.StoreRows, r => r.Item.Base.Id == "prayer_book" && r.IsBookForYou);
     }
 
     [AvaloniaFact]

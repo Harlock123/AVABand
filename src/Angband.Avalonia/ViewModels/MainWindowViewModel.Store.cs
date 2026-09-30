@@ -12,10 +12,15 @@ namespace Angband.Avalonia.ViewModels;
 
 /// <summary>A line in the store screen: something to buy, or something of yours to sell.</summary>
 public sealed record StoreRow(string Letter, string Glyph, uint GlyphColor, string Name, string Price, string Weight, Item Item,
-    string Equipped = "")
+    string Equipped = "", string BookNote = "")
 {
     /// <summary>Whether the row is something the player has on (shown, and asked about before it goes).</summary>
     public bool IsEquipped => Equipped.Length > 0;
+
+    /// <summary>A book's note: whether it's one the player's class can read.</summary>
+    public bool HasBookNote => BookNote.Length > 0;
+    public bool IsBookForYou => BookNote == "for you";
+    public bool IsBookNotForYou => HasBookNote && !IsBookForYou;
 
     public IBrush GlyphBrush { get; } = new ImmutableSolidColorBrush(Color.FromUInt32(GlyphColor));
 }
@@ -182,7 +187,7 @@ public sealed partial class MainWindowViewModel
                 : "";
             StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),
                 _cells.Color(flavor?.Color ?? item.Kind.Color ?? item.Base.Color), name, price,
-                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped));
+                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped, _game.BookNote(item) ?? ""));
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
         OnPropertyChanged(nameof(StoreModeText));

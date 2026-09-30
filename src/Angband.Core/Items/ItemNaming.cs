@@ -42,7 +42,8 @@ public static class ItemNaming
             noun = pattern.Replace("{flavor}", known.Name).Replace("{base}", Plain(item.Base.Name, plural))
                    + " of " + Plain(item.Kind.Name, false);
         }
-        else if (item.IsFlavored)
+        else if (item.IsFlavored || IsBook(item.Base.Id))
+            // (A book says which kind it is, as Angband's do: "a Holy Book of [Novice's Handbook]".)
             noun = Plain(item.Base.Name, plural) + " of " + Plain(item.Kind.Name, false);
         else
             noun = Plain(item.Kind.Name, plural);
@@ -132,6 +133,8 @@ public static class ItemNaming
         var suffix = before.EndsWith("ch") || before.EndsWith("sh") || before.EndsWith('s') || before.EndsWith('x') ? "es" : "s";
         return before + suffix + name[(i + 1)..];
     }
+
+    public static bool IsBook(string baseId) => baseId is "magic_book" or "prayer_book" or "nature_book" or "shadow_book";
 
     private static bool StartsWithVowel(string s) => s.Length > 0 && "aeiouAEIOU".Contains(s[0]);
 }
