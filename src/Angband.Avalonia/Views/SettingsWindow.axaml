@@ -185,6 +185,7 @@
             </StackPanel>
             <TextBlock TextWrapping="Wrap" Opacity="0.7" FontSize="12"
                        Text="A keymap is a key that types other keys, as in Angband: F2 with ma' casts your first spell at the nearest monster. ^x is Ctrl+x; \e Escape, \n Enter; [F1], [Up] and so on name other keys. Keymaps work only when the game waits for a command." />
+            <ScrollViewer MaxHeight="220">
             <ItemsControl x:Name="KeymapList" ItemsSource="{Binding KeymapRows}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -198,6 +199,7 @@
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
+            </ScrollViewer>
           </StackPanel>
         </Border>
         <ScrollViewer>

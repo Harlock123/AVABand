@@ -7,6 +7,8 @@ played; this page keeps it all (Help → What's new...).
 
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
+- **Long lists scroll**: a long item or spell list no longer runs off the bottom of a small window
+  — it fits and scrolls, with the mouse wheel too — and so does a long list of keymaps in Settings.
 
 ## 2026-09-30.16
 

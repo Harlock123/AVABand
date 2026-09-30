@@ -17,6 +17,9 @@ public partial class MainWindow : Window
         InitializeComponent();
         // Tunnel so game keys work regardless of which element has focus (menus handle their own).
         AddHandler(KeyDownEvent, OnGameKeyDown, RoutingStrategies.Tunnel);
+        // A long prompt (a spell list, a shop's service list) fits within the map and scrolls.
+        if (this.FindControl<Panel>("Overlay") is { } fitTo)
+            fitTo.PropertyChanged += (_, e) => { if (e.Property == BoundsProperty) FitPromptBox(); };
         if (this.FindControl<MapView>("Map") is { } map)
         {
             map.CellClicked += (loc, secondary) =>
@@ -115,8 +118,17 @@ public partial class MainWindow : Window
         var x = at.X + gap + size.Width <= overlay.Bounds.Width ? at.X + gap : Math.Max(0, at.X - gap - size.Width);
         var y = Math.Clamp(at.Y - 10, 0, Math.Max(0, overlay.Bounds.Height - size.Height));
         box.Margin = new global::Avalonia.Thickness(x, y, 0, 0);
+        FitPromptBox();
         vm.PropertyChanged -= ResetMenuWhenClosed;
         vm.PropertyChanged += ResetMenuWhenClosed;
+    }
+
+    /// <summary>Keeps the prompt box within the map area, below where it starts, so its lists scroll rather than run off.</summary>
+    private void FitPromptBox()
+    {
+        if (this.FindControl<Border>("PromptBox") is not { } box || this.FindControl<Panel>("Overlay") is not { } overlay
+            || overlay.Bounds.Height <= 0) return;
+        box.MaxHeight = Math.Max(120, overlay.Bounds.Height - box.Margin.Top - 12);
     }
 
     private void ResetMenuWhenClosed(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -131,6 +143,7 @@ public partial class MainWindow : Window
             box.HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center;
             box.VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Top;
             box.Margin = new global::Avalonia.Thickness(0, 24, 0, 0);
+            FitPromptBox();
         });
     }
 

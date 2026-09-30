@@ -368,10 +368,14 @@
       <!-- Item prompt ("Quaff which potion?") -->
       <Border x:Name="PromptBox" IsVisible="{Binding IsPrompting}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0"
               Background="#E0101018" BorderBrush="#556" BorderThickness="1" CornerRadius="6" Padding="14,10" MinWidth="420">
-        <StackPanel Spacing="6">
-          <TextBlock Text="{Binding PromptTitle}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" MaxWidth="640" />
-          <TextBlock Text="{Binding PromptText}" IsVisible="{Binding PromptText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                     Foreground="#dcd6c8" TextWrapping="Wrap" MaxWidth="640" Margin="0,0,0,4" />
+        <!-- (A DockPanel, not a StackPanel: the lists get the height left and scroll within it when long;
+             the window keeps the box within the map, MainWindow.axaml.cs FitPromptBox.) -->
+        <DockPanel>
+          <TextBlock DockPanel.Dock="Top" Text="{Binding PromptTitle}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" MaxWidth="640" Margin="0,0,0,6" />
+          <TextBlock DockPanel.Dock="Top" Text="{Binding PromptText}" IsVisible="{Binding PromptText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                     Foreground="#dcd6c8" TextWrapping="Wrap" MaxWidth="640" Margin="0,0,0,10" />
+          <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0" Text="Press a letter or click (or move and confirm), Esc to cancel." Foreground="#888" FontSize="11" />
+          <Panel>
           <ListBox x:Name="PromptList" ItemsSource="{Binding PromptRows}" IsVisible="{Binding !!PromptRows.Count}" ItemTemplate="{StaticResource ItemRowTemplate}"
                    SelectedIndex="{Binding PromptSelectedIndex, Mode=OneWay}" Focusable="False" Cursor="Hand"
                    Background="Transparent" Padding="0" />
@@ -407,8 +411,9 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
-          <TextBlock Text="Press a letter or click (or move and confirm), Esc to cancel." Foreground="#888" FontSize="11" />
-        </StackPanel>
+
+          </Panel>
+        </DockPanel>
       </Border>
       </Panel>
       </LayoutTransformControl>
