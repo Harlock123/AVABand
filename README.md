@@ -993,7 +993,11 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     is — as it is while Orca runs).
   - **Tutorial** (AVABand's own; Game → *Tutorial*, and the first hint points to it): a short level
     made for teaching — a room with a potion to pick up, a door, a corridor with a pit trap and no
-    way round, a room with a sleeping small kobold, a last door and the stairs. The hint banner says
+    way round, a room with a sleeping small kobold, then a room with a Scroll of Word of Recall to
+    read (it says what it would do in a real game, and the tutorial stays on its level) and the
+    Prancing Pony's door, put there for the lesson (walking in explains the quests and the notice
+    board, rather than opening the real inn), then opening the Knowledge screen (its Quests and Feats
+    pages), and the stairs. The hint banner says
     what to do at each step, in the keys you have, and stays until the step is done (× hides it
     until the next). Played as Pupil the Human Warrior, it is never saved and never scored; dying
     costs nothing, and the stairs finish it with a menu: *Play the tutorial again*, *Create a new

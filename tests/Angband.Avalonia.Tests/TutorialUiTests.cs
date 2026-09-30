@@ -66,4 +66,34 @@ public sealed class TutorialUiTests : IDisposable
         Assert.Equal("Play the tutorial again", menu.Choices[0].Label);
         Assert.Contains(menu.Choices, c => c.Label == "Create a new character...");
     }
+
+    /// <summary>The later lessons: the scroll, the inn and the Knowledge screen, each in the keys you have.</summary>
+    [AvaloniaFact]
+    public void TheLaterLessons_RecallTheInnAndKnowledge()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
+        vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.StartGame(42, "warrior");
+        vm.StartTutorialCommand.Execute(null);
+        var game = vm.Game;
+        foreach (var (at, item) in game.Level.Objects.All.Where(o => o.Item.Kind.Id == Tutorial.PotionId).ToList()) game.Level.Objects.Remove(at, item);
+        game.Level[game.Level.AllLocs().First(p => game.Level.Has(p, TerrainFlags.DoorClosed))].Feature = game.Data.Terrain.Ids.OpenDoor;
+        foreach (var p in game.Level.AllLocs().Where(p => game.Level[p].Trap != 0).ToList()) game.Level[p].Trap = 0;
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        vm.Execute(new HoldCommand());
+        Assert.Contains("Scroll of Word of Recall", vm.HintText);
+        Assert.Contains("(r)", vm.HintText);
+
+        game.TutorialDone.Add("recall");
+        vm.Execute(new HoldCommand());
+        Assert.Contains("Prancing Pony", vm.HintText);
+
+        game.TutorialDone.Add("inn");
+        vm.Execute(new HoldCommand());
+        Assert.Contains("Knowledge screen", vm.HintText);
+        vm.ShowKnowledge();
+        Assert.Contains("knowledge", game.TutorialDone);
+        Assert.StartsWith("That's everything!", vm.HintText);
+    }
 }

@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-09-30.3
 
+- **The tutorial teaches more**: Word of Recall, the Prancing Pony's quests and notice board, and the
+  Knowledge screen's Quests and Feats pages.
 - **The graveyard**: a headstone for every character who died or retired, with an epitaph and their
   last character dump (Game → The graveyard..., or from the title screen).
 - **Boss music**: a great foe in view (a unique from 500 ft down, or a quest's own) brings its own

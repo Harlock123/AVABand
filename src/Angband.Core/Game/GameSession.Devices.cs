@@ -451,6 +451,14 @@ public sealed partial class GameSession
     public bool ToggleRecall()
     {
         if (ArenaForbids()) return true;
+        if (IsTutorial)
+        {
+            // The lesson: what it would do, without leaving the tutorial's one level.
+            TutorialDone.Add("recall");
+            Publish(new MessageEvent("The air about you becomes charged... In a real game, in 15 to 35 turns you'd be carried up to "
+                                     + "the town — or from the town, down to your deepest level. Here, the tutorial goes on."));
+            return true;
+        }
         // Angband birth_no_recall (until Morgoth is dead), and no recall from a quest level with forced descent.
         if (Options[OptionIds.NoRecall] && !Player.IsWinner || ForceDescend && QuestAt(Player.Depth) is not null)
         {

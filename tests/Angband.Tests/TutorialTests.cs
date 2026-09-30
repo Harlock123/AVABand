@@ -15,7 +15,7 @@ public class TutorialTests
         Assert.Equal(TutorialStep.PickUp, Tutorial.StepOf(game));
 
         // Pick up the potion.
-        var potion = game.Level.Objects.All.Single().Loc;
+        var potion = game.Level.Objects.All.Single(o => o.Item.Kind.Id == Tutorial.PotionId).Loc;
         while (game.Player.Position != potion) game.Execute(new WalkCommand(Direction.East));
         if (game.Level.Objects.Any(potion)) game.Execute(new PickupCommand());
         Assert.Equal(TutorialStep.OpenDoor, Tutorial.StepOf(game));
@@ -32,9 +32,34 @@ public class TutorialTests
         }
         Assert.Equal(TutorialStep.Fight, Tutorial.StepOf(game));
 
-        // The kobold, then the stairs.
+        // The kobold.
         var kobold = game.Level.Monsters.All.Single(m => m.Race.Id == Tutorial.MonsterId);
         game.DamageMonster(kobold, 10_000);
+        Assert.Equal(TutorialStep.Recall, Tutorial.StepOf(game));
+
+        // Word of Recall: read, it says what it would do — and the tutorial stays on its level.
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        var scrollAt = game.Level.Objects.All.Single(o => o.Item.Kind.Id == Tutorial.ScrollId).Loc;
+        game.Player.Position = scrollAt;
+        game.Execute(new PickupCommand());
+        var scroll = game.Player.Inventory.Pack.First(i => i.Kind.Id == Tutorial.ScrollId && i.Number >= 1);
+        game.Execute(new UseCommand(scroll));
+        Assert.Contains(messages, m => m.Contains("In a real game"));
+        Assert.Equal(0, game.Player.RecallTimer);
+        Assert.Equal(TutorialStep.Inn, Tutorial.StepOf(game));
+
+        // The Prancing Pony's door: a lesson on quests, not the real inn.
+        var prompts = new List<QuestPromptEvent>();
+        game.Events.Subscribe<QuestPromptEvent>(prompts.Add);
+        game.Player.Position = game.Level.AllLocs().Single(p => game.Level.FeatureAt(p).Shop == "inn");
+        game.Execute(new EnterStoreCommand());
+        Assert.Equal("The Prancing Pony (a lesson)", prompts.Last().Title);
+        Assert.Empty(game.AvaQuests.Quests);
+        Assert.Equal(TutorialStep.Knowledge, Tutorial.StepOf(game));
+
+        // The Knowledge screen (the interface marks it), then the stairs.
+        game.TutorialDone.Add("knowledge");
         Assert.Equal(TutorialStep.Stairs, Tutorial.StepOf(game));
         Assert.Contains(game.Level.AllLocs(), p => game.Level.Has(p, Angband.Core.Definitions.TerrainFlags.DownStair));
     }

@@ -28,7 +28,11 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>~: the knowledge browser (monsters met, objects seen, runes learned, egos and artifacts found).</summary>
     [RelayCommand]
-    public void ShowKnowledge() => KnowledgeRequested?.Invoke(CreateKnowledge());
+    public void ShowKnowledge()
+    {
+        if (_game.IsTutorial && _game.TutorialDone.Add("knowledge")) CheckTutorial(); // (a lesson done)
+        KnowledgeRequested?.Invoke(CreateKnowledge());
+    }
 
     /// <summary>'?' or F1: the list of commands and the keys bound to them.</summary>
     public event Action<KeyCommandsViewModel>? KeyCommandsRequested;

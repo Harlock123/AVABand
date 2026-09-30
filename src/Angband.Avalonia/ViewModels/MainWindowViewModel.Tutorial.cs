@@ -34,7 +34,13 @@ public sealed partial class MainWindowViewModel
                              + $"or press {KeyName(InputAction.WalkIntoTrap)} to jump onto it on purpose.",
         TutorialStep.Fight => "A kobold (k) sleeps in the next room. Walk into it to attack it. "
                               + $"If you get hurt, quaff a potion ({KeyName(InputAction.Quaff)}). {KeyName(InputAction.Look)} looks at it first.",
-        _ => $"Well fought! Open the last door, stand on the stairs (>) and press {KeyName(InputAction.StairsDown)} to finish the tutorial.",
+        TutorialStep.Recall => "Well fought! Through the next door lies a Scroll of Word of Recall (?). Pick it up and read it "
+                               + $"({KeyName(InputAction.Read)}): it's how you get home from the deep, and back down again.",
+        TutorialStep.Inn => "The door marked 9 is the Prancing Pony, the inn in town (put here just for the lesson). "
+                            + "Walk onto it to see what it offers: quests, and work on its notice board.",
+        TutorialStep.Knowledge => $"Now open the Knowledge screen ({KeyName(InputAction.MonsterKnowledge)}): all you've learned, your quest "
+                                  + "journal (Quests), and milestones across all your characters (Feats). Close it again with Escape.",
+        _ => $"That's everything! Go through the last door, stand on the stairs (>) and press {KeyName(InputAction.StairsDown)} to finish.",
     };
 
     /// <summary>In the tutorial, the banner shows the current step (until dismissed, then again at the next).</summary>
@@ -70,7 +76,7 @@ public sealed partial class MainWindowViewModel
             || !_game.Level.Has(_game.Player.Position, Angband.Core.Definitions.TerrainFlags.DownStair)) return false;
         HintText = "";
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel("Tutorial complete", [
-            "You know the basics: moving, picking up, doors, traps, fighting and stairs.",
+            "You know the basics: moving, picking up, doors, traps, fighting, Word of Recall, the inn's quests, Knowledge and stairs.",
             "The hints for new players go on showing tips as new things happen. Good luck!",
         ], [.. Choices(null, () => { }, sheet: false).Prepend(new GameOverChoice("", "Play the tutorial again", StartTutorial))
             .Select((c, i) => c with { Letter = ((char)('a' + i)).ToString() })]));

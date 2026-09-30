@@ -6,27 +6,31 @@ using Angband.Core.World;
 namespace Angband.Core.Game;
 
 /// <summary>The steps of the tutorial, in the order they are taught.</summary>
-public enum TutorialStep { PickUp, OpenDoor, Trap, Fight, Stairs }
+public enum TutorialStep { PickUp, OpenDoor, Trap, Fight, Recall, Inn, Knowledge, Stairs }
 
 /// <summary>
 /// AVABand's tutorial (not Angband's): a short level made for teaching, one lesson after another —
-/// pick up a potion, open a door, get past a trap, fight a sleeping kobold, take the stairs. A
-/// tutorial game is never saved and never scored; the interface guides each step.
+/// pick up a potion, open a door, get past a trap, fight a sleeping kobold, read a Scroll of Word of
+/// Recall, visit the Prancing Pony (its door put here for the lesson), open the Knowledge screen,
+/// take the stairs. A tutorial game is never saved and never scored; the interface guides each step.
 /// </summary>
 public static class Tutorial
 {
     /// <summary>
     /// <c>#</c> granite, <c>,</c> lit room floor, <c>.</c> dark corridor, <c>+</c> closed door,
-    /// <c>@</c> the start, <c>!</c> a potion, <c>^</c> a pit, <c>k</c> a kobold, <c>&gt;</c> the stairs down.
+    /// <c>@</c> the start, <c>!</c> a potion, <c>^</c> a pit, <c>k</c> a kobold, <c>?</c> a Scroll of Word
+    /// of Recall, <c>9</c> the Prancing Pony's door, <c>&gt;</c> the stairs down.
     /// </summary>
     public static readonly string[] Map =
     [
-        "#############################################",
-        "#,,,,,,,####################,,,,,,,,,,#######",
-        "#,@,,!,,+..........^.......+,,,,,,k,,,+....>#",
-        "#,,,,,,,####################,,,,,,,,,,#######",
-        "#############################################",
+        "###################################################################",
+        "#,,,,,,,####################,,,,,,,,,,######,,,,,,,,,,,######,,,,,#",
+        "#,@,,!,,+..........^.......+,,,,,,k,,,+....+,,,?,,,,9,,+....+,,,>,#",
+        "#,,,,,,,####################,,,,,,,,,,######,,,,,,,,,,,######,,,,,#",
+        "###################################################################",
     ];
+
+    public const string ScrollId = "scroll_of_word_of_recall";
 
     public const string MonsterId = "small_kobold";
     public const string PotionId = "cure_light_wounds";
@@ -53,10 +57,11 @@ public static class Tutorial
                 '#' => t.Ids.Granite,
                 '+' => t.Ids.ClosedDoor,
                 '>' => t.Ids.DownStair,
+                '9' => t["shop_inn"].Index,
                 _ => t.Ids.Floor,
             };
             // The rooms are lit, walls and doors included (as Angband lights a room's edges).
-            var room = ch is ',' or '@' or '!' or 'k' || ch is '#' or '+' && TouchesRoom(x, y);
+            var room = IsRoom(ch) || ch is '#' or '+' && TouchesRoom(x, y);
             if (room) sq.Flags |= SquareFlags.Glow | SquareFlags.Room;
             switch (ch)
             {
@@ -69,6 +74,7 @@ public static class Tutorial
                 case 'k':
                     new MonsterSpawner(data).Place(level, game.Rng, data.Monster(MonsterId)!, at, asleep: true);
                     break;
+                case '?': level.Objects.Add(at, game.Objects.Create(ScrollId)); break;
             }
         }
         game.UseLevel(level, start);
@@ -82,11 +88,13 @@ public static class Tutorial
         {
             var ny = y + dy;
             var nx = x + dx;
-            if (ny >= 0 && ny < Map.Length && nx >= 0 && nx < Map[ny].Length && Map[ny][nx] is ',' or '@' or '!' or 'k')
+            if (ny >= 0 && ny < Map.Length && nx >= 0 && nx < Map[ny].Length && IsRoom(Map[ny][nx]))
                 return true;
         }
         return false;
     }
+
+    private static bool IsRoom(char ch) => ch is ',' or '@' or '!' or 'k' or '?' or '9' or '>';
 
     /// <summary>Where the player has got to: the first lesson not yet done.</summary>
     public static TutorialStep StepOf(GameSession game)
@@ -96,6 +104,9 @@ public static class Tutorial
         if (Doors(level).First() is var first && level.Has(first, TerrainFlags.DoorClosed)) return TutorialStep.OpenDoor;
         if (level.AllLocs().Any(p => level[p].Trap != 0) && game.Player.Position.X < TrapColumn()) return TutorialStep.Trap;
         if (level.Monsters.All.Any(m => m.Race.Id == MonsterId)) return TutorialStep.Fight;
+        if (!game.TutorialDone.Contains("recall")) return TutorialStep.Recall;
+        if (!game.TutorialDone.Contains("inn")) return TutorialStep.Inn;
+        if (!game.TutorialDone.Contains("knowledge")) return TutorialStep.Knowledge;
         return TutorialStep.Stairs;
     }
 

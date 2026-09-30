@@ -138,6 +138,16 @@ public sealed partial class GameSession
     /// <summary>Walking into the Prancing Pony.</summary>
     private void EnterInn()
     {
+        if (IsTutorial)
+        {
+            TutorialDone.Add("inn");
+            AskQuest("The Prancing Pony (a lesson)",
+                "In town this is the inn, the 9. Butterbur gives out the story quests your level allows — each has something to find "
+                + "and somewhere to use it, and some a choice to make. The notice board has smaller jobs: hunts, things to bring back, "
+                + "bounties, scouting. Your quests are kept on the Knowledge screen's Quests page.",
+                ("none", "Got it"));
+            return;
+        }
         if (!AvaQuestsOn)
         {
             Publish(new MessageEvent("The Prancing Pony's common room is quiet: there's no work to be had here."));

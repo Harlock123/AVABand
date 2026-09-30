@@ -66,6 +66,9 @@ public sealed partial class GameSession : ITurnHandler
     /// <summary>A tutorial game (<see cref="Tutorial"/>): never saved, never scored.</summary>
     public bool IsTutorial { get; internal set; }
 
+    /// <summary>The tutorial's later lessons done ("recall", "inn", "knowledge"; see <see cref="Tutorial.StepOf"/>).</summary>
+    public HashSet<string> TutorialDone { get; } = new(StringComparer.Ordinal);
+
     /// <summary>A game being played back from a replay: never saved, scored or recorded.</summary>
     public bool IsReplay { get; set; }
 
