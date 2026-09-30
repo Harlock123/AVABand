@@ -64,3 +64,7 @@ Quest items can't be dropped, sold, thrown, ignored or stolen; one carried by a 
 your pack when it dies (or, if your pack is full, falls beside it — leave it behind and Butterbur
 will have it for you at the inn). A quest's place turns up on the level it names; if you leave before
 you're done, it's there again next time you arrive.
+
+To see what a quest is like before you reach it, **Debug → Try a quest** starts a new character of
+your race and class at a level that suits the quest, kitted out, holding it and standing on its
+level. It's a debug character, so it isn't scored; your own game is saved first.

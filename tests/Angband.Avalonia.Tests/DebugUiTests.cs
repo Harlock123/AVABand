@@ -135,4 +135,37 @@ public class DebugUiTests
         Assert.True(Angband.Core.Persistence.SaveGame.Load(game.Data, stream).UsedDebug);
         Assert.Contains("Cheated (debug): not scored.", Angband.Core.Records.CharacterDump.Build(game, []));
     }
+
+    /// <summary>Debug → Try a quest lists every quest, and one asks, then starts a kitted character on the quest's level.</summary>
+    [AvaloniaFact]
+    public void Try_a_quest_starts_a_kitted_character_on_its_level()
+    {
+        var (window, vm) = Open();
+        var menu = window.GetLogicalDescendants().OfType<global::Avalonia.Controls.MenuItem>().Single(m => m.Header as string == "Try a _quest");
+        Assert.Equal(GameSession.QuestTrialLevels.Count, vm.QuestTrials.Count);
+        Assert.Contains(vm.QuestTrials, t => t.Name == "The Heart of the Mountain");
+        Assert.Same(vm.QuestTrials, menu.ItemsSource);
+        ((global::Avalonia.Controls.MenuItem)menu.Parent!).IsSubMenuOpen = true;
+        menu.IsSubMenuOpen = true;
+        global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
+        var shown = menu.GetLogicalChildren().OfType<global::Avalonia.Controls.MenuItem>().ToList();
+        Assert.Equal(vm.QuestTrials.Select(t => t.Name), shown.Select(m => m.Header as string));
+        Assert.All(shown, m => Assert.NotNull(m.Command));
+        TileRenderingTests.Save(window, "quest-trial-menu");
+        menu.IsSubMenuOpen = false;
+        ((global::Avalonia.Controls.MenuItem)menu.Parent!).IsSubMenuOpen = false;
+
+        var old = vm.Game;
+        vm.QuestTrials.First(t => t.Name == "The Last Watch").Command.Execute(null);
+        Assert.True(vm.IsConfirming);
+        Assert.Same(old, vm.Game); // nothing yet
+        window.KeyPressQwerty(PhysicalKey.Y, RawInputModifiers.None);
+        var game = vm.Game;
+        Assert.NotSame(old, game);
+        Assert.Equal("warrior", game.Player.Class!.Id);
+        Assert.Equal(40, game.Player.Level);
+        Assert.Equal(game.AvaQuests.Get("watch")!.N("depth"), game.Player.Depth);
+        Assert.True(vm.DebugMarked);
+        TileRenderingTests.Save(window, "quest-trial");
+    }
 }

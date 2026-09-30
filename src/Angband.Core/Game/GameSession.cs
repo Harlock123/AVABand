@@ -233,6 +233,7 @@ public sealed partial class GameSession : ITurnHandler
             CastCommand cast => WithUncurse(cast.Uncurse, () => Cast(cast.SpellId, cast.Target, cast.Direction, cast.AllowOverexert)),
             DebugJumpCommand jump => DebugJump(jump.Depth),
             DebugCureAllCommand => DebugCureAll(),
+            DebugTryQuestCommand trial => DebugTryQuest(trial.Quest),
             _ => 0,
         };
         if (energy <= 0) return false;

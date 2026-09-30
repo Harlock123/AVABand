@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.7
+
+- **Debug → Try a quest**: jump straight into any quest with a character of your race and class,
+  raised to a level that suits it and kitted out — to see what a quest is like without playing up
+  to it. (The character is a debug one, so it isn't scored.)
+
 ## 2026-09-30.6
 
 - **Spellbooks say what they are**: "a Holy Book of [Novice's Handbook]", "a Magic Book of [First

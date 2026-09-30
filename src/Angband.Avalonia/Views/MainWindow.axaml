@@ -108,6 +108,14 @@
         <MenuItem Header="Jump back to _town" Command="{Binding JumpToTownCommand}" InputGesture="F9" />
         <MenuItem Header="Show _whole map" Command="{Binding ToggleWholeMapCommand}" InputGesture="F7" />
         <MenuItem Header="_Cure all" Command="{Binding CureAllCommand}" />
+        <MenuItem Header="Try a _quest" ItemsSource="{Binding QuestTrials}">
+          <MenuItem.Styles>
+            <Style Selector="MenuItem > MenuItem" x:DataType="vm:QuestTrialItem">
+              <Setter Property="Header" Value="{Binding Name}" />
+              <Setter Property="Command" Value="{Binding Command}" />
+            </Style>
+          </MenuItem.Styles>
+        </MenuItem>
         <Separator />
         <MenuItem Header="Character _marked by debug (not scored)" Command="{Binding ToggleDebugMarkCommand}"
                   ToggleType="CheckBox" IsChecked="{Binding DebugMarked, Mode=OneWay}" />
