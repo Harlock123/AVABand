@@ -1254,6 +1254,10 @@
     "object:reforged_blade": "item/weapon/long_sword_1_new.png",
     "object:water_of_ulmo": "item/potion/unknown.png",
     "object:black_market_strongbox": "dungeon/chest_2_closed.png",
-    "object:key_of_belegost": "ava_key.png"
+    "object:key_of_belegost": "ava_key.png",
+    "terrain:cold_brazier": "ava_brazier_cold.png",
+    "terrain:lit_brazier": "ava_brazier_lit.png",
+    "terrain:trapped_apprentice": "ava_apprentice.png",
+    "object:wardens_taper": "player/hand_left/misc/torch.png"
   }
 }

@@ -98,8 +98,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
     level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
-    near your depth, or bring 2-4 of a potion, scroll or food no shop sells — two taken at once,
-    renewed whenever you come back up, paid at the inn.
+    near your depth, bring 2-4 of a potion, scroll or food no shop sells, a **bounty** on a living
+    unique no deeper than two levels past your deepest (not a quest's own), or **scouting** down to
+    a depth three to five levels past it — two taken at once, renewed whenever you come back up,
+    paid at the inn.
   - Each story quest has a **room of its own** (`templates/ava_vaults.json`, type "AVABand quest",
     never chosen at random) built into the level that needs it as its first room — the classic
     profile, as Angband's quest levels are — with three new vault symbols: `(` the quest's feature,
@@ -119,7 +121,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     discount), show it to the Alchemist (his discount, the Magic shop's prices up) or burn it.
     *The Thief of the Black Market*: ledger pages on monsters give three clues that fit only one of
     four suspects, who roam at their depths; only the thief has the strongbox (Black market prices
-    down for returning it).
+    down for returning it). *The Apprentice* (`GameSession.AvaQuests.MoreStories.cs`): the
+    Alchemist's apprentice, pinned behind a rockfall and guarded; give him your own Scroll of Word
+    of Recall (home at once: the Alchemist's reward and a sixth off his prices) or send him up alone
+    — whether he makes it is settled then (the deeper, the worse his odds) and learned at the
+    Alchemy shop. *The Cartographer*: map three quarters of a cavern, a labyrinth and one of the old
+    mines (magic mapping counts; checked as you go), then the Bookseller pays, with a Rod of
+    Treasure Location and a discount. *The Warden's Fires*: the Shade of the Stair can't be harmed
+    while its hall's three braziers are cold; step onto each with the Warden's Taper to light it —
+    and the Shade, lingering by a lit one, puts it out again (about one turn in four).
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
     `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. One a monster
     drops on a full pack's account and left behind on the level turns up at the Prancing Pony

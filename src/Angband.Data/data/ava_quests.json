@@ -64,5 +64,40 @@
    "return": "You have the Black Market's strongbox. Take it back to the Black market (6).",
    "done": "You returned the Black Market's strongbox; its prices are kinder to you now."
   }
+ },
+ {
+  "id": "apprentice",
+  "name": "The Apprentice",
+  "minLevel": 12,
+  "offer": "The Alchemist himself is at the inn, which he never is. \"My apprentice went down after cave-moss for me, and a rockfall shut the way behind him. A dwarf heard him calling at {feet} ft. The things down there will have heard him too. Bring the boy home.\"",
+  "stages": {
+   "find": "The Alchemist's apprentice is trapped behind a rockfall at {feet} ft (level {depth}). Find him; step onto him to speak to him.",
+   "alone": "You showed the apprentice the way up and left him to find it alone. Whether he made it, the Alchemist (5) will know.",
+   "rescued": "You gave the apprentice your own Scroll of Word of Recall, and he read it and was gone. Tell the Alchemist (5).",
+   "done": "The Alchemist's apprentice is home, thanks to you. The Alchemist won't forget it.",
+   "lost": "The apprentice never came home. The Alchemist doesn't speak of it."
+  }
+ },
+ {
+  "id": "cartographer",
+  "name": "The Cartographer",
+  "minLevel": 6,
+  "offer": "A thin man with ink to the elbows is copying a map at the corner table. \"The Bookseller pays me for maps, and nobody ever maps the strange levels: the caverns, the labyrinths, the old mines. Map most of one of each, three quarters or more, and bring them to the Bookseller. I'll see you're paid.\"",
+  "stages": {
+   "map": "Map three quarters of a cavern, a labyrinth and one of the old mines, for the cartographer: {mapped} of 3 so far ({which}). Magic mapping counts. Then go to the Bookseller (4).",
+   "deliver": "You have maps of a cavern, a labyrinth and the old mines. Take them to the Bookseller (4).",
+   "done": "The Bookseller has the cartographer's maps, and pays for good work."
+  }
+ },
+ {
+  "id": "warden",
+  "name": "The Warden's Fires",
+  "minLevel": 20,
+  "offer": "An old watchman grips your arm. \"There's a hall at {feet} ft where the wardens kept three fires burning, to keep the Shade of the Stair in its place. The fires went out, and it walks. No blade will touch it while they're cold. Take my taper: light all three, then you can put it down. It'll try to put them out again, mind.\"",
+  "stages": {
+   "light": "The Shade of the Stair walks in the Wardens' hall at {feet} ft (level {depth}), and nothing can harm it while the three fires are cold. Step onto each brazier with the Warden's Taper to light it: {lit} of 3 lit. It will try to put them out.",
+   "slay": "All three of the wardens' fires burn: the Shade of the Stair can be harmed now. It is at {feet} ft (level {depth}).",
+   "done": "You lit the wardens' fires and laid the Shade of the Stair to rest."
+  }
  }
 ]

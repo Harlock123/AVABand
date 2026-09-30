@@ -1260,6 +1260,10 @@
     "object:shard_of_the_point": "main:17,0",
     "object:reforged_blade": "main:17,0",
     "object:water_of_ulmo": "main:3,11",
-    "object:black_market_strongbox": "main:27,7"
+    "object:black_market_strongbox": "main:27,7",
+    "terrain:cold_brazier": "ava_brazier_cold.png",
+    "terrain:lit_brazier": "ava_brazier_lit.png",
+    "terrain:trapped_apprentice": "ava_apprentice.png",
+    "object:wardens_taper": "main:7,14"
   }
 }

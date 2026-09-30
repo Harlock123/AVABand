@@ -6,7 +6,8 @@ using Angband.Core.Quests;
 
 namespace Angband.Core.Game;
 
-// AVABand's six story quests (their words are in ava_quests.json):
+// AVABand's story quests (their words are in ava_quests.json) — these six, and three more in
+// GameSession.AvaQuests.MoreStories.cs (the Apprentice, the Cartographer, the Warden's Fires):
 //  - The Sealed Door: Durgash the Keybearer's hall; his key opens a sealed dwarven door deeper down.
 //  - The Burden: the Seal of Angmar, found in a shrine: speed and strength, but sticky, and it calls
 //    monsters; unmade at a dwarven forge further down.
@@ -47,6 +48,9 @@ public sealed partial class GameSession
                 s.Numbers["depth"] = QuestDepth(3, 8, 25);
                 s.Stage = "deliver";
                 break;
+            case "apprentice" or "cartographer" or "warden":
+                PlanMoreQuest(s);
+                break;
             case "thief":
                 var thief = Suspects[Rng.RandInt0(Suspects.Length)];
                 s.Texts["thief"] = thief;
@@ -65,6 +69,7 @@ public sealed partial class GameSession
         {
             case "consecration": GiveQuestItem(QuestItem("water_of_ulmo", "consecration")); break;
             case "letter": GiveQuestItem(QuestItem("sealed_letter", "letter")); break;
+            default: MoreQuestAccepted(s); break;
         }
     }
 
@@ -113,6 +118,7 @@ public sealed partial class GameSession
         if (Active("consecration") is { } crypt && depth == crypt.N("depth") && !KilledUniques.Contains("hathol_lord_of_the_barrow"))
             return ("consecration", "quest_barrow_crypt");
         if (Active("letter") is { Stage: "deliver" or "opened" } letter && depth == letter.N("depth")) return ("letter", "quest_hermitage");
+        if (MoreRoomFor(depth) is { } more) return more;
         // (Last: the other quests' rooms have fixed depths; the Seal's shrine can wait for a level free.)
         if (AvaQuests.Get("burden") is null && depth >= BurdenDepth) return ("burden", "quest_relic_shrine");
         return null;
@@ -122,6 +128,7 @@ public sealed partial class GameSession
 
     private void FurnishRoom(string quest)
     {
+        if (FurnishMoreRoom(quest)) return;
         var feature = QuestSpot('(');
         var monster = QuestSpot(')');
         var item = QuestSpot('[');
@@ -253,6 +260,7 @@ public sealed partial class GameSession
     private void StoryStep(Loc at, string feature)
     {
         _questPlace = at;
+        if (MoreStep(at, feature)) return;
         switch (feature)
         {
             case "dwarven_forge":
@@ -281,6 +289,7 @@ public sealed partial class GameSession
 
     private bool StoryAtShop(string shopId)
     {
+        if (MoreAtShop(shopId)) return true;
         switch (shopId)
         {
             case "weaponsmith" when Active("broken_blade") is { Stage: "reforge" } && ShardKinds.All(k => Carrying(k) is not null):
@@ -370,6 +379,7 @@ public sealed partial class GameSession
 
     private void StoryChoice(string[] parts)
     {
+        if (parts.Length > 1 && MoreChoice(parts)) return;
         switch (parts[0])
         {
             case "door" when parts[1] == "unlock" && Active("sealed_door") is { Stage: "key" } door && _questPlace is { } at
@@ -461,6 +471,7 @@ public sealed partial class GameSession
 
     private void StoryUse(Item item)
     {
+        if (MoreUse(item.Kind.Id)) return;
         switch (item.Kind.Id)
         {
             case "sealed_letter":
@@ -531,6 +542,7 @@ public sealed partial class GameSession
 
     private void StoryMonsterKilled(Monster monster)
     {
+        MoreMonsterKilled(monster);
         var id = monster.Race.Id;
         if (id == "hathol_lord_of_the_barrow" && Active("consecration") is { Stage: "slay" } crypt)
         {
@@ -543,6 +555,7 @@ public sealed partial class GameSession
 
     private bool StoryUndying(Monster monster)
     {
+        if (MoreUndying(monster)) return true;
         if (monster.Race.Id != "hathol_lord_of_the_barrow" || Active("consecration") is not { Stage: "hallow" }) return false;
         monster.Hp = monster.MaxHp;
         if (monster.IsVisible) Publish(new MessageEvent("Hathol, Lord of the Barrow, falls — and rises again from the dust, whole!"));
@@ -551,6 +564,7 @@ public sealed partial class GameSession
 
     private void StoryUpkeep()
     {
+        MoreUpkeep();
         // The Seal of Angmar, carried and not worn, still calls now and then (worn, its curses do it).
         if (Active("burden") is { Stage: "carry" } && Player.Inventory.Pack.Any(i => i.Kind.Id == "seal_of_angmar") && Rng.OneIn(1500))
         {

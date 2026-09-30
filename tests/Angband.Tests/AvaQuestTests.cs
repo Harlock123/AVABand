@@ -7,8 +7,8 @@ using Angband.Core.Persistence;
 
 namespace Angband.Tests;
 
-/// <summary>AVABand's quests: the Prancing Pony, the six story quests, and the notice board.</summary>
-public class AvaQuestTests
+/// <summary>AVABand's quests: the Prancing Pony, the story quests, and the notice board (and AvaQuestTests.More.cs).</summary>
+public partial class AvaQuestTests
 {
     private sealed class Quester
     {
@@ -80,9 +80,11 @@ public class AvaQuestTests
     public void The_quests_data_is_AVABands_own_and_stays_out_of_random_generation()
     {
         var data = TestData.Game;
-        Assert.Equal(["sealed_door", "burden", "broken_blade", "consecration", "letter", "thief"], data.AvaQuests.Select(q => q.Id));
-        Assert.Equal(7, data.Vaults.Count(v => v.Type == "AVABand quest"));
-        Assert.All(data.Monsters.Where(m => m.Id is "durgash_the_keybearer" or "hathol_lord_of_the_barrow"), m => Assert.True(m.Has(MonsterFlags.Questor)));
+        Assert.Equal(["sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "cartographer", "warden"],
+            data.AvaQuests.Select(q => q.Id));
+        Assert.Equal(9, data.Vaults.Count(v => v.Type == "AVABand quest"));
+        Assert.All(data.Monsters.Where(m => m.Id is "durgash_the_keybearer" or "hathol_lord_of_the_barrow" or "the_shade_of_the_stair"),
+            m => Assert.True(m.Has(MonsterFlags.Questor)));
         Assert.All(data.Objects.Where(k => k.Base is "quest" or "relic"), k => Assert.Equal(0, k.Commonness));
         Assert.Contains(data.Shops, s => s.Id == "inn");
     }
@@ -94,7 +96,7 @@ public class AvaQuestTests
         q.EnterShop("inn");
         Assert.Equal("The Prancing Pony", q.Last.Title);
         q.ChooseLabel("Ask who has work");
-        Assert.Equal(["Ask about: The Sealed Door", "Back"], q.Last.Choices.Select(c => c.Label));
+        Assert.Equal(["Ask about: The Sealed Door", "Ask about: The Cartographer", "Back"], q.Last.Choices.Select(c => c.Label));
 
         // Only answers the last question offered count.
         q.Choose("accept:consecration");
@@ -316,7 +318,15 @@ public class AvaQuestTests
         q.Choose(take.Id);
         var job = game.AvaQuests.Board.Single(j => j.Taken);
 
-        if (job.Kind == "hunt")
+        if (job.Kind == "scout") q.Jump(job.Count);
+        else if (job.Kind == "bounty")
+        {
+            var unique = game.Data.Monster(job.Target)!;
+            q.Jump(Math.Max(1, unique.Depth));
+            var spot = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l) && l.DistanceTo(game.Player.Position) > 3);
+            game.DamageMonster(new MonsterSpawner(game.Data).Place(game.Level, game.Rng, unique, spot), 1_000_000);
+        }
+        else if (job.Kind == "hunt")
         {
             var race = game.Data.Monster(job.Target)!;
             q.Jump(Math.Max(1, race.Depth));

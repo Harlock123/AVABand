@@ -128,12 +128,55 @@ def key():
     return c
 
 
+def brazier(lit):
+    c = canvas()
+    stone_floor(c)
+    iron, dark = hexc("#5a5a62"), hexc("#34343a")
+    rect(c, 6, 12, 9, 14, dark)                     # the stone foot
+    rect(c, 4, 15, 11, 15, dark)
+    rect(c, 7, 9, 8, 11, iron)                      # the stem
+    rect(c, 2, 6, 13, 8, iron)                      # the bowl
+    rect(c, 3, 9, 12, 9, dark)
+    if lit:
+        for x, y, col in ((4, 5, "#ff5a1a"), (5, 4, "#ff8a2a"), (6, 3, "#ffb84a"), (7, 1, "#fff08a"), (8, 2, "#ffd060"), (9, 3, "#ffb84a"),
+                          (10, 4, "#ff8a2a"), (11, 5, "#ff5a1a"), (7, 4, "#ffe070"), (8, 4, "#fff08a"), (6, 5, "#ffb84a"), (9, 5, "#ffb84a"),
+                          (7, 2, "#fff08a"), (8, 3, "#ffe070"), (5, 5, "#ff8a2a"), (10, 5, "#ff8a2a"), (7, 5, "#ffd060"), (8, 5, "#ffd060")):
+            px(c, x, y, hexc(col))
+    else:
+        rect(c, 3, 5, 12, 5, hexc("#2a2a2e"))       # cold ash
+        for x in (4, 7, 10):
+            px(c, x, 5, hexc("#6a6a70"))
+    return c
+
+
+def apprentice():
+    c = canvas()
+    stone_floor(c, "#2e2a26", "#221e1a")
+    rubble = hexc("#6e6458")
+    for x, y in ((1, 10), (2, 9), (3, 11), (12, 9), (13, 10), (14, 12), (1, 13), (14, 14), (2, 14)):
+        rect(c, x, y, x + 1, y + 1, rubble)
+    rect(c, 6, 2, 9, 5, hexc("#e0b890"))            # a face
+    rect(c, 6, 1, 9, 1, hexc("#6a4020"))            # hair
+    px(c, 7, 3, hexc("#202020"))
+    px(c, 9, 3, hexc("#202020"))
+    rect(c, 5, 6, 10, 12, hexc("#3a6a3a"))          # a green coat
+    rect(c, 4, 7, 4, 10, hexc("#3a6a3a"))
+    rect(c, 11, 7, 11, 10, hexc("#3a6a3a"))
+    rect(c, 6, 9, 9, 11, hexc("#8a6a3a"))           # the basket of moss
+    rect(c, 7, 9, 8, 9, hexc("#5aa050"))
+    rect(c, 5, 13, 10, 15, rubble)                  # pinned under the rock
+    return c
+
+
 DRAWN = {
     "terrain:sealed_door": ("ava_sealed_door.png", sealed_door, True),
     "terrain:dwarven_forge": ("ava_dwarven_forge.png", forge, True),
     "terrain:quest_altar": ("ava_quest_altar.png", altar, True),
     "terrain:hermitage": ("ava_hermitage.png", hermitage, True),
     "object:key_of_belegost": ("ava_key.png", key, False),
+    "terrain:cold_brazier": ("ava_brazier_cold.png", lambda: brazier(False), True),
+    "terrain:lit_brazier": ("ava_brazier_lit.png", lambda: brazier(True), True),
+    "terrain:trapped_apprentice": ("ava_apprentice.png", apprentice, True),
 }
 # The rest borrow the nearest tile the set has (the first that exists).
 BORROWED = [
@@ -146,6 +189,7 @@ BORROWED = [
     ("object:reforged_blade", ["object:long_sword", "object-base:sword"]),
     ("object:water_of_ulmo", ["object-base:potion"]),
     ("object:black_market_strongbox", ["object-base:chest"]),
+    ("object:wardens_taper", ["object:wooden_torch", "object-base:light"]),
 ]
 
 

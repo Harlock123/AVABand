@@ -32,5 +32,8 @@
    "description": "A page torn from the Black Market's own ledger, with notes in the margin about whoever has been robbing it."},
   {"id": "black_market_strongbox", "name": "Black Market Strongbox", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 80, "color": "Yellow",
    "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
-   "description": "An iron strongbox, still locked, stamped with the mark of the town's Black Market."}
+   "description": "An iron strongbox, still locked, stamped with the mark of the town's Black Market."},
+  {"id": "wardens_taper", "name": "Warden's Taper~", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 5, "color": "Yellow",
+   "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
+   "description": "A long taper of blessed wax that never quite goes out. With it the old wardens lit the fires that kept the Shade of the Stair in its place."}
 ]

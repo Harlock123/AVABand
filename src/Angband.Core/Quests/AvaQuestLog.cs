@@ -11,7 +11,7 @@ public sealed class AvaQuestState
     /// <summary>Its words: the thief's name, the clues found...</summary>
     public Dictionary<string, string> Texts { get; set; } = new();
 
-    public bool IsDone => Stage is "done" or "delivered" or "exposed" or "burned";
+    public bool IsDone => Stage is "done" or "delivered" or "exposed" or "burned" or "lost";
     public int N(string key) => Numbers.GetValueOrDefault(key);
 }
 
@@ -19,7 +19,10 @@ public sealed class AvaQuestState
 public sealed class BoardJob
 {
     public int Id { get; set; }
-    /// <summary>"hunt" (kill <see cref="Count"/> of race <see cref="Target"/>) or "gather" (bring that many of kind <see cref="Target"/>).</summary>
+    /// <summary>
+    /// "hunt" (kill <see cref="Count"/> of race <see cref="Target"/>), "gather" (bring that many of kind
+    /// <see cref="Target"/>), "bounty" (kill the unique <see cref="Target"/>) or "scout" (reach depth <see cref="Count"/>).
+    /// </summary>
     public string Kind { get; set; } = "";
     public string Target { get; set; } = "";
     public int Count { get; set; }

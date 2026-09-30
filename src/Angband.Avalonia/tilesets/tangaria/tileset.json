@@ -1488,6 +1488,10 @@
     "object:reforged_blade": "main:30,12",
     "object:water_of_ulmo": "main:11,9",
     "object:black_market_strongbox": "main:20,5",
-    "object:key_of_belegost": "ava_key.png"
+    "object:key_of_belegost": "ava_key.png",
+    "terrain:cold_brazier": "ava_brazier_cold.png",
+    "terrain:lit_brazier": "ava_brazier_lit.png",
+    "terrain:trapped_apprentice": "ava_apprentice.png",
+    "object:wardens_taper": "main:7,6"
   }
 }

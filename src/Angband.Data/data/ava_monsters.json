@@ -310,5 +310,64 @@
   ],
   "base": "person",
   "description": "A woman in a grey cloak who is never quite where you last saw her."
+ },
+ {
+  "id": "the_shade_of_the_stair",
+  "name": "the Shade of the Stair",
+  "glyph": "G",
+  "color": "Violet",
+  "depth": 24,
+  "rarity": 1,
+  "speed": 0,
+  "hitPoints": 520,
+  "armour": 50,
+  "sleep": 10,
+  "hearing": 20,
+  "smell": 0,
+  "experience": 1000,
+  "blows": [
+   {
+    "method": "touch",
+    "effect": "exp_20",
+    "damage": "0"
+   },
+   {
+    "method": "claw",
+    "effect": "hurt",
+    "damage": "3d6"
+   },
+   {
+    "method": "claw",
+    "effect": "hurt",
+    "damage": "3d6"
+   }
+  ],
+  "flags": [
+   "UNDEAD",
+   "EVIL",
+   "COLD_BLOOD",
+   "SPIRIT",
+   "UNIQUE",
+   "QUESTOR",
+   "HURT_LIGHT",
+   "IM_COLD",
+   "IM_POIS",
+   "NO_CONF",
+   "NO_SLEEP",
+   "NO_STUN",
+   "NO_HOLD",
+   "OPEN_DOOR",
+   "DROP_2",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "spellFrequency": 6,
+  "spells": [
+   "SCARE",
+   "BLIND",
+   "DARKNESS"
+  ],
+  "base": "ghost",
+  "description": "A shape of cold grey mist in the form of a tall man, hollow-eyed. It was bound here once by three fires; while they are cold, nothing can touch it."
  }
 ]

@@ -9,7 +9,8 @@ the **Quests** page of the Knowledge screen (`~`).
 
 The inn in town (the `9`). Walk in and Butterbur will tell you who has work: the quests on offer
 depend on your level. There is also a **notice board** with smaller jobs — hunt so many of a
-monster, or bring back so many of something found only in the dungeon. You can have two board jobs
+monster, bring back so many of something found only in the dungeon, claim a **bounty** on a unique,
+or **scout** down to a depth a few levels past your deepest. You can have two board jobs
 at a time; the postings change whenever you come back up to town, and you collect your pay at the
 inn.
 
@@ -33,6 +34,15 @@ inn.
   of four suspects. Pages of its ledger, carried by monsters above 1000 ft, each hold a clue; put
   them together, and hunt the one they point to — only the thief has the box. Bring it back to the
   Black market (6).
+- **The Cartographer** (from level 6): map most (three quarters) of a cavern, a labyrinth and one
+  of the old mines — magic mapping counts — and take the maps to the Bookseller (4).
+- **The Apprentice** (from level 12): the Alchemist's apprentice is trapped behind a rockfall, and
+  something has found him. Step onto him. Give him your own Scroll of Word of Recall and he is home
+  at once (but you'll need another way back); or show him the way and let him go alone — the
+  Alchemist (5) will tell you whether he made it.
+- **The Warden's Fires** (from level 20): the Shade of the Stair can't be harmed while the three
+  braziers in its hall are cold. Step onto each with the Warden's Taper to light it, then put the
+  Shade down — but it puts out any fire it lingers beside, so be quick.
 
 Quest items can't be dropped, sold, thrown, ignored or stolen; one carried by a monster goes into
 your pack when it dies (or, if your pack is full, falls beside it — leave it behind and Butterbur
