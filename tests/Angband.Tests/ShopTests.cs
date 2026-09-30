@@ -232,24 +232,63 @@ public class ShopTests
         Assert.NotEqual(Stock(12), Stock(13));
     }
 
-    /// <summary>The debug switch for birth_no_selling is kept in the save, and says what it did.</summary>
+    /// <summary>
+    /// The Game menu's switch for birth_no_selling is kept in the save, says what it did — and is
+    /// not a cheat: the character is still scored.
+    /// </summary>
     [Fact]
-    public void DebugShopsPay_IsSaved_AndAnnounced()
+    public void ShopsPay_IsSaved_Announced_AndStillScored()
     {
         var game = GameSession.NewGame(TestData.Game, 5);
         var messages = new List<string>();
         game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
         Assert.True(game.NoSelling);
 
-        game.DebugSetShopsPay(true);
+        game.SetShopsPay(true);
         Assert.False(game.NoSelling);
+        Assert.False(game.IsCheater);
         Assert.Contains(messages, m => m.StartsWith("Shops now pay gold"));
-        game.DebugSetShopsPay(true); // already so: nothing more said
+        game.SetShopsPay(true); // already so: nothing more said
         Assert.Single(messages, m => m.StartsWith("Shops now pay gold"));
 
         using var stream = new MemoryStream();
         Angband.Core.Persistence.SaveGame.Save(game, stream);
         stream.Position = 0;
-        Assert.False(Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream).NoSelling);
+        var loaded = Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream);
+        Assert.False(loaded.NoSelling);
+        Assert.False(loaded.IsCheater);
+    }
+
+    /// <summary>A burnt-out torch is worth nothing, and no store buys it; a lit one still sells.</summary>
+    [Fact]
+    public void ASpentTorch_IsWorthless_AndNoStoreBuysIt()
+    {
+        var game = InTown(6);
+        game.SetShopsPay(true);
+        var store = At(game, "general");
+        var messages = Messages(game);
+
+        var spent = game.Objects.Create("wooden_torch");
+        spent.Fuel = 0;
+        var lit = game.Objects.Create("wooden_torch");
+        Assert.True(lit.Fuel > 0);
+        Assert.True(ItemValue.IsSpent(spent));
+        Assert.False(ItemValue.IsSpent(lit));
+        Assert.Equal(0, ItemValue.Of(spent, TestData.Game));
+        Assert.Equal(0, game.SellPrice(store, spent));
+        Assert.True(game.SellPrice(store, lit) > 0);
+
+        game.Player.Inventory.Add(spent);
+        var gold = game.Player.Gold;
+        game.Execute(new SellCommand(spent));
+        Assert.Contains("I have no interest in that.", messages);
+        Assert.Equal(gold, game.Player.Gold);
+        Assert.Contains(spent, game.Player.Inventory.Pack);
+
+        // An empty lantern can be refilled, so it keeps its worth.
+        var lantern = game.Objects.Create("lantern");
+        lantern.Fuel = 0;
+        Assert.False(ItemValue.IsSpent(lantern));
+        Assert.True(ItemValue.Of(lantern, TestData.Game) > 0);
     }
 }

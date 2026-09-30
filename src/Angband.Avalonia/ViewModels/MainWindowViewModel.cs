@@ -330,18 +330,21 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Debug(() => Execute(new DebugJumpCommand(0)));
     }
 
-    /// <summary>Debug: whether shops pay gold for what you sell (birth_no_selling off), switchable mid-game.</summary>
+    /// <summary>
+    /// Whether shops pay gold for what you sell (birth_no_selling off), switchable mid-game from the
+    /// Game menu. Not a debug command: the character is still scored.
+    /// </summary>
     public bool ShopsPayGold => !_game.NoSelling;
 
     [RelayCommand]
-    private void ToggleShopsPayGold() => Debug(() =>
+    private void ToggleShopsPayGold()
     {
-        _game.DebugSetShopsPay(!ShopsPayGold);
+        _game.SetShopsPay(!ShopsPayGold);
         OnPropertyChanged(nameof(ShopsPayGold));
         OnPropertyChanged(nameof(StoreModeText));
         RefreshStore();
         Refresh();
-    });
+    }
 
     /// <summary>
     /// Runs a debug command. The first one a character uses asks first, as Angband's debug mode does:

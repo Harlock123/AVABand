@@ -62,18 +62,21 @@ public class StoreUiTests
         Assert.Contains("shops pay nothing", vm.LastMessage);
     }
 
-    /// <summary>Debug → "Shops pay gold when you sell": switched on mid-game, even inside a shop, selling pays at once.</summary>
+    /// <summary>
+    /// Game → "Shops pay gold when you sell": switched on mid-game, even inside a shop, selling pays
+    /// at once — without asking about debug commands or losing the character's place in the scores.
+    /// </summary>
     [AvaloniaFact]
-    public void TheDebugToggle_MakesShopsPay_AndBackAgain()
+    public void TheShopsPayToggle_MakesShopsPay_AndBackAgain_AndKeepsTheScore()
     {
         var (window, vm, game) = OpenAt("general");
-        game.MarkDebugUsed(); // already agreed to use debug commands
         Assert.False(vm.ShopsPayGold);
         window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None); // the give/sell pane
 
         vm.ToggleShopsPayGoldCommand.Execute(null);
         Assert.True(vm.ShopsPayGold);
         Assert.False(game.NoSelling);
+        Assert.False(game.IsCheater);
         Assert.Equal("Sell (letter to sell, Tab to buy)", vm.StoreModeText);
         Assert.DoesNotContain("Shops pay nothing", vm.StoreSubtitle);
         var flask = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
@@ -98,7 +101,6 @@ public class StoreUiTests
     public void WieldedAndWornItems_AreMarked_AndAskedAboutBeforeSelling()
     {
         var (window, vm, game) = OpenAt("weaponsmith");
-        game.MarkDebugUsed();
         vm.ToggleShopsPayGoldCommand.Execute(null); // selling for gold, the case that matters most
         var spare = game.Objects.Create("dagger");
         spare.ToHit = spare.ToDam = 0;

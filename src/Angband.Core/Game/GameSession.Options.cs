@@ -79,19 +79,19 @@ public sealed partial class GameSession
     public bool NoSelling => Options[OptionIds.NoSelling];
 
     /// <summary>
-    /// Debug: switches birth_no_selling in the middle of a game (birth options are otherwise fixed).
-    /// With shops paying, dungeon gold goes back to normal too, as with the option off at birth.
-    /// Kept in the save like the other birth options.
+    /// Switches birth_no_selling in the middle of a game (birth options are otherwise fixed; an
+    /// AVABand choice). With shops paying, dungeon gold goes back to normal too, as with the option
+    /// off at birth. Not a cheat: either way is a legitimate 4.2 game, so the character is still
+    /// scored. Kept in the save like the other birth options.
     /// </summary>
-    public void DebugSetShopsPay(bool pay)
+    public void SetShopsPay(bool pay)
     {
         using var _ = Recorded("shops-pay", pay);
         if (NoSelling != pay) return;
-        MarkDebugUsed();
         Options[OptionIds.NoSelling] = !pay;
         Publish(new MessageEvent(pay
-            ? "Shops now pay gold for what you sell (debug: \"no selling\" is off)."
-            : "Shops now pay nothing again, and dungeon gold is increased (debug: \"no selling\" is on)."));
+            ? "Shops now pay gold for what you sell (\"no selling\" is off)."
+            : "Shops now pay nothing again, and dungeon gold is increased (\"no selling\" is on)."));
     }
 
     // --- Birth: the starting kit and knowledge -----------------------------------------------------------

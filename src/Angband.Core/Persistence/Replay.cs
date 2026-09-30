@@ -162,7 +162,7 @@ public sealed class ReplayPlayer
             case "ignore-quality": g.SetIgnoreQuality(S(0), Enum.Parse<IgnoreLevel>(S(1))); break;
             case "inscribe-kind": if (g.Data.Object(S(0)) is { } k) g.SetAutoInscription(k, args![1]?.GetValue<string>()); break;
             case "note": g.AddNote(S(0)); break;
-            case "shops-pay": g.DebugSetShopsPay(B(0)); break;
+            case "shops-pay": g.SetShopsPay(B(0)); break;
             case "aim-next": g.AimAtTargetNext = B(0); break;
             case "recall-sets-depth": g.RecallSetsDepth = args![0]?.GetValue<bool>(); break;
             case "recall-choice": g.RecallChoice = args![0]?.GetValue<int>(); break;

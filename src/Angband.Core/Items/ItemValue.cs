@@ -19,6 +19,14 @@ public static class ItemValue
     /// <summary>Angband tval_has_variable_power: wearables and ammunition.</summary>
     public static bool HasVariablePower(Item item) => item.Base.IsWearable || item.Base.IsAmmo;
 
+    /// <summary>
+    /// A torch (a light that burns out) with no turns of light left: worthless, so no store will buy
+    /// it. An AVABand rule — 4.2.5 still prices a burnt-out torch like a lit one. Lanterns can be
+    /// refilled and wands and staffs recharged, so they keep their worth when empty.
+    /// </summary>
+    public static bool IsSpent(Item item) =>
+        item.Base.Slot == EquipSlot.Light && item.Kind.Has("BURNS_OUT") && item.UsesFuel && item.Fuel <= 0;
+
     /// <summary>Angband tval_can_have_charges: wands and staffs.</summary>
     public static bool HasCharges(Item item) => item.Base.Id is "wand" or "staff";
 
@@ -55,6 +63,7 @@ public static class ItemValue
     private static long ValueOf(Item item, GameData data, int qty, PlayerKnowledge? known)
     {
         if (item.IsGold) return item.GoldValue;
+        if (IsSpent(item)) return 0;
         if (HasVariablePower(item))
         {
             long power = ObjectPower.Of(item, data, known);
