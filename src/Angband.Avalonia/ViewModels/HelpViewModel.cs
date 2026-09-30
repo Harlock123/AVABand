@@ -63,7 +63,14 @@ public sealed partial class HelpViewModel : CommunityToolkit.Mvvm.ComponentModel
         {
             var line = raw.TrimEnd();
             if (line.StartsWith("# ", StringComparison.Ordinal)) { Flush(); title = line[2..].Trim(); }
-            else if (line.StartsWith("## ", StringComparison.Ordinal)) { Flush(); blocks.Add(new HelpBlock(HelpBlockKind.Heading, Spans(line[3..].Trim()))); }
+            else if (line.StartsWith("## ", StringComparison.Ordinal))
+            {
+                Flush();
+                // (What's new's later rounds of a day, "2026-09-30.2", read as just the date.)
+                var heading = line[3..].Trim();
+                if (SameDayRound().IsMatch(heading)) heading = heading[..10];
+                blocks.Add(new HelpBlock(HelpBlockKind.Heading, Spans(heading)));
+            }
             else if (line.StartsWith("- ", StringComparison.Ordinal)) { Flush(); open = (HelpBlockKind.Bullet, [line[2..].Trim()]); }
             else if (line.Length == 0) Flush();
             else if (open is { } o) o.Lines.Add(line.Trim());
@@ -91,4 +98,7 @@ public sealed partial class HelpViewModel : CommunityToolkit.Mvvm.ComponentModel
 
     [GeneratedRegex(@"(\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*)")]
     private static partial Regex SpanPattern();
+
+    [GeneratedRegex(@"^\d{4}-\d{2}-\d{2}\.\d+$")]
+    private static partial Regex SameDayRound();
 }

@@ -66,7 +66,8 @@ public class WhatsNewTests
         var page = WhatsNew.Load();
         var headings = page.Split('\n').Count(l => l.StartsWith("## ", StringComparison.Ordinal));
         Assert.Equal(headings, WhatsNew.Sections(page).Count); // every section heading is a date
-        Assert.Contains(HelpViewModel.LoadBundled(), t => t.Title == "What's new");
+        var help = HelpViewModel.LoadBundled().Single(t => t.Title == "What's new");
+        Assert.DoesNotContain(help.Blocks, b => b.Kind == HelpBlockKind.Heading && b.Spans[0].Text.Contains('.'));
     }
 
     private static (MainWindowViewModel Vm, List<HelpViewModel> Shown, List<AppSettings> Saved) Open(AppSettings settings)
