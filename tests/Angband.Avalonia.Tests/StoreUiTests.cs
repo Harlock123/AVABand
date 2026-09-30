@@ -1,3 +1,6 @@
+using Avalonia.VisualTree;
+using Avalonia.Controls;
+using Avalonia;
 using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Game;
@@ -90,6 +93,25 @@ public class StoreUiTests
         vm.PromptKey(vm.ChoiceRows.First(r => r.Text.Contains("Ring")).Letter[0]);
         Assert.True(game.Knowledge.IsFullyKnown(ring));
         Assert.True(vm.IsInStore); // nothing else unknown: on into the shop
+    }
+
+    /// <summary>The mouse wheel scrolls a shop's list when it's too long to see at once.</summary>
+    [AvaloniaFact]
+    public void The_mouse_wheel_scrolls_a_long_shop_list()
+    {
+        var (window, vm, game) = OpenAt("general");
+        window.Height = 420; // a small window: the list can't all show
+        window.CaptureRenderedFrame();
+        var list = window.GetVisualDescendants().OfType<ListBox>().Single(l => l.Name == "StoreList");
+        var scroller = list.GetVisualDescendants().OfType<ScrollViewer>().First();
+        Assert.True(scroller.Extent.Height > scroller.Viewport.Height, $"{vm.StoreRows.Count} rows fit: nothing to scroll");
+        Assert.Equal(0, scroller.Offset.Y);
+
+        var middle = list.TranslatePoint(new Point(list.Bounds.Width / 2, list.Bounds.Height / 2), window)!.Value;
+        window.MouseWheel(middle, new Vector(0, -3), RawInputModifiers.None);
+        window.CaptureRenderedFrame();
+        Assert.True(scroller.Offset.Y > 0);
+        Assert.True(vm.IsInStore); // still shopping
     }
 
     [AvaloniaFact]
