@@ -5,7 +5,9 @@ Far below, on level 99, waits **Sauron**; on level 100, **Morgoth, Lord of Darkn
 both and you have won. Die on the way and the game is over: there is one life, and the save is
 the character, as in Angband. The game saves by itself on every level change, on exit and every
 five minutes of play (Ctrl+S saves now; Ctrl+X saves and quits). If it ever crashes, the next start
-offers to resume from the last save and says how long ago that was.
+offers to resume from the last save and says how long ago that was. Earlier saves of each living
+character are kept too (the last five, ten minutes or more apart): Game → Load character → *Earlier
+saves of this character* rolls one back if a save is ever damaged.
 
 ## Your first steps
 

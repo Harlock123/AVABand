@@ -728,7 +728,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   level, the noise flow allocating each turn, and pack damage naming every item before rolling —
   all fixed without changing a single roll, so seeded games replay exactly as before.
   Saves live in `<AppData>/AVABand/saves/` (one file per character, written atomically). Ctrl+S
-  saves, Ctrl+O opens the list of saved characters (load or delete). The game autosaves on every
+  saves, Ctrl+O opens the list of saved characters (load or delete). **Backups** (AVABand's own,
+  `SaveStore`): as a character's save is replaced, the one before it is kept in `saves/backups/`
+  — at most one every ten minutes, the newest five kept — so the Load dialog's *Earlier saves of
+  this character* can roll back a damaged or unwanted save ("Restore and load"; the save it replaces
+  is kept as a backup too, and the character's history notes the restore). A character whose save
+  is missing or unreadable is still listed, from its newest backup. A dead character's backups go
+  with its save, so permadeath stays permanent; deleting a character deletes them too. The game autosaves on every
   level change, when switching characters, on exit and every five minutes of play (the option
   *Save every five minutes while playing*, on by default), and continues the most recent living
   character on start-up. If the last session didn't close properly (a crash, a power cut — a small

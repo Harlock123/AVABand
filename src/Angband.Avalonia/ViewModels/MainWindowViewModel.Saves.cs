@@ -98,12 +98,32 @@ public sealed partial class MainWindowViewModel
 
     public LoadGameViewModel CreateLoadGame()
     {
-        var dialog = new LoadGameViewModel(_saves ?? SaveStore.Default());
+        var store = _saves ?? SaveStore.Default();
+        var dialog = new LoadGameViewModel(store);
         dialog.LoadRequested += entry =>
         {
-            // Keep the current character before switching to another.
+            // Keep the current character before switching to another (or before rolling it back).
             if (!_game.Player.IsDead) TrySave();
-            if (TryLoad(entry.Path, out var error)) return true;
+            var toLoad = entry;
+            if (entry.IsBackup)
+            {
+                try { toLoad = store.Restore(entry); }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    dialog.Error = $"Could not restore that save: {ex.Message}";
+                    return false;
+                }
+            }
+            if (TryLoad(toLoad.Path, out var error))
+            {
+                if (toLoad.RestoredFrom is { } when)
+                {
+                    var text = $"Restored from an earlier save ({when.ToLocalTime():g}).";
+                    _game.AddHistory(text);
+                    AddMessage(text);
+                }
+                return true;
+            }
             dialog.Error = error;
             return false;
         };

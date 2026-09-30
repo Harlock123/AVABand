@@ -5,11 +5,11 @@
         x:Class="Angband.Avalonia.Views.LoadGameWindow"
         x:DataType="vm:LoadGameViewModel"
         Title="Load a character"
-        Width="620" Height="420"
+        Width="660" Height="560"
         WindowStartupLocation="CenterOwner">
   <!-- The list first, then Load, Cancel and (last, asking twice) Delete: the controller's D-pad
        goes in that order. -->
-  <Grid Margin="16" RowDefinitions="Auto,*,Auto">
+  <Grid Margin="16" RowDefinitions="Auto,*,Auto,Auto">
     <TextBlock Text="Saved characters" FontWeight="SemiBold" Margin="0,0,0,8" />
     <Panel Grid.Row="1">
       <TextBlock Text="No saved characters yet. Press Ctrl+S during a game to save it."
@@ -25,8 +25,25 @@
         </ListBox.ItemTemplate>
       </ListBox>
     </Panel>
+    <!-- The selected character's earlier saves (saves/backups): pick one and restore it. -->
+    <Expander Grid.Row="2" x:Name="BackupsExpander" Header="{Binding BackupsHeader}" IsVisible="{Binding HasBackups}"
+              HorizontalAlignment="Stretch" Margin="0,10,0,0">
+      <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="0,8,0,0">
+          <Button x:Name="RestoreButton" Content="Restore and load" Command="{Binding RestoreCommand}" />
+          <TextBlock Text="The save it replaces is kept here too, so this can be undone." Opacity="0.6" FontSize="12" VerticalAlignment="Center" />
+        </StackPanel>
+        <ListBox x:Name="BackupList" ItemsSource="{Binding Backups}" SelectedItem="{Binding SelectedBackup}" MaxHeight="150">
+          <ListBox.ItemTemplate>
+            <DataTemplate x:DataType="app:SaveEntry">
+              <TextBlock Text="{Binding BackupTitle}" FontSize="12" />
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </DockPanel>
+    </Expander>
     <!-- Shown Delete, Cancel, Load; declared Load, Cancel, Delete for the focus order. -->
-    <Grid Grid.Row="2" ColumnDefinitions="*,Auto,10,Auto,10,Auto" Margin="0,12,0,0">
+    <Grid Grid.Row="3" ColumnDefinitions="*,Auto,10,Auto,10,Auto" Margin="0,12,0,0">
       <TextBlock Text="{Binding Error}" Foreground="#ff8a80" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="300" HorizontalAlignment="Right" Margin="0,0,10,0" />
       <Button x:Name="LoadButton" Grid.Column="5" Content="Load" Classes="accent" Command="{Binding LoadCommand}" />
       <Button Grid.Column="3" Content="Cancel" Click="OnCancel" />

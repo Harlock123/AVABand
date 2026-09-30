@@ -28,7 +28,40 @@ public sealed partial class LoadGameViewModel : ObservableObject
 
     public string DeleteText => ConfirmingDelete ? "Really delete?" : "Delete";
 
-    partial void OnSelectedChanged(SaveEntry? value) => ConfirmingDelete = false;
+    partial void OnSelectedChanged(SaveEntry? value)
+    {
+        ConfirmingDelete = false;
+        Backups.Clear();
+        if (value is not null)
+            foreach (var backup in _saves.Backups(value.Path)) Backups.Add(backup);
+        SelectedBackup = null;
+        OnPropertyChanged(nameof(HasBackups));
+        OnPropertyChanged(nameof(BackupsHeader));
+    }
+
+    /// <summary>The selected character's earlier saves (saves/backups), newest first.</summary>
+    public ObservableCollection<SaveEntry> Backups { get; } = [];
+
+    public bool HasBackups => Backups.Count > 0;
+
+    public string BackupsHeader => $"Earlier saves of this character ({Backups.Count})";
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RestoreCommand))]
+    private SaveEntry? _selectedBackup;
+
+    private bool HasBackupSelected => SelectedBackup is not null;
+
+    /// <summary>
+    /// Goes back to an earlier save: it becomes the character's save (the one it replaces is kept as
+    /// a backup, so this can be undone) and is loaded.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(HasBackupSelected))]
+    private void Restore()
+    {
+        if (SelectedBackup is not { } backup) return;
+        if (LoadRequested?.Invoke(backup) == true) Loaded?.Invoke();
+    }
 
     [ObservableProperty] private string _error = "";
 
