@@ -2210,12 +2210,14 @@ def compare_body(gd, data):
     sec = section("body", "Body", "Items/Inventory.cs (Slots)", "body.txt")
     root = os.path.normpath(os.path.join(data, "..", "..", ".."))
     src = open(os.path.join(root, CS, "Items/Inventory.cs"), encoding="utf-8").read()
-    ours = [EQUIP_SLOT_TYPES.get(t, t) for t in re.findall(r'new\("[^"]+", EquipSlot\.(\w+)\)', src)]
+    # (AVABand's own arms slot, for its socketed bracers, comes last and isn't 4.2.5's: left out.)
+    ours = [EQUIP_SLOT_TYPES.get(t, t) for t in re.findall(r'new\("[^"]+", EquipSlot\.(\w+)\)', src) if t != "Arms"]
     for e in parse_records(os.path.join(gd, "body.txt"), start="body"):
         sec.compared += 1
         sec.cmp(e["name"], "slots", ours, [line.split(":")[0] for line in get(e, "slot")])
     sec.notes += ["The kinds of slot and their order (which decide where things are worn, and which slot "
-                  "disenchantment picks). The slots' names are AVABand's (4.2.5 names the rings' hands)."]
+                  "disenchantment picks). The slots' names are AVABand's (4.2.5 names the rings' hands). "
+                  "AVABand's own arms slot (socketed bracers) comes after 4.2.5's and is left out."]
     return sec
 
 
