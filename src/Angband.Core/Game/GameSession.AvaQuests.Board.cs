@@ -44,7 +44,7 @@ public sealed partial class GameSession
         // Now and then: a bounty on a unique, or a scouting job.
         if (Rng.OneIn(3)) return Rng.OneIn(2) ? MakeBounty(deepest) : MakeScouting(deepest);
         // Things the dungeon gives up that no shop sells.
-        var stocked = Data.Stores.SelectMany(s => s.Staples.Concat(s.Normal)).ToHashSet();
+        var stocked = Data.Stores.SelectMany(s => s.Staples.Concat(s.Stocked)).ToHashSet();
         var kinds = Data.Objects.Where(k => k.Commonness > 0 && (k.MinDepth ?? k.Level) <= deepest + 2 && k.Level <= deepest + 2
                                             && k.Base is "potion" or "scroll" or "mushroom" or "food" && !stocked.Contains(k.Id) && k.Cost > 0).ToList();
         if (kinds.Count == 0) return null;

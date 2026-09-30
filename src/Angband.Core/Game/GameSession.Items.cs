@@ -97,6 +97,8 @@ public sealed partial class GameSession
         p.ToHit = p.BaseToHit + Adj(Magic.StatTables.ToHit, "dex");
         p.ToDam = p.BaseToDam + Adj(Magic.StatTables.ToDamage, "str");
         p.WeightLimit = Adj(Magic.StatTables.CarryLimit, "str") * 10;
+        // AVABand: the best bag of holding in the pack lets you carry that much more.
+        if (p.Inventory.BestBag is { } bag) p.WeightLimit = p.WeightLimit * (100 + bag.Kind.CarryPercent) / 100;
         p.Stealth = p.BaseStealth;
         p.Blows = p.BaseBlows;
         p.Shots = p.BaseShots;
@@ -1101,6 +1103,7 @@ public sealed partial class GameSession
         }
 
         CurseUpkeep();
+        BagUpkeep();
     }
 
     // --- Level population and monster drops ------------------------------------------------------

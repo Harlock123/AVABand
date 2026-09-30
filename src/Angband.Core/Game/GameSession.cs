@@ -160,6 +160,7 @@ public sealed partial class GameSession : ITurnHandler
         finally
         {
             _replayDepth--;
+            if (_replayDepth == 0) AfterCommandBags(); // (AVABand: a bag lost, its room with it)
         }
     }
 
@@ -234,6 +235,7 @@ public sealed partial class GameSession : ITurnHandler
             DebugJumpCommand jump => DebugJump(jump.Depth),
             DebugCureAllCommand => DebugCureAll(),
             DebugTryQuestCommand trial => DebugTryQuest(trial.Quest),
+            SetGemCommand set => SetGem(set.Host, set.Gem),
             _ => 0,
         };
         if (energy <= 0) return false;

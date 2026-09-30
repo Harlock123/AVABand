@@ -54,7 +54,10 @@
     ],
     "minItems": 0,
     "maxItems": 4,
-    "turnover": 2
+    "turnover": 2,
+    "avabandBuys": [
+      "bag"
+    ]
   },
   {
     "id": "armoury",
@@ -109,7 +112,14 @@
     ],
     "minItems": 6,
     "maxItems": 18,
-    "turnover": 9
+    "turnover": 9,
+    "avabandNormal": [
+      "leather_bracers",
+      "iron_bracers"
+    ],
+    "avabandBuys": [
+      "bracers"
+    ]
   },
   {
     "id": "weaponsmith",
@@ -319,7 +329,10 @@
     ],
     "minItems": 4,
     "maxItems": 14,
-    "turnover": 9
+    "turnover": 9,
+    "avabandBuys": [
+      "gem"
+    ]
   },
   {
     "id": "black_market",

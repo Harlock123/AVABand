@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Tiles for AVABand's quests, in every bundled tileset — and the mappings that use them.
 
-Draws five small pixel-art tiles (CC0, made for AVABand) — the sealed door, the dwarven forge, the
-barrow altar, the hermit's door and the Key of Belegost — at each tileset's cell size (drawn at
+Draws small pixel-art tiles (CC0, made for AVABand) — the quests' places and things (the sealed
+door, the dwarven forge, the barrow altar, the hermit's door, the braziers, the trapped apprentice,
+the Key of Belegost) and AVABand's own items (the bags of holding, socketed bracers, and gems, one
+drawn in each kind's colour) — at each tileset's cell size (drawn at
 16x16, scaled to fit), as ava_*.png in the tileset's folder; then writes every quest mapping into
 its tileset.json (the rest borrow the nearest tile the set already has: the inn a shop door, the
 relic an amulet, the shards a sword, Durgash an orc chief, Hathol a barrow-wight...). Re-run it after rebuilding any tileset.
@@ -168,6 +170,64 @@ def apprentice():
     return c
 
 
+def bag():
+    """A drawstring bag of holding (AVABand's bags)."""
+    c = canvas()
+    leather, dark, cord, rune = hexc("#8a5a2e"), hexc("#5e3c1e"), hexc("#d8c08a"), hexc("#c8d8ff")
+    rect(c, 4, 7, 11, 14, leather)                   # the body
+    rect(c, 3, 9, 12, 13, leather)
+    rect(c, 5, 15, 10, 15, dark)
+    rect(c, 3, 13, 3, 13, dark)
+    rect(c, 12, 13, 12, 13, dark)
+    rect(c, 6, 4, 9, 6, leather)                     # the gathered neck
+    rect(c, 5, 6, 10, 6, cord)                       # the drawstring
+    px(c, 4, 7, cord)
+    px(c, 11, 7, cord)
+    rect(c, 7, 2, 8, 3, dark)                        # the tie
+    for x, y in ((6, 10), (9, 10), (7, 12), (8, 12)):
+        px(c, x, y, rune)                            # silver runes
+    return c
+
+
+def bracers():
+    """A pair of socketed bracers (AVABand's arms slot)."""
+    c = canvas()
+    band, dark, gem = hexc("#a0826a"), hexc("#6a5444"), hexc("#d04040")
+    for x0 in (1, 9):
+        rect(c, x0, 3, x0 + 5, 13, band)
+        rect(c, x0, 5, x0 + 5, 5, dark)
+        rect(c, x0, 11, x0 + 5, 11, dark)
+        rect(c, x0 + 2, 7, x0 + 3, 9, dark)          # the socket
+        px(c, x0 + 2, 8, gem)
+        px(c, x0 + 3, 8, gem)
+    return c
+
+
+def gem(color):
+    """A cut stone, in the gem's colour, with a highlight."""
+    c = canvas()
+    r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+    body = (r, g, b, 255)
+    shade = (r * 6 // 10, g * 6 // 10, b * 6 // 10, 255)
+    light = (min(255, r + 90), min(255, g + 90), min(255, b + 90), 255)
+    for y, (x0, x1) in enumerate([(6, 9), (4, 11), (3, 12), (3, 12), (4, 11), (5, 10), (6, 9), (7, 8)], start=4):
+        rect(c, x0, y, x1, y, body)
+    rect(c, 3, 6, 12, 6, shade)                      # the girdle
+    for y in range(7, 12):
+        px(c, 3 + (y - 6), y, shade)
+    px(c, 6, 5, light)
+    px(c, 7, 5, light)
+    px(c, 5, 7, light)
+    return c
+
+
+# AVABand's gems (ava_objects.json): each kind drawn in its colour (every quality alike).
+GEM_COLOURS = {
+    "ruby": "#e0283a", "sapphire": "#2a5ae0", "topaz": "#f0c030", "emerald": "#20b060", "diamond": "#e8f0ff",
+    "opal": "#a8e0d0", "amethyst": "#9a50d8", "garnet": "#a02838", "bloodstone": "#2e5a38", "black_onyx": "#303038",
+    "star_sapphire": "#5a8aff",
+}
+
 DRAWN = {
     "terrain:sealed_door": ("ava_sealed_door.png", sealed_door, True),
     "terrain:dwarven_forge": ("ava_dwarven_forge.png", forge, True),
@@ -177,7 +237,16 @@ DRAWN = {
     "terrain:cold_brazier": ("ava_brazier_cold.png", lambda: brazier(False), True),
     "terrain:lit_brazier": ("ava_brazier_lit.png", lambda: brazier(True), True),
     "terrain:trapped_apprentice": ("ava_apprentice.png", apprentice, True),
+    "object-base:bag": ("ava_bag.png", bag, False),
+    "object-base:bracers": ("ava_bracers.png", bracers, False),
+    "object-base:gem": ("ava_gem.png", lambda: gem("#e8f0ff"), False),
 }
+for _gem, _colour in GEM_COLOURS.items():
+    _tile = ("ava_gem_" + _gem + ".png", (lambda col: lambda: gem(col))(_colour), False)
+    for _prefix in ("", "chipped_", "flawed_"):
+        if _prefix and _gem in ("bloodstone", "black_onyx", "star_sapphire"):
+            continue
+        DRAWN["object:" + _prefix + _gem] = _tile
 # The rest borrow the nearest tile the set has (the first that exists).
 BORROWED = [
     ("terrain:shop_inn", ["terrain:shop_general", "terrain:shop_home"]),

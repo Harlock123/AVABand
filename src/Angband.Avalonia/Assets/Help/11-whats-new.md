@@ -3,6 +3,15 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.13
+
+- **Bags of holding**: carried in your pack, a Sack, Bag or Greater Bag of Holding lets you carry
+  more, and the bigger ones hold more things. Only the best counts. (Not every bag is what it seems.)
+- **Socketed bracers and gems**: bracers have a slot of their own, beside your gloves, with
+  sockets for gems — rubies, sapphires, topazes, emeralds, diamonds, opals, amethysts and garnets,
+  each lending its virtue, and a few rarer, cursed stones that give more. The Armoury sells
+  bracers and can take a gem out again. See Help → Objects.
+
 ## 2026-09-30.12
 
 - **Share your daily dungeon**: *Copy result* puts a line about your try on the clipboard, ready to

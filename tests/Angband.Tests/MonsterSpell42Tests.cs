@@ -178,7 +178,10 @@ public class MonsterSpell42Tests
             var game = Game(depth: 60); // where such summoners are met
             setup?.Invoke(game);
             var before = game.Level.Monsters.All.Select(m => m.Id).ToHashSet();
-            game.CastSpellForTest(Near(game, caster), spell);
+            // (A summons can bring nothing, as in Angband: a few tries.)
+            var summoner = Near(game, caster);
+            for (var i = 0; i < 5 && !game.Level.Monsters.All.Any(m => !before.Contains(m.Id) && m.Race.Id != caster); i++)
+                game.CastSpellForTest(summoner, spell);
             return [.. game.Level.Monsters.All.Where(m => !before.Contains(m.Id) && m.Race.Id != caster)];
         }
 

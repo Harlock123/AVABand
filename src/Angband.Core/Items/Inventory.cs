@@ -17,13 +17,25 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
         new("ring (right)", EquipSlot.Ring), new("amulet", EquipSlot.Amulet), new("light", EquipSlot.Light),
         new("body", EquipSlot.Body), new("cloak", EquipSlot.Cloak), new("shield", EquipSlot.Shield),
         new("head", EquipSlot.Head), new("hands", EquipSlot.Hands), new("feet", EquipSlot.Feet),
+        new("arms", EquipSlot.Arms), // AVABand's bracers (last: older saves' equipment lines up)
     ];
 
     private readonly List<Item> _pack = [];
     private readonly List<Item> _quiver = [];
     private readonly Item?[] _equipment = new Item?[Slots.Count];
 
-    public int PackSize { get; } = packSize;
+    /// <summary>How many distinct things the pack holds: Angband's 23, and more with AVABand's best bag of holding in it.</summary>
+    public int PackSize => BasePackSize + BagSlots;
+
+    /// <summary>The pack's own size, without a bag.</summary>
+    public int BasePackSize { get; } = packSize;
+
+    /// <summary>The best bag of holding carried (only the best counts), or null.</summary>
+    public Item? BestBag => _pack.Where(i => i.Kind.CarryPercent > 0 || i.Kind.PackSlots > 0)
+        .OrderByDescending(i => i.Kind.PackSlots).ThenByDescending(i => i.Kind.CarryPercent).FirstOrDefault();
+
+    /// <summary>The extra room the best bag gives.</summary>
+    public int BagSlots => BestBag?.Kind.PackSlots ?? 0;
     public int QuiverSlotSize { get; } = quiverSlotSize;
     public int QuiverSize { get; } = quiverSize;
 

@@ -87,6 +87,36 @@ replay as…* saves the try's replay wherever you like as `AVABand-daily-<day>-t
 Daily characters are ordinary games in
 every other way: saved, scored, buried.
 
+**Bags of holding** (AVABand's own, `Game/GameSession.Bags.cs`; base `bag` in `ava_object_bases.json`):
+carried in the pack, not worn — only the best one counts. A *Sack of Holding* (from 500 ft) lets
+you carry 25% more before you're slowed; a *Bag of Holding* (from 1500 ft) 50% more and two more
+things in the pack; a *Greater Bag of Holding* (from 3000 ft) twice as much and four more
+(`carryPercent` and `packSlots` on the object kind; `Player.WeightLimit`, `Inventory.PackSize`). A
+bag burns like cloth; lose it — burnt, stolen, sold, dropped — and what no longer fits spills onto
+the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after every command). The
+*Bag of Devouring* (AVABand's curse `devouring`, in `ava_curses.json`) passes for a Bag of Holding —
+same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
+for good and shows its curse. The General Store buys bags.
+
+**Socketed bracers and gems** (AVABand's own, `Game/GameSession.Gems.cs`): bracers have a slot of
+their own, *arms*, beside the gloves (last in the equipment list, so older saves line up), with 1
+(leather), 2 (iron) or 3 (mithril) sockets; the Armoury sells leather and iron ones. Gems — ruby
+(resist fire, to-dam), sapphire (resist cold, armour), topaz (resist lightning, to-hit), emerald
+(CON; resist poison from flawed), diamond (armour), opal (see invisible; stealth), amethyst (INT
+and WIS; protection from confusion from flawed) and garnet (STR), each chipped, flawed or
+flawless for +1, +2 or +3 — are found from 250 ft down; three cursed ones give more at a price:
+the bloodstone (+3 STR, +2 CON; slow healing), black onyx (stealth and infravision; hallucination)
+and star sapphire (+2 speed; random teleportation). Set a gem from its item menu or the
+bracers' (`SetGemCommand`, recorded; it takes a turn): its properties are merged into the
+bracers, and the resistances, flags and curses it brought are recorded on it, so taking it out
+takes away only those. Only the Armoury's armourer takes one out — asked on entering, for
+50 gold plus a fifth of the gem's worth, and one gem in eight cracks — and not while its curse
+holds (break it with Remove Curse first). The bracers' name lists their gems: "a Pair of Iron
+Bracers (-1,+3) [5,+0] (Ruby, 1 empty socket)". The Magic shop buys gems. Shop notes compare
+bracers as any armour, say what a gem would add to your bracers, and a bag against yours; the
+tiles (a bag, bracers, and a gem drawn in each kind's colour) are drawn by
+`tools/avaband_quest_tiles.py`.
+
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest
 first): after an update, the sections newer than the last one you were shown open once over the
 title screen (a new player is spared it; `WhatsNewSeen` in the settings remembers); the whole page

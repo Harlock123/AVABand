@@ -65,6 +65,7 @@ public static class DataLoader
     public const string AvaObjectsFile = "ava_objects.json";
     public const string AvaVaultsFile = "ava_vaults.json";
     public const string AvaQuestsFile = "ava_quests.json";
+    public const string AvaCursesFile = "ava_curses.json";
 
     private static readonly JsonSerializerOptions Options = new()
     {
@@ -163,6 +164,7 @@ public static class DataLoader
             egos.AddRange(Read<List<EgoItemDef>>(dir, EgosFile, errors));
             artifacts.AddRange(Read<List<ArtifactDef>>(dir, ArtifactsFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, CursesFile, errors));
+            curses.AddRange(Read<List<CurseDef>>(dir, AvaCursesFile, errors));
             summons.AddRange(Read<List<SummonDef>>(dir, SummonsFile, errors));
             flavors.AddRange(Read<List<FlavorGroupDef>>(dir, FlavorsFile, errors));
             chestTraps.AddRange(Read<List<ChestTrapDef>>(dir, ChestTrapsFile, errors));
@@ -214,9 +216,9 @@ public static class DataLoader
         foreach (var store in stores.Items)
         {
             if (town is not null && town.Shops.All(sh => sh.Id != store.Id)) errors.Add($"store '{store.Id}' has no shop in the town.");
-            foreach (var k in store.Staples.Concat(store.Normal).Where(k => !kindIds.Contains(k)))
+            foreach (var k in store.Staples.Concat(store.Stocked).Where(k => !kindIds.Contains(k)))
                 errors.Add($"store '{store.Id}' stocks unknown object '{k}'.");
-            foreach (var b in store.Buys.Where(b => !baseIds.Contains(b)))
+            foreach (var b in store.Buys.Concat(store.AvabandBuys).Where(b => !baseIds.Contains(b)))
                 errors.Add($"store '{store.Id}' buys unknown object base '{b}'.");
             if (store.MinItems > store.MaxItems) errors.Add($"store '{store.Id}' has minItems above maxItems.");
         }

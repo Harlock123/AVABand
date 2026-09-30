@@ -147,6 +147,17 @@ public sealed class Item
     /// Every learnable property (4.2 "rune") this object has. Weapons and armour always carry
     /// their combat-bonus runes, since even +0 must be learned to be shown.
     /// </summary>
+    /// <summary>AVABand's socketed bracers: how many gems they take.</summary>
+    public int Sockets => Kind.Sockets;
+
+    /// <summary>The gems set in it (their properties are merged into its own; see GameSession.Gems.cs).</summary>
+    public List<Item> Gems { get; } = [];
+
+    /// <summary>On a set gem: the resistances, flags and curses it brought that its host didn't have (taken away with it).</summary>
+    public List<string> AddedResists { get; } = [];
+    public List<string> AddedFlags { get; } = [];
+    public List<string> AddedCurses { get; } = [];
+
     public IEnumerable<string> Runes()
     {
         var weaponLike = Base.IsWeapon || Base.Slot == EquipSlot.Bow || Base.IsAmmo;
@@ -189,7 +200,8 @@ public sealed class Item
         // Angband object_similar: different inscriptions keep stacks apart; an uninscribed one may join.
         && (Note is null || other.Note is null || Note == other.Note)
         && Ignored == other.Ignored
-        && QuestTag == other.QuestTag;
+        && QuestTag == other.QuestTag
+        && Gems.Count == 0 && other.Gems.Count == 0;
 
     /// <summary>
     /// Whether an element can harm it in the pack (Angband EL_INFO_HATES without EL_INFO_IGNORE):
@@ -306,6 +318,10 @@ public sealed class Item
         foreach (var (k, v) in CurseTimeouts) copy.CurseTimeouts[k] = v;
         copy.Flags.Clear();
         foreach (var f in Flags) copy.Flags.Add(f);
+        copy.Gems.AddRange(Gems.Select(g => g.Clone(g.Serial, g.Number)));
+        copy.AddedResists.AddRange(AddedResists);
+        copy.AddedFlags.AddRange(AddedFlags);
+        copy.AddedCurses.AddRange(AddedCurses);
         return copy;
     }
 

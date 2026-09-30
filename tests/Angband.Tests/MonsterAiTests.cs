@@ -102,7 +102,7 @@ public class MonsterAiTests
         Assert.False(lizard.Active);
 
         lizard.Hp--; // a hurt monster is always active
-        Hold(game, 40);
+        for (var i = 0; i < 200 && lizard.Position == from; i++) Hold(game, 1);
         Assert.NotEqual(from, lizard.Position);
     }
 

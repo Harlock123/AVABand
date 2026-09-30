@@ -733,7 +733,7 @@ internal static class Bot
         var rng = new GameRandom(seed ^ 0x5EED);
         var slots = Plain ? new[] { EquipSlot.Weapon, EquipSlot.Body }
             : [EquipSlot.Weapon, EquipSlot.Body, EquipSlot.Bow, EquipSlot.Shield, EquipSlot.Cloak, EquipSlot.Head, EquipSlot.Hands, EquipSlot.Feet,
-               EquipSlot.Light, EquipSlot.Amulet, EquipSlot.Ring, EquipSlot.Ring];
+               EquipSlot.Light, EquipSlot.Amulet, EquipSlot.Ring, EquipSlot.Ring, EquipSlot.Arms];
         var covered = new HashSet<string>(game.Player.Race?.Resists ?? []);
         foreach (var slot in slots)
         {

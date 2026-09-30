@@ -202,4 +202,35 @@ public class ItemMenuUiTests
         Assert.False(vm.IsPrompting);
         Assert.Contains("nothing that looks like junk", vm.LastMessage);
     }
+
+    /// <summary>AVABand's bracers: a gem's menu sets it into bracers with room, and the bracers' menu takes a gem.</summary>
+    [AvaloniaFact]
+    public void A_gem_is_set_into_bracers_from_either_menu()
+    {
+        var vm = Start();
+        var gem = Carry(vm, "ruby");
+        vm.OpenItemMenu(gem);
+        Assert.DoesNotContain(vm.MenuLabels, l => l.StartsWith("Set into"));
+        vm.PromptKey('\u001b');
+
+        var bracers = Carry(vm, "leather_bracers");
+        vm.Execute(new WieldCommand(bracers));
+        var worn = vm.Game.Player.Inventory.InSlot(EquipSlot.Arms)!;
+        vm.OpenItemMenu(gem);
+        Assert.Contains("Set into your Pair of Leather Bracers", vm.MenuLabels);
+        Choose(vm, "Set into your");
+        Assert.Single(worn.Gems);
+        Assert.Contains(vm.EquipmentRows, r => r.Name.Contains("Leather Bracers") && r.Name.Contains("Ruby"));
+
+        var bigger = Carry(vm, "iron_bracers");
+        var sapphire = Carry(vm, "sapphire");
+        vm.OpenItemMenu(bigger);
+        Assert.Contains("Set Sapphire here", vm.MenuLabels);
+        Choose(vm, "Set Sapphire here");
+        Assert.Single(bigger.Gems);
+        Assert.False(vm.Game.Player.Inventory.Contains(sapphire));
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        TileRenderingTests.Save(window, "bracers-and-gems");
+    }
 }

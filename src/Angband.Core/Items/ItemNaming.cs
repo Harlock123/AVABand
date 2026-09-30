@@ -87,6 +87,15 @@ public static class ItemNaming
         if (knownMods.Count > 0)
             sb.Append(" <").Append(string.Join(", ", knownMods.Select(kv => $"{kv.Value:+0;-0}"))).Append('>');
 
+        // AVABand's socketed bracers: the gems set in them, and the sockets still empty.
+        if (item.Sockets > 0)
+        {
+            var parts = item.Gems.Select(g => Describe(g, knowledge, withArticle: false, full: false)).ToList();
+            var empty = item.Sockets - item.Gems.Count;
+            if (empty > 0) parts.Add(empty == 1 ? "1 empty socket" : $"{empty} empty sockets");
+            sb.Append(" (").Append(string.Join(", ", parts)).Append(')');
+        }
+
         if (item.UsesFuel) sb.Append($" ({item.Fuel} turns)");
         if (item.IsChest) sb.Append(' ').Append(ChestDescription(item, knowledge));
         if (item.Base.Id is "wand" or "staff" && knowsKind)
@@ -102,7 +111,8 @@ public static class ItemNaming
         if (!knowsKind && knowledge.HasTried(item.Kind)) notes.Add("tried");
         if (item.Curses.Any(c => knowledge.KnowsRune(RuneIds.Curse(c)))) notes.Add("cursed");
         if (knowledge.IgnoredCheck?.Invoke(item) == true) notes.Add("ignore");
-        if (knowsKind && !fullyKnown) notes.Add("??");
+        // (Not on AVABand's bags: a Bag of Devouring would give itself away by its unknown curse.)
+        if (knowsKind && !fullyKnown && item.Base.Id != "bag") notes.Add("??");
         if (notes.Count > 0) sb.Append(" {").Append(string.Join(", ", notes)).Append('}');
         return sb.ToString();
     }
@@ -130,6 +140,8 @@ public static class ItemNaming
         var i = name.IndexOf('~');
         if (!plural) return name.Remove(i, 1);
         var before = name[..i];
+        // "Rub~y" is not how data spells it: a name ending consonant-y before the marker takes "ies" (Rubies).
+        if (before.Length > 1 && before[^1] == 'y' && !"aeiou".Contains(before[^2])) return before[..^1] + "ies" + name[(i + 1)..];
         var suffix = before.EndsWith("ch") || before.EndsWith("sh") || before.EndsWith('s') || before.EndsWith('x') ? "es" : "s";
         return before + suffix + name[(i + 1)..];
     }

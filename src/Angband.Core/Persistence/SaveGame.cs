@@ -187,6 +187,10 @@ public static class SaveGame
         Brands = i.Brands.Select(b => new BrandSave { Element = b.Element, Multiplier = b.Multiplier, Verb = b.Verb, Name = b.Name }).ToList(),
         Resists = [.. i.Resists], Curses = [.. i.Curses], CursePowers = new(i.CursePowers), CurseTimeouts = new(i.CurseTimeouts), Flags = [.. i.Flags], OriginDepth = i.OriginDepth, Note = i.Note, Ignored = i.Ignored, Assessed = i.Assessed,
         QuestTag = i.QuestTag,
+        Gems = i.Gems.Count == 0 ? null : [.. i.Gems.Select(ItemToSave)],
+        AddedResists = i.AddedResists.Count == 0 ? null : [.. i.AddedResists],
+        AddedFlags = i.AddedFlags.Count == 0 ? null : [.. i.AddedFlags],
+        AddedCurses = i.AddedCurses.Count == 0 ? null : [.. i.AddedCurses],
     };
 
     /// <summary>
@@ -325,6 +329,10 @@ public static class SaveGame
                 item.Flags.Clear();
                 foreach (var f in flags) item.Flags.Add(f);
             }
+            foreach (var gem in s.Gems ?? []) if (ToItem(gem) is { } set) item.Gems.Add(set);
+            item.AddedResists.AddRange(s.AddedResists ?? []);
+            item.AddedFlags.AddRange(s.AddedFlags ?? []);
+            item.AddedCurses.AddRange(s.AddedCurses ?? []);
             return item;
         }
 

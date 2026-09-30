@@ -22,7 +22,7 @@ public sealed partial class GameSession
     private static readonly EquipSlot[] TrialSlots =
     [
         EquipSlot.Weapon, EquipSlot.Bow, EquipSlot.Body, EquipSlot.Shield, EquipSlot.Cloak, EquipSlot.Head, EquipSlot.Hands,
-        EquipSlot.Feet, EquipSlot.Light, EquipSlot.Amulet, EquipSlot.Ring, EquipSlot.Ring,
+        EquipSlot.Feet, EquipSlot.Light, EquipSlot.Amulet, EquipSlot.Ring, EquipSlot.Ring, EquipSlot.Arms,
     ];
 
     /// <summary>What a trial character looks for beyond armour: the abilities it doesn't have yet.</summary>

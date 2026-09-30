@@ -78,6 +78,8 @@ public class MimicTests
         var mimic = Hide(game, "potion_mimic", game.Player.Position + new Loc(1, 0));
         var name = game.Describe(mimic.MimicItem!, withArticle: false);
         var hp = mimic.Hp;
+        game.Player.IntrinsicResists["blind"] = 1; // (its spell can blind you as it's found out: then you couldn't see it)
+        game.RecalculateBonuses();
         Assert.True(game.Execute(new WalkCommand(Direction.East)));
         Assert.False(mimic.Camouflaged);
         Assert.Null(mimic.MimicItem);

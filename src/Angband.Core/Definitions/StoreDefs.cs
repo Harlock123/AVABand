@@ -24,8 +24,14 @@ public sealed class StoreDef
     public IReadOnlyList<string> Staples => [.. Always, .. AvabandAlways];
     /// <summary>Object kinds the store randomly stocks.</summary>
     public IReadOnlyList<string> Normal { get; init; } = [];
+    /// <summary>AVABand's own additions to what it randomly stocks (the Armoury's bracers), apart from 4.2.5's list.</summary>
+    public IReadOnlyList<string> AvabandNormal { get; init; } = [];
+    /// <summary>Everything it randomly stocks: 4.2.5's and AVABand's.</summary>
+    public IReadOnlyList<string> Stocked => [.. Normal, .. AvabandNormal];
     /// <summary>Object bases the store will take from the player.</summary>
     public IReadOnlyList<string> Buys { get; init; } = [];
+    /// <summary>AVABand's own additions to what it takes (bracers, gems, bags).</summary>
+    public IReadOnlyList<string> AvabandBuys { get; init; } = [];
     /// <summary>Angband slots: the range of piles, besides the staples, the store keeps.</summary>
     public int MinItems { get; init; } = 6;
     public int MaxItems { get; init; } = 18;

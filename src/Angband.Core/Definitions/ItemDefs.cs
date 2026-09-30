@@ -17,6 +17,8 @@ public enum EquipSlot
     Head,
     Hands,
     Feet,
+    /// <summary>AVABand's own: bracers (kept last, so saves made before it still line up).</summary>
+    Arms,
 }
 
 /// <summary>A broad class of objects (Angband object_base.txt / tval): sword, potion, arrow...</summary>
@@ -187,6 +189,12 @@ public sealed class ObjectKindDef
     public IReadOnlyList<string> Flags { get; init; } = [];
     /// <summary>The power of each of its curses (Angband curse:name:power; 100 is permanent).</summary>
     public IReadOnlyDictionary<string, int> CursePowers { get; init; } = new Dictionary<string, int>();
+    /// <summary>AVABand's bags of holding: carried in the pack, this much more (percent) can be carried before slowing.</summary>
+    public int CarryPercent { get; init; }
+    /// <summary>AVABand's bags of holding: carried in the pack, this many more things fit in it.</summary>
+    public int PackSlots { get; init; }
+    /// <summary>AVABand's socketed bracers: how many gems they take.</summary>
+    public int Sockets { get; init; }
     /// <summary>What using it does, e.g. <c>heal:20; cure:blind</c>. See <see cref="Items.ItemEffects"/>.</summary>
     public string? Effect { get; init; }
     /// <summary>Starting fuel for light sources, in player turns (0 = needs none).</summary>

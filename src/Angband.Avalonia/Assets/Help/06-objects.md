@@ -9,6 +9,28 @@ the resistance of your armour. Once you know a rune you recognise it on everythi
 Potions, scrolls, rings, amulets, wands, staffs, rods and mushrooms are known by their
 **flavour** (an "Icky Green Potion") until you try one; then every one of that kind is known.
 
+## Bags of holding
+
+A **Sack**, **Bag** or **Greater Bag of Holding** does its work from your pack — you don't wear
+it. It lets you carry more before you're slowed (a quarter more, half as much again, or twice as
+much), and the larger two hold two or four more things. Only the best bag you carry counts. If
+you lose it, whatever no longer fits spills onto the floor. Beware: not every Bag of Holding is
+what it seems.
+
+## Bracers and gems
+
+**Bracers** go on your arms, beside your gloves, and have one, two or three **sockets** for gems.
+Set a gem from its menu (or the bracers') and the bracers gain its virtue: a **ruby** resists fire
+and adds damage, a **sapphire** resists cold and adds armour, a **topaz** resists lightning and
+helps you hit, an **emerald** adds constitution (and, flawed or better, resists poison), a
+**diamond** adds armour, an **opal** lets you see invisible things, an **amethyst** sharpens your
+mind (and guards against confusion), a **garnet** adds strength. Chipped, flawed or flawless
+stones give +1, +2 or +3. Some rarer stones give more, and take something back.
+
+Only the **Armoury** (2) can take a gem out again — the armourer will offer when you go in — for
+some gold, and now and then the stone cracks. A cursed stone won't come out until its curse is
+broken.
+
 ## Ignoring
 
 `Ctrl+D` ignores an item or everything like it; ignored items vanish from the map and lists.

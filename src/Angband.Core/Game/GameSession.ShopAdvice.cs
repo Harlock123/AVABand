@@ -28,6 +28,8 @@ public sealed partial class GameSession
     public ItemAdvice? AdviceFor(Item item, bool known = true, bool buying = true)
     {
         if (item.IsAmmo) return AmmoAdvice(item);
+        if (IsGem(item)) return GemAdvice(item);
+        if (item.Kind.CarryPercent > 0 || item.Kind.PackSlots > 0) return BagAdvice(item);
         if (!item.IsWearable || item.Base.Slot == EquipSlot.None) return null;
         if (!known) return new ItemAdvice("not fully known yet", 0);
 
@@ -93,6 +95,43 @@ public sealed partial class GameSession
         return new ItemAdvice(text, tone);
     }
 
+    /// <summary>A gem: what it would add to your bracers (worn first) with a free socket.</summary>
+    private ItemAdvice GemAdvice(Item gem)
+    {
+        if (FreeSockets().FirstOrDefault() is not { } host)
+            return new ItemAdvice(Player.Inventory.All.Any(i => i.Sockets > 0) ? "your bracers have no free socket" : "you have no bracers to set it in", -1);
+        var good = new List<string>();
+        var bad = new List<string>();
+        void Delta(int value, string what) { if (value != 0) (value > 0 ? good : bad).Add($"{value:+0;-0} {what}"); }
+        Delta(gem.ToHit, "to hit");
+        Delta(gem.ToDam, "damage");
+        Delta(gem.ToAc, "armour");
+        foreach (var mod in AdviceModifiers) Delta(gem.Modifier(mod), ModifierWord(mod));
+        var had = Player.Inventory.Equipped.SelectMany(i => i.Resists).Concat(Player.IntrinsicResists.Keys).ToHashSet();
+        foreach (var r in gem.Resists.Where(r => !had.Contains(r)).Order()) good.Add(AbilityWord(r));
+        if (gem.IsCursed) bad.Add("cursed");
+        var tone = good.Count > 0 && bad.Count == 0 ? 1 : bad.Count > 0 && good.Count == 0 ? -1 : 0;
+        var verdict = good.Count + bad.Count == 0 ? "Much the same" : tone > 0 ? "Better" : tone < 0 ? "Worse" : "Mixed";
+        var parts = good.Concat(bad).ToList();
+        var into = $"set in your {ItemNaming.Describe(host, Knowledge, withArticle: false, full: false)}";
+        return new ItemAdvice(parts.Count == 0 ? $"{verdict} — {into}" : $"{verdict} — {into}: {string.Join(", ", parts)}", tone);
+    }
+
+    /// <summary>A bag of holding: against the best bag you carry (only the best counts).</summary>
+    private ItemAdvice BagAdvice(Item bag)
+    {
+        var mine = Player.Inventory.BestBag is { } b && b != bag ? b : null;
+        var carry = bag.Kind.CarryPercent - (mine?.Kind.CarryPercent ?? 0);
+        var slots = bag.Kind.PackSlots - (mine?.Kind.PackSlots ?? 0);
+        var parts = new List<string>();
+        if (carry != 0) parts.Add($"{carry:+0;-0}% carrying");
+        if (slots != 0) parts.Add($"{slots:+0;-0} pack slots");
+        var tone = carry >= 0 && slots >= 0 && parts.Count > 0 ? 1 : carry <= 0 && slots <= 0 && parts.Count > 0 ? -1 : 0;
+        var verdict = parts.Count == 0 ? "Much the same" : tone > 0 ? "Better" : tone < 0 ? "Worse" : "Mixed";
+        var against = mine is null ? "you carry no bag" : $"vs your {ItemNaming.Describe(mine, Knowledge, withArticle: false, full: false)}";
+        return new ItemAdvice(parts.Count == 0 ? $"{verdict} — {against}" : $"{verdict} — {against}: {string.Join(", ", parts)}", tone);
+    }
+
     private ItemAdvice AmmoAdvice(Item ammo)
     {
         if (ammo.IsThrowing && ammo.Base.AmmoClass is null) return new ItemAdvice("for throwing", 0);
@@ -109,7 +148,7 @@ public sealed partial class GameSession
     {
         EquipSlot.Weapon => "weapon", EquipSlot.Bow => "launcher", EquipSlot.Ring => "ring", EquipSlot.Amulet => "amulet",
         EquipSlot.Light => "light", EquipSlot.Body => "body armour", EquipSlot.Cloak => "cloak", EquipSlot.Shield => "shield",
-        EquipSlot.Head => "helm", EquipSlot.Hands => "gloves", EquipSlot.Feet => "boots", _ => "equipment",
+        EquipSlot.Head => "helm", EquipSlot.Hands => "gloves", EquipSlot.Feet => "boots", EquipSlot.Arms => "bracers", _ => "equipment",
     };
 
     private static string ModifierWord(string mod) => mod switch

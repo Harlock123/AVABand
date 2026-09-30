@@ -29,7 +29,7 @@ public sealed class Store(StoreDef def, ShopDef shop, StoreOwnerDef? owner)
              && item.ToAc != item.Kind.ToAc);
 
     /// <summary>Whether the store stocks this kind at all (Angband store_can_carry).</summary>
-    public bool CanCarry(ObjectKindDef kind) => Def.Normal.Contains(kind.Id) || IsStaple(kind);
+    public bool CanCarry(ObjectKindDef kind) => Def.Stocked.Contains(kind.Id) || IsStaple(kind);
 }
 
 /// <summary>Stores (Angband 4.2 store.c): stock, maintenance, prices, buying and selling.</summary>
@@ -203,7 +203,7 @@ public sealed partial class GameSession
         {
             var level = Rng.RandRange(minLevel, maxLevel);
             var kind = def.BlackMarket ? Objects.PickKind(Rng, level)
-                : def.Normal.Count > 0 ? Data.Object(def.Normal[Rng.RandInt0(def.Normal.Count)]) : null;
+                : def.Stocked.Count > 0 ? Data.Object(def.Stocked[Rng.RandInt0(def.Stocked.Count)]) : null;
             if (kind is null || kind.Base == "chest") continue;
 
             var item = Objects.Create(kind);
@@ -356,7 +356,7 @@ public sealed partial class GameSession
 
     /// <summary>Whether the store deals in this kind of item.</summary>
     public bool StoreWillBuy(Store store, Item item) =>
-        !item.IsQuestItem && (store.IsHome || store.Def.BlackMarket || store.Def.Buys.Contains(item.Base.Id));
+        !item.IsQuestItem && (store.IsHome || store.Def.BlackMarket || store.Def.Buys.Contains(item.Base.Id) || store.Def.AvabandBuys.Contains(item.Base.Id));
 
     private int EnterStore()
     {
@@ -368,7 +368,7 @@ public sealed partial class GameSession
             else Publish(new MessageEvent("There is no store here."));
             return 0;
         }
-        if (QuestAtShop(store.Id)) return 0;
+        if (QuestAtShop(store.Id) || GemsAtShop(store.Id)) return 0;
         // A staple the store lacks (one added to the game since the save was made) is in by now.
         if (!store.IsHome && store.Def.Staples.Any(id => !store.Stock.Any(i => i.Kind.Id == id && store.IsAlways(i))))
         {

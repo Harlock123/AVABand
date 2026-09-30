@@ -227,6 +227,13 @@ public static class ObjectInfo
         if (item.Kind.Fuel > 0) facts.Add($"it burns for up to {item.Kind.Fuel} turns");
         if (item.Kind.Charges is { } charges) facts.Add($"it is found with {charges} charges");
         if (item.Kind.Recharge is { } time && b.Id == "rod") facts.Add($"it recharges in {time} turns");
+        // AVABand's bracers and bags.
+        if (item.Sockets > 0)
+            facts.Add($"it has {(item.Sockets == 1 ? "a socket" : $"{item.Sockets} sockets")} for gems"
+                      + (item.Gems.Count == 0 ? ", all empty" : $", {item.Gems.Count} set"));
+        if (item.Kind.CarryPercent > 0)
+            facts.Add($"carried, it lets you carry {(item.Kind.CarryPercent == 100 ? "twice as much" : $"{item.Kind.CarryPercent}% more")} before you're slowed"
+                      + (item.Kind.PackSlots > 0 ? $", and holds {item.Kind.PackSlots} more things" : ""));
         if (facts.Count > 0) sb.Append(Capitalize(Join(facts))).Append(". ");
         sb.Append($"It weighs {(item.Weight / 10.0).ToString("0.#", Inv)} lb.\n");
 
@@ -248,7 +255,7 @@ public static class ObjectInfo
 
         var runes = KnownProperties(game, item);
         if (runes.Count > 0) sb.Append(string.Join(" ", runes)).Append('\n');
-        if (!sampleOnly && !k.IsFullyKnown(item)) sb.Append("You do not know all of its runes.\n");
+        if (!sampleOnly && !k.IsFullyKnown(item) && b.Id != "bag") sb.Append("You do not know all of its runes.\n"); // (a Bag of Devouring keeps its secret)
 
         var description = item.Artifact?.Description is { Length: > 0 } ad && (sampleOnly || k.IsFullyKnown(item)) ? ad : item.Kind.Description;
         if (description.Length > 0) sb.Append('\n').Append(description).Append('\n');

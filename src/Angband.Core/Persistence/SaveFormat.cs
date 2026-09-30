@@ -120,6 +120,11 @@ public sealed class ItemSave
     /// <summary>Null in saves from before per-item flags (the kind's flags are used).</summary>
     public List<string>? Flags { get; set; }
     public int OriginDepth { get; set; }
+    /// <summary>AVABand: gems set in socketed bracers, and on a gem, what it added to them.</summary>
+    public List<ItemSave>? Gems { get; set; }
+    public List<string>? AddedResists { get; set; }
+    public List<string>? AddedFlags { get; set; }
+    public List<string>? AddedCurses { get; set; }
 }
 
 public sealed class SlaySave
