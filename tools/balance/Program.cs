@@ -29,6 +29,11 @@
 // mage and a ranger, that many seeds each: how many finish, how many die, and what it takes. The soak
 // plays one of each too, recorded and replayed.
 //
+// `heroic [runs]` — AVABand's heroic stats against Angband's rolled ones: the same seeds, depths and
+// classes (warrior, mage, ranger; human), played by the bot twice — once with stats from the ordinary
+// roll, once from the heroic roll (HeroicBirth) — and how much more often the heroic ones live, what
+// more they kill and gain.
+//
 // `record-replays [dir]` — records the four games tests/Angband.Tests/Replays keeps (ReplayFixtureTests),
 // for when a change is meant to change how games play out.
 //
@@ -92,6 +97,36 @@ if (args.Length > 0 && args[0] == "record-replays")
     foreach (var (cls, start, tourist, decisions) in new[] { ("warrior", 1, false, 1500), ("mage", 1, false, 1500), ("ranger", 1, false, 1500), ("warrior", 60, true, 600) })
         ok &= Soak.Run(data, cls, 707UL, decisions, start, tourist, Path.Combine(dir, $"{cls}-{start * 50}ft{ReplayFile.Extension}"));
     Environment.Exit(ok ? 0 : 1);
+}
+
+if (args.Length > 0 && args[0] == "heroic")
+{
+    var runs = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 20;
+    Console.WriteLine($"{runs} runs per depth and class; each seed played with rolled stats and with heroic ones");
+    Console.WriteLine("class       depth | survived% rolled → heroic | kills rolled → heroic | exp gained rolled → heroic | potions rolled → heroic");
+    foreach (var cls in new[] { "warrior", "mage", "ranger" })
+    foreach (var depth in new[] { 5, 10, 20, 30, 40, 50 })
+    {
+        var sums = new double[2, 4];
+        for (var run = 0; run < runs; run++)
+        {
+            var seed = (ulong)(depth * 1000 + run);
+            for (var heroic = 0; heroic < 2; heroic++)
+            {
+                var rng = new GameRandom(seed * 7919 + 13);
+                var stats = heroic == 1 ? HeroicBirth.RollStats(rng) : Birth.RollStats(rng);
+                var spec = new CharacterSpec("Bot", "human", cls, stats, heroic == 1 ? StatMethod.HeroicRoll : StatMethod.Roll);
+                var r = Bot.Play(data, depth, seed, cls, spec);
+                sums[heroic, 0] += r.Survived ? 1 : 0;
+                sums[heroic, 1] += r.Kills;
+                sums[heroic, 2] += r.Experience;
+                sums[heroic, 3] += r.Potions;
+            }
+        }
+        string Pair(int k, double scale) => $"{Num(scale * sums[0, k] / runs),6} → {Num(scale * sums[1, k] / runs),-6}";
+        Console.WriteLine($"{cls,-11} {depth,5} | {Pair(0, 100),25} | {Pair(1, 1),21} | {Pair(2, 1),26} | {Pair(3, 1),23}");
+    }
+    return;
 }
 
 if (args.Length > 0 && args[0] == "one")
@@ -211,9 +246,9 @@ internal static class Bot
     }
 
     /// <summary>A character of the class at the depth's level, equipped for it, standing on a new level there.</summary>
-    public static GameSession Setup(GameData data, int depth, ulong seed, string cls, int? level = null)
+    public static GameSession Setup(GameData data, int depth, ulong seed, string cls, int? level = null, CharacterSpec? spec = null)
     {
-        var game = GameSession.NewGame(data, seed, cls);
+        var game = spec is null ? GameSession.NewGame(data, seed, cls) : GameSession.NewGame(data, seed, spec);
         game.MarkDebugUsed();
         var clvl = level ?? Math.Clamp(depth, 1, 50);
         if (clvl > 1) game.GainExperience(game.ExperienceForLevel(clvl - 1) - game.Player.Experience);
@@ -231,9 +266,9 @@ internal static class Bot
         return game;
     }
 
-    public static BotResult Play(GameData data, int depth, ulong seed, string cls = "warrior")
+    public static BotResult Play(GameData data, int depth, ulong seed, string cls = "warrior", CharacterSpec? spec = null)
     {
-        var game = Setup(data, depth, seed, cls);
+        var game = Setup(data, depth, seed, cls, spec: spec);
         if (Environment.GetEnvironmentVariable("BOT_TRACE") is { Length: > 0 })
             Console.WriteLine($"{cls} clvl {game.Player.Level} hp {game.Player.Hp}/{game.Player.MaxHp} sp {game.Player.Mana} ac {game.Player.Armour} "
                 + $"blows {game.Player.Blows} weapon {(game.Player.Inventory.Weapon is { } w ? game.Describe(w) : "none")} "

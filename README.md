@@ -341,7 +341,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   up to 100,000 times until a set meets them all ("Met every minimum after 1,234 rolls"), or says
   at once which minimum that roll can never reach. The minimums are remembered with the last
   character. Heroic characters are scored as usual, but tagged: *[Heroic]* in the high scores and
-  a line in the character dump (kept in the save). Stats now
+  a line in the character dump (kept in the save). How much easier they are is measured by `tools/balance heroic`
+  (`docs/heroic-balance.md`): little for warriors, but a young heroic mage survives about half as
+  often again, and a ranger at 1000 ft 45 → 73% of the time. Stats now
   matter: STR gives to-damage and carrying capacity, DEX to-hit and armour, WIS saving throw, CON
   hit points per level, INT/WIS spell points and failure rates. The screen previews the result by
   creating the character in the engine; Quick start reuses the last character.
