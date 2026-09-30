@@ -275,7 +275,16 @@ public sealed partial class GameSession
     /// <summary>A monster of this race placed for a quest (awake unless asked otherwise).</summary>
     private Monster? PlaceQuestMonster(string raceId, Loc at, bool asleep = false)
     {
-        if (Data.Monster(raceId) is not { } race || Level.Monsters.At(at) is not null) return null;
+        if (Data.Monster(raceId) is not { } race) return null;
+        // A monster of the level's own that happens to stand on the quest's spot steps aside (else the
+        // quest's monster would be missing from its room, and the quest stuck for that visit).
+        if (Level.Monsters.At(at) is { } inTheWay)
+        {
+            if (Level.AllLocs().Where(l => l != at && Level.IsEmptyFloor(l) && l != Player.Position)
+                    .OrderBy(l => l.DistanceTo(at)).Select(l => (Loc?)l).FirstOrDefault() is not { } aside)
+                return null;
+            Level.Monsters.Move(inTheWay, aside);
+        }
         var m = _spawner.Place(Level, Rng, race, at, asleep);
         Scheduler.Add(m);
         return m;

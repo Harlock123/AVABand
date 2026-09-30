@@ -7,6 +7,8 @@ played; this page keeps it all (Help → What's new...).
 
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
+- **Fixed: a quest's monster could be missing from its room** when one of the level's own monsters
+  happened to stand on its spot (Durgash, say, and his key with him).
 - **Blows as in Angband 4.2**: how often you strike now depends on your weapon's weight, your
   Strength and your Dexterity — a light blade in a strong, quick hand strikes often; a weapon too
   heavy for you strikes once, and badly. Spellcasters in heavy armour lose mana. The shops and

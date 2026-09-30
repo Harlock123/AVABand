@@ -378,6 +378,19 @@ public partial class AvaQuestTests
         Assert.False(game.IsIgnored(letter));
     }
 
+    /// <summary>A quest's monster is always in its room, even when one of the level's own stood on its spot.</summary>
+    [Fact]
+    public void The_quests_monster_is_always_there_to_meet()
+    {
+        for (ulong seed = 1; seed <= 30; seed++)
+        {
+            var q = Start(seed: seed);
+            q.TakeQuest("sealed_door");
+            q.Jump(q.Game.AvaQuests.Get("sealed_door")!.N("keydepth"));
+            Assert.True(q.Find("durgash_the_keybearer") is not null, $"no Durgash on seed {seed}");
+        }
+    }
+
     [Fact]
     public void Quests_are_saved()
     {
