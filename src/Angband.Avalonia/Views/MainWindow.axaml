@@ -300,7 +300,8 @@
                              FontFamily="{StaticResource MonoFont}" FontSize="13" />
                   <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
                              FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
-                  <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+                  <StackPanel Grid.Column="2">
+                  <StackPanel Orientation="Horizontal" Spacing="8">
                     <TextBlock Text="{Binding Name}" Foreground="#eee" TextWrapping="Wrap" />
                     <Border IsVisible="{Binding IsEquipped}" Background="#5a3a10" CornerRadius="3" Padding="5,0" VerticalAlignment="Center">
                       <TextBlock Text="{Binding Equipped}" Foreground="#ffcc66" FontSize="11" FontWeight="SemiBold" />
@@ -311,6 +312,9 @@
                     <Border IsVisible="{Binding IsBookNotForYou}" Background="#3a3a3a" CornerRadius="3" Padding="5,0" VerticalAlignment="Center">
                       <TextBlock Text="{Binding BookNote}" Foreground="#aaaaaa" FontSize="11" />
                     </Border>
+                  </StackPanel>
+                  <TextBlock IsVisible="{Binding HasAdvice}" Text="{Binding Advice}" Foreground="{Binding AdviceBrush}" FontSize="11"
+                             TextWrapping="Wrap" Margin="0,1,0,0" />
                   </StackPanel>
                   <TextBlock Grid.Column="3" Text="{Binding Price}" Foreground="#e6c35c" Margin="12,0" />
                   <TextBlock Grid.Column="4" Text="{Binding Weight}" Foreground="#888" FontSize="12" HorizontalAlignment="Right" />

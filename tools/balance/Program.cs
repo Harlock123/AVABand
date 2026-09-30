@@ -672,8 +672,6 @@ internal static class Bot
                     + 10 * item.Modifier(ItemModifiers.Speed) + 3 * (item.Modifier(ItemModifiers.Constitution) + item.Modifier(ItemModifiers.Strength))
                     + 8 * item.Modifier(ItemModifiers.Light);
         if (IsCaster(game)) worth += 3 * item.Modifier(ItemModifiers.Intelligence);
-        // Gloves hamper a caster's spells, save those of Free Action.
-        if (item.Base.Slot == EquipSlot.Hands && game.Player.MaxMana > 0 && !item.Resists.Contains("free_act")) worth -= 1000;
         return worth;
     }
 

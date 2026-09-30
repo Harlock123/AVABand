@@ -42,6 +42,23 @@ public class StoreUiTests
         Assert.Contains(vm.StoreRows, r => r.Item.Base.Id == "prayer_book" && r.IsBookForYou);
     }
 
+    /// <summary>"Will this suit me?": armour and weapons say how they compare with what you have, missiles whether they fit.</summary>
+    [AvaloniaFact]
+    public void The_shops_say_whether_things_suit_you()
+    {
+        var (window, vm, game) = OpenAt("armoury");
+        var armour = vm.StoreRows.Where(r => r.Item.IsWearable).ToList();
+        Assert.NotEmpty(armour);
+        Assert.All(armour, r => Assert.True(r.HasAdvice, r.Name));
+        Assert.Contains(armour, r => r.Advice.StartsWith("vs your Soft Leather Armour") || r.Advice.StartsWith("for your empty"));
+        TileRenderingTests.Save(window, "store-armoury-advice");
+
+        (window, vm, game) = OpenAt("weaponsmith");
+        Assert.Contains(vm.StoreRows, r => r.Item.Base.Slot == Angband.Core.Definitions.EquipSlot.Weapon && r.Advice.Contains("damage a turn"));
+        Assert.Contains(vm.StoreRows, r => r.Item.IsAmmo && (r.Advice.StartsWith("fits your") || r.Advice.StartsWith("not for your")));
+        TileRenderingTests.Save(window, "store-weaponsmith-advice");
+    }
+
     [AvaloniaFact]
     public void Store_OpensWithItsStock()
     {

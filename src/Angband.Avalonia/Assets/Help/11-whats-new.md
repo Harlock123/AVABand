@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.11
+
+- **Will this suit me?** In the shops, armour and weapons say how they compare with what you're
+  wearing ("vs your Dagger: +17 damage a turn"; "+24 armour, -2 to hit, resist cold"), and
+  missiles say whether they fit your launcher.
+
 ## 2026-09-30.10
 
 - **How dangerous is it?** A monster's recall now ends with a Danger line — from what you know of

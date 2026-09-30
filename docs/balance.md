@@ -289,8 +289,7 @@ set up in town, carried Cure Light Wounds at character level 45. Now (unless `BO
 - **Kit for every slot**: shield, cloak, helm, gloves, boots, light, amulet and two rings, each the
   best of thirty good objects made for the deeper of its depth and level, scored by armour and by
   the abilities it doesn't have yet (free action most, then see invisible and poison, confusion and
-  blindness, the base four, the rest), plus speed, CON and STR (INT for a caster). Gloves only of
-  Free Action for spellcasters.
+  blindness, the base four, the rest), plus speed, CON and STR (INT for a caster).
 - **Potions and escapes for its level**: healing potions by the deeper of depth and level (Healing
   itself from level 45), 5 + level/5 of them, and Scrolls of Teleportation from 1250 ft, read when
   badly hurt (sooner when out of potions).

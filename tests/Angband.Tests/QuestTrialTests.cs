@@ -40,7 +40,7 @@ public class QuestTrialTests
         var game = GameSession.NewGame(TestData.Game, 7, "mage");
         game.Execute(new DebugTryQuestCommand("warden"));
         Assert.True(game.Player.LearnedSpells.Count >= 10, $"{game.Player.LearnedSpells.Count} spells");
-        Assert.Null(game.Player.Inventory.InSlot(Angband.Core.Definitions.EquipSlot.Hands)); // (no gloves to hamper it)
+        Assert.Contains(game.Player.Inventory.Pack, i => i.Base.Id == "magic_book");
     }
 
     [Fact]

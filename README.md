@@ -431,6 +431,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     carries a badge — **for you** if the class can read it (`GameSession.BookNote`, Angband's
     `obj_kind_can_browse`), else "not for a Priest" — so a newcomer doesn't buy the wrong realm's
     book or sell their own.
+  - **Will this suit me?** (`GameSession.ShopAdvice.cs`): under anything you could wear or wield, a
+    line says how it compares with what it would replace ("vs your Dagger: +17 damage a turn (about
+    26), +3 to hit"; "for your empty helm slot: +7 armour"; "vs your Soft Leather Armour: +24
+    armour, -2 to hit, resist cold") — armour, damage a turn (an average blow times your blows),
+    to-hit and to-dam, a launcher's multiplier and the missiles it fires, speed, stats, stealth and
+    light, the resistances and abilities it would bring or take away, a curse, and whether it
+    would leave you slowed — green if better, red if worse, amber if mixed; missiles say whether
+    they fit your launcher. Your own things for sale are compared too, once all their runes are
+    known. Only what AVABand's rules count is compared: blows come from your class and gear, not a
+    weapon's weight, and gloves don't hamper spells.
   - AVABand's one addition: the General Store also always has **lanterns** (`avabandAlways` in
     `stores.json`, kept apart from 4.2.5's `always` list so the drift check still compares that
     untouched). In 4.2.5 no shop sells them — the black market might, and the dungeon has plenty

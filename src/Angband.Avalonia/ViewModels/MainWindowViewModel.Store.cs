@@ -12,8 +12,12 @@ namespace Angband.Avalonia.ViewModels;
 
 /// <summary>A line in the store screen: something to buy, or something of yours to sell.</summary>
 public sealed record StoreRow(string Letter, string Glyph, uint GlyphColor, string Name, string Price, string Weight, Item Item,
-    string Equipped = "", string BookNote = "")
+    string Equipped = "", string BookNote = "", string Advice = "", int AdviceTone = 0)
 {
+    /// <summary>The shop note: how it compares with what you'd replace (or whether missiles fit your launcher).</summary>
+    public bool HasAdvice => Advice.Length > 0;
+    public IBrush AdviceBrush { get; } = new ImmutableSolidColorBrush(Color.Parse(AdviceTone > 0 ? "#8fe0a0" : AdviceTone < 0 ? "#e89a8a" : "#d8c07a"));
+
     /// <summary>Whether the row is something the player has on (shown, and asked about before it goes).</summary>
     public bool IsEquipped => Equipped.Length > 0;
 
@@ -174,6 +178,7 @@ public sealed partial class MainWindowViewModel
             ? _game.Player.Inventory.Pack.Concat(_game.Player.Inventory.Quiver).Concat(_game.Player.Inventory.Equipped)
                 .Where(i => _game.StoreWillBuy(store, i)).ToList()
             : store.Stock;
+        bool equippedNow(Item it) => _game.Player.Inventory.Equipped.Contains(it);
         for (var i = 0; i < items.Count && i < 26; i++)
         {
             var item = items[i];
@@ -182,12 +187,16 @@ public sealed partial class MainWindowViewModel
                 : StoreSellMode ? (_game.SellPrice(store, item) is var p and > 0 ? $"{p} gold" : _game.NoSelling ? "" : "no gold")
                 : $"{_game.BuyPrice(store, item)} gold";
             var name = StoreSellMode ? _game.Describe(item) : DescribeStock(store, item);
+            // "Will this suit me?": stock is known in full; your own things only once all their runes are.
+            var advice = equippedNow(item) ? null
+                : StoreSellMode ? _game.AdviceFor(item, _game.Knowledge.IsFullyKnown(item), buying: false) : _game.AdviceFor(item);
             var equipped = StoreSellMode && _game.Player.Inventory.Equipped.Contains(item)
                 ? item.Base.Slot is EquipSlot.Weapon or EquipSlot.Bow ? "wielded" : "worn"
                 : "";
             StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),
                 _cells.Color(flavor?.Color ?? item.Kind.Color ?? item.Base.Color), name, price,
-                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped, _game.BookNote(item) ?? ""));
+                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped, _game.BookNote(item) ?? "",
+                advice?.Text ?? "", advice?.Tone ?? 0));
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
         OnPropertyChanged(nameof(StoreModeText));

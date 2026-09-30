@@ -76,7 +76,6 @@ public sealed partial class GameSession
         var covered = new HashSet<string>(Player.Race?.Resists ?? []);
         foreach (var slot in TrialSlots)
         {
-            if (slot == EquipSlot.Hands && Player.MaxMana > 0) continue; // (gloves hamper most casters)
             var found = new List<Item>();
             for (var i = 0; i < 2000 && found.Count < 20; i++)
                 if (Objects.Make(Rng, level, good: true) is { } item && item.Base.Slot == slot && !item.IsCursed
