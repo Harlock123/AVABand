@@ -6,6 +6,28 @@ Your **race** (Human, Half-Elf, Elf, Hobbit, Gnome, Dwarf, Half-Orc, Half-Troll,
 High-Elf, Kobold) shifts your stats and skills and gives some abilities — Dwarves sense ore,
 Hobbits know mushrooms, High-Elves see invisible things.
 
+In AVABand each race also has an ability of its own (the birth option *AVABand's racial
+abilities* turns them off):
+
+- **Human** — two-weapon fighting: a light weapon (up to 15 lb) in the off hand instead of a shield,
+  for an extra blow each turn (a little less accurate). Choose *Wield in off hand* from a weapon's menu.
+- **Half-Elf** — trusted by both peoples: 10% better prices in every shop; and a keen eye: putting
+  something on shows one of its unknown runes at once.
+- **Elf** — elven archery: +15 to hit with bows.
+- **Hobbit** — stone-thrower: +20 to hit with slings and thrown things; and second breakfast: food
+  lasts half as long again.
+- **Gnome** — tinker: better with magic devices, and recharging backfires half as often.
+- **Dwarf** — delver: digs well with anything, even bare hands; with a pick or shovel, half as much
+  gold again from each vein.
+- **Half-Orc** — orc-kin: sleeping orcs are slower to wake to you, and you are never afraid.
+- **Half-Troll** — troll rage: once on each level, falling below a quarter of your hit points sends
+  you berserk and heals you a little; and rubble falls at your first blow.
+- **Dúnadan** — foresight: a level's feeling, treasure and all, as soon as you arrive; and your life
+  force holds against draining.
+- **High-Elf** — light of the Eldar: your light reaches one square further, and undead and demons in
+  it move more slowly.
+- **Kobold** — trap-wise: better at finding and disarming traps; and venomous: your bare hands poison.
+
 Your **class** decides how you fight and what magic you have:
 
 - **Warrior** — the best fighter, no magic.

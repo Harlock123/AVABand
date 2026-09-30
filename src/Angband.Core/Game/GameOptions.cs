@@ -48,6 +48,8 @@ public static class OptionIds
     public const string Feelings = "birth_feelings";
     /// <summary>AVABand's own: its quests — the Prancing Pony, its notice board, and the quests below.</summary>
     public const string AvaQuests = "birth_ava_quests";
+    /// <summary>AVABand's own: each race's extra ability (ava_races.json).</summary>
+    public const string AvaRaces = "birth_ava_races";
 
     // Cheat options.
     public const string CheatHear = "cheat_hear";
@@ -87,6 +89,7 @@ public static class OptionCatalog
         new(OptionIds.KnowRunes, "Know all runes on birth", OptionKind.Birth, false),
         new(OptionIds.KnowFlavors, "Know all flavors on birth", OptionKind.Birth, false),
         new(OptionIds.AvaQuests, "AVABand's quests (the Prancing Pony and its notice board)", OptionKind.Birth, true),
+        new(OptionIds.AvaRaces, "AVABand's racial abilities (a Dwarf's delving, a Human's two weapons...)", OptionKind.Birth, true),
 
         new(OptionIds.CheatHear, "Cheat: Peek into monster creation", OptionKind.Cheat, false),
         new(OptionIds.CheatRoom, "Cheat: Peek into dungeon creation", OptionKind.Cheat, false),

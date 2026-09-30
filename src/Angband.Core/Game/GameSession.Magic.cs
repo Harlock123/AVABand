@@ -137,6 +137,7 @@ public sealed partial class GameSession
             Player.SkillDevice += shape.Skills.GetValueOrDefault("device");
         }
         Player.BaseStealth = Skill("stealth", Player.BaseStealth);
+        RaceAbilitySkills();
     }
 
     /// <summary>Experience needed to reach the level after <paramref name="level"/>.</summary>

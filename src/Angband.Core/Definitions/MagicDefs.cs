@@ -115,6 +115,10 @@ public sealed class RaceDef
     /// <summary>Innate flags such as <c>REGENERATE</c>.</summary>
     public IReadOnlyList<string> Flags { get; init; } = [];
     public string Description { get; init; } = "";
+    /// <summary>AVABand's racial abilities (ava_races.json; the birth option birth_ava_races turns them off).</summary>
+    public List<string> AvaAbilities { get; } = [];
+    /// <summary>AVABand's racial abilities in words, for the creation screen and the character sheet.</summary>
+    public string AvaAbilityText { get; set; } = "";
     /// <summary>The history chart a background starts from (Angband p_race.txt history).</summary>
     public int History { get; init; }
     /// <summary>Age at birth: the base plus 1d(mod) years.</summary>

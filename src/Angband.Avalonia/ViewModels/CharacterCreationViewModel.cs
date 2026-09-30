@@ -250,7 +250,8 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
                 ? "Heroic roll: each stat 14 to 18/50 (Reroll, or set minimums and Autoroll)"
                 : "Rolled stats (Reroll, or set minimums and Autoroll)") + heroic;
         Error = IsPointBuy ? HeroicBirth.ValidatePointBuy(Method, BaseStats(), _data.Constants) : null;
-        RaceDescription = race?.Description ?? "";
+        RaceDescription = (race?.Description ?? "")
+                          + (race is { AvaAbilityText.Length: > 0 } ? $"\n\nAVABand: {race.AvaAbilityText}" : "");
         ClassDescription = cls?.Description ?? "";
 
         if (Spec() is not { } spec)

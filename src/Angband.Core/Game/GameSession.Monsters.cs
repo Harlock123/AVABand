@@ -129,7 +129,7 @@ public sealed partial class GameSession
             if (monster.IsVisible) LearnRune(RuneIds.Flag(ItemFlags.Aggravate));
             return;
         }
-        long playerNoise = 1L << Math.Clamp(30 - Player.Stealth, 0, 62);
+        long playerNoise = 1L << Math.Clamp(30 - Player.Stealth - RaceStealthAgainst(monster), 0, 62);
         long notice = Rng.RandInt0(1024);
         if (notice * notice * notice > playerNoise) return;
         var noise = Noise[monster.Position];

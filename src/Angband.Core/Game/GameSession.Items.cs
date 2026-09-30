@@ -105,6 +105,7 @@ public sealed partial class GameSession
         var speed = 0;
         var light = 0;
         var resists = new Dictionary<string, int>(p.IntrinsicResists);
+        RaceAbilityResists(resists);
         p.GearFlags.Clear();
         var infravision = p.Infravision;
         var vulnerable = new HashSet<string>();
@@ -112,15 +113,17 @@ public sealed partial class GameSession
         foreach (var item in gear)
         {
             p.Armour += item.Armour + item.ToAc;
-            // A wielded weapon's or bow's own to-hit/dam only count for attacks made with it.
-            if (item != weapon && item != bow)
+            // A wielded weapon's or bow's own to-hit/dam only count for attacks made with it (an
+            // off-hand weapon's too: AVABand's Humans).
+            var offHand = item.Base.IsWeapon && item != weapon;
+            if (item != weapon && item != bow && !offHand)
             {
                 p.ToHit += item.ToHit;
                 p.ToDam += item.ToDam;
             }
             speed += item.Modifier(ItemModifiers.Speed);
             p.Stealth += item.Modifier(ItemModifiers.Stealth);
-            p.Blows += 100 * item.Modifier(ItemModifiers.Blows);
+            if (!offHand) p.Blows += 100 * item.Modifier(ItemModifiers.Blows);
             p.Shots += item.Modifier(ItemModifiers.Shots); // tenths of a shot, as in Angband (SHOTS[10] = +1 shot)
             var itemLight = item.Modifier(ItemModifiers.Light);
             if (itemLight > 0 && ClassHas(ClassFlags.Unlight)) itemLight--; // Angband: lights are dimmer to the unlit
@@ -227,6 +230,7 @@ public sealed partial class GameSession
         if (PercentDamage) p.Blows = Math.Max(p.Blows, 200); // Angband calc_blows: two blows at least in O-combat
         p.TotalInfravision = Math.Max(0, infravision);
         p.EquipmentSpeed = speed;
+        light += RaceAbilityLight();
         p.LightRadius = Math.Max(0, light);
         p.Resists.Clear();
         foreach (var (k, v) in resists) p.Resists[k] = v;
@@ -410,6 +414,7 @@ public sealed partial class GameSession
             LearnRune(rune);
         foreach (var curse in item.Curses)
             if (Data.Curse(curse) is { Effect: null }) LearnRune(RuneIds.Curse(curse)); // passive curses show at once
+        KeenEye(item);
 
         Publish(new MessageEvent($"You are {(item.Base.Slot == EquipSlot.Weapon ? "wielding" : "wearing")} {Describe(item)}."));
         Publish(new ItemWieldedEvent(item.Kind.Id));

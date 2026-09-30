@@ -233,4 +233,20 @@ public class ItemMenuUiTests
         window.Show();
         TileRenderingTests.Save(window, "bracers-and-gems");
     }
+
+    /// <summary>AVABand's Humans: a light weapon's menu offers the off hand, and the sidebar names it so.</summary>
+    [AvaloniaFact]
+    public void A_Human_can_wield_a_second_weapon_from_its_menu()
+    {
+        var vm = Start(); // a Human warrior
+        var dagger = Carry(vm, "main_gauche");
+        vm.OpenItemMenu(dagger);
+        Assert.Contains("Wield in off hand", vm.MenuLabels);
+        Choose(vm, "Wield in off hand");
+        Assert.Equal("main_gauche", vm.Game.OffHand?.Kind.Id);
+        Assert.Contains(vm.EquipmentRows, r => r.Letter.StartsWith("off hand") && r.Name.Contains("Main Gauche"));
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        TileRenderingTests.Save(window, "dual-wield");
+    }
 }

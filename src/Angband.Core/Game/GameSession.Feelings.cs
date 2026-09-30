@@ -35,6 +35,7 @@ public sealed partial class GameSession
                 if (!Level.IsPassable(p) || !Level.FeelSquares.Add(p)) continue;
                 break;
             }
+        Foresight();
     }
 
     /// <summary>Counts newly seen feeling squares; the tenth brings the treasure feeling (Angband update_one).</summary>

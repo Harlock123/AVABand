@@ -49,7 +49,9 @@ public sealed partial class GameSession
             NoteDeath();
             Publish(new MessageEvent("You die."));
             Publish(new PlayerDiedEvent(killer, Player.Depth));
+            return;
         }
+        TrollRage();
     }
 
     /// <summary>

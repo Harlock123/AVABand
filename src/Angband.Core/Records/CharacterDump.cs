@@ -86,6 +86,12 @@ public static class CharacterDump
             Section("Abilities");
             foreach (var (name, description) in abilities) Line($" {name + ':',-24} {description}");
         }
+        // AVABand's own racial ability (birth_ava_races).
+        if (p.Race is { AvaAbilityText.Length: > 0 } race && game.Options[OptionIds.AvaRaces])
+        {
+            Section("Racial ability (AVABand)");
+            Line(" " + race.AvaAbilityText);
+        }
 
         // --- Birth options (as in Angband's dump) ---
         Section("Birth options");

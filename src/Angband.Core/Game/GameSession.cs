@@ -236,6 +236,7 @@ public sealed partial class GameSession : ITurnHandler
             DebugCureAllCommand => DebugCureAll(),
             DebugTryQuestCommand trial => DebugTryQuest(trial.Quest),
             SetGemCommand set => SetGem(set.Host, set.Gem),
+            WieldOffHandCommand off => WieldOffHand(off.Item),
             _ => 0,
         };
         if (energy <= 0) return false;
@@ -285,6 +286,7 @@ public sealed partial class GameSession : ITurnHandler
     /// <summary>Recomputes the player's view, light, monster visibility and noise flow.</summary>
     public void UpdateView()
     {
+        EldarLight(); // (AVABand: a High-Elf's light slows the undead and demons in it)
         // A necromancer's unlight lets them see nearby squares without light (Angband UNLIGHT).
         var radius = Math.Max(Player.LightRadius, UnlightRadius);
         var lights = radius > 0 ? [new LightSource(Player.Position, radius)] : Array.Empty<LightSource>();

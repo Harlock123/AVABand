@@ -174,6 +174,21 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
   same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+- **AVABand's racial abilities** (`ava_races.json`, beside Angband's `races.json`, which the drift
+  check compares; `Game/GameSession.RaceAbilities.cs`, and `GameSession.DualWield.cs` for Humans;
+  the birth option `birth_ava_races`, on by default, turns them off): each race gains one —
+  Humans fight with two weapons (a weapon of up to 15 lb in the shield's place, `WieldOffHandCommand`,
+  "Wield in off hand" on its menu, the sidebar's "off hand": an extra blow at the end of each round
+  at -15 to hit, its to-hit, to-dam, blows, slays and brands counting only for that blow); Half-Elves
+  get 10% better prices and learn one unknown rune of anything they put on; Elves +15 to hit with
+  bows; Hobbits +20 with slings and throws and digest two-thirds as fast; Gnomes +10 device skill
+  and half the recharge backfires; Dwarves +20 digging without a pick or shovel and half as much
+  gold again from a vein with one; Half-Orcs are five stealthier to a sleeping orc and have
+  protection from fear; Half-Trolls rage once a level below a quarter of their hit points
+  (berserk, a sixth of their life back) and clear rubble at a blow; the Dúnedain have a level's
+  whole feeling on arrival and hold life; High-Elves +1 light radius, with undead and demons in it
+  at -2 speed (`Monster.AuraSlow`); Kobolds +10 searching, +15 disarming, and bare hands that
+  poison (+1d6 unless immune). The creation screen and the character sheet show each race's.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
     level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
     near your depth, bring 2-4 of a potion, scroll or food no shop sells, a **bounty** on a living

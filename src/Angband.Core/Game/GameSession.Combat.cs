@@ -62,6 +62,8 @@ public sealed partial class GameSession
                 if (!monster.IsActive || Level.Monsters.At(where) != monster) break;
             }
         }
+        // AVABand's Humans: the off-hand weapon's blow, at the end of the round.
+        if (OffHand is { } off && monster.IsActive && used > 0) PlayerBlow(monster, off, OffHandToHitPenalty);
         return used;
     }
 
@@ -69,13 +71,13 @@ public sealed partial class GameSession
     /// One melee blow (Angband py_attack_real): the to-hit test, slays and brands, criticals.
     /// Returns the damage done, or -1 for a miss.
     /// </summary>
-    private int PlayerBlow(Monster monster)
+    private int PlayerBlow(Monster monster, Item? offHand = null, int toHitPenalty = 0)
     {
         var name = MonsterName(monster);
         TrackHealth(monster); // Angband py_attack_real: health_track
-        var weapon = Player.Inventory.Weapon;
+        var weapon = offHand ?? Player.Inventory.Weapon;
         var dice = weapon?.Damage ?? BareHands.Damage;
-        var weaponToHit = weapon?.ToHit ?? 0;
+        var weaponToHit = (weapon?.ToHit ?? 0) - toHitPenalty;
         var weaponToDam = weapon?.ToDam ?? 0;
         var chance = CombatMath.MeleeChance(Player.SkillMelee, weaponToHit + Player.EffectiveToHit);
         if (!CombatMath.TestHit(Rng, chance, monster.Race.Armour, monster.IsVisible))
@@ -92,8 +94,9 @@ public sealed partial class GameSession
 
         // Angband improve_attack_modifier over the weapon and everything else worn but the bow (a
         // ring's or gloves' slay counts too); without a weapon, a punch.
-        var gearSlays = Player.Inventory.Equipped.Where(i => i != weapon && i.Base.Slot != EquipSlot.Bow).SelectMany(i => i.Slays).ToList();
-        var gearBrands = Player.Inventory.Equipped.Where(i => i != weapon && i.Base.Slot != EquipSlot.Bow).SelectMany(i => i.Brands).ToList();
+        // (Neither hand's weapon lends its slays or brands to the other.)
+        var gearSlays = Player.Inventory.Equipped.Where(i => !i.Base.IsWeapon && i.Base.Slot != EquipSlot.Bow).SelectMany(i => i.Slays).ToList();
+        var gearBrands = Player.Inventory.Equipped.Where(i => !i.Base.IsWeapon && i.Base.Slot != EquipSlot.Bow).SelectMany(i => i.Brands).ToList();
         var (multiplier, verb, rune, oMultiplier) = weapon is null ? (1, "punch", null, 10) : BestMultiplier(weapon, monster);
         if ((gearSlays.Count > 0 || gearBrands.Count > 0) && BestMultiplier(gearSlays, gearBrands, monster, learn: true) is var worn
             && (PercentDamage ? worn.OMultiplier > oMultiplier : worn.Multiplier > multiplier))
@@ -114,7 +117,7 @@ public sealed partial class GameSession
         {
             // Angband melee_damage (a punch does 1) with the weapon's own to-dam, then critical_melee
             // (only with a weapon), then the rest of the to-dam.
-            damage = (weapon is null ? 1 : dice.Roll(Rng)) * multiplier + weaponToDam;
+            damage = (weapon is null ? 1 + VenomousPunch(monster) : dice.Roll(Rng)) * multiplier + weaponToDam;
             grade = CriticalGrade.None;
             if (weapon is not null)
                 damage = CombatMath.CriticalMelee(Rng, weapon.Weight, weaponToHit + Player.EffectiveToHit,
@@ -232,7 +235,7 @@ public sealed partial class GameSession
 
         var missile = Player.Inventory.Remove(ammo, 1, () => Objects.NextSerial++);
         var toHit = Player.EffectiveToHit + bow.ToHit + missile.ToHit;
-        FlyMissile(missile, aim, range, Player.SkillBow, toHit, multiplier, bow);
+        FlyMissile(missile, aim, range, LauncherSkill(bow), toHit, multiplier, bow);
 
         if (!Player.Inventory.Contains(ammo) || ammo.Number == 0)
             Publish(new MessageEvent("You have no more of that ammunition."));

@@ -17,6 +17,9 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
   600 gold; off, you start with one food and one light and keep the gold the rest would have cost.
 - **Monsters learn from their mistakes** — they stop using attacks you resist.
 - **Know all runes on birth** / **Know all flavors on birth** — skip the learning.
+- **AVABand's quests** — the Prancing Pony, its notice board, and the quests below (on by default).
+- **AVABand's racial abilities** — each race's extra ability (Help → Your character); off, the races
+  are Angband 4.2.5's as they are (on by default).
 - **Persistent levels (experimental)** — levels are kept when you leave them.
 - **To-damage is a percentage of dice (experimental)** — to-dam makes each damage die bigger by a
   percentage instead of adding to every blow; slays and brands multiply the dice; criticals add

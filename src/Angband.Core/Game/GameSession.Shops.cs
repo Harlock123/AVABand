@@ -330,7 +330,7 @@ public sealed partial class GameSession
         var value = ItemValue.Of(item, Data);
         var adjust = store.Def.BlackMarket ? 150 : 100;
         if (store.Def.BlackMarket) value *= 2;
-        return QuestPrice(store, Math.Max(1, (value * adjust + 50) / 100));
+        return RacePrice(QuestPrice(store, Math.Max(1, (value * adjust + 50) / 100)), buying: true);
     }
 
     /// <summary>
@@ -350,7 +350,7 @@ public sealed partial class GameSession
             price /= 2;
             adjust = 50;
         }
-        price = (price * adjust + 50) / 100;
+        price = RacePrice((price * adjust + 50) / 100, buying: false);
         return Math.Clamp(price, 1, store.Owner?.Purse ?? long.MaxValue);
     }
 

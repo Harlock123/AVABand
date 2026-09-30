@@ -3,6 +3,13 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.15
+
+- **Every race has an ability of its own**: Humans fight with two weapons, Dwarves delve for more
+  gold, Hobbits throw and sling better and eat less, Half-Trolls rage, the Dúnedain foresee a level's
+  treasure, High-Elves' light slows the undead, and more — see Help → Your character. (A birth
+  option turns them off.)
+
 ## 2026-09-30.14
 
 - **The Alchemist identifies**: go into the Alchemy shop (5) with something you don't fully know

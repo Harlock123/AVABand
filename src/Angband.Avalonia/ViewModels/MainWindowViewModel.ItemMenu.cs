@@ -55,6 +55,8 @@ public sealed partial class MainWindowViewModel
             foreach (var gem in inv.Pack.Where(GameSession.IsGem))
                 menu.Add(($"Set {ItemNaming.Describe(gem, _game.Knowledge, withArticle: false, full: false)} here", () => Execute(new SetGemCommand(item, gem))));
 
+        if (_game.CanWieldOffHand(item)) menu.Add(("Wield in off hand", () => Execute(new WieldOffHandCommand(item)))); // AVABand's Humans
+
         if (equipped && !item.IsSticky) menu.Add(("Take off", () => UseItemAsked(ItemPromptKind.TakeOff, item)));
         else if (!equipped && item.IsWearable) menu.Add(("Equip", () => UseItemAsked(ItemPromptKind.Wield, item)));
 

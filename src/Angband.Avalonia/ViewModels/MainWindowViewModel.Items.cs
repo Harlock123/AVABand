@@ -352,7 +352,8 @@ public sealed partial class MainWindowViewModel
 
         EquipmentRows.Clear();
         for (var i = 0; i < Inventory.Slots.Count; i++)
-            if (inv.Equipment[i] is { } item) EquipmentRows.Add(Row(Inventory.Slots[i].Name, item));
+            if (inv.Equipment[i] is { } item)
+                EquipmentRows.Add(Row(Inventory.Slots[i].Type == EquipSlot.Shield && item.Base.IsWeapon ? "off hand" : Inventory.Slots[i].Name, item));
 
         PackRows.Clear();
         for (var i = 0; i < inv.Pack.Count; i++) PackRows.Add(Row(((char)('a' + i)).ToString(), inv.Pack[i]));

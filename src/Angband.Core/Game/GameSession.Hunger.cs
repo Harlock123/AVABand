@@ -71,6 +71,7 @@ public sealed partial class GameSession
         var amount = EnergyTable.EnergyPerTurn(Player.Speed) * 2;
         if (Player.Regenerates || Player.HasGearFlag(ItemFlags.Regen)) amount += 30;
         if (Player.HasGearFlag(ItemFlags.SlowDigest)) amount /= 5;
+        amount = RaceDigestion(amount);
         SetFood(Player.Food - Math.Max(1, amount));
     }
 

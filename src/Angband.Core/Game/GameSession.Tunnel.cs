@@ -37,7 +37,7 @@ public sealed partial class GameSession
                         + AdjStrDig[StatTables.Index(p.Stats.GetValueOrDefault("str", 15))];
             var tools = p.Inventory.Pack.Where(i => i.Base.Id == "digger").Append(p.Inventory.Weapon).OfType<Item>();
             var best = tools.Select(ToolBonus).DefaultIfEmpty(0).Max();
-            return Math.Max(0, skill + best);
+            return Math.Max(0, skill + best + RaceDigging());
         }
     }
 
@@ -67,7 +67,7 @@ public sealed partial class GameSession
         var skill = DiggingSkill;
         var chance = kind switch
         {
-            DiggingKind.Rubble => skill * 8,
+            DiggingKind.Rubble => SmashesRubble ? 1600 : skill * 8,
             DiggingKind.Magma => (skill - 10) * 4,
             DiggingKind.Quartz => (skill - 20) * 2,
             DiggingKind.Granite => skill - 40,
@@ -181,7 +181,9 @@ public sealed partial class GameSession
                 Publish(new MessageEvent("You have finished the tunnel."));
                 if (gold)
                 {
-                    Level.Objects.Add(p, MakeLevelGold(Level.Depth));
+                    var veinGold = MakeLevelGold(Level.Depth);
+                    DelverGold(veinGold);
+                    Level.Objects.Add(p, veinGold);
                     Publish(new MessageEvent("You have found something!"));
                 }
                 break;

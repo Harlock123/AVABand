@@ -777,7 +777,7 @@ public sealed partial class GameSession
             return false;
         }
         var chance = Math.Max(1, (strength + 100 - device.Kind.Level - 10 * device.Charges / Math.Max(1, device.Number)) / 15);
-        if (Rng.OneIn(chance))
+        if (Rng.OneIn(RaceRechargeChance(chance)))
         {
             Publish(new MessageEvent($"The recharge backfires! Your {Describe(device, withArticle: false)} is destroyed."));
             Player.Inventory.Remove(device, device.Number, () => Objects.NextSerial++);

@@ -29,7 +29,10 @@ public sealed class Monster : IActor
     public int ActorId => Id;
     /// <summary>Base speed; hasted monsters act at +10 (see <see cref="Fast"/>).</summary>
     public int Speed { get; set; }
-    int IActor.Speed => Speed + (Fast > 0 ? 10 : 0) - (Slow > 0 ? 10 : 0);
+    int IActor.Speed => Speed + (Fast > 0 ? 10 : 0) - (Slow > 0 ? 10 : 0) - AuraSlow;
+
+    /// <summary>AVABand: speed lost to the player's aura (a High-Elf's light on undead and demons); set each turn.</summary>
+    public int AuraSlow { get; set; }
     public int Energy { get; set; }
     public bool IsActive => Hp >= 0 && !IsRemoved;
     public bool IsRemoved { get; set; }

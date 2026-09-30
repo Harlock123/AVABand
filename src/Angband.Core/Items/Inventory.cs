@@ -203,6 +203,15 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
         return previous;
     }
 
+    /// <summary>Wields one of <paramref name="item"/> into a given slot (AVABand's off hand); returns what it replaced.</summary>
+    public Item? WieldInto(int slot, Item item, Func<long> nextSerial)
+    {
+        var one = Contains(item) ? Remove(item, 1, nextSerial) : item.Number > 1 ? item.Split(nextSerial(), 1) : item;
+        var previous = _equipment[slot];
+        _equipment[slot] = one;
+        return previous;
+    }
+
     /// <summary>Takes off an equipped item into the pack; false if there is no room.</summary>
     public bool TakeOff(Item item)
     {
