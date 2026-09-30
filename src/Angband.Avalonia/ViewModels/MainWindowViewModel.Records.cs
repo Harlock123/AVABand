@@ -19,6 +19,12 @@ public sealed partial class MainWindowViewModel
         _records = records;
         UseLore(records.LoadLore());
         _featBook = records.LoadFeats();
+        if (!_featBook.Backfilled)
+        {
+            // Once: what characters did before there were feats, from the high scores.
+            _featBook.Backfill(records.LoadScores().Entries, FeatDefs, _data);
+            records.SaveFeats(_featBook);
+        }
     }
 
     private bool _confirmRetire;

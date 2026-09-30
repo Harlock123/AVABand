@@ -61,6 +61,46 @@ public sealed class FeatBook
 
     public Dictionary<string, FeatRecord> Earned { get; private set; } = new(StringComparer.Ordinal);
 
+    /// <summary>Whether the feats characters did before there were feats have been filled in (once).</summary>
+    public bool Backfilled { get; set; }
+
+    /// <summary>What <c>feats.json</c> holds.</summary>
+    private sealed class FeatFile
+    {
+        public bool Backfilled { get; set; }
+        public Dictionary<string, FeatRecord> Earned { get; set; } = [];
+    }
+
+    /// <summary>
+    /// The feats characters did before there were feats, from the high-score table (which no cheat
+    /// ever enters): the depths reached, the levels, and wins (with the class). Oldest first, so the
+    /// first to do each is the one named. Done once; returns the feats filled in.
+    /// </summary>
+    public IReadOnlyList<FeatDef> Backfill(IEnumerable<ScoreEntry> entries, IReadOnlyList<FeatDef> feats, GameData data)
+    {
+        var added = new List<FeatDef>();
+        foreach (var e in entries.OrderBy(e => e.DateUtc))
+        {
+            var classId = data.Classes.FirstOrDefault(c => c.Name == e.Class)?.Id;
+            foreach (var feat in feats.Where(f => !Earned.ContainsKey(f.Id)))
+            {
+                var parts = feat.Id.Split('_', 2);
+                var done = parts[0] switch
+                {
+                    "depth" => int.TryParse(parts[1], out var d) && e.MaxDepth >= d,
+                    "level" => int.TryParse(parts[1], out var l) && Math.Max(e.Level, e.MaxLevel) >= l,
+                    "win" => e.Won && (parts.Length == 1 || parts[1] == classId),
+                    _ => false,
+                };
+                if (!done) continue;
+                Earned[feat.Id] = new FeatRecord { WhenUtc = e.DateUtc, Character = $"{e.Name} the {e.Race} {e.Class}" };
+                added.Add(feat);
+            }
+        }
+        Backfilled = true;
+        return added;
+    }
+
     /// <summary>
     /// Records the feats this game has newly done (if it counts), and returns them — for the
     /// messages, and so the caller knows to save.
@@ -79,13 +119,20 @@ public sealed class FeatBook
         try
         {
             if (File.Exists(path))
+            {
+                var text = File.ReadAllText(path);
+                using var doc = JsonDocument.Parse(text);
+                // (The first feats.json was the earned feats alone; now it says whether it was backfilled too.)
+                if (doc.RootElement.TryGetProperty("Earned", out _) && JsonSerializer.Deserialize<FeatFile>(text, Json) is { } file)
+                    return new FeatBook { Earned = new Dictionary<string, FeatRecord>(file.Earned, StringComparer.Ordinal), Backfilled = file.Backfilled };
                 return new FeatBook
                 {
-                    Earned = JsonSerializer.Deserialize<Dictionary<string, FeatRecord>>(File.ReadAllText(path), Json) is { } earned
+                    Earned = JsonSerializer.Deserialize<Dictionary<string, FeatRecord>>(text, Json) is { } earned
                         ? new Dictionary<string, FeatRecord>(earned, StringComparer.Ordinal) : new(StringComparer.Ordinal),
                 };
+            }
         }
-        catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException or InvalidOperationException)
         {
             // A damaged file starts afresh rather than stopping the game.
         }
@@ -96,7 +143,7 @@ public sealed class FeatBook
     {
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         var temp = path + ".tmp";
-        File.WriteAllText(temp, JsonSerializer.Serialize(Earned, Json));
+        File.WriteAllText(temp, JsonSerializer.Serialize(new FeatFile { Backfilled = Backfilled, Earned = Earned }, Json));
         File.Move(temp, path, overwrite: true);
     }
 }

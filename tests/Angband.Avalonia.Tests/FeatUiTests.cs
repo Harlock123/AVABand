@@ -37,4 +37,18 @@ public sealed class FeatUiTests : IDisposable
         Assert.Contains("First done by", row.Describe());
         Assert.NotNull(vm.CreateKnowledge().Feats);
     }
+
+    [AvaloniaFact]
+    public void Opening_TheRecords_FillsInPastFeats_Once()
+    {
+        var records = new RecordStore(_dir);
+        records.RecordScore(new Angband.Core.Records.ScoreEntry { Name = "Old", Race = "Human", Class = "Warrior", MaxDepth = 22, MaxLevel = 12, Level = 12,
+            KilledBy = "a troll", DateUtc = new DateTime(2026, 9, 1, 0, 0, 0, DateTimeKind.Utc) });
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        vm.UseRecords(records);
+        Assert.True(vm.FeatBook.Backfilled);
+        Assert.Equal("Old the Human Warrior", vm.FeatBook.Earned["depth_20"].Character);
+        Assert.True(records.LoadFeats().Backfilled);
+    }
 }

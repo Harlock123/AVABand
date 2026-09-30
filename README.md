@@ -52,7 +52,9 @@ quests done well; ten notice-board jobs; Sauron and Morgoth slain; and a win wit
 They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
 ft.)"), kept in `feats.json` beside the scores with who did each first and when, and listed on
 the Knowledge screen's **Feats** page. A character that cheated or used a debug command, the
-tutorial and replays earn none.
+tutorial and replays earn none. The first time, the feats characters did before there were feats
+are filled in from the high-score table (the depths, levels and wins it records; no cheat ever
+enters it), each credited to the first to do it.
 
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest
 first): after an update, the sections newer than the last one you were shown open once over the

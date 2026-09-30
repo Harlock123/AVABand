@@ -3,6 +3,11 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.3
+
+- **Feats you'd already done** are filled in from your high scores: the depths, levels and wins
+  of characters from before there were feats.
+
 ## 2026-09-30.2
 
 - **Every quest monster has its picture**: Durgash, Hathol, the Black Market's four suspects and
