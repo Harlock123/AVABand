@@ -3,6 +3,13 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.5
+
+- **Three deep quests** at the Prancing Pony for seasoned characters: **The Heart of the Mountain**
+  (a dragon's hoard and a jewel dragons dream of — give it back, or keep it), **The Last Watch**
+  (hold a besieged watchtower, or bring down the orcs' warchief) and **The Seeing Stone** (a palantír
+  in a drowned vault; look into it at your peril). See Help → Quests.
+
 ## 2026-09-30.4
 
 - **Watch their last moments**: a headstone in the graveyard can replay how that character fell.

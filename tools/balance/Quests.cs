@@ -5,7 +5,7 @@
 // to each level the quest names (a debug jump, recorded), and heads for what the quest wants there —
 // Durgash, the sealed door, the Seal, the forge, a shard, the altar, Hathol, the hermit's door, a
 // ledger page's carrier, the thief, the trapped apprentice, the nearest cold brazier and then the
-// Shade — walking there square by square (the Cartographer, which waits on rare kinds of level, is
+// Shade, the Heart of the Mountain, Grishnag, the palantír — walking there square by square (the Cartographer, which waits on rare kinds of level, is
 // left to the tests); it fights, heals and flees as
 // the plain bot does whenever something awake comes near or it is hurt. It answers each question
 // the quest asks as a player finishing the quest would (the Letter's way depends on the seed).
@@ -25,7 +25,7 @@ internal static class QuestBot
     private static readonly Dictionary<string, int> Levels = new()
     {
         ["sealed_door"] = 16, ["burden"] = 22, ["broken_blade"] = 24, ["consecration"] = 30, ["letter"] = 18, ["thief"] = 22, ["board"] = 15,
-        ["apprentice"] = 22, ["warden"] = 32,
+        ["apprentice"] = 22, ["warden"] = 32, ["heart"] = 38, ["watch"] = 40, ["stone"] = 45,
     };
 
     public const int Budget = 6000;
@@ -70,6 +70,9 @@ internal static class QuestBot
                 "board" => Board(run, out note),
                 "apprentice" => Apprentice(run),
                 "warden" => Warden(run),
+                "heart" => Heart(run),
+                "watch" => Watch(run),
+                "stone" => Stone(run),
                 _ => false,
             };
         }
@@ -238,6 +241,52 @@ internal static class QuestBot
                 Pursue(r, () => s.Stage == "done", () => Monster(r, "the_shade_of_the_stair"), attack: true);
         }
         return s.Stage == "done";
+    }
+
+    private static bool Heart(Run r)
+    {
+        if (!Take(r, "heart")) return false;
+        var s = r.Game.AvaQuests.Get("heart")!;
+        for (var tries = 0; tries < 4 && s.Stage == "hunt" && !r.OutOfTime; tries++)
+        {
+            Jump(r, s.N("depth"));
+            Pursue(r, () => s.Stage != "hunt", () => FloorItem(r, "heart_of_the_mountain"), pickup: true, patience: 2500);
+        }
+        if (s.Stage != "choose") return false;
+        GoInto(r, "inn");
+        Answer(r, "heart:return");
+        return s.Stage == "returned";
+    }
+
+    private static bool Watch(Run r)
+    {
+        if (!Take(r, "watch")) return false;
+        var s = r.Game.AvaQuests.Get("watch")!;
+        // Holds the tower by going for the warchief: either ends it (the siege counts meanwhile).
+        for (var tries = 0; tries < 4 && s.Stage == "hold" && !r.OutOfTime; tries++)
+        {
+            Jump(r, s.N("depth"));
+            Pursue(r, () => s.Stage != "hold", () => Monster(r, "grishnag_the_warchief"), attack: true, patience: 3000);
+        }
+        return s.Stage == "relieved";
+    }
+
+    private static bool Stone(Run r)
+    {
+        if (!Take(r, "stone")) return false;
+        var g = r.Game;
+        var s = g.AvaQuests.Get("stone")!;
+        for (var tries = 0; tries < 4 && s.Stage == "seek" && !r.OutOfTime; tries++)
+        {
+            Jump(r, s.N("depth"));
+            Pursue(r, () => s.Stage != "seek", () => FloorItem(r, "palantir"), pickup: true, patience: 2500);
+        }
+        if (s.Stage != "carry") return false;
+        // One look into it, as anyone would.
+        if (g.Player.Inventory.Pack.FirstOrDefault(i => i.Kind.Id == "palantir") is { } stone) Do(r, new UseCommand(stone));
+        GoInto(r, "bookseller");
+        Answer(r, "stone:give");
+        return s.Stage == "given";
     }
 
     private static bool Board(Run r, out string note)
@@ -409,7 +458,7 @@ internal static class QuestBot
 
     public static void Report(GameData data, int seeds)
     {
-        var quests = new[] { "sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "warden", "board" };
+        var quests = new[] { "sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "warden", "heart", "watch", "stone", "board" };
         var classes = new[] { "warrior", "mage", "ranger" };
         Console.WriteLine("quest          done  died  decisions  potions  levels   (per class: warrior / mage / ranger, " + seeds + " seeds each)");
         foreach (var quest in quests)
@@ -431,9 +480,10 @@ internal static class QuestBot
         var cases = new (string Quest, string Cls, ulong Seed)[]
         {
             // (Seeds on which the bot sees each quest through, so every ending is played on every push.)
-            ("sealed_door", "warrior", 101), ("burden", "warrior", 303), ("broken_blade", "warrior", 404),
+            ("sealed_door", "warrior", 101), ("burden", "warrior", 101), ("broken_blade", "warrior", 505),
             ("consecration", "warrior", 101), ("letter", "mage", 505), ("letter", "warrior", 506), ("letter", "rogue", 507),
-            ("thief", "warrior", 303), ("board", "ranger", 707), ("apprentice", "warrior", 101), ("warden", "warrior", 606),
+            ("thief", "warrior", 303), ("board", "ranger", 709), ("apprentice", "warrior", 101), ("warden", "warrior", 606),
+            ("heart", "warrior", 101), ("watch", "warrior", 101), ("stone", "warrior", 101),
         };
         foreach (var (quest, cls, seed) in cases)
         {

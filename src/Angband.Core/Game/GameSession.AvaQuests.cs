@@ -210,6 +210,7 @@ public sealed partial class GameSession
             {
                 var choices = new List<(string, string)>();
                 if (QuestOffers().Any()) choices.Add(("inn:work", "Ask who has work"));
+                choices.AddRange(DeepInnChoices());
                 foreach (var job in AvaQuests.Board.Where(j => j.Taken && JobComplete(j)))
                     choices.Add(($"board:collect:{job.Id}", $"Collect your pay: {JobTitle(job)}"));
                 choices.Add(("inn:board", "Read the notice board"));

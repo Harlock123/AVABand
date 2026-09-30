@@ -64,3 +64,45 @@ ft, a ranger 45% — `tools/balance play`). The quest is now about as dangerous 
 Whether the Warden's Fires is *fun* — racing the Shade to the braziers, luring it away from a lit
 one — and whether the Apprentice's choice (your only Word of Recall, or let him try alone) feels
 like a real choice. The bot always gives up the scroll.
+
+## The smarter bot, and the deep quests (2026-09-30, later)
+
+The bot was rebuilt for the deep quests (see `docs/balance.md`, "A smarter bot"): kit for every
+slot chosen for free action, see invisible and resistances, potions and Teleportation for its
+level, leaving levels full of breeders, and playing a mage as a caster. The same report,
+`quests 5`:
+
+| quest | done | died | what killed it |
+|---|---|---|---|
+| The Sealed Door | 5/4/5 | 0/0/0 | — |
+| The Burden | 3/3/3 | 0/0/0 | — |
+| The Broken Blade | 3/4/4 | 0/0/0 | — |
+| Consecration | 5/4/4 | 0/0/0 | — |
+| The Letter | 5/5/5 | 0/0/0 | — |
+| The Thief | 4/4/4 | 0/0/0 | — |
+| The Apprentice | 5/5/5 | 0/0/0 | — |
+| The Warden's Fires | 5/5/4 | 0/0/0 | — |
+| **The Heart of the Mountain** (clvl 38) | 4/2/3 | 0/3/2 | Skorvath three times, Bill the Stone Troll, a death knight |
+| **The Last Watch** (clvl 40) | 4/5/5 | 1/0/0 | an ethereal dragon |
+| **The Seeing Stone** (clvl 45) | 3/0/4 | 0/4/0 | the Keeper once; a mature green dragon, a wolf, an ant |
+| The notice board | 2/3/4 | 0/0/0 | — |
+
+Not one death in the first nine quests in 135 runs, where the old bot died in about half: its
+deaths were poison, paralysis, breeders and a mage in melee, which kit and sense now prevent.
+What's left undone is the bot running out of its 6000 decisions (wandering the Thief's twenty
+levels, or a shard it can't reach), not danger. Read these as "nothing unreasonable", not as how
+hard a quest is: this bot's kit is better than most characters'.
+
+The deep quests were tuned on these runs:
+
+- **Skorvath** began as Angband's Scatha (whose id it had taken, silently replacing him — renamed,
+  and a test now keeps AVABand's ids apart from Angband's): 2500 HP, so an 833-point frost breath,
+  seven levels shallower than Scatha. Every warrior died to him. Now 1100 HP (a 367-point breath, 122
+  resisted), breathing one turn in six, at 1900–2500 ft rather than 2200–2800. He still kills
+  mages who stand and trade with him — the bot's mage casts frost bolts at a dragon immune to cold.
+- **The Keeper of the Stone** was +20 speed, 3500 HP, spells one turn in four, at 3100–3900 ft: it
+  killed three in eight, and the depth killed the rest. Now +15, 2600 HP, one in five, and the
+  vault is at 2500–3100 ft. Its nether ball still does about 300; see invisible and nether
+  resistance matter there, as they do against Angband's dreadlords at that depth.
+- **The Last Watch** needed nothing: holding 200 turns or killing Grishnag both work, and most runs
+  end by Grishnag's death well before the horns.

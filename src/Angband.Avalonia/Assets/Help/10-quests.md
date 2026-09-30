@@ -45,6 +45,21 @@ inn.
   braziers in its hall are cold. Step onto each with the Warden's Taper to light it, then put the
   Shade down — but it puts out any fire it lingers beside, so be quick.
 
+For seasoned characters, three more:
+
+- **The Heart of the Mountain** (from level 30): Skorvath the Cold-drake lies on a hoard deep down,
+  and in it is the Heart of the Mountain, the dwarves' lost jewel. Take it, and at the Prancing Pony
+  give it back to the dwarf (gold, a great gift, and the Armoury and Weaponsmith's thanks), or keep
+  it. Worn, it makes you stronger, hardier and quicker — but dragons dream of it, and now and then
+  one comes.
+- **The Last Watch** (from level 32): the rangers' watchtower is besieged by an orc-host. Hold it:
+  stay on its level for 200 turns while war-bands come against you every thirty. Or kill Grishnag,
+  their warchief, and the host breaks at once.
+- **The Seeing Stone** (from level 38): a palantír lies in a drowned vault, kept by what drowned with
+  it. Looked into, it shows the whole level and everything on it — but one time in three the Eye
+  looks back: everything wakes, and something is sent. Give it to the White Council's messenger at
+  the Bookseller (4), or keep it.
+
 Quest items can't be dropped, sold, thrown, ignored or stolen; one carried by a monster goes into
 your pack when it dies (or, if your pack is full, falls beside it — leave it behind and Butterbur
 will have it for you at the inn). A quest's place turns up on the level it names; if you leave before

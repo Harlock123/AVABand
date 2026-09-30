@@ -369,5 +369,185 @@
   ],
   "base": "ghost",
   "description": "A shape of cold grey mist in the form of a tall man, hollow-eyed. It was bound here once by three fires; while they are cold, nothing can touch it."
+ },
+ {
+  "id": "skorvath_the_cold_drake",
+  "name": "Skorvath the Cold-drake",
+  "glyph": "D",
+  "color": "White",
+  "depth": 42,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 1100,
+  "armour": 120,
+  "sleep": 50,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 12000,
+  "blows": [
+   {
+    "method": "claw",
+    "effect": "hurt",
+    "damage": "4d10"
+   },
+   {
+    "method": "claw",
+    "effect": "hurt",
+    "damage": "4d10"
+   },
+   {
+    "method": "bite",
+    "effect": "hurt",
+    "damage": "5d12"
+   }
+  ],
+  "flags": [
+   "UNIQUE",
+   "QUESTOR",
+   "DRAGON",
+   "EVIL",
+   "IM_COLD",
+   "NO_CONF",
+   "NO_SLEEP",
+   "NO_HOLD",
+   "FORCE_SLEEP",
+   "BASH_DOOR",
+   "DROP_4",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "innateFrequency": 5,
+  "spellFrequency": 6,
+  "spells": [
+   "BR_COLD",
+   "SCARE",
+   "CONF"
+  ],
+  "base": "ancient_dragon",
+  "description": "A long-drake of the cold north, grey-white and vast, lying on the dwarves' treasure as if it had always been his. Old songs name him; the dwarves name him with a curse."
+ },
+ {
+  "id": "grishnag_the_warchief",
+  "name": "Grishnag the Warchief",
+  "glyph": "o",
+  "color": "LightRed",
+  "depth": 52,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 2800,
+  "armour": 110,
+  "sleep": 10,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 9000,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "6d8"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "6d8"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "6d8"
+   }
+  ],
+  "flags": [
+   "UNIQUE",
+   "QUESTOR",
+   "MALE",
+   "ORC",
+   "EVIL",
+   "IM_POIS",
+   "NO_CONF",
+   "NO_SLEEP",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "DROP_2",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d2",
+    "race": "olog"
+   }
+  ],
+  "spellFrequency": 6,
+  "innateFrequency": 6,
+  "spells": [
+   "SHRIEK",
+   "SCARE",
+   "S_KIN"
+  ],
+  "base": "orc",
+  "description": "A huge orc in black mail, the white hand of his master painted on his shield. He leads from the front, and the host follows him because it fears him more than the rangers."
+ },
+ {
+  "id": "the_keeper_of_the_stone",
+  "name": "the Keeper of the Stone",
+  "glyph": "W",
+  "color": "Blue",
+  "depth": 55,
+  "rarity": 1,
+  "speed": 15,
+  "hitPoints": 2600,
+  "armour": 130,
+  "sleep": 20,
+  "hearing": 20,
+  "smell": 0,
+  "experience": 20000,
+  "blows": [
+   {
+    "method": "touch",
+    "effect": "exp_80",
+    "damage": "0"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "6d10"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "6d10"
+   }
+  ],
+  "flags": [
+   "UNIQUE",
+   "QUESTOR",
+   "UNDEAD",
+   "EVIL",
+   "COLD_BLOOD",
+   "SPIRIT",
+   "IM_COLD",
+   "IM_POIS",
+   "NO_CONF",
+   "NO_SLEEP",
+   "NO_STUN",
+   "NO_HOLD",
+   "OPEN_DOOR",
+   "DROP_4",
+   "DROP_GREAT",
+   "ONLY_ITEM"
+  ],
+  "spellFrequency": 5,
+  "spells": [
+   "BO_NETH",
+   "BA_NETH",
+   "BLIND",
+   "HOLD",
+   "SCARE",
+   "DRAIN_MANA"
+  ],
+  "base": "wraith",
+  "description": "What was once the stone's warden drowned with it, and did not let go. Its eyes are two pale lights under the water that is no longer there."
  }
 ]

@@ -99,5 +99,39 @@
    "slay": "All three of the wardens' fires burn: the Shade of the Stair can be harmed now. It is at {feet} ft (level {depth}).",
    "done": "You lit the wardens' fires and laid the Shade of the Stair to rest."
   }
+ },
+ {
+  "id": "heart",
+  "name": "The Heart of the Mountain",
+  "minLevel": 30,
+  "offer": "A grey-bearded dwarf of the Iron Hills has taken the best seat by the fire, and nobody has argued. \"Skorvath the Cold-drake lies on a hoard at {feet} ft, and in it is the Heart of the Mountain, the jewel of Belegost, taken from my grandfather's grandfather. Kill the worm and bring the jewel home to us. Mind: it is a jewel dragons dream of. Keep it, and they'll know.\"",
+  "stages": {
+   "hunt": "Skorvath the Cold-drake lies on a hoard at {feet} ft (level {depth}), and the Heart of the Mountain is in it.",
+   "choose": "You have the Heart of the Mountain. Bring it to the dwarf at the Prancing Pony (9) — or keep it: worn, it would make you strong, and the dragons would come for it.",
+   "returned": "You gave the Heart of the Mountain back to the dwarves of the Iron Hills.",
+   "kept": "You kept the Heart of the Mountain. It is yours now — and the dragons can smell it."
+  }
+ },
+ {
+  "id": "watch",
+  "name": "The Last Watch",
+  "minLevel": 32,
+  "offer": "A ranger, grey with dust and three days without sleep, grips the table. \"We hold a watchtower at {feet} ft against an orc-host, and there are not enough of us. Hold it with us until the horns of the West answer, two hundred turns, or bring down Grishnag, their warchief, and they'll break.\"",
+  "stages": {
+   "hold": "Rangers hold a watchtower at {feet} ft (level {depth}) against an orc-host. Hold it with them: {held} of 200 turns there so far — or slay Grishnag the Warchief. War-bands come every thirty turns.",
+   "relieved": "You held the watchtower with the rangers until the host broke."
+  }
+ },
+ {
+  "id": "stone",
+  "name": "The Seeing Stone",
+  "minLevel": 38,
+  "offer": "A messenger in grey, a white star at his collar, speaks low. \"The White Council has word of a palantír in a drowned vault at {feet} ft, and of what keeps it. Bring it to me at the Bookseller's before the Eye finds it. And do not look into it. Or if you must, be quick.\"",
+  "stages": {
+   "seek": "A palantír lies in a sunken vault at {feet} ft (level {depth}), and something keeps it.",
+   "carry": "You have the palantír. Take it to the White Council's messenger at the Bookseller (4). Look into it (use it) to see the whole level and all that's on it — but the Eye may look back.",
+   "given": "You gave the palantír to the White Council's messenger.",
+   "keep": "You kept the palantír. It shows you much, and the Eye has seen you too."
+  }
  }
 ]

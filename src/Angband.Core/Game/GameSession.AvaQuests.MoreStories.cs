@@ -28,6 +28,7 @@ public sealed partial class GameSession
     /// <summary>The depths and counts these quests settle when they're offered.</summary>
     private bool PlanMoreQuest(AvaQuestState s)
     {
+        if (PlanDeepQuest(s)) return true;
         switch (s.Id)
         {
             case "apprentice":
@@ -60,6 +61,7 @@ public sealed partial class GameSession
 
     private (string Quest, string Room)? MoreRoomFor(int depth)
     {
+        if (DeepRoomFor(depth) is { } deep) return deep;
         if (Active("apprentice") is { Stage: "find" } apprentice && depth == apprentice.N("depth")) return ("apprentice", "quest_apprentice_cave");
         if (Active("warden") is { } warden && depth == warden.N("depth") && !KilledUniques.Contains("the_shade_of_the_stair"))
             return ("warden", "quest_warden_hall");
@@ -80,6 +82,7 @@ public sealed partial class GameSession
 
     private bool FurnishMoreRoom(string quest)
     {
+        if (FurnishDeepRoom(quest)) return true;
         var depth = Level.Depth;
         switch (quest)
         {
@@ -147,6 +150,7 @@ public sealed partial class GameSession
 
     private bool MoreAtShop(string shopId)
     {
+        if (DeepAtShop(shopId)) return true;
         switch (shopId)
         {
             case "alchemist" when Active("apprentice") is { Stage: "rescued" }:
@@ -171,6 +175,7 @@ public sealed partial class GameSession
 
     private bool MoreChoice(string[] parts)
     {
+        if (DeepChoice(parts)) return true;
         switch (parts[0])
         {
             case "apprentice" when parts[1] == "recall" && Active("apprentice") is { Stage: "find" } a && Carrying("scroll_of_word_of_recall") is { } scroll:
@@ -227,6 +232,7 @@ public sealed partial class GameSession
 
     private bool MoreUse(string kindId)
     {
+        if (DeepUse(kindId)) return true;
         if (kindId != "wardens_taper") return false;
         Publish(new MessageEvent("Step onto each cold brazier in the Wardens' hall to light it."));
         return true;
@@ -234,6 +240,7 @@ public sealed partial class GameSession
 
     private void MoreMonsterKilled(Monster monster)
     {
+        DeepMonsterKilled(monster);
         if (monster.Race.Id == "the_shade_of_the_stair" && Active("warden") is { Stage: "slay" } warden)
         {
             GainExperience(150L * Level.Depth);
@@ -251,6 +258,7 @@ public sealed partial class GameSession
 
     private void MoreUpkeep()
     {
+        DeepUpkeep();
         // The Shade puts out a fire it lingers by (while it still can): about one turn in six at normal speed.
         if (GameTurn % 10 == 0 && Active("warden") is { Stage: "light" } warden && warden.N("lit") > 0
             && Level.Monsters.All.FirstOrDefault(m => m.Race.Id == "the_shade_of_the_stair") is { } shade

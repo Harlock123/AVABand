@@ -1265,6 +1265,11 @@
     "monster:nar_the_red_handed": "monster/dwarf_new.png",
     "monster:skarn_quickfingers": "monster/orc_warrior_new.png",
     "monster:ilse_shadowcloak": "monster/enchantress_human.png",
-    "monster:the_shade_of_the_stair": "monster/undead/ghost_new.png"
+    "monster:the_shade_of_the_stair": "monster/undead/ghost_new.png",
+    "monster:skorvath_the_cold_drake": "monster/dragons/ice_dragon_new.png",
+    "monster:grishnag_the_warchief": "monster/orc_knight_new.png",
+    "monster:the_keeper_of_the_stone": "monster/undead/wraith.png",
+    "object:heart_of_the_mountain": "item/misc/misc_stone_new.png",
+    "object:palantir": "item/misc/misc_crystal_new.png"
   }
 }

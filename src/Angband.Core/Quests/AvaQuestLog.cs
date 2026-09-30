@@ -11,7 +11,7 @@ public sealed class AvaQuestState
     /// <summary>Its words: the thief's name, the clues found...</summary>
     public Dictionary<string, string> Texts { get; set; } = new();
 
-    public bool IsDone => Stage is "done" or "delivered" or "exposed" or "burned" or "lost";
+    public bool IsDone => Stage is "done" or "delivered" or "exposed" or "burned" or "lost" or "returned" or "kept" or "relieved" or "given" or "keep";
     public int N(string key) => Numbers.GetValueOrDefault(key);
 }
 

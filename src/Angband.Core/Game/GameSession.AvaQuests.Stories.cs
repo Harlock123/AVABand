@@ -7,7 +7,9 @@ using Angband.Core.Quests;
 namespace Angband.Core.Game;
 
 // AVABand's story quests (their words are in ava_quests.json) — these six, and three more in
-// GameSession.AvaQuests.MoreStories.cs (the Apprentice, the Cartographer, the Warden's Fires):
+// GameSession.AvaQuests.MoreStories.cs (the Apprentice, the Cartographer, the Warden's Fires), and the
+// deep ones in GameSession.AvaQuests.DeepStories.cs (the Heart of the Mountain, the Last Watch, the
+// Seeing Stone):
 //  - The Sealed Door: Durgash the Keybearer's hall; his key opens a sealed dwarven door deeper down.
 //  - The Burden: the Seal of Angmar, found in a shrine: speed and strength, but sticky, and it calls
 //    monsters; unmade at a dwarven forge further down.
@@ -48,7 +50,7 @@ public sealed partial class GameSession
                 s.Numbers["depth"] = QuestDepth(3, 8, 25);
                 s.Stage = "deliver";
                 break;
-            case "apprentice" or "cartographer" or "warden":
+            case "apprentice" or "cartographer" or "warden" or "heart" or "watch" or "stone":
                 PlanMoreQuest(s);
                 break;
             case "thief":
@@ -505,6 +507,7 @@ public sealed partial class GameSession
 
     private void StoryPickedUp(Item item)
     {
+        DeepPickedUp(item);
         switch (item.Kind.Id)
         {
             case "key_of_belegost" when Active("sealed_door") is { Stage: "hunt" } door:

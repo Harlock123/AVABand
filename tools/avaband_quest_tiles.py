@@ -198,6 +198,11 @@ BORROWED = [
     ("monster:skarn_quickfingers", ["monster:grishnakh_the_hill_orc"]),
     ("monster:ilse_shadowcloak", ["monster:illusionist", "monster:master_thief"]),
     ("monster:the_shade_of_the_stair", ["monster:ghost", "monster:moaning_spirit"]),
+    ("monster:skorvath_the_cold_drake", ["monster:ancient_white_dragon", "monster:mature_white_dragon"]),
+    ("monster:grishnag_the_warchief", ["monster:shagrat_the_orc_captain", "monster:orc_captain"]),
+    ("monster:the_keeper_of_the_stone", ["monster:nether_wraith", "monster:black_wraith", "monster:white_wraith"]),
+    ("object:heart_of_the_mountain", ["object:arkenstone", "object-base:amulet"]),
+    ("object:palantir", ["object:elfstone", "object:star", "object-base:light"]),
 ]
 
 

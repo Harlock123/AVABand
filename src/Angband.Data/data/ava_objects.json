@@ -35,5 +35,12 @@
    "description": "An iron strongbox, still locked, stamped with the mark of the town's Black Market."},
   {"id": "wardens_taper", "name": "Warden's Taper~", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 5, "color": "Yellow",
    "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
-   "description": "A long taper of blessed wax that never quite goes out. With it the old wardens lit the fires that kept the Shade of the Stair in its place."}
+   "description": "A long taper of blessed wax that never quite goes out. With it the old wardens lit the fires that kept the Shade of the Stair in its place."},
+  {"id": "heart_of_the_mountain", "name": "Heart of the Mountain", "base": "relic", "level": 0, "commonness": 0, "cost": 0, "weight": 2, "color": "White",
+   "modifiers": {"str": 3, "con": 3, "dex": 2}, "curses": ["dragon_summon"], "cursePowers": {"dragon_summon": 40},
+   "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
+   "description": "A great white jewel that seems to hold a light of its own. It was the heart of Belegost's treasury. Worn, it lends strength and endurance, and dragons dream of it; they will come."},
+  {"id": "palantir", "name": "Palantír~", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 40, "color": "Violet",
+   "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
+   "description": "A seeing-stone of the Faithful: a ball of dark crystal that shows what is far away. Looked into, it shows this whole level and all that's on it. Something else looks into the stones too."}
 ]

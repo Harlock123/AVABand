@@ -1388,6 +1388,11 @@
     "monster:nar_the_red_handed": "main:6,31",
     "monster:skarn_quickfingers": "main:11,27",
     "monster:ilse_shadowcloak": "main:9,24",
-    "monster:the_shade_of_the_stair": "main:5,26"
+    "monster:the_shade_of_the_stair": "main:5,26",
+    "monster:skorvath_the_cold_drake": "main:1,38",
+    "monster:grishnag_the_warchief": "main:11,31",
+    "monster:the_keeper_of_the_stone": "main:15,37",
+    "object:heart_of_the_mountain": "main:5,9",
+    "object:palantir": "main:2,14"
   }
 }

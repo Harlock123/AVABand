@@ -133,7 +133,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
 - **AVABand's quests** (`Game/GameSession.AvaQuests*.cs`, `Quests/AvaQuestLog.cs`; data in the
   `ava_*.json` files beside Angband's — `ava_quests.json`, `ava_objects.json`, `ava_object_bases.json`,
   `ava_monsters.json`, `ava_terrain.json`, `templates/ava_vaults.json` — which the drift check doesn't
-  read, so Angband's own files stay untouched). On by default; the birth option *AVABand's quests*
+  read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
+  same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
     level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
@@ -171,6 +172,16 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     left to chance they're rare, and never above 750 ft (`docs/quest-playtest.md`). *The Warden's Fires*: the Shade of the Stair can't be harmed
     while its hall's three braziers are cold; step onto each with the Warden's Taper to light it —
     and the Shade, lingering by a lit one, puts it out again (about one turn in six).
+    Three deep quests for seasoned characters (`GameSession.AvaQuests.DeepStories.cs`): *The Heart
+    of the Mountain* (from level 30, 1900–2500 ft): Skorvath the Cold-drake lies on a hoard with
+    the dwarves' lost jewel; give it back at the inn (5000 gold, a great object, Armoury and
+    Weaponsmith discounts) or keep it — a relic amulet (+3 STR and CON, +2 DEX) with the dragon
+    summon curse. *The Last Watch* (from level 32, 2600–3200 ft): stay 200 turns on the
+    watchtower's level while an orc-host sends a war-band of orcs, trolls and giants every thirty,
+    or kill Grishnag the Warchief and it breaks. *The Seeing Stone* (from level 38, 2500–3100 ft):
+    a palantír in a drowned vault, kept by the Keeper of the Stone; used, it maps the level and
+    shows every monster on it, and one time in three wakes them all and sends two greater undead;
+    give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
     `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. One a monster
@@ -179,7 +190,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     quest places and the key with small tiles of AVABand's own (`ava_*.png`, CC0), sized to the set,
     and the other quest things with its nearest tiles (the inn a shop door, the relic an amulet, the
     shards a sword...), and the quests' own monsters with the nearest Angband monster's (Durgash an
-    orc chief, Hathol a barrow-wight, Nar the Red-handed Nar the Dwarf, the Shade a ghost...);
+    orc chief, Hathol a barrow-wight, Nar the Red-handed Nar the Dwarf, the Shade a ghost, Skorvath
+    an ancient white dragon, Grishnag an orc captain, the Keeper a nether wraith...);
     `tools/avaband_quest_tiles.py` makes them and writes the mappings — re-run it
     after rebuilding a tileset.
   - `tools/balance quests [seeds]` has the bot play each quest end to end (and the soak plays one of
@@ -687,7 +699,12 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   potions it drank. It rests when things are quiet, backs into a corridor when several foes come at
   it in the open and shoots them with the launcher it's given; `play [runs] <class>` plays any
   class, casting the highest-level attack spell it has learned (bolt, beam, ball, arc...) and its
-  healing spells before potions, and `BOT_PLAIN=1` the first, simpler bot.
+  healing spells before potions, and `BOT_PLAIN=1` the first, simpler bot. Since the deep quests
+  it is kitted for every slot (shield, cloak, helm, gloves, boots, light, amulet, two rings, chosen
+  for armour and for free action, see invisible and resistances), carries Teleportation and
+  potions for its level, leaves a level filling with breeders, drinks sooner against something
+  deeper than itself, and plays a mage or necromancer as a caster (spells at close quarters too);
+  `docs/balance.md` has it against the bot before.
   `docs/balance.md` compares versions with it. It's a poor player, for comparing versions rather
   than judging difficulty; `one <depth> <seed> [class]` with `BOT_TRACE=1` shows how a run ended.
 - **Soak test** (`dotnet run -c Release --project tools/balance soak`, and CI's `soak` job on every

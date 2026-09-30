@@ -80,13 +80,29 @@ public partial class AvaQuestTests
     public void The_quests_data_is_AVABands_own_and_stays_out_of_random_generation()
     {
         var data = TestData.Game;
-        Assert.Equal(["sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "cartographer", "warden"],
+        Assert.Equal(["sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "cartographer", "warden",
+                "heart", "watch", "stone"],
             data.AvaQuests.Select(q => q.Id));
-        Assert.Equal(9, data.Vaults.Count(v => v.Type == "AVABand quest"));
-        Assert.All(data.Monsters.Where(m => m.Id is "durgash_the_keybearer" or "hathol_lord_of_the_barrow" or "the_shade_of_the_stair"),
+        Assert.Equal(12, data.Vaults.Count(v => v.Type == "AVABand quest"));
+        Assert.All(data.Monsters.Where(m => m.Id is "durgash_the_keybearer" or "hathol_lord_of_the_barrow" or "the_shade_of_the_stair"
+                                                   or "skorvath_the_cold_drake" or "grishnag_the_warchief" or "the_keeper_of_the_stone"),
             m => Assert.True(m.Has(MonsterFlags.Questor)));
         Assert.All(data.Objects.Where(k => k.Base is "quest" or "relic"), k => Assert.Equal(0, k.Commonness));
         Assert.Contains(data.Shops, s => s.Id == "inn");
+    }
+
+    [Theory]
+    [InlineData("monsters.json", "ava_monsters.json")]
+    [InlineData("objects.json", "ava_objects.json")]
+    [InlineData("object_bases.json", "ava_object_bases.json")]
+    [InlineData("terrain.json", "ava_terrain.json")]
+    public void AVABands_own_data_never_takes_an_Angband_id(string angband, string ours)
+    {
+        // Later files replace earlier ones by id (so mods can), so a clash would quietly replace Angband's own.
+        static HashSet<string> Ids(string file) =>
+            System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Angband.Data.DataLoader.DefaultDataDirectory, file)))
+                .RootElement.EnumerateArray().Select(e => e.GetProperty("id").GetString()!).ToHashSet();
+        Assert.Empty(Ids(ours).Intersect(Ids(angband)));
     }
 
     [Fact]
