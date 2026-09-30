@@ -17,6 +17,9 @@ public class IdentifyServiceTests
         }
 
         public void Choose(string id) => Game.Execute(new QuestChoiceCommand(id));
+
+        /// <summary>The shop screen's Services (or !).</summary>
+        public void AskService() => Game.Execute(new StoreServicesCommand());
     }
 
     private static Shop Open(ulong seed = 5)
@@ -45,7 +48,7 @@ public class IdentifyServiceTests
             foreach (var rune in item.Runes()) shop.Game.Knowledge.LearnRune(rune);
         }
         shop.Enter();
-        Assert.DoesNotContain(shop.Prompts, p => p.Choices.Any(c => c.Id == "ident:list"));
+        Assert.Null(shop.Game.StoreServiceLabel);
     }
 
     [Fact]
@@ -60,8 +63,10 @@ public class IdentifyServiceTests
         game.Player.Gold = 1000;
 
         shop.Enter();
-        Assert.Equal(["Just shop", "Have something identified"], shop.Last.Choices.Select(c => c.Label));
-        shop.Choose("ident:list");
+        Assert.Empty(shop.Prompts); // going in asks nothing
+        Assert.Equal("Identify something", game.StoreServiceLabel);
+        shop.AskService();
+        Assert.Equal("back:alchemist", shop.Last.Choices[^1].Id);
         var offer = shop.Last.Choices.Single(c => c.Id == $"ident:item:{ring.Serial}");
         Assert.EndsWith($"({cost} gold)", offer.Label);
         var asked = shop.Prompts.Count;
@@ -83,7 +88,7 @@ public class IdentifyServiceTests
         game.Player.Inventory.Add(game.Objects.Create("speed"));
         game.Player.Gold = 0;
         shop.Enter();
-        shop.Choose("ident:list");
+        shop.AskService();
         var everything = shop.Last.Choices.Single(c => c.Id == "ident:all");
         shop.Choose(everything.Id);
         Assert.Contains(shop.Said, s => s.Contains("you haven't got it"));
@@ -104,7 +109,7 @@ public class IdentifyServiceTests
         game.Knowledge.LearnKind(bag.Kind);
         game.Player.Gold = 1000;
         shop.Enter();
-        shop.Choose("ident:list");
+        shop.AskService();
         shop.Choose($"ident:item:{bag.Serial}");
         Assert.Equal("a Bag of Holding {cursed}", game.Describe(bag));
     }

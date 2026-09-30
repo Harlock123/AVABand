@@ -49,6 +49,7 @@ public sealed partial class GameSession
             case "accept": AcceptQuest(parts[1]); break;
             case "board": BoardChoice(parts); break;
             case "store": OpenStoreAfterAsking(parts[1]); break;
+            case "back": OpenStoreAfterAsking(parts[1], greet: false); break; // (back from a shop's service)
             case "gem": GemChoice(parts); break;
             case "ident": IdentifyChoice(parts); break;
             default: StoryChoice(parts); break;
@@ -228,11 +229,11 @@ public sealed partial class GameSession
     }
 
     /// <summary>A shop's own quest business first (the smith's forge, the alchemist, the black market); "Just browse" opens it.</summary>
-    private void OpenStoreAfterAsking(string shopId)
+    private void OpenStoreAfterAsking(string shopId, bool greet = true)
     {
         if (!_stores.TryGetValue(shopId, out var store) || Level.FeatureAt(Player.Position).Shop != shopId) return;
         Publish(new ShopEnteredEvent(store.Id, store.IsHome));
-        GreetInShop(store);
+        if (greet) GreetInShop(store);
     }
 
     /// <summary>Entering a shop: true if a quest has something to ask there first.</summary>

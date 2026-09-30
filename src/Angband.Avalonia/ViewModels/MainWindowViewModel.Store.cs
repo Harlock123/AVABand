@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Angband.Core.Definitions;
@@ -64,6 +65,19 @@ public sealed partial class MainWindowViewModel
     {
         StoreSelectedIndex = 0;
         RefreshStore();
+    }
+
+    /// <summary>The shop's service on offer now (the Armoury's gem removal, the Alchemist's identifying), for the button.</summary>
+    public string? StoreServiceLabel => IsInStore ? _game.StoreServiceLabel : null;
+    public bool HasStoreService => StoreServiceLabel is not null;
+
+    /// <summary>Services (or !) in the shop screen: the shop's service, asked for from inside.</summary>
+    [RelayCommand]
+    public void OpenStoreServices()
+    {
+        if (!HasStoreService) return;
+        IsInStore = false; // (the question takes the screen; its "Back to the shop" brings the shop back)
+        Execute(new StoreServicesCommand());
     }
 
     public void LeaveStore()
@@ -202,6 +216,8 @@ public sealed partial class MainWindowViewModel
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
         OnPropertyChanged(nameof(StoreModeText));
+        OnPropertyChanged(nameof(StoreServiceLabel));
+        OnPropertyChanged(nameof(HasStoreService));
     }
 
     /// <summary>Stock is shown fully identified, as Angband stores do.</summary>

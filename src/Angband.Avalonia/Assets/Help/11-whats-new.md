@@ -3,6 +3,11 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-01
+
+- **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
+  removal are a button in the shop (or **!**), shown when they have something to offer you.
+
 ## 2026-09-30.16
 
 - **Carrying**: Strength now keeps adding to what you can carry (it used to stop at 18/70),

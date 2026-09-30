@@ -368,7 +368,7 @@ public sealed partial class GameSession
             else Publish(new MessageEvent("There is no store here."));
             return 0;
         }
-        if (QuestAtShop(store.Id) || GemsAtShop(store.Id) || IdentifyAtShop(store.Id)) return 0;
+        if (QuestAtShop(store.Id)) return 0;
         // A staple the store lacks (one added to the game since the save was made) is in by now.
         if (!store.IsHome && store.Def.Staples.Any(id => !store.Stock.Any(i => i.Kind.Id == id && store.IsAlways(i))))
         {

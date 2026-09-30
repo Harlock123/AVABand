@@ -86,20 +86,21 @@ public sealed partial class GameSession
         }
     }
 
-    /// <summary>At the Armoury: if you have gems set, the armourer offers to take one out.</summary>
-    private bool GemsAtShop(string shopId)
+    /// <summary>Bracers carried or worn with gems set in them.</summary>
+    private List<Item> GemHosts() => [.. Player.Inventory.Equipped.Concat(Player.Inventory.Pack).Where(i => i.Gems.Count > 0)];
+
+    /// <summary>The Armoury's service (from the shop screen): the armourer offers to take a gem out.</summary>
+    private void OfferGemRemoval()
     {
-        if (shopId != "armoury") return false;
-        var hosts = Player.Inventory.Equipped.Concat(Player.Inventory.Pack).Where(i => i.Gems.Count > 0).ToList();
-        if (hosts.Count == 0) return false;
-        var choices = new List<(string, string)> { ("store:armoury", "Just shop") };
+        var hosts = GemHosts();
+        var choices = new List<(string, string)>();
         foreach (var host in hosts)
             for (var i = 0; i < host.Gems.Count; i++)
                 choices.Add(($"gem:out:{host.Serial}:{i}",
                     $"Take {Describe(host.Gems[i])} out of your {ItemNaming.Describe(host, Knowledge, withArticle: false, full: false)} ({GemRemovalCost(host.Gems[i])} gold)"));
+        choices.Add(("back:armoury", "Back to the shop"));
         AskQuest("The Armoury", "The armourer eyes your bracers. \"I can prise a stone out of those, if you like. For a price — and I don't promise the stone.\"",
             [.. choices]);
-        return true;
     }
 
     private void GemChoice(string[] parts)
@@ -128,6 +129,7 @@ public sealed partial class GameSession
             }
             RecalculateBonuses();
         }
-        OpenStoreAfterAsking("armoury");
+        if (GemHosts().Count > 0) OfferGemRemoval(); // another? (or back to the shop)
+        else OpenStoreAfterAsking("armoury", greet: false);
     }
 }

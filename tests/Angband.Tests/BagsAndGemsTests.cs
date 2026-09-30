@@ -132,9 +132,12 @@ public class BagsAndGemsTests
 
             game.Player.Position = game.Level.AllLocs().First(l => game.Level.FeatureAt(l).Shop == "armoury");
             game.Execute(new EnterStoreCommand());
+            Assert.Empty(prompts); // going in asks nothing
+            Assert.Equal("Remove a gem", game.StoreServiceLabel);
+            game.Execute(new StoreServicesCommand());
             var offer = prompts[^1];
             Assert.Equal("The Armoury", offer.Title);
-            Assert.Equal("Just shop", offer.Choices[0].Label);
+            Assert.Equal("Back to the shop", offer.Choices[^1].Label);
             var take = offer.Choices.Single(c => c.Id.StartsWith("gem:out:"));
             Assert.Contains($"({GameSession.GemRemovalCost(bracers.Gems[0])} gold)", take.Label);
             game.Execute(new QuestChoiceCommand(take.Id));
@@ -171,14 +174,14 @@ public class BagsAndGemsTests
         game.Player.Gold = 10_000;
         game.Player.Position = game.Level.AllLocs().First(l => game.Level.FeatureAt(l).Shop == "armoury");
         game.Execute(new EnterStoreCommand());
+        game.Execute(new StoreServicesCommand());
         game.Execute(new QuestChoiceCommand(prompts[^1].Choices.Single(c => c.Id.StartsWith("gem:out:")).Id));
         Assert.Contains(messages, m => m.Contains("Break its curse first"));
         Assert.Single(bracers.Gems);
         Assert.Equal(10_000, game.Player.Gold);
 
         bracers.Curses.Remove("impair_hitpoint_recovery"); // as a Remove Curse that broke it
-        game.Execute(new LeaveStoreCommand());
-        game.Execute(new EnterStoreCommand());
+        game.Execute(new StoreServicesCommand());
         game.Execute(new QuestChoiceCommand(prompts[^1].Choices.Single(c => c.Id.StartsWith("gem:out:")).Id));
         Assert.Empty(bracers.Gems);
         Assert.Equal(str, game.Player.Stats["str"]);

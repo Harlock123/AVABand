@@ -2,8 +2,9 @@ using Angband.Core.Items;
 
 namespace Angband.Core.Game;
 
-// AVABand's identify service at the Alchemist (5): if you carry or wear anything you don't fully know
-// (an untried flavour, or runes you haven't learned), the alchemist offers to tell you all about it,
+// AVABand's identify service at the Alchemist (5), offered from the shop screen (Services, or !) when
+// you carry or wear anything you don't fully know (an untried flavour, or runes you haven't learned):
+// the alchemist tells you all about it,
 // for gold — the item's kind and every rune on it, curses included, as selling it to a shop would
 // teach you (Angband 4.2 has no *Identify*; this is a paid shortcut to what use would show).
 public sealed partial class GameSession
@@ -18,26 +19,18 @@ public sealed partial class GameSession
             .Where(i => !i.IsGold && !Knowledge.IsFullyKnown(i))
             .GroupBy(i => Knowledge.KnowsKind(i) ? $"item:{i.Serial}" : $"kind:{i.Kind.Id}").Select(g => g.First())];
 
-    private bool IdentifyAtShop(string shopId)
-    {
-        if (shopId != "alchemist" || Unidentified().Count == 0) return false;
-        AskQuest("The Alchemy shop", "The alchemist glances at your pack. \"Something in there you can't put a name to? I can tell you what it is, and all it does — for a price.\"",
-            ("store:alchemist", "Just shop"), ("ident:list", "Have something identified"));
-        return true;
-    }
-
     private void OfferIdentify()
     {
         var items = Unidentified();
         if (items.Count == 0)
         {
-            OpenStoreAfterAsking("alchemist");
+            OpenStoreAfterAsking("alchemist", greet: false);
             return;
         }
         var choices = items.Select(i => ($"ident:item:{i.Serial}", $"{Capital(Describe(i))} ({IdentifyCost(i)} gold)")).ToList();
         if (items.Count > 1) choices.Add(("ident:all", $"Everything ({items.Sum(IdentifyCost)} gold)"));
-        choices.Add(("store:alchemist", "Just shop"));
-        AskQuest("The Alchemy shop", $"\"Which? You have {Player.Gold} gold.\"", [.. choices]);
+        choices.Add(("back:alchemist", "Back to the shop"));
+        AskQuest("The Alchemy shop", $"\"Something you can't put a name to? I can tell you what it is, and all it does — for a price. Which? You have {Player.Gold} gold.\"", [.. choices]);
     }
 
     private void IdentifyChoice(string[] parts)

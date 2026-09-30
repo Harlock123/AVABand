@@ -109,7 +109,8 @@ the bloodstone (+3 STR, +2 CON; slow healing), black onyx (stealth and infravisi
 and star sapphire (+2 speed; random teleportation). Set a gem from its item menu or the
 bracers' (`SetGemCommand`, recorded; it takes a turn): its properties are merged into the
 bracers, and the resistances, flags and curses it brought are recorded on it, so taking it out
-takes away only those. Only the Armoury's armourer takes one out — asked on entering, for
+takes away only those. Only the Armoury's armourer takes one out — from the shop screen's
+*Remove a gem* button (or `!`; `StoreServicesCommand`, `GameSession.ShopServices.cs`), for
 50 gold plus a fifth of the gem's worth, and one gem in eight cracks — and not while its curse
 holds (break it with Remove Curse first). The bracers' name lists their gems: "a Pair of Iron
 Bracers (-1,+3) [5,+0] (Ruby, 1 empty socket)". The Magic shop buys gems. Shop notes compare
@@ -492,9 +493,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     carries a badge — **for you** if the class can read it (`GameSession.BookNote`, Angband's
     `obj_kind_can_browse`), else "not for a Priest" — so a newcomer doesn't buy the wrong realm's
     book or sell their own.
-  - **The Alchemist identifies** (AVABand's own, `GameSession.Identify.cs`): going in with anything
-    carried or worn that you don't fully know (an untried flavour, or runes you haven't learned),
-    you're offered "Have something identified" — then each such item with its price (50 gold, 50
+  - **The Alchemist identifies** (AVABand's own, `GameSession.Identify.cs`): with anything carried
+    or worn that you don't fully know (an untried flavour, or runes you haven't learned), the shop
+    screen shows an *Identify something* button (or `!`; shops' services are asked for from inside,
+    `GameSession.ShopServices.cs`, never at the door) — then each such item with its price (50 gold, 50
     more for each unknown rune and 50 for an unknown kind; untried flavours listed once each), or
     everything at once. The item's kind and every rune on it become known, curses included (so a
     Bag of Devouring is found out), as selling it would teach you; you're asked again while

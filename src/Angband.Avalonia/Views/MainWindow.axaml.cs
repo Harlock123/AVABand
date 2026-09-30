@@ -545,6 +545,13 @@ public partial class MainWindow : Window
             return;
         }
 
+        // In a store, ! asks for the shop's service (AVABand's gem removal, identifying).
+        if (!ctrlOrAlt && vm.IsInStore && !vm.IsConfirming && KeyboardInput.Symbol(e) == "!")
+        {
+            vm.OpenStoreServices();
+            e.Handled = true;
+            return;
+        }
         if (!ctrlOrAlt && KeyboardInput.Symbol(e) is { Length: 1 } symbol && char.IsLetter(symbol[0]))
         {
             // In a store, a letter buys/sells one of that item; Shift+letter the whole stack

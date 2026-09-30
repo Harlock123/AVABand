@@ -237,6 +237,7 @@ public sealed partial class GameSession : ITurnHandler
             DebugTryQuestCommand trial => DebugTryQuest(trial.Quest),
             SetGemCommand set => SetGem(set.Host, set.Gem),
             WieldOffHandCommand off => WieldOffHand(off.Item),
+            StoreServicesCommand => StoreServices(),
             _ => 0,
         };
         if (energy <= 0) return false;

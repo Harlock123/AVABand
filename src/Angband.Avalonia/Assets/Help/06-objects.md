@@ -9,8 +9,8 @@ the resistance of your armour. Once you know a rune you recognise it on everythi
 Potions, scrolls, rings, amulets, wands, staffs, rods and mushrooms are known by their
 **flavour** (an "Icky Green Potion") until you try one; then every one of that kind is known.
 
-In a hurry? The **Alchemist** (5) will identify things for gold: go in carrying anything you
-don't fully know and they'll offer to tell you all about it — what it is and every rune on it,
+In a hurry? The **Alchemist** (5) will identify things for gold: carrying anything you don't
+fully know, press **!** (or the *Identify something* button) in the shop and they'll tell you all about it — what it is and every rune on it,
 curses too — at 50 gold, plus 50 for each rune you don't know (and 50 if you don't know what it
 is). A Scroll of Identify Rune, or selling the thing, teaches you too.
 
@@ -32,7 +32,7 @@ helps you hit, an **emerald** adds constitution (and, flawed or better, resists 
 mind (and guards against confusion), a **garnet** adds strength. Chipped, flawed or flawless
 stones give +1, +2 or +3. Some rarer stones give more, and take something back.
 
-Only the **Armoury** (2) can take a gem out again — the armourer will offer when you go in — for
+Only the **Armoury** (2) can take a gem out again — press **!** (or *Remove a gem*) in the shop — for
 some gold, and now and then the stone cracks. A cursed stone won't come out until its curse is
 broken.
 

@@ -86,8 +86,13 @@ public class StoreUiTests
         game.Player.Gold = 5000;
         game.Player.Position = game.Level.AllLocs().First(p => game.Level.FeatureAt(p).Shop == "alchemist");
         vm.HandleAction(InputAction.EnterStore);
+        Assert.True(vm.IsInStore); // straight in: nothing asked at the door
+        Assert.Equal("Identify something", vm.StoreServiceLabel);
+        window.CaptureRenderedFrame();
+        Assert.True(window.GetVisualDescendants().OfType<Button>().Single(b => b.Name == "StoreServiceButton").IsEffectivelyVisible);
+        TileRenderingTests.Save(window, "alchemist-service-button");
+        window.KeyPress(Key.D1, RawInputModifiers.Shift, PhysicalKey.Digit1, "!"); // as a keyboard reports Shift+1
         Assert.Equal("The Alchemy shop", vm.PromptTitle);
-        vm.PromptKey(vm.ChoiceRows.First(r => r.Text == "Have something identified").Letter[0]);
         Assert.Contains(vm.ChoiceRows, r => r.Text.EndsWith("gold)") && r.Text.Contains("Ring"));
         TileRenderingTests.Save(window, "alchemist-identify");
         vm.PromptKey(vm.ChoiceRows.First(r => r.Text.Contains("Ring")).Letter[0]);
