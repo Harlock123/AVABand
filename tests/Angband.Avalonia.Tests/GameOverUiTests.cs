@@ -1,3 +1,4 @@
+using Angband.Core.Game;
 using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Records;
@@ -174,5 +175,34 @@ public sealed class GameOverUiTests : IDisposable
         TileRenderingTests.Save(graveyard, "graveyard");
         vm.ShowTitle();
         Assert.Contains(vm.TitleChoices, c => c.Label == "The graveyard");
+    }
+
+    /// <summary>A headstone keeps its game's replay: "Watch their last moments" plays it from the level they fell on.</summary>
+    [AvaloniaFact]
+    public void TheGraveyard_Replays_TheirLastMoments()
+    {
+        var (window, vm) = Open();
+        vm.ReplayDirectory = Path.Combine(_dir, "replays");
+        vm.StartGame(77, "warrior");                        // (recorded from the start)
+        var game = vm.Game;
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        for (var i = 0; i < 30; i++) vm.Execute(new HoldCommand());
+        game.MarkDebugUsed();                               // (a debug jump: it would bar the grave, so take it off again)
+        vm.Execute(new DebugJumpCommand(3));
+        game.ToggleDebugMark();
+        vm.SkipScenes();
+        for (var i = 0; i < 20; i++) vm.Execute(new HoldCommand());
+        game.Player.Hp = 1;
+        game.TakeHit(100_000, "a cave spider");
+
+        var yard = vm.CreateGraveyard();
+        var stone = yard.Stones.First();
+        Assert.True(stone.HasReplay);
+        Assert.True(yard.WatchCommand.CanExecute(null));
+        yard.WatchCommand.Execute(null);
+        Assert.True(vm.IsReplaying);
+        Assert.Equal(3, vm.Game.Player.Depth);              // on the level they fell on, not back in town
+        Assert.Contains("last moments", vm.LastMessage);
+        vm.StopReplay();
     }
 }

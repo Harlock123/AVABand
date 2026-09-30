@@ -146,7 +146,7 @@ public sealed partial class MainWindowViewModel
             _lastDeath = entry;
             var dump = _records.WriteDump(_game, BuildDump());
             // The graveyard keeps every end (as the scores do, not a cheat's), with its dump.
-            if (!_game.IsCheater) _records.Bury(FallenRecord.From(entry, dump));
+            if (!_game.IsCheater) _records.Bury(FallenRecord.From(entry, dump, CurrentReplayPath));
             var score = _game.IsCheater ? "Score not registered for cheaters."
                 : rank > 0
                 ? $"You placed #{rank} on the high-score table ({entry.Points} points)."

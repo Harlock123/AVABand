@@ -48,7 +48,9 @@
     <Border Background="#99080608" />
     <DockPanel Margin="16">
       <DockPanel DockPanel.Dock="Top" Margin="4,0,4,10">
-        <Button DockPanel.Dock="Right" Content="Close" Classes="accent" Click="OnClose" />
+        <Button DockPanel.Dock="Right" Content="Close" Classes="accent" Click="OnClose" Margin="8,0,0,0" />
+        <Button DockPanel.Dock="Right" x:Name="WatchButton" Content="Watch their last moments" Command="{Binding WatchCommand}"
+                ToolTip.Tip="Their game's replay, from when they came to the level where they fell" />
         <StackPanel>
           <TextBlock Text="The graveyard" FontFamily="{StaticResource TitleFont}" FontSize="26" Foreground="#e2d3ae" />
           <TextBlock Text="{Binding Summary}" Foreground="#b8a898" FontStyle="Italic" />

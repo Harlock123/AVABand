@@ -17,6 +17,7 @@ public sealed record HeadstoneRow(FallenRecord Fallen)
     public string Date => Fallen.DateUtc.ToLocalTime().ToString("d", CultureInfo.CurrentCulture);
     public string Epitaph => Fallen.Epitaph;
     public bool Won => Fallen.Won;
+    public bool HasReplay => Fallen.ReplayPath is { } path && File.Exists(path);
 }
 
 /// <summary>
@@ -43,7 +44,20 @@ public sealed partial class GraveyardViewModel : ObservableObject
         var n => $"{n} adventurers rest here.",
     };
 
-    [ObservableProperty] private HeadstoneRow? _selected;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(WatchCommand))]
+    private HeadstoneRow? _selected;
+
+    /// <summary>Raised with a replay to watch their last moments in (the window closes, the main window plays it).</summary>
+    public event Action<string>? WatchRequested;
+
+    private bool CanWatch => Selected?.HasReplay == true;
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand(CanExecute = nameof(CanWatch))]
+    private void Watch()
+    {
+        if (Selected?.Fallen.ReplayPath is { } path) WatchRequested?.Invoke(path);
+    }
     [ObservableProperty] private string _story = "";
 
     partial void OnSelectedChanged(HeadstoneRow? value)
@@ -86,6 +100,8 @@ public sealed partial class MainWindowViewModel
         {
             // No picture: a plain dark ground.
         }
-        return new GraveyardViewModel(_records?.LoadGraveyard() ?? new Graveyard(), background);
+        var yard = new GraveyardViewModel(_records?.LoadGraveyard() ?? new Graveyard(), background);
+        yard.WatchRequested += path => PlayLastMoments(path);
+        return yard;
     }
 }

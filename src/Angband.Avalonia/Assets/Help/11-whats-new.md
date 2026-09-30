@@ -3,6 +3,10 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.4
+
+- **Watch their last moments**: a headstone in the graveyard can replay how that character fell.
+
 ## 2026-09-30.3
 
 - **The Cartographer** now tells you where to find each kind of level he wants; they were too rare

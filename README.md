@@ -61,7 +61,9 @@ screen once someone lies there): a headstone for every character that died or re
 the hundred best the high-score table keeps — carved with its name, race and class, level and
 deepest depth, what killed it and where, a date, and an epitaph chosen to suit its end ("Went down
 to 1650 ft, and did not come back."), over the death scene at dusk. Choose a stone to read that
-character's last dump beside it. Kept in `graveyard.json` beside the scores; the first time, the
+character's last dump beside it, or **Watch their last moments**: the game's replay (every game is
+recorded), fast-forwarded to when they came to the level where they fell (or its last 150 steps,
+if they were there long) and played on from there in the main window. Kept in `graveyard.json` beside the scores; the first time, the
 dead the high scores remember are brought in. Cheats, the tutorial and replays aren't buried.
 
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest

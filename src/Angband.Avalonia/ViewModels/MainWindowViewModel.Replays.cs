@@ -63,6 +63,49 @@ public sealed partial class MainWindowViewModel
         }
     }
 
+    /// <summary>Where this game's replay is written, if it is being recorded.</summary>
+    public string? CurrentReplayPath => _game.Recorder is not null && _replayName is not null && ReplayDirectory is { } folder
+        ? Path.Combine(folder, _replayName) : null;
+
+    /// <summary>How many steps "their last moments" goes back at most, when the final level ran long.</summary>
+    public const int LastMomentsSteps = 150;
+
+    /// <summary>
+    /// The graveyard's "Watch their last moments": the replay from where they came to the level they
+    /// died on (or the last <see cref="LastMomentsSteps"/> steps, if they were there long), fast-forwarded
+    /// to it and played on from there.
+    /// </summary>
+    public bool PlayLastMoments(string path)
+    {
+        int from;
+        try
+        {
+            var scout = new ReplayPlayer(_data, ReplayFile.Read(path));
+            var depth = scout.Game.Player.Depth;
+            var arrived = 0;
+            while (!scout.Done)
+            {
+                scout.Step();
+                if (scout.Game.Player.Depth == depth) continue;
+                depth = scout.Game.Player.Depth;
+                arrived = scout.Position;
+            }
+            from = Math.Max(arrived, scout.Count - LastMomentsSteps);
+        }
+        catch (Exception ex) when (ex is SaveGameException or IOException or UnauthorizedAccessException or FormatException)
+        {
+            AddMessage($"Could not open the replay: {ex.Message}");
+            return false;
+        }
+        if (!PlayReplay(path) || _replay is not { } replay) return false;
+        while (replay.Position < from && !replay.Done) replay.Step();
+        Scene = null;
+        LastMessage = $"Watching {replay.File.Name}'s last moments.";
+        Refresh();
+        UpdateReplayStatus();
+        return true;
+    }
+
     /// <summary>The replays there are, newest first: path and a line to show.</summary>
     public IReadOnlyList<(string Path, string Title)> ListReplays()
     {

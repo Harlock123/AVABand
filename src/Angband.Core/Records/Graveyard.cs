@@ -24,13 +24,16 @@ public sealed class FallenRecord
     /// <summary>The character dump written at its end, if there is one.</summary>
     public string? DumpPath { get; set; }
 
-    public static FallenRecord From(ScoreEntry e, string? dumpPath = null)
+    /// <summary>The replay of its whole game, if one was recorded ("watch their last moments").</summary>
+    public string? ReplayPath { get; set; }
+
+    public static FallenRecord From(ScoreEntry e, string? dumpPath = null, string? replayPath = null)
     {
         var record = new FallenRecord
         {
             Name = e.Name, Race = e.Race, Class = e.Class, Level = e.MaxLevel > 0 ? e.MaxLevel : e.Level, MaxDepth = e.MaxDepth,
             Depth = e.Depth, KilledBy = e.Won ? "retired victorious" : e.KilledBy ?? "something", Won = e.Won, Heroic = e.Heroic,
-            Points = e.Points, Turns = e.Turns, Seed = e.Seed, DateUtc = e.DateUtc, DumpPath = dumpPath,
+            Points = e.Points, Turns = e.Turns, Seed = e.Seed, DateUtc = e.DateUtc, DumpPath = dumpPath, ReplayPath = replayPath,
         };
         record.Epitaph = Epitaphs.For(record);
         return record;
