@@ -19,7 +19,8 @@
 // for free action, see invisible and the resistances it lacks), carries Scrolls of Teleportation
 // from 1250 ft and potions for its level, leaves a level filling with breeders, drinks sooner
 // against anything deeper than itself, eats when weak whatever is about, and, as a mage or
-// necromancer, casts at what is next to it too (and blinks away when out of mana).
+// necromancer, casts at what is next to it too (and blinks away when out of mana); every caster
+// casts the attack spell that does most to its target (an immunity rules one out).
 //
 // `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each (and a priest,
 // necromancer, druid and blackguard, two each, casting their own attack and healing spells) from the
@@ -468,7 +469,7 @@ internal static class Bot
             if (awake.FirstOrDefault(m => (caster || m.Position.DistanceTo(p.Position) > 1)
                     && ProjectionPath.Projectable(game.Level, p.Position, m.Position, 20)) is { } mark && !p.Timed.Has("blind"))
             {
-                if (AttackSpell(game) is { } spell && !p.Timed.Has("confused"))
+                if (AttackSpell(game, mark) is { } spell && !p.Timed.Has("confused"))
                 {
                     tally.Shots++;
                     tally.Waits = 0;
@@ -571,6 +572,52 @@ internal static class Bot
     /// mana for and fails no more than one time in four — whatever its class.
     /// </summary>
     private static SpellDef? AttackSpell(GameSession game) => CastableSpells(game, IsAttack).FirstOrDefault();
+
+    /// <summary>
+    /// The attack spell that does most to <paramref name="target"/> (unless plain: the highest-level
+    /// one): its average damage at the caster's level, nothing if the target is immune to its element
+    /// (a frost bolt at a cold-immune dragon), double if it's hurt by it.
+    /// </summary>
+    private static SpellDef? AttackSpell(GameSession game, Monster target)
+    {
+        var castable = CastableSpells(game, IsAttack).ToList();
+        if (Plain) return castable.FirstOrDefault();
+        return castable.Select(s => (Spell: s, Damage: DamageTo(game, s, target))).Where(x => x.Damage > 0)
+            .OrderByDescending(x => x.Damage).Select(x => x.Spell).FirstOrDefault();
+    }
+
+    private static double DamageTo(GameSession game, SpellDef spell, Monster target)
+    {
+        var (element, damage) = AverageDamage(spell.Effect, game.Player.Level);
+        if (element is not null && game.Data.Element(element) is { } el)
+        {
+            if (el.ImmunityFlag is { } immune && target.Race.Has(immune)) return 0;
+            if (el.VulnerabilityFlag is { } hurt && target.Race.Has(hurt)) damage *= 2;
+        }
+        if (element == "light" && !target.Race.Has("HURT_LIGHT")) damage /= 2; // (light mostly hurts what hates it)
+        return damage;
+    }
+
+    /// <summary>
+    /// A spell effect's first damaging clause, averaged at a level: "bolt:cold:{(L-5)/3+6}d8:0" is
+    /// cold, 6d8 at level 5; "ball:fire:{L*2}:2" fire, 2L; "light_line:6d8" light.
+    /// </summary>
+    internal static (string? Element, double Damage) AverageDamage(string effect, int level)
+    {
+        var parts = effect.Split(';')[0].Trim().Split(':');
+        var (element, text) = parts[0] == "light_line" ? ("light", parts.ElementAtOrDefault(1) ?? "0")
+            : (parts.ElementAtOrDefault(1), parts.ElementAtOrDefault(2) ?? "0");
+        text = System.Text.RegularExpressions.Regex.Replace(text, @"\{([^}]*)\}",
+            m => Angband.Core.Magic.SpellExpr.Eval(m.Groups[1].Value, level).ToString(CultureInfo.InvariantCulture));
+        var total = 0.0;
+        foreach (var term in text.Split('+', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var dice = term.Split('d');
+            if (dice.Length == 2 && int.TryParse(dice[0], out var n) && int.TryParse(dice[1], out var sides)) total += n * (sides + 1) / 2.0;
+            else if (int.TryParse(term, out var flat)) total += flat;
+        }
+        return (element is "none" or "" ? null : element, total);
+    }
 
     /// <summary>The healing spell of the highest level it can cast, likewise.</summary>
     private static SpellDef? HealingSpell(GameSession game) => CastableSpells(game, IsHealing).FirstOrDefault();

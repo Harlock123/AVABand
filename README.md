@@ -726,7 +726,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   it is kitted for every slot (shield, cloak, helm, gloves, boots, light, amulet, two rings, chosen
   for armour and for free action, see invisible and resistances), carries Teleportation and
   potions for its level, leaves a level filling with breeders, drinks sooner against something
-  deeper than itself, and plays a mage or necromancer as a caster (spells at close quarters too);
+  deeper than itself, and plays a mage or necromancer as a caster (spells at close quarters too,
+  each cast the one that does most to its target: nothing against an immunity, double against a
+  weakness);
   `docs/balance.md` has it against the bot before.
   `docs/balance.md` compares versions with it. It's a poor player, for comparing versions rather
   than judging difficulty; `one <depth> <seed> [class]` with `BOT_TRACE=1` shows how a run ended.

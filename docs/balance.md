@@ -317,6 +317,12 @@ like the old one, to compare versions. 20 runs per depth, the bot before → now
 | 90 | 0 → 35 | 84 → 425 | 5.4 → 5.5 | 5 → 20 | 77 → 366 | 3.3 → 4.7 |
 | 99 | 15 → 15 | 26 → 196 | 2.6 → 4.8 | 20 → 30 | 80 → 286 | 2.6 → 3.4 |
 
+Since then the bot's casters choose the attack spell that does most to their target — its average
+damage at their level, nothing against an immunity, double against a weakness — rather than the
+highest-level one. The mage, 20 runs per depth: 1 95%, 5 95%, 10 90%, 20 90%, 30 100%, 40 95%, 50 90%,
+60 55%, 70 45%, 80 25%, 90 20%, 99 35% alive — about the same above 2500 ft and better below it
+(50 → 55% at 3000 ft, 40 → 45% at 3500 ft, 25 → 35% at the bottom).
+
 The mage gains most (a caster's play, and kit that stops it being paralysed or poisoned to death):
 it now lives about as often as the warrior down to 2500 ft. Below that both still die, the mage
 twice as often. `docs/quest-playtest.md` has what it says about the quests.

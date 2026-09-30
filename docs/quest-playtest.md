@@ -102,7 +102,35 @@ The deep quests were tuned on these runs:
   mages who stand and trade with him — the bot's mage casts frost bolts at a dragon immune to cold.
 - **The Keeper of the Stone** was +20 speed, 3500 HP, spells one turn in four, at 3100–3900 ft: it
   killed three in eight, and the depth killed the rest. Now +15, 2600 HP, one in five, and the
-  vault is at 2500–3100 ft. Its nether ball still does about 300; see invisible and nether
-  resistance matter there, as they do against Angband's dreadlords at that depth.
+  vault is at 2500–3100 ft. With the bot's mages choosing their spells properly (below) the Keeper
+  still killed three mages in five with a nether ball of about 300 — a level-45 mage's whole life —
+  so it now has only its nether bolt (about 130): still the most dangerous thing in the vault, but no
+  longer one breath from a caster's death.
 - **The Last Watch** needed nothing: holding 200 turns or killing Grishnag both work, and most runs
   end by Grishnag's death well before the horns.
+
+## The bot's spells, and the report again
+
+The bot's casters chose the highest-level attack spell they had, whatever the target — the mage
+cast frost bolts at Skorvath, who is immune to cold. Now they cast what does most to the target:
+each attack spell's average damage at their level (from its effect formula), nothing if the target
+is immune to its element, double if it's hurt by it. `quests 5` after that (and the Keeper's change):
+
+| quest | done | died | what killed it |
+|---|---|---|---|
+| The Sealed Door | 5/5/5 | 0/0/0 | — |
+| The Burden | 3/2/3 | 0/1/0 | Shagrat |
+| The Broken Blade | 3/2/3 | 0/0/0 | — |
+| Consecration | 5/5/5 | 0/0/0 | — |
+| The Letter | 5/5/5 | 0/0/0 | — |
+| The Thief | 4/2/4 | 0/0/0 | — |
+| The Apprentice | 5/5/5 | 0/0/0 | — |
+| The Warden's Fires | 5/5/5 | 0/0/0 | — |
+| The Heart of the Mountain | 4/5/4 | 0/0/0 | — (mages had died three in five) |
+| The Last Watch | 4/5/3 | 1/0/2 | an ethereal dragon, Waldern, a nether hound |
+| The Seeing Stone (Keeper with its ball) | 3/0/3 | 0/4/1 | the Keeper three times, drakes |
+| The Seeing Stone (bolt only) | 2/0/4 | 2/3/0 | drakes and dragons of 2500–3100 ft; the Keeper once |
+| The notice board | 2/3/4 | 0/0/0 | — |
+
+The Stone is still hard on mages — not because of the Keeper now, but the depth: the drakes that
+live at 2500–3100 ft. That's the dungeon, as it would be without the quest.

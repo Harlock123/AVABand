@@ -8,6 +8,8 @@ played; this page keeps it all (Help → What's new...).
 - **Share your daily dungeon**: *Copy result* puts a line about your try on the clipboard, ready to
   paste to friends, and *Save replay as…* saves its replay wherever you like, named for the day and
   try.
+- **The Keeper of the Stone** no longer casts a nether ball, which could kill a spellcaster in one go;
+  its nether bolt is still dangerous.
 
 ## 2026-09-30.11
 
