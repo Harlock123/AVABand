@@ -87,6 +87,10 @@ public sealed class SavedCharacter
     public string Class { get; set; } = "warrior";
     public Dictionary<string, int> Stats { get; set; } = [];
     public bool Rolled { get; set; }
+    /// <summary>Made with AVABand's heroic roll or point-buy (with <see cref="Rolled"/>, which one).</summary>
+    public bool Heroic { get; set; }
+    /// <summary>The autoroller's minimums (final stats), kept for next time.</summary>
+    public Dictionary<string, int> AutorollMinimums { get; set; } = [];
     /// <summary>The birth options chosen with this character.</summary>
     public Dictionary<string, bool> BirthOptions { get; set; } = [];
 }

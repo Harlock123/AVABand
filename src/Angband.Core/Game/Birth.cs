@@ -3,8 +3,11 @@ using Angband.Core.Randomness;
 
 namespace Angband.Core.Game;
 
-/// <summary>How the stats were chosen.</summary>
-public enum StatMethod { PointBuy, Roll }
+/// <summary>
+/// How the stats were chosen: Angband 4.2's point-buy or roll, or AVABand's heroic ones
+/// (<see cref="HeroicBirth"/>).
+/// </summary>
+public enum StatMethod { PointBuy, Roll, HeroicRoll, HeroicPointBuy }
 
 /// <summary>
 /// Everything chosen at character creation. <see cref="BaseStats"/> are before race and class
@@ -117,9 +120,9 @@ public static class Birth
     public static int FinalStat(int baseValue, RaceDef? race, ClassDef? cls, string stat) =>
         Math.Clamp(baseValue + (race?.Stats.GetValueOrDefault(stat) ?? 0) + (cls?.Stats.GetValueOrDefault(stat) ?? 0), 3, 40);
 
-    /// <summary>Gold at the start: the base amount plus 50 per unspent point.</summary>
+    /// <summary>Gold at the start: the base amount plus 50 per unspent point (of either point-buy).</summary>
     public static int StartingGold(CharacterSpec spec, GameConstants constants) =>
-        constants.StartGold + (spec.Method == StatMethod.PointBuy
-            ? Math.Max(0, constants.BirthPoints - PointsSpent(spec.BaseStats)) * 50
+        constants.StartGold + (spec.Method.IsPointBuy()
+            ? Math.Max(0, HeroicBirth.Budget(spec.Method, constants) - HeroicBirth.PointsSpent(spec.Method, spec.BaseStats)) * 50
             : 0);
 }

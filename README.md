@@ -331,7 +331,15 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   breakfast!"), Gnomes a wand, staff or rod, and Dwarves sense veins of treasure in the rock a
   few squares around them each turn (unless confused, stunned, afraid and the like). A character
   saved before an ability was added gains it on loading; 9 classes; stats by
-  Angband's 20-point point-buy (unspent points become gold) or Angband's rolled dice. Stats now
+  Angband's 20-point point-buy (unspent points become gold) or Angband's rolled dice — or
+  AVABand's **heroic** methods (`Game/HeroicBirth.cs`): a *heroic roll* (each stat 11 + 3d4:
+  14 to 18/50, about 18/10 on average, against the ordinary 8–17) and a *heroic point-buy* (50
+  points, stats up to 18/50 at 3 points a step past 18). Rolled methods have an **autoroller**, as
+  Angband 3.x had: a minimum for each final stat (after race and class), then *Autoroll* rerolls
+  up to 100,000 times until a set meets them all ("Met every minimum after 1,234 rolls"), or says
+  at once which minimum that roll can never reach. The minimums are remembered with the last
+  character. Heroic characters are scored as usual, but tagged: *[Heroic]* in the high scores and
+  a line in the character dump (kept in the save). Stats now
   matter: STR gives to-damage and carrying capacity, DEX to-hit and armour, WIS saving throw, CON
   hit points per level, INT/WIS spell points and failure rates. The screen previews the result by
   creating the character in the engine; Quick start reuses the last character.

@@ -76,6 +76,7 @@ public static class CharacterDump
             : p.IsDead ? $" Killed by {p.KilledBy} {(p.Depth == 0 ? "in the town" : $"at {p.Depth * feet} ft")}."
             : $" Still alive ({game.HungerLevel.ToString().ToLowerInvariant()}).");
         Line($" Seed {game.Seed}   Score {Scoring.Points(p)} points");
+        if (p.HeroicBirth) Line(" Heroic: born with AVABand's heroic stats (scored, tagged).");
         if (game.IsCheater) Line($" Cheated ({string.Join(", ", game.CheatsUsed.Order(StringComparer.Ordinal))}): not scored.");
 
         // --- Abilities (Angband's birth screen names them; player_property.txt) ---

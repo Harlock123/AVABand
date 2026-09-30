@@ -109,4 +109,61 @@ public class CharacterCreationUiTests
         vm.QuickStartCommand.Execute(null); // same character again
         Assert.StartsWith("Galadwen the High-Elf Mage L1", vm.StatusText);
     }
+
+    [AvaloniaFact]
+    public void TheHeroicRoll_AndTheAutoroller_MakeSuperlativeStats()
+    {
+        var (window, _, _) = Open();
+        var creation = (CharacterCreationViewModel)window.OpenCharacterCreation().DataContext!;
+        creation.SelectedMethod = CharacterCreationViewModel.StatMethods.Single(m => m.Method == StatMethod.HeroicRoll);
+        Assert.True(creation.IsRolled);
+        Assert.All(creation.StatRows, r => Assert.InRange(r.Base, 14, HeroicBirth.HeroicMax));
+        Assert.Contains("Heroic", creation.PointsText);
+
+        // Minimums on the final stats: STR 18/50, CON 18/20 (indexes into "any, 8, 9, ... 18/220").
+        var str = creation.StatRows.Single(r => r.Id == "str");
+        var con = creation.StatRows.Single(r => r.Id == "con");
+        str.MinimumIndex = CharacterCreationViewModel.MinimumChoices.ToList().IndexOf("18/50");
+        con.MinimumIndex = CharacterCreationViewModel.MinimumChoices.ToList().IndexOf("18/20");
+        Assert.Equal(23, str.Minimum);
+        creation.AutorollCommand.Execute(null);
+        Assert.StartsWith("Met every minimum", creation.AutorollText.Replace("The first roll met", "Met"));
+        Assert.True(Birth.FinalStat(str.Base, creation.SelectedRace, creation.SelectedClass, "str") >= 23);
+        Assert.True(Birth.FinalStat(con.Base, creation.SelectedRace, creation.SelectedClass, "con") >= 20);
+        Assert.Equal(StatMethod.HeroicRoll, creation.Spec()!.Method);
+        TileRenderingTests.Save(window.OwnedWindows[0], "character-creation-heroic");
+
+        // A minimum this roll can never reach is refused at once.
+        str.MinimumIndex = CharacterCreationViewModel.MinimumChoices.Count - 1; // 18/220
+        creation.AutorollCommand.Execute(null);
+        Assert.Contains("can't reach 18/220", creation.AutorollText);
+    }
+
+    [AvaloniaFact]
+    public void HeroicPointBuy_GoesTo18Slash50_AndIsRememberedWithTheMinimums()
+    {
+        var (window, vm, saved) = Open();
+        var creation = (CharacterCreationViewModel)window.OpenCharacterCreation().DataContext!;
+        creation.SelectedMethod = CharacterCreationViewModel.StatMethods.Single(m => m.Method == StatMethod.HeroicPointBuy);
+        Assert.True(creation.IsPointBuy);
+        Assert.Equal(HeroicBirth.HeroicBudget, creation.Budget);
+        var str = creation.StatRows.Single(r => r.Id == "str");
+        for (var i = 0; i < 20; i++) creation.IncreaseCommand.Execute(str);
+        Assert.Equal(HeroicBirth.HeroicMax, str.Base);
+        Assert.Equal("18/50", str.BaseText);
+        Assert.Null(creation.Error);
+        creation.StatRows.Single(r => r.Id == "dex").MinimumIndex = 5;
+
+        creation.StartCommand.Execute(null);
+        Assert.True(vm.Game.Player.HeroicBirth);
+        Assert.Equal(HeroicBirth.HeroicMax, vm.Game.Player.BaseStats["str"]);
+        Assert.True(saved.LastCharacter!.Heroic);
+        Assert.False(saved.LastCharacter.Rolled);
+        Assert.Equal(CharacterCreationViewModel.LowestMinimum + 4, saved.LastCharacter.AutorollMinimums["dex"]);
+
+        // The next creation screen starts from them.
+        var again = (CharacterCreationViewModel)window.OpenCharacterCreation().DataContext!;
+        Assert.Equal(StatMethod.HeroicPointBuy, again.Method);
+        Assert.Equal(5, again.StatRows.Single(r => r.Id == "dex").MinimumIndex);
+    }
 }

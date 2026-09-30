@@ -55,7 +55,7 @@ public sealed record ScoreRow(int Rank, ScoreEntry Entry, bool IsCurrent)
 {
     public string RankText => Rank.ToString(CultureInfo.InvariantCulture);
     public string Points => Entry.Points.ToString("N0", CultureInfo.CurrentCulture);
-    public string Who => $"{Entry.Name} the {Entry.Race} {Entry.Class}";
+    public string Who => $"{Entry.Name} the {Entry.Race} {Entry.Class}{(Entry.Heroic ? " [Heroic]" : "")}";
     public string Level => Entry.MaxLevel > Entry.Level ? $"{Entry.Level} ({Entry.MaxLevel})" : Entry.Level.ToString(CultureInfo.InvariantCulture);
     public string Depth => Entry.MaxDepth == 0 ? "Town" : $"{Entry.MaxDepth * 50} ft";
     public string Fate => Entry.Won

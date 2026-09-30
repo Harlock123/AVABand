@@ -194,7 +194,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _settings.LastCharacter = new SavedCharacter
         {
             Name = spec.Name, Race = spec.RaceId, Class = spec.ClassId,
-            Stats = new Dictionary<string, int>(spec.BaseStats), Rolled = spec.Method == StatMethod.Roll,
+            Stats = new Dictionary<string, int>(spec.BaseStats), Rolled = !spec.Method.IsPointBuy(), Heroic = spec.Method.IsHeroic(),
+            AutorollMinimums = _autorollMinimums ?? _settings.LastCharacter?.AutorollMinimums ?? [],
             BirthOptions = spec.Options is { } birth ? new Dictionary<string, bool>(birth) : [],
         };
         _settings.LastClass = spec.ClassId;
@@ -203,7 +204,14 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     }
 
     public CharacterSpec? LastCharacter() => _settings.LastCharacter is { } c
-        ? new CharacterSpec(c.Name, c.Race, c.Class, c.Stats, c.Rolled ? StatMethod.Roll : StatMethod.PointBuy,
+        ? new CharacterSpec(c.Name, c.Race, c.Class, c.Stats,
+            (c.Rolled, c.Heroic) switch
+            {
+                (true, true) => StatMethod.HeroicRoll,
+                (false, true) => StatMethod.HeroicPointBuy,
+                (true, false) => StatMethod.Roll,
+                _ => StatMethod.PointBuy,
+            },
             c.BirthOptions.Count > 0 ? c.BirthOptions : null)
         : null;
 
@@ -217,10 +225,17 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
 
     public void RequestNewCharacter() => NewCharacterRequested?.Invoke();
 
+    /// <summary>The autoroller minimums from the creation screen just used (kept with the last character).</summary>
+    private Dictionary<string, int>? _autorollMinimums;
+
     public CharacterCreationViewModel CreateCharacterCreation()
     {
-        var creation = new CharacterCreationViewModel(_data, LastCharacter());
-        creation.Started += StartCharacter;
+        var creation = new CharacterCreationViewModel(_data, LastCharacter(), _settings.LastCharacter?.AutorollMinimums);
+        creation.Started += spec =>
+        {
+            _autorollMinimums = creation.Minimums();
+            StartCharacter(spec);
+        };
         return creation;
     }
 

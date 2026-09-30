@@ -14,10 +14,25 @@ public sealed partial class StatRow(string id, string label) : ObservableObject
 {
     public string Id { get; } = id;
     public string Label { get; } = label;
-    [ObservableProperty] private int _base = 10;
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(BaseText))] private int _base = 10;
+
+    /// <summary>The base stat as Angband writes it (18/50 for a heroic 23).</summary>
+    public string BaseText => StatTables.Format(Base);
     [ObservableProperty] private string _raceMod = "";
     [ObservableProperty] private string _classMod = "";
     [ObservableProperty] private string _final = "";
+
+    /// <summary>The autoroller's minimum for the final stat: an index into <see cref="CharacterCreationViewModel.MinimumChoices"/> (0: any).</summary>
+    [ObservableProperty] private int _minimumIndex;
+
+    /// <summary>The minimum as a stat value (0: none).</summary>
+    public int Minimum => MinimumIndex <= 0 ? 0 : CharacterCreationViewModel.LowestMinimum - 1 + MinimumIndex;
+}
+
+/// <summary>One way of choosing stats, as the creation screen lists it.</summary>
+public sealed record StatMethodChoice(StatMethod Method, string Label)
+{
+    public override string ToString() => Label;
 }
 
 /// <summary>
@@ -29,25 +44,44 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     private static readonly (string Id, string Label)[] StatLabels =
         [("str", "Strength"), ("int", "Intelligence"), ("wis", "Wisdom"), ("dex", "Dexterity"), ("con", "Constitution")];
 
+    /// <summary>The lowest minimum the autoroller offers (below it, every roll qualifies).</summary>
+    public const int LowestMinimum = 8;
+
+    /// <summary>The autoroller's minimums: "any", then 8 up to 18/220.</summary>
+    public static IReadOnlyList<string> MinimumChoices { get; } =
+        ["any", .. Enumerable.Range(LowestMinimum, 40 - LowestMinimum + 1).Select(StatTables.Format)];
+
+    /// <summary>The ways of choosing stats: Angband 4.2's two, and AVABand's heroic two.</summary>
+    public static IReadOnlyList<StatMethodChoice> StatMethods { get; } =
+    [
+        new(StatMethod.PointBuy, "Point-buy"),
+        new(StatMethod.Roll, "Rolled"),
+        new(StatMethod.HeroicRoll, "Heroic roll"),
+        new(StatMethod.HeroicPointBuy, "Heroic point-buy"),
+    ];
+
     private readonly GameData _data;
     private readonly Random _random = new();
-    private Dictionary<string, int> _rolled = [];
 
-    public CharacterCreationViewModel(GameData data, CharacterSpec? last)
+    public CharacterCreationViewModel(GameData data, CharacterSpec? last, IReadOnlyDictionary<string, int>? minimums = null)
     {
         _data = data;
         Races = data.Races;
         Classes = data.Classes;
-        foreach (var (id, label) in StatLabels) StatRows.Add(new StatRow(id, label));
+        foreach (var (id, label) in StatLabels)
+        {
+            var row = new StatRow(id, label);
+            if (minimums?.GetValueOrDefault(id) is >= LowestMinimum and var min) row.MinimumIndex = min - LowestMinimum + 1;
+            StatRows.Add(row);
+        }
 
         _name = last?.Name ?? "Adventurer";
         _selectedRace = Races.FirstOrDefault(r => r.Id == last?.RaceId) ?? Races.FirstOrDefault();
         _selectedClass = Classes.FirstOrDefault(c => c.Id == last?.ClassId) ?? Classes.FirstOrDefault();
-        _isPointBuy = last?.Method != StatMethod.Roll;
+        _selectedMethod = StatMethods.First(m => m.Method == (last?.Method ?? StatMethod.PointBuy));
         // A fresh character starts at 12 in everything, leaving half the points to spend.
         foreach (var row in StatRows) row.Base = last?.BaseStats.GetValueOrDefault(row.Id) is > 0 and var v ? v : 12;
-        if (!_isPointBuy) _rolled = StatRows.ToDictionary(r => r.Id, r => r.Base);
-        if (_isPointBuy && Birth.ValidatePointBuy(BaseStats(), Budget) is not null)
+        if (IsPointBuy && HeroicBirth.ValidatePointBuy(Method, BaseStats(), _data.Constants) is not null)
             foreach (var row in StatRows) row.Base = 12;
         // Birth options (Angband's birth menu), as last chosen or at their defaults.
         foreach (var o in OptionCatalog.OfKind(OptionKind.Birth))
@@ -60,12 +94,27 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     public IReadOnlyList<ClassDef> Classes { get; }
     public ObservableCollection<StatRow> StatRows { get; } = [];
     public ObservableCollection<OptionRow> BirthOptionRows { get; } = [];
-    public int Budget => _data.Constants.BirthPoints;
+    public int Budget => HeroicBirth.Budget(Method, _data.Constants);
+
+    public StatMethod Method => SelectedMethod.Method;
+
+    /// <summary>Point-buy of either kind (the +/− buttons show); otherwise rolled (Reroll and the autoroller show).</summary>
+    public bool IsPointBuy
+    {
+        get => Method.IsPointBuy();
+        set
+        {
+            if (value != IsPointBuy) SelectedMethod = StatMethods.First(m => m.Method == (value ? StatMethod.PointBuy : StatMethod.Roll));
+        }
+    }
+
+    public bool IsRolled => !IsPointBuy;
 
     [ObservableProperty] private string _name;
     [ObservableProperty] private RaceDef? _selectedRace;
     [ObservableProperty] private ClassDef? _selectedClass;
-    [ObservableProperty] private bool _isPointBuy;
+    [ObservableProperty] private StatMethodChoice _selectedMethod;
+    [ObservableProperty] private string _autorollText = "";
     [ObservableProperty] private string _pointsText = "";
     [ObservableProperty] private string _preview = "";
     [ObservableProperty] private string _raceDescription = "";
@@ -79,22 +128,30 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     partial void OnSelectedClassChanged(ClassDef? value) => Update();
     partial void OnNameChanged(string value) => Update();
 
-    partial void OnIsPointBuyChanged(bool value)
+    partial void OnSelectedMethodChanged(StatMethodChoice value)
     {
-        if (value)
-            foreach (var row in StatRows) row.Base = Math.Clamp(row.Base, Birth.PointBuyMin, Birth.PointBuyMax);
+        OnPropertyChanged(nameof(IsPointBuy));
+        OnPropertyChanged(nameof(IsRolled));
+        OnPropertyChanged(nameof(Method));
+        OnPropertyChanged(nameof(Budget));
+        AutorollText = "";
+        if (IsPointBuy)
+        {
+            var (min, max) = HeroicBirth.BaseRange(Method);
+            foreach (var row in StatRows) row.Base = Math.Clamp(row.Base, min, max);
+            while (HeroicBirth.PointsSpent(Method, BaseStats()) > Budget)
+                StatRows.OrderByDescending(r => r.Base).First().Base--;
+            Update();
+        }
         else Reroll();
-        while (value && Birth.PointsSpent(BaseStats()) > Budget)
-            StatRows.OrderByDescending(r => r.Base).First().Base--;
-        Update();
     }
 
     [RelayCommand]
     private void Increase(StatRow row)
     {
-        if (!IsPointBuy || row.Base >= Birth.PointBuyMax) return;
+        if (!IsPointBuy || row.Base >= HeroicBirth.BaseRange(Method).Max) return;
         row.Base++;
-        if (Birth.PointsSpent(BaseStats()) > Budget) row.Base--;
+        if (HeroicBirth.PointsSpent(Method, BaseStats()) > Budget) row.Base--;
         Update();
     }
 
@@ -109,9 +166,44 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     [RelayCommand]
     private void Reroll()
     {
-        _rolled = Birth.RollStats(new GameRandom((ulong)_random.NextInt64()));
-        foreach (var row in StatRows) row.Base = _rolled[row.Id];
+        var rolled = HeroicBirth.Roll(Method, new GameRandom((ulong)_random.NextInt64()));
+        foreach (var row in StatRows) row.Base = rolled[row.Id];
+        AutorollText = "";
         Update();
+    }
+
+    /// <summary>The autoroller's minimums, by stat (only those set).</summary>
+    public Dictionary<string, int> Minimums() =>
+        StatRows.Where(r => r.Minimum > 0).ToDictionary(r => r.Id, r => r.Minimum);
+
+    /// <summary>
+    /// The autoroller (as Angband 3.x's): rerolls, up to 100,000 times, until every final stat
+    /// reaches its minimum — or says which minimum this roll can never reach.
+    /// </summary>
+    [RelayCommand]
+    private void Autoroll()
+    {
+        if (IsPointBuy) return;
+        var minimums = Minimums();
+        if (minimums.Count == 0)
+        {
+            AutorollText = "Set a minimum for some stats first (the Min column), then Autoroll.";
+            return;
+        }
+        if (HeroicBirth.Unreachable(Method, minimums, SelectedRace, SelectedClass) is { } impossible)
+        {
+            AutorollText = impossible;
+            return;
+        }
+        const int tries = 100_000;
+        if (HeroicBirth.AutoRoll(Method, minimums, SelectedRace, SelectedClass, new GameRandom((ulong)_random.NextInt64()), tries) is not { } found)
+        {
+            AutorollText = $"No roll met every minimum in {tries:N0} tries; lower some of them.";
+            return;
+        }
+        foreach (var row in StatRows) row.Base = found.Stats[row.Id];
+        Update();
+        AutorollText = found.Rolls == 1 ? "The first roll met every minimum." : $"Met every minimum after {found.Rolls:N0} rolls.";
     }
 
     /// <summary>Angband player_random_name: a made-up word of 4 to 8 letters, built from names.txt's Tolkien names.</summary>
@@ -135,7 +227,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         SelectedRace is null || SelectedClass is null
             ? null
             : new CharacterSpec(string.IsNullOrWhiteSpace(Name) ? "Adventurer" : Name.Trim(), SelectedRace.Id, SelectedClass.Id,
-                BaseStats(), IsPointBuy ? StatMethod.PointBuy : StatMethod.Roll,
+                BaseStats(), Method,
                 BirthOptionRows.ToDictionary(r => r.Id, r => r.IsChecked));
 
     /// <summary>Refreshes modifiers, points and the preview (by creating the character for real).</summary>
@@ -150,11 +242,14 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             row.Final = StatTables.Format(Birth.FinalStat(row.Base, race, cls, row.Id));
         }
 
-        var spent = Birth.PointsSpent(BaseStats());
-        PointsText = IsPointBuy
+        var spent = HeroicBirth.PointsSpent(Method, BaseStats());
+        var heroic = Method.IsHeroic() ? "  ·  Heroic (AVABand): scored, but tagged in the high scores" : "";
+        PointsText = (IsPointBuy
             ? $"Points: {Budget - spent} of {Budget} left (unspent points become {50} gold each)"
-            : "Rolled stats (press Reroll for another set)";
-        Error = IsPointBuy ? Birth.ValidatePointBuy(BaseStats(), Budget) : null;
+            : Method == StatMethod.HeroicRoll
+                ? "Heroic roll: each stat 14 to 18/50 (Reroll, or set minimums and Autoroll)"
+                : "Rolled stats (Reroll, or set minimums and Autoroll)") + heroic;
+        Error = IsPointBuy ? HeroicBirth.ValidatePointBuy(Method, BaseStats(), _data.Constants) : null;
         RaceDescription = race?.Description ?? "";
         ClassDescription = cls?.Description ?? "";
 

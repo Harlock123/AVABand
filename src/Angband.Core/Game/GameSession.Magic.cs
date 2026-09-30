@@ -56,6 +56,7 @@ public sealed partial class GameSession
         p.Name = spec.Name;
         p.Race = race;
         p.Class = cls;
+        p.HeroicBirth = spec.Method.IsHeroic();
         foreach (var stat in CharacterSpec.StatIds)
         {
             p.BaseStats[stat] = spec.BaseStats.GetValueOrDefault(stat, Data.Constants.BaseStat);

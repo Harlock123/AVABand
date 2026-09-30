@@ -66,7 +66,7 @@ public sealed partial class MainWindowViewModel
         if (LastCharacter() is { } last && last.Name == p.Name && last.ClassId == p.Class.Id && last.RaceId == (p.Race?.Id ?? last.RaceId))
             return last;
         var stats = p.BaseStats.Count > 0 ? new Dictionary<string, int>(p.BaseStats) : CharacterSpec.Default("human", p.Class.Id).BaseStats;
-        return new CharacterSpec(p.Name, p.Race?.Id ?? "human", p.Class.Id, stats, StatMethod.Roll,
+        return new CharacterSpec(p.Name, p.Race?.Id ?? "human", p.Class.Id, stats, p.HeroicBirth ? StatMethod.HeroicRoll : StatMethod.Roll,
             game.Options.OfKind(Angband.Core.Game.OptionKind.Birth));
     }
 

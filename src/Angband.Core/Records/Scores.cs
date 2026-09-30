@@ -28,6 +28,8 @@ public sealed class ScoreEntry
     public ulong Seed { get; set; }
     /// <summary>Defeated Morgoth.</summary>
     public bool Won { get; set; }
+    /// <summary>Made with AVABand's heroic stats: scored as usual, tagged in the list.</summary>
+    public bool Heroic { get; set; }
     public DateTime DateUtc { get; set; }
 
     public bool IsAlive => KilledBy is null;
@@ -42,7 +44,7 @@ public sealed class ScoreEntry
             Experience = p.Experience, Gold = p.Gold, Turns = game.NormalTurns, Points = Scoring.Points(p),
             KilledBy = p.IsDead ? p.KilledBy ?? "something" : null, Seed = game.Seed,
             DateUtc = whenUtc ?? DateTime.UtcNow,
-            Won = p.IsWinner,
+            Won = p.IsWinner, Heroic = p.HeroicBirth,
         };
     }
 }

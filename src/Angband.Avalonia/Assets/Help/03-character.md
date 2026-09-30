@@ -18,6 +18,20 @@ Your **class** decides how you fight and what magic you have:
 - **Necromancer** — casts from the dark: sees without light, fails more in it.
 - **Blackguard** — a brutal fighter whose spells feed on combat.
 
+## Stats at birth
+
+The creation screen offers four ways to set your stats:
+
+- **Point-buy** (Angband's): 20 points to spend, stats 10 to 18; unspent points become gold.
+- **Rolled** (Angband's): each stat 8 to 17 by dice; *Reroll* for another set.
+- **Heroic roll** (AVABand's): each stat 14 to 18/50 — superlative characters are common.
+- **Heroic point-buy** (AVABand's): 50 points, stats up to 18/50.
+
+With a rolled method, set a **Min** for any stat (the final value, after race and class) and
+press **Autoroll**: it rerolls, thousands of times if need be, until every minimum is met, or
+tells you a minimum is out of reach. Heroic characters still enter the high scores, marked
+*[Heroic]*.
+
 ## Stats
 
 - **Strength** — melee damage, how much you carry, digging.

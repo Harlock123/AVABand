@@ -129,7 +129,7 @@ public static class SaveGame
                 Shape = p.Shape, StatScramble = new(p.StatScramble),
                 ConHpRemainder = p.ConHpRemainder, Regenerates = p.Regenerates, Infravision = p.Infravision,
                 MaxMana = p.MaxMana, Mana = p.Mana, ManaFraction = p.ManaFraction,
-                Stats = new(p.Stats), BaseStats = new(p.BaseStats), NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
+                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
                 MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, RecallDepth = p.RecallDepth, DeepDescentTimer = p.DeepDescentTimer,
                 LearnedSpells = [.. p.LearnedSpells], CastSpells = p.CastSpells.Order(StringComparer.Ordinal).ToList(),
                 BaseSpeed = p.BaseSpeed, BaseArmour = p.BaseArmour, BaseToHit = p.BaseToHit, BaseToDam = p.BaseToDam,
@@ -349,6 +349,7 @@ public static class SaveGame
         (p.MaxMana, p.Mana, p.ManaFraction) = (ps.MaxMana, ps.Mana, ps.ManaFraction);
         foreach (var (k, v) in ps.Stats) p.Stats[k] = v;
         foreach (var (k, v) in ps.BaseStats) p.BaseStats[k] = v;
+        p.HeroicBirth = ps.HeroicBirth;
         // Saves from before gear stat bonuses: the current stats were the natural ones.
         foreach (var (k, v) in ps.NaturalStats.Count > 0 ? ps.NaturalStats : ps.Stats) p.NaturalStats[k] = v;
         foreach (var (k, v) in ps.StatDrain) p.StatDrain[k] = v;

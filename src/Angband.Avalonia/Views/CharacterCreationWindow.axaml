@@ -39,22 +39,27 @@
       <ScrollViewer Grid.Column="4">
       <StackPanel Spacing="8" Margin="0,0,14,0">
         <StackPanel Orientation="Horizontal" Spacing="12">
-          <ToggleSwitch x:Name="MethodSwitch" OnContent="Point-buy" OffContent="Rolled" IsChecked="{Binding IsPointBuy}" />
-          <Button Content="Reroll" Command="{Binding RerollCommand}" IsVisible="{Binding !IsPointBuy}" VerticalAlignment="Center" />
+          <ComboBox x:Name="MethodBox" ItemsSource="{Binding StatMethods}" SelectedItem="{Binding SelectedMethod}" MinWidth="170" />
+          <Button Content="Reroll" Command="{Binding RerollCommand}" IsVisible="{Binding IsRolled}" VerticalAlignment="Center" />
+          <Button x:Name="AutorollButton" Content="Autoroll" Command="{Binding AutorollCommand}" IsVisible="{Binding IsRolled}" VerticalAlignment="Center"
+                  ToolTip.Tip="Reroll until every final stat reaches its minimum (the Min column)" />
         </StackPanel>
-        <TextBlock Text="{Binding PointsText}" Opacity="0.8" />
-        <Grid ColumnDefinitions="120,50,40,40,44,70" Margin="0,4,0,0">
+        <TextBlock Text="{Binding PointsText}" Opacity="0.8" TextWrapping="Wrap" />
+        <TextBlock Text="{Binding AutorollText}" Foreground="#e6c35c" TextWrapping="Wrap"
+                   IsVisible="{Binding AutorollText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        <Grid ColumnDefinitions="120,50,40,40,44,70,Auto" Margin="0,4,0,0">
           <TextBlock Grid.Column="1" Text="Base" Opacity="0.6" FontSize="12" />
           <TextBlock Grid.Column="2" Text="Race" Opacity="0.6" FontSize="12" />
           <TextBlock Grid.Column="3" Text="Class" Opacity="0.6" FontSize="12" />
           <TextBlock Grid.Column="5" Text="Final" Opacity="0.6" FontSize="12" />
+          <TextBlock Grid.Column="6" Text="Min (autoroll)" Opacity="0.6" FontSize="12" IsVisible="{Binding IsRolled}" />
         </Grid>
         <ItemsControl ItemsSource="{Binding StatRows}">
           <ItemsControl.ItemTemplate>
             <DataTemplate x:DataType="vm:StatRow">
-              <Grid ColumnDefinitions="120,50,40,40,44,70,Auto,Auto" Margin="0,2">
+              <Grid ColumnDefinitions="120,50,40,40,44,70,Auto,Auto,Auto" Margin="0,2">
                 <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="1" Text="{Binding Base}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                <TextBlock Grid.Column="1" Text="{Binding BaseText}" VerticalAlignment="Center" FontWeight="SemiBold" />
                 <TextBlock Grid.Column="2" Text="{Binding RaceMod}" VerticalAlignment="Center" Foreground="#8ab4f8" />
                 <TextBlock Grid.Column="3" Text="{Binding ClassMod}" VerticalAlignment="Center" Foreground="#e6c35c" />
                 <TextBlock Grid.Column="5" Text="{Binding Final}" VerticalAlignment="Center" FontWeight="Bold" />
@@ -64,6 +69,9 @@
                 <Button Grid.Column="7" Content="+" Padding="10,0" Margin="2,0"
                         IsVisible="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).IsPointBuy}"
                         Command="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).IncreaseCommand}" CommandParameter="{Binding}" />
+                <ComboBox Grid.Column="8" MinWidth="96" Padding="6,2" FontSize="12"
+                          ItemsSource="{x:Static vm:CharacterCreationViewModel.MinimumChoices}" SelectedIndex="{Binding MinimumIndex}"
+                          IsVisible="{Binding $parent[Window].((vm:CharacterCreationViewModel)DataContext).IsRolled}" />
               </Grid>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
