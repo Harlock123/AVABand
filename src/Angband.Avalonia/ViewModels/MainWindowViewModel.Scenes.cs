@@ -12,10 +12,12 @@ public enum SceneKind { StairsDown, StairsUp, RecallUp, RecallDown, Cavern, Laby
 /// daylight, and the picture to show — the player's own, or the bundled artwork — or none, when the
 /// scene is painted. A unique's scene carries its glyph and colour for the painted version.
 /// </summary>
-/// With <see cref="WaitForKey"/> (the option "Scenes stay until you press Space") it holds, once
+/// A Word of Recall scene with <see cref="PortalArt"/> (the folder of the rent's rim and the hand) is
+/// the animated cutscene over its backdrop (<see cref="Picture"/>). With <see cref="WaitForKey"/> (the option "Scenes stay until you press Space") it holds, once
 /// it has faded in, until dismissed.
 public sealed record AmbientScene(SceneKind Kind, string Caption, int Depth, bool Day, string? Picture,
-    string? Glyph = null, uint GlyphColor = 0xFFFFFFFF, string? Subtitle = null, bool WaitForKey = false);
+    string? Glyph = null, uint GlyphColor = 0xFFFFFFFF, string? Subtitle = null, bool WaitForKey = false,
+    string? PortalArt = null);
 
 // Scenes (the option "Show scenes at moments of note", on by default): taking the stairs, Word of
 // Recall, arriving in a cavern, labyrinth or fortress, a level whose feeling is deadly, meeting a
@@ -114,10 +116,27 @@ public sealed partial class MainWindowViewModel
 
     // --- What shows a scene ------------------------------------------------------------------------
 
+    /// <summary>
+    /// Word of Recall: a rent torn in the world where you stand — the dungeon room you read it in, or
+    /// the town square — and a vast incorporeal hand reaching out of it to take you. Your own
+    /// picture (recall-town, recall-dungeon) replaces the cutscene; without the bundled pictures,
+    /// the painted rings of light.
+    /// </summary>
     private void OnRecalled(RecalledEvent e)
     {
-        if (e.Up) AddScene(SceneKind.RecallUp, "Word of Recall draws you up to the town", pictures: ["recall-town"]);
-        else AddScene(SceneKind.RecallDown, "Word of Recall draws you down into the depths", pictures: ["recall-dungeon"]);
+        var (kind, caption, own) = e.Up
+            ? (SceneKind.RecallUp, "Word of Recall draws you up to the town", "recall-town")
+            : (SceneKind.RecallDown, "Word of Recall draws you down into the depths", "recall-dungeon");
+        if (!ScenesOn) return;
+        var backdrop = e.Up ? "recall-portal-room.jpg" : _game.IsDaytime ? "recall-portal-square-day.jpg" : "recall-portal-square-night.jpg";
+        var bundled = Path.Combine(BundledArtDirectory, backdrop);
+        if (PictureFor(own) is null && OptionValue(DisplayOptions.ScenePictures) && File.Exists(bundled))
+        {
+            _pendingScenes.Add(new AmbientScene(kind, caption, _game.Player.Depth, _game.IsDaytime, bundled,
+                WaitForKey: OptionValue(DisplayOptions.ScenesWait), PortalArt: BundledArtDirectory));
+            return;
+        }
+        AddScene(kind, caption, pictures: [own]);
     }
 
     /// <summary>

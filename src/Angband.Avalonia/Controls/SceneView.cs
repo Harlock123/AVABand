@@ -23,6 +23,7 @@ public sealed class SceneView : Control
     {
         SceneKind.Death => 3200,
         SceneKind.Unique => 2200,
+        SceneKind.RecallUp or SceneKind.RecallDown => 3600,
         _ => DurationMs,
     };
 
@@ -31,8 +32,11 @@ public sealed class SceneView : Control
     /// <summary>Where a scene that waits for Space holds: faded in, before it would fade out.</summary>
     public const double HoldAt = 0.8;
 
-    /// <summary>Whether the scene is holding for Space (it has played up to <see cref="HoldAt"/>).</summary>
-    public bool IsHolding => Scene is { WaitForKey: true } && Elapsed >= Duration * HoldAt;
+    /// <summary>Where a scene holds: the recall portal before its hand has closed, the rest at <see cref="HoldAt"/>.</summary>
+    public static double HoldFor(AmbientScene scene) => scene.PortalArt is not null ? RecallHold : HoldAt;
+
+    /// <summary>Whether the scene is holding for Space (it has played up to <see cref="HoldFor"/>).</summary>
+    public bool IsHolding => Scene is { WaitForKey: true } s && Elapsed >= Duration * HoldFor(s);
 
     public static readonly StyledProperty<AmbientScene?> SceneProperty =
         AvaloniaProperty.Register<SceneView, AmbientScene?>(nameof(Scene));
@@ -83,10 +87,10 @@ public sealed class SceneView : Control
         if (Scene is null) return;
         Elapsed += ms;
         InvalidateVisual();
-        if (Scene.WaitForKey && Elapsed >= Duration * HoldAt)
+        if (Scene.WaitForKey && Elapsed >= Duration * HoldFor(Scene))
         {
             // Hold, faded in, on this frame until dismissed (the view model ends it).
-            Elapsed = Duration * HoldAt;
+            Elapsed = Duration * HoldFor(Scene);
             _clock?.Stop();
             return;
         }
@@ -103,7 +107,11 @@ public sealed class SceneView : Control
         using (context.PushOpacity(Math.Clamp(fade, 0, 1)))
         {
             context.FillRectangle(Brushes.Black, new Rect(Bounds.Size));
-            if (scene.Picture is { } path && Picture(path) is { } bitmap) DrawPicture(context, bitmap, p);
+            if (scene.Picture is { } path && Picture(path) is { } bitmap)
+            {
+                var dest = DrawPicture(context, bitmap, p);
+                if (scene.PortalArt is { } art) DrawRecallPortal(context, dest, art, p);
+            }
             else Paint(context, scene, p);
             DrawCaption(context, scene.Caption, scene.Subtitle);
             if (IsHolding) DrawPrompt(context);
@@ -125,8 +133,8 @@ public sealed class SceneView : Control
         }
     }
 
-    /// <summary>The player's own picture, filling the view and zooming in a little as it plays.</summary>
-    private void DrawPicture(DrawingContext context, Bitmap bitmap, double p)
+    /// <summary>The picture, filling the view and zooming in a little as it plays; returns where it went.</summary>
+    private Rect DrawPicture(DrawingContext context, Bitmap bitmap, double p)
     {
         var view = Bounds.Size;
         var src = bitmap.Size;
@@ -134,6 +142,133 @@ public sealed class SceneView : Control
         var size = new Size(src.Width * scale, src.Height * scale);
         var dest = new Rect(new Point((view.Width - size.Width) / 2, (view.Height - size.Height) / 2), size);
         context.DrawImage(bitmap, new Rect(src), dest);
+        return dest;
+    }
+
+    // --- Word of Recall: the rent and the hand ------------------------------------------------------
+
+    /// <summary>The rent in the backdrops (tools/recall_portal_art.py's PORTAL): centre and radii, as fractions of the picture.</summary>
+    public const double PortalX = 0.5, PortalY = 0.445, PortalRx = 0.094, PortalRy = 0.24;
+
+    /// <summary>Where a recall scene holds for Space: the hand reaching, not yet closed.</summary>
+    public const double RecallHold = 0.6;
+
+    private readonly Dictionary<string, Bitmap?> _art = new(StringComparer.Ordinal);
+
+    private Bitmap? Art(string folder, string name)
+    {
+        var path = Path.Combine(folder, name);
+        if (_art.TryGetValue(path, out var cached)) return cached;
+        Bitmap? bitmap = null;
+        try { bitmap = new Bitmap(path); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException) { }
+        return _art[path] = bitmap;
+    }
+
+    private static double Smooth(double a, double b, double x)
+    {
+        var t = Math.Clamp((x - a) / (b - a), 0, 1);
+        return t * t * (3 - 2 * t);
+    }
+
+    /// <summary>
+    /// The Word of Recall cutscene, over its backdrop (a dungeon room, or the town square): the rent
+    /// tears open, shimmering and crackling; a vast incorporeal hand reaches out of it toward you,
+    /// growing until it fills the view, closes — and the light takes you.
+    /// </summary>
+    private void DrawRecallPortal(DrawingContext context, Rect dest, string art, double p)
+    {
+        var t = Elapsed / 1000;
+        var centre = new Point(dest.X + dest.Width * PortalX, dest.Y + dest.Height * PortalY);
+        var open = Smooth(0.02, 0.24, p);
+        var rx = dest.Width * PortalRx * (0.15 + 0.85 * open);
+        var ry = dest.Height * PortalRy * (0.15 + 0.85 * open);
+
+        // Inside the rent: a swirl of violet light, turning, with ripples running out and motes circling.
+        using (context.PushGeometryClip(new EllipseGeometry(new Rect(centre.X - rx, centre.Y - ry, rx * 2, ry * 2))))
+        {
+            var pulse = 0.85 + 0.15 * Math.Sin(t * 5.3);
+            var core = new RadialGradientBrush
+            {
+                Center = new RelativePoint(centre, RelativeUnit.Absolute),
+                GradientOrigin = new RelativePoint(centre, RelativeUnit.Absolute),
+                RadiusX = new RelativeScalar(rx, RelativeUnit.Absolute),
+                RadiusY = new RelativeScalar(ry, RelativeUnit.Absolute),
+                GradientStops =
+                {
+                    new GradientStop(Color.FromArgb(255, 240, 228, 255), 0),
+                    new GradientStop(Color.FromArgb(255, (byte)(150 * pulse), (byte)(95 * pulse), 235), 0.35),
+                    new GradientStop(Color.FromArgb(255, 45, 16, 90), 1),
+                },
+            };
+            context.FillRectangle(core, new Rect(centre.X - rx, centre.Y - ry, rx * 2, ry * 2));
+            for (var arm = 0; arm < 6; arm++)
+            {
+                var geometry = new StreamGeometry();
+                using (var g = geometry.Open())
+                {
+                    for (var i = 0; i <= 40; i++)
+                    {
+                        var r = i / 40.0;
+                        var a = arm * Math.PI / 3 + t * 1.7 + r * 4.4;
+                        var pt = new Point(centre.X + Math.Cos(a) * rx * r, centre.Y + Math.Sin(a) * ry * r);
+                        if (i == 0) g.BeginFigure(pt, false);
+                        else g.LineTo(pt);
+                    }
+                    g.EndFigure(false);
+                }
+                context.DrawGeometry(null, new Pen(new SolidColorBrush(Color.FromArgb(80, 225, 200, 255)), Math.Max(2, rx * 0.06)), geometry);
+            }
+            for (var i = 0; i < 4; i++)
+            {
+                var phase = (t * 0.55 + i / 4.0) % 1;
+                var pen = new Pen(new SolidColorBrush(Color.FromArgb((byte)(130 * (1 - phase)), 235, 220, 255)), 1.5 + 3 * (1 - phase));
+                context.DrawEllipse(null, pen, centre, rx * phase, ry * phase);
+            }
+            foreach (var (x, y, z) in Scatter(40, 31))
+            {
+                var a = x * Math.PI * 2 + t * (0.6 + z);
+                var r = 0.2 + 0.75 * y;
+                context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(140 + 110 * z), 255, 245, 255)), null,
+                    new Point(centre.X + Math.Cos(a) * rx * r, centre.Y + Math.Sin(a) * ry * r), 1 + 2 * z, 1 + 2 * z);
+            }
+        }
+
+        // Its torn edge and the cracks running out from it, flickering.
+        if (Art(art, "recall-portal-rim.png") is { } rim)
+        {
+            var w = rx * 2 * 1.9;
+            var h = ry * 2 * 1.5;
+            using (context.PushOpacity(Math.Clamp(open * (0.85 + 0.15 * Math.Sin(t * 11.7) * Math.Sin(t * 4.1)), 0, 1)))
+                context.DrawImage(rim, new Rect(rim.Size), new Rect(centre.X - w / 2, centre.Y - h / 2, w, h));
+        }
+
+        // The hand: out of the rent and toward you, growing to more than fill the view, then closing.
+        var reach = Math.Pow(Smooth(0.2, 0.8, p), 1.5);
+        if (reach > 0 && Art(art, "recall-hand-open.png") is { } openHand)
+        {
+            var grasp = Smooth(0.63, 0.71, p);
+            var height = dest.Height * PortalRy * 2 * (0.5 + 2.9 * reach);
+            var width = height * openHand.Size.Width / openHand.Size.Height;
+            var at = new Point(centre.X, centre.Y + dest.Height * 0.32 * reach);
+            var sway = Matrix.CreateTranslation(-at.X, -at.Y) * Matrix.CreateRotation((3.5 * Math.Sin(t * 1.4) - 4 * grasp) * Math.PI / 180)
+                       * Matrix.CreateTranslation(at.X, at.Y);
+            var rect = new Rect(at.X - width / 2, at.Y - height / 2, width, height);
+            var fadeIn = Math.Clamp(reach * 6, 0, 1) * 0.94;
+            using (context.PushTransform(sway))
+            {
+                using (context.PushOpacity(fadeIn * (1 - grasp)))
+                    context.DrawImage(openHand, new Rect(openHand.Size), rect);
+                if (grasp > 0 && Art(art, "recall-hand-grasp.png") is { } closed)
+                    using (context.PushOpacity(fadeIn * grasp))
+                        context.DrawImage(closed, new Rect(closed.Size), rect);
+            }
+        }
+
+        // It has you: a flash of the rent's light, into which the scene fades.
+        var flash = Math.Exp(-Math.Pow((p - 0.83) / 0.05, 2));
+        if (flash > 0.01)
+            context.FillRectangle(new SolidColorBrush(Color.FromArgb((byte)(235 * flash), 238, 226, 255)), new Rect(Bounds.Size));
     }
 
     private void DrawCaption(DrawingContext context, string caption, string? subtitle)

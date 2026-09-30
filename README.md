@@ -899,7 +899,13 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     arriving in a cavern, labyrinth, hard centre (a fortress), moria level, lair or gauntlet, a level whose feeling is deadly ("Omens of death
     haunt this place."), meeting a unique for the very first time (its name), and death (a tombstone,
     behind the game-over menu). Several queue — the stairs, then the cavern you arrive in; a click
-    ends one, a key ends them all and still does what it does. With the option *Scenes stay until
+    ends one, a key ends them all and still does what it does. **Word of Recall** has a cutscene
+    of its own: where you read it — a torchlit dungeon room, or the town square by day or by night —
+    a rent tears open in the world, swirling violet and crackling at its torn edges, and a vast
+    incorporeal hand reaches out of it toward you, grows until it fills the view, closes, and a
+    flash of its light takes you (3.6 s). The artwork is rendered by `tools/recall_portal_art.py`
+    (CC0: the rooms are lit 3-D surfaces in perspective; the hand is drawn as light through smoke)
+    and animated by `SceneView`; your own `recall-town` / `recall-dungeon` picture replaces it. With the option *Scenes stay until
     you press Space* (off by default) each scene fades in and holds, "Press Space to continue" in
     the corner: Space, Enter, a click or the controller's A moves to the next, Escape or B ends
     them all, and other keys do nothing meanwhile (a new or loaded game clears any still held). Only the stairs show the stair scenes

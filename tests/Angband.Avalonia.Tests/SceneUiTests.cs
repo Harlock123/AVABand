@@ -190,7 +190,7 @@ public sealed class SceneUiTests : IDisposable
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         var view = window.GetVisualDescendants().OfType<SceneView>().Single();
-        string[] names = ["stairs-down", "stairs-up", "stairs-up-town", "recall-town", "recall-dungeon", "unique", "danger", "death",
+        string[] names = ["stairs-down", "stairs-up", "stairs-up-town", "unique", "danger", "death",
             "level-cavern", "level-labyrinth", "level-fortress", "level-moria", "level-lair", "level-gauntlet"];
         foreach (var name in names)
         {
@@ -257,5 +257,78 @@ public sealed class SceneUiTests : IDisposable
         Assert.False(vm.Scene!.WaitForKey);
         scene.Advance(SceneView.DurationMs * 2);
         Assert.Null(vm.Scene);
+    }
+
+    /// <summary>
+    /// Word of Recall's cutscene: read in the dungeon, a rent torn in a dungeon room; in town, in the
+    /// town square (by day or night). A hand reaches out of it, grows and closes; the scene holds,
+    /// with the option, before it closes. The player's own picture replaces it.
+    /// </summary>
+    [AvaloniaFact]
+    public void WordOfRecall_TearsARent_AndAHandReachesOut()
+    {
+        var (window, vm, scene) = Open();
+        vm.BundledArtDirectory = Path.Combine(AppContext.BaseDirectory, "art");
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(5));
+        vm.SkipScenes();
+
+        game.Player.RecallTimer = 1;
+        vm.Execute(new HoldCommand());
+        Assert.Equal(0, game.Player.Depth);
+        var up = vm.Scene!;
+        Assert.Equal(SceneKind.RecallUp, up.Kind);
+        Assert.EndsWith("recall-portal-room.jpg", up.Picture);
+        Assert.Equal(vm.BundledArtDirectory, up.PortalArt);
+        foreach (var name in new[] { "recall-portal-rim.png", "recall-hand-open.png", "recall-hand-grasp.png" })
+            Assert.True(File.Exists(Path.Combine(vm.BundledArtDirectory, name)), name);
+        var duration = SceneView.DurationFor(SceneKind.RecallUp);
+        foreach (var (at, name) in new[] { (0.12, "tear"), (0.45, "reach"), (0.6, "hand"), (0.72, "grasp") })
+        {
+            scene.Advance(duration * at - scene.Elapsed);
+            window.CaptureRenderedFrame();
+            TileRenderingTests.Save(window, "scene-recall-" + name);
+        }
+        vm.SkipScenes();
+
+        // Read in town: the town square, by day or by night.
+        game.Player.RecallDepth = 5;
+        game.Player.RecallTimer = 1;
+        for (var i = 0; i < 20 && game.Player.Depth == 0; i++) vm.Execute(new HoldCommand());
+        Assert.True(game.Player.Depth > 0);
+        var down = vm.Scene!;
+        Assert.Equal(SceneKind.RecallDown, down.Kind);
+        Assert.EndsWith(down.Day ? "recall-portal-square-day.jpg" : "recall-portal-square-night.jpg", down.Picture);
+        scene.Advance(SceneView.DurationFor(SceneKind.RecallDown) * 0.5);
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "scene-recall-town-square");
+        vm.SkipScenes();
+
+        // The player's own picture wins, and is shown plainly.
+        Directory.CreateDirectory(_art);
+        var png = Directory.GetFiles(AppContext.BaseDirectory, "*.png", SearchOption.AllDirectories).First();
+        File.Copy(png, Path.Combine(_art, "recall-town.png"));
+        vm.Execute(new DebugJumpCommand(5));
+        vm.SkipScenes();
+        game.Player.RecallTimer = 1;
+        for (var i = 0; i < 20 && game.Player.Depth > 0; i++) vm.Execute(new HoldCommand());
+        Assert.Equal(Path.Combine(_art, "recall-town.png"), vm.Scene!.Picture);
+        Assert.Null(vm.Scene.PortalArt);
+    }
+
+    [AvaloniaFact]
+    public void TheRecallCutscene_HoldsBeforeTheHandCloses()
+    {
+        var (_, vm, scene) = Open(wait: true);
+        vm.BundledArtDirectory = Path.Combine(AppContext.BaseDirectory, "art");
+        vm.Game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(5));
+        vm.SkipScenes();
+        vm.Game.Player.RecallTimer = 1;
+        vm.Execute(new HoldCommand());
+        scene.Advance(SceneView.DurationFor(SceneKind.RecallUp) * 3);
+        Assert.True(scene.IsHolding);
+        Assert.Equal(SceneView.DurationFor(SceneKind.RecallUp) * SceneView.RecallHold, scene.Elapsed, 3);
     }
 }

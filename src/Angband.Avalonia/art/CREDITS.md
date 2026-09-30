@@ -1,6 +1,6 @@
 # Credits: art
 
-The pictures AVABand shows at moments of note. All are public-domain works (their artists died more than a century ago), from scans on Wikimedia Commons; the licence tag on each file's Commons page is given below. The three Piranesi plates were trimmed to the printed area. Your own pictures of the same names, in `<AppData>/AVABand/art/`, are shown instead.
+The pictures AVABand shows at moments of note. All but the Word of Recall cutscene's (made for AVABand, CC0) are public-domain works (their artists died more than a century ago), from scans on Wikimedia Commons; the licence tag on each file's Commons page is given below. The three Piranesi plates were trimmed to the printed area. Your own pictures of the same names, in `<AppData>/AVABand/art/`, are shown instead.
 
 ## danger.jpg
 
@@ -58,19 +58,10 @@ The pictures AVABand shows at moments of note. All are public-domain works (thei
 - Licence: Public domain (Wikimedia Commons licence tags: {{PD-old-100}}, {{PD-Art-YorckProject}}; Commons LicenseShortName: 'Public domain')
 - Notes: Oil; furnaces and ironworks blazing at night — the fires of the old mines. Science Museum, London. 1920px Commons thumbnail, re-encoded.
 
-## recall-dungeon.jpg
+## recall-portal-room.jpg, recall-portal-square-day.jpg, recall-portal-square-night.jpg, recall-portal-rim.png, recall-hand-open.png, recall-hand-grasp.png
 
-- **Inferno, Plate 8 (Canto III): Abandon all hope ye who enter here** — Gustave Doré (1832-1883), 1857-1861 (published 1861)
-- Source: https://commons.wikimedia.org/wiki/File:Gustave_Dor%C3%A9_-_Dante_Alighieri_-_Inferno_-_Plate_8_(Canto_III_-_Abandon_all_hope_ye_who_enter_here).jpg
-- Licence: Public domain (Wikimedia Commons licence tag: {{PD-Art|PD-old-auto-1923|deathyear=1883}}; Commons LicenseShortName: 'Public domain')
-- Notes: Wood engraving; gate of Hell opening into a dark abyss. Downscaled to 1700px, JPEG q82.
-
-## recall-town.jpg
-
-- **Meadows near Greifswald (Wiesen bei Greifswald)** — Caspar David Friedrich (1774-1840), c. 1821-1822
-- Source: https://commons.wikimedia.org/wiki/File:Wiesen_bei_Greifswald_(1821-1822)_-_Caspar_David_Friedrich_(Hamburger_Kunsthalle).jpg
-- Licence: Public domain (Wikimedia Commons licence tag: {{PD-art-two-auto|1840}}; Commons LicenseShortName: 'Public domain')
-- Notes: Oil; daylight view of a town skyline with church spires beyond meadows. Hamburger Kunsthalle.
+- **The Word of Recall cutscene** — made for AVABand, rendered by `tools/recall_portal_art.py` (no source images): a torchlit dungeon room and the town square by day and by night, each with a rent torn in it; the rent's torn, crackling edge; and a vast incorporeal hand, open and closing. The game animates them together (`Controls/SceneView.cs`).
+- Licence: CC0 1.0 (public-domain dedication).
 
 ## stairs-down.jpg
 

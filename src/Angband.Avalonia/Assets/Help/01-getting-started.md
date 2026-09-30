@@ -18,7 +18,8 @@ then read out, and **Ctrl+Shift+D** describes what is around you (Windows, macOS
 
 Moments of note — the stairs, Word of Recall, a cavern, labyrinth, moria level, lair, gauntlet or hard centre, a deadly level, a unique met
 for the first time, death — show a scene for a moment; any key skips it, and Options → *Show scenes
-at moments of note* turns them off. Too quick? Options → *Scenes stay until you press Space* holds
+at moments of note* turns them off. Word of Recall has its own: a rent torn in the room (or the town square) where you read it, and a
+vast ghostly hand reaching out of it to take you. Too quick? Options → *Scenes stay until you press Space* holds
 each one until you press Space (Escape skips the rest). Your own pictures in the AVABand `art` folder beside your saves
 (`stairs-down.png`, `stairs-up.png`, `recall-town.png`, `unique.png`, `death.png`...) replace them.
 
