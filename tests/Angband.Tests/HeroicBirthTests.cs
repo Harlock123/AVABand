@@ -71,7 +71,7 @@ public class HeroicBirthTests
         Assert.True(game.Player.HeroicBirth);
         Assert.False(game.IsCheater);
         Assert.True(ScoreEntry.For(game).Heroic);
-        Assert.Contains("Heroic: born with AVABand's heroic stats", CharacterDump.Build(game));
+        Assert.Contains("Heroic: born with AVABand's heroic stats (the score counts 75%)", CharacterDump.Build(game));
         Assert.Equal(stats["str"], game.Player.BaseStats["str"]);
 
         using var stream = new MemoryStream();
@@ -83,5 +83,22 @@ public class HeroicBirthTests
         Assert.False(plain.Player.HeroicBirth);
         Assert.False(ScoreEntry.For(plain).Heroic);
         Assert.DoesNotContain("Heroic", CharacterDump.Build(plain));
+    }
+
+    [Fact]
+    public void AHeroicScore_CountsThreeQuarters()
+    {
+        var plain = GameSession.NewGame(TestData.Game, 5, CharacterSpec.Default("human", "warrior"));
+        var heroic = GameSession.NewGame(TestData.Game, 5,
+            new CharacterSpec("Hero", "human", "warrior", HeroicBirth.RollStats(new GameRandom(1)), StatMethod.HeroicRoll));
+        foreach (var g in new[] { plain, heroic })
+        {
+            g.Player.Experience = g.Player.MaxExperience = 10_000;
+            g.Player.MaxDepth = 20;
+        }
+        Assert.Equal(12_000, Scoring.Points(plain.Player));
+        Assert.Equal(9_000, Scoring.Points(heroic.Player));
+        Assert.Equal(9_000, ScoreEntry.For(heroic).Points);
+        Assert.Contains("Score 9000 points", CharacterDump.Build(heroic));
     }
 }

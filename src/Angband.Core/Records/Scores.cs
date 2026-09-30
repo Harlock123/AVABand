@@ -5,8 +5,18 @@ namespace Angband.Core.Records;
 
 public static class Scoring
 {
-    /// <summary>Angband's <c>total_points</c>: experience plus 100 points per dungeon level reached.</summary>
-    public static long Points(Player p) => Math.Max(p.Experience, p.MaxExperience) + 100L * p.MaxDepth;
+    /// <summary>What a heroic character's score counts for, in percent (AVABand's: see docs/heroic-balance.md).</summary>
+    public const int HeroicPercent = 75;
+
+    /// <summary>
+    /// Angband's <c>total_points</c>: experience plus 100 points per dungeon level reached — three
+    /// quarters of it for a character born with AVABand's heroic stats, which make the game easier.
+    /// </summary>
+    public static long Points(Player p)
+    {
+        var points = Math.Max(p.Experience, p.MaxExperience) + 100L * p.MaxDepth;
+        return p.HeroicBirth ? points * HeroicPercent / 100 : points;
+    }
 }
 
 /// <summary>One line of the high-score table.</summary>
@@ -28,7 +38,7 @@ public sealed class ScoreEntry
     public ulong Seed { get; set; }
     /// <summary>Defeated Morgoth.</summary>
     public bool Won { get; set; }
-    /// <summary>Made with AVABand's heroic stats: scored as usual, tagged in the list.</summary>
+    /// <summary>Made with AVABand's heroic stats: its points count 75%, and it is tagged in the list.</summary>
     public bool Heroic { get; set; }
     public DateTime DateUtc { get; set; }
 

@@ -37,5 +37,5 @@ What it shows:
 - Across the board, heroic characters gain about 30% more experience in the same time.
 
 So heroic characters are substantially easier, most of all for spellcasters and rangers in their
-first thousand feet. They are tagged *[Heroic]* in the high scores; whether their score should also
-count for less is a choice left open.
+first thousand feet. So their score counts 75% (`Scoring.HeroicPercent`), as well as being tagged
+*[Heroic]* in the high scores.

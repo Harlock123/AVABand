@@ -30,7 +30,7 @@ The creation screen offers four ways to set your stats:
 With a rolled method, set a **Min** for any stat (the final value, after race and class) and
 press **Autoroll**: it rerolls, thousands of times if need be, until every minimum is met, or
 tells you a minimum is out of reach. Heroic characters still enter the high scores, marked
-*[Heroic]*.
+*[Heroic]*, but their score counts only three quarters: heroic stats make the game easier.
 
 ## Stats
 

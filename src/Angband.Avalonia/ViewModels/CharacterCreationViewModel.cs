@@ -243,7 +243,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         }
 
         var spent = HeroicBirth.PointsSpent(Method, BaseStats());
-        var heroic = Method.IsHeroic() ? "  ·  Heroic (AVABand): scored, but tagged in the high scores" : "";
+        var heroic = Method.IsHeroic() ? $"  ·  Heroic (AVABand): the score counts {Angband.Core.Records.Scoring.HeroicPercent}%, tagged in the high scores" : "";
         PointsText = (IsPointBuy
             ? $"Points: {Budget - spent} of {Budget} left (unspent points become {50} gold each)"
             : Method == StatMethod.HeroicRoll

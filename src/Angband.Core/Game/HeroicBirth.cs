@@ -7,7 +7,8 @@ namespace Angband.Core.Game;
 /// <summary>
 /// AVABand's superlative characters (not in Angband 4.2.5): a heroic roll, a heroic point-buy, and
 /// an autoroller that rerolls until every stat reaches a minimum (as Angband 3.x's did). Heroic
-/// characters are scored as usual, but tagged "Heroic" in the scores and the character dump.
+/// characters' scores count 75% (Scoring.HeroicPercent), and they are tagged "Heroic" in the scores
+/// and the character dump.
 /// </summary>
 public static class HeroicBirth
 {

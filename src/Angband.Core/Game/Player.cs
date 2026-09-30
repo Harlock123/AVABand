@@ -112,7 +112,7 @@ public sealed class Player : IActor
     /// <summary>Killed Morgoth: the game is won (Angband total_winner).</summary>
     public bool IsWinner { get; set; }
 
-    /// <summary>Made with AVABand's heroic stats (<see cref="Game.HeroicBirth"/>): scored, but tagged.</summary>
+    /// <summary>Made with AVABand's heroic stats (<see cref="Game.HeroicBirth"/>): its score counts 75%, and is tagged.</summary>
     public bool HeroicBirth { get; set; }
     public string? KilledBy { get; set; }
     public bool IsResting { get; set; }
