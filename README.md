@@ -98,6 +98,12 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Pack room** (with bags, worth managing): Game → *Tidy pack* (`TidyPackCommand`, recorded;
+`Inventory.CombinePack`, Angband's `combine_pack`) merges stacks that have come to match (a kind
+learned, an inscription removed) and reports "N of M slots used" and how much looks like junk (for
+Game → *Clear out junk*); the sidebar marks the slots "(1 left)" and "(full)"; and the first time a
+full pack stops you picking something up a hint says what to do.
+
 **Socketed bracers and gems** (AVABand's own, `Game/GameSession.Gems.cs`): bracers have a slot of
 their own, *arms*, beside the gloves (last in the equipment list, so older saves line up), with 1
 (leather), 2 (iron) or 3 (mithril) sockets; the Armoury sells leather and iron ones. Gems — ruby

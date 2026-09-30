@@ -238,6 +238,7 @@ public sealed partial class GameSession : ITurnHandler
             SetGemCommand set => SetGem(set.Host, set.Gem),
             WieldOffHandCommand off => WieldOffHand(off.Item),
             StoreServicesCommand => StoreServices(),
+            TidyPackCommand => TidyPack(),
             _ => 0,
         };
         if (energy <= 0) return false;

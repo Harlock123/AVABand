@@ -7,6 +7,9 @@ played; this page keeps it all (Help → What's new...).
 
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
+- **Tidy pack** (Game menu): merges stacks that can now go together and says how full your pack
+  is and what looks like junk. The sidebar shows "(1 left)" or "(full)" beside your slots, and the
+  first time a full pack stops you picking something up, a tip says what to do.
 - **A blue–yellow colour-blind palette**: Options → *Colour-blind friendly colours (blue-yellow)*, for
   tritanopia, alongside the red–green one.
 - **Compare gear anywhere**: inspecting something in your pack, or looking at it on the floor, now

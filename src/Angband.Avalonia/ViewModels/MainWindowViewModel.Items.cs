@@ -381,8 +381,10 @@ public sealed partial class MainWindowViewModel
         // The weight that counts (worn gear three quarters, with AVABand's rules) against what can be carried unhindered.
         var penalty = _game.BurdenPenalty;
         var slow = penalty > 0 ? $" · {_game.BurdenName} (-{penalty} speed)" : "";
-        BurdenText = string.Format(CultureInfo.InvariantCulture, "Weight {0:0.0} / {1:0} lb{2}  |  Slots {3}/{4}",
-            _game.BurdenWeight / 10.0, p.WeightLimit / 20.0, slow, inv.SlotsUsed, inv.PackSize);
+        var free = inv.PackSize - inv.SlotsUsed;
+        BurdenText = string.Format(CultureInfo.InvariantCulture, "Weight {0:0.0} / {1:0} lb{2}  |  Slots {3}/{4}{5}",
+            _game.BurdenWeight / 10.0, p.WeightLimit / 20.0, slow, inv.SlotsUsed, inv.PackSize,
+            free <= 0 ? " (full)" : free == 1 ? " (1 left)" : "");
     }
 
     private ItemRow Row(string letter, Item item)

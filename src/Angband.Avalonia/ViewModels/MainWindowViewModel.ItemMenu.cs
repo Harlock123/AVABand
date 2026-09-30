@@ -109,6 +109,18 @@ public sealed partial class MainWindowViewModel
     private List<JunkItem>? _junk;
     private HashSet<Item> _junkTicked = [];
 
+    /// <summary>Game → Tidy pack: stacks that can go together merged, and how full the pack is.</summary>
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    public void TidyPack()
+    {
+        Execute(new TidyPackCommand());
+        Refresh();
+    }
+
+    /// <summary>Game → Clear out junk.</summary>
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private void ClearJunk() => BeginClearJunk();
+
     /// <summary>AVABand's "Clear out junk": the carried things worth ignoring, ticked or not, to ignore at once.</summary>
     public void BeginClearJunk()
     {

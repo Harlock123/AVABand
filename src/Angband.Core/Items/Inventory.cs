@@ -234,6 +234,27 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
             if (_equipment[i] is { Number: <= 0 }) _equipment[i] = null;
     }
 
+    /// <summary>
+    /// Angband combine_pack: stacks that can now go together (a kind learned, an inscription
+    /// gone) are merged, as far as a stack may grow; the pack is put back in order. Returns how many
+    /// merged.
+    /// </summary>
+    public int CombinePack()
+    {
+        var merged = 0;
+        for (var i = _pack.Count - 1; i > 0; i--)
+            for (var j = 0; j < i; j++)
+                if (_pack[j].CanStackWith(_pack[i]) && _pack[j].Number + _pack[i].Number <= _pack[j].Base.MaxStack)
+                {
+                    _pack[j].Absorb(_pack[i]);
+                    _pack.RemoveAt(i);
+                    merged++;
+                    break;
+                }
+        SortPack();
+        return merged;
+    }
+
     /// <summary>Angband pack order: by base (in data order), then kind level, then name.</summary>
     private void SortPack() => _pack.Sort((a, b) =>
     {

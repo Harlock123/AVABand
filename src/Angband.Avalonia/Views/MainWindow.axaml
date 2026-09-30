@@ -64,6 +64,8 @@
         <MenuItem Header="_Repeat last command" Command="{Binding RepeatLastCommandCommand}" InputGesture="Ctrl+V" />
         <MenuItem Header="_Message history..." Command="{Binding ShowMessageHistoryCommand}" InputGesture="Ctrl+P" />
         <MenuItem Header="Level _feeling" Command="{Binding ShowFeelingCommand}" InputGesture="Ctrl+F" />
+        <MenuItem Header="_Tidy pack" Command="{Binding TidyPackCommand}" />
+        <MenuItem Header="Clear out _junk..." Command="{Binding ClearJunkCommand}" />
         <MenuItem Header="_Retire (after winning)" Command="{Binding RetireCommand}" InputGesture="Shift+Q" />
         <MenuItem Header="Shops pay _gold when you sell" Command="{Binding ToggleShopsPayGoldCommand}"
                   ToggleType="CheckBox" IsChecked="{Binding ShopsPayGold, Mode=OneWay}" />

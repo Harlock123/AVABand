@@ -125,6 +125,9 @@ public sealed partial class MainWindowViewModel
         yield return ("hidden_traps", () => game.TrapsFound > 0,
             () => "You noticed that trap as it came into sight. Traps stay hidden until your search skill is up to "
                   + $"them; it grows with your level and with gear of Searching (your character sheet, {KeyName(InputAction.CharacterSheet)}, shows it).");
+        yield return ("pack_full", () => player.Inventory.SlotsUsed >= player.Inventory.PackSize
+                                         && game.Level.Objects.At(player.Position).Any(i => !i.IsGold && !Hidden(i) && !player.Inventory.CanCarry(i)),
+            () => "Your pack is full, so you can't pick this up. Drop something, eat or drink it, or use Game → Clear out junk; a bag of holding gives more room.");
         yield return ("floor", () => game.Level.Objects.At(player.Position).Any(i => !i.IsGold && !Hidden(i)),
             () => $"{KeyName(InputAction.Pickup)} picks up what you stand on (it is listed under \"On the floor\" in the sidebar).");
         yield return ("hungry", () => game.HungerLevel <= HungerLevel.Hungry,

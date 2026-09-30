@@ -286,4 +286,24 @@ public class ItemMenuUiTests
         for (var i = 0; i < 10 && !vm.LastMessage.Contains("Metal Cap"); i++) vm.CursorKey(" ");
         Assert.Contains("for your empty helm slot", vm.LastMessage);
     }
+
+    /// <summary>A full pack says so in the sidebar, and standing on something that won't fit brings a hint.</summary>
+    [AvaloniaFact]
+    public void A_full_pack_is_shown_and_explained()
+    {
+        var vm = Start();
+        var game = vm.Game;
+        foreach (var kind in game.Data.Objects.Where(k => k.Base is "potion" or "scroll" && k.Commonness > 0).Select(k => k.Id))
+            if (game.Player.Inventory.SlotsUsed < game.Player.Inventory.PackSize - 1) game.Player.Inventory.Add(game.Objects.Create(kind));
+        vm.Refresh();
+        Assert.EndsWith("(1 left)", vm.BurdenText);
+        game.Player.Inventory.Add(game.Objects.Create("shovel")); // (nothing it can join)
+        vm.Refresh();
+        Assert.EndsWith("(full)", vm.BurdenText);
+
+        vm.DismissHint();
+        game.Level.Objects.Add(game.Player.Position, game.Objects.Create("pick")); // (nothing in the pack it could join)
+        vm.Execute(new HoldCommand());
+        Assert.StartsWith("Your pack is full, so you can't pick this up.", vm.HintText);
+    }
 }
