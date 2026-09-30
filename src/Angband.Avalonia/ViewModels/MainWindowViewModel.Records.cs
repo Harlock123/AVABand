@@ -25,6 +25,8 @@ public sealed partial class MainWindowViewModel
             _featBook.Backfill(records.LoadScores().Entries, FeatDefs, _data);
             records.SaveFeats(_featBook);
         }
+        // The daily dungeon's feats, from its board (tries made before they were feats count too).
+        if (_featBook.CheckBoard(records.LoadDaily(), FeatDefs).Count > 0) records.SaveFeats(_featBook);
     }
 
     private bool _confirmRetire;

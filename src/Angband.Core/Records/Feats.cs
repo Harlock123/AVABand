@@ -6,7 +6,8 @@ namespace Angband.Core.Records;
 
 /// <summary>A feat: a milestone any character can reach, kept for good once one has.</summary>
 /// <param name="Earned">Whether this character has done it (checked after each command).</param>
-public sealed record FeatDef(string Id, string Name, string Description, Func<GameSession, bool> Earned);
+/// <param name="OnBoard">For a daily-dungeon feat: whether the daily board shows it done (checked as each try is recorded).</param>
+public sealed record FeatDef(string Id, string Name, string Description, Func<GameSession, bool> Earned, Func<DailyBoard, bool>? OnBoard = null);
 
 /// <summary>When a feat was first done, and by whom.</summary>
 public sealed class FeatRecord
@@ -40,14 +41,38 @@ public static class Feats
             g => g.AvaQuests.Quests.Values.Any(q => q.IsDone && q.Stage != "lost")));
         feats.Add(new("ava_quests_all", "Every Trouble Mended", "Bring every one of the Prancing Pony's story quests to a good end, with one character.",
             g => data.AvaQuests.All(q => g.AvaQuests.Get(q.Id) is { IsDone: true } s && s.Stage != "lost")));
+        feats.Add(new("heart_returned", "Friend of Belegost", "Give the Heart of the Mountain back to the dwarves.",
+            g => g.AvaQuests.Get("heart")?.Stage == "returned"));
+        feats.Add(new("watch_held", "The Horns of the West", $"Hold the watchtower all {GameSession.WatchTurns} turns, until the horns answer.",
+            g => g.AvaQuests.Get("watch") is { Stage: "relieved" } w && w.N("held") >= GameSession.WatchTurns));
+        feats.Add(new("stone_kept", "The Eye Looks Back", "Keep the palantír, and look into it ten times.",
+            g => g.AvaQuests.Get("stone") is { Stage: "keep" } s && s.N("looks") >= 10));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
         foreach (var quest in data.Quests)
             if (data.Monster(quest.Race) is { } boss)
                 feats.Add(new($"quest_{quest.Id}", $"{boss.Name} Falls", $"Slay {boss.Name}.", g => g.KilledUniques.Contains(boss.Id)));
+        feats.Add(new("daily", "Daily Delver", "Finish a try at the daily dungeon.", _ => false, b => b.Entries.Count > 0));
+        feats.Add(new("daily_deep", "Deep of the Day", $"Reach {20 * data.Constants.FeetPerLevel} ft in a daily dungeon.",
+            g => g.Player.DailyDate is not null && g.Player.MaxDepth >= 20));
+        feats.Add(new("daily_week", "Seven Days Running", "Try the daily dungeon seven days in a row.", _ => false, b => DailyStreak(b) >= 7));
         feats.Add(new("win", "Victory", "Win the game.", g => g.Player.IsWinner));
         foreach (var cls in data.Classes)
             feats.Add(new($"win_{cls.Id}", $"Victory as a {cls.Name}", $"Win the game with a {cls.Name}.", g => g.Player.IsWinner && g.Player.Class?.Id == cls.Id));
         return feats;
+    }
+
+    /// <summary>The longest run of days in a row with a daily-dungeon try on the board.</summary>
+    public static int DailyStreak(DailyBoard board)
+    {
+        var days = board.Entries.Select(e => DateOnly.TryParseExact(e.Day, "yyyy-MM-dd", out var d) ? d : (DateOnly?)null)
+            .OfType<DateOnly>().Distinct().Order().ToList();
+        var best = 0;
+        for (int i = 0, run = 0; i < days.Count; i++)
+        {
+            run = i > 0 && days[i].DayNumber == days[i - 1].DayNumber + 1 ? run + 1 : 1;
+            best = Math.Max(best, run);
+        }
+        return best;
     }
 
     /// <summary>Whether this game can earn feats: not a cheat's, a debug user's, the tutorial or a replay.</summary>
@@ -111,6 +136,17 @@ public sealed class FeatBook
         var fresh = feats.Where(f => !Earned.ContainsKey(f.Id) && f.Earned(game)).ToList();
         var who = $"{game.Player.Name} the {game.Player.Race?.Name} {game.Player.Class?.Name}".Replace("  ", " ");
         foreach (var feat in fresh) Earned[feat.Id] = new FeatRecord { WhenUtc = whenUtc ?? DateTime.UtcNow, Character = who };
+        return fresh;
+    }
+
+    /// <summary>Records the daily-dungeon feats the board newly shows (named for its latest try); returns them.</summary>
+    public IReadOnlyList<FeatDef> CheckBoard(DailyBoard board, IReadOnlyList<FeatDef> feats, DateTime? whenUtc = null)
+    {
+        var latest = board.Entries.OrderBy(e => e.DateUtc).LastOrDefault();
+        if (latest is null) return [];
+        var fresh = feats.Where(f => f.OnBoard is { } done && !Earned.ContainsKey(f.Id) && done(board)).ToList();
+        foreach (var feat in fresh)
+            Earned[feat.Id] = new FeatRecord { WhenUtc = whenUtc ?? latest.DateUtc, Character = $"{latest.Name} the {latest.Race} {latest.Class}" };
         return fresh;
     }
 

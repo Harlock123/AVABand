@@ -134,4 +134,62 @@ public class FeatTests
         }
         finally { File.Delete(path); }
     }
+
+    [Fact]
+    public void The_deep_quests_have_feats_of_their_own()
+    {
+        var game = Game();
+        var book = new FeatBook();
+        game.AvaQuests.Quests["heart"] = new AvaQuestState { Id = "heart", Stage = "kept" };
+        game.AvaQuests.Quests["watch"] = new AvaQuestState { Id = "watch", Stage = "relieved", Numbers = { ["held"] = 80 } }; // Grishnag slain
+        game.AvaQuests.Quests["stone"] = new AvaQuestState { Id = "stone", Stage = "keep", Numbers = { ["looks"] = 9 } };
+        var ids = book.Check(game, All).Select(f => f.Id).ToList();
+        Assert.DoesNotContain("heart_returned", ids);
+        Assert.DoesNotContain("watch_held", ids);
+        Assert.DoesNotContain("stone_kept", ids);
+
+        game.AvaQuests.Quests["heart"].Stage = "returned";
+        game.AvaQuests.Quests["watch"].Numbers["held"] = GameSession.WatchTurns;
+        game.AvaQuests.Quests["stone"].Numbers["looks"] = 10;
+        Assert.Equal(["heart_returned", "watch_held", "stone_kept"], book.Check(game, All).Select(f => f.Id).Where(id => id is "heart_returned" or "watch_held" or "stone_kept"));
+    }
+
+    [Fact]
+    public void Looking_into_the_palantir_is_counted()
+    {
+        var game = Game();
+        game.AvaQuests.Quests["stone"] = new AvaQuestState { Id = "stone", Stage = "keep" };
+        var stone = game.Objects.Create("palantir");
+        game.Player.Inventory.Add(stone);
+        for (var i = 0; i < 3; i++) game.Execute(new UseCommand(game.Player.Inventory.Pack.First(p => p.Kind.Id == "palantir")));
+        Assert.Equal(3, game.AvaQuests.Get("stone")!.N("looks"));
+    }
+
+    [Fact]
+    public void The_daily_dungeon_has_feats_from_its_board()
+    {
+        var board = new DailyBoard();
+        var book = new FeatBook();
+        Assert.Empty(book.CheckBoard(board, All));
+        foreach (var day in new[] { "2026-09-01", "2026-09-02", "2026-09-03", "2026-09-05", "2026-09-06", "2026-09-07", "2026-09-08", "2026-09-09", "2026-09-10" })
+            board.Add(new DailyEntry { Day = day, Name = "Dain", Race = "Dwarf", Class = "Priest", DateUtc = DateTime.Parse(day + "T12:00:00Z").ToUniversalTime() });
+        Assert.Equal(6, Feats.DailyStreak(board)); // (the 4th missed)
+        Assert.Equal(["daily"], book.CheckBoard(board, All).Select(f => f.Id));
+        Assert.Equal("Dain the Dwarf Priest", book.Earned["daily"].Character);
+
+        board.Add(new DailyEntry { Day = "2026-09-11", Name = "Dain", Race = "Dwarf", Class = "Priest", DateUtc = DateTime.UtcNow });
+        Assert.Equal(7, Feats.DailyStreak(board));
+        Assert.Equal(["daily_week"], book.CheckBoard(board, All).Select(f => f.Id));
+        Assert.Empty(book.CheckBoard(board, All));
+    }
+
+    [Fact]
+    public void Going_deep_in_a_daily_dungeon_is_a_feat()
+    {
+        var game = Game();
+        game.Player.MaxDepth = 20;
+        Assert.DoesNotContain("daily_deep", new FeatBook().Check(game, All).Select(f => f.Id));
+        game.Player.DailyDate = "2026-09-30";
+        Assert.Contains("daily_deep", new FeatBook().Check(game, All).Select(f => f.Id));
+    }
 }

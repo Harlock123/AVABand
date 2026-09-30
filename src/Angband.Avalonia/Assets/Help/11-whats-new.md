@@ -3,6 +3,11 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.8
+
+- **New feats**: *Friend of Belegost*, *The Horns of the West* and *The Eye Looks Back* for the deep
+  quests, and *Daily Delver*, *Deep of the Day* and *Seven Days Running* for the daily dungeon.
+
 ## 2026-09-30.7
 
 - **Debug → Try a quest**: jump straight into any quest with a character of your race and class,

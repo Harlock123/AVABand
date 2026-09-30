@@ -145,6 +145,7 @@ public sealed partial class GameSession
     /// </summary>
     private void LookIntoThePalantir()
     {
+        if (AvaQuests.Get("stone") is { } stone) stone.Numbers["looks"] = stone.N("looks") + 1; // (a feat counts them)
         Publish(new MessageEvent("You look into the stone. The dark clears, and you see the whole level laid out, and everything that walks on it."));
         MapArea(255);
         DetectMonsters(255, null);

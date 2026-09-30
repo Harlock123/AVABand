@@ -255,6 +255,8 @@ public sealed class GameOverUiTests : IDisposable
         Assert.Equal(1, first.Attempt);
         Assert.StartsWith("killed by a jackal", first.Fate);
         Assert.True(File.Exists(first.ReplayPath));
+        Assert.True(vm.FeatBook.Earned.ContainsKey("daily")); // a first try is a feat
+        Assert.True(new RecordStore(Path.Combine(_dir, "records")).LoadFeats().Earned.ContainsKey("daily"));
 
         var again = vm.CreateDaily();
         var row = Assert.Single(again.Rows);

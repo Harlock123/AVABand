@@ -48,7 +48,11 @@ application-data folder).
 **Feats** (AVABand's own, `Records/Feats.cs`): milestones across every character you play — 500,
 1000, 2000, 3000, 4000 and 5000 ft; character levels 10 to 50; the first, tenth and fiftieth unique
 slain; 100,000 gold carried; an artifact worn; a first and then every one of the Prancing Pony's
-quests done well; ten notice-board jobs; Sauron and Morgoth slain; and a win with each class.
+quests done well; the deep quests' own (the Heart given back, the watchtower held all 200 turns
+rather than won by Grishnag's death, the palantír kept and looked into ten times — the stone quest
+counts the looks); ten notice-board jobs; the daily dungeon's (a first try, 1000 ft in one, and
+seven days running — these from the daily board, `FeatBook.CheckBoard`, as each try is recorded and
+at start-up); Sauron and Morgoth slain; and a win with each class.
 They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
 ft.)"), kept in `feats.json` beside the scores with who did each first and when, and listed on
 the Knowledge screen's **Feats** page. A character that cheated or used a debug command, the
