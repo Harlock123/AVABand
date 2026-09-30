@@ -51,7 +51,8 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. The
   Home (8) keeps whatever you leave there. Under each piece of armour or weapon a line says how it
   compares with what you have ("Better", "Worse" or "Mixed", in green, red or amber), and arrows, shots
-  and bolts say whether they fit your launcher.
+  and bolts say whether they fit your launcher. Inspecting something in your pack, or looking at it
+  on the floor, says the same.
 - **Go down**: find the `>` staircase and press `>`. Each level is 50 feet deeper and a little
   more dangerous. Take the stairs back up (`<`) whenever you like — levels are new each time
   (unless you chose persistent levels).

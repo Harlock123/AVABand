@@ -342,8 +342,20 @@ public sealed partial class MainWindowViewModel
     {
         var lines = ObjectInfo.DescribeItem(_game, item).Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         lines[0] += ".";
-        return string.Join(" ", lines);
+        return string.Join(" ", lines) + (AdviceNote(item) is { } note ? " " + note : "");
     }
+
+    /// <summary>
+    /// The shops' "will this suit me?" note, anywhere (inspecting, looking): how something you could
+    /// wear compares with what you have, a gem or bag likewise, missiles whether they fit — for things
+    /// not already worn, as far as you know them.
+    /// </summary>
+    private string? AdviceNote(Item item) =>
+        _game.Player.Inventory.Equipped.Contains(item) || _game.StoreHere is not null && !_game.Player.Inventory.Contains(item)
+            ? null
+            : _game.AdviceFor(item, _game.Knowledge.IsFullyKnown(item) || !item.IsWearable, buying: !_game.Player.Inventory.Contains(item)) is { } a
+                ? a.Text.TrimEnd('.') + "."
+                : null;
 
     private void RefreshInventory()
     {

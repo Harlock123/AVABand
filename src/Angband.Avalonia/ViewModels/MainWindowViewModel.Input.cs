@@ -367,7 +367,7 @@ public sealed partial class MainWindowViewModel
         if (_game.VisibleTrapAt(p) is { } trap)
             return $"You see {(("aeiou".Contains(char.ToLowerInvariant(trap.Name[0]))) ? "an" : "a")} {trap.Name}.";
         if (_game.ObjectShownAt(p) is { } shown && _game.Level[p].Has(Angband.Core.World.SquareFlags.Seen))
-            return $"You see {_game.Describe(shown)}.";
+            return $"You see {_game.Describe(shown)}." + (AdviceNote(shown) is { } note ? " " + note : "");
         var feature = _data.Terrain[_game.Known.Feature(p)];
         if (feature.Mimic is { } mimic) feature = _data.Terrain[mimic];
         return $"You see {(("aeiou".Contains(feature.Name[0])) ? "an" : "a")} {feature.Name}.";

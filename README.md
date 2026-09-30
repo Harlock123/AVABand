@@ -512,7 +512,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     "Much the same —") and coloured to match (green, red, amber: the map's palette, so the
     colour-blind option applies); missiles say whether
     they fit your launcher. Your own things for sale are compared too, once all their runes are
-    known. Only what AVABand's rules count is compared: blows come from your class and gear, not a
+    known. The same note is added when you inspect something in your pack (`I`, or its menu) or look at
+it on the floor (`x`). Only what AVABand's rules count is compared: blows come from your class and gear, not a
     weapon's weight, and gloves don't hamper spells.
   - AVABand's one addition: the General Store also always has **lanterns** (`avabandAlways` in
     `stores.json`, kept apart from 4.2.5's `always` list so the drift check still compares that

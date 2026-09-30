@@ -261,4 +261,29 @@ public class ItemMenuUiTests
         Assert.Contains($"· Strained (-{vm.Game.BurdenPenalty} speed)", vm.BurdenText);
         Assert.Contains("Strained", vm.StatusText);
     }
+
+    /// <summary>The shops' comparison, anywhere: inspecting something in the pack, and looking at it on the floor.</summary>
+    [AvaloniaFact]
+    public void Inspecting_or_looking_at_gear_says_whether_it_suits_you()
+    {
+        var vm = Start(); // wielding a dagger
+        var axe = Carry(vm, "battle_axe");
+        vm.Game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.ToHit);
+        vm.Game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.ToDam);
+        vm.OpenItemMenu(axe);
+        Choose(vm, "Inspect");
+        Assert.Contains(vm.Messages, m => m.Contains("Better — vs your Dagger: +") && m.Contains("damage a turn"));
+
+        // On the floor, seen by looking.
+        var game = vm.Game;
+        var spot = game.Level.AllLocs().First(l => l.ChebyshevTo(game.Player.Position) == 1 && game.Level.IsEmptyFloor(l));
+        var cap = game.Objects.Create("metal_cap");
+        game.Knowledge.LearnKind(cap.Kind);
+        game.Level.Objects.Add(spot, cap);
+        game.UpdateView();
+        vm.Refresh();
+        vm.HandleAction(InputAction.Look);
+        for (var i = 0; i < 10 && !vm.LastMessage.Contains("Metal Cap"); i++) vm.CursorKey(" ");
+        Assert.Contains("for your empty helm slot", vm.LastMessage);
+    }
 }
