@@ -29,6 +29,7 @@ public static class DisplayOptions
     public const string HoverLook = "hover_look";
     /// <summary>AVABand's own: a palette red–green colour blindness can tell apart.</summary>
     public const string ColorBlind = "color_blind_friendly";
+    public const string ColorBlindTritan = "color_blind_tritan";
     /// <summary>AVABand's own: save by itself every few minutes of play, not only on level changes.</summary>
     public const string Autosave = "autosave_every_few_minutes";
     /// <summary>AVABand's own: a short tip the first time something happens.</summary>
@@ -72,6 +73,7 @@ public static class DisplayOptions
         new(BookFirst, "Choose the book, then the spell (as Angband's menus)", OptionKind.Interface, false),
         new(HoverLook, "Describe the square under the mouse", OptionKind.Interface, true),
         new(ColorBlind, "Colour-blind friendly colours (red-green)", OptionKind.Interface, false),
+        new(ColorBlindTritan, "Colour-blind friendly colours (blue-yellow)", OptionKind.Interface, false),
         new(Autosave, "Save every five minutes while playing", OptionKind.Interface, true),
         new(Hints, "Hints for new players (each shown once)", OptionKind.Interface, true),
         new(ScreenReader, "Screen reader support (announce messages, prompts and tips)", OptionKind.Interface, false),
@@ -204,6 +206,7 @@ public sealed partial class MainWindowViewModel
         _cells.PurpleUniques = OptionValue(DisplayOptions.PurpleUniques);
         _cells.HpChangesColor = OptionValue(DisplayOptions.HpChangesColor);
         _cells.ColorBlind = OptionValue(DisplayOptions.ColorBlind);
+        _cells.ColorBlindTritan = OptionValue(DisplayOptions.ColorBlindTritan);
         CenterPlayer = OptionValue(DisplayOptions.CenterPlayer);
     }
 

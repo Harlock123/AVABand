@@ -60,4 +60,29 @@ public class ColorBlindTests
         Assert.Equal(umber, cells.Color("Umber"));
         Assert.NotEqual(0xFFC00000u, cells.Color("Red"));
     }
+
+    private static readonly double[,] Tritanopia =
+        { { 1.255528, -0.076749, -0.178779 }, { -0.078411, 0.930809, 0.147602 }, { 0.004733, 0.691367, 0.303900 } };
+
+    /// <summary>The pairs blue–yellow colour blindness runs together.</summary>
+    private static readonly (string, string)[] TritanPairs =
+        [("Blue", "Green"), ("LightBlue", "LightGreen"), ("Yellow", "Violet"), ("LightYellow", "LightViolet"), ("Yellow", "LightPink"),
+         ("Teal", "Blue"), ("Green", "Teal"), ("Yellow", "White")];
+
+    private static double Apart(MapCellBuilder cells, string a, string b) =>
+        Math.Sqrt(Simulate(cells.Color(a), Tritanopia).Zip(Simulate(cells.Color(b), Tritanopia), (x, y) => (x - y) * (x - y)).Sum());
+
+    [Fact]
+    public void The_blue_yellow_palette_keeps_what_tritanopia_confuses_apart()
+    {
+        var cells = new MapCellBuilder(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        var angbandPairs = TritanPairs.Min(p => Apart(cells, p.Item1, p.Item2));
+        cells.ColorBlindTritan = true;
+        var friendlyPairs = TritanPairs.Min(p => Apart(cells, p.Item1, p.Item2));
+        var friendlyHealth = ClosestPair(cells, Tritanopia);
+        Assert.True(friendlyPairs > 55, $"closest confusable pair only {friendlyPairs:0.0} apart");
+        Assert.True(friendlyPairs > angbandPairs + 15, $"{friendlyPairs:0.0} is no better than Angband's {angbandPairs:0.0}");
+        Assert.True(friendlyHealth > 55, $"health colours only {friendlyHealth:0.0} apart");
+        Assert.Equal(cells.Color("Umber"), new MapCellBuilder(DataLoader.Load(DataLoader.DefaultDataDirectory)).Color("Umber")); // the rest alone
+    }
 }

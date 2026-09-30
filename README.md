@@ -1517,7 +1517,12 @@ The option **Colour-blind friendly colours (red-green)** swaps the colours red�
 blindness confuses for a palette after Okabe–Ito (greens lean blue, reds lean vermilion and orange,
 blues, yellows and purples set apart) everywhere colours are drawn — map, sidebar, health bar,
 projections; a test simulates deuteranopia and protanopia (Machado et al. 2009) and checks the
-health bar's five colours stay well apart, as Angband's own do not.
+health bar's five colours stay well apart, as Angband's own do not. **Colour-blind friendly colours
+(blue-yellow)** does the same for tritanopia (`MapCellBuilder.TritanPalette`): blues darker, greens
+brighter, yellows golden and violets deep, each within its own hue — chosen by a search under the
+Machado tritanopia model so the pairs it runs together (blue and green, yellow and violet or pink,
+teal and blue, yellow and white) and the health colours all stay at least 80 apart (Angband's own
+confusable pairs: under 40); a test holds it to that.
 
 ## Sound
 `Angband.Audio` plays sound through OpenAL Soft (Silk.NET, which ships native libraries for

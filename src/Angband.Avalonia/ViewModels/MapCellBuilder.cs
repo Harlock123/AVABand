@@ -116,10 +116,42 @@ public sealed class MapCellBuilder
 
     public uint Color(string name) =>
         ColorBlind && ColorBlindPalette.TryGetValue(name, out var safe) ? safe
+        : ColorBlindTritan && TritanPalette.TryGetValue(name, out var tritan) ? tritan
         : _colors.TryGetValue(name, out var c) ? c : 0xFFFF00FF;
 
     /// <summary>Use <see cref="ColorBlindPalette"/> for the colours red–green colour blindness confuses.</summary>
     public bool ColorBlind { get; set; }
+
+    /// <summary>Use <see cref="TritanPalette"/> for the colours blue–yellow colour blindness (tritanopia) confuses.</summary>
+    public bool ColorBlindTritan { get; set; }
+
+    /// <summary>
+    /// Blue–yellow (tritan) friendly replacements: blues darker and greens brighter, yellows golden and
+    /// violets deep, so blue and green, and yellow and violet or pink — the pairs tritanopia runs
+    /// together — stay apart, as the health colours do (each kept within its own hue; chosen by
+    /// search under the Machado 2009 tritanopia model, tests/…/ColorBlindTests).
+    /// </summary>
+    public static readonly IReadOnlyDictionary<string, uint> TritanPalette = new Dictionary<string, uint>(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Red"] = 0xFFDB191C,
+        ["LightRed"] = 0xFFF6986F,
+        ["Orange"] = 0xFFFF6A20,
+        ["Yellow"] = 0xFFF9D583,
+        ["LightYellow"] = 0xFFFFFBDC,
+        ["Green"] = 0xFF30E070,
+        ["LightGreen"] = 0xFFA0FFB8,
+        ["Teal"] = 0xFF03919D,
+        ["LightTeal"] = 0xFF9CE8E8,
+        ["Blue"] = 0xFF1427A2,
+        ["LightBlue"] = 0xFF6E8CFF,
+        ["DeepLightBlue"] = 0xFF3A64E8,
+        ["Violet"] = 0xFF7A1E7A,
+        ["LightViolet"] = 0xFFB45AB4,
+        ["Purple"] = 0xFF5A1060,
+        ["LightPurple"] = 0xFF9C4AAA,
+        ["Magenta"] = 0xFFC0106E,
+        ["LightPink"] = 0xFFFE69AD,
+    };
 
     /// <summary>
     /// Colour-blind friendly replacements (after the Okabe–Ito palette): greens lean blue, reds lean

@@ -7,6 +7,8 @@ played; this page keeps it all (Help → What's new...).
 
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
+- **A blue–yellow colour-blind palette**: Options → *Colour-blind friendly colours (blue-yellow)*, for
+  tritanopia, alongside the red–green one.
 - **Compare gear anywhere**: inspecting something in your pack, or looking at it on the floor, now
   says whether it suits you ("Better — vs your Dagger: +17 damage a turn"), as the shops do.
 - **Long lists scroll**: a long item or spell list no longer runs off the bottom of a small window
