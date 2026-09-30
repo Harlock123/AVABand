@@ -60,10 +60,25 @@ tells you a minimum is out of reach. Heroic characters still enter the high scor
 - **Intelligence** — arcane casters' spells and mana.
 - **Wisdom** — divine casters' spells and mana, and saving throws.
 - **Dexterity** — blows, to-hit, armour, avoiding thieves.
-- **Constitution** — hit points.
+- **Constitution** — hit points (and, a little, how much you carry).
 
 Stats above 18 are written 18/10, 18/50 and so on up to 18/220. Drained stats come back when you
 gain a level, and with certain mushrooms and potions (Vigor, Restoration).
+
+## Carrying
+
+Your **Strength** sets how much you can carry before it slows you: about 80 lb at 14, 100 lb at
+18, 150 lb at 18/50, 200 lb at 18/100, and more beyond. Each point of **Constitution** above 15 adds
+2 lb. What you **wear** weighs only three quarters as much as it would in your pack. The sidebar
+shows the weight that counts against what you can carry: go over, and for every tenth of your
+limit you are a point slower — *Burdened* (−1), *Strained* (−2, −3), *Overloaded* (−4 or worse), as
+the sidebar and the status bar say.
+
+Some things let you carry more: a **bag of holding** in your pack, boots or a cloak **(Porter)**
+(a fifth more each), Heroism or Berserk Strength while they last (a tenth), and your race —
+Half-Trolls carry a fifth more and Dwarves a tenth, Hobbits and Kobolds a tenth less. These add up.
+(The birth option *AVABand's encumbrance* turns the Strength, Constitution, worn-weight and potion
+rules off, for Angband's own.)
 
 ## Experience and levels
 

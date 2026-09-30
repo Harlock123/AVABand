@@ -174,6 +174,18 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
   same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+- **Encumbrance** (`Game/GameSession.Burden.cs`): Angband 4.2's rule — Strength sets a weight limit
+  (`adj_str_wgt`), half of it carried unhindered, -1 speed for each tenth beyond — with the birth
+  option *AVABand's encumbrance* (`birth_ava_burden`, on by default): Strength keeps counting where
+  Angband's table stalls (flat at 13–14, stopping at 18/70): `StatTables.AvaCarryLimit` adds 10 lb of
+  limit a step from STR 14, 20 lb a step through 18/100 and 10 lb beyond (80 lb unhindered at 14,
+  100 at 18, 150 at 18/50, 200 at 18/100, 260 at 18/220); Constitution adds 2 lb unhindered a step
+  above 15; worn gear counts three quarters (`BurdenWeight`); Heroism and Berserk Strength +10%; and
+  the burden is named by its cost — Burdened (-1), Strained (-2, -3), Overloaded (-4 or worse) — in
+  the sidebar ("Weight 112.0 / 100 lb · Strained (-2 speed)") and the status bar. What raises the limit
+  by a share adds up (`CarryPercent`): the best bag of holding, (Porter) boots and cloaks
+  (`ava_egos.json`, +20% each), the potions, and the race (`carryPercent` in `ava_races.json`, with the
+  racial abilities: Half-Trolls +20%, Dwarves +10%, Hobbits and Kobolds -10%).
 - **AVABand's racial abilities** (`ava_races.json`, beside Angband's `races.json`, which the drift
   check compares; `Game/GameSession.RaceAbilities.cs`, and `GameSession.DualWield.cs` for Humans;
   the birth option `birth_ava_races`, on by default, turns them off): each race gains one —

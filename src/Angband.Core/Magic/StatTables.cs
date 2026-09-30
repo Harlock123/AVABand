@@ -28,6 +28,13 @@ public static class StatTables
     /// <summary>Weight limit from Strength in pounds (Angband adj_str_wgt x10); half of it can be carried unhindered.</summary>
     public static readonly int[] CarryLimit = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 150, 160, 170, 180, 190, 200, 220, 240, 260, 280, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300];
 
+    /// <summary>
+    /// AVABand's weight limit from Strength (the birth option birth_ava_burden): Angband's up to STR 13,
+    /// then 10 lb more from 14 (Angband stalls at 13-14), 20 lb a step through the 18/xx range to
+    /// 18/100, and 10 lb a step beyond — Angband's stops at 18/70.
+    /// </summary>
+    public static readonly int[] AvaCarryLimit = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520];
+
     /// <summary>To-hit bonus from Dexterity (Angband adj_dex_th).</summary>
     public static readonly int[] ToHit = [-3, -2, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20];
 

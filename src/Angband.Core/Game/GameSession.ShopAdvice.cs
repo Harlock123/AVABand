@@ -84,7 +84,7 @@ public sealed partial class GameSession
                 bad.Add("loses " + AbilityWord(r));
         if (item.IsCursed) bad.Add("cursed");
 
-        if (buying && Player.Inventory.TotalWeight + item.Weight > Player.WeightLimit / 2) bad.Add("too heavy: you'd be slowed");
+        if (buying && BurdenWeight + item.Weight > Player.WeightLimit / 2) bad.Add("too heavy: you'd be slowed");
 
         var against = replaced is null ? $"for your empty {SlotWord(item.Base.Slot)} slot" : $"vs your {ItemNaming.Describe(replaced, Knowledge, withArticle: false, full: false)}";
         var parts = good.Concat(bad).ToList();

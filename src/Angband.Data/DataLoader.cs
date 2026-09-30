@@ -67,6 +67,7 @@ public static class DataLoader
     public const string AvaQuestsFile = "ava_quests.json";
     public const string AvaCursesFile = "ava_curses.json";
     public const string AvaRacesFile = "ava_races.json";
+    public const string AvaEgosFile = "ava_egos.json";
 
     private static readonly JsonSerializerOptions Options = new()
     {
@@ -165,6 +166,7 @@ public static class DataLoader
             objects.AddRange(Read<List<ObjectKindDef>>(dir, ObjectsFile, errors));
             objects.AddRange(Read<List<ObjectKindDef>>(dir, AvaObjectsFile, errors));
             egos.AddRange(Read<List<EgoItemDef>>(dir, EgosFile, errors));
+            egos.AddRange(Read<List<EgoItemDef>>(dir, AvaEgosFile, errors));
             artifacts.AddRange(Read<List<ArtifactDef>>(dir, ArtifactsFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, CursesFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, AvaCursesFile, errors));
@@ -255,6 +257,7 @@ public static class DataLoader
             race.AvaAbilities.Clear();
             race.AvaAbilities.AddRange(ava.Abilities);
             race.AvaAbilityText = ava.Text;
+            race.AvaCarryPercent = ava.CarryPercent;
         }
         foreach (var race in races.Items)
             foreach (var stat in race.Stats.Keys.Concat(classes.Items.SelectMany(c => c.Stats.Keys)).Distinct()
@@ -710,6 +713,7 @@ public static class DataLoader
         public string Id { get; init; } = "";
         public List<string> Abilities { get; init; } = [];
         public string Text { get; init; } = "";
+        public int CarryPercent { get; init; }
     }
 
     /// <summary>Id-keyed list where later additions replace earlier ones in place.</summary>

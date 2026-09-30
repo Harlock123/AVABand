@@ -96,9 +96,7 @@ public sealed partial class GameSession
         p.Armour = p.BaseArmour + Adj(Magic.StatTables.ToArmour, "dex");
         p.ToHit = p.BaseToHit + Adj(Magic.StatTables.ToHit, "dex");
         p.ToDam = p.BaseToDam + Adj(Magic.StatTables.ToDamage, "str");
-        p.WeightLimit = Adj(Magic.StatTables.CarryLimit, "str") * 10;
-        // AVABand: the best bag of holding in the pack lets you carry that much more.
-        if (p.Inventory.BestBag is { } bag) p.WeightLimit = p.WeightLimit * (100 + bag.Kind.CarryPercent) / 100;
+        p.WeightLimit = CarryLimit(Adj);
         p.Stealth = p.BaseStealth;
         p.Blows = p.BaseBlows;
         p.Shots = p.BaseShots;
@@ -169,8 +167,7 @@ public sealed partial class GameSession
         }
 
         // Angband: -1 speed per tenth of the weight limit carried beyond half of it.
-        var weight = p.Inventory.TotalWeight;
-        if (weight > p.WeightLimit / 2) speed -= (weight - p.WeightLimit / 2) / Math.Max(1, p.WeightLimit / 10);
+        speed -= BurdenPenalty;
         if (Hunger.LevelOf(p.Food, Data.Constants) == HungerLevel.Gorged) speed -= 10;
 
         // Angband calc_bonuses: fear (timed, or from gear such as the Ring of Escaping) spoils aim

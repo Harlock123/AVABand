@@ -100,7 +100,8 @@ public static class Tutorial
     public static TutorialStep StepOf(GameSession game)
     {
         var level = game.Level;
-        if (level.Objects.All.Any(o => o.Item.Kind.Id == PotionId)) return TutorialStep.PickUp;
+        // (Only the tutorial's own potion, where it was left: one the kobold drops doesn't send you back.)
+        if (level.Objects.At(PotionSpot).Any(i => i.Kind.Id == PotionId)) return TutorialStep.PickUp;
         if (Doors(level).First() is var first && level.Has(first, TerrainFlags.DoorClosed)) return TutorialStep.OpenDoor;
         if (level.AllLocs().Any(p => level[p].Trap != 0) && game.Player.Position.X < TrapColumn()) return TutorialStep.Trap;
         if (level.Monsters.All.Any(m => m.Race.Id == MonsterId)) return TutorialStep.Fight;
@@ -114,4 +115,8 @@ public static class Tutorial
         Enumerable.Range(0, Map[2].Length).Where(x => Map[2][x] == '+').Select(x => new Loc(x, 2));
 
     private static int TrapColumn() => Map[2].IndexOf('^');
+
+    /// <summary>Where the tutorial's potion lies (the map's '!').</summary>
+    private static Loc PotionSpot => Enumerable.Range(0, Map.Length).Where(y => Map[y].Contains('!'))
+        .Select(y => new Loc(Map[y].IndexOf('!'), y)).First();
 }

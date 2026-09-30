@@ -50,6 +50,8 @@ public static class OptionIds
     public const string AvaQuests = "birth_ava_quests";
     /// <summary>AVABand's own: each race's extra ability (ava_races.json).</summary>
     public const string AvaRaces = "birth_ava_races";
+    /// <summary>AVABand's own: Strength counts for more weight, Constitution a little, worn gear 75%, and the burden is named.</summary>
+    public const string AvaBurden = "birth_ava_burden";
 
     // Cheat options.
     public const string CheatHear = "cheat_hear";
@@ -90,6 +92,7 @@ public static class OptionCatalog
         new(OptionIds.KnowFlavors, "Know all flavors on birth", OptionKind.Birth, false),
         new(OptionIds.AvaQuests, "AVABand's quests (the Prancing Pony and its notice board)", OptionKind.Birth, true),
         new(OptionIds.AvaRaces, "AVABand's racial abilities (a Dwarf's delving, a Human's two weapons...)", OptionKind.Birth, true),
+        new(OptionIds.AvaBurden, "AVABand's encumbrance (more from Strength and Constitution; worn gear weighs less)", OptionKind.Birth, true),
 
         new(OptionIds.CheatHear, "Cheat: Peek into monster creation", OptionKind.Cheat, false),
         new(OptionIds.CheatRoom, "Cheat: Peek into dungeon creation", OptionKind.Cheat, false),

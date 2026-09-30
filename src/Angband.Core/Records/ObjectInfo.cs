@@ -227,7 +227,9 @@ public static class ObjectInfo
         if (item.Kind.Fuel > 0) facts.Add($"it burns for up to {item.Kind.Fuel} turns");
         if (item.Kind.Charges is { } charges) facts.Add($"it is found with {charges} charges");
         if (item.Kind.Recharge is { } time && b.Id == "rod") facts.Add($"it recharges in {time} turns");
-        // AVABand's bracers and bags.
+        // AVABand's bracers, bags and (Porter) gear.
+        if (item.Ego?.CarryPercent is > 0 and var porter && (sampleOnly || k.IsFullyKnown(item)))
+            facts.Add($"worn, it lets you carry {porter}% more before you're slowed");
         if (item.Sockets > 0)
             facts.Add($"it has {(item.Sockets == 1 ? "a socket" : $"{item.Sockets} sockets")} for gems"
                       + (item.Gems.Count == 0 ? ", all empty" : $", {item.Gems.Count} set"));

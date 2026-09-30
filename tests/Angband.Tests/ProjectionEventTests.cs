@@ -66,9 +66,14 @@ public class ProjectionEventTests
         var hurt = new List<MonsterDamagedEvent>();
         game.Events.Subscribe<ProjectionEvent>(shown.Add);
         game.Events.Subscribe<MonsterDamagedEvent>(hurt.Add);
-        var dagger = game.Objects.Create("dagger");
-        game.Player.Inventory.Add(dagger);
-        game.Execute(new ThrowCommand(dagger, jackal.Position));
+        // (Even a sure hand misses now and then, as in Angband: a few throws until one lands.)
+        for (var i = 0; i < 10 && hurt.Count == 0; i++)
+        {
+            shown.Clear();
+            var dagger = game.Objects.Create("dagger");
+            game.Player.Inventory.Add(dagger);
+            game.Execute(new ThrowCommand(dagger, jackal.Position));
+        }
         var flight = Assert.Single(shown);
         Assert.Equal(ProjectionKind.Missile, flight.Kind);
         Assert.Equal(jackal.Position, flight.Path[^1]); // stopped at the jackal, not the full range

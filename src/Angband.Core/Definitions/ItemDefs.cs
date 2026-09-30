@@ -260,6 +260,8 @@ public sealed class EgoItemDef
     public Dice ToDam { get; init; } = Dice.Zero;
     public Dice ToAc { get; init; } = Dice.Zero;
     public IReadOnlyDictionary<string, int> Modifiers { get; init; } = new Dictionary<string, int>();
+    /// <summary>AVABand's (Porter) ego: worn, this much more (percent) can be carried before slowing.</summary>
+    public int CarryPercent { get; init; }
     /// <summary>Random modifiers (Angband random-value syntax), rolled when the ego is applied.</summary>
     public IReadOnlyDictionary<string, string> Rolls { get; init; } = new Dictionary<string, string>();
     public IReadOnlyList<SlayDef> Slays { get; init; } = [];

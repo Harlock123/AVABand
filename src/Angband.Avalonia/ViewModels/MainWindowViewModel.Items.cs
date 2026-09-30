@@ -366,9 +366,11 @@ public sealed partial class MainWindowViewModel
         HasFloorItems = FloorRows.Count > 0;
 
         GoldText = $"Gold {p.Gold}";
-        var slow = p.Inventory.TotalWeight > p.WeightLimit / 2 ? " (burdened)" : "";
+        // The weight that counts (worn gear three quarters, with AVABand's rules) against what can be carried unhindered.
+        var penalty = _game.BurdenPenalty;
+        var slow = penalty > 0 ? $" · {_game.BurdenName} (-{penalty} speed)" : "";
         BurdenText = string.Format(CultureInfo.InvariantCulture, "Weight {0:0.0} / {1:0} lb{2}  |  Slots {3}/{4}",
-            inv.TotalWeight / 10.0, p.WeightLimit / 20.0, slow, inv.SlotsUsed, inv.PackSize);
+            _game.BurdenWeight / 10.0, p.WeightLimit / 20.0, slow, inv.SlotsUsed, inv.PackSize);
     }
 
     private ItemRow Row(string letter, Item item)

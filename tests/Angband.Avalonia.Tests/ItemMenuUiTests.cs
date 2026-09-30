@@ -249,4 +249,16 @@ public class ItemMenuUiTests
         window.Show();
         TileRenderingTests.Save(window, "dual-wield");
     }
+
+    /// <summary>The sidebar names the burden and what it costs.</summary>
+    [AvaloniaFact]
+    public void The_sidebar_names_the_burden()
+    {
+        var vm = Start();
+        Assert.DoesNotContain("speed)", vm.BurdenText);
+        while (vm.Game.BurdenPenalty < 2) { vm.Game.Player.Inventory.Add(vm.Game.Objects.Create("flask_of_oil", 1)); vm.Game.RecalculateBonuses(); }
+        vm.Refresh();
+        Assert.Contains($"· Strained (-{vm.Game.BurdenPenalty} speed)", vm.BurdenText);
+        Assert.Contains("Strained", vm.StatusText);
+    }
 }

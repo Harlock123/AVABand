@@ -3,6 +3,15 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.16
+
+- **Carrying**: Strength now keeps adding to what you can carry (it used to stop at 18/70),
+  Constitution helps a little, what you wear weighs three quarters, Heroism and Berserk Strength
+  help while they last, and new (Porter) boots and cloaks let you carry a fifth more. Half-Trolls
+  and Dwarves carry more, Hobbits and Kobolds less. The sidebar names your burden — Burdened,
+  Strained, Overloaded — and how much it slows you. See Help → Your character.
+- **The tutorial** no longer goes back to "pick up the potion" if the kobold drops one.
+
 ## 2026-09-30.15
 
 - **Every race has an ability of its own**: Humans fight with two weapons, Dwarves delve for more

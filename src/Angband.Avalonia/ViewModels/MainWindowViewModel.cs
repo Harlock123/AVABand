@@ -433,6 +433,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
             .Append(player.RecallTimer > 0 ? "Recall" : "")
             .Append(player.DeepDescentTimer > 0 ? "Descent" : "")
             .Append(SpeedText())
+            .Append(_game.BurdenPenalty > 0 ? _game.BurdenName : "") // (AVABand: why you're slow)
             .Append(_game.InArena ? "Single combat" : "")
             .Append(_game.Commanded is { IsActive: true } commanded ? $"Commanding {_game.MonsterName(commanded)}" : "")
             .Append(player.IsWinner ? "*WINNER*" : "")

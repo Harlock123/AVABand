@@ -1,0 +1,4 @@
+[
+  {"id": "porter", "name": "(Porter)", "bases": ["boots", "cloak"], "level": 10, "commonness": 15, "maxDepth": 100, "carryPercent": 20,
+   "ignore": ["acid"]}
+]
