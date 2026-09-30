@@ -114,6 +114,9 @@ public sealed class Player : IActor
 
     /// <summary>Made with AVABand's heroic stats (<see cref="Game.HeroicBirth"/>): its score counts 75%, and is tagged.</summary>
     public bool HeroicBirth { get; set; }
+
+    /// <summary>The daily dungeon's day this character is playing (yyyy-MM-dd), or null for an ordinary game.</summary>
+    public string? DailyDate { get; set; }
     public string? KilledBy { get; set; }
     public bool IsResting { get; set; }
 

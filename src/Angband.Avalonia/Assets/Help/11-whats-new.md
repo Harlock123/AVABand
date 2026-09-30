@@ -6,6 +6,8 @@ played; this page keeps it all (Help → What's new...).
 ## 2026-09-30.4
 
 - **Watch their last moments**: a headstone in the graveyard can replay how that character fell.
+- **The daily dungeon**: one dungeon and one character a day, the same for everyone. Compare with
+  friends and swap replays (Game → Daily dungeon..., or from the title screen).
 - **Character cards**: save a picture of your character (or a headstone) to share with friends.
 
 ## 2026-09-30.3

@@ -66,6 +66,7 @@ public sealed partial class MainWindowViewModel
             RequestNewCharacter));
         if (_saves?.List().Any(e => !e.Summary.IsDead) == true)
             choices.Add(("Load a saved character", null, () => LoadRequested?.Invoke()));
+        if (!IsFirstRun) choices.Add(("Today's daily dungeon", "the same dungeon for everyone, today", ShowDaily));
         if (_records is not null) choices.Add(("High scores", null, ShowHighScores));
         if (_records?.LoadGraveyard().Fallen.Count > 0) choices.Add(("The graveyard", "those who went before", ShowGraveyard));
         choices.Add(("Exit", null, () => ExitRequested?.Invoke()));

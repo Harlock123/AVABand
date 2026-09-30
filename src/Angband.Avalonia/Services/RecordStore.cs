@@ -15,6 +15,27 @@ public sealed class RecordStore(string directory)
     /// <summary>Monster memory, shared by every character (as Angband 4.2's lore.txt).</summary>
     public string LorePath => Path.Combine(Directory, "lore.json");
 
+    /// <summary>The daily dungeon's tries (AVABand's own).</summary>
+    public string DailyPath => Path.Combine(Directory, "daily.json");
+
+    public DailyBoard LoadDaily() => DailyBoard.Load(DailyPath);
+
+    /// <summary>A try at a day's dungeon, entered in the daily table; returns it (numbered).</summary>
+    public DailyEntry? RecordDaily(DailyEntry entry)
+    {
+        try
+        {
+            var board = LoadDaily();
+            board.Add(entry);
+            board.Save(DailyPath);
+            return entry;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return null;
+        }
+    }
+
     /// <summary>Every character that died or retired (AVABand's own).</summary>
     public string GraveyardPath => Path.Combine(Directory, "graveyard.json");
 

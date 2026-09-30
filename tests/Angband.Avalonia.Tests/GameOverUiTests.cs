@@ -231,4 +231,38 @@ public sealed class GameOverUiTests : IDisposable
             File.Copy(fallen, Path.Combine(shots, "card-fallen.png"), true);
         }
     }
+
+    /// <summary>The daily dungeon: today's seed and character (not the last character's), and a try goes in the daily table with its replay.</summary>
+    [AvaloniaFact]
+    public void TheDailyDungeon_IsPlayed_AndItsTriesKept()
+    {
+        var (window, vm) = Open();
+        vm.ReplayDirectory = Path.Combine(_dir, "replays");
+        var daily = vm.CreateDaily();
+        Assert.StartsWith("Today: a ", daily.Character);
+        Assert.True(daily.IsEmpty);
+        daily.PlayCommand.Execute(null);
+        var today = DailyDungeon.Today();
+        Assert.Equal(DailyDungeon.SeedFor(today), vm.Game.Seed);
+        Assert.Equal(DailyDungeon.Stamp(today), vm.Game.Player.DailyDate);
+        var spec = DailyDungeon.SpecFor(vm.Game.Data, today, "x");
+        Assert.Equal(spec.ClassId, vm.Game.Player.Class!.Id);
+
+        for (var i = 0; i < 5; i++) vm.Execute(new HoldCommand());
+        vm.Game.TakeHit(100_000, "a jackal");
+        var tries = new RecordStore(Path.Combine(_dir, "records")).LoadDaily().For(DailyDungeon.Stamp(today));
+        var first = Assert.Single(tries);
+        Assert.Equal(1, first.Attempt);
+        Assert.StartsWith("killed by a jackal", first.Fate);
+        Assert.True(File.Exists(first.ReplayPath));
+
+        var again = vm.CreateDaily();
+        var row = Assert.Single(again.Rows);
+        Assert.True(row.IsToday);
+        again.Selected = row;
+        Assert.True(again.WatchCommand.CanExecute(null));
+        var dialog = new DailyWindow { DataContext = again };
+        DialogFit.Show(dialog, window);
+        TileRenderingTests.Save(dialog, "daily");
+    }
 }

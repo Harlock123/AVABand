@@ -70,6 +70,15 @@ what killed them and the epitaph, over the scene that suits (the kind of level t
 graveyard at dusk) — saved in `cards/` beside the records and opened in your picture viewer. Kept in `graveyard.json` beside the scores; the first time, the
 dead the high scores remember are brought in. Cheats, the tutorial and replays aren't buried.
 
+**The daily dungeon** (AVABand's own, `Game/DailyDungeon.cs`; Game → Daily dungeon..., and on the
+title screen): one dungeon a day, the same for everyone — the seed is FNV-1a of the UTC date, and
+the day's character (race, class and rolled stats; your name) is drawn from it, with the default
+birth options — so on the same AVABand everyone plays the same levels. Each try (a death or a
+retirement; not a cheat's) goes in its own table, `daily.json` beside the scores, numbered and
+best-first by depth, with its replay: watch a try from the window, or send the replay to a friend
+(they open it with Watch a replay → Open a replay file…). Daily characters are ordinary games in
+every other way: saved, scored, buried.
+
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest
 first): after an update, the sections newer than the last one you were shown open once over the
 title screen (a new player is spared it; `WhatsNewSeen` in the settings remembers); the whole page

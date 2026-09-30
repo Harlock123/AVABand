@@ -177,6 +177,7 @@ public sealed class PlayerSave
     public Dictionary<string, int> Stats { get; set; } = [];
     public Dictionary<string, int> BaseStats { get; set; } = [];
     public bool HeroicBirth { get; set; }
+    public string? DailyDate { get; set; }
     public Dictionary<string, int> NaturalStats { get; set; } = [];
     public Dictionary<string, int> StatDrain { get; set; } = [];
     public long MaxExperience { get; set; }

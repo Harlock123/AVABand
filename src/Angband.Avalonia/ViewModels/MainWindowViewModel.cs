@@ -239,11 +239,13 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         return creation;
     }
 
-    private void StartGame(ulong seed, CharacterSpec? spec)
+    private void StartGame(ulong seed, CharacterSpec? spec, Action<GameSession>? prepare = null)
     {
         // Starting afresh keeps the character being left behind (if still alive).
         TrySave();
-        AttachGame(spec is null ? GameSession.NewGame(_data, seed) : GameSession.NewGame(_data, seed, spec));
+        var game = spec is null ? GameSession.NewGame(_data, seed) : GameSession.NewGame(_data, seed, spec);
+        prepare?.Invoke(game);
+        AttachGame(game);
         AddMessage($"Welcome, {_game.Player.Name} the {_game.Player.Race?.Name} {_game.Player.Class?.Name}! (seed {seed})"
                    + (_game.StudyableSpells().Any() ? " Press G to learn your first spell." : ""));
         Refresh();

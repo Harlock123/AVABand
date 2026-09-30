@@ -49,6 +49,7 @@
         <MenuItem Header="_Quick start (same character)" Command="{Binding QuickStartCommand}" />
         <MenuItem x:Name="NewGameAsMenu" Header="Quick start _as" />
         <MenuItem Header="_Tutorial (learn the basics)" Command="{Binding StartTutorialCommand}" />
+        <MenuItem Header="_Daily dungeon..." Command="{Binding ShowDailyCommand}" />
         <MenuItem Header="_Watch a replay..." Command="{Binding WatchReplayCommand}" />
         <MenuItem Header="Your _journey..." Command="{Binding ShowJourneyCommand}" />
         <Separator />

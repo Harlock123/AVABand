@@ -66,7 +66,9 @@ shop, monster, trap, bad wound...), each just once. Options → *Hints for new p
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,
   quests, a win with each class), with who reached each first. **Game → The graveyard** keeps a
   headstone for every character who died or retired, with their story — and *Watch their last
-  moments* replays how they fell. **Game → Save a character card** makes a picture of your
+  moments* replays how they fell. **Game → Daily dungeon** is the same dungeon and character
+  for everyone each day — compare how far you got with friends, and swap replays.
+  **Game → Save a character card** makes a picture of your
   character to share (the graveyard can make one for a headstone too).
 
 ## Where to learn more
