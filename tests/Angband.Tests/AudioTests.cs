@@ -428,6 +428,37 @@ public class AudioTests
         game.SetFood(game.Data.Constants.FoodFull - 1); // eating back up is quiet
         Assert.DoesNotContain("HUNGRY", played);
     }
+
+    /// <summary>A great foe in view: the pack's boss music; a pack without it keeps the place's; off again, the place's comes back.</summary>
+    [Fact]
+    public void ABoss_HasItsOwnMusic_WhenThePackHasSome()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5);
+        game.MarkDebugUsed();
+        game.Execute(new DebugJumpCommand(12));
+        var (_, director, _, engine) = Setup(game);
+        Assert.Equal("dungeon", director.MusicMood);
+        director.Boss = true;
+        Assert.Equal("boss", director.MusicMood);
+        Assert.Equal("boss_theme.ogg", engine.MusicStarted[^1]);
+        director.Boss = false;
+        Assert.Equal("dungeon", director.MusicMood);
+        Assert.NotEqual("boss_theme.ogg", engine.MusicStarted[^1]);
+
+        // A pack with no boss music: the place's plays on, unchanged.
+        var bare = new RecordingAudioEngine();
+        var noBoss = new SoundDirector(bare) { MusicPack = Effects };
+        noBoss.Attach(game);
+        var started = bare.MusicStarted.Count;
+        noBoss.Boss = true;
+        Assert.Equal(started, bare.MusicStarted.Count);
+
+        // In town there's no boss music, even if asked.
+        game.Execute(new DebugJumpCommand(0));
+        director.Attach(game);
+        director.Boss = true;
+        Assert.NotEqual("boss", director.MusicMood);
+    }
 }
 
 /// <summary>Ambience: a loop under the music for the place you are in.</summary>

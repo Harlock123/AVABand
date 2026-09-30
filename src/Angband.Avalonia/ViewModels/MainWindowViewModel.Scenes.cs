@@ -175,6 +175,9 @@ public sealed partial class MainWindowViewModel
         else AddScene(SceneKind.Trapdoor, $"You fall through a trap door… {depth * 50} ft (level {depth})", pictures: ["trapdoor"]);
     }
 
+    /// <summary>A great foe: a unique from 500 ft down, or a quest's own (its death has a scene; in view, it has music).</summary>
+    public static bool IsGreatFoe(MonsterRaceDef race) => race.IsUnique && (race.Depth >= 10 || race.Has(MonsterFlags.Questor));
+
     /// <summary>One of AVABand's quests brought to a good end.</summary>
     private void OnAvaQuestCompleted(AvaQuestCompletedEvent e) =>
         AddScene(SceneKind.QuestComplete, $"Quest complete: {e.Name}", subtitle: "Your journal is in Knowledge (~).", pictures: ["quest-complete"]);
@@ -185,7 +188,7 @@ public sealed partial class MainWindowViewModel
     /// </summary>
     private void OnMonsterKilledForScene(MonsterKilledEvent e)
     {
-        if (!e.IsUnique || _data.Monster(e.RaceId) is not { } race || race.Depth < 10 && !race.Has(MonsterFlags.Questor)) return;
+        if (!e.IsUnique || _data.Monster(e.RaceId) is not { } race || !IsGreatFoe(race)) return;
         var where = _game.Player.Depth == 0 ? "in the town" : $"at {_game.Player.Depth * 50} ft";
         AddScene(SceneKind.BossSlain, $"{char.ToUpperInvariant(race.Name[0])}{race.Name[1..]} is slain", race.Glyph.ToString(),
             _cells.Color(race.Color), where, "boss-slain");

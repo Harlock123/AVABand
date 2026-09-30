@@ -170,6 +170,36 @@ public sealed partial class MainWindowViewModel
                 }
     }
 
+    /// <summary>The great foe the boss music is for, and the game turn it was last seen.</summary>
+    private (int Id, long Seen)? _bossInView;
+
+    /// <summary>
+    /// How long, in game turns, the boss music outlasts its foe slipping out of view (about 20
+    /// turns at normal speed) — so a foe stepping round a corner doesn't flip the music back and forth.
+    /// </summary>
+    public const long BossMusicLinger = 200;
+
+    /// <summary>
+    /// After each command: the boss music while a great foe is in view, until it is dead or gone
+    /// from the level, or out of sight a while.
+    /// </summary>
+    private void UpdateBossMusic()
+    {
+        if (_audio is null) return;
+        var level = _game.Level;
+        if (level.Depth > 0 && level.Monsters.All.FirstOrDefault(m => m.IsVisible && IsGreatFoe(m.Race)) is { } foe)
+            _bossInView = (foe.Id, _game.GameTurn);
+        else if (_bossInView is { } b && (level.Depth == 0 || level.Monsters.All.All(m => m.Id != b.Id) || _game.GameTurn - b.Seen > BossMusicLinger))
+            _bossInView = null;
+        _audio.Director.Boss = _bossInView is not null;
+    }
+
     /// <summary>Re-points the sound director at a freshly started game.</summary>
-    private void AttachAudio() => _audio?.Director.Attach(_game);
+    private void AttachAudio()
+    {
+        _bossInView = null;
+        if (_audio is null) return;
+        _audio.Director.Boss = false;
+        _audio.Director.Attach(_game);
+    }
 }

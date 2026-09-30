@@ -1392,7 +1392,11 @@ dropouts a second at the default size, none at 2048). *Small*, *Medium* (1024) a
 size; a change applies the next time the game starts. It works through a one-line OpenAL Soft
 config file in the temp folder named by `ALSOFT_CONF` (your own `alsoft.conf` still applies; if
 you set `ALSOFT_CONF` yourself, AVABand leaves it alone). Settings → Sound (F10) has master/effects/music volumes,
-separate effects and music packs, and Ctrl+M mutes.
+separate effects and music packs, and Ctrl+M mutes. **Boss music** (AVABand's own): while a great foe is in view — a unique from 500 ft down, or a
+quest's own — the music pack's "boss" mood plays (the bundled *cc0-dungeon-music* has "The Foe
+Before You", composed and synthesised by `tools/boss_theme.py`, CC0), until the foe dies, you
+leave the level, or it has been out of sight about 20 turns; a pack without boss music keeps to
+the place's.
 
 Bundled packs (in `src/Angband.Avalonia/soundpacks/`):
 

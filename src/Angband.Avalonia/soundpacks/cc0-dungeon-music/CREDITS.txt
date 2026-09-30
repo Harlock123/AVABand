@@ -48,3 +48,10 @@ Title screen:
 title_theme.ogg               "The Pits of Angband", composed and synthesised for AVABand
                               (tools/title_theme.py: drone, bells, strings, harp, horn, choir,
                               timpani, all made in code - no samples). CC0.
+
+Great foes:
+
+boss_theme.ogg                "The Foe Before You", composed and synthesised for AVABand
+                              (tools/boss_theme.py: a low-string ostinato, timpani, snare, horn
+                              stabs and a choir, all made in code - no samples). CC0. Played while
+                              a great foe is in view.

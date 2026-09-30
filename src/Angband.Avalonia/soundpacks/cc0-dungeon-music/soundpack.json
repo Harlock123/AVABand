@@ -5,6 +5,7 @@
   "source": "https://opengameart.org",
   "music": {
     "title": ["title_theme.ogg"],
+    "boss": ["boss_theme.ogg"],
     "town": [
       "The_Old_Tower_Inn.mp3",
       "town_theme.mp3"

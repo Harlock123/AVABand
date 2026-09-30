@@ -485,4 +485,41 @@ public sealed class SceneUiTests : IDisposable
         var done = Assert.Single(events);
         Assert.Equal(("letter", "The Letter"), (done.QuestId, done.Name));
     }
+
+    /// <summary>The boss music: on while a great foe is in view, lingering a little once it slips from sight, off when it dies.</summary>
+    [AvaloniaFact]
+    public void AGreatFoe_InView_BringsTheBossMusic()
+    {
+        var (_, vm, _) = Open();
+        var engine = new RecordingEngine();
+        var director = new Angband.Audio.SoundDirector(engine) { MusicPack = Angband.Audio.SoundPack.Load(Path.Combine(AppContext.BaseDirectory, "soundpacks", "cc0-dungeon-music")) };
+        vm.UseAudio(new AudioServices(engine, director, []));
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        vm.Execute(new DebugJumpCommand(12));
+        vm.SkipScenes();
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        vm.Execute(new HoldCommand());
+        Assert.False(director.Boss);
+
+        var race = game.Data.Monster("golfimbul_the_hill_orc_chief")!;
+        var near = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l) && l.ChebyshevTo(game.Player.Position) == 2
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        var foe = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, race, near);
+        vm.Execute(new HoldCommand());
+        Assert.True(foe.IsVisible);
+        Assert.True(director.Boss);
+        Assert.Equal("boss", director.MusicMood);
+
+        game.DamageMonster(foe, 1_000_000);
+        vm.Execute(new HoldCommand());
+        Assert.False(director.Boss);
+
+        // A small unique (Grip, 100 ft) brings no boss music.
+        var grip = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("grip")!, near);
+        vm.Execute(new HoldCommand());
+        Assert.Contains(game.Level.Monsters.All, m => m == grip);
+        Assert.False(director.Boss);
+    }
 }
