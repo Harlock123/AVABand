@@ -95,6 +95,7 @@
         <MenuItem Header="_Help topics..." Command="{Binding ShowHelpCommand}" />
         <MenuItem Header="Keyboard _commands..." Command="{Binding ShowKeyCommandsCommand}" InputGesture="F1" />
         <Separator />
+        <MenuItem Header="What's _new..." Command="{Binding ShowWhatsNewCommand}" />
         <MenuItem Header="Check for _updates..." Command="{Binding CheckForUpdatesCommand}" />
       </MenuItem>
       <MenuItem Header="_Debug">

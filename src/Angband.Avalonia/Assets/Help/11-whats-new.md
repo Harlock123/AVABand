@@ -1,0 +1,42 @@
+# What's new
+
+The newest changes first. After an update, AVABand shows you what's arrived since you last
+played; this page keeps it all (Help → What's new...).
+
+## 2026-10-01
+
+- **Every quest monster has its picture**: Durgash, Hathol, the Black Market's four suspects and
+  the Shade of the Stair now show in every tileset, not as letters.
+- **What's new**: this page, shown once after each update.
+
+## 2026-09-30
+
+- **Three new quests** at the Prancing Pony: *The Apprentice* (a rescue that may cost you your own
+  Word of Recall), *The Cartographer* (map a cavern, a labyrinth and the old mines) and *The
+  Warden's Fires* (light three braziers to make a shade mortal, while it snuffs them out).
+- **The notice board** now posts bounties on uniques and scouting jobs, too.
+- **New scenes**: falling through a trap door, Deep Descent, a quest done, a great foe slain.
+- **Scenes have sounds**: footsteps on the stairs, the rent tearing and a thunderclap for Word of
+  Recall, a bell at death, and more.
+- **Save backups**: earlier saves of each character are kept; roll one back from the Load dialog.
+- **Heroic characters' scores count 75%**, since heroic stats make the game easier.
+- **Option**: check GitHub for a newer AVABand when the game starts (off unless you turn it on).
+
+## 2026-09-29
+
+- **Word of Recall has a cutscene**: a rent torn in the world where you read it, and a vast
+  ghostly hand reaching out of it to take you.
+- **Heroic characters**: a heroic roll, a heroic point-buy, and an autoroller that rerolls until
+  your stats reach the minimums you set.
+- **Option**: scenes stay until you press Space.
+- **Help → Check for updates...** asks GitHub whether a newer AVABand is out.
+- **Game → Shops pay gold when you sell** no longer costs your place in the high scores; a
+  burnt-out torch sells for nothing.
+- **Sound on Windows** works without the Visual C++ runtime; if sound can't start, Settings → Sound
+  says why.
+- **AVABand's quests**: the Prancing Pony, six story quests and a notice board.
+- **The title screen**, with its own music; damage shown in the messages; three lines of messages.
+- **Two arrow keys held together move diagonally**, for keyboards without a keypad; an option to
+  make new levels never need a diagonal step.
+- **Nine tilesets**; an item menu and *Clear out junk*; lanterns always on sale, and refillable.
+- **Ambience** for caverns, fortresses, old mines, lairs and gauntlets.

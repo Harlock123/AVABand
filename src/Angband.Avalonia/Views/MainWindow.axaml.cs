@@ -378,6 +378,7 @@ public partial class MainWindow : Window
         if (DataContext is MainWindowViewModel titled && !Design.IsDesignMode && ShowCreationOnFirstRun && ShowTitleAtStart)
         {
             titled.ShowTitle();
+            titled.ShowWhatsNewIfUpdated(); // (after an update: what's arrived, over the title)
             return;
         }
         // First run: go straight to character creation, as Angband does.

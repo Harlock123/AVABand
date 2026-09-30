@@ -39,6 +39,9 @@ public sealed class AppSettings
     /// <summary>The last character created, reused by quick start (null until the first one).</summary>
     public SavedCharacter? LastCharacter { get; set; }
 
+    /// <summary>The newest What's new section the player has been shown (its date), so each update is shown once.</summary>
+    public string? WhatsNewSeen { get; set; }
+
     /// <summary>Interface options (Angband's '=' menu), by Angband name; missing ones take their defaults.</summary>
     public Dictionary<string, bool> Options { get; set; } = [];
 

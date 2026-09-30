@@ -42,6 +42,30 @@ public sealed partial class MainWindowViewModel
     [RelayCommand]
     public void ShowHelp() => HelpRequested?.Invoke(new HelpViewModel());
 
+    /// <summary>Help → What's new: the help, opened at its What's new page.</summary>
+    [CommunityToolkit.Mvvm.Input.RelayCommand]
+    private void ShowWhatsNew()
+    {
+        var help = new HelpViewModel();
+        help.Selected = help.Topics.FirstOrDefault(t => t.Title == "What's new") ?? help.Selected;
+        HelpRequested?.Invoke(help);
+    }
+
+    /// <summary>
+    /// At start-up: after an update, what's new since the player last looked (once). A brand-new
+    /// player is spared it; either way the newest is remembered as seen.
+    /// </summary>
+    public void ShowWhatsNewIfUpdated(string? markdown = null)
+    {
+        markdown ??= WhatsNew.Load();
+        var newest = WhatsNew.Newest(markdown);
+        if (newest is null || _settings.WhatsNewSeen == newest) return;
+        var topic = IsFirstRun ? null : WhatsNew.Since(markdown, _settings.WhatsNewSeen);
+        _settings.WhatsNewSeen = newest;
+        _saveSettings?.Invoke(_settings);
+        if (topic is not null) HelpRequested?.Invoke(new HelpViewModel([topic, .. HelpViewModel.LoadBundled()]));
+    }
+
     /// <summary>Ctrl+P: the message history.</summary>
     public event Action<MessageHistoryViewModel>? MessageHistoryRequested;
 

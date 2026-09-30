@@ -45,6 +45,11 @@ pre-release, and tagging a commit `v*` (e.g. `v0.1.0`) makes a proper release. U
 saves, scores, monster memory and settings go to your user folder (`AVABand` under the system's
 application-data folder).
 
+**What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest
+first): after an update, the sections newer than the last one you were shown open once over the
+title screen (a new player is spared it; `WhatsNewSeen` in the settings remembers); the whole page
+is in Help (Help → What's new...). Each change a player would notice gets a line there.
+
 **Help → Check for updates...** asks GitHub (only when you choose it) for the newest release and
 compares its commit with the one your build was made from (stamped into the program as
 `1.0.0+<commit>`), using GitHub's compare API. It says you are up to date, or that a newer build
