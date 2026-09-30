@@ -261,8 +261,21 @@ public sealed class GameOverUiTests : IDisposable
         var again = vm.CreateDaily();
         var row = Assert.Single(again.Rows);
         Assert.True(row.IsToday);
-        again.Selected = row;
+        Assert.Same(row, again.Selected); // today's best, ready to share
         Assert.True(again.WatchCommand.CanExecute(null));
+
+        // Sharing: a line to copy, and the replay under a name that says which day and try.
+        string? copied = null;
+        (string From, string Name)? saved = null;
+        again.CopyRequested += line => copied = line;
+        again.SaveReplayRequested += (from, name) => saved = (from, name);
+        again.CopyResultCommand.Execute(null);
+        Assert.StartsWith($"AVABand daily {DailyDungeon.Stamp(today)}: ", copied);
+        Assert.Contains("killed by a jackal", copied);
+        Assert.Equal("Copied: " + copied, again.ShareNote);
+        again.SaveReplayCommand.Execute(null);
+        Assert.Equal((first.ReplayPath!, $"AVABand-daily-{DailyDungeon.Stamp(today)}-try1.avareplay"), saved);
+
         var dialog = new DailyWindow { DataContext = again };
         DialogFit.Show(dialog, window);
         TileRenderingTests.Save(dialog, "daily");

@@ -65,4 +65,19 @@ public class DailyDungeonTests
         Assert.Equal(9, board.For("2026-10-01")[0].MaxDepth);
         Assert.Equal(["2026-10-01", "2026-10-01", "2026-09-30"], board.Ordered().Select(e => e.Day));
     }
+
+    [Fact]
+    public void A_try_has_a_line_to_share_and_a_name_for_its_replay()
+    {
+        var entry = new DailyEntry
+        {
+            Day = "2026-10-01", Attempt = 2, Name = "Dain", Race = "Dwarf", Class = "Priest", Level = 18, MaxDepth = 29, Points = 12345,
+            Fate = "killed by Grip, Farmer Maggot's Dog at 1450 ft",
+        };
+        Assert.Equal("AVABand daily 2026-10-01 (try 2): Dain the Dwarf Priest reached 1450 ft (level 18), 12,345 points — "
+                     + "killed by Grip, Farmer Maggot's Dog at 1450 ft.", entry.ShareLine());
+        Assert.Equal("AVABand-daily-2026-10-01-try2.avareplay", entry.ReplayFileName(".avareplay"));
+        entry.Attempt = 1;
+        Assert.StartsWith("AVABand daily 2026-10-01: ", entry.ShareLine());
+    }
 }

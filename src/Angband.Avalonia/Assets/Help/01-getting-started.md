@@ -70,7 +70,9 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   quests, the daily dungeon, a win with each class), with who reached each first. **Game → The graveyard** keeps a
   headstone for every character who died or retired, with their story — and *Watch their last
   moments* replays how they fell. **Game → Daily dungeon** is the same dungeon and character
-  for everyone each day — compare how far you got with friends, and swap replays.
+  for everyone each day — compare how far you got with friends, and swap replays: *Copy result*
+  puts a line about your try on the clipboard to paste to them, and *Save replay as…* saves its
+  replay to send.
   **Game → Save a character card** makes a picture of your
   character to share (the graveyard can make one for a headstone too).
 

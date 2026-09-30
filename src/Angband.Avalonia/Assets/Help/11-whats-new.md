@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-09-30.12
+
+- **Share your daily dungeon**: *Copy result* puts a line about your try on the clipboard, ready to
+  paste to friends, and *Save replay as…* saves its replay wherever you like, named for the day and
+  try.
+
 ## 2026-09-30.11
 
 - **Will this suit me?** In the shops, armour and weapons say how they compare with what you're

@@ -24,7 +24,12 @@
     <DockPanel DockPanel.Dock="Bottom" Margin="0,12,0,0">
       <Button DockPanel.Dock="Right" Content="Close" Click="OnClose" Margin="8,0,0,0" />
       <Button DockPanel.Dock="Right" Content="Watch this try" Command="{Binding WatchCommand}" />
-      <TextBlock Text="{Binding ReplayNote}" FontSize="12" Opacity="0.7" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,12,0" />
+      <Button DockPanel.Dock="Right" Content="Save replay as…" Command="{Binding SaveReplayCommand}" Margin="0,0,8,0" />
+      <Button x:Name="CopyButton" DockPanel.Dock="Right" Content="Copy result" Command="{Binding CopyResultCommand}" Margin="0,0,8,0" />
+      <StackPanel VerticalAlignment="Center" Margin="0,0,12,0" Spacing="2">
+        <TextBlock Text="{Binding ShareNote}" FontSize="12" Foreground="#8fe0a0" TextWrapping="Wrap" IsVisible="{Binding ShareNote.Length}" />
+        <TextBlock Text="{Binding ReplayNote}" FontSize="12" Opacity="0.7" TextWrapping="Wrap" />
+      </StackPanel>
     </DockPanel>
     <Grid DockPanel.Dock="Top" ColumnDefinitions="100,60,*,140,90,*" Margin="10,0,10,6">
       <TextBlock Grid.Column="0" Text="Day" FontWeight="SemiBold" Foreground="#8ab4f8" />

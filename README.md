@@ -80,7 +80,11 @@ the day's character (race, class and rolled stats; your name) is drawn from it, 
 birth options — so on the same AVABand everyone plays the same levels. Each try (a death or a
 retirement; not a cheat's) goes in its own table, `daily.json` beside the scores, numbered and
 best-first by depth, with its replay: watch a try from the window, or send the replay to a friend
-(they open it with Watch a replay → Open a replay file…). Daily characters are ordinary games in
+(they open it with Watch a replay → Open a replay file…). The window opens on today's best try;
+*Copy result* puts a line on the clipboard ("AVABand daily 2026-09-30 (try 2): Dain the Dwarf
+Priest reached 1450 ft (level 18), 12,345 points — killed by …", `DailyEntry.ShareLine`) and *Save
+replay as…* saves the try's replay wherever you like as `AVABand-daily-<day>-try<n>.avareplay`.
+Daily characters are ordinary games in
 every other way: saved, scored, buried.
 
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest

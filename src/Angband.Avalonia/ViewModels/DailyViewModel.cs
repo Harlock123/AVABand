@@ -28,6 +28,8 @@ public sealed partial class DailyViewModel : ObservableObject
         Character = character;
         Stats = stats;
         foreach (var t in tries) Rows.Add(new DailyRow(t, t.Day == today));
+        // Today's best try (the table is best first within a day) is ready to share.
+        _selected = Rows.FirstOrDefault(r => r.IsToday);
         ReplayNote = replayFolder is null ? "Every try is recorded as a replay."
             : $"Every try is recorded as a replay (in {replayFolder}). Send one to a friend, or watch theirs with Game → Watch a replay → Open a replay file…";
     }
@@ -41,7 +43,37 @@ public sealed partial class DailyViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(WatchCommand))]
+    [NotifyCanExecuteChangedFor(nameof(CopyResultCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveReplayCommand))]
     private DailyRow? _selected;
+
+    /// <summary>Raised with a line to put on the clipboard.</summary>
+    public event Action<string>? CopyRequested;
+
+    /// <summary>Raised with a try's replay and the name to save a copy under.</summary>
+    public event Action<string, string>? SaveReplayRequested;
+
+    /// <summary>What was last copied (for tests, and said under the table).</summary>
+    [ObservableProperty]
+    private string _shareNote = "";
+
+    private bool HasSelection => Selected is not null;
+
+    [RelayCommand(CanExecute = nameof(HasSelection))]
+    private void CopyResult()
+    {
+        if (Selected is null) return;
+        var line = Selected.Entry.ShareLine();
+        CopyRequested?.Invoke(line);
+        ShareNote = "Copied: " + line;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanWatch))]
+    private void SaveReplay()
+    {
+        if (Selected?.Entry.ReplayPath is { } path)
+            SaveReplayRequested?.Invoke(path, Selected.Entry.ReplayFileName(Angband.Core.Persistence.ReplayFile.Extension));
+    }
 
     /// <summary>Raised to play today's dungeon (a new try).</summary>
     public event Action? PlayRequested;
