@@ -279,3 +279,45 @@ is the bot's own — poison it doesn't cure, worm masses, a fruit fly — as in 
 bosses account for three in 63. The soak plays one of each quest (every way of the Letter) on seeds
 where the bot sees it through, recorded and replayed, on every push.
 
+
+## A smarter bot (for the deep quests)
+
+Sent to 2000–3200 ft for the deep quests, the bot died within a few dozen turns: it wore only a
+weapon, body armour and a bow (no free action, no see invisible, no resistances), and the quest bot,
+set up in town, carried Cure Light Wounds at character level 45. Now (unless `BOT_PLAIN=1`):
+
+- **Kit for every slot**: shield, cloak, helm, gloves, boots, light, amulet and two rings, each the
+  best of thirty good objects made for the deeper of its depth and level, scored by armour and by
+  the abilities it doesn't have yet (free action most, then see invisible and poison, confusion and
+  blindness, the base four, the rest), plus speed, CON and STR (INT for a caster). Gloves only of
+  Free Action for spellcasters.
+- **Potions and escapes for its level**: healing potions by the deeper of depth and level (Healing
+  itself from level 45), 5 + level/5 of them, and Scrolls of Teleportation from 1250 ft, read when
+  badly hurt (sooner when out of potions).
+- **Breeders**: five in view and it leaves by the nearest stairs.
+- **Wary**: it drinks at 65% rather than 50% while something deeper than itself is awake near it.
+- **Casters** (mage, necromancer) cast at what's next to them too, and blink away when out of mana.
+- It eats when weak whatever is about, and no longer tries to read while confused, blind or amnesiac.
+
+This kit is generous — thirty good objects to choose from in every slot is more than most
+characters find — so this bot's survival is optimistic where the old one's was pessimistic; use it,
+like the old one, to compare versions. 20 runs per depth, the bot before → now, on the same seeds:
+
+| depth | warrior survived % | turns | potions | mage survived % | turns | potions |
+|---:|---|---|---|---|---|---|
+| 1 | 90 → 100 | 869 → 1000 | 2.5 → 0.5 | 65 → 95 | 627 → 861 | 4.0 → 1.1 |
+| 5 | 85 → 95 | 854 → 903 | 1.9 → 0.8 | 45 → 95 | 750 → 914 | 4.7 → 0.9 |
+| 10 | 65 → 100 | 753 → 937 | 3.4 → 0.4 | 50 → 80 | 664 → 905 | 4.7 → 2.7 |
+| 20 | 65 → 100 | 681 → 914 | 5.0 → 0.1 | 35 → 95 | 479 → 844 | 6.6 → 2.1 |
+| 30 | 55 → 100 | 749 → 965 | 5.8 → 0.8 | 20 → 100 | 383 → 875 | 6.6 → 2.1 |
+| 40 | 35 → 95 | 495 → 876 | 6.8 → 2.6 | 20 → 95 | 162 → 888 | 5.4 → 3.0 |
+| 50 | 5 → 90 | 194 → 942 | 6.9 → 3.9 | 5 → 90 | 158 → 894 | 5.4 → 4.7 |
+| 60 | 10 → 75 | 125 → 824 | 5.8 → 4.7 | 0 → 50 | 94 → 639 | 5.2 → 4.4 |
+| 70 | 0 → 70 | 106 → 827 | 5.6 → 7.1 | 5 → 40 | 78 → 686 | 1.9 → 7.4 |
+| 80 | 5 → 55 | 165 → 597 | 4.3 → 7.4 | 15 → 25 | 131 → 308 | 1.4 → 4.0 |
+| 90 | 0 → 35 | 84 → 425 | 5.4 → 5.5 | 5 → 20 | 77 → 366 | 3.3 → 4.7 |
+| 99 | 15 → 15 | 26 → 196 | 2.6 → 4.8 | 20 → 30 | 80 → 286 | 2.6 → 3.4 |
+
+The mage gains most (a caster's play, and kit that stops it being paralysed or poisoned to death):
+it now lives about as often as the warrior down to 2500 ft. Below that both still die, the mage
+twice as often. `docs/quest-playtest.md` has what it says about the quests.

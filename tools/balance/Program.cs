@@ -15,7 +15,11 @@
 // [runs] mage` plays a mage instead: its books, the spells of its level learned, and its strongest
 // bolt or ball it can afford cast at what it sees. `one <depth> <seed> [class]` plays a single run
 // (BOT_TRACE=1 shows its end); BOT_PLAIN=1 plays as the first bot did (no resting, corridors or
-// launcher), to compare.
+// launcher), to compare. The bot is kitted for all its slots (shield to rings, chosen for armour and
+// for free action, see invisible and the resistances it lacks), carries Scrolls of Teleportation
+// from 1250 ft and potions for its level, leaves a level filling with breeders, drinks sooner
+// against anything deeper than itself, eats when weak whatever is about, and, as a mage or
+// necromancer, casts at what is next to it too (and blinks away when out of mana).
 //
 // `soak [decisions]` — for CI: a warrior, a mage and a ranger of level 50, five fixed seeds each (and a priest,
 // necromancer, druid and blackguard, two each, casting their own attack and healing spells) from the
@@ -261,6 +265,12 @@ internal static class Bot
 
     private static bool IsHealing(SpellDef s) => s.Effect.StartsWith("heal:", StringComparison.Ordinal);
 
+    /// <summary>How many breeders in view send it off the level.</summary>
+    private const int BreederFlight = 5;
+
+    /// <summary>The classes that fight with spells more than hands (Angband's arcane and necromantic casters).</summary>
+    private static bool IsCaster(GameSession game) => game.Player.Class?.Id is "mage" or "necromancer";
+
     private static string? Kind(GameData data, string[] ids) => ids.FirstOrDefault(id => data.Object(id) is not null);
 
     internal sealed class Tally
@@ -279,10 +289,14 @@ internal static class Bot
         game.MarkDebugUsed();
         var clvl = level ?? Math.Clamp(depth, 1, 50);
         if (clvl > 1) game.GainExperience(game.ExperienceForLevel(clvl - 1) - game.Player.Experience);
+        // Kitted for the deeper of where it starts and what its level would have seen (the quest bot
+        // starts in town at a high level); the plain bot as it always was.
+        var gear = Plain ? depth : Math.Max(depth, clvl);
         Equip(game, Math.Max(depth, clvl), seed);
-        Give(game, Kind(data, Healing[depth < 20 ? 0 : depth < 40 ? 1 : 2]), 5 + depth / 10);
+        Give(game, Kind(data, Healing[gear < 20 ? 0 : gear < 40 ? 1 : gear < 45 || Plain ? 2 : 3]), 5 + gear / (Plain ? 10 : 5));
         Give(game, "phase_door", 5);
-        if (!Plain) Give(game, "ration_of_food", 5);
+        if (!Plain && gear >= 25) Give(game, "teleportation", 3 + gear / 20);
+        if (!Plain) Give(game, "ration_of_food", 8);
         if (!Plain) LearnSpells(game);
         game.Player.Hp = game.Player.MaxHp;
         // (Items given straight into the pack: count their weight, as a loaded game would.)
@@ -372,7 +386,15 @@ internal static class Bot
             .OrderBy(m => m.Position.DistanceTo(p.Position)).ToList();
         var afraid = p.Timed.Has("afraid") || p.Timed.Has("terror");
 
-        if (hurt < 20 && foes.Count > 0 && Find(game, "phase_door") is { } phase)
+        // Badly hurt deep down with something at hand: a Scroll of Teleportation, which gets clear.
+        var drinks = Healing.Any(h => Kind(game.Data, h) is { } potion && Find(game, potion) is not null);
+        if (!Plain && hurt < (drinks ? 25 : 40) && foes.Count > 0 && !p.Timed.Has("blind") && !p.Timed.Has("confused") && Find(game, "teleportation") is { } port)
+        {
+            tally.Blinks++;
+            return game.Execute(new UseCommand(port));
+        }
+        var canRead = !p.Timed.Has("blind") && !p.Timed.Has("confused") && !p.Timed.Has("amnesia");
+        if (hurt < 20 && foes.Count > 0 && (Plain || canRead) && Find(game, "phase_door") is { } phase)
         {
             tally.Blinks++;
             return game.Execute(new UseCommand(phase));
@@ -385,14 +407,16 @@ internal static class Bot
         }
         // Blind or confused, it can't fight or read: a cure potion clears both (and heals).
         var dazed = p.Timed.Has("blind") || p.Timed.Has("confused");
-        if ((hurt < 50 || dazed) && Healing.Select(h => Kind(game.Data, h) is { } id ? Find(game, id) : null).FirstOrDefault(i => i is not null) is { } cure)
+        // Against something deeper than itself (a boss, say), it drinks sooner: one breath or ball is half its life.
+        var wary = !Plain && foes.Any(m => m.Sleep == 0 && m.Race.Depth > p.Level) ? 65 : 50;
+        if ((hurt < wary || dazed) && Healing.Select(h => Kind(game.Data, h) is { } id ? Find(game, id) : null).FirstOrDefault(i => i is not null) is { } cure)
         {
             tally.Potions++;
             return game.Execute(new UseCommand(cure));
         }
         // Afraid, it can't fight hand to hand: blink away if anything is close, else keep exploring.
         if (afraid && foes.FirstOrDefault() is { } near && near.Position.DistanceTo(p.Position) <= 2
-            && !p.Timed.Has("blind") && Find(game, "phase_door") is { } escape)
+            && (Plain ? !p.Timed.Has("blind") : canRead) && Find(game, "phase_door") is { } escape)
         {
             tally.Blinks++;
             return game.Execute(new UseCommand(escape));
@@ -410,15 +434,23 @@ internal static class Bot
                     return game.Execute(new TakeStairsCommand(game.Level.Has(p.Position, TerrainFlags.DownStair)));
                 return game.Execute(new WalkCommand(Toward(p.Position, route[0])));
             }
+            // Breeders filling the level: leave by the nearest stairs (there is no end to them).
+            if (game.Level.Monsters.All.Count(m => m.IsVisible && m.Race.Has("MULTIPLY")) >= BreederFlight && Stairs(game) is { } exit)
+            {
+                tally.Flights++;
+                if (exit.Count == 0)
+                    return game.Execute(new TakeStairsCommand(game.Level.Has(p.Position, TerrainFlags.DownStair)));
+                return game.Execute(new WalkCommand(Toward(p.Position, exit[0])));
+            }
             // Something far deeper than it is awake and coming: blink away rather than meet it.
             if (game.Level.Monsters.All.FirstOrDefault(m => m.IsVisible && m.Sleep == 0 && m.Race.Depth > p.Level + 10
-                    && m.Position.DistanceTo(p.Position) <= 3) is not null && Find(game, "phase_door") is { } away && !p.Timed.Has("blind"))
+                    && m.Position.DistanceTo(p.Position) <= 3) is not null && Find(game, "phase_door") is { } away && canRead)
             {
                 tally.Blinks++;
                 return game.Execute(new UseCommand(away));
             }
-            // Hungry: eat.
-            if (game.HungerLevel <= HungerLevel.Hungry && awake.Count == 0 && p.Inventory.Pack.FirstOrDefault(i => i.Base.Id == "food") is { } food)
+            // Hungry: eat (when weak with it, whatever is about).
+            if ((game.HungerLevel <= HungerLevel.Weak || (game.HungerLevel <= HungerLevel.Hungry && awake.Count == 0)) && p.Inventory.Pack.FirstOrDefault(i => i.Base.Id == "food") is { } food)
                 return game.Execute(new UseCommand(food));
             // Quiet and hurt (or low on mana): rest.
             if (awake.Count == 0 && (hurt < 70 || (p.MaxMana > 0 && p.Mana * 2 < p.MaxMana)) && !dazed)
@@ -430,8 +462,10 @@ internal static class Bot
                     return true;
                 }
             }
-            // Something awake at range and in the line of fire: a spell, or a shot.
-            if (awake.FirstOrDefault(m => m.Position.DistanceTo(p.Position) > 1
+            // Something awake at range and in the line of fire: a spell, or a shot. (A caster casts at
+            // what is next to it too: its spells hit harder than its hands.)
+            var caster = IsCaster(game);
+            if (awake.FirstOrDefault(m => (caster || m.Position.DistanceTo(p.Position) > 1)
                     && ProjectionPath.Projectable(game.Level, p.Position, m.Position, 20)) is { } mark && !p.Timed.Has("blind"))
             {
                 if (AttackSpell(game) is { } spell && !p.Timed.Has("confused"))
@@ -450,6 +484,13 @@ internal static class Bot
                     tally.Waits = 0;
                     if (game.Execute(new FireCommand(mark.Position))) return true;
                 }
+            }
+            // A caster out of mana, with something at its elbow: blink away, to rest or shoot.
+            if (caster && awake.FirstOrDefault() is { } close && close.Position.DistanceTo(p.Position) <= 1 && AttackSpell(game) is null
+                && hurt < 70 && canRead && Find(game, "phase_door") is { } gap)
+            {
+                tally.Blinks++;
+                return game.Execute(new UseCommand(gap));
             }
             // Several awake and coming, nothing yet at hand, and it stands in the open: back into a corridor.
             var coming = awake.Where(m => m.Position.DistanceTo(p.Position) <= 7).ToList();
@@ -617,15 +658,38 @@ internal static class Bot
         game.Player.Inventory.Add(item);
     }
 
+    /// <summary>What the bot looks for in armour and jewellery (besides armour): the abilities that keep a deep character alive, not yet had.</summary>
+    private static readonly Dictionary<string, int> Abilities = new()
+    {
+        ["free_act"] = 40, ["see_invis"] = 20, ["pois"] = 20, ["conf"] = 12, ["blind"] = 12, ["fire"] = 8, ["cold"] = 8, ["acid"] = 8,
+        ["elec"] = 8, ["hold_life"] = 8, ["nexus"] = 6, ["nether"] = 6, ["chaos"] = 6, ["dark"] = 5, ["light"] = 5, ["sound"] = 5,
+        ["shards"] = 5, ["disen"] = 5, ["fear"] = 4,
+    };
+
+    private static int Worth(GameSession game, Item item, HashSet<string> covered)
+    {
+        var worth = item.Armour + item.ToAc + item.Resists.Where(r => !covered.Contains(r)).Sum(r => Abilities.GetValueOrDefault(r))
+                    + 10 * item.Modifier(ItemModifiers.Speed) + 3 * (item.Modifier(ItemModifiers.Constitution) + item.Modifier(ItemModifiers.Strength))
+                    + 8 * item.Modifier(ItemModifiers.Light);
+        if (IsCaster(game)) worth += 3 * item.Modifier(ItemModifiers.Intelligence);
+        // Gloves hamper a caster's spells, save those of Free Action.
+        if (item.Base.Slot == EquipSlot.Hands && game.Player.MaxMana > 0 && !item.Resists.Contains("free_act")) worth -= 1000;
+        return worth;
+    }
+
     /// <summary>
     /// The best weapon (most damage a blow) and body armour (most armour) among 30 good objects of
     /// each made for the depth, and (unless plain) the launcher with the most might and 40 plain
-    /// missiles for it.
+    /// missiles for it, and the rest of a kit (shield, cloak, helm, gloves, boots, light, amulet, two
+    /// rings) chosen for armour and for the resistances and abilities it doesn't have yet.
     /// </summary>
     private static void Equip(GameSession game, int depth, ulong seed)
     {
         var rng = new GameRandom(seed ^ 0x5EED);
-        var slots = Plain ? new[] { EquipSlot.Weapon, EquipSlot.Body } : [EquipSlot.Weapon, EquipSlot.Body, EquipSlot.Bow];
+        var slots = Plain ? new[] { EquipSlot.Weapon, EquipSlot.Body }
+            : [EquipSlot.Weapon, EquipSlot.Body, EquipSlot.Bow, EquipSlot.Shield, EquipSlot.Cloak, EquipSlot.Head, EquipSlot.Hands, EquipSlot.Feet,
+               EquipSlot.Light, EquipSlot.Amulet, EquipSlot.Ring, EquipSlot.Ring];
+        var covered = new HashSet<string>(game.Player.Race?.Resists ?? []);
         foreach (var slot in slots)
         {
             var found = new List<Item>();
@@ -637,9 +701,11 @@ internal static class Bot
             {
                 EquipSlot.Weapon => found.OrderByDescending(i => i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam).FirstOrDefault(),
                 EquipSlot.Bow => found.OrderByDescending(i => i.Multiplier).ThenByDescending(i => i.ToDam).FirstOrDefault(),
-                _ => found.OrderByDescending(i => i.Armour + i.ToAc).FirstOrDefault(),
+                _ when Plain => found.OrderByDescending(i => i.Armour + i.ToAc).FirstOrDefault(),
+                _ => found.OrderByDescending(i => Worth(game, i, covered)).FirstOrDefault(),
             };
             if (best is null) continue;
+            covered.UnionWith(best.Resists);
             game.Player.Inventory.Add(best);
             game.Execute(new WieldCommand(best));
             if (slot == EquipSlot.Bow && game.Data.Objects
