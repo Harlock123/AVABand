@@ -255,6 +255,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game = game;
         _game.Lore = _lore;
         CursorMode = CursorMode.None;
+        _pendingScenes.Clear();
+        SkipScenes(); // a scene left from the last game (a death scene holding for Space) goes with it
         _game.Events.Subscribe<MessageEvent>(m => AddMessage(m.Text));
         _game.Events.Subscribe<DamageNoteEvent>(d => AmendLastMessage(d.Damage));
         _game.Events.Subscribe<QuestPromptEvent>(OnQuestPrompt);

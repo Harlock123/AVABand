@@ -1,4 +1,5 @@
 using Angband.Core.Game;
+using Angband.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Angband.Avalonia.ViewModels;
@@ -11,13 +12,17 @@ public enum SceneKind { StairsDown, StairsUp, RecallUp, RecallDown, Cavern, Laby
 /// daylight, and the picture to show — the player's own, or the bundled artwork — or none, when the
 /// scene is painted. A unique's scene carries its glyph and colour for the painted version.
 /// </summary>
+/// With <see cref="WaitForKey"/> (the option "Scenes stay until you press Space") it holds, once
+/// it has faded in, until dismissed.
 public sealed record AmbientScene(SceneKind Kind, string Caption, int Depth, bool Day, string? Picture,
-    string? Glyph = null, uint GlyphColor = 0xFFFFFFFF, string? Subtitle = null);
+    string? Glyph = null, uint GlyphColor = 0xFFFFFFFF, string? Subtitle = null, bool WaitForKey = false);
 
 // Scenes (the option "Show scenes at moments of note", on by default): taking the stairs, Word of
 // Recall, arriving in a cavern, labyrinth or fortress, a level whose feeling is deadly, meeting a
 // unique for the very first time, and death. They queue (the stairs, then the cavern you arrive in),
-// each lasting a moment; a click ends one, a key ends them all (and still does what it does).
+// each lasting a moment; a click ends one, a key ends them all (and still does what it does). With
+// "Scenes stay until you press Space" each holds instead: Space, Enter, a click or the controller's A
+// moves on to the next, Escape (or B) ends them all, and other keys do nothing meanwhile.
 // Pictures are looked for in the player's art folder (<AppData>/AVABand/art), then among the bundled
 // artwork (unless "Use the bundled pictures" is off); with none, the scene is painted.
 public sealed partial class MainWindowViewModel
@@ -59,7 +64,8 @@ public sealed partial class MainWindowViewModel
     {
         if (!ScenesOn) return;
         var depth = _game.Player.Depth;
-        _pendingScenes.Add(new AmbientScene(kind, caption, depth, _game.IsDaytime, PictureFor(pictures), glyph, glyphColor, subtitle));
+        _pendingScenes.Add(new AmbientScene(kind, caption, depth, _game.IsDaytime, PictureFor(pictures), glyph, glyphColor, subtitle,
+            OptionValue(DisplayOptions.ScenesWait)));
     }
 
     /// <summary>After a command: the stairs taken (if any), then whatever else happened, in order of note.</summary>
@@ -83,6 +89,21 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>The scene has played (or a click cut it short): the next, if any.</summary>
     public void EndScene() => Scene = _sceneQueue.Count > 0 ? _sceneQueue.Dequeue() : null;
+
+    /// <summary>Whether the scene on screen is holding for Space.</summary>
+    public bool SceneWaits => Scene?.WaitForKey == true;
+
+    /// <summary>
+    /// A controller action (or key) while a scene holds for Space: Confirm moves on, Cancel ends them
+    /// all, anything else is kept from the game. False when no scene is holding.
+    /// </summary>
+    public bool HandleWaitingScene(InputAction action)
+    {
+        if (!SceneWaits) return false;
+        if (action == InputAction.Confirm) EndScene();
+        else if (action == InputAction.Cancel) SkipScenes();
+        return true;
+    }
 
     /// <summary>A key: every scene waiting goes.</summary>
     public void SkipScenes()

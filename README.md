@@ -899,7 +899,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     arriving in a cavern, labyrinth, hard centre (a fortress), moria level, lair or gauntlet, a level whose feeling is deadly ("Omens of death
     haunt this place."), meeting a unique for the very first time (its name), and death (a tombstone,
     behind the game-over menu). Several queue — the stairs, then the cavern you arrive in; a click
-    ends one, a key ends them all and still does what it does. Only the stairs show the stair scenes
+    ends one, a key ends them all and still does what it does. With the option *Scenes stay until
+    you press Space* (off by default) each scene fades in and holds, "Press Space to continue" in
+    the corner: Space, Enter, a click or the controller's A moves to the next, Escape or B ends
+    them all, and other keys do nothing meanwhile (a new or loaded game clears any still held). Only the stairs show the stair scenes
     (not trapdoors or debug jumps). Each has a picture: first your own, from the `art` folder beside
     the saves (`<AppData>/AVABand/art/`), then the artwork that comes with the game (`art/` beside the
     program; the option *Scenes use the bundled pictures* turns those off), else a painted scene (a

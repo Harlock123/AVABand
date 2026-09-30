@@ -83,6 +83,7 @@ public sealed partial class MainWindowViewModel
     public void HandleAction(InputAction action)
     {
         if (action == InputAction.None) return;
+        if (HandleWaitingScene(action)) return;
         if (IsShowingTitle)
         {
             switch (action)

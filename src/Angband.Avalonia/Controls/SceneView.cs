@@ -28,6 +28,12 @@ public sealed class SceneView : Control
 
     private double Duration => Scene is { } s ? DurationFor(s.Kind) : DurationMs;
 
+    /// <summary>Where a scene that waits for Space holds: faded in, before it would fade out.</summary>
+    public const double HoldAt = 0.8;
+
+    /// <summary>Whether the scene is holding for Space (it has played up to <see cref="HoldAt"/>).</summary>
+    public bool IsHolding => Scene is { WaitForKey: true } && Elapsed >= Duration * HoldAt;
+
     public static readonly StyledProperty<AmbientScene?> SceneProperty =
         AvaloniaProperty.Register<SceneView, AmbientScene?>(nameof(Scene));
 
@@ -77,6 +83,13 @@ public sealed class SceneView : Control
         if (Scene is null) return;
         Elapsed += ms;
         InvalidateVisual();
+        if (Scene.WaitForKey && Elapsed >= Duration * HoldAt)
+        {
+            // Hold, faded in, on this frame until dismissed (the view model ends it).
+            Elapsed = Duration * HoldAt;
+            _clock?.Stop();
+            return;
+        }
         if (Elapsed < Duration) return;
         _clock?.Stop();
         Finished?.Invoke();
@@ -93,6 +106,7 @@ public sealed class SceneView : Control
             if (scene.Picture is { } path && Picture(path) is { } bitmap) DrawPicture(context, bitmap, p);
             else Paint(context, scene, p);
             DrawCaption(context, scene.Caption, scene.Subtitle);
+            if (IsHolding) DrawPrompt(context);
         }
     }
 
@@ -144,6 +158,15 @@ public sealed class SceneView : Control
         var small = new FormattedText(subtitle, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
             new Typeface(FontFamily.Default, FontStyle.Italic), size * 0.6, Parchment);
         context.DrawText(small, new Point((Bounds.Width - small.Width) / 2, at.Y + text.Height + 2));
+    }
+
+    /// <summary>"Press Space to continue", small, in the corner, while a scene holds.</summary>
+    private void DrawPrompt(DrawingContext context)
+    {
+        var size = Math.Max(11, Bounds.Height / 48);
+        var text = new FormattedText("Press Space to continue", System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+            new Typeface(FontFamily.Default), size, Parchment);
+        context.DrawText(text, new Point(Bounds.Width - text.Width - size, Bounds.Height - text.Height - size * 0.6));
     }
 
     private static readonly IBrush Parchment = new SolidColorBrush(Color.FromRgb(0xE2, 0xD3, 0xAE));

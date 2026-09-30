@@ -24,13 +24,14 @@ public sealed class SceneUiTests : IDisposable
             if (Directory.Exists(dir)) Directory.Delete(dir, true);
     }
 
-    private (MainWindow Window, MainWindowViewModel Vm, SceneView Scene) Open(bool scenes = true, bool pictures = true)
+    private (MainWindow Window, MainWindowViewModel Vm, SceneView Scene) Open(bool scenes = true, bool pictures = true, bool wait = false)
     {
         MainWindow.ShowCreationOnFirstRun = false;
         var settings = new AppSettings();
         settings.Options[DisplayOptions.Hints] = false;
         if (!scenes) settings.Options[DisplayOptions.Scenes] = false;
         if (!pictures) settings.Options[DisplayOptions.ScenePictures] = false;
+        if (wait) settings.Options[DisplayOptions.ScenesWait] = true;
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null)
         {
             ArtDirectory = _art,
@@ -206,5 +207,55 @@ public sealed class SceneUiTests : IDisposable
         Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "art", "CREDITS.md")));
         Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "ambience", "CREDITS.md")));
         Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "ambience", "ambient-dungeon-shallow.ogg")));
+    }
+
+    /// <summary>
+    /// "Scenes stay until you press Space": the scene fades in and holds, other keys wait (and do
+    /// nothing), Space moves on; the controller's A does too, and B ends them all. Off by default.
+    /// </summary>
+    [AvaloniaFact]
+    public void WithTheOption_AScene_HoldsUntilSpace()
+    {
+        Assert.False(DisplayOptions.All.Single(o => o.Id == DisplayOptions.ScenesWait).Default);
+        var (window, vm, scene) = Open(wait: true);
+        TakeStairs(vm, down: true);
+        Assert.True(vm.Scene!.WaitForKey);
+        scene.Advance(SceneView.DurationMs * 3); // long past its usual moment
+        Assert.NotNull(vm.Scene);
+        Assert.True(scene.IsHolding);
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "scene-holding");
+
+        var turn = vm.Game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None); // not Space: nothing happens
+        Assert.NotNull(vm.Scene);
+        Assert.Equal(turn, vm.Game.GameTurn);
+        window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None);
+        Assert.Null(vm.Scene);
+
+        // The controller: A moves on, B ends them all.
+        TakeStairs(vm, down: false);
+        Assert.NotNull(vm.Scene);
+        vm.HandleAction(InputAction.Confirm);
+        Assert.Null(vm.Scene);
+        TakeStairs(vm, down: true);
+        vm.HandleAction(InputAction.Cancel);
+        Assert.Null(vm.Scene);
+
+        // A scene still holding when a new game starts goes with the old one.
+        TakeStairs(vm, down: false);
+        Assert.NotNull(vm.Scene);
+        vm.StartGame(43, "warrior");
+        Assert.Null(vm.Scene);
+    }
+
+    [AvaloniaFact]
+    public void WithoutTheOption_AScene_StillPassesByItself()
+    {
+        var (_, vm, scene) = Open();
+        TakeStairs(vm, down: true);
+        Assert.False(vm.Scene!.WaitForKey);
+        scene.Advance(SceneView.DurationMs * 2);
+        Assert.Null(vm.Scene);
     }
 }

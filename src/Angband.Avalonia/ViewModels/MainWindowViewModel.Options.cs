@@ -39,6 +39,8 @@ public static class DisplayOptions
     public const string Scenes = "stair_scenes";
     /// <summary>AVABand's own: scenes use the bundled artwork (off: only the player's own pictures, else painted).</summary>
     public const string ScenePictures = "scene_pictures";
+    /// <summary>AVABand's own: a scene stays until Space (or Enter, a click, the controller's A) instead of passing by itself.</summary>
+    public const string ScenesWait = "scenes_wait_for_space";
     /// <summary>AVABand's own: torchlight fading with distance (and flickering), remembered squares dimmer.</summary>
     public const string LightAndShadow = "light_and_shadow";
     /// <summary>AVABand's own: record every game as a replay (replays/ beside the saves).</summary>
@@ -73,6 +75,7 @@ public static class DisplayOptions
         new(ScreenReader, "Screen reader support (announce messages, prompts and tips)", OptionKind.Interface, false),
         new(Scenes, "Show scenes at moments of note (stairs, recall, uniques, danger, death)", OptionKind.Interface, true),
         new(ScenePictures, "Scenes use the bundled pictures (off: painted scenes)", OptionKind.Interface, true),
+        new(ScenesWait, "Scenes stay until you press Space (off: they pass by themselves)", OptionKind.Interface, false),
         new(LightAndShadow, "Light and shadow on the map (torchlight fades and flickers)", OptionKind.Interface, true),
         new(RecordReplays, "Record every game as a replay", OptionKind.Interface, true),
         new(ThreeMessageLines, "Show three lines of messages (off: just the newest)", OptionKind.Interface, true),

@@ -414,6 +414,14 @@ public partial class MainWindow : Window
     private void OnGameKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
+        if (vm.SceneWaits)
+        {
+            // Held until Space: Space or Enter moves on, Escape ends them all, other keys wait.
+            vm.HandleWaitingScene(e.Key is Key.Space or Key.Enter ? InputAction.Confirm
+                : e.Key == Key.Escape ? InputAction.Cancel : InputAction.None);
+            e.Handled = true;
+            return;
+        }
         if (vm.HasScene) vm.SkipScenes(); // a key cuts the scenes short, and still does what it does
 
         // Two arrow keys held together move diagonally (plain arrows, at the command prompt, as bound by default).
