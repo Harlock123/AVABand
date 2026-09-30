@@ -35,6 +35,23 @@ public static class StatTables
     /// </summary>
     public static readonly int[] AvaCarryLimit = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 220, 240, 260, 280, 300, 320, 340, 360, 380, 400, 410, 420, 430, 440, 450, 460, 470, 480, 490, 500, 510, 520];
 
+    /// <summary>Angband adj_str_hold: the heaviest weapon (in pounds) a Strength can wield without penalty.</summary>
+    public static readonly int[] StrHold = [4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 30, 35, 40, 45, 50, 55, 60, 65, 70, 80, 80, 80, 80, 80, 90, 90, 90, 90, 90, 100, 100, 100];
+
+    /// <summary>Angband adj_dex_blow: Dexterity's index into the blows table.</summary>
+    public static readonly int[] DexBlow = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 11, 11, 11];
+
+    /// <summary>Angband blows_table[P][D]: the energy one blow costs, by Strength-for-weight (P) and Dexterity (D).</summary>
+    public static readonly int[,] BlowsTable =
+    {
+        { 100, 100, 95, 85, 75, 60, 50, 42, 35, 30, 25, 23 }, { 100, 95, 85, 75, 60, 50, 42, 35, 30, 25, 23, 21 },
+        { 95, 85, 75, 60, 50, 42, 35, 30, 26, 23, 21, 20 }, { 85, 75, 60, 50, 42, 36, 32, 28, 25, 22, 20, 19 },
+        { 75, 60, 50, 42, 36, 33, 28, 25, 23, 21, 19, 18 }, { 60, 50, 42, 36, 33, 30, 27, 24, 22, 21, 19, 17 },
+        { 50, 42, 36, 33, 30, 27, 25, 23, 21, 20, 18, 17 }, { 42, 36, 33, 30, 28, 26, 24, 22, 20, 19, 18, 17 },
+        { 36, 33, 30, 28, 26, 24, 22, 21, 20, 19, 17, 16 }, { 35, 32, 29, 26, 24, 22, 21, 20, 19, 18, 17, 16 },
+        { 34, 30, 27, 25, 23, 22, 21, 20, 19, 18, 17, 16 }, { 33, 29, 26, 24, 22, 21, 20, 19, 18, 17, 16, 15 },
+    };
+
     /// <summary>To-hit bonus from Dexterity (Angband adj_dex_th).</summary>
     public static readonly int[] ToHit = [-3, -2, -2, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 20];
 
@@ -50,7 +67,7 @@ public static class StatTables
     public const int MaxLevel = 50;
 
     /// <summary>Stat value (3..40, where 19+ means 18/10, 18/20...) to table index.</summary>
-    /// <summary>Angband adj_str_blow (used for throwing range; these figures are Angband's own).</summary>
+    /// <summary>Angband adj_str_blow (throwing range, and with Angband's blows, Strength's part in them).</summary>
     public static readonly int[] StrBlow = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240];
 
     public static int Index(int stat) => Math.Clamp(stat - 3, 0, ManaPerLevel.Length - 1);

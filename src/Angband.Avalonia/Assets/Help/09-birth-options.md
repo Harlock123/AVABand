@@ -20,6 +20,9 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
 - **AVABand's quests** — the Prancing Pony, its notice board, and the quests below (on by default).
 - **AVABand's racial abilities** — each race's extra ability (Help → Your character); off, the races
   are Angband 4.2.5's as they are (on by default).
+- **Angband 4.2's blows** — blows from your weapon's weight, Strength and Dexterity, heavy weapons
+  hard to wield, and casters' armour weight costing mana, as in Angband 4.2.5 (on by default); off,
+  each class strikes a fixed number of times.
 - **AVABand's encumbrance** — Strength keeps adding to what you carry where Angband's stops,
   Constitution adds a little, worn gear weighs three quarters, Heroism and Berserk help, and the
   burden is named (Help → Your character); off, Angband 4.2.5's rule (on by default).

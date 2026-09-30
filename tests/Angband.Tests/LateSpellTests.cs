@@ -23,6 +23,10 @@ public class LateSpellTests
         var arena = Arena.Create(seed, Room);
         var game = GameSession.NewGame(TestData.Game, seed, cls);
         game.UseLevel(arena.Level, arena.Player.Position);
+        game.Options[OptionIds.AngbandBlows] = false; // (spells, not armour weight: that's AngbandBlowsTests')
+        game.RecalculateBonuses();
+        game.RecalculateMana();
+        game.Player.Mana = game.Player.MaxMana;
         game.Player.Hp = game.Player.MaxHp = 5000;
         return game;
     }

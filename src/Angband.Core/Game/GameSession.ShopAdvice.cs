@@ -10,8 +10,9 @@ public sealed record ItemAdvice(string Text, int Tone);
 // AVABand's shop notes ("will this suit me?"): for something you could wear or wield, how it compares
 // with what it would replace — armour, damage per turn, a launcher's multiplier, speed and stats, the
 // abilities and resistances it would bring or take away, and whether it would leave you burdened; for
-// missiles, whether they fit your launcher. Only what AVABand's rules count is compared (blows come
-// from your class and gear, not a weapon's weight; gloves don't hamper spells).
+// missiles, whether they fit your launcher. Only what the rules count is compared: a weapon's blows as
+// they'd be with it (Angband's, from its weight, with birth_angband_blows; the class's otherwise), and
+// whether it's too heavy to wield well; gloves don't hamper spells (4.2.5 has no such rule).
 public sealed partial class GameSession
 {
     private static readonly string[] AdviceModifiers =
@@ -48,14 +49,17 @@ public sealed partial class GameSession
             case EquipSlot.Weapon:
             {
                 // Damage a turn: an average blow (dice and the weapon's own bonus) times the blows you'd have.
+                // (Blows as they'd be with each weapon: with Angband's rules they depend on its weight.)
                 double PerTurn(Item? w) =>
-                    w is null ? 0 : (w.Damage.AverageTimesTwo / 2.0 + w.ToDam + Player.ToDam)
-                                    * (Player.Blows + 100 * (w.Modifier(ItemModifiers.Blows) - (replaced?.Modifier(ItemModifiers.Blows) ?? 0))) / 100.0;
-                var now = replaced is null ? 0 : (replaced.Damage.AverageTimesTwo / 2.0 + replaced.ToDam + Player.ToDam) * Player.Blows / 100.0;
+                    w is null ? 0 : (w.Damage.AverageTimesTwo / 2.0 + w.ToDam + Player.ToDam) * BlowsWith(w) / 100.0;
+                var now = PerTurn(replaced);
                 var then = PerTurn(item);
                 var change = (int)Math.Round(then - now);
                 if (change != 0) Delta(change, $"damage a turn (about {Math.Round(then)})");
                 Delta(item.ToHit - (replaced?.ToHit ?? 0), "to hit");
+                if (AngbandBlowsOn && HeavyBy(item) > 0) bad.Add($"too heavy for you ({HeavyBy(item)} lb over: -{2 * HeavyBy(item)} to hit, one blow)");
+                else if (AngbandBlowsOn && BlowsWith(item) != BlowsWith(replaced))
+                    (BlowsWith(item) > BlowsWith(replaced) ? good : bad).Add($"{BlowsWith(item) / 100.0:0.#} blows a turn (now {BlowsWith(replaced) / 100.0:0.#})");
                 break;
             }
             case EquipSlot.Bow:

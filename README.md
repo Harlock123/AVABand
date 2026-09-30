@@ -181,6 +181,19 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
   same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+- **Blows and armour weight, as Angband 4.2.5** (`Game/GameSession.AngbandBlows.cs`; the birth
+  option *Angband 4.2's blows*, `birth_angband_blows`, on by default — off, each class's fixed blows
+  as before): `calc_blows` from `player-calcs.c` — Strength for the weapon's weight (`adj_str_blow` ×
+  the class's strength-multiplier ÷ the weight, the class's min-weight at least) and Dexterity
+  (`adj_dex_blow`) index `blows_table` for the energy a blow costs; blows are 100 ÷ that, up to the
+  class's max-attacks, plus extra blows from gear — so a starting warrior swings a dagger about 1.7
+  times, and a strong, quick one five or six; a weapon heavier than `adj_str_hold` allows is wielded
+  with trouble (-2 to hit a pound over, one blow, "You have trouble wielding such a heavy weapon."); and
+  a caster's armour beyond the class's spell weight costs a point of mana a pound ("The weight of your
+  armor encumbers your movement."). The class figures (max-attacks, min-weight, strength-multiplier,
+  spell weight) are 4.2.5's `class.txt`, in `ava_classes.json` beside `classes.json`. (4.2.5 has no
+  glove penalty for casters; older versions did.) The shop notes and inspecting a weapon say the blows
+  you'd have with it, and the trial kit and the balance bot choose weapons by damage a turn.
 - **Encumbrance** (`Game/GameSession.Burden.cs`): Angband 4.2's rule — Strength sets a weight limit
   (`adj_str_wgt`), half of it carried unhindered, -1 speed for each tenth beyond — with the birth
   option *AVABand's encumbrance* (`birth_ava_burden`, on by default): Strength keeps counting where
@@ -519,8 +532,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     colour-blind option applies); missiles say whether
     they fit your launcher. Your own things for sale are compared too, once all their runes are
     known. The same note is added when you inspect something in your pack (`I`, or its menu) or look at
-it on the floor (`x`). Only what AVABand's rules count is compared: blows come from your class and gear, not a
-    weapon's weight, and gloves don't hamper spells.
+it on the floor (`x`). Only what the game's rules count is compared: with Angband's blows (the default) a weapon's
+    note gives the blows you'd have with it ("1.2 blows a turn (now 1.7)") or says it's too heavy for
+    you; gloves don't hamper spells (4.2.5 has no such rule).
   - AVABand's one addition: the General Store also always has **lanterns** (`avabandAlways` in
     `stores.json`, kept apart from 4.2.5's `always` list so the drift check still compares that
     untouched). In 4.2.5 no shop sells them — the black market might, and the dungeon has plenty

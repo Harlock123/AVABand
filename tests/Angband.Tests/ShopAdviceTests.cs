@@ -27,10 +27,13 @@ public class ShopAdviceTests
     public void A_weapon_says_its_damage_a_turn()
     {
         var game = Warrior();
+        var gauche = game.AdviceFor(game.Objects.Create("main_gauche"))!; // light: as many blows, bigger dice
+        Assert.StartsWith("Better — vs your Dagger: +", gauche.Text);
+        Assert.Contains("damage a turn (about ", gauche.Text);
+        Assert.Equal(1, gauche.Tone);
+        // A heavy axe: more a blow, but (Angband's blows) fewer of them for a weak hand — or too heavy to swing well.
         var axe = game.AdviceFor(game.Objects.Create("battle_axe"))!;
-        Assert.StartsWith("Better — vs your Dagger: +", axe.Text);
-        Assert.Contains("damage a turn (about ", axe.Text);
-        Assert.Equal(1, axe.Tone);
+        Assert.True(axe.Text.Contains("blows a turn (now") || axe.Text.Contains("too heavy for you"), axe.Text);
         Assert.True(game.AdviceFor(game.Objects.Create("dagger"))!.Tone <= 0); // a dagger for a dagger: no better
     }
 

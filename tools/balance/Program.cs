@@ -744,7 +744,9 @@ internal static class Bot
                     found.Add(item);
             var best = slot switch
             {
-                EquipSlot.Weapon => found.OrderByDescending(i => i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam).FirstOrDefault(),
+                // (By damage a turn: with Angband's blows, a heavy weapon's big dice come with fewer blows.)
+                EquipSlot.Weapon when Plain => found.OrderByDescending(i => i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam).FirstOrDefault(),
+                EquipSlot.Weapon => found.OrderByDescending(i => (i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam) * game.BlowsWith(i)).FirstOrDefault(),
                 EquipSlot.Bow => found.OrderByDescending(i => i.Multiplier).ThenByDescending(i => i.ToDam).FirstOrDefault(),
                 _ when Plain => found.OrderByDescending(i => i.Armour + i.ToAc).FirstOrDefault(),
                 _ => found.OrderByDescending(i => Worth(game, i, covered)).FirstOrDefault(),

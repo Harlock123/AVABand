@@ -65,6 +65,16 @@ tells you a minimum is out of reach. Heroic characters still enter the high scor
 Stats above 18 are written 18/10, 18/50 and so on up to 18/220. Drained stats come back when you
 gain a level, and with certain mushrooms and potions (Vigor, Restoration).
 
+## Blows
+
+How many times you strike a turn depends, as in Angband 4.2, on your **weapon's weight**, your
+**Strength** and your **Dexterity**: a light weapon and a strong, quick hand give more blows, up to
+your class's limit (a warrior's six, a mage's four). A weapon too heavy for your Strength is
+wielded with trouble — less accurate, and only one blow — and you're told so. The shops' notes and
+inspecting a weapon show the blows you'd have with it. Spellcasters also lose a point of mana for
+each pound of armour beyond what their class can wear lightly (a mage 30 lb, a priest 35, a paladin
+40...). The birth option *Angband 4.2's blows* turns these off, for a fixed number of blows by class.
+
 ## Carrying
 
 Your **Strength** sets how much you can carry before it slows you: about 80 lb at 14, 100 lb at

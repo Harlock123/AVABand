@@ -14,6 +14,7 @@ public class PercentDamageTests
         var game = Arena.Create(4, "#########", "#,,,@,,,#", "#########");
         TestGames.ClearMonsters(game);
         game.Options[OptionIds.PercentDamage] = on;
+        game.Options[OptionIds.AngbandBlows] = false; // (these set the blows by hand: the class's fixed figure)
         game.RecalculateBonuses();
         return game;
     }

@@ -7,6 +7,10 @@ played; this page keeps it all (Help → What's new...).
 
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
+- **Blows as in Angband 4.2**: how often you strike now depends on your weapon's weight, your
+  Strength and your Dexterity — a light blade in a strong, quick hand strikes often; a weapon too
+  heavy for you strikes once, and badly. Spellcasters in heavy armour lose mana. The shops and
+  inspecting show the blows a weapon would give you. (A birth option keeps the old fixed blows.)
 - **Tidy pack** (Game menu): merges stacks that can now go together and says how full your pack
   is and what looks like junk. The sidebar shows "(1 left)" or "(full)" beside your slots, and the
   first time a full pack stops you picking something up, a tip says what to do.

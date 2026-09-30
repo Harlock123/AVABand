@@ -68,6 +68,7 @@ public static class DataLoader
     public const string AvaCursesFile = "ava_curses.json";
     public const string AvaRacesFile = "ava_races.json";
     public const string AvaEgosFile = "ava_egos.json";
+    public const string AvaClassesFile = "ava_classes.json";
 
     private static readonly JsonSerializerOptions Options = new()
     {
@@ -116,6 +117,7 @@ public static class DataLoader
         var spells = new Merged<SpellDef>(s => s.Id);
         var races = new Merged<RaceDef>(r => r.Id);
         var avaRaces = new List<AvaRaceJson>();
+        var avaClasses = new List<AvaClassJson>();
         var stores = new Merged<StoreDef>(s => s.Id);
         var objectBases = new Merged<ObjectBaseDef>(b => b.Id);
         var objects = new Merged<ObjectKindDef>(o => o.Id);
@@ -160,6 +162,7 @@ public static class DataLoader
             spells.AddRange(Read<List<SpellDef>>(dir, SpellsFile, errors));
             races.AddRange(Read<List<RaceDef>>(dir, RacesFile, errors));
             avaRaces.AddRange(Read<List<AvaRaceJson>>(dir, AvaRacesFile, errors) ?? []);
+            avaClasses.AddRange(Read<List<AvaClassJson>>(dir, AvaClassesFile, errors) ?? []);
             stores.AddRange(Read<List<StoreDef>>(dir, StoresFile, errors));
             objectBases.AddRange(Read<List<ObjectBaseDef>>(dir, ObjectBasesFile, errors));
             objectBases.AddRange(Read<List<ObjectBaseDef>>(dir, AvaObjectBasesFile, errors));
@@ -246,6 +249,16 @@ public static class DataLoader
         foreach (var m in monsterDefs)
         foreach (var k in m.Mimics.Where(k => !kindIds.Contains(k)))
             errors.Add($"monster '{m.Id}' mimics unknown object '{k}'.");
+        // Angband 4.2.5's blow and armour-weight figures (class.txt) go onto the classes they name.
+        foreach (var ava in avaClasses)
+        {
+            if (classes.Items.FirstOrDefault(c => c.Id == ava.Id) is not { } cls)
+            {
+                errors.Add($"{AvaClassesFile}: unknown class '{ava.Id}'.");
+                continue;
+            }
+            (cls.MaxAttacks, cls.MinWeight, cls.StrengthMultiplier, cls.SpellWeight) = (ava.MaxAttacks, ava.MinWeight, ava.StrengthMultiplier, ava.SpellWeight);
+        }
         // AVABand's racial abilities go onto the races they name (not in races.json: the drift check compares that).
         foreach (var ava in avaRaces)
         {
@@ -705,6 +718,16 @@ public static class DataLoader
     private static void CheckColor(IReadOnlyDictionary<string, string> colors, string color, string owner, List<string> errors)
     {
         if (!colors.ContainsKey(color)) errors.Add($"{owner}: unknown colour '{color}'.");
+    }
+
+    /// <summary>An entry of ava_classes.json: a class's blow and armour-weight figures from Angband 4.2.5.</summary>
+    private sealed class AvaClassJson
+    {
+        public string Id { get; init; } = "";
+        public int MaxAttacks { get; init; }
+        public int MinWeight { get; init; }
+        public int StrengthMultiplier { get; init; }
+        public int SpellWeight { get; init; }
     }
 
     /// <summary>An entry of ava_races.json: a race's AVABand abilities.</summary>

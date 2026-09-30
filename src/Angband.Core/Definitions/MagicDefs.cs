@@ -66,6 +66,14 @@ public sealed class ClassDef
     public int ExpFactor { get; init; }
     /// <summary>Realm id, or null for non-casters.</summary>
     public string? Realm { get; init; }
+    /// <summary>Angband 4.2.5 class.txt max-attacks (ava_classes.json): the most blows a turn, weight and skill allowing.</summary>
+    public int MaxAttacks { get; set; }
+    /// <summary>class.txt min-weight, tenths of a pound: lighter weapons count as this heavy for blows.</summary>
+    public int MinWeight { get; set; }
+    /// <summary>class.txt strength-multiplier (att_multiply): how much Strength counts toward blows.</summary>
+    public int StrengthMultiplier { get; set; }
+    /// <summary>class.txt magic spell_weight, tenths of a pound: armour beyond it costs a caster mana.</summary>
+    public int SpellWeight { get; set; }
     /// <summary>Level at which the class can first cast.</summary>
     public int FirstSpellLevel { get; init; } = 1;
     public IReadOnlyList<StartItemDef> StartingKit { get; init; } = [];

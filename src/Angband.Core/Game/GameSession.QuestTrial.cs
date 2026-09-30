@@ -84,7 +84,8 @@ public sealed partial class GameSession
                     found.Add(item);
             var best = slot switch
             {
-                EquipSlot.Weapon => found.MaxBy(i => i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam),
+                // (By damage a turn: with Angband's blows, a heavy weapon's big dice come with fewer blows.)
+                EquipSlot.Weapon => found.MaxBy(i => (i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam) * BlowsWith(i)),
                 EquipSlot.Bow => found.MaxBy(i => i.Multiplier * 10 + i.ToDam),
                 _ => found.MaxBy(i => i.Armour + i.ToAc + 10 * i.Modifier(ItemModifiers.Speed)
                                       + i.Resists.Where(r => !covered.Contains(r)).Sum(r => TrialAbilities.GetValueOrDefault(r))),

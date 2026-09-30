@@ -267,7 +267,7 @@ public class ItemMenuUiTests
     public void Inspecting_or_looking_at_gear_says_whether_it_suits_you()
     {
         var vm = Start(); // wielding a dagger
-        var axe = Carry(vm, "battle_axe");
+        var axe = Carry(vm, "main_gauche"); // (light: as many blows as the dagger, bigger dice)
         vm.Game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.ToHit);
         vm.Game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.ToDam);
         vm.OpenItemMenu(axe);

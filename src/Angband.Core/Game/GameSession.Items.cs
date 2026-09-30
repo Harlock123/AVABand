@@ -98,7 +98,7 @@ public sealed partial class GameSession
         p.ToDam = p.BaseToDam + Adj(Magic.StatTables.ToDamage, "str");
         p.WeightLimit = CarryLimit(Adj);
         p.Stealth = p.BaseStealth;
-        p.Blows = p.BaseBlows;
+        p.Blows = p.Class is null ? p.BaseBlows : BaseBlowsNow(weapon);
         p.Shots = p.BaseShots;
         var speed = 0;
         var light = 0;
@@ -225,6 +225,11 @@ public sealed partial class GameSession
             foreach (var f in shape.Flags) p.GearFlags.Add(f);
         }
         if (PercentDamage) p.Blows = Math.Max(p.Blows, 200); // Angband calc_blows: two blows at least in O-combat
+        if (p.Class is not null)
+        {
+            ApplyHeavyWield(weapon);
+            RecalculateMana(); // (armour put on or taken off changes a caster's mana, with Angband's rules)
+        }
         p.TotalInfravision = Math.Max(0, infravision);
         p.EquipmentSpeed = speed;
         light += RaceAbilityLight();

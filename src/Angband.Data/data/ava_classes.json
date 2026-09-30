@@ -1,0 +1,11 @@
+[
+  {"id": "warrior", "maxAttacks": 6, "minWeight": 30, "strengthMultiplier": 5, "spellWeight": 0},
+  {"id": "mage", "maxAttacks": 4, "minWeight": 40, "strengthMultiplier": 2, "spellWeight": 300},
+  {"id": "druid", "maxAttacks": 4, "minWeight": 35, "strengthMultiplier": 3, "spellWeight": 350},
+  {"id": "priest", "maxAttacks": 4, "minWeight": 35, "strengthMultiplier": 3, "spellWeight": 350},
+  {"id": "necromancer", "maxAttacks": 4, "minWeight": 35, "strengthMultiplier": 3, "spellWeight": 300},
+  {"id": "paladin", "maxAttacks": 5, "minWeight": 30, "strengthMultiplier": 5, "spellWeight": 400},
+  {"id": "rogue", "maxAttacks": 5, "minWeight": 20, "strengthMultiplier": 4, "spellWeight": 350},
+  {"id": "ranger", "maxAttacks": 5, "minWeight": 35, "strengthMultiplier": 4, "spellWeight": 400},
+  {"id": "blackguard", "maxAttacks": 5, "minWeight": 100, "strengthMultiplier": 5, "spellWeight": 600}
+]

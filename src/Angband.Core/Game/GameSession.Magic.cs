@@ -237,7 +237,7 @@ public sealed partial class GameSession
             return;
         }
         var levels = Player.Level - cls.FirstSpellLevel + 1;
-        Player.MaxMana = 1 + StatTables.ManaPerLevel[CastingStatIndex] * levels / 100;
+        Player.MaxMana = Math.Max(0, 1 + StatTables.ManaPerLevel[CastingStatIndex] * levels / 100 - ArmourManaPenalty());
         Player.Mana = Math.Min(Player.Mana, Player.MaxMana);
     }
 
