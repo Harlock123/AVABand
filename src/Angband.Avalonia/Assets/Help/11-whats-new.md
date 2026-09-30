@@ -9,6 +9,8 @@ played; this page keeps it all (Help → What's new...).
   the Shade of the Stair now show in every tileset, not as letters.
 - **What's new**: this page, shown once after each update.
 - **Heroic characters' scores count 75%**, since heroic stats make the game easier.
+- **The scenes match**: the stairs, the kinds of level, a deadly level and death have new pictures,
+  rendered in the same style as the Word of Recall's, in place of the old paintings.
 - **Feats**: milestones across all your characters (deep levels, great foes slain, quests, a win
   with each class), on the Knowledge screen's new Feats page.
 

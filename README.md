@@ -18,10 +18,10 @@ A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 12.
 | The Alchemist (4.2's store stock) | Monster list (`[`) |
 | ![Monster knowledge: what you have learned about each monster seen](screenshots/knowledge.png) | ![Every keyboard command and the keys bound to it](screenshots/keyboard-commands.png) |
 | Knowledge (`~`) | Keyboard commands (F1) |
-| ![Settings: tilesets with a preview, tile scale and font size](screenshots/settings.png) | ![Going down: Piranesi's Imaginary Prisons, plate XIV](screenshots/stairs-down.png) |
-| Settings | Taking the stairs down (Piranesi) |
-| ![Going up: Piranesi's Imaginary Prisons, plate XII](screenshots/stairs-up.png) | ![Up into the town: Wright of Derby's Cavern, near Naples](screenshots/stairs-up-town.png) |
-| Taking the stairs up | ...and up into the town (Wright of Derby) |
+| ![Settings: tilesets with a preview, tile scale and font size](screenshots/settings.png) | ![Going down: a torchlit stair descending into the dark](screenshots/stairs-down.png) |
+| Settings | Taking the stairs down |
+| ![Going up: a stair climbing toward grey light](screenshots/stairs-up.png) | ![Up into the town: a stair climbing toward the evening sky](screenshots/stairs-up-town.png) |
+| Taking the stairs up | ...and up into the town |
 | ![Your journey: depth over time, each depth, and the history](screenshots/journey.png) | |
 | Your journey | |
 
@@ -969,8 +969,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     a tombstone). The names are `stairs-down`, `stairs-up`, `stairs-up-town`, `recall-town`,
     `recall-dungeon`, `level-cavern`, `level-labyrinth`, `level-fortress`, `level-moria`,
     `level-lair`, `level-gauntlet`, `danger`, `unique` and `death`, as `.png`, `.jpg` or `.jpeg`
-    (the bundled moria, lair and gauntlet pictures are de Loutherbourg's *Coalbrookdale by Night* and
-    two of Doré's *Inferno* plates; `art/CREDITS.md` has them all).
+    (the bundled pictures are rendered for AVABand by `tools/scene_art_levels.py`, `scene_art.py` and
+    `recall_portal_art.py`, all in one style, CC0 — only the first-unique scene is still a
+    public-domain painting; `art/CREDITS.md` has them all).
   - **Screen reader support** (AVABand's own; the option *Screen reader support*, **off by
     default**): the map is drawn, so a screen reader can't read it; with the option on, a live
     region announces what is said — every message of a turn together, each prompt with its question
@@ -1559,6 +1560,6 @@ Copyright (c) 2026 Lonnie Watson. AVABand is free software, released under the G
 License, version 2 (`LICENSE`) — the licence Angband itself is available under, since AVABand's
 game data is converted from Angband 4.2.5 and its rules follow Angband's source. The bundled
 tilesets and sounds carry their own (Creative Commons and similar) licences; the scene pictures are
-public-domain works (Piranesi, Doré, John Martin, Caspar David Friedrich, Wright of Derby) and the
-ambience loops are CC0 (`art/CREDITS.md`, `ambience/CREDITS.md`). See
+rendered for AVABand and CC0 (but for one public-domain painting), and the ambience loops and scene
+sounds are CC0 (`art/CREDITS.md`, `ambience/CREDITS.md`, `scene-sounds/CREDITS.md`). See
 `THIRD-PARTY-NOTICES.md` for the details and credits.

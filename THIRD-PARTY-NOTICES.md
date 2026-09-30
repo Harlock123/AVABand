@@ -49,12 +49,10 @@ See `LICENSE.txt` / `CREDITS.txt` in each pack's folder.
 
 ## Scene pictures (`src/Angband.Avalonia/art`)
 
-Eleven public-domain paintings and engravings, from scans on Wikimedia Commons: Giovanni Battista
-Piranesi (*Carceri d'invenzione*, plates XII, XIV and XVI, trimmed to the printed area), Gustave
-Doré (*Inferno*), John Martin (*Pandemonium*, *The Great Day of His Wrath*), Caspar David Friedrich
-(*Meadows near Greifswald*, *The Abbey in the Oakwood*) and Joseph Wright of Derby (*Cavern, near
-Naples*, *A Grotto in the Gulf of Salerno*). Each file's title, artist, source page and the exact
-licence tag on it are in `art/CREDITS.md`.
+The scene pictures are rendered for AVABand (`tools/scene_art_levels.py`, `tools/scene_art.py`,
+`tools/recall_portal_art.py`; no source images) and are CC0 — all but `unique.jpg`, a public-domain
+engraving by Gustave Doré (*Inferno*, Canto XXXIV) from a scan on Wikimedia Commons, whose title,
+source page and exact licence tag are in `art/CREDITS.md`.
 
 The title screen's picture (`title.jpg`, Thangorodrim over the gates of Angband) and logo
 (`title-logo.png`) were drawn for AVABand by `tools/title_art.py` and are CC0; the logo is set in
