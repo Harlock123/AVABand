@@ -291,4 +291,37 @@ public class ShopTests
         Assert.False(ItemValue.IsSpent(lantern));
         Assert.True(ItemValue.Of(lantern, TestData.Game) > 0);
     }
+
+    /// <summary>The debug mark can be taken off an old save, and put back by doing it again; it survives saving.</summary>
+    [Fact]
+    public void TheDebugMark_CanBeTakenOff_AndPutBack()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5);
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        game.MarkDebugUsed();
+        Assert.True(game.IsCheater);
+
+        game.ToggleDebugMark();
+        Assert.False(game.UsedDebug);
+        Assert.False(game.IsCheater);
+        Assert.Contains(messages, m => m.StartsWith("The debug mark is gone: this character can enter the high scores"));
+        using (var stream = new MemoryStream())
+        {
+            Angband.Core.Persistence.SaveGame.Save(game, stream);
+            stream.Position = 0;
+            Assert.False(Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream).IsCheater);
+        }
+
+        game.ToggleDebugMark(); // again: marked once more
+        Assert.True(game.UsedDebug);
+        Assert.Contains(messages, m => m.StartsWith("This character is marked again"));
+
+        // A cheat option stays recorded: taking the debug mark off doesn't make it scored.
+        game.SetOption("cheat_hear", true);
+        game.ToggleDebugMark();
+        Assert.False(game.UsedDebug);
+        Assert.True(game.IsCheater);
+        Assert.Contains(messages, m => m.Contains("cheat options were used (cheat_hear)"));
+    }
 }

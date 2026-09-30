@@ -38,6 +38,25 @@ public sealed partial class GameSession
     }
 
     /// <summary>
+    /// Debug → "Marked as using debug commands": takes the debug mark off a character (an AVABand
+    /// pardon, for a save marked by a switch that is no longer a debug command), or puts it back if
+    /// it is used again. Cheat options switched on stay recorded either way.
+    /// </summary>
+    public void ToggleDebugMark()
+    {
+        using var _ = Recorded("debug-mark");
+        if (!CheatsUsed.Remove(DebugCheat))
+        {
+            CheatsUsed.Add(DebugCheat);
+            Publish(new MessageEvent("This character is marked again: it won't enter the high scores."));
+            return;
+        }
+        Publish(new MessageEvent(IsCheater
+            ? $"The debug mark is gone, but cheat options were used ({string.Join(", ", CheatsUsed.Order(StringComparer.Ordinal))}): still not scored."
+            : "The debug mark is gone: this character can enter the high scores again."));
+    }
+
+    /// <summary>
     /// Changes an option during play. Birth options are fixed once the character exists; switching a
     /// cheat on marks the character. Returns false if the change isn't allowed.
     /// </summary>

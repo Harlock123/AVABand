@@ -346,6 +346,20 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Refresh();
     }
 
+    /// <summary>Whether the character bears the debug mark (Debug menu tick; never scored while it does).</summary>
+    public bool DebugMarked => _game.UsedDebug;
+
+    /// <summary>
+    /// Debug → the mark itself: untick to take it off (the character can be scored again), tick to put
+    /// it back. Not a debug command, so it neither asks nor marks.
+    /// </summary>
+    [RelayCommand]
+    private void ToggleDebugMark()
+    {
+        _game.ToggleDebugMark();
+        Refresh();
+    }
+
     /// <summary>
     /// Runs a debug command. The first one a character uses asks first, as Angband's debug mode does:
     /// afterwards the character is marked (<see cref="GameSession.UsedDebug"/>) and never scored.
@@ -360,6 +374,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         AskFirst("Debug commands mark this character: it won't enter the high scores. Use them anyway?", () =>
         {
             _game.MarkDebugUsed();
+            OnPropertyChanged(nameof(DebugMarked));
             action();
         });
         Refresh();
@@ -380,6 +395,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     internal void Refresh()
     {
         OnPropertyChanged(nameof(ShopsPayGold)); // a new or loaded game may differ
+        OnPropertyChanged(nameof(DebugMarked));
         var level = _game.Level;
         var player = _game.Player;
         var depth = player.Depth;

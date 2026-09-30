@@ -23,4 +23,7 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
   dice; everyone has at least two blows.
 
 The **cheat** options (Settings → Options) show you what monsters and levels were made, or let you
-survive death; using one keeps the character out of the high scores.
+survive death; using one keeps the character out of the high scores. So does any **Debug** menu
+command — but its tick *Character marked by debug (not scored)* takes that mark off again (say, for
+a save marked by the old debug "Shops pay gold" switch). Ticking it puts the mark back. It can't
+clear a cheat option.

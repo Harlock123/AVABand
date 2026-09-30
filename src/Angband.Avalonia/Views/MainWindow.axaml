@@ -102,6 +102,9 @@
         <MenuItem Header="Jump back to _town" Command="{Binding JumpToTownCommand}" InputGesture="F9" />
         <MenuItem Header="Show _whole map" Command="{Binding ToggleWholeMapCommand}" InputGesture="F7" />
         <MenuItem Header="_Cure all" Command="{Binding CureAllCommand}" />
+        <Separator />
+        <MenuItem Header="Character _marked by debug (not scored)" Command="{Binding ToggleDebugMarkCommand}"
+                  ToggleType="CheckBox" IsChecked="{Binding DebugMarked, Mode=OneWay}" />
       </MenuItem>
     </Menu>
     </LayoutTransformControl>

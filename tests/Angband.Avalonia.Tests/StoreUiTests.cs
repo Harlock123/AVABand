@@ -228,4 +228,21 @@ public class StoreUiTests
         Assert.True(vm.IsInStore);
         Assert.Equal(had + 8, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
     }
+
+    /// <summary>Debug → "Character marked by debug": unticking it clears the mark without asking; ticking puts it back.</summary>
+    [AvaloniaFact]
+    public void TheDebugMarkTick_ClearsAndRestoresTheMark()
+    {
+        var (_, vm, game) = OpenAt("general");
+        game.MarkDebugUsed();
+        vm.Refresh();
+        Assert.True(vm.DebugMarked);
+
+        vm.ToggleDebugMarkCommand.Execute(null);
+        Assert.False(vm.DebugMarked);
+        Assert.False(game.IsCheater);
+
+        vm.ToggleDebugMarkCommand.Execute(null);
+        Assert.True(vm.DebugMarked);
+    }
 }

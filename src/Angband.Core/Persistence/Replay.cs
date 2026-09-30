@@ -157,6 +157,7 @@ public sealed class ReplayPlayer
                 g.ApplyInterfaceOptions(args![0]!.AsObject().ToDictionary(kv => kv.Key, kv => kv.Value!.GetValue<bool>()));
                 break;
             case "debug": g.MarkDebugUsed(); break;
+            case "debug-mark": g.ToggleDebugMark(); break;
             case "ignore-kind": if (g.Data.Object(S(0)) is { } kind) g.SetKindIgnored(kind, B(1)); break;
             case "ignore-ego": if (g.Data.Egos.FirstOrDefault(e => e.Id == S(0)) is { } ego) g.SetEgoIgnored(ego, B(1)); break;
             case "ignore-quality": g.SetIgnoreQuality(S(0), Enum.Parse<IgnoreLevel>(S(1))); break;
