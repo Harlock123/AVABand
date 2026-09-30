@@ -21,7 +21,7 @@ public class OldSaveTests
     }
 
     [Fact]
-    public void ThereAreOldSavesToTest() => Assert.True(Saves().Count >= 9);
+    public void ThereAreOldSavesToTest() => Assert.True(Saves().Count >= 10);
 
     [Theory]
     [MemberData(nameof(Saves))]
