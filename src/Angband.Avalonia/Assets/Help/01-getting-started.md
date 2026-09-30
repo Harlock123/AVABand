@@ -29,7 +29,8 @@ among nine tilesets — Angband's own Original, Nomad, Adam Bolt and David Gerva
 Crawl, Tangaria, DawnLike, RLTiles and Hexany's tinted one-colour set — with a live preview.
 
 **Help → Check for updates...** asks GitHub whether a newer AVABand is out, and if one is, offers
-to open its download page. It only goes online when you choose it.
+to open its download page. It only goes online when you choose it — or, with Options → *Check
+GitHub for a newer AVABand when the game starts*, once at start-up, speaking up only if there is one.
 
 **No sound?** Its Sound tab says why: no audio device found, the device busy, or OpenAL's library
 unable to load (on Windows on ARM, usually a missing Microsoft Visual C++ runtime; install the

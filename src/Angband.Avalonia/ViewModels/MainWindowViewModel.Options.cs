@@ -49,6 +49,8 @@ public static class DisplayOptions
     public const string ThreeMessageLines = "three_message_lines";
     /// <summary>AVABand's own: two arrow keys held together move diagonally (for keyboards without a keypad).</summary>
     public const string ArrowDiagonals = "arrow_key_diagonals";
+    /// <summary>AVABand's own: ask GitHub for a newer release when the game starts (off: only Help → Check for updates goes online).</summary>
+    public const string CheckUpdatesAtStart = "check_updates_at_start";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -80,6 +82,7 @@ public static class DisplayOptions
         new(RecordReplays, "Record every game as a replay", OptionKind.Interface, true),
         new(ThreeMessageLines, "Show three lines of messages (off: just the newest)", OptionKind.Interface, true),
         new(ArrowDiagonals, "Two arrow keys held together move diagonally", OptionKind.Interface, true),
+        new(CheckUpdatesAtStart, "Check GitHub for a newer AVABand when the game starts", OptionKind.Interface, false),
     ];
 }
 

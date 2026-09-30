@@ -141,4 +141,43 @@ public class UpdateCheckTests
         Assert.StartsWith("AVABand is up to date", vm.LastMessage);
         Assert.Empty(opened);
     }
+
+    /// <summary>With the option on, start-up looks for a newer release and says so on the title screen; off (the default), it never asks.</summary>
+    [AvaloniaFact]
+    public async Task AtStartUp_ANewerRelease_IsNoticed_OnlyWithTheOption()
+    {
+        Assert.False(DisplayOptions.All.Single(o => o.Id == DisplayOptions.CheckUpdatesAtStart).Default);
+        var asked = 0;
+        Task<UpdateCheck> Newer(CancellationToken _)
+        {
+            asked++;
+            return Task.FromResult(new UpdateCheck(UpdateStatus.NewerAvailable, "A newer AVABand is out: 2 changes newer than yours.", "https://example/latest"));
+        }
+
+        var off = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null) { CheckUpdates = Newer };
+        await off.CheckUpdatesAtStartAsync();
+        Assert.Equal(0, asked);
+        Assert.Null(off.UpdateNotice);
+
+        var settings = new AppSettings();
+        settings.Options[DisplayOptions.CheckUpdatesAtStart] = true;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null) { CheckUpdates = Newer };
+        vm.StartGame(42, "warrior");
+        var opened = new List<string>();
+        vm.OpenUrlRequested += opened.Add;
+        await vm.CheckUpdatesAtStartAsync();
+        Assert.Equal(1, asked);
+        Assert.StartsWith("A newer AVABand is out", vm.UpdateNotice);
+        Assert.Contains("Help → Check for updates", vm.LastMessage);
+        vm.OpenUpdatePageCommand.Execute(null);
+        Assert.Equal(["https://example/latest"], opened);
+
+        // Up to date, or GitHub out of reach: not a word.
+        var quiet = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null)
+        {
+            CheckUpdates = _ => Task.FromResult(new UpdateCheck(UpdateStatus.Failed, "Couldn't check for updates: offline")),
+        };
+        await quiet.CheckUpdatesAtStartAsync();
+        Assert.Null(quiet.UpdateNotice);
+    }
 }

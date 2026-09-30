@@ -372,6 +372,8 @@ public partial class MainWindow : Window
     protected override void OnOpened(EventArgs e)
     {
         base.OnOpened(e);
+        // With the option on, a quiet look for a newer release (it only speaks up if there is one).
+        if (DataContext is MainWindowViewModel checking && !Design.IsDesignMode) _ = checking.CheckUpdatesAtStartAsync();
         // The title screen, whose choices cover a first run, a crash and a dead character too.
         if (DataContext is MainWindowViewModel titled && !Design.IsDesignMode && ShowCreationOnFirstRun && ShowTitleAtStart)
         {

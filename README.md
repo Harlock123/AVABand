@@ -50,7 +50,9 @@ compares its commit with the one your build was made from (stamped into the prog
 `1.0.0+<commit>`), using GitHub's compare API. It says you are up to date, or that a newer build
 is out and how many changes newer, and offers to open the download page, naming the file for your
 platform. Builds newer than the release, or local builds GitHub hasn't seen, are said as such
-(`Services/UpdateChecker.cs`).
+(`Services/UpdateChecker.cs`). The option *Check GitHub for a newer AVABand when the game starts*
+(off by default) does the same quietly at start-up: if a newer build is out it says so on the title
+screen (click it for the download page) and in the messages; otherwise, or offline, nothing.
 
 Notes: the musl builds have no sound or gamepad support (OpenAL Soft and SDL ship no musl
 libraries; the game runs silently without them). The macOS builds are not signed, so the first
