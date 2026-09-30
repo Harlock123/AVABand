@@ -50,7 +50,7 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   hint worth hearing). Buy a few **Flasks of Oil** to
   throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. The
   Home (8) keeps whatever you leave there. Under each piece of armour or weapon a line says how it
-  compares with what you have (green if better, red if worse, amber if mixed), and arrows, shots
+  compares with what you have ("Better", "Worse" or "Mixed", in green, red or amber), and arrows, shots
   and bolts say whether they fit your launcher.
 - **Go down**: find the `>` staircase and press `>`. Each level is 50 feet deeper and a little
   more dangerous. Take the stairs back up (`<`) whenever you like — levels are new each time

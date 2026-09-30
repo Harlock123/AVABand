@@ -13,13 +13,13 @@ public class ShopAdviceTests
         var game = Warrior();
         var chain = game.Objects.Create("chain_mail");
         var advice = game.AdviceFor(chain)!;
-        Assert.StartsWith("vs your Soft Leather Armour: ", advice.Text);
+        Assert.StartsWith("Mixed — vs your Soft Leather Armour: ", advice.Text);
         Assert.Contains($"+{chain.Armour + chain.ToAc - 8} armour", advice.Text);
         Assert.Contains("-2 to hit", advice.Text); // chain mail's clumsiness counts for every attack
         Assert.Equal(0, advice.Tone);              // better armour, worse aim: mixed
 
         var cap = game.AdviceFor(game.Objects.Create("metal_cap"))!;
-        Assert.StartsWith("for your empty helm slot: +", cap.Text);
+        Assert.StartsWith("Better — for your empty helm slot: +", cap.Text);
         Assert.Equal(1, cap.Tone);
     }
 
@@ -28,7 +28,7 @@ public class ShopAdviceTests
     {
         var game = Warrior();
         var axe = game.AdviceFor(game.Objects.Create("battle_axe"))!;
-        Assert.StartsWith("vs your Dagger: +", axe.Text);
+        Assert.StartsWith("Better — vs your Dagger: +", axe.Text);
         Assert.Contains("damage a turn (about ", axe.Text);
         Assert.Equal(1, axe.Tone);
         Assert.True(game.AdviceFor(game.Objects.Create("dagger"))!.Tone <= 0); // a dagger for a dagger: no better
@@ -56,7 +56,7 @@ public class ShopAdviceTests
         var game = Warrior();
         var ring = game.Objects.Create("ring_of_resist_fire_and_cold");
         var advice = game.AdviceFor(ring)!;
-        Assert.StartsWith("for your empty ring slot: ", advice.Text);
+        Assert.StartsWith("Better — for your empty ring slot: ", advice.Text);
         Assert.Contains("resist fire", advice.Text);
         Assert.Contains("resist cold", advice.Text);
 
@@ -67,7 +67,7 @@ public class ShopAdviceTests
         game.Player.Inventory.Add(second);
         game.Execute(new WieldCommand(second));
         var third = game.AdviceFor(game.Objects.Create("ring_of_see_invisible"))!;
-        Assert.StartsWith("vs your ", third.Text); // (by its flavour until you know the kind)
+        Assert.StartsWith("Mixed — vs your ", third.Text); // (by its flavour until you know the kind)
         Assert.Contains("see invisible", third.Text);
         Assert.Contains("loses ", third.Text);
         Assert.Equal(0, third.Tone);

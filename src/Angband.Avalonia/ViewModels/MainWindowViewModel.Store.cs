@@ -12,11 +12,11 @@ namespace Angband.Avalonia.ViewModels;
 
 /// <summary>A line in the store screen: something to buy, or something of yours to sell.</summary>
 public sealed record StoreRow(string Letter, string Glyph, uint GlyphColor, string Name, string Price, string Weight, Item Item,
-    string Equipped = "", string BookNote = "", string Advice = "", int AdviceTone = 0)
+    string Equipped = "", string BookNote = "", string Advice = "", uint AdviceColor = 0xFFD8C07A)
 {
     /// <summary>The shop note: how it compares with what you'd replace (or whether missiles fit your launcher).</summary>
     public bool HasAdvice => Advice.Length > 0;
-    public IBrush AdviceBrush { get; } = new ImmutableSolidColorBrush(Color.Parse(AdviceTone > 0 ? "#8fe0a0" : AdviceTone < 0 ? "#e89a8a" : "#d8c07a"));
+    public IBrush AdviceBrush { get; } = new ImmutableSolidColorBrush(Color.FromUInt32(AdviceColor));
 
     /// <summary>Whether the row is something the player has on (shown, and asked about before it goes).</summary>
     public bool IsEquipped => Equipped.Length > 0;
@@ -196,7 +196,9 @@ public sealed partial class MainWindowViewModel
             StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),
                 _cells.Color(flavor?.Color ?? item.Kind.Color ?? item.Base.Color), name, price,
                 string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item, equipped, _game.BookNote(item) ?? "",
-                advice?.Text ?? "", advice?.Tone ?? 0));
+                advice?.Text ?? "",
+                // (Through the map's palette, so the colour-blind option applies.)
+                _cells.Color(advice?.Tone switch { > 0 => "LightGreen", < 0 => "LightRed", _ => "Yellow" })));
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
         OnPropertyChanged(nameof(StoreModeText));

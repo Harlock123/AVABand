@@ -86,8 +86,11 @@ public sealed partial class GameSession
 
         var against = replaced is null ? $"for your empty {SlotWord(item.Base.Slot)} slot" : $"vs your {ItemNaming.Describe(replaced, Knowledge, withArticle: false, full: false)}";
         var parts = good.Concat(bad).ToList();
-        var text = parts.Count == 0 ? $"{against}: much the same" : $"{against}: {string.Join(", ", parts)}";
-        return new ItemAdvice(text, good.Count > 0 && bad.Count == 0 ? 1 : bad.Count > 0 && good.Count == 0 ? -1 : 0);
+        var tone = good.Count > 0 && bad.Count == 0 ? 1 : bad.Count > 0 && good.Count == 0 ? -1 : 0;
+        // The verdict in words first, so it doesn't rest on colour alone.
+        var verdict = parts.Count == 0 ? "Much the same" : tone > 0 ? "Better" : tone < 0 ? "Worse" : "Mixed";
+        var text = parts.Count == 0 ? $"{verdict} — {against}" : $"{verdict} — {against}: {string.Join(", ", parts)}";
+        return new ItemAdvice(text, tone);
     }
 
     private ItemAdvice AmmoAdvice(Item ammo)

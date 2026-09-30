@@ -50,13 +50,24 @@ public class StoreUiTests
         var armour = vm.StoreRows.Where(r => r.Item.IsWearable).ToList();
         Assert.NotEmpty(armour);
         Assert.All(armour, r => Assert.True(r.HasAdvice, r.Name));
-        Assert.Contains(armour, r => r.Advice.StartsWith("vs your Soft Leather Armour") || r.Advice.StartsWith("for your empty"));
+        Assert.Contains(armour, r => r.Advice.Contains("vs your Soft Leather Armour") || r.Advice.Contains("for your empty"));
+        Assert.All(armour, r => Assert.Matches("^(Better|Worse|Mixed|Much the same) — ", r.Advice));
         TileRenderingTests.Save(window, "store-armoury-advice");
 
         (window, vm, game) = OpenAt("weaponsmith");
         Assert.Contains(vm.StoreRows, r => r.Item.Base.Slot == Angband.Core.Definitions.EquipSlot.Weapon && r.Advice.Contains("damage a turn"));
         Assert.Contains(vm.StoreRows, r => r.Item.IsAmmo && (r.Advice.StartsWith("fits your") || r.Advice.StartsWith("not for your")));
         TileRenderingTests.Save(window, "store-weaponsmith-advice");
+
+        // The colour-blind option reaches the notes too (their verdict is in words as well).
+        static uint Colour(StoreRow r) => ((global::Avalonia.Media.Immutable.ImmutableSolidColorBrush)r.AdviceBrush).Color.ToUInt32();
+        var better = vm.StoreRows.First(r => r.Advice.StartsWith("Better"));
+        Assert.NotEqual(MapCellBuilder.ColorBlindPalette["LightGreen"], Colour(better));
+        vm.SetOption(DisplayOptions.ColorBlind, true);
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None); // (refreshed: selling, then buying again)
+        better = vm.StoreRows.First(r => r.Advice.StartsWith("Better"));
+        Assert.Equal(MapCellBuilder.ColorBlindPalette["LightGreen"], Colour(better));
     }
 
     [AvaloniaFact]

@@ -14,8 +14,8 @@ played; this page keeps it all (Help → What's new...).
 ## 2026-09-30.11
 
 - **Will this suit me?** In the shops, armour and weapons say how they compare with what you're
-  wearing ("vs your Dagger: +17 damage a turn"; "+24 armour, -2 to hit, resist cold"), and
-  missiles say whether they fit your launcher.
+  wearing ("Better — vs your Dagger: +17 damage a turn"; "Mixed — … +25 armour, -2 to hit, resist
+  cold"), and missiles say whether they fit your launcher. The notes follow the colour-blind option.
 
 ## 2026-09-30.10
 
