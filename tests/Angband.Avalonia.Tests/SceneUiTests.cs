@@ -331,4 +331,72 @@ public sealed class SceneUiTests : IDisposable
         Assert.True(scene.IsHolding);
         Assert.Equal(SceneView.DurationFor(SceneKind.RecallUp) * SceneView.RecallHold, scene.Elapsed, 3);
     }
+
+    private sealed class RecordingEngine : Angband.Audio.NullAudioEngine
+    {
+        public List<string> Played { get; } = [];
+        public override bool IsAvailable => true;
+        public override void PlayEffect(string path, float gain = 1f) => Played.Add(path);
+    }
+
+    private static List<string> SceneSounds(RecordingEngine engine) =>
+        engine.Played.Where(p => p.Contains("scene-sounds")).Select(Path.GetFileNameWithoutExtension).ToList()!;
+
+    /// <summary>Scenes have sounds: footsteps on the stairs; the recall cutscene's tear and reach, then its grasp and thunderclap.</summary>
+    [AvaloniaFact]
+    public void Scenes_PlayTheirSounds_AtTheirMoments()
+    {
+        var (_, vm, scene) = Open();
+        vm.BundledArtDirectory = Path.Combine(AppContext.BaseDirectory, "art");
+        var engine = new RecordingEngine();
+        vm.UseAudio(new AudioServices(engine, new Angband.Audio.SoundDirector(engine), []));
+        Assert.All(new[] { "recall-reach", "recall-take", "stairs-down", "stairs-up", "death", "unique", "danger" },
+            name => Assert.True(File.Exists(Path.Combine(AppContext.BaseDirectory, "scene-sounds", name + ".ogg")), name));
+
+        TakeStairs(vm, down: true);
+        Assert.Equal(["stairs-down"], SceneSounds(engine));
+        scene.Advance(100);
+        Assert.Equal(["stairs-down"], SceneSounds(engine)); // once, at the start
+        vm.SkipScenes();
+
+        engine.Played.Clear();
+        vm.Game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(5));
+        vm.SkipScenes();
+        engine.Played.Clear();
+        vm.Game.Player.RecallTimer = 1;
+        for (var i = 0; i < 20 && vm.Game.Player.Depth > 0; i++) vm.Execute(new HoldCommand());
+        Assert.Equal(["recall-reach"], SceneSounds(engine));
+        var duration = SceneView.DurationFor(SceneKind.RecallUp);
+        scene.Advance(duration * 0.5);
+        Assert.Equal(["recall-reach"], SceneSounds(engine));
+        scene.Advance(duration * 0.2);
+        Assert.Equal(["recall-reach", "recall-take"], SceneSounds(engine));
+
+        // Muted, or effects off: silence.
+        vm.SkipScenes();
+        engine.Played.Clear();
+        vm.Muted = true;
+        TakeStairs(vm, down: true);
+        Assert.Empty(SceneSounds(engine));
+    }
+
+    /// <summary>Holding for Space, the recall scene never reaches its grasp: no thunderclap until it is let go.</summary>
+    [AvaloniaFact]
+    public void AHeldRecallScene_KeepsItsThunderclap()
+    {
+        var (_, vm, scene) = Open(wait: true);
+        vm.BundledArtDirectory = Path.Combine(AppContext.BaseDirectory, "art");
+        var engine = new RecordingEngine();
+        vm.UseAudio(new AudioServices(engine, new Angband.Audio.SoundDirector(engine), []));
+        vm.Game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(5));
+        vm.SkipScenes();
+        engine.Played.Clear();
+        vm.Game.Player.RecallTimer = 1;
+        for (var i = 0; i < 20 && vm.Game.Player.Depth > 0; i++) vm.Execute(new HoldCommand());
+        scene.Advance(SceneView.DurationFor(SceneKind.RecallUp) * 3);
+        Assert.True(scene.IsHolding);
+        Assert.Equal(["recall-reach"], SceneSounds(engine));
+    }
 }

@@ -150,6 +150,26 @@ public sealed partial class MainWindowViewModel
         _audio.Director.AmbienceEnabled = AmbienceEnabled && !Muted;
     }
 
+    /// <summary>Where scene sounds are found: the player's own folder, then the game's (tools/scene_sounds.py).</summary>
+    public IReadOnlyList<string> SceneSoundFolders { get; set; } =
+    [
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AVABand", "scene-sounds"),
+        Path.Combine(AppContext.BaseDirectory, "scene-sounds"),
+    ];
+
+    /// <summary>A scene's sound, when it reaches it (as an effect: the effects volume, off when effects are off or muted).</summary>
+    public void PlaySceneSound(string name)
+    {
+        if (_audio is null || !EffectsEnabled || Muted) return;
+        foreach (var folder in SceneSoundFolders)
+            foreach (var ext in new[] { ".ogg", ".wav", ".mp3" })
+                if (Path.Combine(folder, name + ext) is var path && File.Exists(path))
+                {
+                    _audio.Engine.PlayEffect(path);
+                    return;
+                }
+    }
+
     /// <summary>Re-points the sound director at a freshly started game.</summary>
     private void AttachAudio() => _audio?.Director.Attach(_game);
 }

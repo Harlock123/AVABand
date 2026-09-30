@@ -59,6 +59,7 @@ public partial class MainWindow : Window
         if (this.FindControl<SceneView>("SceneView") is { } scene)
         {
             scene.Finished += () => (DataContext as MainWindowViewModel)?.EndScene();
+            scene.Cue += sound => (DataContext as MainWindowViewModel)?.PlaySceneSound(sound);
             scene.PointerPressed += (_, e) =>
             {
                 (DataContext as MainWindowViewModel)?.EndScene();

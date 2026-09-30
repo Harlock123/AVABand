@@ -50,6 +50,34 @@ public sealed class SceneView : Control
     /// <summary>Raised when the scene has played through.</summary>
     public event Action? Finished;
 
+    /// <summary>Raised with a sound's name (scene-sounds/&lt;name&gt;.ogg) when the scene reaches it.</summary>
+    public event Action<string>? Cue;
+
+    /// <summary>
+    /// The sounds a scene plays, and when (as a fraction of it): the recall cutscene's rent tearing
+    /// and the hand reaching at the start, then its grasp and thunderclap (timed to the flash) —
+    /// never reached while the scene holds for Space; footsteps on the stairs; a bell at death; a
+    /// swelling chord for a first unique; a rumble for a deadly level.
+    /// </summary>
+    public static IReadOnlyList<(double At, string Sound)> CuesFor(SceneKind kind) => kind switch
+    {
+        SceneKind.RecallUp or SceneKind.RecallDown => [(0, "recall-reach"), (0.62, "recall-take")],
+        SceneKind.StairsDown => [(0, "stairs-down")],
+        SceneKind.StairsUp => [(0, "stairs-up")],
+        SceneKind.Death => [(0, "death")],
+        SceneKind.Unique => [(0, "unique")],
+        SceneKind.Danger => [(0, "danger")],
+        _ => [],
+    };
+
+    /// <summary>Plays the cues passed between two moments (ms); from &lt; 0 is the scene's start.</summary>
+    private void FireCues(double from, double to)
+    {
+        if (Scene is not { } scene) return;
+        foreach (var (at, sound) in CuesFor(scene.Kind))
+            if (at == 0 ? from < 0 : at * Duration > from && at * Duration <= to) Cue?.Invoke(sound);
+    }
+
     /// <summary>Milliseconds since the scene began.</summary>
     public double Elapsed { get; private set; }
 
@@ -71,6 +99,7 @@ public sealed class SceneView : Control
             global::Avalonia.Threading.DispatcherPriority.Render, (_, _) => Tick());
         _watch.Restart();
         _clock.Start();
+        FireCues(-1, 0);
         InvalidateVisual();
     }
 
@@ -85,8 +114,11 @@ public sealed class SceneView : Control
     public void Advance(double ms)
     {
         if (Scene is null) return;
+        var before = Elapsed;
         Elapsed += ms;
         InvalidateVisual();
+        if (Scene.WaitForKey) Elapsed = Math.Min(Elapsed, Duration * HoldFor(Scene));
+        if (Elapsed > before) FireCues(before, Elapsed);
         if (Scene.WaitForKey && Elapsed >= Duration * HoldFor(Scene))
         {
             // Hold, faded in, on this frame until dismissed (the view model ends it).

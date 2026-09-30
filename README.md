@@ -905,7 +905,14 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     incorporeal hand reaches out of it toward you, grows until it fills the view, closes, and a
     flash of its light takes you (3.6 s). The artwork is rendered by `tools/recall_portal_art.py`
     (CC0: the rooms are lit 3-D surfaces in perspective; the hand is drawn as light through smoke)
-    and animated by `SceneView`; your own `recall-town` / `recall-dungeon` picture replaces it. With the option *Scenes stay until
+    and animated by `SceneView`; your own `recall-town` / `recall-dungeon` picture replaces it.
+    Scenes have **sounds** (`scene-sounds/`, synthesised by `tools/scene_sounds.py`, CC0), cued by
+    `SceneView` as they play: the rent tearing and a rising rush as the hand reaches, then its grasp
+    and a thunderclap timed to the flash (not while the scene holds for Space); footsteps down or up
+    the stairs, fainter and echoing going down, nearer and into open air coming up; a funeral bell
+    at death; a swelling chord for a first unique; a rumble for a deadly level. They play as effects
+    (the effects volume; silent with effects off or muted), and your own files of the same names in
+    `<AppData>/AVABand/scene-sounds/` replace them. With the option *Scenes stay until
     you press Space* (off by default) each scene fades in and holds, "Press Space to continue" in
     the corner: Space, Enter, a click or the controller's A moves to the next, Escape or B ends
     them all, and other keys do nothing meanwhile (a new or loaded game clears any still held). Only the stairs show the stair scenes
