@@ -11,7 +11,10 @@ foreach (var depth in new[] { 30, 60, 99 })
     var best = double.MaxValue; long gt = 0;
     for (var rep = 0; rep < 5; rep++)
     {
-        var game = GameSession.NewGame(data, (ulong)depth * 7 + 1, "warrior");
+        // (PERF_RACE=high_elf: a race whose abilities run every turn, the High-Elf's light aura.)
+        var game = Environment.GetEnvironmentVariable("PERF_RACE") is { Length: > 0 } race
+            ? GameSession.NewGame(data, (ulong)depth * 7 + 1, CharacterSpec.Default(race, "warrior"))
+            : GameSession.NewGame(data, (ulong)depth * 7 + 1, "warrior");
         game.Execute(new DebugJumpCommand(depth));
         game.Player.MaxHp = game.Player.Hp = 1_000_000;
         var sw = Stopwatch.StartNew();

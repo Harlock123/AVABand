@@ -921,7 +921,11 @@ it on the floor (`x`). Only what the game's rules count is compared: with Angban
   resting a thousand turns deep takes a quarter of a second; the screen's refresh after a turn is
   under 0.2 ms. Profiling it (`dotnet-trace`) found monster teleports listing every square of the
   level, the noise flow allocating each turn, and pack damage naming every item before rolling —
-  all fixed without changing a single roll, so seeded games replay exactly as before.
+  all fixed without changing a single roll, so seeded games replay exactly as before. Re-run after
+  the racial abilities, burden, bags, gems, dual wielding and Angband's blows went in: 0.11–0.14 ms
+  a turn at 1500 ft, 0.06–0.07 ms at 3000 ft and 0.12–0.14 ms at 4950 ft, no slower than before
+  them. `PERF_RACE=high_elf` plays a race whose ability runs every turn (the High-Elf's light,
+  which slows undead and demons in it); it costs nothing measurable.
   Saves live in `<AppData>/AVABand/saves/` (one file per character, written atomically). Ctrl+S
   saves, Ctrl+O opens the list of saved characters (load or delete). **Backups** (AVABand's own,
   `SaveStore`): as a character's save is replaced, the one before it is kept in `saves/backups/`
