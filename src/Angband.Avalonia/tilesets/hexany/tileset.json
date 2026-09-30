@@ -1461,6 +1461,13 @@
     "terrain:cold_brazier": "ava_brazier_cold.png",
     "terrain:lit_brazier": "ava_brazier_lit.png",
     "terrain:trapped_apprentice": "ava_apprentice.png",
-    "object:wardens_taper": "main:9,3"
+    "object:wardens_taper": "main:9,3",
+    "monster:durgash_the_keybearer": "main:31,12",
+    "monster:hathol_lord_of_the_barrow": "main:15,17",
+    "monster:fengel_the_fence": "main:23,17",
+    "monster:nar_the_red_handed": "main:5,14",
+    "monster:skarn_quickfingers": "main:22,11",
+    "monster:ilse_shadowcloak": "main:11,13",
+    "monster:the_shade_of_the_stair": "main:3,17"
   }
 }

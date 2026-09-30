@@ -136,7 +136,9 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     ("Someone found this down below with your name on it"), so no quest can be lost that way. Every tileset draws the
     quest places and the key with small tiles of AVABand's own (`ava_*.png`, CC0), sized to the set,
     and the other quest things with its nearest tiles (the inn a shop door, the relic an amulet, the
-    shards a sword...); `tools/avaband_quest_tiles.py` makes them and writes the mappings — re-run it
+    shards a sword...), and the quests' own monsters with the nearest Angband monster's (Durgash an
+    orc chief, Hathol a barrow-wight, Nar the Red-handed Nar the Dwarf, the Shade a ghost...);
+    `tools/avaband_quest_tiles.py` makes them and writes the mappings — re-run it
     after rebuilding a tileset.
   - `tools/balance quests [seeds]` has the bot play each quest end to end (and the soak plays one of
     each, recorded and replayed, on every push); its first runs had the bosses brought down to

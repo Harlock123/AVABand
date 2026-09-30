@@ -28,6 +28,19 @@ public class BundledTilesetTests
         Assert.Equal(["adam-bolt", "angband-nomad", "angband-old", "dawnlike", "dcss", "gervais", "hexany", "rltiles", "tangaria"],
             Bundled.Select(s => s.Id).Order());
 
+    /// <summary>AVABand's quest monsters have pictures in every set (borrowed from the nearest Angband monster's).</summary>
+    [Theory]
+    [MemberData(nameof(Ids))]
+    public void TheQuestMonsters_HaveTiles(string id)
+    {
+        var set = Bundled.Single(s => s.Id == id);
+        var data = DataLoader.Load(DataLoader.DefaultDataDirectory);
+        var quest = data.Monsters.Where(m => m.Id is "durgash_the_keybearer" or "hathol_lord_of_the_barrow" or "fengel_the_fence"
+            or "nar_the_red_handed" or "skarn_quickfingers" or "ilse_shadowcloak" or "the_shade_of_the_stair").ToList();
+        Assert.Equal(7, quest.Count);
+        Assert.All(quest, m => Assert.True(set.Tiles.ContainsKey("monster:" + m.Id), $"{id}: no tile for {m.Id}"));
+    }
+
     [Theory]
     [MemberData(nameof(Ids))]
     public void SheetCells_LieInsideTheirImages(string id)

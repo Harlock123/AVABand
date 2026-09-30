@@ -5,7 +5,7 @@ Draws five small pixel-art tiles (CC0, made for AVABand) — the sealed door, th
 barrow altar, the hermit's door and the Key of Belegost — at each tileset's cell size (drawn at
 16x16, scaled to fit), as ava_*.png in the tileset's folder; then writes every quest mapping into
 its tileset.json (the rest borrow the nearest tile the set already has: the inn a shop door, the
-relic an amulet, the shards a sword...). Re-run it after rebuilding any tileset.
+relic an amulet, the shards a sword, Durgash an orc chief, Hathol a barrow-wight...). Re-run it after rebuilding any tileset.
 
 Stdlib only (PNG writing from dcss_flavor_tiles.py).
 
@@ -190,6 +190,14 @@ BORROWED = [
     ("object:water_of_ulmo", ["object-base:potion"]),
     ("object:black_market_strongbox", ["object-base:chest"]),
     ("object:wardens_taper", ["object:wooden_torch", "object-base:light"]),
+    # The quests' own monsters: the nearest Angband monster's picture.
+    ("monster:durgash_the_keybearer", ["monster:golfimbul_the_hill_orc_chief", "monster:orc_captain"]),
+    ("monster:hathol_lord_of_the_barrow", ["monster:barrow_wight"]),
+    ("monster:fengel_the_fence", ["monster:master_thief"]),
+    ("monster:nar_the_red_handed", ["monster:nar_the_dwarf"]),
+    ("monster:skarn_quickfingers", ["monster:grishnakh_the_hill_orc"]),
+    ("monster:ilse_shadowcloak", ["monster:illusionist", "monster:master_thief"]),
+    ("monster:the_shade_of_the_stair", ["monster:ghost", "monster:moaning_spirit"]),
 ]
 
 
