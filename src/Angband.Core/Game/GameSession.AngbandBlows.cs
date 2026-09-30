@@ -72,14 +72,23 @@ public sealed partial class GameSession
     /// <summary>The last armour-encumbrance state said (Angband "The weight of your armor encumbers your movement.").</summary>
     private bool? _cumberSaid;
 
-    /// <summary>Angband calc_mana's armour weight: a caster loses a point of mana per pound of armour beyond the class's allowance.</summary>
-    private int ArmourManaPenalty()
+    /// <summary>The armour-weight mana penalty the last mana calculation used (to recalculate only when it changes).</summary>
+    private int _armourPenaltyUsed;
+
+    /// <summary>Angband calc_mana's armour weight: the mana a caster loses, a point per pound of armour beyond the class's allowance.</summary>
+    private int ArmourManaPenaltyNow()
     {
         if (!AngbandBlowsOn || Player.Class is not { SpellWeight: > 0 } cls) return 0;
         var worn = Player.Inventory.Equipped
             .Where(i => !i.Base.IsWeapon && i.Base.Slot is not (EquipSlot.Bow or EquipSlot.Ring or EquipSlot.Amulet or EquipSlot.Light))
             .Sum(i => i.Weight);
-        var penalty = Math.Max(0, (worn - cls.SpellWeight) / 10);
+        return Math.Max(0, (worn - cls.SpellWeight) / 10);
+    }
+
+    /// <summary>The armour penalty for a mana calculation (said when the encumbrance comes or goes).</summary>
+    private int ArmourManaPenalty()
+    {
+        var penalty = _armourPenaltyUsed = ArmourManaPenaltyNow();
         var cumbered = penalty > 0;
         if (_cumberSaid is { } was && was != cumbered)
             Publish(new MessageEvent(cumbered ? "The weight of your armor encumbers your movement." : "You feel able to move more freely."));

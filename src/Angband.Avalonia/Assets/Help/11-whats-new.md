@@ -7,6 +7,8 @@ played; this page keeps it all (Help → What's new...).
 
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
+- **Gems are rarer** (they were turning up more than once a level), and bags of holding a little
+  rarer too; a flawless gem is now a deep find.
 - **Fixed: a quest's monster could be missing from its room** when one of the level's own monsters
   happened to stand on its spot (Durgash, say, and his key with him).
 - **Blows as in Angband 4.2**: how often you strike now depends on your weapon's weight, your

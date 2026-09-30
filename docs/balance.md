@@ -326,3 +326,54 @@ highest-level one. The mage, 20 runs per depth: 1 95%, 5 95%, 10 90%, 20 90%, 30
 The mage gains most (a caster's play, and kit that stops it being paralysed or poisoned to death):
 it now lives about as often as the warrior down to 2500 ft. Below that both still die, the mage
 twice as often. `docs/quest-playtest.md` has what it says about the quests.
+
+## The races, with and without their AVABand abilities
+
+A warrior of each race (default stats, point-buy), 30 runs a depth with `BOT_DEPTHS=5,20,40,60 play 30 warrior <race>`, and again with the racial abilities off (`... <race> no-abilities`); survived %, abilities on → off:
+
+| race | 250 ft | 1000 ft | 2000 ft | 3000 ft |
+|---|---|---|---|---|
+| human | 100 → 100 | 100 → 100 | 90 → 93.3 | 76.7 → 86.7 |
+| half_elf | 100 → 100 | 100 → 100 | 96.7 → 96.7 | 86.7 → 83.3 |
+| elf | 100 → 100 | 100 → 100 | 96.7 → 96.7 | 90 → 90 |
+| hobbit | 100 → 100 | 100 → 100 | 93.3 → 93.3 | 86.7 → 86.7 |
+| gnome | 100 → 100 | 100 → 100 | 96.7 → 96.7 | 93.3 → 93.3 |
+| dwarf | 100 → 100 | 100 → 100 | 93.3 → 93.3 | 90 → 93.3 |
+| half_orc | 100 → 100 | 100 → 100 | 93.3 → 93.3 | 90 → 90 |
+| half_troll | 100 → 100 | 100 → 100 | 96.7 → 96.7 | 86.7 → 83.3 |
+| dunadan | 100 → 100 | 96.7 → 96.7 | 86.7 → 86.7 | 83.3 → 80 |
+| high_elf | 100 → 100 | 100 → 100 | 100 → 96.7 | 86.7 → 86.7 |
+| kobold | 100 → 100 | 100 → 100 | 93.3 → 93.3 | 86.7 → 83.3 |
+
+(Measured before item rarity was retuned, below; with Angband's blows and AVABand's encumbrance on.)
+Every race's abilities are within one run in thirty of the same race without them at every depth
+but one, as expected: they are conveniences and small edges (prices, rune-learning, digging gold,
+light, a rage once a level), not raw power. The exception is the Human's two weapons: a Human
+fighting with a second weapon in place of a shield earns more — **50% more experience at 2000 ft,
+22% more at 3000 ft**, more kills in the shallows — but survives a little less often (90 → 93%,
+77 → 87% alive without the second weapon), the shield's armour given up for the blow. That is the
+trade the ability offers, and it's left as it is.
+
+## AVABand's own items: how often they turn up
+
+`dotnet run -c Release --project tools/balance items [levels]`: per 100 levels at each depth, the
+objects on the floor and every monster's drop (all slain), beside two of Angband's for scale. The
+first measure showed gems far too common — a chipped gem more than once a level at every depth,
+four times as often as a potion of Speed — and bags of holding a little generous; gems' commonness
+came down about eightfold (chipped 30 → 4, flawed 20 → 3, flawless 10 → 2, the cursed 6 → 2) and
+bags' about half (Sack 20 → 12, Bag 10 → 5, Devouring 3 → 2, Greater 5 → 3). Now (300 levels a depth):
+
+| item | 250 ft | 500 | 1000 | 1500 | 2000 | 2500 | 3000 | 3500 | 4000 ft |
+|---|---|---|---|---|---|---|---|---|---|
+| bag of holding (any) | 0 | 6.0 | 6.3 | 8.0 | 10.3 | 13.7 | 11.7 | 14.7 | 21.0 |
+| bracers | 16.3 | 11.7 | 15.3 | 17.0 | 25.3 | 30.0 | 28.0 | 21.3 | 30.7 |
+| gem, chipped | 17.3 | 17.7 | 19.7 | 15.3 | 15.3 | 24.0 | 25.0 | 31.7 | 37.3 |
+| gem, flawed | 0.3 | 0.7 | 9.7 | 11.7 | 15.3 | 15.3 | 18.7 | 16.7 | 29.7 |
+| gem, flawless | 0 | 0 | 0 | 0 | 3.7 | 6.7 | 9.0 | 15.0 | 17.7 |
+| gem, cursed | 0 | 0 | 1.0 | 0.3 | 2.0 | 4.0 | 5.7 | 5.3 | 8.0 |
+| (Porter) gear | 0.7 | 1.0 | 2.3 | 6.3 | 10.3 | 11.3 | 16.7 | 22.7 | 28.3 |
+| *Ring of Free Action* | 0.3 | 0 | 19.0 | 20.7 | 33.7 | 36.3 | 41.3 | 49.7 | 54.7 |
+| *Potion of Speed* | 45.7 | 28.0 | 30.7 | 28.7 | 40.7 | 36.0 | 41.0 | 44.7 | 53.0 |
+
+A bag of holding is now about as rare as a Ring of Free Action at 1000 ft and half as common deep;
+a flawless gem is a deep find, a few levels in a hundred.

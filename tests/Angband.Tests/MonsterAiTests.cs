@@ -297,7 +297,7 @@ public class MonsterAiTests
         var moves = Collect<PlayerMovedEvent>(game);
 
         bool SeenAll() => new[] { "HEAL", "TELE_TO", "S_MONSTER" }.All(id => spells.Any(s => s.SpellId == id));
-        for (var i = 0; i < 600 && !SeenAll(); i++)
+        for (var i = 0; i < 1500 && (!SeenAll() || moves.Count == 0); i++) // (a pull can land you where you stood)
         {
             orfax.Hp = Math.Min(orfax.Hp, orfax.MaxHp / 2); // keep him hurt so healing is worthwhile
             Hold(game, 1);

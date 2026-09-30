@@ -820,6 +820,9 @@ it on the floor (`x`). Only what the game's rules count is compared: with Angban
   each cast the one that does most to its target: nothing against an immunity, double against a
   weakness);
   `docs/balance.md` has it against the bot before.
+  `play [runs] [class] [race] [no-abilities]` plays a race (with or without its AVABand abilities;
+  a Human fights with a second weapon), `BOT_DEPTHS=5,20,40` just those depths, and `items [levels]`
+  counts how often AVABand's own items (bags, bracers, gems, (Porter) gear) turn up by depth.
   `docs/balance.md` compares versions with it. It's a poor player, for comparing versions rather
   than judging difficulty; `one <depth> <seed> [class]` with `BOT_TRACE=1` shows how a run ended.
 - **Soak test** (`dotnet run -c Release --project tools/balance soak`, and CI's `soak` job on every

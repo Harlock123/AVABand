@@ -228,7 +228,7 @@ public sealed partial class GameSession
         if (p.Class is not null)
         {
             ApplyHeavyWield(weapon);
-            RecalculateMana(); // (armour put on or taken off changes a caster's mana, with Angband's rules)
+            if (ArmourManaPenaltyNow() != _armourPenaltyUsed) RecalculateMana(); // (armour on or off changes a caster's mana, with Angband's rules)
         }
         p.TotalInfravision = Math.Max(0, infravision);
         p.EquipmentSpeed = speed;

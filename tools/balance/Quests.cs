@@ -480,10 +480,10 @@ internal static class QuestBot
         var cases = new (string Quest, string Cls, ulong Seed)[]
         {
             // (Seeds on which the bot sees each quest through, so every ending is played on every push.)
-            ("sealed_door", "warrior", 202), ("burden", "warrior", 101), ("broken_blade", "warrior", 202),
+            ("sealed_door", "warrior", 202), ("burden", "warrior", 101), ("broken_blade", "warrior", 101),
             ("consecration", "warrior", 101), ("letter", "mage", 505), ("letter", "warrior", 506), ("letter", "rogue", 507),
             ("thief", "warrior", 101), ("board", "ranger", 202), ("apprentice", "warrior", 404), ("warden", "warrior", 101),
-            ("heart", "warrior", 303), ("watch", "warrior", 101), ("stone", "warrior", 404),
+            ("heart", "warrior", 303), ("watch", "warrior", 202), ("stone", "warrior", 303),
         };
         foreach (var (quest, cls, seed) in cases)
         {

@@ -43,6 +43,9 @@
 // gauntlet...) is made at each depth: the Cartographer's quest needs a cavern, a labyrinth and one of
 // the old mines, so it can only be done as fast as they turn up.
 //
+// `items [levels]` — how often AVABand's own items (bags, bracers, gems, (Porter) gear) turn up by depth,
+// floor and drops, per 100 levels, beside a few of Angband's for scale.
+//
 // `record-replays [dir]` — records the four games tests/Angband.Tests/Replays keeps (ReplayFixtureTests),
 // for when a change is meant to change how games play out.
 //
@@ -63,7 +66,9 @@ using Angband.Data;
 var data = DataLoader.Load(DataLoader.DefaultDataDirectory);
 var play = args.Length > 0 && args[0] == "play";
 var count = args.Length > (play ? 1 : 0) && int.TryParse(args[play ? 1 : 0], CultureInfo.InvariantCulture, out var n) ? n : play ? 20 : 30;
-var depths = new[] { 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
+var depths = Environment.GetEnvironmentVariable("BOT_DEPTHS") is { Length: > 0 } only // (BOT_DEPTHS=5,20,40: just those)
+    ? only.Split(',').Select(d => int.Parse(d, CultureInfo.InvariantCulture)).ToArray()
+    : new[] { 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
 string Num(double x) => x.ToString("0.0", CultureInfo.InvariantCulture);
 
 if (args.Length > 0 && args[0] == "soak")
@@ -94,6 +99,44 @@ if (args.Length > 0 && args[0] == "quests")
         return;
     }
     QuestBot.Report(data, args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 3);
+    return;
+}
+
+if (args.Length > 0 && args[0] == "items")
+{
+    // How often AVABand's own items turn up: per 100 levels at each depth, on the floor and dropped by
+    // the level's monsters (all slain), beside a few of Angband's for scale.
+    var levels = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 200;
+    var kinds = new (string Label, Func<Item, bool> Is)[]
+    {
+        ("bag", i => i.Base.Id == "bag"),
+        ("bracers", i => i.Base.Id == "bracers"),
+        ("gem: chipped", i => i.Base.Id == "gem" && i.Kind.Id.StartsWith("chipped_")),
+        ("gem: flawed", i => i.Base.Id == "gem" && i.Kind.Id.StartsWith("flawed_")),
+        ("gem: flawless", i => i.Base.Id == "gem" && !i.Kind.Id.StartsWith("chipped_") && !i.Kind.Id.StartsWith("flawed_") && i.Kind.Curses.Count == 0),
+        ("gem: cursed", i => i.Base.Id == "gem" && i.Kind.Curses.Count > 0),
+        ("(Porter)", i => i.Ego?.Id == "porter"),
+        ("for scale: Free Action ring", i => i.Kind.Id == "ring_of_free_action"),
+        ("for scale: potion of Speed", i => i.Kind.Id == "speed"),
+    };
+    var itemDepths = new[] { 5, 10, 20, 30, 40, 50, 60, 70, 80 };
+    Console.WriteLine($"Per 100 levels ({levels} made at each depth), floor objects and every monster's drop:");
+    Console.WriteLine("item                         " + string.Join("", itemDepths.Select(d => $"{d * 50 + " ft",8}")));
+    var tally = kinds.ToDictionary(k => k.Label, _ => new double[itemDepths.Length]);
+    for (var di = 0; di < itemDepths.Length; di++)
+        for (var run = 0; run < levels; run++)
+        {
+            var game = GameSession.NewGame(data, (ulong)(itemDepths[di] * 7919 + run), "warrior");
+            game.MarkDebugUsed();
+            game.Player.Hp = game.Player.MaxHp = 1_000_000;
+            game.Execute(new DebugJumpCommand(itemDepths[di]));
+            foreach (var m in game.Level.Monsters.All.ToList()) if (m.IsActive) game.DamageMonster(m, 1_000_000);
+            foreach (var (_, item) in game.Level.Objects.All)
+                foreach (var (label, isIt) in kinds)
+                    if (isIt(item)) tally[label][di] += item.Number;
+        }
+    foreach (var (label, _) in kinds)
+        Console.WriteLine($"{label,-29}" + string.Join("", tally[label].Select(t => $"{t * 100 / levels,8:0.0}")));
     return;
 }
 
@@ -172,15 +215,19 @@ if (args.Length > 0 && args[0] == "one")
 if (play)
 {
     var cls = args.Length > 2 ? args[2] : "warrior";
-    Console.WriteLine($"{count} runs per depth; a clvl-matched {cls} with depth-made gear and potions plays up to {Bot.MaxTurns} turns"
-                      + (Bot.Plain ? " (plain bot)" : ""));
+    // `play [runs] [class] [race] [no-abilities]`: a race (Human by default), with or without its AVABand abilities.
+    var race = args.Length > 3 ? args[3] : null;
+    var abilities = !(args.Length > 4 && args[4] == "no-abilities");
+    var spec = race is null ? null : CharacterSpec.Default(race, cls) with { Options = new Dictionary<string, bool> { [OptionIds.AvaRaces] = abilities } };
+    Console.WriteLine($"{count} runs per depth; a clvl-matched {(race is null ? "" : race + " ")}{cls}{(race is not null && !abilities ? " (racial abilities off)" : "")} "
+                      + $"with depth-made gear and potions plays up to {Bot.MaxTurns} turns" + (Bot.Plain ? " (plain bot)" : ""));
     Console.WriteLine("depth | survived% | left level% | turns | kills | exp gained | level seen% | potions | blinks | rests | shots/casts | pickups | tried");
     foreach (var depth in depths)
     {
         double lived = 0, left = 0, turns = 0, kills = 0, exp = 0, seen = 0, potions = 0, blinks = 0, rests = 0, shots = 0, pickups = 0, tried = 0;
         for (var run = 0; run < count; run++)
         {
-            var r = Bot.Play(data, depth, (ulong)(depth * 1000 + run), cls);
+            var r = Bot.Play(data, depth, (ulong)(depth * 1000 + run), cls, spec);
             if (r.Survived) lived++;
             if (r.LeftLevel) left++;
             turns += r.Turns;
@@ -299,6 +346,7 @@ internal static class Bot
         if (!Plain && gear >= 25) Give(game, "teleportation", 3 + gear / 20);
         if (!Plain) Give(game, "ration_of_food", 8);
         if (!Plain) LearnSpells(game);
+        if (!Plain && game.HasRaceAbility("DUAL_WIELD")) OffHand(game, Math.Max(depth, clvl), seed);
         game.Player.Hp = game.Player.MaxHp;
         // (Items given straight into the pack: count their weight, as a loaded game would.)
         game.RecalculateBonuses();
@@ -337,6 +385,27 @@ internal static class Bot
         return new BotResult(!game.Player.IsDead, !game.Player.IsDead && game.Player.Depth != depth, turns, kills, game.Player.MaxExperience - startExp,
             passable == 0 ? 0 : 100.0 * known / passable, tally.Potions, tally.Blinks, tally.Rests, tally.Shots,
             tally.Pickups, tally.Tried, game.Player.IsDead ? game.Player.KilledBy : null);
+    }
+
+    /// <summary>
+    /// A Human's second weapon (AVABand's DUAL_WIELD): the best light weapon (15 lb or less) among
+    /// thirty good ones, by its one blow's damage, in the off hand in place of the shield.
+    /// </summary>
+    private static void OffHand(GameSession game, int depth, ulong seed)
+    {
+        var rng = new GameRandom(seed ^ 0x0FF4);
+        var found = new List<Item>();
+        for (var i = 0; i < 3000 && found.Count < 30; i++)
+            if (game.Objects.Make(rng, depth, good: true) is { } item && item.Base.Slot == EquipSlot.Weapon && !item.IsCursed
+                && item.Weight <= GameSession.OffHandMaxWeight)
+                found.Add(item);
+        if (found.OrderByDescending(i => i.Damage.Count * (i.Damage.Sides + 1) / 2.0 + i.ToDam).FirstOrDefault() is not { } best) return;
+        game.Player.Inventory.Add(best);
+        game.Execute(new WieldOffHandCommand(best));
+        // The shield it replaced isn't carried about.
+        foreach (var shield in game.Player.Inventory.Pack.Where(i => i.Base.Slot == EquipSlot.Shield).ToList())
+            game.Player.Inventory.Remove(shield, shield.Number, () => game.Objects.NextSerial++);
+        game.RecalculateBonuses();
     }
 
     /// <summary>The books of the class's spells up to its level, and every spell it can learn from them.</summary>
