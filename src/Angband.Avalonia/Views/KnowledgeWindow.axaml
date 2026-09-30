@@ -128,6 +128,7 @@
         </ScrollViewer>
       </TabItem>
       <TabItem Header="Quests" Content="{Binding Quests}" />
+      <TabItem Header="Feats" Content="{Binding Feats}" />
     </TabControl>
   </DockPanel>
 </Window>

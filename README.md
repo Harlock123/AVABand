@@ -45,6 +45,15 @@ pre-release, and tagging a commit `v*` (e.g. `v0.1.0`) makes a proper release. U
 saves, scores, monster memory and settings go to your user folder (`AVABand` under the system's
 application-data folder).
 
+**Feats** (AVABand's own, `Records/Feats.cs`): milestones across every character you play — 500,
+1000, 2000, 3000, 4000 and 5000 ft; character levels 10 to 50; the first, tenth and fiftieth unique
+slain; 100,000 gold carried; an artifact worn; a first and then every one of the Prancing Pony's
+quests done well; ten notice-board jobs; Sauron and Morgoth slain; and a win with each class.
+They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
+ft.)"), kept in `feats.json` beside the scores with who did each first and when, and listed on
+the Knowledge screen's **Feats** page. A character that cheated or used a debug command, the
+tutorial and replays earn none.
+
 **What's new** (`Assets/Help/11-whats-new.md`, a dated section for each round of changes, newest
 first): after an update, the sections newer than the last one you were shown open once over the
 title screen (a new player is spared it; `WhatsNewSeen` in the settings remembers); the whole page

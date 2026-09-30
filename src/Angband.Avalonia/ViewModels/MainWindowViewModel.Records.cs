@@ -18,6 +18,7 @@ public sealed partial class MainWindowViewModel
     {
         _records = records;
         UseLore(records.LoadLore());
+        _featBook = records.LoadFeats();
     }
 
     private bool _confirmRetire;

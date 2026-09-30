@@ -293,6 +293,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         var fromDepth = _game.Player.Depth;
         NoteForRepeat(command, _game.Execute(command));
         ShowScenes(command, fromDepth);
+        CheckFeats();
         _game.AimAtTargetNext = false;
         CountDownHint();
         AutosaveIfDue();

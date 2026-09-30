@@ -214,6 +214,7 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     public EquipComparisonViewModel? Equipment { get; init; }
     /// <summary>AVABand's quest journal (the last tab).</summary>
     public KnowledgeCategoryViewModel? Quests { get; init; }
+    public KnowledgeCategoryViewModel? Feats { get; init; }
 
     /// <summary>The character history, as Angband's history screen and dump show it.</summary>
     public string History { get; init; } = "";
@@ -240,6 +241,7 @@ public sealed partial class MainWindowViewModel
             Equipment = new EquipComparisonViewModel(_game, Inspect),
             History = HistoryText(),
             Quests = CreateQuestJournal(),
+            Feats = CreateFeatsPage(),
         };
 
     /// <summary>AVABand's quest journal: every quest taken or found, and the notice-board jobs taken.</summary>

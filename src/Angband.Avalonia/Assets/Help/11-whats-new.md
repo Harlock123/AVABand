@@ -8,6 +8,8 @@ played; this page keeps it all (Help → What's new...).
 - **Every quest monster has its picture**: Durgash, Hathol, the Black Market's four suspects and
   the Shade of the Stair now show in every tileset, not as letters.
 - **What's new**: this page, shown once after each update.
+- **Feats**: milestones across all your characters (deep levels, great foes slain, quests, a win
+  with each class), on the Knowledge screen's new Feats page.
 
 ## 2026-09-30
 

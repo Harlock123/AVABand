@@ -61,7 +61,9 @@ shop, monster, trap, bad wound...), each just once. Options → *Hints for new p
 - Rest (`R`) to heal and regain spell points when nothing is about.
 - Eat when you are hungry; the status bar says so.
 - A monster you don't know is dangerous until you know it isn't. Look at it (`x` or `l`, as your
-  keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all.
+  keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all —
+  and its **Feats** page lists milestones across all your characters (deep levels, great foes,
+  quests, a win with each class), with who reached each first.
 
 ## Where to learn more
 
