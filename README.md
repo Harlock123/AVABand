@@ -1289,7 +1289,14 @@ NLayer. A `SoundDirector` subscribes to the engine's event bus and turns events 
 engine knows nothing about audio (and sound never touches the game's RNG). Monster spells make the
 sound 4.2's `monster_spell.txt` gives them (`msgt`): a frost breath is `BR_FROST`, poison `BR_GAS`,
 a summoned demon `SUM_DEMON`; bolts and balls, as in 4.2, have none. Without an audio device
-(or with `--no-audio`) the game is silent. Sounds are **levelled** as they load (`Loudness.cs`): packs are recorded at very
+(or with `--no-audio`) the game is silent, and Settings → Sound says why (`AudioFailure.cs`): no
+output device, a device that won't start, or an OpenAL library that won't load, with the system's
+own reason. On Windows x64 and x86 AVABand ships the **official OpenAL Soft 1.23.1 build**
+(`src/Angband.Audio/native/`, swapped in for Silk.NET's by `Directory.Build.targets`): Silk's copy
+is built with MSVC and needs the Visual C++ runtime (`VCRUNTIME140_1.dll` etc.), so on a PC
+without that redistributable the game was silent while other games played sound; the official
+MinGW build needs only Windows' own `msvcrt.dll`. There is no official ARM64 build, so Windows on
+ARM keeps Silk's; if its runtime is missing, the Sound tab names the DLLs and the Redistributable. Sounds are **levelled** as they load (`Loudness.cs`): packs are recorded at very
 different levels — the Angband effects sit 10-30 dB under the bundled music, and the music tracks
 differ by 30 dB among themselves — so each effect is brought to about -20 dB average and each music
 track, measured over its first 30 seconds, to -30 dB, putting swings, hits and deaths clearly over

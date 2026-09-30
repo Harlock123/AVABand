@@ -94,4 +94,26 @@ public class SoundUiTests
         Assert.Equal([AudioBuffer.Large], saves);
         Assert.Contains("No audio device", vm.AudioBufferNote); // no real engine in this test
     }
+
+    [AvaloniaFact]
+    public void WhenSoundCantStart_TheSoundTabSaysWhy()
+    {
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), _ => { });
+        vm.StartGame(42);
+        var reason = AudioFailure.Describe(new DllNotFoundException("soft_oal.dll"), ["VCRUNTIME140_1.dll"]);
+        var engine = new NullAudioEngine(reason);
+        vm.UseAudio(new AudioServices(engine, new SoundDirector(engine), []));
+        Assert.Equal(reason, vm.AudioStatus);
+
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var dialog = window.OpenSettings();
+        dialog.GetVisualDescendants().OfType<TabControl>().First().SelectedIndex = 1; // Sound
+        dialog.UpdateLayout();
+        Assert.Contains(dialog.GetVisualDescendants().OfType<SelectableTextBlock>(), t => t.Text == reason);
+
+        var off = new NullAudioEngine();
+        vm.UseAudio(new AudioServices(off, new SoundDirector(off), []));
+        Assert.Contains("--no-audio", vm.AudioStatus);
+    }
 }

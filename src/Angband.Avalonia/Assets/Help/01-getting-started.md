@@ -25,6 +25,10 @@ at moments of note* turns them off. Your own pictures in the AVABand `art` folde
 among nine tilesets — Angband's own Original, Nomad, Adam Bolt and David Gervais sets, Dungeon
 Crawl, Tangaria, DawnLike, RLTiles and Hexany's tinted one-colour set — with a live preview.
 
+**No sound?** Its Sound tab says why: no audio device found, the device busy, or OpenAL's library
+unable to load (on Windows on ARM, usually a missing Microsoft Visual C++ runtime; install the
+Visual C++ Redistributable it names). The game plays on in silence either way.
+
 New to Angband? **Game → Tutorial** teaches the basics on a short level of its own, step by step,
 in a few minutes (it is never saved or scored). Tips also appear at the foot of the map the first time something happens (your first
 shop, monster, trap, bad wound...), each just once. Options → *Hints for new players* turns them off.

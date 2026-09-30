@@ -88,11 +88,13 @@ https://github.com/google/fonts/tree/main/ofl/cinzel
 | SkiaSharp / HarfBuzzSharp (and native Skia, HarfBuzz) | MIT (Skia: BSD-3-Clause; HarfBuzz: "Old MIT") |
 | CommunityToolkit.Mvvm | MIT |
 | Silk.NET (OpenAL, SDL bindings) | MIT |
-| OpenAL Soft (native, via Silk.NET.OpenAL.Soft.Native) | LGPL-2.0-or-later |
+| OpenAL Soft (native: via Silk.NET.OpenAL.Soft.Native; on Windows x64/x86 the official 1.23.1 binaries, `src/Angband.Audio/native/`) | LGPL-2.0-or-later |
 | SDL2 (native, via Ultz.Native.SDL) | zlib |
 | NVorbis | MIT |
 | NLayer | MIT |
 
 OpenAL Soft is not compiled into AVABand: it is a separate shared library, loaded at run time (the
 single-file builds carry it and unpack it before loading it). Its source code is available at
-https://github.com/kcat/openal-soft.
+https://github.com/kcat/openal-soft (the Windows x64/x86 DLLs are the unmodified official 1.23.1
+release binaries, source at https://github.com/kcat/openal-soft/tree/1.23.1; its licence is in
+`src/Angband.Audio/native/COPYING-openal-soft.txt`).

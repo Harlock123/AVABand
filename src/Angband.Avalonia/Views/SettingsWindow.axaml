@@ -91,7 +91,7 @@
     <TabItem Header="Sound">
       <DockPanel Margin="16">
         <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,12">
-          <TextBlock Text="{Binding AudioStatus}" Opacity="0.7" />
+          <SelectableTextBlock Text="{Binding AudioStatus}" Opacity="0.7" TextWrapping="Wrap" />
           <StackPanel Orientation="Horizontal" Spacing="24">
             <ToggleSwitch x:Name="MuteSwitch" OnContent="Muted" OffContent="Sound on" IsChecked="{Binding Muted}" />
             <ToggleSwitch OnContent="Effects on" OffContent="Effects off" IsChecked="{Binding EffectsEnabled}" />

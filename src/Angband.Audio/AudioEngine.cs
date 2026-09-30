@@ -39,9 +39,12 @@ public interface IAudioEngine : IDisposable
 }
 
 /// <summary>Silent engine: used when audio is off, unavailable, or in tests.</summary>
-public class NullAudioEngine : IAudioEngine
+public class NullAudioEngine(string? reason = null) : IAudioEngine
 {
     public virtual bool IsAvailable => false;
+
+    /// <summary>Why the game is silent, in words for the player (null: audio was simply turned off).</summary>
+    public string? Reason { get; } = reason;
     public string? CurrentMusic { get; protected set; }
     public event Action? MusicEnded;
     public virtual void SetVolumes(float master, float effects, float music) { }

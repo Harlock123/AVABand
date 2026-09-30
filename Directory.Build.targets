@@ -1,0 +1,27 @@
+<Project>
+  <!--
+    Windows x64/x86: use the official OpenAL Soft build (src/Angband.Audio/native), which needs no
+    Visual C++ runtime, in place of Silk.NET.OpenAL.Soft.Native's, which fails to load without it.
+    The package's items are re-pointed at our files with their metadata kept, so deps.json, the
+    runtimes/ folders and single-file bundles are laid out just as before. See native/README.md.
+  -->
+  <PropertyGroup>
+    <_AvaOpenAlDir>$(MSBuildThisFileDirectory)src/Angband.Audio/native/</_AvaOpenAlDir>
+  </PropertyGroup>
+  <Target Name="AvaUseMinGwOpenAl" AfterTargets="ResolvePackageAssets">
+    <ItemGroup>
+      <_AvaOalRid Include="@(RuntimeTargetsCopyLocalItems)"
+                  Condition="'%(NuGetPackageId)' == 'Silk.NET.OpenAL.Soft.Native' and '%(Filename)%(Extension)' == 'soft_oal.dll'
+                             and Exists('$(_AvaOpenAlDir)%(RuntimeIdentifier)/soft_oal.dll')" />
+      <RuntimeTargetsCopyLocalItems Remove="@(_AvaOalRid)" />
+      <RuntimeTargetsCopyLocalItems Include="@(_AvaOalRid->'$(_AvaOpenAlDir)%(RuntimeIdentifier)/soft_oal.dll')" />
+
+      <_AvaOalNative Include="@(NativeCopyLocalItems)"
+                     Condition="'$(RuntimeIdentifier)' != '' and '%(NuGetPackageId)' == 'Silk.NET.OpenAL.Soft.Native'
+                                and '%(Filename)%(Extension)' == 'soft_oal.dll'
+                                and Exists('$(_AvaOpenAlDir)$(RuntimeIdentifier)/soft_oal.dll')" />
+      <NativeCopyLocalItems Remove="@(_AvaOalNative)" />
+      <NativeCopyLocalItems Include="@(_AvaOalNative->'$(_AvaOpenAlDir)$(RuntimeIdentifier)/soft_oal.dll')" />
+    </ItemGroup>
+  </Target>
+</Project>

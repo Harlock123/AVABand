@@ -17,7 +17,8 @@ public sealed partial class MainWindowViewModel
     public IReadOnlyList<SoundPack> MusicPacks => _audio?.Packs.Where(p => p.HasMusic).ToList() ?? [];
     public bool AudioAvailable => _audio?.Engine.IsAvailable == true;
     public string AudioStatus => _audio is null ? "Audio is off."
-        : _audio.Engine.IsAvailable ? "Audio device open." : "No audio device could be opened; the game is silent.";
+        : _audio.Engine.IsAvailable ? "Audio device open."
+        : (_audio.Engine as NullAudioEngine)?.Reason ?? "Audio is off (--no-audio); the game is silent.";
 
     [ObservableProperty] private SoundPack? _selectedSoundPack;
     [ObservableProperty] private SoundPack? _selectedMusicPack;

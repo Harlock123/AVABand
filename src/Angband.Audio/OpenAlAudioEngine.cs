@@ -93,20 +93,20 @@ public sealed unsafe class OpenAlAudioEngine : IAudioEngine
             var alc = ALContext.GetApi(soft: true);
             var al = AL.GetApi(soft: true);
             var device = alc.OpenDevice(null);
-            if (device == null) return new NullAudioEngine();
+            if (device == null) return new NullAudioEngine(AudioFailure.NoDevice);
             var context = alc.CreateContext(device, null);
             if (context == null || !alc.MakeContextCurrent(context))
             {
                 alc.CloseDevice(device);
-                return new NullAudioEngine();
+                return new NullAudioEngine(AudioFailure.NoContext);
             }
             return new OpenAlAudioEngine(al, alc, device, context) { PeriodFrames = periodFrames };
         }
-        catch (Exception ex) when (ex is DllNotFoundException or EntryPointNotFoundException or InvalidOperationException
-                                       or FileNotFoundException or TypeInitializationException)
+        catch (Exception ex)
         {
-            Trace.WriteLine($"Audio unavailable: {ex.Message}");
-            return new NullAudioEngine();
+            // Whatever went wrong, the game plays on in silence — and the Sound tab says why.
+            Trace.WriteLine($"Audio unavailable: {ex}");
+            return new NullAudioEngine(AudioFailure.Describe(ex, AudioFailure.MissingVcRuntimeHere()));
         }
     }
 
