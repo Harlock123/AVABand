@@ -1,3 +1,6 @@
 [
-  {"id": "devouring", "name": "devouring", "description": "now and then swallows something in your pack for good", "bases": ["bag"]}
+  {"id": "devouring", "name": "devouring", "description": "now and then swallows something in your pack for good", "bases": ["bag"]},
+  {"id": "loose_settings", "name": "loose settings", "description": "now and then lets a stone work loose from its socket and fall", "bases": ["bracers"]},
+  {"id": "greedy", "name": "greed", "description": "now and then eats a little of your gold", "bases": ["bag"]},
+  {"id": "leaden", "name": "lead", "description": "weighs twice what it should", "bases": ["bracers", "bag"]}
 ]

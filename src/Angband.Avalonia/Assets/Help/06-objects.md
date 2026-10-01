@@ -22,6 +22,10 @@ much), and the larger two hold two or four more things. Only the best bag you ca
 you lose it, whatever no longer fits spills onto the floor. Beware: not every Bag of Holding is
 what it seems.
 
+Bags and bracers can carry curses of their own: a **greedy** bag nibbles at your gold, a bag or
+bracers **of lead** weigh twice what they should, and bracers with **loose settings** now and then
+drop a stone at your feet (pick it up and set it again). Remove Curse deals with them as with any curse.
+
 ## Bracers and gems
 
 **Bracers** go on your arms, beside your gloves, and have one, two or three **sockets** for gems.

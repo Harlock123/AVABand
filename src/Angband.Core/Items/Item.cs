@@ -131,8 +131,8 @@ public sealed class Item
     public int QuiverWeight => (IsAmmo ? 1 : Inventory.ThrownQuiverMultiplier) * Number;
     /// <summary>Flavoured (unknown until learned) — except special artifact-only kinds, which never are.</summary>
     public bool IsFlavored => Base.Flavor is not null && !Kind.IsSpecialArtifactKind;
-    /// <summary>Weight of one, in tenths of a pound.</summary>
-    public int Weight => Artifact?.Weight ?? Kind.Weight;
+    /// <summary>Weight of one, in tenths of a pound (twice that under AVABand's curse of lead).</summary>
+    public int Weight => (Artifact?.Weight ?? Kind.Weight) * (Curses.Contains("leaden") ? 2 : 1);
 
     /// <summary>Elements it makes you immune to: an artifact's (Angband RES_x[3]).</summary>
     public IReadOnlyList<string> Immunities => Artifact?.Immunities ?? [];

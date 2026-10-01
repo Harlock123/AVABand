@@ -209,4 +209,73 @@ public class AvaLootTests
         game.VeinGold(gold);
         Assert.Equal(150, gold.GoldValue);
     }
+
+    // --- AVABand's curses for its slots ----------------------------------------------------------
+
+    private static Item Cursed(GameSession game, string kind, string curse)
+    {
+        var item = game.Objects.Create(kind);
+        item.Curses.Add(curse);
+        item.CursePowers[curse] = 20;
+        game.Knowledge.LearnKind(item.Kind);
+        return game.Player.Inventory.Add(item)!;
+    }
+
+    private static GameSession Quiet()
+    {
+        var game = NewGame();
+        game.Player.MaxHp = game.Player.Hp = 100_000; // (whatever lives here, this is about the curses)
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        return game;
+    }
+
+    [Fact]
+    public void A_leaden_thing_weighs_twice_as_much_and_is_soon_known()
+    {
+        var game = Quiet();
+        var plain = game.Objects.Create("iron_bracers");
+        var leaden = Cursed(game, "iron_bracers", "leaden");
+        Assert.Equal(plain.Weight * 2, leaden.Weight);
+        Assert.False(game.Knowledge.KnowsRune(RuneIds.Curse("leaden")));
+        game.Execute(new HoldCommand());
+        Assert.True(game.Knowledge.KnowsRune(RuneIds.Curse("leaden")));
+    }
+
+    [Fact]
+    public void A_greedy_bag_eats_gold_now_and_then()
+    {
+        var game = Quiet();
+        Cursed(game, "sack_of_holding", "greedy");
+        game.Player.Gold = 10_000;
+        for (var i = 0; i < 30 * GameSession.GreedChance && game.Player.Gold == 10_000; i++) game.Execute(new HoldCommand());
+        Assert.Equal(10_000 - 10_000 / 20, game.Player.Gold);
+        Assert.True(game.Knowledge.KnowsRune(RuneIds.Curse("greedy")));
+    }
+
+    [Fact]
+    public void Loose_settings_drop_a_stone_at_your_feet()
+    {
+        var game = Quiet();
+        var bracers = Cursed(game, "iron_bracers", "loose_settings");
+        game.Execute(new WieldCommand(bracers));
+        game.Execute(new SetGemCommand(bracers, Carry(game, "ruby")));
+        Assert.Contains("fire", bracers.Resists);
+        for (var i = 0; i < 30 * GameSession.LooseSettingsChance && bracers.Gems.Count > 0; i++) game.Execute(new HoldCommand());
+        Assert.Empty(bracers.Gems);
+        Assert.DoesNotContain("fire", bracers.Resists); // what the stone gave went with it
+        Assert.Contains(game.Level.Objects.All, o => o.Item.Kind.Id == "ruby" && o.Loc.DistanceTo(game.Player.Position) <= 2);
+        Assert.True(game.Knowledge.KnowsRune(RuneIds.Curse("loose_settings")));
+    }
+
+    [Fact]
+    public void A_cursed_bag_gets_only_a_bags_curse()
+    {
+        var game = NewGame();
+        for (var i = 0; i < 40; i++)
+        {
+            var bag = game.Objects.Create("sack_of_holding");
+            game.Objects.ApplyCurse(game.Rng, bag, 20);
+            Assert.All(bag.Curses, c => Assert.Contains(c, new[] { "greedy", "leaden", "devouring" }));
+        }
+    }
 }

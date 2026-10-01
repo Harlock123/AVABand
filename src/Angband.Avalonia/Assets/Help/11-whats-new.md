@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **New curses for bags and bracers**: greedy bags that eat gold, leaden things twice as heavy, and
+  bracers whose settings let a stone fall.
 - **Nine new artifacts**: bracers of Narvi, Beorn, the Hornburg and Haldir, Bilbo's bag, the off-hand
   blades 'Thorn' and of Dol Amroth, the Mattock of Narvi and the Boots of Strider.
 - **Enchanted bracers and bags**: bracers of the Archer, of Warding, of the Duelist and the rare

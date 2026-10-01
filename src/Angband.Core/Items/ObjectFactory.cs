@@ -169,7 +169,7 @@ public sealed class ObjectFactory(GameData data)
         }
 
         if (power == 2) TryMakeEgo(rng, item, level);
-        if (rng.OneIn(20) && item.IsWearable) level = ApplyCurse(rng, item, level);
+        if (rng.OneIn(20) && (item.IsWearable || item.Base.Id == "bag")) level = ApplyCurse(rng, item, level);
 
         var b = item.Base;
         if (b.IsWeapon || b.Slot == EquipSlot.Bow || b.IsAmmo) ApplyWeaponMagic(rng, item, level, power);
@@ -237,6 +237,13 @@ public sealed class ObjectFactory(GameData data)
         if (item.Flags.Contains("BLESSED")) return level;
         var power = rng.RandInt1(9) + 10 * MagicBonus(rng, 9, level);
         var newLevel = level;
+        // AVABand's bags, carried not worn, take only the curses made for bags (greed, lead, devouring).
+        if (item.Base.Id == "bag")
+        {
+            var forBags = data.Curses.Where(c => c.Bases.Contains("bag")).ToList();
+            if (forBags.Count > 0 && AddCurse(rng, item, rng.Pick(forBags), power)) newLevel += rng.RandInt1(1 + power / 10);
+            return newLevel;
+        }
         for (var n = rng.RandInt1(4); n > 0; n--)
         {
             for (var tries = 3; tries > 0; tries--)

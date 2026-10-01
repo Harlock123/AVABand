@@ -13,7 +13,9 @@ public class CurseData425Tests
     [Fact]
     public void All_of_4_2_5s_curses_are_here()
     {
-        Assert.Equal(27, TestData.Game.Curses.Count(c => c.Id != "devouring")); // (and AVABand's Bag of Devouring's own)
+        // (And AVABand's own for its bags and bracers, in ava_curses.json, beside them.)
+        string[] avaband = ["devouring", "loose_settings", "greedy", "leaden"];
+        Assert.Equal(27, TestData.Game.Curses.Count(c => !avaband.Contains(c.Id)));
         Assert.Equal(-50, Curse("vulnerability").ToAc);
         Assert.Equal(["cold"], Curse("burning_up").Resists);
         Assert.Contains("NO_TELEPORT", Curse("anti_teleportation").Flags);

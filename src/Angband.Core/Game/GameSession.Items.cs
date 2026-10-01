@@ -1111,6 +1111,7 @@ public sealed partial class GameSession
 
         CurseUpkeep();
         BagUpkeep();
+        AvaCurseUpkeep();
     }
 
     // --- Level population and monster drops ------------------------------------------------------

@@ -98,6 +98,15 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Curses for bracers and bags** (AVABand's own, `ava_curses.json`, `Game/GameSession.AvaCurses.cs`):
+*loose settings* (bracers: about one turn in 1000, a stone works loose and falls at your feet,
+taking what it gave with it; a cursed stone holds fast), *greed* (bags: about one turn in 600 it
+eats a twentieth of your gold) and *lead* (bracers and bags: twice the weight, `Item.Weight`; felt,
+and so known, the first time you carry one). Each shows itself when it first acts, and Remove Curse
+takes it off as any other. Bags, carried not worn, are cursed one time in 20 like worn things now,
+but only with the curses made for bags (greed, lead, devouring — so any bag may turn out to
+devour, not only the Bag of Devouring).
+
 **Egos for bracers and bags** (AVABand's own, `ava_egos.json`, in Angband's ego format plus three
 AVABand fields on `EgoItemDef`): bracers *of the Archer* (+1–2 DEX, +3–6 to hit), *of Warding*
 (+4–8 armour and a random base resistance), *of the Duelist* (`offHandBonus`: the off hand's −15
