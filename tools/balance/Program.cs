@@ -30,6 +30,9 @@
 // game that hangs, and if the replay doesn't play back to exactly the same end; a failing game's
 // replay is written to soak-failures/ (watch it with Game > Watch a replay...).
 //
+// `kits` — each class's starting weapon with Angband's blows on and off (blows and damage a turn at level 1).
+// BOT_ANGBAND_BLOWS=0 plays `play` with the birth option "Angband 4.2's blows" off, to compare.
+//
 // `quests [seeds]` — AVABand's quests, each played end to end by the bot (Quests.cs) with a warrior, a
 // mage and a ranger, that many seeds each: how many finish, how many die, and what it takes. The soak
 // plays one of each too, recorded and replayed.
@@ -70,6 +73,14 @@ var depths = Environment.GetEnvironmentVariable("BOT_DEPTHS") is { Length: > 0 }
     ? only.Split(',').Select(d => int.Parse(d, CultureInfo.InvariantCulture)).ToArray()
     : new[] { 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99 };
 string Num(double x) => x.ToString("0.0", CultureInfo.InvariantCulture);
+
+if (args.Length > 3 && args[0] == "soak" && args[1] == "one")
+{
+    // One soak game: soak one <class> <seed> [decisions].
+    var ok = Soak.Run(data, args[2], ulong.Parse(args[3], CultureInfo.InvariantCulture),
+        args.Length > 4 ? int.Parse(args[4], CultureInfo.InvariantCulture) : 4000, 1);
+    Environment.Exit(ok ? 0 : 1);
+}
 
 if (args.Length > 0 && args[0] == "soak")
 {
@@ -204,6 +215,32 @@ if (args.Length > 0 && args[0] == "profiles")
     return;
 }
 
+if (args.Length > 0 && args[0] == "kits")
+{
+    // Each class's starting weapon at level 1, Angband's blows on and off: blows and damage a turn
+    // (average dice and bonuses, times blows), with the quick start's stats (all 15) and with a
+    // fighter's spread (STR and DEX 17). Human, so no racial stat changes.
+    Console.WriteLine("class | weapon | lb | stats | blows (Angband's) | dmg/turn | blows (off) | dmg/turn (off) | too heavy by");
+    foreach (var cls in data.Classes.Select(c => c.Id))
+        foreach (var (label, str) in new[] { ("all 15", 15), ("STR/DEX 17", 17) })
+        {
+            var stats = CharacterSpec.StatIds.ToDictionary(s => s, s => s is "str" or "dex" ? str : 15);
+            (int Blows, double Damage, int Heavy, Item? W) Try(bool on)
+            {
+                var spec = new CharacterSpec("Kit", "human", cls, stats, Options: new Dictionary<string, bool> { [OptionIds.AngbandBlows] = on });
+                var g = GameSession.NewGame(data, 1, spec);
+                var w = g.Player.Inventory.Weapon;
+                var dmg = w is null ? 0 : (w.Damage.AverageTimesTwo / 2.0 + w.ToDam + g.Player.ToDam) * g.Player.Blows / 100.0;
+                return (g.Player.Blows, dmg, g.HeavyBy(w), w);
+            }
+            var on = Try(true);
+            var off = Try(false);
+            Console.WriteLine($"{cls} | {(on.W is null ? "none" : on.W.Kind.Id)} | {(on.W?.Weight ?? 0) / 10.0:0.#} | {label} | {on.Blows / 100.0:0.0#} | {Num(on.Damage)} | "
+                              + $"{off.Blows / 100.0:0.0#} | {Num(off.Damage)} | {on.Heavy}");
+        }
+    return;
+}
+
 if (args.Length > 0 && args[0] == "one")
 {
     var one = Bot.Play(data, int.Parse(args[1], CultureInfo.InvariantCulture), ulong.Parse(args[2], CultureInfo.InvariantCulture),
@@ -218,9 +255,15 @@ if (play)
     // `play [runs] [class] [race] [no-abilities]`: a race (Human by default), with or without its AVABand abilities.
     var race = args.Length > 3 ? args[3] : null;
     var abilities = !(args.Length > 4 && args[4] == "no-abilities");
-    var spec = race is null ? null : CharacterSpec.Default(race, cls) with { Options = new Dictionary<string, bool> { [OptionIds.AvaRaces] = abilities } };
+    // (BOT_ANGBAND_BLOWS=0: with the birth option "Angband 4.2's blows" off, the class's blows as AVABand had them.)
+    var blowsOff = Environment.GetEnvironmentVariable("BOT_ANGBAND_BLOWS") == "0";
+    var spec = race is null && !blowsOff ? null : CharacterSpec.Default(race ?? "human", cls) with
+    {
+        Options = new Dictionary<string, bool> { [OptionIds.AvaRaces] = abilities, [OptionIds.AngbandBlows] = !blowsOff },
+    };
     Console.WriteLine($"{count} runs per depth; a clvl-matched {(race is null ? "" : race + " ")}{cls}{(race is not null && !abilities ? " (racial abilities off)" : "")} "
-                      + $"with depth-made gear and potions plays up to {Bot.MaxTurns} turns" + (Bot.Plain ? " (plain bot)" : ""));
+                      + $"with depth-made gear and potions plays up to {Bot.MaxTurns} turns" + (Bot.Plain ? " (plain bot)" : "")
+                      + (blowsOff ? " (Angband's blows off)" : ""));
     Console.WriteLine("depth | survived% | left level% | turns | kills | exp gained | level seen% | potions | blinks | rests | shots/casts | pickups | tried");
     foreach (var depth in depths)
     {
@@ -324,6 +367,8 @@ internal static class Bot
     internal sealed class Tally
     {
         public int Potions, Blinks, Rests, Shots, Waits, Flights, Pickups, Tried;
+        /// <summary>The depth it last tidied its pack on (once a level, when the pack is nearly full).</summary>
+        public int TidiedAt = -1;
         /// <summary>Squares (and depth) where picking up failed: not tried again.</summary>
         public HashSet<(int, Loc)> LeftBehind { get; } = [];
         /// <summary>Kinds whose use failed (they wanted an aim or a choice the bot doesn't give): not tried again.</summary>
@@ -591,8 +636,9 @@ internal static class Bot
 
     /// <summary>
     /// When nothing awake is about: pick up what is underfoot, put on anything for an empty slot,
-    /// try an unknown potion or scroll, or walk to an object in view (within 12 steps). Null when
-    /// there is nothing of the kind to do.
+    /// set a gem in bracers with a free socket, tidy a nearly full pack (once a level), try an
+    /// unknown potion or scroll, or walk to an object in view (within 12 steps). Null when there is
+    /// nothing of the kind to do.
     /// </summary>
     private static bool? Loot(GameSession game, Tally tally)
     {
@@ -607,6 +653,14 @@ internal static class Bot
         if (p.Inventory.Pack.FirstOrDefault(i => i.IsWearable && !i.IsCursed && game.Knowledge.KnowsKind(i)
                 && p.Inventory.InSlot(i.Base.Slot) is null && i.Base.Slot != EquipSlot.None) is { } wear)
             return game.Execute(new WieldCommand(wear));
+        if (!Plain && p.Inventory.Pack.FirstOrDefault(GameSession.IsGem) is { } gem && game.FreeSockets().FirstOrDefault() is { } host)
+            return game.Execute(new SetGemCommand(host, gem));
+        // (Takes no time, so on to the rest.)
+        if (!Plain && tally.TidiedAt != p.Depth && p.Inventory.SlotsUsed >= p.Inventory.PackSize - 2)
+        {
+            tally.TidiedAt = p.Depth;
+            game.Execute(new TidyPackCommand());
+        }
         if (!p.Timed.Has("blind") && !p.Timed.Has("confused")
             && p.Inventory.Pack.FirstOrDefault(i => i.Base.Id is "potion" or "scroll" && !game.Knowledge.KnowsKind(i)
                                                    && !tally.Unusable.Contains(i.Kind.Id)) is { } unknown)
@@ -761,7 +815,7 @@ internal static class Bot
         return null;
     }
 
-    private static Direction Toward(Loc from, Loc to) =>
+    internal static Direction Toward(Loc from, Loc to) =>
         DirectionExtensions.FromOffset(Math.Sign(to.X - from.X), Math.Sign(to.Y - from.Y));
 
     private static Item? Find(GameSession game, string kind) => game.Player.Inventory.Pack.FirstOrDefault(i => i.Kind.Id == kind);
@@ -786,7 +840,8 @@ internal static class Bot
     {
         var worth = item.Armour + item.ToAc + item.Resists.Where(r => !covered.Contains(r)).Sum(r => Abilities.GetValueOrDefault(r))
                     + 10 * item.Modifier(ItemModifiers.Speed) + 3 * (item.Modifier(ItemModifiers.Constitution) + item.Modifier(ItemModifiers.Strength))
-                    + 8 * item.Modifier(ItemModifiers.Light);
+                    + 8 * item.Modifier(ItemModifiers.Light)
+                    + (item.Ego?.CarryPercent ?? 0) / 2; // (Porter): room for more before it's slowed
         if (IsCaster(game)) worth += 3 * item.Modifier(ItemModifiers.Intelligence);
         return worth;
     }
@@ -848,7 +903,18 @@ internal static class Soak
         var game = Bot.Setup(data, start, seed, cls, level: 50);
         // A tourist can't die (Angband cheat_live: death sends it home, healed), so it sees the bottom.
         if (tourist) game.Options[OptionIds.CheatLive] = true;
+        else Supply(game, seed);
         var target = start;
+        var descents = 0;
+        // How often AVABand's additions came up (so a soak that stopped using them shows it).
+        int gemsSet = 0, gemsOut = 0, identified = 0, tidied = 0;
+        game.Events.Subscribe<MessageEvent>(m =>
+        {
+            if (m.Text.StartsWith("You set ", StringComparison.Ordinal)) gemsSet++;
+            else if (m.Text.StartsWith("The armourer prises", StringComparison.Ordinal) || m.Text.Contains("cracks as it comes free")) gemsOut++;
+            else if (m.Text.StartsWith("The alchemist turns", StringComparison.Ordinal)) identified++;
+            else if (m.Text.StartsWith("You tidy your pack", StringComparison.Ordinal) || m.Text.StartsWith("Your pack is tidy", StringComparison.Ordinal)) tidied++;
+        });
         game.Recorder = new ReplayRecorder(game);
         var mind = new Bot.Mind();
         var done = 0;
@@ -878,6 +944,8 @@ internal static class Soak
                     {
                         if (tourist && target >= data.Constants.MaxDepth) break;
                         target = Math.Min(game.Player.Depth + (tourist ? 2 : 6), tourist ? data.Constants.MaxDepth : 99);
+                        // Every third level down, a trip to town on the way: the shops' services.
+                        if (!tourist && ++descents % 3 == 0) TownTrip(game);
                         game.Execute(new DebugJumpCommand(target));
                         game.Execute(new DebugCureAllCommand()); // (recorded, like the jump)
                         onLevel = 0;
@@ -908,8 +976,72 @@ internal static class Soak
 
         var file = game.Recorder.ToFile(game);
         var end = $"{done} decisions, to {maxDepth * 50} ft, {(game.Player.IsDead ? "killed by " + game.Player.KilledBy : "alive")}, "
-                  + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms";
+                  + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms"
+                  + (tourist ? "" : $"; gems set {gemsSet}, taken out {gemsOut}, identified {identified}, tidied {tidied}");
         return Finish(data, game, $"{cls} {seed}", $"{cls} {seed} from {start * 50} ft", marks, end, failure, keep, cls, seed);
+    }
+
+    /// <summary>
+    /// What a soak game's bot starts with besides its kit, for AVABand's additions to have their turn:
+    /// gold for the shops' services, a bag of holding, and two gems for its bracers (set as it goes;
+    /// iron bracers, worn at its first quiet moment, if its kit had none with a socket).
+    /// </summary>
+    private static void Supply(GameSession game, ulong seed)
+    {
+        game.Player.Gold += 20000;
+        var gems = game.Data.Objects.Where(k => k.Base == "gem").Select(k => k.Id).ToList();
+        var kinds = new List<string> { "bag_of_holding", gems[(int)(seed % (ulong)gems.Count)], gems[(int)(seed / 3 % (ulong)gems.Count)] };
+        if (!game.FreeSockets().Any())
+        {
+            kinds.Add("iron_bracers");
+            if (game.Player.Inventory.InSlot(EquipSlot.Arms) is { } arms) // (off, so the new pair goes on)
+                game.Player.Inventory.Remove(arms, arms.Number, () => game.Objects.NextSerial++);
+        }
+        foreach (var kind in kinds)
+            if (game.Data.Object(kind) is not null)
+            {
+                var item = game.Objects.Create(kind, 1);
+                game.Knowledge.LearnKind(item.Kind);
+                game.Player.Inventory.Add(item);
+            }
+        game.RecalculateBonuses();
+    }
+
+    /// <summary>
+    /// A trip to town (recorded, like the jumps): into the Armoury to have a gem taken out (it sets it
+    /// again later, if it didn't crack), into the Alchemist's to have everything unknown identified,
+    /// and a tidy of the pack. A trip that can't reach a shop (someone in the way) leaves it be.
+    /// </summary>
+    private static void TownTrip(GameSession game)
+    {
+        game.Execute(new DebugJumpCommand(0));
+        game.Execute(new TidyPackCommand());
+        QuestPromptEvent? prompt = null;
+        using var listen = game.Events.Subscribe<QuestPromptEvent>(e => prompt = e);
+        foreach (var (shop, pick) in new[] { ("armoury", "gem:out:"), ("alchemist", "ident:") })
+        {
+            if (game.IsGameOver || game.Player.Depth != 0) return;
+            var door = game.Level.AllLocs().FirstOrDefault(l => game.Level.FeatureAt(l).Shop == shop);
+            for (var step = 0; step < 300 && !game.IsGameOver && game.Player.Position != door; step++)
+            {
+                if (game.FindPath(game.Player.Position, door) is not { Count: > 0 } path) break;
+                game.Execute(new WalkCommand(Bot.Toward(game.Player.Position, path[0])));
+            }
+            if (game.Player.Position != door) continue;
+            prompt = null;
+            game.Execute(new StoreServicesCommand());
+            // One service ("everything" at the Alchemist's), then back to the shop and out.
+            var choice = prompt?.Choices.FirstOrDefault(c => c.Id == "ident:all")
+                         ?? prompt?.Choices.FirstOrDefault(c => c.Id.StartsWith(pick, StringComparison.Ordinal));
+            if (choice is not null)
+            {
+                prompt = null;
+                game.Execute(new QuestChoiceCommand(choice.Id));
+            }
+            if (prompt?.Choices.FirstOrDefault(c => c.Id.StartsWith("back:", StringComparison.Ordinal)) is { } back)
+                game.Execute(new QuestChoiceCommand(back.Id));
+            game.Execute(new LeaveStoreCommand());
+        }
     }
 
     /// <summary>

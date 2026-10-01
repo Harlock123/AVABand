@@ -839,7 +839,13 @@ it on the floor (`x`). Only what the game's rules count is compared: with Angban
   (cheat_live sends it home, and it's jumped straight back down), two levels deeper every 60
   decisions, so every depth from 3000 to 6350 ft, Sauron's and Morgoth's levels among them, is
   played; each game recorded as a replay. The bot eats when hungry and, badly hurt with nothing to
-  drink, runs for the nearest stairs. It fails on an exception, a decision slower than 10
+  drink, runs for the nearest stairs. AVABand's own additions get their turn too: each
+  (non-tourist) bot starts with a bag of holding, two gems, bracers to set them in and gold to spend;
+  it sets gems when things are quiet, tidies its pack once a level when it's nearly full, weighs
+  (Porter) gear in its kit for the room it gives, and every third level down stops in town, where the
+  Armoury takes a gem out and the Alchemist identifies everything it carries (each line of the output
+  counts the gems set and taken out, things identified and tidies). `soak one <class> <seed>` plays
+  a single game. It fails on an exception, a decision slower than 10
   seconds or a game that hangs, and on a replay that doesn't play back to exactly where its game
   ended — naming the first step where they part. A failing game's replay is kept (in CI, as the
   `soak-failures` artifact) to watch with Game → *Watch a replay…*. Four of its games are kept as fixtures
