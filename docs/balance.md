@@ -377,3 +377,44 @@ bags' about half (Sack 20 → 12, Bag 10 → 5, Devouring 3 → 2, Greater 5 →
 
 A bag of holding is now about as rare as a Ring of Free Action at 1000 ft and half as common deep;
 a flawless gem is a deep find, a few levels in a hundred.
+
+## Angband's blows, on and off
+
+The birth option *Angband 4.2's blows* (on by default) works out blows from the weapon's weight,
+Strength and Dexterity, as 4.2.5 does, in place of a flat number for each class. Two measurements:
+
+**The starting kits** (`balance kits`): each class's 4.2.5 starting weapon at level 1, Human,
+with the quick start's stats (all 15) and with Strength and Dexterity 17. Damage a turn is the
+average blow times blows.
+
+| class | weapon | blows / dmg a turn, on (all 15) | on (STR/DEX 17) | off |
+|---|---|---|---|---|
+| warrior | dagger | 1.66 / 7.5 | 2.77 / 12.5 | 2.0 / 9.0 |
+| rogue | dagger | 1.66 / 4.2 | 2.0 / 7.0 | 1.5 / 3.8 |
+| ranger | main gauche | 1.05 / 3.2 | 1.17 / 4.7 | 1.5 / 4.5 |
+| paladin | main gauche | 1.17 / 3.5 | 1.33 / 6.7 | 2.0 / 6.0 |
+| blackguard | tulwar | 1.0 / 6.0 | 1.17 / 8.2 | 2.0 / 12.0 |
+| priest | mace | 1.0 / 7.0 | 1.0 / 7.0 | 1.5 / 10.5 |
+| mage, necromancer, druid | rapier, main gauche, whip | about 1 either way | | |
+
+So with the quick start's stats a blackguard, a paladin and a priest open with roughly half to
+two-thirds the melee they had with the flat blows; a warrior or rogue who puts points into
+Strength and Dexterity opens with more. These are 4.2.5's own kits and numbers.
+
+**Whole games** (`play 30 <class>`, depths 1–30, with and without `BOT_ANGBAND_BLOWS=0`; the
+bot is kitted for the depth, choosing its weapon by damage a turn). Survival % on / off:
+
+| class | 50 ft | 250 ft | 500 ft | 1000 ft | 1500 ft |
+|---|---|---|---|---|---|
+| warrior | 100 / 100 | 100 / 100 | 100 / 100 | 100 / 100 | 100 / 100 |
+| rogue | 100 / 100 | 96.7 / 100 | 96.7 / 96.7 | 96.7 / 96.7 | 93.3 / 96.7 |
+| paladin | 100 / 100 | 100 / 100 | 93.3 / 96.7 | 100 / 100 | 93.3 / 96.7 |
+| blackguard | 96.7 / 100 | 96.7 / 100 | 96.7 / 100 | 96.7 / 100 | 100 / 93.3 |
+| priest | 96.7 / 100 | 86.7 / 100 | 100 / 96.7 | 96.7 / 93.3 | 83.3 / 93.3 |
+
+The priest's dips, run again with 90 games: 93.3 / 98.9 at 250 ft, 91.1 / 94.4 at 1500 ft. The
+first is real but small (a priest with one blow of a mace leans on its spells sooner); the second is
+noise. Everything else is within a game or two in thirty. Kills mostly run higher with Angband's
+blows (the bot finds lighter weapons that swing more often); experience is too noisy to read (one
+unique killed swings a depth's average — the warrior's 1500 ft is 2403 on, 5780 off). The starting
+kits stay as 4.2.5 has them; the birth option turns the old blows back on for anyone who wants them.
