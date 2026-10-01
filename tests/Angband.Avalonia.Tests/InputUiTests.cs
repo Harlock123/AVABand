@@ -188,7 +188,8 @@ public class InputUiTests
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
         vm.StartGame(42, "warrior");
         foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
-        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        // (The pair's timing held still, so a slow machine can't let the first arrow go alone.)
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760, ArrowClock = () => TimeSpan.Zero };
         window.Show();
         TestKit.OpenGround(vm);
         var from = vm.Game.Player.Position;

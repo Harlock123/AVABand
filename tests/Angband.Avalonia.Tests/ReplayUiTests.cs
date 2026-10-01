@@ -56,11 +56,11 @@ public sealed class ReplayUiTests : IDisposable
         Assert.True(vm.IsReplaying);
         Assert.True(vm.Game.IsReplay);
         Assert.StartsWith("Replay: ", vm.ReplayStatus);
+        // Paused at once: playing, its clock steps it on in real time, and a slow machine could reach the end.
+        vm.HandleAction(InputAction.Confirm);
+        Assert.True(vm.ReplayPaused);
         window.CaptureRenderedFrame();
         TileRenderingTests.Save(window, "replay");
-
-        vm.HandleAction(InputAction.Confirm); // pause
-        Assert.True(vm.ReplayPaused);
         vm.HandleAction(InputAction.MoveNorth); // faster
         Assert.Equal(8, vm.ReplaySpeed);
         for (var i = 0; i < 500 && !vm.LastMessage.StartsWith("The replay has ended", StringComparison.Ordinal); i++) vm.StepReplay();

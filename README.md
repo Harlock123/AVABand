@@ -174,6 +174,13 @@ All randomness comes from `GameRandom` (xoshiro256**, integer-only helpers, seri
 A `GameSession` created with a seed and fed the same commands replays identically; a
 `LevelRequest(depth, seed)` always yields the same level.
 
+The interface's timers are kept out of the tests' way the same way: each clock that moves something
+on by itself — a scene (`SceneView.RunsByItself`), a run's steps (`RunStepDelay`), two-arrow
+diagonals (`MainWindow.ArrowClock`), the input dropped around a scene (`SceneClock`), a replay being
+watched (paused first), autosave (`Clock`) — can be held or set by a test, so a slow machine (CI)
+can't move something on between two lines of one. The UI suite passes three times running with every
+core kept busy.
+
 ## Implemented so far
 - **AVABand's quests** (`Game/GameSession.AvaQuests*.cs`, `Quests/AvaQuestLog.cs`; data in the
   `ava_*.json` files beside Angband's — `ava_quests.json`, `ava_objects.json`, `ava_object_bases.json`,
@@ -1327,7 +1334,9 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   filtered by slot; as in 4.2 a property whose rune you haven't learned reads "?"), *Home* (what
   you keep at home, readable from anywhere), *History* (the player history, as in the character
   dump, "(LOST)" marks included, with a box beneath to write a note of your own into it, as `:`
-  does) and *Upgrades* (AVABand's own: everything you carry or keep at home that the shops' note
+  does — and above it *Show* (everything, or only your notes, levels reached, uniques killed or
+  artifacts) and *Find* (lines containing some words), with a count of the lines shown) and
+  *Upgrades* (AVABand's own: everything you carry or keep at home that the shops' note
   calls better than what you have on, or mixed, best first, each with its note — bags you carry
   already count, so only those at home are weighed). Each line opens a
   description built from what the character knows: damage or armour, launcher multiplier, light

@@ -42,6 +42,9 @@ public sealed class SceneUiTests : IDisposable
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         var scene = window.GetVisualDescendants().OfType<SceneView>().Single();
+        // Held still: the tests move scenes on themselves (Advance), and on a slow machine a scene's own
+        // clock could end it between two lines of a test.
+        scene.RunsByItself = false;
         return (window, vm, scene);
     }
 
@@ -87,8 +90,7 @@ public sealed class SceneUiTests : IDisposable
     [AvaloniaFact]
     public void UpIntoTheTown_SaysSo_AndAKeyEndsTheScenes_AndDoesNothingMore()
     {
-        var (window, vm, view) = Open();
-        view.RunsByItself = false; // (held still: on a slow machine it could pass by itself mid-test)
+        var (window, vm, _) = Open();
         long now = 1000;
         vm.SceneClock = () => now;
         TakeStairs(vm, down: true);

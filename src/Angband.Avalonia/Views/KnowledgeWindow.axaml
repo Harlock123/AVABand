@@ -124,6 +124,15 @@
       <TabItem Header="Home" Content="{Binding Home}" />
       <TabItem Header="History">
         <DockPanel>
+          <!-- Which lines: one kind, and/or those containing some words. -->
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,6">
+            <TextBlock Text="Show" VerticalAlignment="Center" Opacity="0.8" />
+            <ComboBox x:Name="HistoryFilterBox" ItemsSource="{x:Static vm:KnowledgeViewModel.HistoryFilters}"
+                      SelectedIndex="{Binding HistoryFilter}" MinWidth="150" />
+            <TextBlock Text="Find" VerticalAlignment="Center" Opacity="0.8" Margin="8,0,0,0" />
+            <TextBox x:Name="HistorySearchBox" Text="{Binding HistorySearch}" Width="260" PlaceholderText="words in the line" />
+            <TextBlock Text="{Binding HistorySummary}" VerticalAlignment="Center" Opacity="0.7" />
+          </StackPanel>
           <!-- A note of your own (as ':' writes one), straight into the history. -->
           <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
             <Button x:Name="AddNoteButton" DockPanel.Dock="Right" Content="Add note" Margin="8,0,0,0" Command="{Binding AddNoteCommand}"

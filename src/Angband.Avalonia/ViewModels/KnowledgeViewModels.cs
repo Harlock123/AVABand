@@ -220,22 +220,70 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     /// <summary>AVABand: what you carry or keep at home that the shops' note calls better than what you have on.</summary>
     public KnowledgeCategoryViewModel? Upgrades { get; init; }
 
-    /// <summary>The character history, as Angband's history screen and dump show it.</summary>
+    /// <summary>The character history, as Angband's history screen and dump show it (the lines the filter lets through).</summary>
     [ObservableProperty] private string _history = "";
+
+    /// <summary>The history's lines, read afresh each time the page is filtered.</summary>
+    public Func<IReadOnlyList<Angband.Core.Game.HistoryEntry>>? HistoryEntries { get; init; }
+
+    /// <summary>What the History page can show: everything, or one kind of line.</summary>
+    public static IReadOnlyList<string> HistoryFilters { get; } = ["Everything", "Your notes", "Levels reached", "Uniques killed", "Artifacts"];
+
+    /// <summary>The kind of line shown (an index into <see cref="HistoryFilters"/>).</summary>
+    [ObservableProperty] private int _historyFilter;
+
+    /// <summary>Words the shown lines must contain (any case; empty: all).</summary>
+    [ObservableProperty] private string _historySearch = "";
+
+    /// <summary>How many lines are shown, of how many.</summary>
+    [ObservableProperty] private string _historySummary = "";
+
+    partial void OnHistoryFilterChanged(int value) => RefreshHistory();
+    partial void OnHistorySearchChanged(string value) => RefreshHistory();
+
+    /// <summary>Whether a line is of the kind chosen: notes ("-- "), levels, uniques killed, artifacts found or missed.</summary>
+    public static bool IsKind(Angband.Core.Game.HistoryEntry h, int filter) => filter switch
+    {
+        1 => h.Text.StartsWith("-- ", StringComparison.Ordinal),
+        2 => h.Text.StartsWith("Reached level ", StringComparison.Ordinal),
+        3 => h.Text.StartsWith("Killed ", StringComparison.Ordinal),
+        4 => h.Artifact is not null,
+        _ => true,
+    };
+
+    /// <summary>Angband do_cmd_knowledge_history: the turn, depth and note of each line.</summary>
+    public static string FormatHistory(IEnumerable<Angband.Core.Game.HistoryEntry> lines)
+    {
+        var sb = new System.Text.StringBuilder("      Turn   Depth  Note\n");
+        foreach (var h in lines) sb.Append($"{h.Turn,10}{h.Depth * 50,7}'  {h.Shown}\n");
+        return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>Shows the lines the filter and the search let through.</summary>
+    public void RefreshHistory()
+    {
+        if (HistoryEntries is null) return;
+        var all = HistoryEntries();
+        var words = HistorySearch.Trim();
+        var shown = all.Where(h => IsKind(h, HistoryFilter)
+                                   && (words.Length == 0 || h.Shown.Contains(words, StringComparison.OrdinalIgnoreCase))).ToList();
+        History = FormatHistory(shown);
+        HistorySummary = shown.Count == all.Count ? $"{all.Count} {(all.Count == 1 ? "line" : "lines")}" : $"{shown.Count} of {all.Count} lines";
+    }
 
     /// <summary>A note being written on the History page.</summary>
     [ObservableProperty] private string _noteText = "";
 
-    /// <summary>Writes a note in the history (as ':' does) and returns the history as it now reads; null if it wasn't kept.</summary>
-    public Func<string, string?>? WriteNote { get; init; }
+    /// <summary>Writes a note in the history (as ':' does); false if it wasn't kept.</summary>
+    public Func<string, bool>? WriteNote { get; init; }
 
     /// <summary>The History page's "Add note": the note goes in, the page shows it, the box empties.</summary>
     [RelayCommand]
     private void AddNote()
     {
-        if (WriteNote?.Invoke(NoteText) is not { } history) return;
-        History = history;
+        if (WriteNote?.Invoke(NoteText) != true) return;
         NoteText = "";
+        RefreshHistory();
     }
 
     /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests, 13 feats, 14 upgrades).</summary>
@@ -249,8 +297,9 @@ public sealed partial class MainWindowViewModel
 
     public KnowledgeViewModel CreateKnowledge() => CreateKnowledge(CreateMonsterKnowledge());
 
-    private KnowledgeViewModel CreateKnowledge(MonsterKnowledgeViewModel monsters) =>
-        new(monsters, CreateObjectKnowledge(), CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge())
+    private KnowledgeViewModel CreateKnowledge(MonsterKnowledgeViewModel monsters)
+    {
+        var knowledge = new KnowledgeViewModel(monsters, CreateObjectKnowledge(), CreateRuneKnowledge(), CreateEgoKnowledge(), CreateArtifactKnowledge())
         {
             Curses = CreateCurseKnowledge(),
             Features = CreateFeatureKnowledge(),
@@ -258,17 +307,20 @@ public sealed partial class MainWindowViewModel
             Home = CreateHomeKnowledge(),
             Shapes = CreateShapeKnowledge(),
             Equipment = new EquipComparisonViewModel(_game, Inspect),
-            History = HistoryText(),
+            HistoryEntries = () => _game.History,
             WriteNote = text =>
             {
-                if (!_game.AddNote(text)) return null;
+                if (!_game.AddNote(text)) return false;
                 Refresh();
-                return HistoryText();
+                return true;
             },
             Quests = CreateQuestJournal(),
             Feats = CreateFeatsPage(),
             Upgrades = CreateUpgrades(),
         };
+        knowledge.RefreshHistory();
+        return knowledge;
+    }
 
     /// <summary>
     /// AVABand's Upgrades page: everything you carry or keep at home that the shops' note ("will this
@@ -369,12 +421,7 @@ public sealed partial class MainWindowViewModel
     }
 
     /// <summary>Angband do_cmd_knowledge_history: the turn, depth and note of each line.</summary>
-    public string HistoryText()
-    {
-        var sb = new System.Text.StringBuilder("      Turn   Depth  Note\n");
-        foreach (var h in _game.History) sb.Append($"{h.Turn,10}{h.Depth * 50,7}'  {h.Shown}\n");
-        return sb.ToString().TrimEnd();
-    }
+    public string HistoryText() => KnowledgeViewModel.FormatHistory(_game.History);
 
     private uint BaseColor(string baseId) => _cells.Color(_data.ObjectBase(baseId)?.Color ?? "White");
     private string BaseName(string baseId) => _data.ObjectBase(baseId) is { } b ? ItemNaming.Plain(b.Name, false) : baseId;

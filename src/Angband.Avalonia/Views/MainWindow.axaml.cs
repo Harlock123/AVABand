@@ -43,12 +43,12 @@ public partial class MainWindow : Window
         _arrowChord.Move += dir => (DataContext as MainWindowViewModel)?.HandleAction(InputActions.FromDirection(dir));
         _arrowTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(10), DispatcherPriority.Input, (_, _) =>
         {
-            _arrowChord.Tick(_arrowClock.Elapsed);
+            _arrowChord.Tick(ArrowClock());
             if (!_arrowChord.IsWaiting) _arrowTimer!.Stop();
         });
         AddHandler(KeyUpEvent, (_, e) =>
         {
-            if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, _arrowClock.Elapsed);
+            if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, ArrowClock());
             (DataContext as MainWindowViewModel)?.SceneKeyReleased(e.Key.ToString());
             if (e.Key == _runKey) _runKey = null;
         }, RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -446,7 +446,10 @@ public partial class MainWindow : Window
 
     private readonly ArrowChord _arrowChord = new();
     private readonly DispatcherTimer _arrowTimer;
-    private readonly System.Diagnostics.Stopwatch _arrowClock = System.Diagnostics.Stopwatch.StartNew();
+    private static readonly System.Diagnostics.Stopwatch ArrowStopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+    /// <summary>The clock two-arrow diagonals are timed by (tests hold it still, so a slow machine can't split a pair).</summary>
+    public Func<TimeSpan> ArrowClock { get; set; } = () => ArrowStopwatch.Elapsed;
 
     private static Angband.Core.Geometry.Direction? ArrowKeyDirection(Key key) => key switch
     {
@@ -507,7 +510,7 @@ public partial class MainWindow : Window
             && !vm.IsEnteringCount && vm.OptionValue(DisplayOptions.ArrowDiagonals)
             && vm.Bindings.ForKey(e.Key.ToString()) == InputActions.FromDirection(arrow))
         {
-            _arrowChord.Down(arrow, _arrowClock.Elapsed);
+            _arrowChord.Down(arrow, ArrowClock());
             if (_arrowChord.IsWaiting) _arrowTimer.Start();
             e.Handled = true;
             return;

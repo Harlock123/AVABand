@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Find things in your history**: the History page can show only your notes, the levels you've
+  reached, the uniques you've killed or the artifacts you've found, and find lines by their words.
 - **Where you've been** (Ctrl+B): your last 40 squares on this level, dotted on the map for a
   moment, and where that trail began.
 - **Run pace** (Settings → Options): how quickly a run's steps go by, from Brisk to Very slow.

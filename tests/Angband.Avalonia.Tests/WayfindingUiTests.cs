@@ -97,6 +97,43 @@ public class WayfindingUiTests
     }
 
     [AvaloniaFact]
+    public void TheHistoryPage_ShowsOneKindOfLine_OrLinesWithSomeWords()
+    {
+        var (vm, _) = Start();
+        var game = vm.Game;
+        game.AddNote("left the Ring of Free Action at home");
+        game.GainExperience(game.ExperienceForLevel(4) - game.Player.Experience); // levels 2 to 5
+        game.AddHistory("Killed Grip, Farmer Maggot's Dog");
+        game.AddNote("Grip was easy");
+        var knowledge = vm.CreateKnowledge();
+        var all = game.History.Count;
+        Assert.Equal($"{all} lines", knowledge.HistorySummary);
+
+        knowledge.HistoryFilter = 1; // your notes
+        Assert.Equal($"2 of {all} lines", knowledge.HistorySummary);
+        Assert.Contains("-- Note: left the Ring", knowledge.History);
+        Assert.DoesNotContain("Reached level", knowledge.History);
+        Assert.StartsWith("      Turn   Depth  Note", knowledge.History);
+
+        knowledge.HistoryFilter = 2; // levels reached
+        Assert.Equal($"4 of {all} lines", knowledge.HistorySummary);
+        knowledge.HistoryFilter = 3; // uniques killed
+        Assert.Contains("Killed Grip", Assert.Single(knowledge.History.Split('\n').Skip(1)));
+
+        // Words, with or without a kind: any case.
+        knowledge.HistoryFilter = 0;
+        knowledge.HistorySearch = "grip";
+        Assert.Equal($"2 of {all} lines", knowledge.HistorySummary);
+        knowledge.HistoryFilter = 1;
+        Assert.Contains("Grip was easy", Assert.Single(knowledge.History.Split('\n').Skip(1)));
+
+        // A note added while filtered shows if it fits.
+        knowledge.NoteText = "Grip's kennel is east of the stairs";
+        knowledge.AddNoteCommand.Execute(null);
+        Assert.Equal($"2 of {all + 1} lines", knowledge.HistorySummary);
+    }
+
+    [AvaloniaFact]
     public void TheUpgradesPage_ListsWhatWouldSuitYouBetter()
     {
         var (vm, _) = Start(); // wielding a dagger, in soft leather armour
