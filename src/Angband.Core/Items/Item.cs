@@ -148,7 +148,7 @@ public sealed class Item
     /// their combat-bonus runes, since even +0 must be learned to be shown.
     /// </summary>
     /// <summary>AVABand's socketed bracers: how many gems they take.</summary>
-    public int Sockets => Kind.Sockets;
+    public int Sockets => Kind.Sockets + (Ego?.ExtraSockets ?? 0);
 
     /// <summary>The gems set in it (their properties are merged into its own; see GameSession.Gems.cs).</summary>
     public List<Item> Gems { get; } = [];

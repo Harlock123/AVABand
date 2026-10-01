@@ -60,4 +60,85 @@ public class AvaLootTests
         Assert.Contains("holy_water", alchemist.Stocked);
         Assert.Contains("oil", alchemist.AvabandBuys);
     }
+
+    // --- Egos for bracers and bags ---------------------------------------------------------------
+
+    private static Item WithEgo(GameSession game, string kind, string ego)
+    {
+        var item = game.Objects.Create(kind);
+        ObjectFactory.ApplyEgo(game.Rng, item, game.Data.Egos.Single(e => e.Id == ego), 30);
+        game.Knowledge.LearnKind(item.Kind);
+        foreach (var rune in item.Runes()) game.Knowledge.LearnRune(rune);
+        return game.Player.Inventory.Add(item)!;
+    }
+
+    [Theory]
+    [InlineData("archer", "bracers")]
+    [InlineData("warding", "bracers")]
+    [InlineData("duelist", "bracers")]
+    [InlineData("celebrimbor", "bracers")]
+    [InlineData("fireproof", "bag")]
+    [InlineData("insulated", "bag")]
+    public void AVABands_egos_fit_their_bases(string ego, string baseId)
+    {
+        var def = TestData.Game.Egos.Single(e => e.Id == ego);
+        Assert.Equal([baseId], def.Bases);
+        var kind = TestData.Game.Objects.First(k => k.Base == baseId && k.Id != "bag_of_devouring");
+        Assert.True(def.Fits(kind));
+    }
+
+    [Fact]
+    public void Celebrimbors_bracers_have_one_more_socket()
+    {
+        var game = NewGame();
+        var plain = game.Objects.Create("iron_bracers");
+        var bracers = WithEgo(game, "iron_bracers", "celebrimbor");
+        Assert.Equal(plain.Sockets + 1, bracers.Sockets);
+        foreach (var gem in new[] { "ruby", "sapphire", "topaz" })
+            Assert.True(game.Execute(new SetGemCommand(bracers, Carry(game, gem))));
+        Assert.Equal(3, bracers.Gems.Count);
+        Assert.Contains("of Celebrimbor's", game.Describe(bracers).Replace("(Celebrimbor's)", "of Celebrimbor's"));
+    }
+
+    [Fact]
+    public void Bracers_of_the_Duelist_ease_the_off_hand()
+    {
+        var game = NewGame();
+        Assert.Equal(GameSession.OffHandToHitPenalty, game.OffHandPenalty);
+        var bracers = WithEgo(game, "leather_bracers", "duelist");
+        game.Execute(new WieldCommand(bracers));
+        Assert.Equal(GameSession.OffHandToHitPenalty - 10, game.OffHandPenalty);
+        Assert.Contains("off hand's blow 10 easier to land", ObjectInfo.DescribeItem(game, bracers));
+    }
+
+    [Fact]
+    public void Bracers_of_the_Archer_and_of_Warding_roll_their_bonuses()
+    {
+        var game = NewGame();
+        var archer = WithEgo(game, "leather_bracers", "archer");
+        Assert.InRange(archer.Modifier(ItemModifiers.Dexterity), 1, 2);
+        Assert.True(archer.ToHit >= 3);
+        var warding = WithEgo(game, "leather_bracers", "warding");
+        Assert.True(warding.ToAc >= 4);
+        Assert.Single(warding.Resists, r => r is "acid" or "elec" or "fire" or "cold");
+    }
+
+    [Theory]
+    [InlineData("fireproof", "fire", "phase_door")]
+    [InlineData("insulated", "cold", "cure_light_wounds")]
+    public void A_guarding_bag_keeps_the_pack_safe_from_its_element(string ego, string element, string kind)
+    {
+        // Without the bag, a sure hit destroys them all; with it, none.
+        var bare = NewGame();
+        var lost = Carry(bare, kind, 5);
+        Assert.True(bare.InventoryDamage(element, 10_000) >= 5);
+        Assert.DoesNotContain(lost, bare.Player.Inventory.Pack);
+
+        var game = NewGame();
+        var stack = Carry(game, kind, 5);
+        var bag = WithEgo(game, "sack_of_holding", ego);
+        Assert.Equal(0, game.InventoryDamage(element, 10_000));
+        Assert.Equal(5, stack.Number);
+        Assert.Contains("keeps what's in your pack safe from", ObjectInfo.DescribeItem(game, bag));
+    }
 }

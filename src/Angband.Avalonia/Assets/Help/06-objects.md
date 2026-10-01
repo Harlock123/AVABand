@@ -36,6 +36,11 @@ Only the **Armoury** (2) can take a gem out again — press **!** (or *Remove a 
 some gold, and now and then the stone cracks. A cursed stone won't come out until its curse is
 broken.
 
+Bracers and bags can be found enchanted too: bracers **of the Archer** (Dexterity and aim), **of
+Warding** (armour and a resistance), **of the Duelist** (your off hand's blow lands far more easily),
+and the rare **(Celebrimbor's)**, with one more socket; a **(Fireproof)** bag keeps fire from what's
+in your pack, and an **(Insulated)** one keeps out the cold.
+
 ## Weapon oils
 
 A **weapon oil** is rubbed on your weapon (or your hands) — **U**, or *Apply* from its menu — and

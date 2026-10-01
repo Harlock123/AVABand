@@ -262,6 +262,12 @@ public sealed class EgoItemDef
     public IReadOnlyDictionary<string, int> Modifiers { get; init; } = new Dictionary<string, int>();
     /// <summary>AVABand's (Porter) ego: worn, this much more (percent) can be carried before slowing.</summary>
     public int CarryPercent { get; init; }
+    /// <summary>AVABand's (Celebrimbor's) bracers: sockets for gems beyond the kind's own.</summary>
+    public int ExtraSockets { get; init; }
+    /// <summary>AVABand's bracers of the Duelist: worn, the off hand's blow is this much less hard to land.</summary>
+    public int OffHandBonus { get; init; }
+    /// <summary>AVABand's bag egos: carried, the pack's contents are safe from these elements (a Fireproof bag: fire).</summary>
+    public IReadOnlyList<string> Guards { get; init; } = [];
     /// <summary>Random modifiers (Angband random-value syntax), rolled when the ego is applied.</summary>
     public IReadOnlyDictionary<string, string> Rolls { get; init; } = new Dictionary<string, string>();
     public IReadOnlyList<SlayDef> Slays { get; init; } = [];

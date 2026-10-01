@@ -1,4 +1,10 @@
 [
   {"id": "porter", "name": "(Porter)", "bases": ["boots", "cloak"], "level": 10, "commonness": 15, "maxDepth": 100, "carryPercent": 20,
-   "ignore": ["acid"]}
+   "ignore": ["acid"]},
+  {"id": "archer", "name": "of the Archer", "bases": ["bracers"], "level": 10, "commonness": 30, "maxDepth": 100, "rolls": {"dex": "1d2", "to_h": "d6"}, "minimums": {"dex": 1, "to_h": 3}},
+  {"id": "warding", "name": "of Warding", "bases": ["bracers"], "level": 15, "commonness": 30, "maxDepth": 100, "rolls": {"to_a": "d8"}, "randomPower": "base_resist", "minimums": {"to_a": 4}},
+  {"id": "duelist", "name": "of the Duelist", "bases": ["bracers"], "level": 20, "commonness": 15, "maxDepth": 100, "rolls": {"to_h": "d4"}, "offHandBonus": 10, "minimums": {"to_h": 1}},
+  {"id": "celebrimbor", "name": "(Celebrimbor's)", "bases": ["bracers"], "level": 35, "commonness": 5, "maxDepth": 100, "extraSockets": 1, "ignore": ["acid", "fire"]},
+  {"id": "fireproof", "name": "(Fireproof)", "bases": ["bag"], "level": 10, "commonness": 20, "maxDepth": 100, "guards": ["fire"], "ignore": ["fire"]},
+  {"id": "insulated", "name": "(Insulated)", "bases": ["bag"], "level": 10, "commonness": 20, "maxDepth": 100, "guards": ["cold"]}
 ]

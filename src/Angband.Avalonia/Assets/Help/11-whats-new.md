@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Enchanted bracers and bags**: bracers of the Archer, of Warding, of the Duelist and the rare
+  Celebrimbor's (an extra socket); Fireproof and Insulated bags that protect your pack.
 - **Weapon oils**: Venom, Burning, Frost, Storm and Corrosive Oil, and Holy Water — rub one on your
   weapon (U) and your blows poison, burn, freeze, shock, dissolve or smite evil for a while. The
   Alchemist sells some.

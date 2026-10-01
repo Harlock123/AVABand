@@ -270,6 +270,7 @@ public class StoreUiTests
         vm.HandleAction(InputAction.MoveSouth);
         var chosen = vm.StoreRows[vm.StoreSelectedIndex].Item.Kind;
         vm.HandleAction(InputAction.Confirm);
+        if (vm.IsEnteringNumber) vm.HandleAction(InputAction.Confirm); // (a stack: "Quantity?", one)
         Assert.Contains(game.Player.Inventory.All, i => i.Kind == chosen);
         vm.HandleAction(InputAction.Cancel);
         Assert.False(vm.IsInStore);

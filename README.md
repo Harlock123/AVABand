@@ -98,6 +98,15 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Egos for bracers and bags** (AVABand's own, `ava_egos.json`, in Angband's ego format plus three
+AVABand fields on `EgoItemDef`): bracers *of the Archer* (+1–2 DEX, +3–6 to hit), *of Warding*
+(+4–8 armour and a random base resistance), *of the Duelist* (`offHandBonus`: the off hand's −15
+to hit becomes −5, `GameSession.OffHandPenalty`) and *(Celebrimbor's)* (from 1750 ft, rare:
+`extraSockets`, one more socket — mithril bracers with four); bags *(Fireproof)* and *(Insulated)*
+(`guards`: carried, the pack's contents are safe from fire, or cold, in `InventoryDamage`; the
+quiver isn't). Made as Angband makes egos, on great items; the inspect text names what each does
+once its runes are known.
+
 **Weapon oils** (AVABand's own; base `oil` in `ava_object_bases.json`, six kinds in
 `ava_objects.json`): applied (`U`, or *Apply* in the item's menu; the `oil` base's verb), each sets
 one of Angband 4.2's own temporary brands or slays (`timed_effects.json`'s `att_pois`, `att_fire`,

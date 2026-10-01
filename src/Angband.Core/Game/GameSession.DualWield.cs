@@ -19,6 +19,9 @@ public sealed partial class GameSession
     /// <summary>The off hand's blow is this much harder to land.</summary>
     public const int OffHandToHitPenalty = 15;
 
+    /// <summary>The off hand's penalty now: less with bracers of the Duelist (AVABand's ego), never below none.</summary>
+    public int OffHandPenalty => Math.Max(0, OffHandToHitPenalty - Player.Inventory.Equipped.Sum(i => i.Ego?.OffHandBonus ?? 0));
+
     private static readonly int ShieldSlot = Enumerable.Range(0, Inventory.Slots.Count).First(i => Inventory.Slots[i].Type == EquipSlot.Shield);
 
     /// <summary>The weapon in the off hand, if any.</summary>

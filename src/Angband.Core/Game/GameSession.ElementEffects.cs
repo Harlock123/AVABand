@@ -288,9 +288,12 @@ public sealed partial class GameSession
     {
         if (chance <= 0) return 0;
         var destroyed = 0;
+        // AVABand's bag egos: a Fireproof (Insulated...) bag carried keeps the pack safe from its element.
+        var guarded = Player.Inventory.Pack.Any(b => b.Ego?.Guards.Contains(element) == true);
         foreach (var item in Player.Inventory.Pack.Concat(Player.Inventory.Quiver).ToList())
         {
             if (!item.HarmedBy(element)) continue;
+            if (guarded && Player.Inventory.Pack.Contains(item)) continue;
             // The name without its number ("Potions of Cure Light Wounds"), only once something is hurt.
             string Name() => System.Text.RegularExpressions.Regex.Replace(ItemNaming.Describe(item, Knowledge, withArticle: false, full: false), @"^\d+ ", "");
             var weapon = item.Base.Slot is Definitions.EquipSlot.Weapon or Definitions.EquipSlot.Bow && !item.Base.IsAmmo;

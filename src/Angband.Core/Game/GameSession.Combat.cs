@@ -63,7 +63,7 @@ public sealed partial class GameSession
             }
         }
         // AVABand's Humans: the off-hand weapon's blow, at the end of the round.
-        if (OffHand is { } off && monster.IsActive && used > 0) PlayerBlow(monster, off, OffHandToHitPenalty);
+        if (OffHand is { } off && monster.IsActive && used > 0) PlayerBlow(monster, off, OffHandPenalty);
         return used;
     }
 
