@@ -278,4 +278,56 @@ public class AvaLootTests
             Assert.All(bag.Curses, c => Assert.Contains(c, new[] { "greedy", "leaden", "devouring" }));
         }
     }
+
+    // --- Gem sets --------------------------------------------------------------------------------
+
+    private static Item WornBracers(GameSession game, params string[] gems)
+    {
+        var bracers = Carry(game, "mithril_bracers");
+        game.Execute(new WieldCommand(bracers));
+        foreach (var gem in gems) game.Execute(new SetGemCommand(bracers, Carry(game, gem)));
+        return bracers;
+    }
+
+    [Fact]
+    public void Three_rubies_of_any_quality_make_you_immune_to_fire()
+    {
+        var game = NewGame();
+        var messages = new List<string>();
+        game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        var bracers = WornBracers(game, "chipped_ruby", "flawed_ruby");
+        Assert.Equal(1, game.Player.Resists.GetValueOrDefault("fire"));
+        game.Execute(new SetGemCommand(bracers, Carry(game, "ruby")));
+        Assert.Equal(3, game.Player.Resists["fire"]);
+        Assert.Contains(messages, m => m.Contains("The stones answer one another — three rubies: immunity to fire"));
+        Assert.Contains("its stones make a set — three rubies: immunity to fire", ObjectInfo.DescribeItem(game, bracers));
+
+        // Off the arm, the set counts for nothing.
+        game.Execute(new TakeOffCommand(bracers));
+        Assert.Equal(0, game.Player.Resists.GetValueOrDefault("fire"));
+    }
+
+    [Fact]
+    public void A_ruby_a_sapphire_and_a_topaz_resist_acid_too()
+    {
+        var game = NewGame();
+        WornBracers(game, "chipped_ruby", "chipped_sapphire", "chipped_topaz");
+        foreach (var element in new[] { "fire", "cold", "elec", "acid" })
+            Assert.Equal(1, game.Player.Resists.GetValueOrDefault(element));
+    }
+
+    [Fact]
+    public void Three_emeralds_add_constitution_and_three_diamonds_armour()
+    {
+        var game = NewGame();
+        var before = game.Player.Stats["con"];
+        WornBracers(game, "chipped_emerald", "chipped_emerald", "chipped_emerald");
+        Assert.Equal(before + 3 + 2, game.Player.Stats["con"]); // +1 each, and +2 for the set
+
+        var diamonds = NewGame();
+        var bracers = WornBracers(diamonds, "chipped_diamond", "chipped_diamond");
+        var armour = diamonds.Player.Armour;
+        diamonds.Execute(new SetGemCommand(bracers, Carry(diamonds, "chipped_diamond")));
+        Assert.Equal(armour + 4 + 10, diamonds.Player.Armour); // the stone's own 4, and 10 for the set
+    }
 }

@@ -36,6 +36,12 @@ helps you hit, an **emerald** adds constitution (and, flawed or better, resists 
 mind (and guards against confusion), a **garnet** adds strength. Chipped, flawed or flawless
 stones give +1, +2 or +3. Some rarer stones give more, and take something back.
 
+Stones set together answer one another. Three of a kind in one pair of bracers, of any quality,
+give more: three **rubies** make you immune to fire, three **sapphires** to cold, three **topazes**
+to lightning; three **emeralds**, **garnets** or **amethysts** add two more CON, STR or INT; three
+**diamonds** ten more armour; three **opals** better infravision. A **ruby**, a **sapphire** and a
+**topaz** together resist acid too. You need bracers with three sockets, and to wear them.
+
 Only the **Armoury** (2) can take a gem out again — press **!** (or *Remove a gem*) in the shop — for
 some gold, and now and then the stone cracks. A cursed stone won't come out until its curse is
 broken.

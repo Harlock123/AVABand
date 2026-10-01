@@ -81,13 +81,17 @@ public sealed partial class GameSession
         var weapon = p.Inventory.Weapon;
         var bow = p.Inventory.Bow;
 
+        // AVABand's gem sets, in the bracers worn (GameSession.GemSets.cs).
+        var gemSets = WornGemSets();
+
         // Current stats: natural, less drain, plus equipment (Angband: 3 to 18/220).
         foreach (var stat in Game.CharacterSpec.StatIds)
         {
             if (!p.NaturalStats.TryGetValue(stat, out var natural)) natural = p.NaturalStats[stat] = p.Stats.GetValueOrDefault(stat, 15);
             // Scrambled stats read from another stat's natural value (Angband SCRAMBLE).
             if (p.StatScramble.TryGetValue(stat, out var source)) natural = p.NaturalStats.GetValueOrDefault(source, natural);
-            var bonus = gear.Sum(i => i.Modifier(stat) + CurseModifier(i, stat)) + (PlayerShape?.Modifiers.GetValueOrDefault(stat) ?? 0);
+            var bonus = gear.Sum(i => i.Modifier(stat) + CurseModifier(i, stat)) + (PlayerShape?.Modifiers.GetValueOrDefault(stat) ?? 0)
+                        + gemSets.Where(g => g.Stat == stat).Sum(g => g.StatBonus);
             p.Stats[stat] = Math.Clamp(natural - p.StatDrain.GetValueOrDefault(stat) + bonus, 3, 40);
         }
 
@@ -149,6 +153,14 @@ public sealed partial class GameSession
                 foreach (var r in curse.Resists) resists[r] = Math.Max(resists.GetValueOrDefault(r), 1);
                 foreach (var f in curse.Flags) p.GearFlags.Add(f);
             }
+        }
+
+        foreach (var set in gemSets)
+        {
+            p.Armour += set.Armour;
+            infravision += set.Infravision;
+            if (set.Immunity is { } immune) resists[immune] = 3;
+            if (set.Resist is { } resist) resists[resist] = Math.Max(resists.GetValueOrDefault(resist), 1);
         }
 
         foreach (var v in vulnerable)

@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Gem sets**: three matching stones in one pair of bracers give more (three rubies: immunity to
+  fire); a ruby, a sapphire and a topaz together resist acid too.
 - **New curses for bags and bracers**: greedy bags that eat gold, leaden things twice as heavy, and
   bracers whose settings let a stone fall.
 - **Nine new artifacts**: bracers of Narvi, Beorn, the Hornburg and Haldir, Bilbo's bag, the off-hand

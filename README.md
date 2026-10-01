@@ -98,6 +98,14 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Gem sets** (AVABand's own, `Game/GameSession.GemSets.cs`): stones set together in one pair of
+worn bracers answer one another. Three of a kind, of any quality, give a stronger form of their
+virtue — three rubies immunity to fire, three sapphires to cold, three topazes to lightning; three
+emeralds, garnets or amethysts +2 CON, STR or INT; three diamonds +10 armour; three opals +3
+infravision — and a ruby, a sapphire and a topaz together resist acid too, the fourth base element.
+A set needs three sockets (mithril bracers, or Celebrimbor's iron ones) and counts only while worn
+(`RecalculateBonuses`); completing one says so, and the bracers' description lists their sets.
+
 **Curses for bracers and bags** (AVABand's own, `ava_curses.json`, `Game/GameSession.AvaCurses.cs`):
 *loose settings* (bracers: about one turn in 1000, a stone works loose and falls at your feet,
 taking what it gave with it; a cursed stone holds fast), *greed* (bags: about one turn in 600 it

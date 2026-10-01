@@ -34,6 +34,7 @@ public sealed partial class GameSession
             return 0;
         }
         var one = Player.Inventory.Remove(gem, 1, () => Objects.NextSerial++);
+        var setsBefore = GemSets(host).Count;
         host.Gems.Add(one);
         Merge(host, one, +1);
         foreach (var rune in one.Runes().Where(r => !r.StartsWith("curse", StringComparison.Ordinal))) LearnRune(rune);
@@ -43,6 +44,9 @@ public sealed partial class GameSession
             foreach (var curse in one.AddedCurses)
                 if (Data.Curse(curse) is { Effect: null }) LearnRune(RuneIds.Curse(curse));
         Publish(new MessageEvent($"You set {ItemNaming.Describe(one, Knowledge, full: false)} into your {ItemNaming.Describe(host, Knowledge, withArticle: false, full: false)}."));
+        // A set completed (AVABand's gem sets): the stones answer one another.
+        if (GemSets(host) is { } sets && sets.Count > setsBefore)
+            Publish(new MessageEvent($"The stones answer one another — {sets[^1].Text}{(worn ? "" : ", once you wear them")}."));
         RecalculateBonuses();
         return Time.EnergyTable.MoveEnergy;
     }
