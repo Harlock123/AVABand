@@ -67,6 +67,19 @@ public sealed partial class GameSession
     /// <summary>Learns that a race has a spell (it showed it by resisting what it breathes).</summary>
     public void LearnMonsterSpell(MonsterRaceDef race, string spell) => Lore.For(race.Id).SpellsSeen.Add(spell);
 
+    /// <summary>
+    /// AVABand: what you know of a race says it's a danger to you — "could kill you" (its worst known
+    /// attack could take all your hit points), "dangerous" (half of them) — or null. The recall's
+    /// Danger line says why.
+    /// </summary>
+    public string? DangerWord(MonsterRaceDef race) =>
+        MonsterRecall.Danger(Data, race, Lore.Find(race.Id) ?? new RaceLore(), RecallViewer).Level switch
+        {
+            MonsterRecall.DangerLevel.Deadly => "could kill you",
+            MonsterRecall.DangerLevel.Serious => "dangerous",
+            _ => null,
+        };
+
     /// <summary>Angband look_mon_desc: "the cave orc (wounded, asleep)".</summary>
     public string LookDescription(Monster m)
     {
@@ -84,9 +97,7 @@ public sealed partial class GameSession
         if (m.Slow > 0) states.Add("slowed");
         if (m.Fast > 0) states.Add("hasted");
         // AVABand: what you know of it says it's a danger to you (the recall's Danger line says why).
-        var danger = MonsterRecall.Danger(Data, m.Race, Lore.Find(m.Race.Id) ?? new RaceLore(), RecallViewer).Level;
-        if (danger == MonsterRecall.DangerLevel.Deadly) states.Add("could kill you");
-        else if (danger == MonsterRecall.DangerLevel.Serious) states.Add("dangerous");
+        if (DangerWord(m.Race) is { } danger) states.Add(danger);
         return $"{MonsterName(m)} ({string.Join(", ", states)})";
     }
 

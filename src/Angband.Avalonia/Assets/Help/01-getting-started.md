@@ -16,7 +16,9 @@ again* as them), *Create a new character*, *Load* another, see the *High scores*
 letter, the arrows and Enter, a click or the gamepad pick.
 
 Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
-then read out, and **Ctrl+Shift+D** describes what is around you (Windows, macOS and Linux).
+then read out, and **Ctrl+Shift+D** describes what is around you (and which monsters could kill you).
+In a shop, what's for sale is read with each note on whether it would suit you, row by row as you
+move, and the service on offer; a full pack is said as it fills (Windows, macOS and Linux).
 
 Moments of note — the stairs, Word of Recall, a trap door or Deep Descent, a cavern, labyrinth, moria level, lair, gauntlet or hard centre, a deadly level, a unique met
 for the first time, a great foe slain, a quest done, death — show a scene for a moment; any key skips it, and Options → *Show scenes

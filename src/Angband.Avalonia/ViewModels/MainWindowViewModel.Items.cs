@@ -58,6 +58,11 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty] private string _goldText = "";
     [ObservableProperty] private bool _hasFloorItems;
     [ObservableProperty] private string _burdenText = "";
+
+    /// <summary>The weight and slots line in words (its accessible name).</summary>
+    [ObservableProperty] private string _burdenSpoken = "";
+
+    private bool _packWasFull;
     [ObservableProperty] private bool _isPrompting;
     [ObservableProperty] private string _promptTitle = "";
 
@@ -385,6 +390,13 @@ public sealed partial class MainWindowViewModel
         BurdenText = string.Format(CultureInfo.InvariantCulture, "Weight {0:0.0} / {1:0} lb{2}  |  Slots {3}/{4}{5}",
             _game.BurdenWeight / 10.0, p.WeightLimit / 20.0, slow, inv.SlotsUsed, inv.PackSize,
             free <= 0 ? " (full)" : free == 1 ? " (1 left)" : "");
+        // In words, for a screen reader; and said once as the pack fills (not again until there's room).
+        var room = free <= 0 ? "your pack is full" : free == 1 ? "one pack slot left" : $"{free} pack slots free";
+        BurdenSpoken = string.Format(CultureInfo.InvariantCulture, "Carrying {0:0.0} of {1:0} pounds{2}; {3} of {4} pack slots used, {5}.",
+            _game.BurdenWeight / 10.0, p.WeightLimit / 20.0, penalty > 0 ? $", {_game.BurdenName}, minus {penalty} speed" : "",
+            inv.SlotsUsed, inv.PackSize, room);
+        if (free <= 0 && !_packWasFull && ScreenReaderOn) Announce("Your pack is full.");
+        _packWasFull = free <= 0;
     }
 
     private ItemRow Row(string letter, Item item)

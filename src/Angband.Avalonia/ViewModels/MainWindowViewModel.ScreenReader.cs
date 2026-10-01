@@ -9,8 +9,11 @@ namespace Angband.Avalonia.ViewModels;
 // is drawn, so a screen reader can't read it: instead a live region announces what is said — each
 // message, each prompt with its choices, each tip — gathered over a turn and spoken together, and
 // Ctrl+Shift+D ("Describe surroundings") reads out your hit points, where you are, the monsters and
-// objects in view with where they are, and the nearest stairs. The map, the status line, the hotbar
-// slots and the item rows carry accessible names. (Avalonia 12 speaks to screen readers on Windows,
+// objects in view with where they are (and which monsters are a danger to you), and the nearest stairs.
+// The map, the status line, the hotbar slots, the item rows, the weight and slots line (saying when
+// the pack is full, and said as it fills), the shop's rows (each with its note on whether it would
+// suit you, said as the arrows reach it) and its Services button carry accessible names; going into
+// a shop says where you are, what's for sale and the service on offer. (Avalonia 12 speaks to screen readers on Windows,
 // macOS and Linux — AT-SPI there, when the desktop's accessibility is on.)
 public sealed partial class MainWindowViewModel
 {
@@ -93,7 +96,10 @@ public sealed partial class MainWindowViewModel
         };
         string List(IEnumerable<Angband.Core.Game.VisibleListRow> rows) =>
             string.Join("; ", rows.Where(r => !r.IsHeading).Select(r => r.Location.Length > 0 ? $"{r.Text.Trim()}, {Spoken(r.Location)}" : r.Text.Trim()));
-        var monsters = List(_game.MonsterList());
+        // (Each monster your knowledge of says is a danger to you says so: "could kill you", "dangerous".)
+        var monsters = List(_game.MonsterList().Select(r => r.TileKey?.StartsWith("monster:", StringComparison.Ordinal) == true
+            && _game.Data.Monster(r.TileKey["monster:".Length..]) is { } race && _game.DangerWord(race) is { } danger
+                ? r with { Text = $"{r.Text.Trim()} ({danger})" } : r));
         parts.Add(monsters.Length > 0 ? $"Monsters: {monsters}." : "No monsters in view.");
         var objects = List(_game.ObjectList());
         if (objects.Length > 0) parts.Add($"Objects: {objects}.");

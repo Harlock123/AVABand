@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Screen readers hear more**: a shop's rows with their notes (each as the arrows reach it) and the
+  service on offer, a full pack, and which monsters around you could kill you.
 - **The tutorial teaches more**: a lesson in the Armoury (its notes on whether things would suit
   you, and the Services button), one on tidying your pack, and how to read a monster's danger.
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem

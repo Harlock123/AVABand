@@ -1161,9 +1161,13 @@ it on the floor (`x`). Only what the game's rules count is compared: with Angban
     region announces what is said — every message of a turn together, each prompt with its question
     and all its choices ("Quaff which potion? a, Potion of Cure Light Wounds…"), each tip — and
     Ctrl+Shift+D (*Describe surroundings*) reads out your hit points, where you are, the monsters and
-    objects in view with where they are ("a jackal, 3 north 2 east") and the nearest stairs. The
+    objects in view with where they are ("a jackal, 3 north 2 east"; a monster your knowledge of
+    says is a danger to you says so: "(could kill you)", "(dangerous)") and the nearest stairs. The
     map (named by that description), the status line, the hotbar slots and the item rows have
-    accessible names. Avalonia 12 speaks to Narrator, NVDA or JAWS on Windows, VoiceOver on macOS
+    accessible names, and so do the weight and slots line ("…23 of 23 pack slots used, your pack is
+    full", and "Your pack is full." said as it fills), the shop's rows (each with its note on
+    whether it would suit you) and its Services button. Going into a shop says where you are, what's
+    for sale, the first row and the service on offer ("press !"); the arrows say each row they reach. Avalonia 12 speaks to Narrator, NVDA or JAWS on Windows, VoiceOver on macOS
     and Orca on Linux (through AT-SPI, switched on by itself whenever the desktop's accessibility
     is — as it is while Orca runs).
   - **Tutorial** (AVABand's own; Game → *Tutorial*, and the first hint points to it): a short level

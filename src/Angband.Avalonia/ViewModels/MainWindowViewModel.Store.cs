@@ -17,6 +17,10 @@ public sealed record StoreRow(string Letter, string Glyph, uint GlyphColor, stri
 {
     /// <summary>The shop note: how it compares with what you'd replace (or whether missiles fit your launcher).</summary>
     public bool HasAdvice => Advice.Length > 0;
+
+    /// <summary>The row in words (its accessible name, and what a screen reader hears as it's chosen): the note last.</summary>
+    public string Spoken => string.Join(", ", new[] { Letter, Name, Price, Weight, Equipped, BookNote }.Where(s => s.Length > 0))
+                            + (HasAdvice ? ". " + Advice : "");
     public IBrush AdviceBrush { get; } = new ImmutableSolidColorBrush(Color.FromUInt32(AdviceColor));
 
     /// <summary>Whether the row is something the player has on (shown, and asked about before it goes).</summary>
@@ -59,12 +63,25 @@ public sealed partial class MainWindowViewModel
         StoreSellMode = false;
         StoreSelectedIndex = 0;
         RefreshStore();
+        if (ScreenReaderOn)
+            Announce($"{StoreTitle}. {StoreSubtitle}. {StoreModeText}. {StoreRows.Count} {(StoreRows.Count == 1 ? "thing" : "things")}."
+                     + (HasStoreService ? $" Service on offer: {StoreServiceLabel}, press !." : "")
+                     + (StoreRows.FirstOrDefault() is { } first ? " " + first.Spoken : ""));
     }
 
     partial void OnStoreSellModeChanged(bool value)
     {
         StoreSelectedIndex = 0;
         RefreshStore();
+        if (IsInStore && ScreenReaderOn)
+            Announce($"{StoreModeText}. {StoreRows.Count} {(StoreRows.Count == 1 ? "thing" : "things")}."
+                     + (StoreRows.FirstOrDefault() is { } first ? " " + first.Spoken : ""));
+    }
+
+    /// <summary>A screen reader hears the row the arrows move to (the list itself never takes focus).</summary>
+    private void AnnounceStoreRow()
+    {
+        if (ScreenReaderOn && StoreRows.ElementAtOrDefault(StoreSelectedIndex) is { } row) Announce(row.Spoken);
     }
 
     /// <summary>The shop's service on offer now (the Armoury's gem removal, the Alchemist's identifying), for the button.</summary>
@@ -152,9 +169,11 @@ public sealed partial class MainWindowViewModel
         {
             case InputAction.MoveNorth:
                 if (StoreRows.Count > 0) StoreSelectedIndex = (StoreSelectedIndex - 1 + StoreRows.Count) % StoreRows.Count;
+                AnnounceStoreRow();
                 break;
             case InputAction.MoveSouth:
                 if (StoreRows.Count > 0) StoreSelectedIndex = (StoreSelectedIndex + 1) % StoreRows.Count;
+                AnnounceStoreRow();
                 break;
             case InputAction.Confirm:
                 if (StoreRows.ElementAtOrDefault(StoreSelectedIndex) is { } row) Transact(row, all: false);

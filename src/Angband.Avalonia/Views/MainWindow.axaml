@@ -189,7 +189,11 @@
       <ScrollViewer>
         <StackPanel Margin="10" Spacing="4">
           <TextBlock Text="{Binding GoldText}" Foreground="Gold" FontWeight="SemiBold" />
-          <TextBlock Text="{Binding BurdenText}" Foreground="#aaa" FontSize="12" TextWrapping="Wrap" />
+          <!-- (A TextBlock is read by its text, so the words go on a Border round it; the text itself is left out.) -->
+          <Border x:Name="BurdenLine" AutomationProperties.Name="{Binding BurdenSpoken}">
+            <TextBlock Text="{Binding BurdenText}" AutomationProperties.AccessibilityView="Raw"
+                       Foreground="#aaa" FontSize="12" TextWrapping="Wrap" />
+          </Border>
           <!-- The monster health bar (Angband): the monster last targeted, looked at or struck. -->
           <StackPanel x:Name="HealthBar" Orientation="Horizontal" Spacing="8" IsVisible="{Binding HealthVisible}" Margin="0,4,0,0">
             <TextBlock FontFamily="{StaticResource MonoFont}" FontSize="14">
@@ -291,6 +295,7 @@
             <TextBlock Text="{Binding StoreSubtitle}" Foreground="#e6c35c" TextWrapping="Wrap" />
             <DockPanel Margin="0,6,0,0">
               <Button x:Name="StoreServiceButton" DockPanel.Dock="Right" IsVisible="{Binding HasStoreService}" Command="{Binding OpenStoreServicesCommand}"
+                      AutomationProperties.Name="{Binding StoreServiceLabel, StringFormat='Shop service: {0} (key !)'}"
                       Content="{Binding StoreServiceLabel, StringFormat='{}{0} (!)'}" Padding="10,3" Focusable="False" />
               <TextBlock Text="{Binding StoreModeText}" Foreground="#8ab4f8" VerticalAlignment="Center" />
             </DockPanel>
@@ -307,7 +312,7 @@
             </ListBox.Styles>
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:StoreRow">
-                <Grid ColumnDefinitions="Auto,18,*,Auto,70">
+                <Grid ColumnDefinitions="Auto,18,*,Auto,70" AutomationProperties.Name="{Binding Spoken}">
                   <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
                              FontFamily="{StaticResource MonoFont}" FontSize="13" />
                   <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
