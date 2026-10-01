@@ -8,10 +8,10 @@
         Width="1160" Height="680"
         WindowStartupLocation="CenterOwner">
   <Window.Styles>
-    <!-- Eleven tabs: a little smaller than the theme's, so they fit on one line. -->
+    <!-- Fifteen tabs: a little smaller than the theme's, so they fit on one line. -->
     <Style Selector="TabItem">
-      <Setter Property="FontSize" Value="17" />
-      <Setter Property="Padding" Value="10,0" />
+      <Setter Property="FontSize" Value="16" />
+      <Setter Property="Padding" Value="8,0" />
     </Style>
   </Window.Styles>
   <Window.DataTemplates>
@@ -123,12 +123,27 @@
       </TabItem>
       <TabItem Header="Home" Content="{Binding Home}" />
       <TabItem Header="History">
-        <ScrollViewer Background="#111111">
-          <SelectableTextBlock Text="{Binding History}" FontFamily="{StaticResource MonoFont}" Margin="12" FontSize="14" />
-        </ScrollViewer>
+        <DockPanel>
+          <!-- A note of your own (as ':' writes one), straight into the history. -->
+          <DockPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+            <Button x:Name="AddNoteButton" DockPanel.Dock="Right" Content="Add note" Margin="8,0,0,0" Command="{Binding AddNoteCommand}"
+                    IsDefault="False" />
+            <TextBlock DockPanel.Dock="Left" Text="Note" VerticalAlignment="Center" Margin="0,0,8,0" Opacity="0.8" />
+            <TextBox x:Name="NoteBox" Text="{Binding NoteText}" MaxLength="160"
+                     PlaceholderText="Something to remember (e.g. left the Ring of Free Action at home)">
+              <TextBox.KeyBindings>
+                <KeyBinding Gesture="Enter" Command="{Binding AddNoteCommand}" />
+              </TextBox.KeyBindings>
+            </TextBox>
+          </DockPanel>
+          <ScrollViewer Background="#111111">
+            <SelectableTextBlock Text="{Binding History}" FontFamily="{StaticResource MonoFont}" Margin="12" FontSize="14" />
+          </ScrollViewer>
+        </DockPanel>
       </TabItem>
       <TabItem Header="Quests" Content="{Binding Quests}" />
       <TabItem Header="Feats" Content="{Binding Feats}" />
+      <TabItem Header="Upgrades" Content="{Binding Upgrades}" />
     </TabControl>
   </DockPanel>
 </Window>

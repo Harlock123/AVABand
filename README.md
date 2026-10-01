@@ -1325,8 +1325,11 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   wearable thing you have — worn, in the pack, underfoot, at home, and the shops' goods if ticked —
   in one table of combat numbers, modifiers, resistances, protections, sustains and abilities,
   filtered by slot; as in 4.2 a property whose rune you haven't learned reads "?"), *Home* (what
-  you keep at home, readable from anywhere) and *History* (the player history, as in the character
-  dump, "(LOST)" marks included). Each line opens a
+  you keep at home, readable from anywhere), *History* (the player history, as in the character
+  dump, "(LOST)" marks included, with a box beneath to write a note of your own into it, as `:`
+  does) and *Upgrades* (AVABand's own: everything you carry or keep at home that the shops' note
+  calls better than what you have on, or mixed, best first, each with its note — bags you carry
+  already count, so only those at home are weighed). Each line opens a
   description built from what the character knows: damage or armour, launcher multiplier, light
   fuel, charges and recharge time, the effect in plain English ("When quaffed, it heals 20 hit
   points or 15% of your hit points, whichever is more, cures blindness and reduces cuts" — written
@@ -1650,6 +1653,10 @@ the context action, or a game command.
 
 - **Keyboard**: bindings are chords — key names (`Up`, `NumPad8`, `Ctrl+T`, `F7`) or typed
   characters (`Char:>`), so symbols follow the keyboard layout. Letters still pick menu entries.
+- **Where you've been** (AVABand's own; Ctrl+B, *Show where you've been*): the last 40 squares you
+  stood on on this level are dotted on the map for a couple of seconds (or until your next command) —
+  the older half dim, the newer bright — and the message says where the trail began ("…4 west of
+  here"): for finding your bearings after a run, a teleport or time away. A new level starts a new trail.
 - **Running** (`Core/Game/GameSession.Run.cs`, a port of 4.2's `player-path.c` `run_init` /
   `run_test` / `run_step`): Shift+direction keeps stepping one way, following a corridor round its
   bends, and stops when anything interesting happens: a monster comes into view (or one in view
@@ -1666,7 +1673,8 @@ the context action, or a game command.
   it back the same) and draws the map after each, as Angband's own game loop does. A key or button
   stops the run where it is, as in Angband, and does nothing more — except the one that started it,
   repeating while held; a keymap's run still goes all the way at once. `RunCommand` (the run in one
-  go) is unchanged, so older replays play as they did.
+  go) is unchanged, so older replays play as they did. Settings → Options → *Run pace* sets how long
+  each step shows: Brisk (8 ms), Steady (20 ms, the default), Slow (45 ms) or Very slow (90 ms).
 - **Mouse**: resting the pointer on a square describes it in a small label at the foot of the map
   ("The cave orc (wounded, asleep)", "A down staircase") without touching the message line (off with
   the option *Describe the square under the mouse*); holding Shift with the mouse over a known square tints the route a click would travel (with *Allow mouse clicks to move the player* on; nothing when there is no known way); in look or target mode the line of fire from you to the cursor is tinted yellow up to where a shot would stop — the first wall or visible monster in the way, ringed (Angband's target path); left-click travels to a known square along the shortest known path (stopping when a

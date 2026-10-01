@@ -267,6 +267,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Events.Subscribe<QuestPromptEvent>(OnQuestPrompt);
         _game.Events.Subscribe<ShopEnteredEvent>(OnShopEntered);
         _game.Events.Subscribe<LevelChangedEvent>(OnLevelChanged);
+        _trail.Clear();
+        _game.Events.Subscribe<LevelChangedEvent>(_ => _trail.Clear());
+        _game.Events.Subscribe<PlayerMovedEvent>(e => NoteTrail(e.From));
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);
         _game.Events.Subscribe<RecalledEvent>(OnRecalled);
         _game.Events.Subscribe<UniqueFirstSeenEvent>(OnUniqueFirstSeen);

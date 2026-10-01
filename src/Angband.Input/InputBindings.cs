@@ -128,6 +128,7 @@ public sealed class InputBindings
         K(InputAction.HotbarNext, "Alt+Right");
         K(InputAction.HotbarUse, "Alt+Enter");
         K(InputAction.DescribeSurroundings, "Ctrl+Shift+D");
+        K(InputAction.ShowTrail, "Ctrl+B");
         K(InputAction.FireNearest, "Shift+Tab"); // and Tab itself outside stores (Angband's key)
         K(InputAction.RegenerateLevel, "F5");
         K(InputAction.JumpDeeper, "F6");

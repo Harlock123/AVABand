@@ -95,6 +95,8 @@ public enum InputAction
     /// "Clear out junk". Added last so saved bindings keep their meaning.
     /// </summary>
     Inventory, Equipment, ClearJunk,
+    /// <summary>Show where you've been on this level (AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    ShowTrail,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -196,6 +198,7 @@ public static class InputActions
         InputAction.HotbarUse => "Hotbar: use the selected slot",
         InputAction.ContextMenu => "Menu for the square (the look cursor's, or yours)",
         InputAction.DescribeSurroundings => "Describe surroundings",
+        InputAction.ShowTrail => "Show where you've been",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

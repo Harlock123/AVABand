@@ -250,6 +250,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.HotbarUse: UseHotbar(HotbarCursor); break;
             case InputAction.ContextMenu: OpenContextMenuHere(); break;
             case InputAction.DescribeSurroundings: DescribeSurroundings(); break;
+            case InputAction.ShowTrail: ShowTrail(); break;
             case InputAction.WalkIntoTrap: AskDirection(DirectionFor.Jump); break;
             case InputAction.UseItem: BeginItemPrompt(ItemPromptKind.UseAny); break;
             case InputAction.TakeNote: BeginNote(); break;

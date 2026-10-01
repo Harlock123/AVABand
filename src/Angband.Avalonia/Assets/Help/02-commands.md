@@ -11,7 +11,10 @@
 - **Run** with Shift and a direction, or `.` then a direction: you keep going until something
   interesting happens — a monster appears, the corridor branches, you reach a door or an object.
   The run is drawn a step at a time, so you can see the way you came; any other key stops it where
-  it is (Options → *Draw runs a step at a time* turns that off, showing only where it ends).
+  it is (Options → *Draw runs a step at a time* turns that off, showing only where it ends; *Run
+  pace* beside it sets how quickly the steps go by).
+- **Ctrl+B** shows where you've been: your last 40 squares on this level, dotted on the map for a
+  moment, and where that trail began.
 - **Click** a square to travel there along the shortest known path (hold Shift to see the route
   in blue first); while looking or targeting, a yellow line shows where a shot would go, ringed where it
   would stop; **right-click** for a menu of
@@ -34,7 +37,7 @@
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,
   `W` scroll the map (locate), Ctrl+L centre it on you (handy with *Center map continuously* off).
-- `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home and your history), `=` options, Ctrl+P message history.
+- `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home, your history — with a box to add a note — and Upgrades: what you have that would suit you better), `=` options, Ctrl+P message history.
 
 **The hotbar** under the map holds ten spells or items: **Alt+1** to **Alt+0**, or a click, uses
 one. Click an empty slot to fill it, or drag an item from the sidebar or a spell from the spell

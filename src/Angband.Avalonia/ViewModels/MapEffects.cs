@@ -105,6 +105,24 @@ public sealed class MapEffects
         Queue(frames);
     }
 
+    /// <summary>How long the trail of where you've been shows (Ctrl+B).</summary>
+    public const double TrailMs = 2500;
+
+    /// <summary>
+    /// The trail of where you've been (AVABand's own, Ctrl+B): a dot on each square, oldest first —
+    /// the older half dim, the newer bright — for a few seconds (or until the next command).
+    /// </summary>
+    public void AddTrail(IReadOnlyList<Loc> trail)
+    {
+        if (trail.Count == 0) return;
+        var glyphs = trail.Select((p, i) =>
+        {
+            var colour = i < trail.Count / 2 ? "Umber" : "Yellow";
+            return new EffectGlyph(p, '•', colour, _palette(colour));
+        }).ToList();
+        Queue([new Frame(glyphs, TrailMs)]);
+    }
+
     /// <summary>A damage number from <paramref name="at"/>, when the effects before it have played.</summary>
     public void AddDamage(Loc at, int damage) => Queue([new Spawn(at, damage.ToString(System.Globalization.CultureInfo.InvariantCulture))]);
 

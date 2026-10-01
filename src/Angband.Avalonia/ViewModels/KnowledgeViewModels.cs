@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using Angband.Core.Items;
 using Angband.Core.Records;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Angband.Avalonia.ViewModels;
 
@@ -216,10 +217,28 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     public KnowledgeCategoryViewModel? Quests { get; init; }
     public KnowledgeCategoryViewModel? Feats { get; init; }
 
-    /// <summary>The character history, as Angband's history screen and dump show it.</summary>
-    public string History { get; init; } = "";
+    /// <summary>AVABand: what you carry or keep at home that the shops' note calls better than what you have on.</summary>
+    public KnowledgeCategoryViewModel? Upgrades { get; init; }
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests).</summary>
+    /// <summary>The character history, as Angband's history screen and dump show it.</summary>
+    [ObservableProperty] private string _history = "";
+
+    /// <summary>A note being written on the History page.</summary>
+    [ObservableProperty] private string _noteText = "";
+
+    /// <summary>Writes a note in the history (as ':' does) and returns the history as it now reads; null if it wasn't kept.</summary>
+    public Func<string, string?>? WriteNote { get; init; }
+
+    /// <summary>The History page's "Add note": the note goes in, the page shows it, the box empties.</summary>
+    [RelayCommand]
+    private void AddNote()
+    {
+        if (WriteNote?.Invoke(NoteText) is not { } history) return;
+        History = history;
+        NoteText = "";
+    }
+
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests, 13 feats, 14 upgrades).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -240,9 +259,41 @@ public sealed partial class MainWindowViewModel
             Shapes = CreateShapeKnowledge(),
             Equipment = new EquipComparisonViewModel(_game, Inspect),
             History = HistoryText(),
+            WriteNote = text =>
+            {
+                if (!_game.AddNote(text)) return null;
+                Refresh();
+                return HistoryText();
+            },
             Quests = CreateQuestJournal(),
             Feats = CreateFeatsPage(),
+            Upgrades = CreateUpgrades(),
         };
+
+    /// <summary>
+    /// AVABand's Upgrades page: everything you carry or keep at home that the shops' note ("will this
+    /// suit me?") calls better than what you have on — or mixed, better in some ways — best first, with
+    /// the note and the item's description. Only what you know of them counts; bags you carry already
+    /// count, so only those at home are weighed.
+    /// </summary>
+    public KnowledgeCategoryViewModel CreateUpgrades()
+    {
+        var home = _game.Stores.Values.FirstOrDefault(s => s.IsHome)?.Stock ?? [];
+        var rows = _game.Player.Inventory.Pack.Select(i => (Item: i, AtHome: false))
+            .Concat(home.Select(i => (Item: i, AtHome: true)))
+            .Where(x => !x.Item.IsAmmo && (x.AtHome || x.Item.Kind.CarryPercent <= 0 && x.Item.Kind.PackSlots <= 0))
+            .Select(x => (x.Item, x.AtHome, Advice: _game.AdviceFor(x.Item, _game.Knowledge.IsFullyKnown(x.Item), buying: x.AtHome)))
+            .Where(x => x.Advice is { Tone: > 0 } || x.Advice is { Tone: 0 } a && a.Text.StartsWith("Mixed", StringComparison.Ordinal))
+            .OrderByDescending(x => x.Advice!.Tone).ThenBy(x => x.AtHome)
+            .Select(x => new KnowledgeRow(x.Item.Base.Glyph.ToString(),
+                _cells.Color(_game.Knowledge.Flavor(x.Item.Kind)?.Color ?? x.Item.Kind.Color ?? x.Item.Base.Color),
+                Capitalize(_game.Describe(x.Item)), $"{(x.Advice!.Tone > 0 ? "better" : "mixed")}{(x.AtHome ? ", at home" : "")}",
+                () => x.Advice.Text + "\n\n" + Inspect(x.Item)))
+            .ToList();
+        return new KnowledgeCategoryViewModel("Upgrades",
+            rows.Count == 1 ? "1 thing you have would suit you better" : $"{rows.Count} things you have would suit you better (or in part)",
+            "Nothing you carry or keep at home would suit you better than what you have on.", rows);
+    }
 
     /// <summary>AVABand's quest journal: every quest taken or found, and the notice-board jobs taken.</summary>
     public KnowledgeCategoryViewModel CreateQuestJournal()

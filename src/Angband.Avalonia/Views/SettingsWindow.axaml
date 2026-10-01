@@ -230,6 +230,12 @@
           <TextBlock Opacity="0.7" TextWrapping="Wrap"
                      Text="Angband's interface options. They apply at once and are kept with your settings, for every character." />
           <ItemsControl x:Name="InterfaceOptions" ItemsSource="{Binding InterfaceOptionRows}" ItemTemplate="{StaticResource OptionTemplate}" />
+          <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,6,0,0">
+            <TextBlock Text="Run pace" VerticalAlignment="Center" />
+            <ComboBox x:Name="RunPaceBox" ItemsSource="{Binding RunPaceChoices}" SelectedIndex="{Binding RunPaceIndex}" MinWidth="220" />
+            <TextBlock Text="How long each step of a run is shown (with runs drawn a step at a time)." VerticalAlignment="Center"
+                       Opacity="0.7" FontSize="12" TextWrapping="Wrap" />
+          </StackPanel>
 
           <TextBlock Text="Birth" FontSize="18" FontWeight="SemiBold" Margin="0,14,0,0" />
           <TextBlock Opacity="0.7" TextWrapping="Wrap"

@@ -36,6 +36,9 @@ public sealed class AppSettings
     /// <summary>Audio buffer size (<see cref="Angband.Audio.AudioBuffer"/>): applied when the game starts.</summary>
     public string AudioBuffer { get; set; } = Angband.Audio.AudioBuffer.Automatic;
 
+    /// <summary>How long each step of a run shows, in milliseconds (Settings → Options, "Run pace").</summary>
+    public int RunStepMs { get; set; } = Angband.Avalonia.ViewModels.MainWindowViewModel.RunStepMs;
+
     /// <summary>The last character created, reused by quick start (null until the first one).</summary>
     public SavedCharacter? LastCharacter { get; set; }
 

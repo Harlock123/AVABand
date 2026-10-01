@@ -13,11 +13,41 @@ namespace Angband.Avalonia.ViewModels;
 // except the key that started it, repeating while it's held.
 public sealed partial class MainWindowViewModel
 {
-    /// <summary>Milliseconds each step of a run is shown for.</summary>
+    /// <summary>Milliseconds each step of a run is shown for, unless the pace is changed.</summary>
     public const int RunStepMs = 20;
 
-    /// <summary>How long each step shows (tests hold a run between steps with a long one).</summary>
-    public TimeSpan RunStepDelay { get; set; } = TimeSpan.FromMilliseconds(RunStepMs);
+    /// <summary>The run paces offered (Settings → Options): milliseconds a step, and what they're called.</summary>
+    public static IReadOnlyList<(int Ms, string Label)> RunPaces { get; } =
+    [
+        (8, "Brisk (8 ms a step)"),
+        (RunStepMs, "Steady (20 ms a step)"),
+        (45, "Slow (45 ms a step)"),
+        (90, "Very slow (90 ms a step)"),
+    ];
+
+    public IReadOnlyList<string> RunPaceChoices { get; } = [.. RunPaces.Select(p => p.Label)];
+
+    /// <summary>The chosen run pace (an index into <see cref="RunPaces"/>); kept with the settings.</summary>
+    public int RunPaceIndex
+    {
+        get => Math.Max(0, RunPaces.ToList().FindIndex(p => p.Ms == _settings.RunStepMs));
+        set
+        {
+            if (value < 0 || value >= RunPaces.Count || RunPaces[value].Ms == _settings.RunStepMs) return;
+            _settings.RunStepMs = RunPaces[value].Ms;
+            _saveSettings?.Invoke(_settings);
+            OnPropertyChanged();
+        }
+    }
+
+    private TimeSpan? _runStepDelay;
+
+    /// <summary>How long each step shows: the chosen pace (tests hold a run between steps with a long one).</summary>
+    public TimeSpan RunStepDelay
+    {
+        get => _runStepDelay ?? TimeSpan.FromMilliseconds(Math.Clamp(_settings.RunStepMs, 1, 1000));
+        set => _runStepDelay = value;
+    }
 
     private DispatcherTimer? _runTimer;
 

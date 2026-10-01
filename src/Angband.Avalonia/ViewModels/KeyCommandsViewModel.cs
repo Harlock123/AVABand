@@ -105,6 +105,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.CenterMap, "Centre the map on you once (when it isn't kept centred)"),
             (InputAction.ContextMenu, "The right-click menu: for the square under the look cursor, or for you"),
             (InputAction.DescribeSurroundings, "Say what is around you: hit points, where, monsters and objects in view, stairs"),
+            (InputAction.ShowTrail, "Show where you've been on this level: your last 40 squares, for a moment"),
             (InputAction.HotbarPrevious, "Hotbar: select the slot to the left"),
             (InputAction.HotbarNext, "Hotbar: select the slot to the right"),
             (InputAction.HotbarUse, "Hotbar: use the selected slot (Alt+1..Alt+0 use a slot directly)"),

@@ -5,6 +5,13 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Where you've been** (Ctrl+B): your last 40 squares on this level, dotted on the map for a
+  moment, and where that trail began.
+- **Run pace** (Settings → Options): how quickly a run's steps go by, from Brisk to Very slow.
+- **Upgrades** (Knowledge, the last page): everything you carry or keep at home that would suit you
+  better than what you have on.
+- **Notes from the History page**: write a note into your character's history right there (as `:`
+  does from the map).
 - **Runs are drawn a step at a time**: you see the way you came as the map fills in, instead of
   arriving at the end at once. Any other key stops a run where it is. (Options → *Draw runs a step
   at a time* to turn it off.)
