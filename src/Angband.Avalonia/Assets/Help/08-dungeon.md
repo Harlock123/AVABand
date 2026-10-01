@@ -6,7 +6,9 @@ Each level is 50 feet. Most are rooms and corridors (classic, or the looser "mod
 are Moria-style ragged caves (levels 10-39), labyrinths (from 13), caverns (from 15), lairs — half
 rooms, half a cavern full of one kind of monster — and gauntlets (from 20), and hard centres, a
 great vault ringed by caverns (from 50). A gauntlet's maze can't be mapped, and you can't teleport
-in it or in the cavern you arrive in (a short blink of ten squares still works). Vaults hold the
+in it or in the cavern you arrive in (a short blink of ten squares still works). A lair's monsters
+guard a hoard at its heart — gold, a fine object, often a gem — and the cavern beyond a gauntlet's
+maze holds a reward for whoever runs it. Vaults hold the
 best treasure and the worst monsters. Arriving on a level out of the ordinary, you're told what
 kind it is ("You are in a gauntlet...").
 **Level feelings** tell you on arrival how dangerous the level seems, and once you have explored

@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Hoards**: a lair's monsters now guard a hoard at its heart, and running a gauntlet pays — a reward
+  waits in the cavern beyond its maze.
 - **Lamps and digging gear**: the Dwarven Lamp and Elven Lantern (no oil needed), the Miner's Helm
   and Delver's Gloves.
 - **Fixed: a Ring of Digging did nothing** — only your digging tool counted. Everything you wear now

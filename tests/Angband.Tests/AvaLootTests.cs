@@ -373,4 +373,32 @@ public class AvaLootTests
         game.Execute(new WieldCommand(ring));
         Assert.Equal(dig + 20 * ring.Modifier(ItemModifiers.Tunnel), game.DiggingSkill);
     }
+
+    // --- Hoards in lairs and gauntlets ---------------------------------------------------------
+
+    [Theory]
+    [InlineData(11UL), InlineData(12UL), InlineData(13UL)]
+    public void A_lair_has_a_hoard_at_its_heart(ulong seed)
+    {
+        var generator = new Angband.Core.Generation.DungeonGenerator(TestData.Game);
+        var level = generator.Generate(new Angband.Core.Generation.LevelRequest(30, seed, ProfileId: "lair")).Level;
+        var great = level.SpawnHints.Where(h => h.Kind == Angband.Core.World.SpawnKind.GreatObject && h.DepthBonus == 10).ToList();
+        var heart = Assert.Single(great).Loc;
+        var gold = level.SpawnHints.Where(h => h.Kind == Angband.Core.World.SpawnKind.Gold && h.DepthBonus == 10).ToList();
+        Assert.Equal(4, gold.Count);
+        Assert.All(gold, g => Assert.True(g.Loc.DistanceTo(heart) <= 6, $"gold at {g.Loc}, heart at {heart}"));
+    }
+
+    [Fact]
+    public void Running_the_gauntlet_pays_on_the_far_side()
+    {
+        var generator = new Angband.Core.Generation.DungeonGenerator(TestData.Game);
+        var level = generator.Generate(new Angband.Core.Generation.LevelRequest(40, 11, Angband.Core.Generation.StairArrival.Descended,
+            ProfileId: "gauntlet")).Level;
+        var reward = Assert.Single(level.SpawnHints, h => h.Kind == Angband.Core.World.SpawnKind.GoodObject && h.DepthBonus == 5);
+        // Come down the stairs, you arrive on the left (the up stairs' side): the reward is on the right.
+        var downs = level.AllLocs().Where(p => level.Has(p, Angband.Core.Definitions.TerrainFlags.DownStair)).ToList();
+        Assert.True(reward.Loc.X > level.Width / 2);
+        Assert.All(downs, d => Assert.True(d.X > level.Width / 2));
+    }
 }

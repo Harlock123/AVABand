@@ -705,6 +705,7 @@ public sealed partial class Cave
         AllocObjects(c, AllocSet.Room, AllocType.Object, _rng.Normal(GenConstants.RoomItemAv, 3), c.Depth);
         AllocObjects(c, AllocSet.Both, AllocType.Object, _rng.Normal(GenConstants.BothItemAv, 3), c.Depth);
         AllocObjects(c, AllocSet.Both, AllocType.Gold, _rng.Normal(GenConstants.BothGoldAv, 3), c.Depth);
+        PlaceHoard(c, lairOffset, lairWidth, extraLevel: 10, great: true); // (AVABand's: the lair's hoard)
         return c;
     }
 
@@ -798,6 +799,9 @@ public sealed partial class Cave
         AllocObjects(c, AllocSet.Room, AllocType.Object, _rng.Normal(GenConstants.RoomItemAv, 3), c.Depth);
         AllocObjects(c, AllocSet.Both, AllocType.Object, _rng.Normal(GenConstants.BothItemAv, 3), c.Depth);
         AllocObjects(c, AllocSet.Both, AllocType.Gold, _rng.Normal(GenConstants.BothGoldAv, 3), c.Depth);
+        // (AVABand's: running the gauntlet pays — a reward in the cavern beyond the maze from where you came in.)
+        if (arrival == right) PlaceHoard(c, 0, left.Width, extraLevel: 5, great: false);
+        else PlaceHoard(c, line2, right.Width, extraLevel: 5, great: false);
         return c;
     }
 
@@ -947,5 +951,27 @@ public sealed partial class Cave
         AllocObjects(c, AllocSet.Both, AllocType.Gold, _rng.Normal(k / 2, 2), c.Depth);
         AllocObjects(c, AllocSet.Both, AllocType.Good, _rng.RandInt0(k / 4), c.Depth);
         return c;
+    }
+
+    // --- AVABand: hoards -------------------------------------------------------------------------------
+
+    /// <summary>
+    /// AVABand's own (Angband's lairs and gauntlets have none): a hoard at the heart of a region of the
+    /// level (columns <paramref name="x0"/> to <paramref name="x0"/> + <paramref name="width"/>) — a good
+    /// object (great, for a lair) on the square nearest its middle, four piles of gold round it, half
+    /// the time one of AVABand's stones and a quarter of the time a pair of bracers, all made
+    /// <paramref name="extraLevel"/> deeper than the level.
+    /// </summary>
+    private void PlaceHoard(Level c, int x0, int width, int extraLevel, bool great)
+    {
+        var heart = new Loc(x0 + width / 2, c.Height / 2);
+        var spots = c.AllLocs().Where(l => l.X >= x0 && l.X < x0 + width && CanPutItem(c, l))
+            .OrderBy(l => l.DistanceTo(heart)).ThenBy(l => l.Y).ThenBy(l => l.X).Take(8).ToList();
+        if (spots.Count == 0) return;
+        var level = c.Depth + extraLevel;
+        PlaceObject(c, spots[0], level, good: true, great: great);
+        foreach (var g in spots.Skip(1).Take(4)) PlaceGold(c, g, level);
+        if (spots.Count > 5 && _rng.OneIn(2)) PlaceObject(c, spots[5], level, good: true, great: false, tval: "gem");
+        if (spots.Count > 6 && _rng.OneIn(4)) PlaceObject(c, spots[6], level, good: true, great: false, tval: "bracers");
     }
 }

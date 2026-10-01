@@ -98,6 +98,13 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Hoards** (AVABand's own, `Cave.Levels.cs` `PlaceHoard`; Angband's lairs and gauntlets have
+none): a lair's cavern holds a hoard at its heart — a great object and four piles of gold, made ten
+levels deeper, with one of AVABand's stones half the time and a pair of bracers a quarter of the
+time — and the cavern beyond a gauntlet's maze from where you came in holds a good object, gold and
+the same chances, five levels deeper. Added after Angband's own placement, so the rest of each
+level is as 4.2.5 makes it.
+
 **Lamps and gear for delvers** (AVABand's own kinds, `ava_objects.json`): the *Dwarven Lamp* (light
 2, never needs oil, +1 digging) and the *Elven Lantern* (light 2, never needs oil, +1 stealth), the
 *Miner's Helm* (4 armour, +1 light, +1 digging; the Armoury stocks it) and *Delver's Gloves* (2
