@@ -3,7 +3,7 @@
 
 Draws small pixel-art tiles (CC0, made for AVABand) — the quests' places and things (the sealed
 door, the dwarven forge, the barrow altar, the hermit's door, the braziers, the trapped apprentice,
-the Key of Belegost) and AVABand's own items (the bags of holding, socketed bracers, gems, weapon oils
+the Key of Belegost), every shop's door (its number and an emblem of its trade, so no two look alike) and AVABand's own items (the bags of holding, socketed bracers, gems, weapon oils
 and monster trophies, each gem, oil and dragon scale drawn in its kind's colour) — at each tileset's cell size (drawn at
 16x16, scaled to fit), as ava_*.png in the tileset's folder; then writes every quest mapping into
 its tileset.json (the rest borrow the nearest tile the set already has: the inn a shop door, the
@@ -224,25 +224,63 @@ def gem(color):
 # A 3x5 pixel font for the shopfront numerals.
 DIGITS = {
     "0": ["###", "#.#", "#.#", "#.#", "###"],
+    "1": [".#.", "##.", ".#.", ".#.", "###"],
+    "2": ["###", "..#", "###", "#..", "###"],
+    "3": ["###", "..#", ".##", "..#", "###"],
+    "4": ["#.#", "#.#", "###", "..#", "..#"],
+    "5": ["###", "#..", "###", "..#", "###"],
+    "6": ["###", "#..", "###", "#.#", "###"],
+    "7": ["###", "..#", ".#.", ".#.", ".#."],
+    "8": ["###", "#.#", "###", "#.#", "###"],
     "9": ["###", "#.#", "###", "..#", "###"],
 }
 
+# Each shop's sign: its number, the sign's colour, and an 8x5 emblem of its trade.
+EMBLEMS = {
+    "barrel": [".######.", "#......#", "########", "#......#", ".######."],
+    "shield": ["#######.", "#.....#.", "#.....#.", ".#...#..", "..###..."],
+    "sword": ["......##", ".....##.", "#..##...", ".##.....", "#.#....."],
+    "book": ["########", "#...#..#", "#...#..#", "#...#..#", "########"],
+    "potion": ["...##...", "...##...", "..####..", ".######.", ".######."],
+    "star": ["...#....", ".#.#.#..", "..###...", ".#.#.#..", "...#...."],
+    "skull": ["..####..", ".#.##.#.", ".######.", "..#..#..", "..####.."],
+    "house": ["...##...", "..####..", ".######.", ".#.##.#.", ".#.##.#."],
+    "mug": [".####...", ".#..###.", ".#..#.#.", ".#..###.", ".####..."],
+    "gem": ["...##...", "..####..", ".######.", "..####..", "...##..."],
+}
+SHOPS = {  # terrain id: (number, sign colour, emblem)
+    "shop_general": ("1", "#6a4a2a", "barrel"),
+    "shop_armoury": ("2", "#4a5a6a", "shield"),
+    "shop_weaponsmith": ("3", "#7a2a2a", "sword"),
+    "shop_bookseller": ("4", "#2a3a7a", "book"),
+    "shop_alchemist": ("5", "#2a6a3a", "potion"),
+    "shop_magic": ("6", "#1a6a7a", "star"),
+    "shop_black_market": ("7", "#1a1a1e", "skull"),
+    "shop_home": ("8", "#8a5a1a", "house"),
+    "shop_inn": ("9", "#3a5a2a", "mug"),
+    "shop_artificer": ("0", "#5a2e7a", "gem"),
+}
 
-def shopfront(digit, sign):
-    """A town building's entrance with its number over the door (AVABand's own buildings: the inn's 9,
-    the Arcane Artificer's 0), so each looks like no other shop."""
+
+def shopfront(digit, sign, emblem):
+    """A town building's entrance: a sign over the door with the shop's number and an emblem of its
+    trade, in the shop's own colour — so no two shops look alike, in any tileset."""
     c = canvas()
     stone_floor(c, "#4a4450", "#36323c")
-    rect(c, 1, 1, 14, 6, hexc(sign))                     # the sign board
-    rect(c, 1, 1, 14, 1, hexc("#2a2630"))
-    rect(c, 1, 6, 14, 6, hexc("#2a2630"))
-    for y, row in enumerate(DIGITS[digit]):             # the number, in gold
+    rect(c, 0, 1, 15, 7, hexc(sign))                      # the sign board
+    rect(c, 0, 1, 15, 1, hexc("#2a2630"))
+    rect(c, 0, 7, 15, 7, hexc("#2a2630"))
+    for y, row in enumerate(DIGITS[digit]):              # the number, in gold
         for x, ch in enumerate(row):
             if ch == "#":
-                px(c, 6 + x, 1 + y, hexc("#ffe080"))
-    rect(c, 5, 8, 10, 15, hexc("#6a4424"))                # the door
-    rect(c, 5, 8, 10, 8, hexc("#3a2414"))
-    rect(c, 7, 8, 8, 15, hexc("#4e3018"))
+                px(c, 1 + x, 2 + y, hexc("#ffe080"))
+    for y, row in enumerate(EMBLEMS[emblem]):            # the emblem, pale
+        for x, ch in enumerate(row):
+            if ch == "#":
+                px(c, 6 + x, 2 + y, hexc("#f0ece0"))
+    rect(c, 5, 9, 10, 15, hexc("#6a4424"))                # the door
+    rect(c, 5, 9, 10, 9, hexc("#3a2414"))
+    rect(c, 7, 9, 8, 15, hexc("#4e3018"))
     px(c, 9, 12, hexc("#e0c060"))                         # its handle
     return c
 
@@ -335,8 +373,6 @@ DRAWN = {
     "terrain:cold_brazier": ("ava_brazier_cold.png", lambda: brazier(False), True),
     "terrain:lit_brazier": ("ava_brazier_lit.png", lambda: brazier(True), True),
     "terrain:trapped_apprentice": ("ava_apprentice.png", apprentice, True),
-    "terrain:shop_inn": ("ava_shop_inn.png", lambda: shopfront("9", "#2e6a3a"), True),
-    "terrain:shop_artificer": ("ava_shop_artificer.png", lambda: shopfront("0", "#5a2e7a"), True),
     "object-base:bag": ("ava_bag.png", bag, False),
     "object-base:bracers": ("ava_bracers.png", bracers, False),
     "object-base:gem": ("ava_gem.png", lambda: gem("#e8f0ff"), False),
@@ -347,6 +383,8 @@ for _gem, _colour in GEM_COLOURS.items():
         if _prefix and _gem in ("bloodstone", "black_onyx", "star_sapphire"):
             continue
         DRAWN["object:" + _prefix + _gem] = _tile
+for _shop, (_digit, _sign, _emblem) in SHOPS.items():  # every shop's door, its own
+    DRAWN["terrain:" + _shop] = ("ava_" + _shop + ".png", (lambda d, sg, e: lambda: shopfront(d, sg, e))(_digit, _sign, _emblem), True)
 DRAWN["object-base:oil"] = ("ava_oil.png", lambda: oil("#30b040"), False)
 DRAWN["object-base:trophy"] = ("ava_trophy.png", lambda: scale("#d03020"), False)
 for _trophy, _colour in SCALE_COLOURS.items():
@@ -426,11 +464,14 @@ def main():
                 wanted[key] = tiles[source]
         # Write the mappings in the file's own style: replace a line that has the key, else add it.
         indent = re.search(r'\n([ \t]*)"terrain:floor"', text).group(1)
+        decoder = json.JSONDecoder()
         for key, value in wanted.items():
             line = f'{indent}{json.dumps(key)}: {json.dumps(value, ensure_ascii=False, separators=(", ", ": "))}'
-            pattern = re.compile(r'\n[ \t]*' + re.escape(json.dumps(key)) + r': [^\n]*?(,?)(?=\n)')
-            if pattern.search(text):
-                text = pattern.sub(lambda m: "\n" + line + m.group(1), text, count=1)
+            found = re.search(r'\n[ \t]*' + re.escape(json.dumps(key)) + r': ', text)
+            if found:
+                # The existing value, however many lines it takes (a set's lit and unlit variants), replaced whole.
+                _, end = decoder.raw_decode(text, found.end())
+                text = text[:found.start()] + "\n" + line + text[end:]
             else:
                 close = text.rstrip()[:-1].rstrip()          # without the root's closing brace
                 tiles_close = len(close) - 1                  # the tiles object's closing brace

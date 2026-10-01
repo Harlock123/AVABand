@@ -136,118 +136,14 @@
     },
     "terrain:up_staircase": "main:7,1",
     "terrain:down_staircase": "main:8,1",
-    "terrain:shop_general": {
-      "lit": [
-        "main:0,0",
-        "main:9,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:9,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:9,1"
-      ]
-    },
-    "terrain:shop_armoury": {
-      "lit": [
-        "main:0,0",
-        "main:10,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:10,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:10,1"
-      ]
-    },
-    "terrain:shop_weaponsmith": {
-      "lit": [
-        "main:0,0",
-        "main:11,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:11,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:11,1"
-      ]
-    },
-    "terrain:shop_bookseller": {
-      "lit": [
-        "main:0,0",
-        "main:12,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:12,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:12,1"
-      ]
-    },
-    "terrain:shop_alchemist": {
-      "lit": [
-        "main:0,0",
-        "main:13,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:13,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:13,1"
-      ]
-    },
-    "terrain:shop_magic": {
-      "lit": [
-        "main:0,0",
-        "main:14,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:14,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:14,1"
-      ]
-    },
-    "terrain:shop_black_market": {
-      "lit": [
-        "main:0,0",
-        "main:15,1"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:15,1"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:15,1"
-      ]
-    },
-    "terrain:shop_home": {
-      "lit": [
-        "main:0,0",
-        "main:0,2"
-      ],
-      "torch": [
-        "main:1,0",
-        "main:0,2"
-      ],
-      "dark": [
-        "main:2,0",
-        "main:0,2"
-      ]
-    },
+    "terrain:shop_general": "ava_shop_general.png",
+    "terrain:shop_armoury": "ava_shop_armoury.png",
+    "terrain:shop_weaponsmith": "ava_shop_weaponsmith.png",
+    "terrain:shop_bookseller": "ava_shop_bookseller.png",
+    "terrain:shop_alchemist": "ava_shop_alchemist.png",
+    "terrain:shop_magic": "ava_shop_magic.png",
+    "terrain:shop_black_market": "ava_shop_black_market.png",
+    "terrain:shop_home": "ava_shop_home.png",
     "trap:glyph_warding": "main:1,2",
     "trap:web": "main:2,2",
     "trap:trap_door": "main:3,2",

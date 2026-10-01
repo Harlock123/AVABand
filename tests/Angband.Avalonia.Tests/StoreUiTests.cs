@@ -360,4 +360,21 @@ public class StoreUiTests
         window.CaptureRenderedFrame();
         TileRenderingTests.Save(window, "artificer");
     }
+
+    /// <summary>The town in tiles: each shop's door its own (a picture for the README and the eye).</summary>
+    [AvaloniaFact]
+    public void The_town_in_tiles_shows_every_shops_own_door()
+    {
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory),
+            Angband.Data.Tiles.TilesetCatalog.Discover([Angband.Data.Tiles.TilesetCatalog.DefaultDirectory]),
+            new AppSettings { UseTiles = true, TilesetId = "dcss", TileScale = 1 }, save: null);
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1440, Height = 900 };
+        window.Show();
+        vm.Game.Known.RememberAll(vm.Game.Level);
+        vm.Refresh();
+        Assert.True(vm.UseTiles);
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "town-doors");
+    }
 }

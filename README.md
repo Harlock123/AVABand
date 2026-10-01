@@ -339,9 +339,9 @@ core kept busy.
     of the piece's worth, a second three times as much (`SocketCost`) — and one try in ten
     (`SocketFailChance`) the piece loses a point of enchantment, no socket is cut and half the fee
     comes back. Sockets he cuts are `Item.AddedSockets` (saved); gems go in and come out (at the
-    Armoury) as with bracers. His door, and the Prancing Pony's, are drawn for AVABand in every
-    bundled tileset (`tools/avaband_quest_tiles.py`: a shopfront with its number, 0 or 9, over the
-    door), so neither looks like another shop. A game saved in town before he came has its town built
+    Armoury) as with bracers. Every shop's door — Angband's eight, the Pony's and his — is drawn for
+    AVABand in every bundled tileset (`tools/avaband_quest_tiles.py`: a sign over the door with the
+    shop's number and an emblem of its trade, in the shop's own colour), so no two look alike. A game saved in town before he came has its town built
     anew on loading (`GameSession.RebuildTownIfOutdated`, from the character's own town seed). From
     level 20 he offers his own quest, **The Artificer's Chisel**
     (`chisel`, found rather than offered at the inn): his star-forged chisel lies in his fallen

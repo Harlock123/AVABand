@@ -23,6 +23,17 @@ public class BundledTilesetTests
         return data;
     }
 
+    /// <summary>Every shop's door is its own picture (its number and trade drawn for AVABand), so none looks like another.</summary>
+    [Theory]
+    [MemberData(nameof(Ids))]
+    public void EveryShopsDoor_IsItsOwnPicture(string id)
+    {
+        var set = Bundled.Single(s => s.Id == id);
+        var data = DataLoader.Load(DataLoader.DefaultDataDirectory);
+        var doors = data.Town.Shops.Select(t => System.Text.Json.JsonSerializer.Serialize(set.Tiles["terrain:" + t])).ToList();
+        Assert.Equal(data.Town.Shops.Count, doors.Distinct().Count());
+    }
+
     [Fact]
     public void NineTilesetsShip() =>
         Assert.Equal(["adam-bolt", "angband-nomad", "angband-old", "dawnlike", "dcss", "gervais", "hexany", "rltiles", "tangaria"],

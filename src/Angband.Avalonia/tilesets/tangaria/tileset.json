@@ -40,46 +40,14 @@
       "torch": "main:13,35",
       "dark": "main:15,35"
     },
-    "terrain:shop_general": {
-      "lit": "main:13,34",
-      "torch": "main:12,34",
-      "dark": "main:14,34"
-    },
-    "terrain:shop_armoury": {
-      "lit": "main:16,34",
-      "torch": "main:15,34",
-      "dark": "main:17,34"
-    },
-    "terrain:shop_weaponsmith": {
-      "lit": "main:19,34",
-      "torch": "main:18,34",
-      "dark": "main:20,34"
-    },
-    "terrain:shop_bookseller": {
-      "lit": "main:28,34",
-      "torch": "main:27,34",
-      "dark": "main:29,34"
-    },
-    "terrain:shop_alchemist": {
-      "lit": "main:22,34",
-      "torch": "main:21,34",
-      "dark": "main:23,34"
-    },
-    "terrain:shop_magic": {
-      "lit": "main:25,34",
-      "torch": "main:24,34",
-      "dark": "main:26,34"
-    },
-    "terrain:shop_black_market": {
-      "lit": "main:31,34",
-      "torch": "main:30,34",
-      "dark": "main:0,35"
-    },
-    "terrain:shop_home": {
-      "lit": "main:2,35",
-      "torch": "main:1,35",
-      "dark": "main:3,35"
-    },
+    "terrain:shop_general": "ava_shop_general.png",
+    "terrain:shop_armoury": "ava_shop_armoury.png",
+    "terrain:shop_weaponsmith": "ava_shop_weaponsmith.png",
+    "terrain:shop_bookseller": "ava_shop_bookseller.png",
+    "terrain:shop_alchemist": "ava_shop_alchemist.png",
+    "terrain:shop_magic": "ava_shop_magic.png",
+    "terrain:shop_black_market": "ava_shop_black_market.png",
+    "terrain:shop_home": "ava_shop_home.png",
     "terrain:secret_door": {
       "lit": "main:17,35",
       "torch": "main:16,35",

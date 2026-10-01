@@ -5,9 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
-- **Fixed: the Arcane Artificer was hard to find.** With graphical tiles its door looked just like
-  the Magic shop's (and the Prancing Pony's like the General Store's); each now has a door of its own,
-  with its number (0, 9) over it. And a game saved in town before the Artificer came now finds him
+- **Every shop has a door of its own** in graphical tiles: a sign with its number and an emblem of
+  its trade (a barrel, a shield, a sword, a book, a potion, a star, a skull, a house, a mug, a gem),
+  each in its own colour. (The Arcane Artificer's door used to look just like the Magic shop's.) And a game saved in town before the Artificer came now finds him
   there at once, the town built anew on loading.
 - **Multiclasses**: be a **Warrior/Mage**, **Warrior/Priest**, **Warrior/Druid** or
   **Warrior/Necromancer** — halfway between the two, with the caster's spells a little later and a
