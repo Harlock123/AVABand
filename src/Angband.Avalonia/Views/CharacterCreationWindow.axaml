@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Angband.Avalonia.ViewModels"
         xmlns:defs="using:Angband.Core.Definitions"
+        xmlns:ctl="using:Angband.Avalonia.Controls"
         x:Class="Angband.Avalonia.Views.CharacterCreationWindow"
         x:DataType="vm:CharacterCreationViewModel"
         Title="Create a character"
@@ -21,7 +22,13 @@
         <TextBlock DockPanel.Dock="Bottom" Text="{Binding RaceDescription}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" Margin="0,8,0,0" />
         <ListBox x:Name="RaceList" ItemsSource="{Binding Races}" SelectedItem="{Binding SelectedRace}">
           <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="defs:RaceDef"><TextBlock Text="{Binding Name}" /></DataTemplate>
+            <DataTemplate x:DataType="defs:RaceDef">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Image Source="{Binding Converter={x:Static ctl:Portraits.Race}}" Width="32" Height="32"
+                       RenderOptions.BitmapInterpolationMode="None" />
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+              </StackPanel>
+            </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
       </DockPanel>
@@ -31,13 +38,34 @@
         <TextBlock DockPanel.Dock="Bottom" Text="{Binding ClassDescription}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" Margin="0,8,0,0" />
         <ListBox x:Name="ClassList" ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}">
           <ListBox.ItemTemplate>
-            <DataTemplate x:DataType="defs:ClassDef"><TextBlock Text="{Binding Name}" /></DataTemplate>
+            <DataTemplate x:DataType="defs:ClassDef">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <!-- The chosen race in this class. -->
+                <Image Width="32" Height="32" RenderOptions.BitmapInterpolationMode="None">
+                  <Image.Source>
+                    <MultiBinding Converter="{x:Static ctl:Portraits.RaceInClass}">
+                      <Binding />
+                      <Binding Path="$parent[Window].((vm:CharacterCreationViewModel)DataContext).SelectedRace" />
+                    </MultiBinding>
+                  </Image.Source>
+                </Image>
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+              </StackPanel>
+            </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
       </DockPanel>
 
       <ScrollViewer Grid.Column="4">
       <StackPanel Spacing="8" Margin="0,0,14,0">
+        <!-- The race chosen, in the class chosen. -->
+        <Border Background="#12151c" CornerRadius="6" Padding="10">
+          <DockPanel>
+            <Image x:Name="PortraitImage" DockPanel.Dock="Left" Source="{Binding Portrait}" Width="128" Height="128"
+                   RenderOptions.BitmapInterpolationMode="None" Margin="0,0,14,0" />
+            <TextBlock Text="{Binding PortraitCaption}" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" TextWrapping="Wrap" />
+          </DockPanel>
+        </Border>
         <StackPanel Orientation="Horizontal" Spacing="12">
           <ComboBox x:Name="MethodBox" ItemsSource="{Binding StatMethods}" SelectedItem="{Binding SelectedMethod}" MinWidth="170" />
           <Button Content="Reroll" Command="{Binding RerollCommand}" IsVisible="{Binding IsRolled}" VerticalAlignment="Center" />

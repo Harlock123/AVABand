@@ -462,3 +462,25 @@ does for the bot (`BOT_SOCKETS=1`, 40 runs at each depth). Survival %, unsockete
 Within noise but for the mage at 500 ft — gems' resistances and armour matter most to the frail and
 the shallow — and the gold (2,500 and up for each socket, three times that for a second) keeps a
 fully socketed kit a late-game thing. No change made.
+
+## Multiclasses
+
+The four Warrior pairs against their two classes (`play 30 <class>`, depths 5-30), survival %:
+
+| class | 250 ft | 500 ft | 1000 ft | 1500 ft |
+|---|---|---|---|---|
+| warrior | 96.7 | 100 | 96.7 | 96.7 |
+| mage | 96.7 | 83.3 | 96.7 | 90 |
+| warrior/mage | 100 | 96.7 | 90 | 100 |
+| priest | 96.7 | 100 | 100 | 100 |
+| warrior/priest | 100 | 100 | 100 | 100 |
+| druid | 93.3 | 93.3 | 96.7 | 93.3 |
+| warrior/druid | 96.7 | 100 | 100 | 93.3 |
+| necromancer | 96.7 | 100 | 96.7 | 96.7 |
+| warrior/necromancer | 100 | 96.7 | 80 | 93.3 |
+
+At the same character level a pair holds its own — the bot plays a level-matched character, so what
+the pair costs, half as much experience again for every level, isn't in these numbers; it's the price
+of getting there. The Warrior/Necromancer's 80% at 1000 ft held up over 90 games (90%, against the
+Necromancer's 96.7%): it was carrying the warrior's torch, and a necromancer fights best in the dark.
+Starting it without (as the Necromancer does) brought it to 95.6%.

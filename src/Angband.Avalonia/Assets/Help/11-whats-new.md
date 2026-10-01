@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Multiclasses**: be a **Warrior/Mage**, **Warrior/Priest**, **Warrior/Druid** or
+  **Warrior/Necromancer** — halfway between the two, with the caster's spells a little later and a
+  little weaker, for half as much experience again each level.
+- **Portraits** on the creation screen: see your race in the class you choose.
 - **The Arcane Artificer** (0), a new building in town: SlatriBartSlow cuts sockets for gems into
   your armour and weapons — for a great deal of gold, and now and then his hand slips. From level 20
   he has a quest of his own: **The Artificer's Chisel**.

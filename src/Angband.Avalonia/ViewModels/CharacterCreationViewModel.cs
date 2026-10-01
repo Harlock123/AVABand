@@ -81,7 +81,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     {
         _data = data;
         Races = data.Races;
-        Classes = data.Classes;
+        Classes = [.. data.Classes, .. data.Multiclasses]; // (Angband's nine, then AVABand's Warrior/Mage and the rest)
         foreach (var (id, label) in StatLabels)
         {
             var row = new StatRow(id, label);
@@ -134,6 +134,12 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     [ObservableProperty] private string _autorollText = "";
     [ObservableProperty] private string _pointsText = "";
     [ObservableProperty] private string _preview = "";
+
+    /// <summary>The portrait of the race chosen in the class chosen (art/portraits).</summary>
+    [ObservableProperty] private global::Avalonia.Media.Imaging.Bitmap? _portrait;
+
+    /// <summary>"Adventurer the Dwarf Warrior/Priest", beside the portrait.</summary>
+    [ObservableProperty] private string _portraitCaption = "";
     [ObservableProperty] private string _raceDescription = "";
     [ObservableProperty] private string _classDescription = "";
     [ObservableProperty] private string? _error;
@@ -272,6 +278,8 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
                 : "Rolled stats (Reroll, or set minimums and Autoroll)") + heroic;
         Error = IsPointBuy ? HeroicBirth.ValidatePointBuy(Method, BaseStats(), _data.Constants) : null;
         UpdateRaceComparison();
+        Portrait = Angband.Avalonia.Controls.Portraits.For(race?.Id, cls?.Id);
+        PortraitCaption = $"{(string.IsNullOrWhiteSpace(Name) ? "Adventurer" : Name.Trim())} the {race?.Name} {cls?.Name}";
         RaceDescription = (race?.Description ?? "")
                           + (race is { AvaAbilityText.Length: > 0 } ? $"\n\nAVABand: {race.AvaAbilityText}" : "");
         ClassDescription = cls?.Description ?? "";

@@ -320,6 +320,8 @@ public static class DataLoader
             MonsterSpells = monsterSpells.Items,
             Realms = realms.Items,
             Classes = classes.Items,
+            Multiclasses = Angband.Core.Game.Multiclass.All(classes.Items,
+                kind => objects.Items.FirstOrDefault(k => k.Id == kind)?.Base.EndsWith("_book", StringComparison.Ordinal) == true),
             Spells = spells.Items,
             Races = races.Items,
             Stores = stores.Items,

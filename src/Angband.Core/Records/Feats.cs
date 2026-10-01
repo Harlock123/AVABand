@@ -56,7 +56,7 @@ public static class Feats
             g => g.Player.DailyDate is not null && g.Player.MaxDepth >= 20));
         feats.Add(new("daily_week", "Seven Days Running", "Try the daily dungeon seven days in a row.", _ => false, b => DailyStreak(b) >= 7));
         feats.Add(new("win", "Victory", "Win the game.", g => g.Player.IsWinner));
-        foreach (var cls in data.Classes)
+        foreach (var cls in data.Classes.Concat(data.Multiclasses)) // (AVABand's Warrior/Mage and the rest too)
             feats.Add(new($"win_{cls.Id}", $"Victory as a {cls.Name}", $"Win the game with a {cls.Name}.", g => g.Player.IsWinner && g.Player.Class?.Id == cls.Id));
         return feats;
     }

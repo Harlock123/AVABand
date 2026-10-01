@@ -83,6 +83,17 @@ public sealed class ClassDef
     /// </summary>
     public IReadOnlyList<string> Flags { get; init; } = [];
     public string Description { get; init; } = "";
+
+    /// <summary>AVABand's multiclasses: the two classes this one is made of (none for a class of its own).</summary>
+    public IReadOnlyList<string> Components { get; init; } = [];
+    /// <summary>AVABand's multiclasses: the class whose spells it casts (its own, if none).</summary>
+    public string? SpellClass { get; init; }
+    /// <summary>AVABand's multiclasses: the level each spell needs, as a percentage of the spell class's.</summary>
+    public int SpellLevelPercent { get; init; } = 100;
+    /// <summary>AVABand's multiclasses: the level spells are cast at (power and mana), as a percentage of yours.</summary>
+    public int CasterLevelPercent { get; init; } = 100;
+
+    public bool IsMulticlass => Components.Count > 0;
 }
 
 /// <summary>Class ability flags (Angband class.txt player-flags).</summary>

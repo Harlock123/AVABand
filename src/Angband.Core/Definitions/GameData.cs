@@ -57,7 +57,10 @@ public sealed class GameData
     public RaceDef? Race(string id) => Races.FirstOrDefault(r => r.Id == id);
     public IReadOnlyList<SpellDef> Spells { get; init; } = [];
     public RealmDef? Realm(string id) => Realms.FirstOrDefault(r => r.Id == id);
-    public ClassDef? Class(string id) => Classes.FirstOrDefault(c => c.Id == id);
+    public ClassDef? Class(string id) => Classes.FirstOrDefault(c => c.Id == id) ?? Multiclasses.FirstOrDefault(c => c.Id == id);
+
+    /// <summary>AVABand's multiclasses (Warrior/Mage...), made from two classes when the data is loaded (Game/Multiclass.cs).</summary>
+    public IReadOnlyList<ClassDef> Multiclasses { get; init; } = [];
     public SpellDef? Spell(string id) => Spells.FirstOrDefault(s => s.Id == id);
     public MonsterSpellDef? MonsterSpell(string id) => MonsterSpells.FirstOrDefault(s => s.Id == id);
 

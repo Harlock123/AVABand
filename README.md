@@ -306,6 +306,25 @@ core kept busy.
   creation screen's *Compare races* sets them all side by side — stat changes, hit die, experience,
   and each race's abilities by name (AVABand's, while the birth option keeps them, its carrying,
   infravision and Angband's own) — with the chosen race marked and a click choosing another.
+  - **Multiclasses** (AVABand's own, `Game/Multiclass.cs`): the *Warrior/Mage*, *Warrior/Priest*,
+    *Warrior/Druid* and *Warrior/Necromancer*, made from the two classes when the data loads
+    (`GameData.Multiclasses`; ids `warrior_mage`... — a class like any other to the rest of the game,
+    saved by its id): skills (first level and per level), hit die, stat bonuses and blows (most
+    attacks, least weight, Strength multiplier) halfway between; the caster's realm, books and
+    spells, its armour-weight limit for mana, and both classes' abilities but the caster's
+    zero-fail; each spell needed at half as many levels again (`Multiclass.SpellLevelPercent`, never
+    past 50) and cast — its power, and your mana — as at two-thirds of your level
+    (`GameSession.CasterLevel`); the warrior's kit (without its torch for the Necromancer's pair, which
+    keeps to the dark) and the caster's first book; and 50% more experience for every level
+    (`ExpFactor`). Each has its own victory feat, and the soak plays one game of each. Measured with
+    the bot at 250-1500 ft (`play 30 <class>`): at the same character level each pair survives about
+    as its two classes do (docs/balance.md) — its cost is the experience it takes to get there.
+  - **Portraits** on the creation screen (`Controls/Portraits.cs`, `art/portraits/`): the race
+    chosen in the class chosen, large beside the character's name, and small beside each race (in
+    plain clothes) and each class (on the race chosen) — 11 races in 13 classes and alone, 154
+    pictures composed by `tools/portrait_art.py` from Dungeon Crawl Stone Soup's player paper-doll
+    tiles (CC0; `art/CREDITS.md`): a race's body, hair or beard, and a class's armour or robes, helm or
+    hat, cloak, boots and what it holds, in DCSS's own doll order, scaled up four times unsmoothed.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
     level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
     near your depth, bring 2-4 of a potion, scroll or food no shop sells, a **bounty** on a living

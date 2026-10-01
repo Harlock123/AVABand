@@ -236,7 +236,7 @@ public sealed partial class GameSession
             Player.MaxMana = Player.Mana = 0;
             return;
         }
-        var levels = Player.Level - cls.FirstSpellLevel + 1;
+        var levels = Math.Max(1, CasterLevel - cls.FirstSpellLevel + 1); // (a multiclass: at two-thirds of your level)
         Player.MaxMana = Math.Max(0, 1 + StatTables.ManaPerLevel[CastingStatIndex] * levels / 100 - ArmourManaPenalty());
         Player.Mana = Math.Min(Player.Mana, Player.MaxMana);
     }
@@ -277,7 +277,10 @@ public sealed partial class GameSession
 
     /// <summary>The player's class data for a spell, or null if the class can't use it.</summary>
     public ClassSpellInfo? SpellInfo(SpellDef spell) =>
-        Player.Class is { } cls && spell.Classes.TryGetValue(cls.Id, out var info) ? info : null;
+        Player.Class is { } cls && spell.Classes.TryGetValue(cls.SpellClass ?? cls.Id, out var info) ? Multiclass.Adjust(info, cls) : null;
+
+    /// <summary>The level spells are cast at: yours, or for a multiclass two-thirds of it (their power, and your mana).</summary>
+    public int CasterLevel => Player.Class is { CasterLevelPercent: not 100 and var percent } ? Math.Max(1, Player.Level * percent / 100) : Player.Level;
 
     /// <summary>All spells of the player's class, in book order.</summary>
     public IEnumerable<SpellDef> ClassSpells => Data.Spells.Where(s => SpellInfo(s) is not null);
@@ -286,7 +289,7 @@ public sealed partial class GameSession
 
     /// <summary>Angband obj_kind_can_browse: a book of the player's class (one holding spells they could learn).</summary>
     public bool PlayerCanBrowse(ObjectKindDef kind) =>
-        Player.Class is { } cls && Data.Spells.Any(s => s.Book == kind.Id && s.Classes.ContainsKey(cls.Id));
+        Player.Class is { } cls && Data.Spells.Any(s => s.Book == kind.Id && s.Classes.ContainsKey(cls.SpellClass ?? cls.Id));
 
     /// <summary>
     /// For a book, whether it's the player's (so a newcomer doesn't buy, or sell, the wrong kind):
@@ -462,7 +465,7 @@ public sealed partial class GameSession
         _effectSource = spell.Name;
         try
         {
-            ApplySpellEffectList(spell, SpellEffects.Parse(spell.Effect, Player.Level).ToList(), target, direction);
+            ApplySpellEffectList(spell, SpellEffects.Parse(spell.Effect, CasterLevel).ToList(), target, direction);
         }
         finally
         {

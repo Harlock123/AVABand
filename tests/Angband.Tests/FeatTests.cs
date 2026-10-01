@@ -15,7 +15,7 @@ public class FeatTests
     public void TheFeats_AreEachNamedOnce_AndCoverEveryClassesWin()
     {
         Assert.Equal(All.Count, All.Select(f => f.Id).Distinct().Count());
-        Assert.All(TestData.Game.Classes, c => Assert.Contains(All, f => f.Id == $"win_{c.Id}"));
+        Assert.All(TestData.Game.Classes.Concat(TestData.Game.Multiclasses), c => Assert.Contains(All, f => f.Id == $"win_{c.Id}"));
         Assert.Contains(All, f => f.Name == "Sauron, the Sorcerer Falls" || f.Id == "quest_sauron");
         Assert.Contains(All, f => f.Id == "quest_morgoth");
     }

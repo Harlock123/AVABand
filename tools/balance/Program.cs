@@ -96,6 +96,9 @@ if (args.Length > 0 && args[0] == "soak")
         // and Morgoth's among them).
         if (!Soak.Run(data, cls, 606UL, decisions, 60, tourist: true)) failures++;
     }
+    // AVABand's multiclasses, a game each.
+    foreach (var cls in data.Multiclasses)
+        if (!Soak.Run(data, cls.Id, 101UL, decisions, 1)) failures++;
     // AVABand's quests, one of each (and each way of the Letter), recorded and replayed.
     failures += QuestBot.Soak(data);
     Console.WriteLine(failures == 0 ? "Soak: every game played and replayed cleanly." : $"Soak: {failures} game(s) failed.");

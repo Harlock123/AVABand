@@ -207,4 +207,33 @@ public class CharacterCreationUiTests
         Assert.DoesNotContain("Delver", creation.RaceComparison.Single(r => r.Race.Id == "dwarf").Abilities);
 
     }
+
+    /// <summary>Portraits: the race chosen in the class chosen (and each race, and each class on that race, in the lists); every one there.</summary>
+    [AvaloniaFact]
+    public void The_portrait_shows_the_race_in_the_class()
+    {
+        var (window, _, _) = Open();
+        var creationWindow = window.OpenCharacterCreation();
+        var creation = (CharacterCreationViewModel)creationWindow.DataContext!;
+        creation.SelectedRace = creation.Races.Single(r => r.Id == "dwarf");
+        creation.SelectedClass = creation.Classes.Single(c => c.Id == "warrior_priest");
+        Assert.NotNull(creation.Portrait);
+        Assert.Equal(128, creation.Portrait!.PixelSize.Width);
+        Assert.Equal("Adventurer the Dwarf Warrior/Priest", creation.PortraitCaption);
+        var before = creation.Portrait;
+        creation.SelectedClass = creation.Classes.Single(c => c.Id == "mage");
+        Assert.NotSame(before, creation.Portrait);
+
+        // A picture for every race, and every race in every class (multiclasses too).
+        foreach (var race in creation.Races)
+        {
+            Assert.NotNull(Angband.Avalonia.Controls.Portraits.For(race.Id));
+            foreach (var cls in creation.Classes) Assert.NotNull(Angband.Avalonia.Controls.Portraits.For(race.Id, cls.Id));
+        }
+        Assert.Contains(creation.Classes, c => c.Id == "warrior_mage");
+
+        creation.SelectedClass = creation.Classes.Single(c => c.Id == "warrior_druid");
+        creationWindow.CaptureRenderedFrame();
+        TileRenderingTests.Save(creationWindow, "creation-portrait");
+    }
 }

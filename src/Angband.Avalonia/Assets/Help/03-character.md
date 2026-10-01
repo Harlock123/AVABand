@@ -40,6 +40,16 @@ Your **class** decides how you fight and what magic you have:
 - **Necromancer** — casts from the dark: sees without light, fails more in it.
 - **Blackguard** — a brutal fighter whose spells feed on combat.
 
+AVABand adds four **multiclasses**, a Warrior who has also learned a caster's magic: the
+**Warrior/Mage**, **Warrior/Priest**, **Warrior/Druid** and **Warrior/Necromancer**. Their skills,
+hit points and blows are halfway between the two classes; they cast the caster's spells from its
+books, each learned a little later (a level-10 spell at 15) and a little weaker, with less mana; heavy
+armour costs them mana as it does the caster; and they need **half as much experience again** for
+every level. They start with the warrior's weapon and armour and the caster's first book.
+
+The creation screen shows a **portrait** of your race in the class you choose (and each race, and
+each class on your race, in the lists).
+
 ## Stats at birth
 
 The creation screen offers four ways to set your stats:

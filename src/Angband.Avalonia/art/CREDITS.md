@@ -22,3 +22,8 @@ The pictures AVABand shows at moments of note. All are made for AVABand (CC0), r
 - **Thangorodrim** — the three smoking peaks over the gates of Angband, with the AVABand logo; drawn for AVABand, procedurally, by `tools/title_art.py`
 - Licence: CC0 (public domain). The logo's lettering is Cinzel Decorative and Cinzel by Natanael Gama (SIL Open Font License 1.1).
 - Notes: shown behind the title screen. Your own `title.png`/`title.jpg` and `title-logo.png` in `<AppData>/AVABand/art/` replace them.
+
+## portraits/*.png
+
+- **The creation screen's portraits** — every race in every class (and AVABand's Warrior/Mage and the other multiclasses), and each race alone in plain clothes — composed by `tools/portrait_art.py` from the player "paper doll" tiles of **Dungeon Crawl Stone Soup** (the DCSS tile set, by the DCSS development team and contributors): a race's base body, hair or beard, and a class's armour or robes, helm or hat, cloak, boots and what it holds, layered in DCSS's own doll order and scaled up four times without smoothing.
+- Licence: CC0 1.0 (public-domain dedication), as the DCSS tiles are.
