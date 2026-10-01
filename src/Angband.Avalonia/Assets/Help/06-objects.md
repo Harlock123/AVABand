@@ -41,6 +41,14 @@ Warding** (armour and a resistance), **of the Duelist** (your off hand's blow la
 and the rare **(Celebrimbor's)**, with one more socket; a **(Fireproof)** bag keeps fire from what's
 in your pack, and an **(Insulated)** one keeps out the cold.
 
+## AVABand's artifacts
+
+Beside Angband's, a few of AVABand's own wait in the deep: bracers of **Narvi**, **Beorn**, **the
+Hornburg** and **Haldir**; **Bilbo Baggins'** bag, which keeps fire and frost from your pack; two
+blades for a second hand, **'Thorn'** and the main gauche **of Dol Amroth**; the **Mattock of Narvi**,
+which finds more gold in every vein; and the **Boots of Strider**, made for long marches under a
+heavy load.
+
 ## Weapon oils
 
 A **weapon oil** is rubbed on your weapon (or your hands) — **U**, or *Apply* from its menu — and

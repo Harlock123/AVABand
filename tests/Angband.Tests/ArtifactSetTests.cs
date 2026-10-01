@@ -8,7 +8,10 @@ public class ArtifactSetTests
     [Fact]
     public void All138_AreThere()
     {
-        Assert.Equal(138, TestData.Game.Artifacts.Count);
+        // (Angband's 138, and AVABand's own in ava_artifacts.json beside them.)
+        var ava = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(Angband.Data.DataLoader.DefaultDataDirectory,
+            Angband.Data.DataLoader.AvaArtifactsFile))).RootElement.GetArrayLength();
+        Assert.Equal(138 + ava, TestData.Game.Artifacts.Count);
         foreach (var name in new[] { "'Bladeturner'", "'Soulkeeper'", "'Razorback'", "'Mediator'", "of Isildur", "of Celeborn",
                      "of Arvedui", "of Caspanion", "of the Rohirrim", "of Himring", "'Thalkettoth'", "'Belegennon'" })
             Assert.Contains(TestData.Game.Artifacts, a => a.Name == name);

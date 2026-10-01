@@ -68,6 +68,8 @@ public static class DataLoader
     public const string AvaCursesFile = "ava_curses.json";
     public const string AvaRacesFile = "ava_races.json";
     public const string AvaEgosFile = "ava_egos.json";
+    /// <summary>AVABand's own artifacts (for its bracers, bags and the like), beside Angband's.</summary>
+    public const string AvaArtifactsFile = "ava_artifacts.json";
     public const string AvaClassesFile = "ava_classes.json";
 
     private static readonly JsonSerializerOptions Options = new()
@@ -171,6 +173,7 @@ public static class DataLoader
             egos.AddRange(Read<List<EgoItemDef>>(dir, EgosFile, errors));
             egos.AddRange(Read<List<EgoItemDef>>(dir, AvaEgosFile, errors));
             artifacts.AddRange(Read<List<ArtifactDef>>(dir, ArtifactsFile, errors));
+            artifacts.AddRange(Read<List<ArtifactDef>>(dir, AvaArtifactsFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, CursesFile, errors));
             curses.AddRange(Read<List<CurseDef>>(dir, AvaCursesFile, errors));
             summons.AddRange(Read<List<SummonDef>>(dir, SummonsFile, errors));

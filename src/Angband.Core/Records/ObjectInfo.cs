@@ -234,6 +234,12 @@ public static class ObjectInfo
         // AVABand's bracers, bags and (Porter) gear.
         if (item.Ego?.CarryPercent is > 0 and var porter && (sampleOnly || k.IsFullyKnown(item)))
             facts.Add($"worn, it lets you carry {porter}% more before you're slowed");
+        if (item.Artifact?.CarryPercent is > 0 and var carry && (sampleOnly || k.IsFullyKnown(item)))
+            facts.Add($"worn, it lets you carry {carry}% more before you're slowed");
+        if (item.Artifact?.Guards is { Count: > 0 } artGuards && (sampleOnly || k.IsFullyKnown(item)))
+            facts.Add($"carried, it keeps what's in your pack safe from {string.Join(" and ", artGuards.Select(g => game.Data.Element(g)?.Name ?? g))}");
+        if (item.Artifact?.GoldPercent is > 0 and var gold && (sampleOnly || k.IsFullyKnown(item)))
+            facts.Add($"dug with, a vein of treasure gives {gold}% more gold");
         if (item.Ego?.OffHandBonus is > 0 and var duelist && (sampleOnly || k.IsFullyKnown(item)))
             facts.Add($"worn, it makes your off hand's blow {duelist} easier to land");
         if (item.Ego?.Guards is { Count: > 0 } guards && (sampleOnly || k.IsFullyKnown(item)))

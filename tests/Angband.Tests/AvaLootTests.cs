@@ -141,4 +141,72 @@ public class AvaLootTests
         Assert.Equal(5, stack.Number);
         Assert.Contains("keeps what's in your pack safe from", ObjectInfo.DescribeItem(game, bag));
     }
+
+    // --- AVABand's artifacts ---------------------------------------------------------------------
+
+    private static Item CarryArtifact(GameSession game, string id)
+    {
+        var item = game.Objects.CreateArtifact(game.Data.Artifacts.Single(a => a.Id == id));
+        game.Knowledge.LearnKind(item.Kind);
+        foreach (var rune in item.Runes()) game.Knowledge.LearnRune(rune);
+        return game.Player.Inventory.Add(item)!;
+    }
+
+    [Fact]
+    public void AVABands_artifacts_load_beside_Angbands()
+    {
+        var ids = new[]
+        {
+            "bracers_of_narvi", "bracers_of_beorn", "bracers_of_the_hornburg", "bracers_of_haldir", "pack_of_bilbo", "thorn",
+            "main_gauche_of_dol_amroth", "mattock_of_narvi", "boots_of_strider",
+        };
+        foreach (var id in ids) Assert.Contains(TestData.Game.Artifacts, a => a.Id == id);
+        Assert.Contains(TestData.Game.Artifacts, a => a.Id == "sting"); // Angband's still there
+        // Every one has a description, and a name no Angband artifact has.
+        var angband = TestData.Game.Artifacts.Where(a => !ids.Contains(a.Id)).Select(a => a.Name).ToHashSet();
+        foreach (var id in ids)
+        {
+            var art = TestData.Game.Artifacts.Single(a => a.Id == id);
+            Assert.NotEmpty(art.Description);
+            Assert.DoesNotContain(art.Name, angband);
+        }
+    }
+
+    [Fact]
+    public void The_boots_of_Strider_let_you_carry_more()
+    {
+        var game = NewGame();
+        var before = game.Player.WeightLimit;
+        var boots = CarryArtifact(game, "boots_of_strider");
+        game.Execute(new WieldCommand(boots));
+        Assert.True(game.Player.WeightLimit > before);
+        Assert.Contains("carry 30% more", ObjectInfo.DescribeItem(game, boots));
+    }
+
+    [Fact]
+    public void Bilbos_pack_keeps_fire_and_frost_from_the_pack()
+    {
+        var game = NewGame();
+        var scrolls = Carry(game, "phase_door", 5);
+        var potions = Carry(game, "cure_light_wounds", 5);
+        var pack = CarryArtifact(game, "pack_of_bilbo");
+        Assert.Equal(0, game.InventoryDamage("fire", 10_000));
+        Assert.Equal(0, game.InventoryDamage("cold", 10_000));
+        Assert.Equal(5, scrolls.Number);
+        Assert.Equal(5, potions.Number);
+        Assert.True(pack.Kind.CarryPercent > 0); // still a bag of holding
+    }
+
+    [Fact]
+    public void The_Mattock_of_Narvi_finds_more_gold()
+    {
+        var game = NewGame();
+        CarryArtifact(game, "mattock_of_narvi");
+        game.RecalculateBonuses();
+        Assert.Equal("mattock", game.BestDigger!.Kind.Id);
+        var gold = game.Objects.Create(game.Data.Objects.First(k => k.Base == "gold").Id);
+        gold.GoldValue = 100;
+        game.VeinGold(gold);
+        Assert.Equal(150, gold.GoldValue);
+    }
 }

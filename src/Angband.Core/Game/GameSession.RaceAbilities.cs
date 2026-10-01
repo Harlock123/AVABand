@@ -80,10 +80,12 @@ public sealed partial class GameSession
     /// <summary>A Dwarf delves: +20 digging without a pick or shovel.</summary>
     private int RaceDigging() => HasRaceAbility("DELVER") && BestDigger?.Base.Id != "digger" ? 20 : 0;
 
-    /// <summary>A Dwarf with a pick or shovel gets half as much gold again from a vein.</summary>
-    private void DelverGold(Item gold)
+    /// <summary>A vein's gold, dug: a Dwarf with a pick or shovel gets half as much again (and an artifact digger its own share).</summary>
+    internal void VeinGold(Item gold)
     {
         if (HasRaceAbility("DELVER") && BestDigger?.Base.Id == "digger") gold.GoldValue = gold.GoldValue * 3 / 2;
+        // (And an AVABand artifact digger's own share more, for anyone: the Mattock of Narvi.)
+        if (BestDigger?.Artifact?.GoldPercent is > 0 and var more) gold.GoldValue += gold.GoldValue * more / 100;
     }
 
     /// <summary>A Half-Troll smashes rubble at the first blow.</summary>

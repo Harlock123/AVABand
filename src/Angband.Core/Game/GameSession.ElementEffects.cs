@@ -289,7 +289,7 @@ public sealed partial class GameSession
         if (chance <= 0) return 0;
         var destroyed = 0;
         // AVABand's bag egos: a Fireproof (Insulated...) bag carried keeps the pack safe from its element.
-        var guarded = Player.Inventory.Pack.Any(b => b.Ego?.Guards.Contains(element) == true);
+        var guarded = Player.Inventory.Pack.Any(b => b.Ego?.Guards.Contains(element) == true || b.Artifact?.Guards.Contains(element) == true);
         foreach (var item in Player.Inventory.Pack.Concat(Player.Inventory.Quiver).ToList())
         {
             if (!item.HarmedBy(element)) continue;

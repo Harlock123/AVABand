@@ -25,7 +25,7 @@ public sealed partial class GameSession
     /// <summary>What raises (or lowers) the weight limit by a share, in percent, all told.</summary>
     public int CarryPercent =>
         (Player.Inventory.BestBag?.Kind.CarryPercent ?? 0)
-        + Player.Inventory.Equipped.Sum(i => i.Ego?.CarryPercent ?? 0)
+        + Player.Inventory.Equipped.Sum(i => (i.Ego?.CarryPercent ?? 0) + (i.Artifact?.CarryPercent ?? 0))
         + (AvaBurden && (Player.Timed.Has(Effects.TimedIds.Hero) || Player.Timed.Has("berserk")) ? 10 : 0)
         + (Options[OptionIds.AvaRaces] ? Player.Race?.AvaCarryPercent ?? 0 : 0);
 

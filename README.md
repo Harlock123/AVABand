@@ -107,6 +107,17 @@ to hit becomes −5, `GameSession.OffHandPenalty`) and *(Celebrimbor's)* (from 1
 quiver isn't). Made as Angband makes egos, on great items; the inspect text names what each does
 once its runes are known.
 
+**AVABand's artifacts** (`ava_artifacts.json`, loaded beside Angband's 138 with three AVABand
+fields on `ArtifactDef`), made as Angband's are: the mithril Bracers *of Narvi* (+2 INT/DEX, resist
+fire and cold, sustain DEX, three empty sockets), the iron Bracers *of Beorn* (+3 STR, +2 CON,
+regeneration, no fear) and *of the Hornburg* (+14 armour, resist acid and shards), the leather
+Bracers *of Haldir* (+2 stealth, +1 DEX, free action, resist lightning), the Bag of Holding *of
+Bilbo Baggins* (`guards`: the pack safe from fire and cold), two off-hand blades for Humans — the
+Dagger *'Thorn'* (slays orcs, see invisible) and the Main Gauche *of Dol Amroth* (slays evil, free
+action) — the Mattock *of Narvi* (+4 digging; `goldPercent`: half as much gold again from every vein,
+`GameSession.VeinGold`) and the Leather Boots *of Strider* (`carryPercent`: a third more before
+you're slowed). Each has its own description, and a name no Angband artifact has.
+
 **Weapon oils** (AVABand's own; base `oil` in `ava_object_bases.json`, six kinds in
 `ava_objects.json`): applied (`U`, or *Apply* in the item's menu; the `oil` base's verb), each sets
 one of Angband 4.2's own temporary brands or slays (`timed_effects.json`'s `att_pois`, `att_fire`,

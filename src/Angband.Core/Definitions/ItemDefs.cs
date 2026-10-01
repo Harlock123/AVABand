@@ -324,6 +324,12 @@ public sealed class ArtifactDef
     /// <summary>Power of the activation (Angband activation.txt), for pricing and random artifacts.</summary>
     public int ActivationPower { get; init; }
     public string Description { get; init; } = "";
+    /// <summary>AVABand's artifacts (ava_artifacts.json): worn, this much more (percent) can be carried before slowing.</summary>
+    public int CarryPercent { get; init; }
+    /// <summary>AVABand's artifact bags: carried, the pack's contents are safe from these elements.</summary>
+    public IReadOnlyList<string> Guards { get; init; } = [];
+    /// <summary>AVABand's artifact diggers: your best digger, a vein of treasure gives this much more gold (percent).</summary>
+    public int GoldPercent { get; init; }
 }
 
 /// <summary>

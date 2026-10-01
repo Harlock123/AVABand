@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Nine new artifacts**: bracers of Narvi, Beorn, the Hornburg and Haldir, Bilbo's bag, the off-hand
+  blades 'Thorn' and of Dol Amroth, the Mattock of Narvi and the Boots of Strider.
 - **Enchanted bracers and bags**: bracers of the Archer, of Warding, of the Duelist and the rare
   Celebrimbor's (an extra socket); Fireproof and Insulated bags that protect your pack.
 - **Weapon oils**: Venom, Burning, Frost, Storm and Corrosive Oil, and Holy Water — rub one on your

@@ -182,7 +182,7 @@ public sealed partial class GameSession
                 if (gold)
                 {
                     var veinGold = MakeLevelGold(Level.Depth);
-                    DelverGold(veinGold);
+                    VeinGold(veinGold);
                     Level.Objects.Add(p, veinGold);
                     Publish(new MessageEvent("You have found something!"));
                 }
