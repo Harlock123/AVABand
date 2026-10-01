@@ -287,6 +287,8 @@ public sealed class MapView : Control
             var dest = new Rect(originX + (x - offsetX) * cell.Width, originY + (y - offsetY) * cell.Height, cell.Width, cell.Height);
             var mapCell = source.GetCell(x, y);
             renderer.DrawCell(context, dest, mapCell);
+            if (mapCell.Sconce) DrawSconce(context, dest, shading ? flicker : 1);
+            anyTorch |= shading && mapCell.Sconce; // (its flame flickers with the torchlight)
             if (!shading || mapCell.IsUnknown) continue;
             var shade = source.ShadeAt(x, y);
             anyTorch |= shade.Torch;
@@ -334,6 +336,27 @@ public sealed class MapView : Control
         (IBrush)new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb((byte)a, 0, 0, 0)))];
     private static readonly IBrush[] WarmBrushes = [.. Enumerable.Range(0, 256).Select(a =>
         (IBrush)new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb((byte)a, 255, 150, 50)))];
+
+    // AVABand's sconces on the walls of lit rooms: a brass bracket, a flame and its warm glow.
+    private static readonly IBrush SconceGlow = new RadialGradientBrush
+    {
+        GradientStops = { new GradientStop(Color.FromArgb(0x78, 0xFF, 0xB8, 0x48), 0), new GradientStop(Color.FromArgb(0x00, 0xFF, 0xB8, 0x48), 1) },
+    }.ToImmutable();
+    private static readonly IBrush SconceBrass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xA8, 0x7A, 0x30));
+    private static readonly IBrush SconceFlame = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0x8C, 0x20));
+    private static readonly IBrush SconceCore = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0xE8, 0x90));
+
+    private static void DrawSconce(DrawingContext context, Rect cell, double flicker)
+    {
+        var (w, h) = (cell.Width, cell.Height);
+        var cx = cell.X + w / 2;
+        var flameY = cell.Y + h * 0.36;
+        context.DrawEllipse(SconceGlow, null, new Point(cx, flameY), w * 0.48, h * 0.46);
+        context.FillRectangle(SconceBrass, new Rect(cx - w * 0.14, cell.Y + h * 0.58, w * 0.28, Math.Max(1, h * 0.09)));   // the bracket
+        context.FillRectangle(SconceBrass, new Rect(cx - w * 0.05, cell.Y + h * 0.48, w * 0.10, h * 0.12));                 // its cup
+        context.DrawEllipse(SconceFlame, null, new Point(cx, flameY), w * 0.09, h * 0.14 * (0.85 + 0.15 * flicker));
+        context.DrawEllipse(SconceCore, null, new Point(cx, flameY + h * 0.03), w * 0.045, h * 0.07);
+    }
 
     // Torchlight flicker: a slow clock (10 a second) runs only while torchlit squares are shown.
     private global::Avalonia.Threading.DispatcherTimer? _flickerClock;

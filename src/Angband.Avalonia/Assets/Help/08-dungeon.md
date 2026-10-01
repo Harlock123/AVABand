@@ -13,6 +13,9 @@ best treasure and the worst monsters. Arriving on a level out of the ordinary, y
 kind it is ("You are in a gauntlet...").
 **Level feelings** tell you on arrival how dangerous the level seems, and once you have explored
 a little, how good its treasure is (`Ctrl+F` repeats them).
+Rooms near the surface are mostly lit, deeper ones mostly dark. A **lit room** has candles in
+brass sconces along its walls (a warm glow on the wall in ASCII); a dark room's walls are bare, and
+you see only as far as your own light (option *Sconces on the walls of lit rooms*).
 
 ## Traps, doors and rubble
 

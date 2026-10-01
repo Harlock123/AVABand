@@ -1239,6 +1239,11 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
     as a flame does; lit rooms stay steady; squares you remember but can't see now are drawn
     darker. It shades whatever the map shows, ASCII or tiles (a slow clock, ten times a second,
     runs the flicker while torchlit squares are on screen).
+  - **Sconces on lit rooms' walls** (AVABand's own; the option *Sconces on the walls of lit rooms*,
+    on by default): every few squares along the inner wall of a naturally lit room, a brass sconce
+    with a burning candle (a warm glow over the wall in ASCII), so a lit room tells at a glance from
+    a dark one. Only walls that glow beside a lit room's floor get one; their flames flicker with
+    the light and shadow.
   - **Scenes** (AVABand's own; the option *Show scenes at moments of note*, on by default): a moment's
     full-window scene, fading in and out, with a caption — taking the stairs down ("Descending… 250
     ft (level 5)") or up ("Up into the town, by night"), Word of Recall taking you up or down,

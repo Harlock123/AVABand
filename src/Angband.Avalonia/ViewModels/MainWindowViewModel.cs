@@ -149,7 +149,28 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         var lighting = !seen ? TileLighting.Dark
             : !sq.Has(SquareFlags.Glow) && sq.Has(SquareFlags.Lit) ? TileLighting.Torch
             : TileLighting.Lit;
-        return _cells.Terrain(feature, lighting);
+        var cell = _cells.Terrain(feature, lighting);
+        return feature.Has(TerrainFlags.Wall) && SconceAt(p) ? cell with { Sconce = true } : cell;
+    }
+
+    /// <summary>
+    /// AVABand's sconces (the option, on by default): a wall of a lit room (one the room's light falls
+    /// on, Angband's glowing room walls), facing into the room, about every fourth square along it.
+    /// Walls of unlit rooms have none, so the two tell apart at a glance.
+    /// </summary>
+    private bool SconceAt(Loc p)
+    {
+        if ((p.X + p.Y) % 4 != 0 || !OptionValue(DisplayOptions.Sconces)) return false;
+        var level = _game.Level;
+        if (!level[p].Has(SquareFlags.Glow)) return false;
+        foreach (var d in new[] { new Loc(0, 1), new Loc(0, -1), new Loc(1, 0), new Loc(-1, 0) })
+        {
+            var n = p + d;
+            if (level.InBounds(n) && level[n].Has(SquareFlags.Glow) && level[n].Has(SquareFlags.Room)
+                && !level.FeatureAt(n).Has(TerrainFlags.Wall) && level.IsPassable(n))
+                return true;
+        }
+        return false;
     }
 
     /// <summary>Light and shadow on the map (the option): torchlight fading from you, remembered squares dimmer.</summary>

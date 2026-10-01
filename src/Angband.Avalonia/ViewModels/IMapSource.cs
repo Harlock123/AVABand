@@ -7,6 +7,7 @@ namespace Angband.Avalonia.ViewModels;
 /// One drawable map cell. ASCII mode uses the glyph and colours; tile mode looks up
 /// <see cref="TileKey"/> (then <see cref="AltTileKey"/>) in the active tileset, drawing the
 /// terrain <see cref="UnderKey"/> beneath creatures and traps when the tileset is transparent.
+/// <see cref="Sconce"/>: a wall of a lit room with a sconce on it (AVABand's own; the map draws it over the wall).
 /// </summary>
 public readonly record struct MapCell(
     char Glyph,
@@ -16,7 +17,8 @@ public readonly record struct MapCell(
     TileLighting Lighting = TileLighting.Lit,
     string? AltTileKey = null,
     string? UnderKey = null,
-    TileLighting UnderLighting = TileLighting.Lit)
+    TileLighting UnderLighting = TileLighting.Lit,
+    bool Sconce = false)
 {
     public static readonly MapCell Unknown = new(' ', 0xFF000000, 0xFF000000, "");
 

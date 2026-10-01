@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Sconces on the walls of lit rooms**: a naturally lit room now has candles in brass sconces along
+  its walls (a warm glow on the wall in ASCII), so you can tell it from a dark room before you step
+  in. Turn them off with the option *Sconces on the walls of lit rooms*.
 - **Every shop has a door of its own** in graphical tiles: a sign with its number and an emblem of
   its trade (a barrel, a shield, a sword, a book, a potion, a star, a skull, a house, a mug, a gem),
   each in its own colour. (The Arcane Artificer's door used to look just like the Magic shop's.) And a game saved in town before the Artificer came now finds him
