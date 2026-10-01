@@ -326,7 +326,8 @@ for _trophy, _colour in SCALE_COLOURS.items():
 DRAWN["object:troll_hide"] = ("ava_troll_hide.png", hide, False)
 DRAWN["object:spider_silk"] = ("ava_spider_silk.png", silk, False)
 for _oil, _colour in OIL_COLOURS.items():
-    DRAWN["object:" + _oil] = ("ava_" + _oil + ".png", (lambda col: lambda: oil(col))(_colour), False)
+    for _grade in ("", "lesser_", "greater_"):  # (every grade in the one flask)
+        DRAWN["object:" + _grade + _oil] = ("ava_" + _oil + ".png", (lambda col: lambda: oil(col))(_colour), False)
 # The rest borrow the nearest tile the set has (the first that exists).
 BORROWED = [
     ("terrain:shop_inn", ["terrain:shop_general", "terrain:shop_home"]),

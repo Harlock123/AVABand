@@ -443,3 +443,8 @@ and by a spider or troll one in 50 (a unique still always leaves its own). Now o
 often as potions of Speed, the lamps and gear less, and trophies deep down about as often as Rings of
 Free Action — with every monster slain, so fewer in play. The egos and artifacts are rare finds, a
 few in a hundred levels.
+
+With the oils in three grades (lesser, ordinary, greater: commonness split about 5:3:2, the lesser
+from the first levels and the greater from 1500 ft), all oils together still come about as often as
+potions of Speed — 16 to 51 per 100 levels — the lesser most of them (10 to 27) and the greater a few
+(up to 14 at 2500 ft).

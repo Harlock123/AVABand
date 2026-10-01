@@ -163,10 +163,14 @@ you're slowed). Each has its own description, and a name no Angband artifact has
 **Weapon oils** (AVABand's own; base `oil` in `ava_object_bases.json`, six kinds in
 `ava_objects.json`): applied (`U`, or *Apply* in the item's menu; the `oil` base's verb), each sets
 one of Angband 4.2's own temporary brands or slays (`timed_effects.json`'s `att_pois`, `att_fire`,
-`att_cold`, `att_elec`, `att_acid`, `att_evil`, which melee already uses) for 20+1d20 turns: *Venom
-Oil*, *Burning Oil*, *Frost Oil*, *Storm Oil*, *Corrosive Oil* and *Holy Water* (slay evil). The
-Alchemist stocks Venom Oil, Burning Oil and Holy Water (`avabandNormal`) and buys oils; all six turn
-up in the dungeon from 50 to 1000 ft. Each has its own flask tile in every bundled tileset
+`att_cold`, `att_elec`, `att_acid`, `att_evil`, which melee already uses): *Venom Oil*, *Burning
+Oil*, *Frost Oil*, *Storm Oil*, *Corrosive Oil* and *Holy Water* (slay evil), each in three grades
+(the effect `oil:<brand>:<grade>:<turns>`; `Player.OilGrades`, saved): *Lesser* (10+1d10 turns, the
+multiplier one less — a brand ×2), ordinary (20+1d20, Angband's ×3) and *Greater* (40+1d40, one more
+— ×4; Holy Water's slay ×2, ×2, ×3). The grade goes with its brand (when it ends, or Angband's own
+spell brands it afresh; `GameSession.TemporaryAttackModifiers`). Lesser oils from the first levels,
+ordinary from 50 to 1000 ft, Greater from 1500 ft and rare. The Alchemist stocks Lesser Venom and
+Burning Oil and Holy Water (`avabandNormal`) and buys oils. Each has its own flask tile in every bundled tileset
 (`tools/avaband_quest_tiles.py`).
 
 **Pack room** (with bags, worth managing): Game → *Tidy pack* (`TidyPackCommand`, recorded;

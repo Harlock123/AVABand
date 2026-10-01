@@ -281,8 +281,8 @@
     "maxItems": 10,
     "turnover": 9,
     "avabandNormal": [
-      "oil_of_venom",
-      "oil_of_burning",
+      "lesser_oil_of_venom",
+      "lesser_oil_of_burning",
       "holy_water"
     ],
     "avabandBuys": [

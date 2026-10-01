@@ -141,6 +141,7 @@ public static class SaveGame
                     ["save"] = p.SkillSave, ["disarm"] = p.DisarmSkill, ["disarm_magic"] = p.DisarmMagicSkill, ["search"] = p.SkillSearch, ["device"] = p.SkillDevice,
                 },
                 Timed = new(p.Timed.Snapshot()),
+                OilGrades = p.OilGrades.Count == 0 ? null : new(p.OilGrades),
                 Pack = p.Inventory.Pack.Select(ItemToSave).ToList(),
                 Quiver = p.Inventory.Quiver.Select(ItemToSave).ToList(),
                 Equipment = p.Inventory.Equipment.Select(i => i is null ? null : ItemToSave(i)).ToList(),
@@ -387,6 +388,7 @@ public static class SaveGame
         p.SkillSearch = ps.Skills.GetValueOrDefault("search", p.SkillSearch);
         foreach (var (id, value) in ps.Timed)
             if (data.Timed(id) is { } def) p.Timed.Set(def, value);
+        foreach (var (id, grade) in ps.OilGrades ?? []) p.OilGrades[id] = grade;
         foreach (var item in ps.Pack.Select(ToItem).OfType<Item>()) p.Inventory.Add(item);
         foreach (var item in ps.Quiver.Select(ToItem).OfType<Item>()) p.Inventory.Add(item);
         for (var slot = 0; slot < ps.Equipment.Count && slot < Inventory.Slots.Count; slot++)

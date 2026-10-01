@@ -122,6 +122,12 @@ public sealed class Player : IActor
 
     public Inventory Inventory { get; set; } = new();
     public TimedEffects Timed { get; } = new();
+
+    /// <summary>
+    /// AVABand's weapon oils: the grade of the oil behind a temporary brand or slay (by timed effect):
+    /// -1 lesser, +1 greater, added to its multiplier while it lasts (none: Angband's own strength).
+    /// </summary>
+    public Dictionary<string, int> OilGrades { get; } = [];
     public bool IsBlind => Timed.Has(TimedIds.Blind);
     /// <summary>Paralysed, or stunned to the point of being knocked out.</summary>
     /// <summary>Paralysed, or knocked out (Angband: stunned past "Heavy Stun", over 150).</summary>

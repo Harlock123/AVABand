@@ -804,7 +804,17 @@ public sealed partial class GameSession
                 return true;
             }
             case "timed":
+                Player.OilGrades.Remove(e.Arg(0)); // (Angband's own brand, at its own strength)
                 return e.Dice(1).Roll(Rng) is var turns and > 0 && IncreaseTimed(e.Arg(0), turns);
+            case "oil":
+            {
+                // AVABand's weapon oils: oil:<brand>:<grade>:<turns> — the brand as Angband's, its
+                // multiplier changed by the grade (-1 lesser, 0, +1 greater) while it lasts.
+                if (e.Dice(2).Roll(Rng) is not (var oiled and > 0) || !IncreaseTimed(e.Arg(0), oiled)) return false;
+                if (e.Int(1) == 0) Player.OilGrades.Remove(e.Arg(0));
+                else Player.OilGrades[e.Arg(0)] = e.Int(1);
+                return true;
+            }
             case "timed_nores":
                 // Angband TIMED_INC_NO_RES: nothing protects against it (the salt water's paralysis).
                 return e.Dice(1).Roll(Rng) is var still and > 0 && IncreaseTimed(e.Arg(0), still, check: false);
@@ -1252,7 +1262,7 @@ public static class ItemEffects
 {
     public static readonly IReadOnlySet<string> Known = new HashSet<string>
     {
-        "heal", "cure", "reduce", "timed", "timed_nores", "nourish", "satisfy", "teleport", "light_area", "detect_monsters", "map_area",
+        "heal", "cure", "reduce", "timed", "timed_nores", "oil", "nourish", "satisfy", "teleport", "light_area", "detect_monsters", "map_area",
         "detect_objects", "identify", "remove_curse", "fire_damage",
         // Devices and the fuller item list (GameSession.Devices.cs).
         "bolt", "beam", "ball", "breath", "monster_status", "teleport_other", "drain_life", "heal_monster", "haste_monster",

@@ -204,6 +204,8 @@ public sealed class PlayerSave
     public Dictionary<string, int> IntrinsicResists { get; set; } = [];
     public Dictionary<string, int> Skills { get; set; } = [];
     public Dictionary<string, int> Timed { get; set; } = [];
+    /// <summary>AVABand: the grades of the weapon oils on your blows (none in older saves).</summary>
+    public Dictionary<string, int>? OilGrades { get; set; }
     public List<ItemSave> Pack { get; set; } = [];
     public List<ItemSave> Quiver { get; set; } = [];
     /// <summary>One entry per equipment slot (null = empty).</summary>

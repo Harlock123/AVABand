@@ -42,6 +42,53 @@ public class AvaLootTests
         Assert.Contains("When applied, it makes your blows", ObjectInfo.DescribeItem(game, oil));
     }
 
+    [Theory]
+    [InlineData("lesser_oil_of_burning", 10, 20, 2)]
+    [InlineData("oil_of_burning", 20, 40, 3)]
+    [InlineData("greater_oil_of_burning", 40, 80, 4)]
+    public void An_oils_grade_sets_how_long_and_how_hard_it_burns(string kind, int least, int most, int multiplier)
+    {
+        var game = NewGame();
+        var oil = Carry(game, kind);
+        Assert.Contains($"(x{multiplier} against what doesn't resist it)", ObjectInfo.DescribeItem(game, oil));
+        game.Execute(new UseCommand(oil));
+        Assert.InRange(game.Player.Timed["att_fire"], least, most);
+        var brand = Assert.Single(game.TemporaryAttackModifiers().Brands);
+        Assert.Equal("fire", brand.Element);
+        Assert.Equal(multiplier, brand.Multiplier);
+    }
+
+    [Theory]
+    [InlineData("lesser_holy_water", 2)]
+    [InlineData("holy_water", 2)]
+    [InlineData("greater_holy_water", 3)]
+    public void Holy_waters_grade_strengthens_its_smiting(string kind, int multiplier)
+    {
+        var game = NewGame();
+        game.Execute(new UseCommand(Carry(game, kind)));
+        Assert.Equal(multiplier, Assert.Single(game.TemporaryAttackModifiers().Slays).Multiplier);
+    }
+
+    [Fact]
+    public void An_oils_grade_lasts_as_long_as_its_brand_and_is_saved()
+    {
+        var game = NewGame();
+        game.Execute(new UseCommand(Carry(game, "greater_oil_of_venom")));
+        Assert.Equal(1, game.Player.OilGrades["att_pois"]);
+
+        using var stream = new MemoryStream();
+        Angband.Core.Persistence.SaveGame.Save(game, stream);
+        stream.Position = 0;
+        var loaded = Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream);
+        Assert.Equal(4, Assert.Single(loaded.TemporaryAttackModifiers().Brands).Multiplier);
+
+        // Worn off, the grade goes with it.
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        for (var i = 0; i < 100 && game.Player.Timed.Has("att_pois"); i++) game.Execute(new HoldCommand());
+        Assert.False(game.Player.Timed.Has("att_pois"));
+        Assert.Empty(game.Player.OilGrades);
+    }
+
     [Fact]
     public void Venom_oil_uses_angbands_own_poison_brand()
     {
@@ -56,7 +103,8 @@ public class AvaLootTests
     public void The_alchemist_stocks_and_buys_oils()
     {
         var alchemist = TestData.Game.Stores.Single(s => s.Id == "alchemist");
-        Assert.Contains("oil_of_venom", alchemist.Stocked);
+        Assert.Contains("lesser_oil_of_venom", alchemist.Stocked);
+        Assert.Contains("lesser_oil_of_burning", alchemist.Stocked);
         Assert.Contains("holy_water", alchemist.Stocked);
         Assert.Contains("oil", alchemist.AvabandBuys);
     }

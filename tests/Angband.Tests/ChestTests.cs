@@ -129,6 +129,8 @@ public class ChestTests
         var game = Game();
         game.Player.DisarmSkill = 200;
         var messages = Messages(game);
+        // (Few enough hit points that a turn's healing can't make up even a low roll of the blast's 5d8.)
+        game.Player.Hp = game.Player.MaxHp = 200;
         var hp = game.Player.Hp;
         PlaceChest(game, "large_steel_chest", Bit("explosion"), game.Player.Position + new Loc(1, 0));
         game.Execute(new OpenCommand(Direction.East));

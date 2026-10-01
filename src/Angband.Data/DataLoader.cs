@@ -601,7 +601,7 @@ public static class DataLoader
                 foreach (var e in Angband.Core.Game.SpellEffects.Parse(s.Effect, 1))
                 {
                     if (!Angband.Core.Game.SpellEffects.IsKnown(e.Name)) errors.Add($"{owner}: unknown effect '{e.Name}'.");
-                    else if (e.Name is "timed" or "cure" or "reduce" && !timedIds.Contains(e.Arg(0)))
+                    else if (e.Name is "timed" or "cure" or "reduce" or "oil" && !timedIds.Contains(e.Arg(0)))
                         errors.Add($"{owner}: unknown timed effect '{e.Arg(0)}'.");
                 }
             }
@@ -632,7 +632,7 @@ public static class DataLoader
             {
                 if (!Angband.Core.Game.ItemEffects.Known.Contains(e.Name))
                     errors.Add($"{owner}: unknown effect '{e.Name}'.");
-                else if (e.Name is "timed" or "cure" or "reduce" && !timedIds.Contains(e.Arg(0)))
+                else if (e.Name is "timed" or "cure" or "reduce" or "oil" && !timedIds.Contains(e.Arg(0)))
                     errors.Add($"{owner}: unknown timed effect '{e.Arg(0)}'.");
                 else if (e.Name == "summon" && !summonIds.Contains(e.Arg(1)))
                     errors.Add($"{owner}: unknown summon '{e.Arg(1)}'.");

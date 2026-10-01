@@ -93,6 +93,12 @@ public partial class AvaQuestTests
         for (var i = 0; i < 3000 && state.Stage == "hold"; i++)
         {
             game.Player.Hp = game.Player.MaxHp;
+            // (Sent off the level — a monster's teleport-level — back to the tower: the count waits there.)
+            if (game.Player.Depth != state.N("depth"))
+            {
+                q.Jump(state.N("depth"));
+                if (q.Find("grishnag_the_warchief") is { } again) game.Level.Monsters.Remove(again);
+            }
             game.Execute(new HoldCommand());
         }
         Assert.Contains(q.Said, s => s.Contains("another war-band comes"));

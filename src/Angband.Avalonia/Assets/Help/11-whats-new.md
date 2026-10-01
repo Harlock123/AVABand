@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Grades of weapon oil**: Lesser oils (weaker, shorter) and Greater oils (stronger, twice as long)
+  beside the ordinary ones.
 - **Monster trophies**: dragons leave scales, trolls their hides, great spiders their silk — and the
   Armoury works them into your armour for their resistance (or a troll's healing).
 - **Hoards**: a lair's monsters now guard a hoard at its heart, and running a gauntlet pays — a reward

@@ -97,6 +97,14 @@ public static class ObjectInfo
             "image" => "makes you hallucinate", "amnesia" => "makes you forget things",
             _ => $"inflicts {TimedNoun(data, e.Arg(0))}",
         } + (e.Int(1) >= 10000 ? "" : $" for {e.Arg(1)} turns"),
+        // AVABand's weapon oils: the brand, its strength by the oil's grade, and for how long.
+        "oil" => e.Arg(0) switch
+        {
+            "att_pois" => "makes your blows poison", "att_fire" => "makes your blows burn", "att_cold" => "makes your blows freeze",
+            "att_elec" => "makes your blows shock", "att_acid" => "makes your blows dissolve", "att_evil" => "makes your blows smite evil",
+            _ => $"gives you {TimedNoun(data, e.Arg(0))}",
+        } + (data.Timed(e.Arg(0)) is { } oiled && (oiled.Brand?.Multiplier ?? oiled.Slay?.Multiplier) is { } times
+            ? $" (x{Math.Max(2, times + e.Int(1))} against what doesn't resist it)" : "") + $" for {e.Arg(2)} turns",
         "nourish" => "feeds you",
         "satisfy" => "fills your stomach",
         "set_food" => "leaves you hungry",

@@ -132,6 +132,8 @@ if (args.Length > 0 && args[0] == "items")
         ("gem: cursed", i => i.Base.Id == "gem" && i.Kind.Curses.Count > 0),
         ("(Porter)", i => i.Ego?.Id == "porter"),
         ("weapon oil", i => i.Base.Id == "oil"),
+        ("  of them lesser", i => i.Base.Id == "oil" && i.Kind.Id.StartsWith("lesser_")),
+        ("  of them greater", i => i.Base.Id == "oil" && i.Kind.Id.StartsWith("greater_")),
         ("bracers ego", i => i.Base.Id == "bracers" && i.Ego is not null),
         ("bag ego", i => i.Base.Id == "bag" && i.Ego is not null),
         ("AVABand artifact", i => i.Artifact is { } a && avaArtifacts.Contains(a.Id)),

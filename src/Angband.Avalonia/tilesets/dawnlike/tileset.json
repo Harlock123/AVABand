@@ -1442,6 +1442,18 @@
     "object:black_dragon_scale": "ava_black_dragon_scale.png",
     "object:green_dragon_scale": "ava_green_dragon_scale.png",
     "object:troll_hide": "ava_troll_hide.png",
-    "object:spider_silk": "ava_spider_silk.png"
+    "object:spider_silk": "ava_spider_silk.png",
+    "object:lesser_oil_of_venom": "ava_oil_of_venom.png",
+    "object:greater_oil_of_venom": "ava_oil_of_venom.png",
+    "object:lesser_oil_of_burning": "ava_oil_of_burning.png",
+    "object:greater_oil_of_burning": "ava_oil_of_burning.png",
+    "object:lesser_oil_of_frost": "ava_oil_of_frost.png",
+    "object:greater_oil_of_frost": "ava_oil_of_frost.png",
+    "object:lesser_oil_of_storms": "ava_oil_of_storms.png",
+    "object:greater_oil_of_storms": "ava_oil_of_storms.png",
+    "object:lesser_oil_of_corrosion": "ava_oil_of_corrosion.png",
+    "object:greater_oil_of_corrosion": "ava_oil_of_corrosion.png",
+    "object:lesser_holy_water": "ava_holy_water.png",
+    "object:greater_holy_water": "ava_holy_water.png"
   }
 }

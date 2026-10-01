@@ -103,10 +103,9 @@ public sealed partial class GameSession
             (multiplier, verb, rune, oMultiplier) = worn;
         // Temporary brands and slays (Angband player_timed.txt brand/slay: the poison coating,
         // Smite Evil, Demon Bane...) better the blow, weapon or not.
-        var temporary = Player.Timed.Active.Select(kv => Data.Timed(kv.Key)).OfType<TimedEffectDef>().ToList();
-        if (temporary.Any(t => t.Brand is not null || t.Slay is not null)
-            && BestMultiplier([.. temporary.Select(t => t.Slay).OfType<SlayDef>()], [.. temporary.Select(t => t.Brand).OfType<BrandDef>()],
-                monster, learn: false) is var temp
+        var (tempSlays, tempBrands) = TemporaryAttackModifiers();
+        if ((tempSlays.Count > 0 || tempBrands.Count > 0)
+            && BestMultiplier(tempSlays, tempBrands, monster, learn: false) is var temp
             && (PercentDamage ? temp.OMultiplier > oMultiplier : temp.Multiplier > multiplier))
             (multiplier, verb, rune, oMultiplier) = (temp.Multiplier, temp.Verb, null, temp.OMultiplier);
         int damage;
@@ -412,4 +411,25 @@ public sealed partial class GameSession
         CriticalGrade.HighSuperb => " It was a *SUPERB* hit!",
         _ => "",
     };
+
+    /// <summary>
+    /// The temporary slays and brands on your blows (Angband player_timed.txt: a poison coating, Smite
+    /// Evil...), each at its strength — an AVABand weapon oil's grade added to its multiplier (a lesser
+    /// oil's brand x2, a greater one's x4), never below x2.
+    /// </summary>
+    public (List<SlayDef> Slays, List<BrandDef> Brands) TemporaryAttackModifiers()
+    {
+        var slays = new List<SlayDef>();
+        var brands = new List<BrandDef>();
+        foreach (var (id, _) in Player.Timed.Active)
+        {
+            if (Data.Timed(id) is not { } t) continue;
+            var grade = Player.OilGrades.GetValueOrDefault(id);
+            if (t.Slay is { } slay)
+                slays.Add(grade == 0 ? slay : new SlayDef { MonsterFlag = slay.MonsterFlag, Multiplier = Math.Max(2, slay.Multiplier + grade), Verb = slay.Verb, Name = slay.Name });
+            if (t.Brand is { } brand)
+                brands.Add(grade == 0 ? brand : new BrandDef { Element = brand.Element, Multiplier = Math.Max(2, brand.Multiplier + grade), Verb = brand.Verb, Name = brand.Name });
+        }
+        return (slays, brands);
+    }
 }

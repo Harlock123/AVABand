@@ -194,6 +194,7 @@ public sealed partial class GameSession
     /// <summary>When a timed effect ends: sprinting leaves you slow, scrambled stats return.</summary>
     private void OnTimedEnded(string id)
     {
+        Player.OilGrades.Remove(id); // (an oil's grade goes with its brand)
         switch (id)
         {
             case "command":

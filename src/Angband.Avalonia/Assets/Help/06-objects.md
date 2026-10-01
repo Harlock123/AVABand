@@ -79,8 +79,12 @@ too.
 A **weapon oil** is rubbed on your weapon (or your hands) — **U**, or *Apply* from its menu — and
 for a while (20 to 40 turns) your blows carry it: **Venom Oil** poisons, **Burning Oil** burns,
 **Frost Oil** freezes, **Storm Oil** shocks, **Corrosive Oil** dissolves, and **Holy Water** smites
-evil creatures. A creature that resists the element shrugs it off. The **Alchemist** (5) keeps
-Venom Oil, Burning Oil and Holy Water, and buys oils; the rest turn up in the dungeon.
+evil creatures. A creature that resists the element shrugs it off.
+
+Each comes in three grades. A **Lesser** oil is weaker (×2) and wears off sooner (10 to 20 turns);
+the ordinary oil burns ×3 for 20 to 40 turns; a **Greater** oil strikes ×4 and lasts 40 to 80 turns
+(Holy Water smites ×2, or ×3 when Greater). Lesser oils turn up from the first levels, Greater ones
+deep down. The **Alchemist** (5) keeps Lesser Venom and Burning Oil and Holy Water, and buys oils.
 
 ## Ignoring
 
