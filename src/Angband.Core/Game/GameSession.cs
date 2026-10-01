@@ -403,6 +403,7 @@ public sealed partial class GameSession : ITurnHandler
                 }
             }
             else if (shopId == "inn") EnterInn();
+            else if (shopId == "artificer") EnterArtificer();
             else Publish(new MessageEvent($"The {Data.Shops.FirstOrDefault(s => s.Id == shopId)?.Name ?? shopId} is closed."));
         }
         else if (feature.Has(TerrainFlags.Stair))

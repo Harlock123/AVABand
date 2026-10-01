@@ -133,5 +133,17 @@
    "given": "You gave the palantír to the White Council's messenger.",
    "keep": "You kept the palantír. It shows you much, and the Eye has seen you too."
   }
+ },
+ {
+  "id": "chisel",
+  "name": "The Artificer's Chisel",
+  "minLevel": 0,
+  "offer": "SlatriBartSlow sets down his loupe. \"I had a workshop once, below — a good one, where the stone was quiet. Something came up out of the dark at {feet} ft (level {depth}) and I ran, and left my star-forged chisel on the bench. Without it every cut is a gamble. Bring it back, and I'll cut you a socket for nothing — and never slip on your gear again.\"",
+  "stages": {
+   "find": "SlatriBartSlow's star-forged chisel lies in his fallen workshop at {feet} ft (level {depth}). Find it.",
+   "found": "You have the star-forged chisel. Take it back to SlatriBartSlow at the Arcane Artificer (0) — or keep it, and one day cut a socket yourself, even into an artifact.",
+   "returned": "You brought SlatriBartSlow his chisel. He owes you a socket for nothing, and asks half for the rest — and his hand no longer slips.",
+   "kept": "You kept SlatriBartSlow's star-forged chisel. It has one cut left in it for you, into anything that would take a socket, even an artifact."
+  }
  }
 ]

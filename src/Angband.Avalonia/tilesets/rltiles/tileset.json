@@ -1337,6 +1337,8 @@
     "object:lesser_oil_of_corrosion": "ava_oil_of_corrosion.png",
     "object:greater_oil_of_corrosion": "ava_oil_of_corrosion.png",
     "object:lesser_holy_water": "ava_holy_water.png",
-    "object:greater_holy_water": "ava_holy_water.png"
+    "object:greater_holy_water": "ava_holy_water.png",
+    "terrain:shop_artificer": ["main:12,0", "main:20,0"],
+    "object:star_forged_chisel": "main:15,10"
   }
 }

@@ -66,6 +66,7 @@ public class RepeatUiTests
         window.KeyPressQwerty(PhysicalKey.G, RawInputModifiers.Shift); // study
         window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);  // Magic Missile
         game.Player.MaxMana = game.Player.Mana = 20;
+        TestKit.OpenGround(vm);
         // Something tough to shoot at, in the open east of the player.
         var at = game.Level.AllLocs().First(p => p.Y == game.Player.Position.Y && p.X > game.Player.Position.X + 1
                                                  && p.X < game.Player.Position.X + 5 && game.Level.IsEmptyFloor(p));

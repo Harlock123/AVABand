@@ -25,7 +25,7 @@ internal static class QuestBot
     private static readonly Dictionary<string, int> Levels = new()
     {
         ["sealed_door"] = 16, ["burden"] = 22, ["broken_blade"] = 24, ["consecration"] = 30, ["letter"] = 18, ["thief"] = 22, ["board"] = 15,
-        ["apprentice"] = 22, ["warden"] = 32, ["heart"] = 38, ["watch"] = 40, ["stone"] = 45,
+        ["apprentice"] = 22, ["warden"] = 32, ["heart"] = 38, ["watch"] = 40, ["stone"] = 45, ["chisel"] = 26,
     };
 
     public const int Budget = 6000;
@@ -73,6 +73,7 @@ internal static class QuestBot
                 "heart" => Heart(run),
                 "watch" => Watch(run),
                 "stone" => Stone(run),
+                "chisel" => Chisel(run),
                 _ => false,
             };
         }
@@ -221,6 +222,25 @@ internal static class QuestBot
         GoInto(r, "alchemist");
         Answer(r, "apprentice:reward");
         return s.Stage == "done";
+    }
+
+    /// <summary>The Artificer's Chisel: asked of SlatriBartSlow, the chisel fetched from his workshop and given back, the free socket taken.</summary>
+    private static bool Chisel(Run r)
+    {
+        GoInto(r, "artificer");
+        Answer(r, "artificer:trouble");
+        Answer(r, "accept:chisel");
+        if (r.Game.AvaQuests.Get("chisel") is not { } s) return false;
+        for (var tries = 0; tries < 4 && s.Stage == "find" && !r.OutOfTime; tries++)
+        {
+            Jump(r, s.N("depth"));
+            Pursue(r, () => s.Stage != "find", () => FloorItem(r, "star_forged_chisel"), pickup: true, patience: 2500);
+        }
+        if (s.Stage != "found") return false;
+        GoInto(r, "artificer");
+        Answer(r, "chisel:return");
+        if (r.Prompt?.Choices.FirstOrDefault(c => c.Id.StartsWith("artificer:cut:", StringComparison.Ordinal)) is { } cut) Answer(r, cut.Id);
+        return s.Stage == "returned";
     }
 
     private static bool Warden(Run r)
@@ -458,7 +478,7 @@ internal static class QuestBot
 
     public static void Report(GameData data, int seeds)
     {
-        var quests = new[] { "sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "warden", "heart", "watch", "stone", "board" };
+        var quests = new[] { "sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "warden", "heart", "watch", "stone", "chisel", "board" };
         var classes = new[] { "warrior", "mage", "ranger" };
         Console.WriteLine("quest          done  died  decisions  potions  levels   (per class: warrior / mage / ranger, " + seeds + " seeds each)");
         foreach (var quest in quests)
@@ -482,8 +502,8 @@ internal static class QuestBot
             // (Seeds on which the bot sees each quest through, so every ending is played on every push.)
             ("sealed_door", "warrior", 202), ("burden", "warrior", 102), ("broken_blade", "warrior", 101),
             ("consecration", "warrior", 101), ("letter", "mage", 505), ("letter", "warrior", 506), ("letter", "rogue", 507),
-            ("thief", "warrior", 101), ("board", "ranger", 202), ("apprentice", "warrior", 404), ("warden", "warrior", 101),
-            ("heart", "warrior", 303), ("watch", "warrior", 202), ("stone", "warrior", 311),
+            ("thief", "warrior", 102), ("board", "ranger", 202), ("apprentice", "warrior", 404), ("warden", "warrior", 101),
+            ("heart", "warrior", 303), ("watch", "warrior", 101), ("stone", "warrior", 311), ("chisel", "warrior", 101),
         };
         foreach (var (quest, cls, seed) in cases)
         {

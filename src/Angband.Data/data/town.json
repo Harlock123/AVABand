@@ -13,6 +13,7 @@
     { "id": "magic", "name": "Magic shop", "terrain": "shop_magic" },
     { "id": "black_market", "name": "Black market", "terrain": "shop_black_market" },
     { "id": "home", "name": "Home", "terrain": "shop_home", "isHome": true },
-    { "id": "inn", "name": "Prancing Pony", "terrain": "shop_inn" }
+    { "id": "inn", "name": "Prancing Pony", "terrain": "shop_inn" },
+    { "id": "artificer", "name": "Arcane Artificer", "terrain": "shop_artificer" }
   ]
 }

@@ -81,9 +81,9 @@ public partial class AvaQuestTests
     {
         var data = TestData.Game;
         Assert.Equal(["sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "cartographer", "warden",
-                "heart", "watch", "stone"],
+                "heart", "watch", "stone", "chisel"],
             data.AvaQuests.Select(q => q.Id));
-        Assert.Equal(12, data.Vaults.Count(v => v.Type == "AVABand quest"));
+        Assert.Equal(13, data.Vaults.Count(v => v.Type == "AVABand quest"));
         Assert.All(data.Monsters.Where(m => m.Id is "durgash_the_keybearer" or "hathol_lord_of_the_barrow" or "the_shade_of_the_stair"
                                                    or "skorvath_the_cold_drake" or "grishnag_the_warchief" or "the_keeper_of_the_stone"),
             m => Assert.True(m.Has(MonsterFlags.Questor)));

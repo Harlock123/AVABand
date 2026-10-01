@@ -119,7 +119,9 @@ public class InputUiTests
         var game = vm.Game;
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
 
-        // Carve a known corridor running east from the player, ten squares long.
+        // Carve a known corridor running east from the player, ten squares long (somewhere it fits).
+        game.Player.Position = new Loc(Math.Clamp(game.Player.Position.X, 2, game.Level.Width - 14),
+            Math.Clamp(game.Player.Position.Y, 2, game.Level.Height - 3));
         var start = game.Player.Position;
         var terrain = game.Data.Terrain.Ids;
         for (var dx = -1; dx <= 11; dx++)

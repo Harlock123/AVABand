@@ -17,6 +17,7 @@ public sealed partial class GameSession
     {
         ["sealed_door"] = 16, ["burden"] = 22, ["broken_blade"] = 24, ["consecration"] = 30, ["letter"] = 18, ["thief"] = 22,
         ["apprentice"] = 22, ["cartographer"] = 12, ["warden"] = 32, ["heart"] = 38, ["watch"] = 40, ["stone"] = 45,
+        ["chisel"] = 26,
     };
 
     private static readonly EquipSlot[] TrialSlots =

@@ -312,6 +312,22 @@ core kept busy.
     unique no deeper than two levels past your deepest (not a quest's own), or **scouting** down to
     a depth three to five levels past it — two taken at once, renewed whenever you come back up,
     paid at the inn.
+  - **The Arcane Artificer** (the town's tenth building, `0`, kept by SlatriBartSlow;
+    `Game/GameSession.Artificer.cs`, `GameSession.AvaQuests.Artificer.cs`): walking in, he offers to
+    cut a socket for gems into anything of yours that could take one (`ArtificerSocketLimit`: body
+    armour and shields 2, helms, gloves, boots, cloaks, weapons and launchers 1, bracers 1 beyond
+    their own; no rings, amulets, lights or artifacts), each at its price — 2,500 gold plus a quarter
+    of the piece's worth, a second three times as much (`SocketCost`) — and one try in ten
+    (`SocketFailChance`) the piece loses a point of enchantment, no socket is cut and half the fee
+    comes back. Sockets he cuts are `Item.AddedSockets` (saved); gems go in and come out (at the
+    Armoury) as with bracers. From level 20 he offers his own quest, **The Artificer's Chisel**
+    (`chisel`, found rather than offered at the inn): his star-forged chisel lies in his fallen
+    workshop (`quest_artificer_workshop`) 3 levels past your deepest (1000 to 2000 ft), guarded.
+    Given back ("returned"), he cuts one socket free, asks half after and never slips; kept, it cuts
+    one socket by your own hand (use it), even into an artifact, and is spent. The soak's quest bot
+    plays it (`Chisel`), and its town trips buy a socket. Measured with `BOT_SOCKETS=1` (the bot's kit
+    with every socket filled): survival within noise of the unsocketed kit at 500-2500 ft
+    (docs/balance.md).
   - Each story quest has a **room of its own** (`templates/ava_vaults.json`, type "AVABand quest",
     never chosen at random) built into the level that needs it as its first room — the classic
     profile, as Angband's quest levels are — with three new vault symbols: `(` the quest's feature,

@@ -62,6 +62,7 @@ public sealed partial class GameSession
     private (string Quest, string Room)? MoreRoomFor(int depth)
     {
         if (DeepRoomFor(depth) is { } deep) return deep;
+        if (ChiselRoomFor(depth) is { } chisel) return chisel;
         if (Active("apprentice") is { Stage: "find" } apprentice && depth == apprentice.N("depth")) return ("apprentice", "quest_apprentice_cave");
         if (Active("warden") is { } warden && depth == warden.N("depth") && !KilledUniques.Contains("the_shade_of_the_stair"))
             return ("warden", "quest_warden_hall");
@@ -83,6 +84,7 @@ public sealed partial class GameSession
     private bool FurnishMoreRoom(string quest)
     {
         if (FurnishDeepRoom(quest)) return true;
+        if (FurnishChiselRoom(quest)) return true;
         var depth = Level.Depth;
         switch (quest)
         {
@@ -233,6 +235,7 @@ public sealed partial class GameSession
     private bool MoreUse(string kindId)
     {
         if (DeepUse(kindId)) return true;
+        if (ChiselUse(kindId)) return true;
         if (kindId != "wardens_taper") return false;
         Publish(new MessageEvent("Step onto each cold brazier in the Wardens' hall to light it."));
         return true;

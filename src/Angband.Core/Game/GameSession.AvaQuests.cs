@@ -53,6 +53,7 @@ public sealed partial class GameSession
             case "gem": GemChoice(parts); break;
             case "ident": IdentifyChoice(parts); break;
             case "trophy": TrophyChoice(parts); break;
+            case "artificer" or "chisel": ArtificerChoice(parts); break;
             case "armoury": if (parts.ElementAtOrDefault(1) == "trophy") OfferTrophyWork(); else OfferGemRemoval(); break;
             default: StoryChoice(parts); break;
         }

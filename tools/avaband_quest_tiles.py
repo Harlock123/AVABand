@@ -353,6 +353,9 @@ BORROWED = [
     ("monster:the_keeper_of_the_stone", ["monster:nether_wraith", "monster:black_wraith", "monster:white_wraith"]),
     ("object:heart_of_the_mountain", ["object:arkenstone", "object-base:amulet"]),
     ("object:palantir", ["object:elfstone", "object:star", "object-base:light"]),
+    # The Arcane Artificer's door, and his star-forged chisel.
+    ("terrain:shop_artificer", ["terrain:shop_magic", "terrain:shop_general"]),
+    ("object:star_forged_chisel", ["object:shovel", "object-base:digger"]),
     # AVABand's lamps, helm and gloves: their nearest Angband kind's picture.
     ("object:dwarven_lamp", ["object:lantern", "object-base:light"]),
     ("object:elven_lantern", ["object:lantern", "object-base:light"]),

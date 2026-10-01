@@ -193,6 +193,7 @@ public static class SaveGame
         AddedFlags = i.AddedFlags.Count == 0 ? null : [.. i.AddedFlags],
         AddedCurses = i.AddedCurses.Count == 0 ? null : [.. i.AddedCurses],
         Trophy = i.Trophy,
+        AddedSockets = i.AddedSockets,
     };
 
     /// <summary>
@@ -336,6 +337,7 @@ public static class SaveGame
             item.AddedFlags.AddRange(s.AddedFlags ?? []);
             item.AddedCurses.AddRange(s.AddedCurses ?? []);
             item.Trophy = s.Trophy;
+            item.AddedSockets = s.AddedSockets;
             return item;
         }
 

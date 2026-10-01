@@ -365,6 +365,7 @@ public sealed partial class GameSession
         if (StoreHere is not { } store)
         {
             if (Level.FeatureAt(Player.Position).Shop == "inn") EnterInn();
+            else if (Level.FeatureAt(Player.Position).Shop == "artificer") EnterArtificer();
             else Publish(new MessageEvent("There is no store here."));
             return 0;
         }

@@ -448,3 +448,17 @@ With the oils in three grades (lesser, ordinary, greater: commonness split about
 from the first levels and the greater from 1500 ft), all oils together still come about as often as
 potions of Speed — 16 to 51 per 100 levels — the lesser most of them (10 to 27) and the greater a few
 (up to 14 at 2500 ft).
+
+## Sockets from the Arcane Artificer
+
+What a kit with every socket the Artificer would cut, each filled with a gem made for the depth,
+does for the bot (`BOT_SOCKETS=1`, 40 runs at each depth). Survival %, unsocketed / socketed:
+
+| class | 500 ft | 1000 ft | 1500 ft | 2000 ft | 2500 ft |
+|---|---|---|---|---|---|
+| warrior | 100 / 97.5 | 97.5 / 97.5 | 95 / 100 | 95 / 97.5 | 100 / 92.5 |
+| mage | 87.5 / 100 | 95 / 92.5 | 90 / 95 | 90 / 85 | 80 / 80 |
+
+Within noise but for the mage at 500 ft — gems' resistances and armour matter most to the frail and
+the shallow — and the gold (2,500 and up for each socket, three times that for a second) keeps a
+fully socketed kit a late-game thing. No change made.

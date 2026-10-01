@@ -275,7 +275,7 @@ if (play)
     };
     Console.WriteLine($"{count} runs per depth; a clvl-matched {(race is null ? "" : race + " ")}{cls}{(race is not null && !abilities ? " (racial abilities off)" : "")} "
                       + $"with depth-made gear and potions plays up to {Bot.MaxTurns} turns" + (Bot.Plain ? " (plain bot)" : "")
-                      + (blowsOff ? " (Angband's blows off)" : ""));
+                      + (blowsOff ? " (Angband's blows off)" : "") + (Bot.Sockets ? " (kit fully socketed, gems set)" : ""));
     Console.WriteLine("depth | survived% | left level% | turns | kills | exp gained | level seen% | potions | blinks | rests | shots/casts | pickups | tried");
     foreach (var depth in depths)
     {
@@ -404,6 +404,7 @@ internal static class Bot
         if (!Plain) Give(game, "ration_of_food", 8);
         if (!Plain) LearnSpells(game);
         if (!Plain && game.HasRaceAbility("DUAL_WIELD")) OffHand(game, Math.Max(depth, clvl), seed);
+        if (Sockets) SocketedKit(game, Math.Max(depth, clvl), seed);
         game.Player.Hp = game.Player.MaxHp;
         // (Items given straight into the pack: count their weight, as a loaded game would.)
         game.RecalculateBonuses();
@@ -462,6 +463,30 @@ internal static class Bot
         // The shield it replaced isn't carried about.
         foreach (var shield in game.Player.Inventory.Pack.Where(i => i.Base.Slot == EquipSlot.Shield).ToList())
             game.Player.Inventory.Remove(shield, shield.Number, () => game.Objects.NextSerial++);
+        game.RecalculateBonuses();
+    }
+
+    /// <summary>BOT_SOCKETS=1: every piece of the kit given all the sockets the Arcane Artificer would cut, each with a gem.</summary>
+    public static readonly bool Sockets = Environment.GetEnvironmentVariable("BOT_SOCKETS") == "1";
+
+    /// <summary>
+    /// The kit as a rich player would have it from the Arcane Artificer: each piece with all the sockets
+    /// he allows, and a gem made for the depth (not cursed) set in each.
+    /// </summary>
+    private static void SocketedKit(GameSession game, int depth, ulong seed)
+    {
+        var rng = new GameRandom(seed ^ 0x50C4);
+        foreach (var piece in game.Player.Inventory.Equipped.ToList())
+        {
+            piece.AddedSockets = GameSession.ArtificerSocketLimit(piece);
+            for (var tries = 0; tries < 400 && piece.Gems.Count < piece.Sockets; tries++)
+                if (game.Objects.Make(rng, depth, bases: ["gem"]) is { IsCursed: false } gem && GameSession.IsGem(gem) && gem.Kind.Curses.Count == 0)
+                {
+                    game.Knowledge.LearnKind(gem.Kind);
+                    var carried = game.Player.Inventory.Add(gem)!;
+                    game.Execute(new SetGemCommand(piece, carried));
+                }
+        }
         game.RecalculateBonuses();
     }
 
@@ -919,13 +944,14 @@ internal static class Soak
         var target = start;
         var descents = 0;
         // How often AVABand's additions came up (so a soak that stopped using them shows it).
-        int gemsSet = 0, gemsOut = 0, identified = 0, tidied = 0;
+        int gemsSet = 0, gemsOut = 0, identified = 0, tidied = 0, socketsCut = 0;
         game.Events.Subscribe<MessageEvent>(m =>
         {
             if (m.Text.StartsWith("You set ", StringComparison.Ordinal)) gemsSet++;
             else if (m.Text.StartsWith("The armourer prises", StringComparison.Ordinal) || m.Text.Contains("cracks as it comes free")) gemsOut++;
             else if (m.Text.StartsWith("The alchemist turns", StringComparison.Ordinal)) identified++;
             else if (m.Text.StartsWith("You tidy your pack", StringComparison.Ordinal) || m.Text.StartsWith("Your pack is tidy", StringComparison.Ordinal)) tidied++;
+            else if (m.Text.Contains("with a clean new socket")) socketsCut++;
         });
         game.Recorder = new ReplayRecorder(game);
         var mind = new Bot.Mind();
@@ -989,7 +1015,7 @@ internal static class Soak
         var file = game.Recorder.ToFile(game);
         var end = $"{done} decisions, to {maxDepth * 50} ft, {(game.Player.IsDead ? "killed by " + game.Player.KilledBy : "alive")}, "
                   + $"{file.Steps.Count} steps, slowest decision {slowest.TotalMilliseconds:0} ms"
-                  + (tourist ? "" : $"; gems set {gemsSet}, taken out {gemsOut}, identified {identified}, tidied {tidied}");
+                  + (tourist ? "" : $"; gems set {gemsSet}, taken out {gemsOut}, identified {identified}, tidied {tidied}, sockets cut {socketsCut}");
         return Finish(data, game, $"{cls} {seed}", $"{cls} {seed} from {start * 50} ft", marks, end, failure, keep, cls, seed);
     }
 
@@ -1021,8 +1047,9 @@ internal static class Soak
 
     /// <summary>
     /// A trip to town (recorded, like the jumps): into the Armoury to have a gem taken out (it sets it
-    /// again later, if it didn't crack), into the Alchemist's to have everything unknown identified,
-    /// and a tidy of the pack. A trip that can't reach a shop (someone in the way) leaves it be.
+    /// again later, if it didn't crack), into the Alchemist's to have everything unknown identified, to
+    /// the Arcane Artificer for a socket (if it can pay), and a tidy of the pack. A trip that can't
+    /// reach a shop (someone in the way) leaves it be.
     /// </summary>
     private static void TownTrip(GameSession game)
     {
@@ -1030,16 +1057,24 @@ internal static class Soak
         game.Execute(new TidyPackCommand());
         QuestPromptEvent? prompt = null;
         using var listen = game.Events.Subscribe<QuestPromptEvent>(e => prompt = e);
-        foreach (var (shop, pick) in new[] { ("armoury", "gem:out:"), ("alchemist", "ident:") })
+        foreach (var (shop, pick) in new[] { ("armoury", "gem:out:"), ("alchemist", "ident:"), ("artificer", "artificer:cut:") })
         {
             if (game.IsGameOver || game.Player.Depth != 0) return;
             var door = game.Level.AllLocs().FirstOrDefault(l => game.Level.FeatureAt(l).Shop == shop);
+            prompt = null;
             for (var step = 0; step < 300 && !game.IsGameOver && game.Player.Position != door; step++)
             {
                 if (game.FindPath(game.Player.Position, door) is not { Count: > 0 } path) break;
                 game.Execute(new WalkCommand(Bot.Toward(game.Player.Position, path[0])));
             }
             if (game.Player.Position != door) continue;
+            // (The Arcane Artificer asks as you walk in: a socket for the first thing he offers, then out.)
+            if (shop == "artificer")
+            {
+                if (prompt?.Choices.FirstOrDefault(c => c.Id.StartsWith(pick, StringComparison.Ordinal)) is { } socket)
+                    game.Execute(new QuestChoiceCommand(socket.Id));
+                continue;
+            }
             prompt = null;
             game.Execute(new StoreServicesCommand());
             // One service ("everything" at the Alchemist's), then back to the shop and out.

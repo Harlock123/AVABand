@@ -103,7 +103,7 @@ public sealed partial class GameSession
                 choices.Add(($"gem:out:{host.Serial}:{i}",
                     $"Take {Describe(host.Gems[i])} out of your {ItemNaming.Describe(host, Knowledge, withArticle: false, full: false)} ({GemRemovalCost(host.Gems[i])} gold)"));
         choices.Add(("back:armoury", "Back to the shop"));
-        AskQuest("The Armoury", "The armourer eyes your bracers. \"I can prise a stone out of those, if you like. For a price — and I don't promise the stone.\"",
+        AskQuest("The Armoury", "The armourer eyes your settings. \"I can prise a stone out of those, if you like. For a price — and I don't promise the stone.\"",
             [.. choices]);
     }
 

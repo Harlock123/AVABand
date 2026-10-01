@@ -127,6 +127,8 @@ public sealed class ItemSave
     public List<string>? AddedCurses { get; set; }
     /// <summary>AVABand: the trophy worked into a piece of armour (none in older saves).</summary>
     public string? Trophy { get; set; }
+    /// <summary>AVABand: sockets the Arcane Artificer cut (none in older saves).</summary>
+    public int AddedSockets { get; set; }
 }
 
 public sealed class SlaySave

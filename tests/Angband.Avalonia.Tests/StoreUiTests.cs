@@ -339,4 +339,25 @@ public class StoreUiTests
         vm.ToggleDebugMarkCommand.Execute(null);
         Assert.True(vm.DebugMarked);
     }
+
+    /// <summary>The Arcane Artificer ('0'): walking in, SlatriBartSlow offers a socket for each piece that could take one.</summary>
+    [AvaloniaFact]
+    public void The_Arcane_Artificer_offers_sockets()
+    {
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var game = vm.Game;
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        var door = game.Level.AllLocs().Single(p => game.Level.FeatureAt(p).Shop == "artificer");
+        game.Player.Position = game.Level.AllLocs().First(p => p.ChebyshevTo(door) == 1 && game.Level.IsPassable(p)
+                                                              && game.Level.FeatureAt(p).Shop is null);
+        vm.Execute(new WalkCommand(Angband.Core.Geometry.DirectionExtensions.FromOffset(door.X - game.Player.Position.X, door.Y - game.Player.Position.Y)));
+        Assert.True(vm.IsPrompting);
+        Assert.Equal("The Arcane Artificer", vm.PromptTitle);
+        Assert.Contains(vm.ChoiceRows, r => r.Text.StartsWith("A socket in your Soft Leather Armour"));
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "artificer");
+    }
 }

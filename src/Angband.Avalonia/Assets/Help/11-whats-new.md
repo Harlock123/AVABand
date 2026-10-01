@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **The Arcane Artificer** (0), a new building in town: SlatriBartSlow cuts sockets for gems into
+  your armour and weapons — for a great deal of gold, and now and then his hand slips. From level 20
+  he has a quest of his own: **The Artificer's Chisel**.
 - **Grades of weapon oil**: Lesser oils (weaker, shorter) and Greater oils (stronger, twice as long)
   beside the ordinary ones.
 - **Monster trophies**: dragons leave scales, trolls their hides, great spiders their silk — and the

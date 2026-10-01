@@ -14,6 +14,20 @@ or **scout** down to a depth a few levels past your deepest. You can have two bo
 at a time; the postings change whenever you come back up to town, and you collect your pay at the
 inn.
 
+## The Arcane Artificer
+
+The town's tenth building (the `0`), where **SlatriBartSlow** cuts sockets for gems into your gear —
+for a great deal of gold. Body armour and shields can take two, helms, gloves, boots, cloaks,
+weapons and launchers one, bracers one beyond their own; never rings, amulets, lights or artifacts.
+A first socket costs 2,500 gold and a quarter of the piece's worth, a second three times as much,
+and one try in ten his hand slips: the piece loses a point of enchantment, no socket is cut, and he
+gives back half. Gems go into his sockets as into bracers, and the Armoury takes them out again.
+
+From level 20 he'll tell you about his lost **star-forged chisel** — **The Artificer's Chisel**: it
+lies in his fallen workshop deep below. Bring it back and he cuts you a socket for nothing, asks
+half for the rest, and his hand never slips again. Or keep it, and use it once yourself — it cuts a
+socket into anything that would take one, even an artifact.
+
 ## The quests
 
 - **The Sealed Door** (from level 5): Durgash the Keybearer holds a dwarven key in his hall. Take it
