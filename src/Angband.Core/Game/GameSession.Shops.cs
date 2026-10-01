@@ -524,6 +524,7 @@ public sealed partial class GameSession
     /// </summary>
     private void GreetInShop(Store store)
     {
+        if (IsTutorial) TutorialDone.Add("shop"); // (the tutorial's Armoury lesson)
         if (store.IsHome || store.Owner is not { } owner || Rng.OneIn(2)) return;
         var shortName = owner.Name.Split(' ')[0];
         if (Rng.OneIn(3))

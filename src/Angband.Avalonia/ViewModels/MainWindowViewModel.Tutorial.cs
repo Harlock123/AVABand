@@ -33,11 +33,17 @@ public sealed partial class MainWindowViewModel
         TutorialStep.Trap => "A trap (^) lies in the corridor, with no way round. Walk at it to disarm it (keep trying if you fail), "
                              + $"or press {KeyName(InputAction.WalkIntoTrap)} to jump onto it on purpose.",
         TutorialStep.Fight => "A kobold (k) sleeps in the next room. Walk into it to attack it. "
-                              + $"If you get hurt, quaff a potion ({KeyName(InputAction.Quaff)}). {KeyName(InputAction.Look)} looks at it first.",
+                              + $"If you get hurt, quaff a potion ({KeyName(InputAction.Quaff)}). {KeyName(InputAction.Look)} looks at it first: "
+                              + "once you know its attacks, what you recall of it ends with how dangerous it is to you.",
         TutorialStep.Recall => "Well fought! Through the next door lies a Scroll of Word of Recall (?). Pick it up and read it "
                                + $"({KeyName(InputAction.Read)}): it's how you get home from the deep, and back down again.",
         TutorialStep.Inn => "The door marked 9 is the Prancing Pony, the inn in town (put here just for the lesson). "
                             + "Walk onto it to see what it offers: quests, and work on its notice board.",
+        TutorialStep.Shop => "The door marked 2 is the Armoury (here for the lesson). Walk in: under each thing for sale a note says "
+                             + "whether it would suit you — Better, Worse or Mixed, and why. When a shop can do something more for you, a Services "
+                             + "button (or !) shows: the Alchemist identifies things, the Armoury takes gems out of bracers. Escape leaves.",
+        TutorialStep.Tidy => "Your pack fills as you go, and says (full) when there's no room left. Tidy it now (Game → Tidy pack, "
+                             + "or right-click yourself, then Other): stacks that belong together merge, and it tells you how full it is.",
         TutorialStep.Knowledge => $"Now open the Knowledge screen ({KeyName(InputAction.MonsterKnowledge)}): all you've learned, your quest "
                                   + "journal (Quests), and milestones across all your characters (Feats). Close it again with Escape.",
         _ => $"That's everything! Go through the last door, stand on the stairs (>) and press {KeyName(InputAction.StairsDown)} to finish.",
@@ -76,7 +82,7 @@ public sealed partial class MainWindowViewModel
             || !_game.Level.Has(_game.Player.Position, Angband.Core.Definitions.TerrainFlags.DownStair)) return false;
         HintText = "";
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel("Tutorial complete", [
-            "You know the basics: moving, picking up, doors, traps, fighting, Word of Recall, the inn's quests, Knowledge and stairs.",
+            "You know the basics: moving, picking up, doors, traps, fighting, Word of Recall, the inn's quests, shops, a tidy pack, Knowledge and stairs.",
             "The hints for new players go on showing tips as new things happen. Good luck!",
         ], [.. Choices(null, () => { }, sheet: false).Prepend(new GameOverChoice("", "Play the tutorial again", StartTutorial))
             .Select((c, i) => c with { Letter = ((char)('a' + i)).ToString() })]));

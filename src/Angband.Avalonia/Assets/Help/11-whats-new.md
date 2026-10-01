@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **The tutorial teaches more**: a lesson in the Armoury (its notes on whether things would suit
+  you, and the Services button), one on tidying your pack, and how to read a monster's danger.
 - **Shops don't stop you at the door any more**: the Alchemist's identifying and the Armoury's gem
   removal are a button in the shop (or **!**), shown when they have something to offer you.
 - **Gems are rarer** (they were turning up more than once a level), and bags of holding a little

@@ -67,9 +67,9 @@ public sealed class TutorialUiTests : IDisposable
         Assert.Contains(menu.Choices, c => c.Label == "Create a new character...");
     }
 
-    /// <summary>The later lessons: the scroll, the inn and the Knowledge screen, each in the keys you have.</summary>
+    /// <summary>The later lessons: the scroll, the inn, the Armoury, a tidy pack and the Knowledge screen, each in the keys you have.</summary>
     [AvaloniaFact]
-    public void TheLaterLessons_RecallTheInnAndKnowledge()
+    public void TheLaterLessons_RecallTheInnTheShopTidyingAndKnowledge()
     {
         MainWindow.ShowCreationOnFirstRun = false;
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], new AppSettings(), save: null);
@@ -91,6 +91,19 @@ public sealed class TutorialUiTests : IDisposable
 
         game.TutorialDone.Add("inn");
         vm.Execute(new HoldCommand());
+        Assert.Contains("Armoury", vm.HintText);
+        Assert.Contains("Services", vm.HintText);
+
+        // The Armoury: a real shop, its notes under what it sells.
+        game.Player.Position = game.Level.AllLocs().Single(p => game.Level.FeatureAt(p).Shop == "armoury");
+        vm.Execute(new EnterStoreCommand());
+        Assert.True(vm.IsInStore);
+        Assert.Contains(vm.StoreRows, r => r.HasAdvice);
+        vm.LeaveStore();
+        Assert.Contains("Tidy pack", vm.HintText);
+
+        vm.TidyPack();
+        Assert.Contains("tidy", game.TutorialDone);
         Assert.Contains("Knowledge screen", vm.HintText);
         vm.ShowKnowledge();
         Assert.Contains("knowledge", game.TutorialDone);

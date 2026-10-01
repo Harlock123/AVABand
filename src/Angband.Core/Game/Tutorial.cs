@@ -6,27 +6,28 @@ using Angband.Core.World;
 namespace Angband.Core.Game;
 
 /// <summary>The steps of the tutorial, in the order they are taught.</summary>
-public enum TutorialStep { PickUp, OpenDoor, Trap, Fight, Recall, Inn, Knowledge, Stairs }
+public enum TutorialStep { PickUp, OpenDoor, Trap, Fight, Recall, Inn, Shop, Tidy, Knowledge, Stairs }
 
 /// <summary>
 /// AVABand's tutorial (not Angband's): a short level made for teaching, one lesson after another —
 /// pick up a potion, open a door, get past a trap, fight a sleeping kobold, read a Scroll of Word of
-/// Recall, visit the Prancing Pony (its door put here for the lesson), open the Knowledge screen,
-/// take the stairs. A tutorial game is never saved and never scored; the interface guides each step.
+/// Recall, visit the Prancing Pony (its door put here for the lesson), look round the Armoury (its
+/// notes on what would suit you, and the services a shop can offer), tidy the pack, open the
+/// Knowledge screen, take the stairs. A tutorial game is never saved and never scored; the interface guides each step.
 /// </summary>
 public static class Tutorial
 {
     /// <summary>
     /// <c>#</c> granite, <c>,</c> lit room floor, <c>.</c> dark corridor, <c>+</c> closed door,
     /// <c>@</c> the start, <c>!</c> a potion, <c>^</c> a pit, <c>k</c> a kobold, <c>?</c> a Scroll of Word
-    /// of Recall, <c>9</c> the Prancing Pony's door, <c>&gt;</c> the stairs down.
+    /// of Recall, <c>9</c> the Prancing Pony's door, <c>2</c> the Armoury's, <c>&gt;</c> the stairs down.
     /// </summary>
     public static readonly string[] Map =
     [
         "###################################################################",
         "#,,,,,,,####################,,,,,,,,,,######,,,,,,,,,,,######,,,,,#",
         "#,@,,!,,+..........^.......+,,,,,,k,,,+....+,,,?,,,,9,,+....+,,,>,#",
-        "#,,,,,,,####################,,,,,,,,,,######,,,,,,,,,,,######,,,,,#",
+        "#,,,,,,,####################,,,,,,,,,,######,,,,,,2,,,,######,,,,,#",
         "###################################################################",
     ];
 
@@ -58,6 +59,7 @@ public static class Tutorial
                 '+' => t.Ids.ClosedDoor,
                 '>' => t.Ids.DownStair,
                 '9' => t["shop_inn"].Index,
+                '2' => t["shop_armoury"].Index,
                 _ => t.Ids.Floor,
             };
             // The rooms are lit, walls and doors included (as Angband lights a room's edges).
@@ -94,7 +96,7 @@ public static class Tutorial
         return false;
     }
 
-    private static bool IsRoom(char ch) => ch is ',' or '@' or '!' or 'k' or '?' or '9' or '>';
+    private static bool IsRoom(char ch) => ch is ',' or '@' or '!' or 'k' or '?' or '9' or '2' or '>';
 
     /// <summary>Where the player has got to: the first lesson not yet done.</summary>
     public static TutorialStep StepOf(GameSession game)
@@ -107,6 +109,8 @@ public static class Tutorial
         if (level.Monsters.All.Any(m => m.Race.Id == MonsterId)) return TutorialStep.Fight;
         if (!game.TutorialDone.Contains("recall")) return TutorialStep.Recall;
         if (!game.TutorialDone.Contains("inn")) return TutorialStep.Inn;
+        if (!game.TutorialDone.Contains("shop")) return TutorialStep.Shop;
+        if (!game.TutorialDone.Contains("tidy")) return TutorialStep.Tidy;
         if (!game.TutorialDone.Contains("knowledge")) return TutorialStep.Knowledge;
         return TutorialStep.Stairs;
     }

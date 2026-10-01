@@ -11,6 +11,7 @@ public sealed partial class GameSession
 {
     private int TidyPack()
     {
+        if (IsTutorial) TutorialDone.Add("tidy");
         var inv = Player.Inventory;
         var merged = inv.CombinePack();
         var junk = JunkCandidates().Count;

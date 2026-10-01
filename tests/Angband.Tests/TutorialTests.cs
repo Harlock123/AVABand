@@ -56,6 +56,22 @@ public class TutorialTests
         game.Execute(new EnterStoreCommand());
         Assert.Equal("The Prancing Pony (a lesson)", prompts.Last().Title);
         Assert.Empty(game.AvaQuests.Quests);
+        Assert.Equal(TutorialStep.Shop, Tutorial.StepOf(game));
+
+        // The Armoury's door: a real shop, its notes on what would suit you.
+        var entered = new List<ShopEnteredEvent>();
+        game.Events.Subscribe<ShopEnteredEvent>(entered.Add);
+        var armoury = game.Level.AllLocs().Single(p => game.Level.FeatureAt(p).Shop == "armoury");
+        game.Player.Position = armoury;
+        game.Execute(new EnterStoreCommand());
+        Assert.Equal("armoury", Assert.Single(entered).StoreId);
+        Assert.Contains(game.StoreHere!.Stock, i => game.AdviceFor(i) is not null);
+        game.Execute(new LeaveStoreCommand());
+        Assert.Equal(TutorialStep.Tidy, Tutorial.StepOf(game));
+
+        // Tidying the pack.
+        game.Execute(new TidyPackCommand());
+        Assert.Contains(messages, m => m.Contains("slots used"));
         Assert.Equal(TutorialStep.Knowledge, Tutorial.StepOf(game));
 
         // The Knowledge screen (the interface marks it), then the stairs.
