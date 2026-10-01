@@ -7,7 +7,7 @@ namespace Angband.Core.Game;
 // AVABand's monster trophies (ava_objects.json, base "trophy"; never found lying about, only taken from
 // what you kill): a dragon's scale in the colour of its breath (red fire, white cold, blue lightning,
 // black acid, green poison), a troll's hide, a great spider's silk. A unique always leaves its trophy;
-// others now and then (a dragon one time in three, a spider one in six, a troll one in eight). The
+// others now and then (a dragon one time in 25, a spider or a troll one in 50: they come in crowds). The
 // Armoury's armourer works a trophy into a piece of armour you wear or carry, for gold — the piece
 // gains the trophy's resistance (or a troll's healing) — one trophy to a piece, and never an artifact.
 public sealed partial class GameSession
@@ -25,9 +25,9 @@ public sealed partial class GameSession
     public static (IReadOnlyList<string> Kinds, int OneIn) TrophiesOf(MonsterRaceDef race)
     {
         if (race.Base is "dragon" or "ancient_dragon")
-            return ([.. DragonScales.Where(d => race.Spells.Contains(d.Breath)).Select(d => d.Scale)], 3);
-        if (race.Base == "spider" && race.Depth >= 15) return (["spider_silk"], 6);
-        if (race.Base == "troll") return (["troll_hide"], 8);
+            return ([.. DragonScales.Where(d => race.Spells.Contains(d.Breath)).Select(d => d.Scale)], 25);
+        if (race.Base == "spider" && race.Depth >= 15) return (["spider_silk"], 50);
+        if (race.Base == "troll") return (["troll_hide"], 50);
         return ([], 0);
     }
 

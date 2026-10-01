@@ -46,7 +46,8 @@
 // gauntlet...) is made at each depth: the Cartographer's quest needs a cavern, a labyrinth and one of
 // the old mines, so it can only be done as fast as they turn up.
 //
-// `items [levels]` — how often AVABand's own items (bags, bracers, gems, (Porter) gear) turn up by depth,
+// `items [levels]` — how often AVABand's own items (bags, bracers, gems, (Porter) gear, oils, egos,
+// artifacts, trophies, lamps) turn up by depth,
 // floor and drops, per 100 levels, beside a few of Angband's for scale.
 //
 // `record-replays [dir]` — records the four games tests/Angband.Tests/Replays keeps (ReplayFixtureTests),
@@ -118,6 +119,9 @@ if (args.Length > 0 && args[0] == "items")
     // How often AVABand's own items turn up: per 100 levels at each depth, on the floor and dropped by
     // the level's monsters (all slain), beside a few of Angband's for scale.
     var levels = args.Length > 1 ? int.Parse(args[1], CultureInfo.InvariantCulture) : 200;
+    // (AVABand's own artifacts: those in ava_artifacts.json.)
+    var avaArtifacts = System.Text.Json.JsonDocument.Parse(File.ReadAllText(Path.Combine(DataLoader.DefaultDataDirectory, DataLoader.AvaArtifactsFile)))
+        .RootElement.EnumerateArray().Select(e => e.GetProperty("id").GetString()!).ToHashSet();
     var kinds = new (string Label, Func<Item, bool> Is)[]
     {
         ("bag", i => i.Base.Id == "bag"),
@@ -127,6 +131,12 @@ if (args.Length > 0 && args[0] == "items")
         ("gem: flawless", i => i.Base.Id == "gem" && !i.Kind.Id.StartsWith("chipped_") && !i.Kind.Id.StartsWith("flawed_") && i.Kind.Curses.Count == 0),
         ("gem: cursed", i => i.Base.Id == "gem" && i.Kind.Curses.Count > 0),
         ("(Porter)", i => i.Ego?.Id == "porter"),
+        ("weapon oil", i => i.Base.Id == "oil"),
+        ("bracers ego", i => i.Base.Id == "bracers" && i.Ego is not null),
+        ("bag ego", i => i.Base.Id == "bag" && i.Ego is not null),
+        ("AVABand artifact", i => i.Artifact is { } a && avaArtifacts.Contains(a.Id)),
+        ("trophy", i => i.Base.Id == "trophy"),
+        ("lamp, helm, gloves", i => i.Kind.Id is "dwarven_lamp" or "elven_lantern" or "miners_helm" or "delvers_gloves"),
         ("for scale: Free Action ring", i => i.Kind.Id == "ring_of_free_action"),
         ("for scale: potion of Speed", i => i.Kind.Id == "speed"),
     };

@@ -80,6 +80,8 @@ public class BagsAndGemsTests
         game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
         for (var i = 0; i < 20 * GameSession.DevouringChance && !messages.Any(m => m.Contains("satisfied noise")); i++)
         {
+            // (Only the bag at work: no townsperson to steal from the pack or startle it.)
+            foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
             game.Player.Hp = game.Player.MaxHp;
             game.Player.Food = 10000;
             game.Execute(new HoldCommand());

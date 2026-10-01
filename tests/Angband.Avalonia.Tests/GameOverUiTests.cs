@@ -185,8 +185,9 @@ public sealed class GameOverUiTests : IDisposable
         vm.ReplayDirectory = Path.Combine(_dir, "replays");
         vm.StartGame(77, "warrior");                        // (recorded from the start)
         var game = vm.Game;
-        game.Player.Hp = game.Player.MaxHp = 100_000;
-        for (var i = 0; i < 30; i++) vm.Execute(new HoldCommand());
+        // (Nothing set by hand before the fall — the replay must play the same game — and only a few turns
+        // in town: a townsperson's blows, few as they are, add up.)
+        for (var i = 0; i < 5; i++) vm.Execute(new HoldCommand());
         game.MarkDebugUsed();                               // (a debug jump: it would bar the grave, so take it off again)
         vm.Execute(new DebugJumpCommand(3));
         game.ToggleDebugMark();

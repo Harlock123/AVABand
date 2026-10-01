@@ -418,3 +418,28 @@ noise. Everything else is within a game or two in thirty. Kills mostly run highe
 blows (the bot finds lighter weapons that swing more often); experience is too noisy to read (one
 unique killed swings a depth's average — the warrior's 1500 ft is 2403 on, 5780 off). The starting
 kits stay as 4.2.5 has them; the birth option turns the old blows back on for anyone who wants them.
+
+## The new loot: how often it turns up
+
+Weapon oils, egos for bracers and bags, AVABand's nine artifacts, monster trophies and the lamps
+and digging gear, measured as the gems and bags were (`balance items 100`: per 100 levels at each
+depth, the floor and every monster's drop, with every monster slain):
+
+| item | 250 ft | 500 ft | 1000 ft | 1500 ft | 2000 ft | 2500 ft | 3000 ft | 3500 ft | 4000 ft |
+|---|---|---|---|---|---|---|---|---|---|
+| weapon oil | 21.0 | 18.0 | 18.0 | 18.0 | 11.0 | 35.0 | 41.0 | 38.0 | 43.0 |
+| bracers ego | 4.0 | 0.0 | 1.0 | 1.0 | 3.0 | 5.0 | 9.0 | 6.0 | 6.0 |
+| bag ego | 0.0 | 0.0 | 1.0 | 2.0 | 1.0 | 6.0 | 5.0 | 6.0 | 8.0 |
+| AVABand artifact | 0.0 | 0.0 | 0.0 | 4.0 | 2.0 | 5.0 | 6.0 | 9.0 | 8.0 |
+| trophy | 0.0 | 4.0 | 11.0 | 32.0 | 56.0 | 67.0 | 94.0 | 83.0 | 138.0 |
+| lamp, helm, gloves | 3.0 | 6.0 | 8.0 | 16.0 | 16.0 | 18.0 | 28.0 | 15.0 | 31.0 |
+| *Free Action ring* | 0.0 | 0.0 | 15.0 | 23.0 | 35.0 | 35.0 | 61.0 | 40.0 | 68.0 |
+| *potion of Speed* | 41.0 | 32.0 | 31.0 | 22.0 | 27.0 | 45.0 | 39.0 | 43.0 | 60.0 |
+
+As first written, oils came 73 to 201 per 100 levels (more than one a level deep down) and trophies
+up to 380 — dragons, trolls and spiders come in crowds, pits and lairs — so oils were made about a
+fifth as common, the lamps, helm and gloves a third, and a trophy dropped by a dragon one time in 25
+and by a spider or troll one in 50 (a unique still always leaves its own). Now oils come about as
+often as potions of Speed, the lamps and gear less, and trophies deep down about as often as Rings of
+Free Action — with every monster slain, so fewer in play. The egos and artifacts are rare finds, a
+few in a hundred levels.

@@ -68,6 +68,7 @@ public class DebugUiTests
         Assert.Equal(10, game.Player.Depth);
         var messages = new List<string>();
         game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        vm.SkipScenes(); // (a scene on arrival would take the next key)
 
         window.KeyPressQwerty(PhysicalKey.F9, RawInputModifiers.None);
 

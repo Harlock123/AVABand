@@ -71,10 +71,11 @@ public class LocateUiTests
         Assert.True(cols > 20 && rows > 10 && cols < level.Width && rows < level.Height);
         var panel = map.ViewOffset;
 
-        var moved = vm.Game.Player.Position + new Loc(5, 2); // still well inside the panel
+        var moved = vm.Game.Player.Position + new Loc(2, 1); // still inside the panel
         Put(moved);
         Assert.Equal(panel, map.ViewOffset);
 
+        vm.SkipScenes(); // (a scene on arrival would take the next key)
         window.KeyPressQwerty(PhysicalKey.L, RawInputModifiers.Control);
         window.CaptureRenderedFrame();
         var centred = new Loc(moved.X - cols / 2, moved.Y - rows / 2);
