@@ -534,6 +534,23 @@ public sealed partial class GameSession : ITurnHandler
     }
 
     /// <param name="fresh">Throw the current level away and build a new one, even in a persistent dungeon.</param>
+    /// <summary>
+    /// A save made in town before a building was added (the Arcane Artificer) keeps its old town: it's
+    /// built again, as on any arrival (from the character's own town seed), so the new building is there.
+    /// True if it was.
+    /// </summary>
+    internal bool RebuildTownIfOutdated()
+    {
+        if (Player.Depth != 0 || Level.ProfileId != "town") return false;
+        var have = Level.AllLocs().Select(l => Level.FeatureAt(l).Id).ToHashSet();
+        var missing = Data.Town.Shops.Where(shop => !have.Contains(shop)).ToList();
+        if (missing.Count == 0) return false;
+        ChangeLevel(0, StairArrival.None, fresh: true);
+        Publish(new MessageEvent("The town has changed while you were away: "
+                                 + string.Join(" and ", missing.Select(t => $"the {Data.Terrain[t].Name}")) + " stands in it now."));
+        return true;
+    }
+
     private void ChangeLevel(int depth, StairArrival arrival, bool fresh = false)
     {
         var seed = depth == 0 ? TownSeed : Rng.NextULong();

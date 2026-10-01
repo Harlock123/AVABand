@@ -510,6 +510,8 @@ public static class SaveGame
             g.RecomputeSkills();
             g.RecalculateBonuses();
         }
+        // Saved in a town from before a building was added: the town as it is now.
+        g.RebuildTownIfOutdated();
         return g;
     }
 }

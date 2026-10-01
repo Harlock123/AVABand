@@ -221,6 +221,32 @@ def gem(color):
     return c
 
 
+# A 3x5 pixel font for the shopfront numerals.
+DIGITS = {
+    "0": ["###", "#.#", "#.#", "#.#", "###"],
+    "9": ["###", "#.#", "###", "..#", "###"],
+}
+
+
+def shopfront(digit, sign):
+    """A town building's entrance with its number over the door (AVABand's own buildings: the inn's 9,
+    the Arcane Artificer's 0), so each looks like no other shop."""
+    c = canvas()
+    stone_floor(c, "#4a4450", "#36323c")
+    rect(c, 1, 1, 14, 6, hexc(sign))                     # the sign board
+    rect(c, 1, 1, 14, 1, hexc("#2a2630"))
+    rect(c, 1, 6, 14, 6, hexc("#2a2630"))
+    for y, row in enumerate(DIGITS[digit]):             # the number, in gold
+        for x, ch in enumerate(row):
+            if ch == "#":
+                px(c, 6 + x, 1 + y, hexc("#ffe080"))
+    rect(c, 5, 8, 10, 15, hexc("#6a4424"))                # the door
+    rect(c, 5, 8, 10, 8, hexc("#3a2414"))
+    rect(c, 7, 8, 8, 15, hexc("#4e3018"))
+    px(c, 9, 12, hexc("#e0c060"))                         # its handle
+    return c
+
+
 def oil(color):
     """A stoppered flask of weapon oil (AVABand's oils), the oil in its colour."""
     c = canvas()
@@ -309,6 +335,8 @@ DRAWN = {
     "terrain:cold_brazier": ("ava_brazier_cold.png", lambda: brazier(False), True),
     "terrain:lit_brazier": ("ava_brazier_lit.png", lambda: brazier(True), True),
     "terrain:trapped_apprentice": ("ava_apprentice.png", apprentice, True),
+    "terrain:shop_inn": ("ava_shop_inn.png", lambda: shopfront("9", "#2e6a3a"), True),
+    "terrain:shop_artificer": ("ava_shop_artificer.png", lambda: shopfront("0", "#5a2e7a"), True),
     "object-base:bag": ("ava_bag.png", bag, False),
     "object-base:bracers": ("ava_bracers.png", bracers, False),
     "object-base:gem": ("ava_gem.png", lambda: gem("#e8f0ff"), False),
@@ -330,7 +358,6 @@ for _oil, _colour in OIL_COLOURS.items():
         DRAWN["object:" + _grade + _oil] = ("ava_" + _oil + ".png", (lambda col: lambda: oil(col))(_colour), False)
 # The rest borrow the nearest tile the set has (the first that exists).
 BORROWED = [
-    ("terrain:shop_inn", ["terrain:shop_general", "terrain:shop_home"]),
     ("object-base:quest", ["object-base:scroll"]),
     ("object-base:relic", ["object-base:amulet"]),
     ("object:shard_of_the_hilt", ["object-base:sword"]),
@@ -354,7 +381,6 @@ BORROWED = [
     ("object:heart_of_the_mountain", ["object:arkenstone", "object-base:amulet"]),
     ("object:palantir", ["object:elfstone", "object:star", "object-base:light"]),
     # The Arcane Artificer's door, and his star-forged chisel.
-    ("terrain:shop_artificer", ["terrain:shop_magic", "terrain:shop_general"]),
     ("object:star_forged_chisel", ["object:shovel", "object-base:digger"]),
     # AVABand's lamps, helm and gloves: their nearest Angband kind's picture.
     ("object:dwarven_lamp", ["object:lantern", "object-base:light"]),

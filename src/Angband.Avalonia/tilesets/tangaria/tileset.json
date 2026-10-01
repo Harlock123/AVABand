@@ -1475,7 +1475,7 @@
     "monster-glyph:~": "main:31,4",
     "monster-glyph:U": "main:24,17",
     "monster-glyph:D": "main:16,16",
-    "terrain:shop_inn": {"lit": "main:13,34", "torch": "main:12,34", "dark": "main:14,34"},
+    "terrain:shop_inn": "ava_shop_inn.png",
     "terrain:sealed_door": "ava_sealed_door.png",
     "terrain:quest_altar": "ava_quest_altar.png",
     "terrain:dwarven_forge": "ava_dwarven_forge.png",
@@ -1566,7 +1566,7 @@
     "object:greater_oil_of_corrosion": "ava_oil_of_corrosion.png",
     "object:lesser_holy_water": "ava_holy_water.png",
     "object:greater_holy_water": "ava_holy_water.png",
-    "terrain:shop_artificer": {"lit": "main:25,34", "torch": "main:24,34", "dark": "main:26,34"},
+    "terrain:shop_artificer": "ava_shop_artificer.png",
     "object:star_forged_chisel": "main:10,6"
   }
 }

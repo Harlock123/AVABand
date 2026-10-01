@@ -183,4 +183,27 @@ public partial class AvaQuestTests
         var loaded = Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream);
         Assert.Equal(2, loaded.Player.Inventory.InSlot(EquipSlot.Body)!.Sockets);
     }
+
+    /// <summary>A save made in town before the Artificer came (a town without his door) has its town built again on loading.</summary>
+    [Fact]
+    public void An_older_town_in_a_save_is_built_again_with_the_Artificer_in_it()
+    {
+        var game = GameSession.NewGame(TestData.Game, 5, "warrior");
+        var door = game.Level.AllLocs().Single(l => game.Level.FeatureAt(l).Shop == "artificer");
+        game.Level[door].Feature = game.Data.Terrain.Ids.Floor; // (as the town was before)
+        using var stream = new MemoryStream();
+        Angband.Core.Persistence.SaveGame.Save(game, stream);
+        stream.Position = 0;
+        var loaded = Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream);
+        Assert.Equal(0, loaded.Player.Depth);
+        Assert.Single(loaded.Level.AllLocs(), l => loaded.Level.FeatureAt(l).Shop == "artificer");
+        Assert.All(TestData.Game.Town.Shops, shop => Assert.Contains(loaded.Level.AllLocs(), l => loaded.Level.FeatureAt(l).Id == shop));
+
+        // A town that's as it should be is left alone.
+        stream.SetLength(0);
+        Angband.Core.Persistence.SaveGame.Save(loaded, stream);
+        stream.Position = 0;
+        var again = Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream);
+        Assert.Equal(loaded.Player.Position, again.Player.Position);
+    }
 }

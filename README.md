@@ -339,7 +339,11 @@ core kept busy.
     of the piece's worth, a second three times as much (`SocketCost`) — and one try in ten
     (`SocketFailChance`) the piece loses a point of enchantment, no socket is cut and half the fee
     comes back. Sockets he cuts are `Item.AddedSockets` (saved); gems go in and come out (at the
-    Armoury) as with bracers. From level 20 he offers his own quest, **The Artificer's Chisel**
+    Armoury) as with bracers. His door, and the Prancing Pony's, are drawn for AVABand in every
+    bundled tileset (`tools/avaband_quest_tiles.py`: a shopfront with its number, 0 or 9, over the
+    door), so neither looks like another shop. A game saved in town before he came has its town built
+    anew on loading (`GameSession.RebuildTownIfOutdated`, from the character's own town seed). From
+    level 20 he offers his own quest, **The Artificer's Chisel**
     (`chisel`, found rather than offered at the inn): his star-forged chisel lies in his fallen
     workshop (`quest_artificer_workshop`) 3 levels past your deepest (1000 to 2000 ft), guarded.
     Given back ("returned"), he cuts one socket free, asks half after and never slips; kept, it cuts

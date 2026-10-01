@@ -2035,7 +2035,7 @@
     "object:creature_dominion": "main:2,13",
     "object:nature_craft": "main:3,13",
     "object:wild_forces": "main:31,12",
-    "terrain:shop_inn": "main:7,2",
+    "terrain:shop_inn": "ava_shop_inn.png",
     "terrain:sealed_door": "ava_sealed_door.png",
     "terrain:quest_altar": "ava_quest_altar.png",
     "terrain:dwarven_forge": "ava_dwarven_forge.png",
@@ -2126,7 +2126,7 @@
     "object:greater_oil_of_corrosion": "ava_oil_of_corrosion.png",
     "object:lesser_holy_water": "ava_holy_water.png",
     "object:greater_holy_water": "ava_holy_water.png",
-    "terrain:shop_artificer": "main:12,2",
+    "terrain:shop_artificer": "ava_shop_artificer.png",
     "object:star_forged_chisel": "main:15,14"
   }
 }

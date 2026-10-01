@@ -1241,7 +1241,7 @@
     "object:mattock": "avaband_mattock.png",
     "object:seeker_bolt": "avaband_seeker_bolt.png",
     "object:mithril_bolt": "avaband_mithril_bolt.png",
-    "terrain:shop_inn": ["dungeon/shops/enter_shop.png", "dungeon/shops/shop_general.png"],
+    "terrain:shop_inn": "ava_shop_inn.png",
     "terrain:sealed_door": "ava_sealed_door.png",
     "terrain:quest_altar": "ava_quest_altar.png",
     "terrain:dwarven_forge": "ava_dwarven_forge.png",
@@ -1332,7 +1332,7 @@
     "object:greater_oil_of_corrosion": "ava_oil_of_corrosion.png",
     "object:lesser_holy_water": "ava_holy_water.png",
     "object:greater_holy_water": "ava_holy_water.png",
-    "terrain:shop_artificer": ["dungeon/shops/enter_shop.png", "dungeon/shops/shop_wands.png"],
+    "terrain:shop_artificer": "ava_shop_artificer.png",
     "object:star_forged_chisel": "avaband_shovel.png"
   }
 }
