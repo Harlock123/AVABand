@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Scenes don't eat into your next moves**: keys pressed ahead of a scene are dropped instead of
+  skipping it before you see it, and the key that ends a scene just ends it.
+- **The Wear/Wield prompt says whether each item suits you**: under each choice, the shops' note —
+  Better, Worse or Mixed than what it would replace, and why.
 - **Compare races** on the creation screen: every race side by side — stat changes, hit die,
   experience and what each can do. Click one to choose it.
 - **Screen readers hear more**: a shop's rows with their notes (each as the arrows reach it) and the

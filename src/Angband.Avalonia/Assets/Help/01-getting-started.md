@@ -21,7 +21,7 @@ In a shop, what's for sale is read with each note on whether it would suit you, 
 move, and the service on offer; a full pack is said as it fills (Windows, macOS and Linux).
 
 Moments of note — the stairs, Word of Recall, a trap door or Deep Descent, a cavern, labyrinth, moria level, lair, gauntlet or hard centre, a deadly level, a unique met
-for the first time, a great foe slain, a quest done, death — show a scene for a moment; any key skips it, and Options → *Show scenes
+for the first time, a great foe slain, a quest done, death — show a scene for a moment; any key skips it (and does nothing else — keys pressed before it appeared are dropped, so they can't skip it unseen or act behind it), and Options → *Show scenes
 at moments of note* turns them off. Word of Recall has its own: a rent torn in the room (or the town square) where you read it, and a
 vast ghostly hand reaching out of it to take you. Scenes have sounds too (footsteps on the stairs,
 a bell at death, the rent tearing and a thunderclap), at the effects volume. Too quick? Options → *Scenes stay until you press Space* holds

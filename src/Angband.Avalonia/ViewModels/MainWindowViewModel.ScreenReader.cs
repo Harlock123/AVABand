@@ -66,7 +66,7 @@ public sealed partial class MainWindowViewModel
         if (!ScreenReaderOn) return;
         var lines = ChoiceRows.Select(r => $"{r.Letter}, {r.Text}")
             .Concat(SpellPromptRows.Select(r => $"{r.Letter}, {r.Name}, {r.Stats}"))
-            .Concat(PromptRows.Select(r => $"{r.Letter}, {r.Name}"));
+            .Concat(PromptRows.Select(r => $"{r.Letter}, {r.Spoken}"));
         Announce($"{PromptTitle} {string.Join(". ", lines)}.");
     }
 

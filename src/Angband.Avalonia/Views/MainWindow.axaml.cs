@@ -49,7 +49,9 @@ public partial class MainWindow : Window
         AddHandler(KeyUpEvent, (_, e) =>
         {
             if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, _arrowClock.Elapsed);
+            (DataContext as MainWindowViewModel)?.SceneKeyReleased(e.Key.ToString());
         }, RoutingStrategies.Tunnel, handledEventsToo: true);
+        Deactivated += (_, _) => (DataContext as MainWindowViewModel)?.SceneKeyReleased(null);
         Deactivated += (_, _) => _arrowChord.Reset();
         // Shift held shows the travel route under the mouse: follow it from keys and pointer alike.
         AddHandler(KeyDownEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: true), RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -378,6 +380,7 @@ public partial class MainWindow : Window
     /// </summary>
     public void HandleGamepadAction(InputAction action)
     {
+        if ((DataContext as MainWindowViewModel)?.SceneTakesInput(null) == true) return; // (as a key: see OnGameKeyDown)
         if (OpenDialog is { } dialog)
         {
             DialogPad.Handle(dialog, action);
@@ -460,6 +463,12 @@ public partial class MainWindow : Window
     private void OnGameKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
+        // Scenes: keys typed ahead of one are dropped, and a key while one passes just ends it (as Escape).
+        if (vm.SceneTakesInput(e.Key.ToString()))
+        {
+            e.Handled = true;
+            return;
+        }
         if (vm.SceneWaits)
         {
             // Held until Space: Space or Enter moves on, Escape ends them all, other keys wait.
@@ -468,7 +477,6 @@ public partial class MainWindow : Window
             e.Handled = true;
             return;
         }
-        if (vm.HasScene) vm.SkipScenes(); // a key cuts the scenes short, and still does what it does
 
         // Two arrow keys held together move diagonally (plain arrows, at the command prompt, as bound by default).
         if (e.KeyModifiers == KeyModifiers.None && ArrowKeyDirection(e.Key) is { } arrow && !_replaying && vm.IsAtCommandPrompt && !vm.IsShowingTitle

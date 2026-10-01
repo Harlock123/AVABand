@@ -329,6 +329,7 @@ public class FeelingUiTests
         Assert.Contains(vm.Messages, m => Angband.Core.Game.LevelFeelings.MonsterTexts.Any(t => m.StartsWith(t)));
 
         vm.Messages.Clear();
+        vm.SkipScenes(); // (the stairs' scene would take the next key)
         window.KeyPressQwerty(global::Avalonia.Input.PhysicalKey.F, global::Avalonia.Input.RawInputModifiers.Control);
         Assert.Contains(vm.Messages, m => Angband.Core.Game.LevelFeelings.MonsterTexts.Any(t => m.StartsWith(t)));
         TileRenderingTests.Save(window, "level-feeling");

@@ -85,17 +85,44 @@ public sealed class SceneUiTests : IDisposable
     }
 
     [AvaloniaFact]
-    public void UpIntoTheTown_SaysSo_AndAKeyEndsTheScenes_AndStillCounts()
+    public void UpIntoTheTown_SaysSo_AndAKeyEndsTheScenes_AndDoesNothingMore()
     {
         var (window, vm, _) = Open();
+        long now = 1000;
+        vm.SceneClock = () => now;
         TakeStairs(vm, down: true);
         vm.SkipScenes();
         TakeStairs(vm, down: false);
         Assert.StartsWith("Up into the town, by ", vm.Scene!.Caption);
         var turn = vm.Game.GameTurn;
-        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None); // hold a turn
+
+        // Keys typed ahead (arriving with the scene, while the turn was worked out) are dropped: the scene stays.
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        Assert.NotNull(vm.Scene);
+        Assert.Equal(turn, vm.Game.GameTurn);
+
+        // A key once it's up ends it, as Escape would — and goes no further.
+        now += MainWindowViewModel.SceneTypeAheadMs;
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
         Assert.Null(vm.Scene);
+        Assert.Equal(turn, vm.Game.GameTurn);
+        // The keys right behind it are dropped too, and the key that ended it, held, until it's let go.
+        window.KeyPressQwerty(PhysicalKey.Digit4, RawInputModifiers.None);
+        now += MainWindowViewModel.SceneTypeAheadMs;
+        window.KeyPress(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5"); // (auto-repeat: down, no up)
+        Assert.Equal(turn, vm.Game.GameTurn);
+        window.KeyRelease(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5");
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None); // hold a turn
         Assert.True(vm.Game.GameTurn > turn);
+
+        // A controller button likewise.
+        TakeStairs(vm, down: true);
+        now += MainWindowViewModel.SceneTypeAheadMs;
+        turn = vm.Game.GameTurn;
+        window.HandleGamepadAction(InputAction.Hold);
+        Assert.Null(vm.Scene);
+        Assert.Equal(turn, vm.Game.GameTurn);
     }
 
     [AvaloniaFact]
@@ -218,7 +245,12 @@ public sealed class SceneUiTests : IDisposable
     {
         Assert.False(DisplayOptions.All.Single(o => o.Id == DisplayOptions.ScenesWait).Default);
         var (window, vm, scene) = Open(wait: true);
+        long now = 1000;
+        vm.SceneClock = () => now;
         TakeStairs(vm, down: true);
+        window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None); // typed ahead: dropped, the scene holds
+        Assert.NotNull(vm.Scene);
+        now += MainWindowViewModel.SceneTypeAheadMs;
         Assert.True(vm.Scene!.WaitForKey);
         scene.Advance(SceneView.DurationMs * 3); // long past its usual moment
         Assert.NotNull(vm.Scene);

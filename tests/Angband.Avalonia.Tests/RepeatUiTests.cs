@@ -73,6 +73,7 @@ public class RepeatUiTests
         game.UpdateView();
 
         vm.Execute(new CastCommand("magic_missile"));
+        vm.SkipScenes(); // (a unique's first sight has its scene, which would take the next key)
         var mana = game.Player.Mana;
         Assert.True(mana < 20, $"{vm.LastMessage} mana {mana}/{game.Player.MaxMana}");
 
@@ -151,6 +152,7 @@ public class RepeatUiTests
         game.Knowledge.LearnKind(scroll.Kind);
         scroll = game.Player.Inventory.Add(scroll)!;
 
+        vm.SkipScenes(); // (the stairs' scenes would take the next key)
         vm.Execute(new UseCommand(scroll));
         Assert.True(vm.IsEnteringNumber);
         Assert.StartsWith("Which level do you wish to return to (0 to cancel)? 2", vm.LastMessage); // the deepest

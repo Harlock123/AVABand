@@ -287,6 +287,35 @@ public class ItemMenuUiTests
         Assert.Contains("for your empty helm slot", vm.LastMessage);
     }
 
+    /// <summary>The Wear/Wield prompt: each choice with the shops' note — better or worse than what it would replace.</summary>
+    [AvaloniaFact]
+    public void The_wear_and_wield_prompt_says_whether_each_suits_you()
+    {
+        var vm = Start(); // wielding a dagger
+        Carry(vm, "main_gauche");
+        var cap = Carry(vm, "metal_cap");
+        vm.Game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.ToHit);
+        vm.Game.Knowledge.LearnRune(Angband.Core.Definitions.RuneIds.ToDam);
+        vm.HandleAction(InputAction.Wield);
+        Assert.Equal("Wear or wield which item?", vm.PromptTitle);
+        var gauche = vm.PromptRows.Single(r => r.Item.Kind.Id == "main_gauche");
+        Assert.StartsWith("Better — vs your Dagger: +", gauche.Advice);
+        Assert.StartsWith(gauche.Name + ". Better", gauche.Spoken);
+        var capRow = vm.PromptRows.Single(r => r.Item == cap);
+        Assert.True(capRow.HasAdvice);
+        Assert.Contains("helm slot", capRow.Advice);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        window.CaptureRenderedFrame();
+        TileRenderingTests.Save(window, "wield-prompt");
+        vm.CancelPrompt();
+
+        // Other prompts carry no notes.
+        vm.HandleAction(InputAction.Drop);
+        Assert.All(vm.PromptRows, r => Assert.False(r.HasAdvice));
+        vm.CancelPrompt();
+    }
+
     /// <summary>A full pack says so in the sidebar, and standing on something that won't fit brings a hint.</summary>
     [AvaloniaFact]
     public void A_full_pack_is_shown_and_explained()

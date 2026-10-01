@@ -535,7 +535,8 @@ A `GameSession` created with a seed and fed the same commands replays identicall
     colour-blind option applies); missiles say whether
     they fit your launcher. Your own things for sale are compared too, once all their runes are
     known. The same note is added when you inspect something in your pack (`I`, or its menu) or look at
-it on the floor (`x`). Only what the game's rules count is compared: with Angband's blows (the default) a weapon's
+it on the floor (`x`), and it sits under each choice in the *Wear or wield* prompt (`w`; things not
+    fully known say so, and from the floor, whether its weight would slow you). Only what the game's rules count is compared: with Angband's blows (the default) a weapon's
     note gives the blows you'd have with it ("1.2 blows a turn (now 1.7)") or says it's too heavy for
     you; gloves don't hamper spells (4.2.5 has no such rule).
   - AVABand's one addition: the General Store also always has **lanterns** (`avabandAlways` in
@@ -1123,7 +1124,11 @@ it on the floor (`x`). Only what the game's rules count is compared: with Angban
     arriving in a cavern, labyrinth, hard centre (a fortress), moria level, lair or gauntlet, a level whose feeling is deadly ("Omens of death
     haunt this place."), meeting a unique for the very first time (its name), and death (a tombstone,
     behind the game-over menu). Several queue — the stairs, then the cavern you arrive in; a click
-    ends one, a key ends them all and still does what it does. **Word of Recall** has a cutscene
+    ends one, and a key ends them all, as Escape would, and does nothing more. Keys typed ahead of a
+    scene (pressed while the turn was worked out, so they arrive just as it appears) are dropped
+    rather than ending it unseen, and so are the keys right behind the one that ends it (a quarter of
+    a second either way, `SceneTypeAheadMs`) and that key's own repeats while it's held — so nothing
+    meant for before the scene acts after it. A controller button likewise. **Word of Recall** has a cutscene
     of its own: where you read it — a torchlit dungeon room, or the town square by day or by night —
     a rent tears open in the world, swirling violet and crackling at its torn edges, and a vast
     incorporeal hand reaches out of it toward you, grows until it fills the view, closes, and a

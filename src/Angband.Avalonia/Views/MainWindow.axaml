@@ -11,12 +11,17 @@
   <Window.Resources>
     <DataTemplate x:Key="ItemRowTemplate" x:DataType="vm:ItemRow">
       <Grid ColumnDefinitions="Auto,18,*,Auto" Margin="0,1" Background="Transparent" PointerPressed="OnItemRowPressed"
-            AutomationProperties.Name="{Binding Name}">
+            AutomationProperties.Name="{Binding Spoken}">
         <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
                    FontFamily="{StaticResource MonoFont}" FontSize="12" Margin="0,0,4,0" />
         <TextBlock Grid.Column="1" Text="{Binding Glyph}" Foreground="{Binding GlyphBrush}"
                    FontFamily="{StaticResource MonoFont}" FontWeight="Bold" />
-        <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="#eee" FontSize="12" TextWrapping="Wrap" />
+        <StackPanel Grid.Column="2">
+          <TextBlock Text="{Binding Name}" Foreground="#eee" FontSize="12" TextWrapping="Wrap" />
+          <!-- The Wear/Wield prompt's note: better or worse than what it would replace. -->
+          <TextBlock IsVisible="{Binding HasAdvice}" Text="{Binding Advice}" Foreground="{Binding AdviceBrush}" FontSize="11"
+                     TextWrapping="Wrap" Margin="0,1,0,0" />
+        </StackPanel>
         <TextBlock Grid.Column="3" Text="{Binding Weight}" Foreground="#888" FontSize="11" Margin="6,0,0,0" />
       </Grid>
     </DataTemplate>

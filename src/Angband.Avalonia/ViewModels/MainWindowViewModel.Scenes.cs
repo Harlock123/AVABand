@@ -113,11 +113,55 @@ public sealed partial class MainWindowViewModel
         return true;
     }
 
-    /// <summary>A key: every scene waiting goes.</summary>
+    /// <summary>Every scene waiting goes (and with them, any input being dropped for them).</summary>
     public void SkipScenes()
     {
         _sceneQueue.Clear();
         Scene = null;
+        _sceneInputDroppedUntil = 0;
+    }
+
+    /// <summary>
+    /// How long (ms) input is dropped as a scene appears or is cut short: keys typed ahead while the
+    /// turn was worked out (they arrive all at once, just after the scene does) and the next few after a
+    /// key ends it — so a scene isn't gone before it's seen, and keys meant for before it don't act after.
+    /// </summary>
+    public const int SceneTypeAheadMs = 250;
+
+    /// <summary>The clock (ms) the scenes' input drop runs on (tests set their own).</summary>
+    public Func<long> SceneClock { get; set; } = () => Environment.TickCount64;
+
+    private long _sceneInputDroppedUntil;
+
+    /// <summary>The key that cut the scenes short, while it's still held (its repeats are dropped too).</summary>
+    private string? _sceneKeyHeld;
+
+    partial void OnSceneChanged(AmbientScene? value)
+    {
+        if (value is not null) _sceneInputDroppedUntil = SceneClock() + SceneTypeAheadMs;
+    }
+
+    /// <summary>
+    /// A key (by name; null for a controller button) before the game sees it: true when the scenes take
+    /// it — typed ahead of a scene (dropped), the key that cut them short still held (its repeats
+    /// dropped), or the first press while a scene passes, which ends every scene waiting, as Escape
+    /// would, and does nothing more. A scene holding for Space has its own keys (HandleWaitingScene).
+    /// </summary>
+    public bool SceneTakesInput(string? key)
+    {
+        if (key is not null && key == _sceneKeyHeld) return true;
+        if (SceneClock() < _sceneInputDroppedUntil) return true;
+        if (!HasScene || SceneWaits) return false;
+        SkipScenes();
+        _sceneKeyHeld = key;
+        _sceneInputDroppedUntil = SceneClock() + SceneTypeAheadMs;
+        return true;
+    }
+
+    /// <summary>A key let go (or the window left): the key that cut the scenes short works again.</summary>
+    public void SceneKeyReleased(string? key)
+    {
+        if (key is null || key == _sceneKeyHeld) _sceneKeyHeld = null;
     }
 
     // --- What shows a scene ------------------------------------------------------------------------

@@ -39,9 +39,17 @@ public enum ItemPromptKind
 }
 
 /// <summary>One line in the inventory panel or an item prompt.</summary>
-public sealed record ItemRow(string Letter, string Glyph, uint GlyphColor, string Name, string Weight, Item Item)
+public sealed record ItemRow(string Letter, string Glyph, uint GlyphColor, string Name, string Weight, Item Item,
+    string Advice = "", uint AdviceColor = 0xFFD8C07A)
 {
     public IBrush GlyphBrush { get; } = new ImmutableSolidColorBrush(Color.FromUInt32(GlyphColor));
+
+    /// <summary>The shops' note (the Wear/Wield prompt shows it): whether it would suit you better than what it replaces.</summary>
+    public bool HasAdvice => Advice.Length > 0;
+    public IBrush AdviceBrush { get; } = new ImmutableSolidColorBrush(Color.FromUInt32(AdviceColor));
+
+    /// <summary>The row in words (its accessible name): the note after the name.</summary>
+    public string Spoken => HasAdvice ? $"{Name}. {Advice}" : Name;
 }
 
 /// <summary>Inventory panel and Angband-style "which item?" prompts.</summary>
@@ -137,7 +145,18 @@ public sealed partial class MainWindowViewModel
         };
         PromptRows.Clear();
         for (var i = 0; i < candidates.Count && i < 26; i++)
-            PromptRows.Add(Row(((char)('a' + i)).ToString(), candidates[i]));
+        {
+            var row = Row(((char)('a' + i)).ToString(), candidates[i]);
+            // Wear or wield: each with the shops' note on how it compares with what it would replace.
+            if (kind == ItemPromptKind.Wield && WieldAdvice(candidates[i]) is { } advice)
+                row = row with
+                {
+                    Advice = advice.Text,
+                    // (Through the map's palette, so the colour-blind option applies.)
+                    AdviceColor = _cells.Color(advice.Tone switch { > 0 => "LightGreen", < 0 => "LightRed", _ => "Yellow" }),
+                };
+            PromptRows.Add(row);
+        }
         IsPrompting = true;
     }
 
@@ -361,6 +380,14 @@ public sealed partial class MainWindowViewModel
             : _game.AdviceFor(item, _game.Knowledge.IsFullyKnown(item) || !item.IsWearable, buying: !_game.Player.Inventory.Contains(item)) is { } a
                 ? a.Text.TrimEnd('.') + "."
                 : null;
+
+    /// <summary>
+    /// The note for something you might put on: its properties as far as you know them (all its runes
+    /// learned, or it says it's not fully known yet), and from the floor, whether its weight would slow you.
+    /// </summary>
+    private ItemAdvice? WieldAdvice(Item item) =>
+        _game.Player.Inventory.Equipped.Contains(item) ? null
+            : _game.AdviceFor(item, _game.Knowledge.IsFullyKnown(item), buying: !_game.Player.Inventory.Contains(item));
 
     private void RefreshInventory()
     {
