@@ -86,6 +86,10 @@ public static class ObjectInfo
             "blessed" => "blesses you", "prot_evil" => "protects you from evil", "telepathy" => "grants telepathy",
             "see_invisible" => "lets you see invisible things", "infravision" => "sharpens your infravision",
             "att_conf" => "makes your hands glow to confuse the next monster you hit",
+            // (AVABand's weapon oils, and Angband's spells that brand: what your blows do meanwhile.)
+            "att_pois" => "makes your blows poison", "att_fire" => "makes your blows burn", "att_cold" => "makes your blows freeze",
+            "att_elec" => "makes your blows shock", "att_acid" => "makes your blows dissolve", "att_evil" => "makes your blows smite evil",
+            "att_demon" => "makes your blows smite demons",
             "terror" => "fills you with terror (fast but unable to fight)", "stoneskin" => "turns your skin to stone",
             "sprint" => "makes you sprint", "stealth" => "makes you stealthy", "scrambled" => "scrambles your stats",
             "paralyzed" => "paralyzes you", "confused" => "confuses you", "blind" => "blinds you",
@@ -244,7 +248,7 @@ public static class ObjectInfo
             var verb = b.Id switch
             {
                 "potion" => "quaffed", "scroll" => "read", "food" or "mushroom" => "eaten", "wand" => "aimed",
-                "staff" => "used", "rod" => "zapped", _ => "used",
+                "staff" => "used", "rod" => "zapped", "oil" => "applied", _ => "used",
             };
             sb.Append($"When {verb}, it {EffectText(data, effect)}.\n");
         }

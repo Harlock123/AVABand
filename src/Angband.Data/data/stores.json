@@ -278,7 +278,15 @@
     ],
     "minItems": 6,
     "maxItems": 10,
-    "turnover": 9
+    "turnover": 9,
+    "avabandNormal": [
+      "oil_of_venom",
+      "oil_of_burning",
+      "holy_water"
+    ],
+    "avabandBuys": [
+      "oil"
+    ]
   },
   {
     "id": "magic",

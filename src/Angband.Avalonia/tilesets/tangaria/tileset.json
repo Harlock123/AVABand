@@ -1534,6 +1534,13 @@
     "object:flawed_garnet": "ava_gem_garnet.png",
     "object:bloodstone": "ava_gem_bloodstone.png",
     "object:black_onyx": "ava_gem_black_onyx.png",
-    "object:star_sapphire": "ava_gem_star_sapphire.png"
+    "object:star_sapphire": "ava_gem_star_sapphire.png",
+    "object-base:oil": "ava_oil.png",
+    "object:oil_of_venom": "ava_oil_of_venom.png",
+    "object:oil_of_burning": "ava_oil_of_burning.png",
+    "object:oil_of_frost": "ava_oil_of_frost.png",
+    "object:oil_of_storms": "ava_oil_of_storms.png",
+    "object:oil_of_corrosion": "ava_oil_of_corrosion.png",
+    "object:holy_water": "ava_holy_water.png"
   }
 }

@@ -38,7 +38,7 @@ public sealed partial class MainWindowViewModel
             {
                 ItemPromptKind.Aim => "Aim", ItemPromptKind.Zap => "Zap", ItemPromptKind.UseStaff => "Use",
                 ItemPromptKind.Read => "Read", ItemPromptKind.Quaff => "Quaff", ItemPromptKind.Eat => "Eat",
-                ItemPromptKind.QuestUse => "Use", _ => "Activate",
+                ItemPromptKind.QuestUse => "Use", ItemPromptKind.Apply => "Apply", _ => "Activate",
             };
             menu.Add((label, () => UseItemAsked(ItemPromptKind.UseAny, item)));
         }

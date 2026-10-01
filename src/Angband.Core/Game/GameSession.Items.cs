@@ -478,7 +478,7 @@ public sealed partial class GameSession
             return 0;
         }
 
-        var verb = item.Base.Id switch { "potion" => "quaff", "scroll" => "read", "food" => "eat", _ => "use" };
+        var verb = item.Base.Id switch { "potion" => "quaff", "scroll" => "read", "food" => "eat", "oil" => "apply", _ => "use" };
         var wasAware = Knowledge.KnowsKind(item);
 
         // Use one of the stack first, so effects that look at the pack see the right count.

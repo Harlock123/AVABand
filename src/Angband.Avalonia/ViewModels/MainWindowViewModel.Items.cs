@@ -36,6 +36,8 @@ public enum ItemPromptKind
     InventoryMenu, EquipmentMenu,
     /// <summary>Reading, looking at or using one of AVABand's quest items.</summary>
     QuestUse,
+    /// <summary>AVABand's weapon oils, rubbed on a weapon ('U', or the item's menu).</summary>
+    Apply,
 }
 
 /// <summary>One line in the inventory panel or an item prompt.</summary>
@@ -102,6 +104,7 @@ public sealed partial class MainWindowViewModel
                 ItemPromptKind.Uninscribe => "You have nothing with an inscription.",
                 ItemPromptKind.Ignore => "You have nothing to ignore.",
                 ItemPromptKind.UseAny => "You have nothing to use.",
+                ItemPromptKind.Apply => "You have no weapon oil.",
                 ItemPromptKind.InventoryMenu => "You have nothing in your pack.",
                 ItemPromptKind.EquipmentMenu => "You are not wearing anything.",
                 _ => "You have nothing to choose.",
@@ -141,6 +144,7 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Uninscribe => "Un-inscribe which item?",
             ItemPromptKind.Ignore => "Ignore which item?",
             ItemPromptKind.UseAny => "Use which item?",
+            ItemPromptKind.Apply => "Apply which oil?",
             _ => "Inspect which item?",
         };
         PromptRows.Clear();
@@ -222,7 +226,7 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Eat => 'E', ItemPromptKind.Drop => 'd', ItemPromptKind.Throw => 'v', ItemPromptKind.Pickup => 'g',
         ItemPromptKind.Refuel => 'F', ItemPromptKind.Inspect => 'I', ItemPromptKind.Aim => 'a', ItemPromptKind.UseStaff => 'u',
         ItemPromptKind.Zap => 'z', ItemPromptKind.Activate => 'A', ItemPromptKind.Inscribe => '{', ItemPromptKind.Ignore => 'k',
-        ItemPromptKind.UseAny => 'U', ItemPromptKind.InventoryMenu => 'i', ItemPromptKind.EquipmentMenu => 'e', ItemPromptKind.QuestUse => 'U', _ => '}',
+        ItemPromptKind.UseAny => 'U', ItemPromptKind.InventoryMenu => 'i', ItemPromptKind.EquipmentMenu => 'e', ItemPromptKind.QuestUse => 'U', ItemPromptKind.Apply => 'U', _ => '}',
     };
 
     private static string CommandVerb(ItemPromptKind kind) => kind switch
@@ -232,7 +236,7 @@ public sealed partial class MainWindowViewModel
         ItemPromptKind.Pickup => "pick up", ItemPromptKind.Refuel => "refuel with", ItemPromptKind.Inspect => "inspect",
         ItemPromptKind.Aim => "aim", ItemPromptKind.UseStaff => "use", ItemPromptKind.Zap => "zap", ItemPromptKind.Activate => "activate",
         ItemPromptKind.Inscribe => "inscribe", ItemPromptKind.Ignore => "ignore", ItemPromptKind.UseAny => "use",
-        ItemPromptKind.InventoryMenu or ItemPromptKind.EquipmentMenu => "choose", ItemPromptKind.QuestUse => "use", _ => "un-inscribe",
+        ItemPromptKind.InventoryMenu or ItemPromptKind.EquipmentMenu => "choose", ItemPromptKind.QuestUse => "use", ItemPromptKind.Apply => "apply", _ => "un-inscribe",
     };
 
     /// <summary>The command an item is used with, for 'U' (none if it can't be used).</summary>
@@ -245,6 +249,7 @@ public sealed partial class MainWindowViewModel
         "staff" => ItemPromptKind.UseStaff,
         "rod" => ItemPromptKind.Zap,
         "quest" => ItemPromptKind.QuestUse,
+        "oil" => ItemPromptKind.Apply,
         _ => _game.Player.Inventory.Equipped.Contains(item) && item.CanActivate ? ItemPromptKind.Activate : null,
     };
 
@@ -339,6 +344,7 @@ public sealed partial class MainWindowViewModel
             ItemPromptKind.Quaff => carried.Concat(floor).Where(i => i.Base.Id == "potion"),
             ItemPromptKind.Read => carried.Concat(floor).Where(i => i.Base.Id == "scroll"),
             ItemPromptKind.Eat => carried.Concat(floor).Where(i => i.Base.Id is "food" or "mushroom"),
+            ItemPromptKind.Apply => carried.Concat(floor).Where(i => i.Base.Id == "oil"),
             ItemPromptKind.Aim => inv.Pack.Where(i => i.Base.Id == "wand"),
             ItemPromptKind.UseStaff => inv.Pack.Where(i => i.Base.Id == "staff"),
             ItemPromptKind.Zap => inv.Pack.Where(i => i.Base.Id == "rod"),

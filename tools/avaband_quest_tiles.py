@@ -3,8 +3,8 @@
 
 Draws small pixel-art tiles (CC0, made for AVABand) — the quests' places and things (the sealed
 door, the dwarven forge, the barrow altar, the hermit's door, the braziers, the trapped apprentice,
-the Key of Belegost) and AVABand's own items (the bags of holding, socketed bracers, and gems, one
-drawn in each kind's colour) — at each tileset's cell size (drawn at
+the Key of Belegost) and AVABand's own items (the bags of holding, socketed bracers, gems and weapon
+oils, each gem and oil drawn in its kind's colour) — at each tileset's cell size (drawn at
 16x16, scaled to fit), as ava_*.png in the tileset's folder; then writes every quest mapping into
 its tileset.json (the rest borrow the nearest tile the set already has: the inn a shop door, the
 relic an amulet, the shards a sword, Durgash an orc chief, Hathol a barrow-wight...). Re-run it after rebuilding any tileset.
@@ -221,6 +221,29 @@ def gem(color):
     return c
 
 
+def oil(color):
+    """A stoppered flask of weapon oil (AVABand's oils), the oil in its colour."""
+    c = canvas()
+    glass, cork = hexc("#c8d8e0", 200), hexc("#8a5a2e")
+    r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+    liquid, shine = (r, g, b, 255), (min(255, r + 80), min(255, g + 80), min(255, b + 80), 255)
+    rect(c, 7, 1, 8, 3, cork)                        # the stopper
+    rect(c, 6, 4, 9, 6, glass)                       # the neck
+    for y, (x0, x1) in enumerate([(4, 11), (3, 12), (3, 12), (3, 12), (3, 12), (4, 11), (5, 10)], start=7):
+        rect(c, x0, y, x1, y, glass)                 # the bowl
+    for y, (x0, x1) in enumerate([(4, 11), (4, 11), (4, 11), (5, 10)], start=10):
+        rect(c, x0, y, x1, y, liquid)                # the oil, filling it two-thirds
+    px(c, 5, 10, shine)
+    px(c, 5, 11, shine)
+    return c
+
+
+# AVABand's weapon oils (ava_objects.json): each kind drawn in its colour.
+OIL_COLOURS = {
+    "oil_of_venom": "#30b040", "oil_of_burning": "#e04020", "oil_of_frost": "#d8f0ff", "oil_of_storms": "#4070ff",
+    "oil_of_corrosion": "#90a0a0", "holy_water": "#a0d8ff",
+}
+
 # AVABand's gems (ava_objects.json): each kind drawn in its colour (every quality alike).
 GEM_COLOURS = {
     "ruby": "#e0283a", "sapphire": "#2a5ae0", "topaz": "#f0c030", "emerald": "#20b060", "diamond": "#e8f0ff",
@@ -247,6 +270,9 @@ for _gem, _colour in GEM_COLOURS.items():
         if _prefix and _gem in ("bloodstone", "black_onyx", "star_sapphire"):
             continue
         DRAWN["object:" + _prefix + _gem] = _tile
+DRAWN["object-base:oil"] = ("ava_oil.png", lambda: oil("#30b040"), False)
+for _oil, _colour in OIL_COLOURS.items():
+    DRAWN["object:" + _oil] = ("ava_" + _oil + ".png", (lambda col: lambda: oil(col))(_colour), False)
 # The rest borrow the nearest tile the set has (the first that exists).
 BORROWED = [
     ("terrain:shop_inn", ["terrain:shop_general", "terrain:shop_home"]),

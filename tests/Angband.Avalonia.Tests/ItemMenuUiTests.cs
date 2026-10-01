@@ -287,6 +287,21 @@ public class ItemMenuUiTests
         Assert.Contains("for your empty helm slot", vm.LastMessage);
     }
 
+    /// <summary>A weapon oil: "Apply" in its menu, and listed by 'U'; applying it brands your blows.</summary>
+    [AvaloniaFact]
+    public void A_weapon_oil_is_applied_from_its_menu_or_U()
+    {
+        var vm = Start();
+        var oil = Carry(vm, "oil_of_burning", 2);
+        vm.OpenItemMenu(oil);
+        Assert.Contains("Apply", vm.MenuLabels);
+        Choose(vm, "Apply");
+        Assert.True(vm.Game.Player.Timed.Has("att_fire"));
+        vm.HandleAction(InputAction.UseItem);
+        Assert.Contains(vm.PromptRows, r => r.Item == oil);
+        vm.CancelPrompt();
+    }
+
     /// <summary>The Wear/Wield prompt: each choice with the shops' note — better or worse than what it would replace.</summary>
     [AvaloniaFact]
     public void The_wear_and_wield_prompt_says_whether_each_suits_you()

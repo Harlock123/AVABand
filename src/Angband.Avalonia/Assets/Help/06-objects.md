@@ -36,6 +36,14 @@ Only the **Armoury** (2) can take a gem out again — press **!** (or *Remove a 
 some gold, and now and then the stone cracks. A cursed stone won't come out until its curse is
 broken.
 
+## Weapon oils
+
+A **weapon oil** is rubbed on your weapon (or your hands) — **U**, or *Apply* from its menu — and
+for a while (20 to 40 turns) your blows carry it: **Venom Oil** poisons, **Burning Oil** burns,
+**Frost Oil** freezes, **Storm Oil** shocks, **Corrosive Oil** dissolves, and **Holy Water** smites
+evil creatures. A creature that resists the element shrugs it off. The **Alchemist** (5) keeps
+Venom Oil, Burning Oil and Holy Water, and buys oils; the rest turn up in the dungeon.
+
 ## Ignoring
 
 `Ctrl+D` ignores an item or everything like it; ignored items vanish from the map and lists.

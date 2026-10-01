@@ -3,5 +3,6 @@
   {"id": "relic", "name": "Relic~", "glyph": "\"", "color": "Violet", "slot": "amulet", "breakChance": 0, "flags": ["EASY_KNOW"]},
   {"id": "bag", "name": "Bag~", "glyph": "~", "color": "Umber", "breakChance": 0, "hates": ["fire"], "flags": ["EASY_KNOW"]},
   {"id": "bracers", "name": "Bracers", "glyph": "]", "color": "LightUmber", "slot": "arms", "breakChance": 10, "hates": ["acid", "fire"]},
-  {"id": "gem", "name": "Gem~", "glyph": "*", "color": "White", "breakChance": 0, "flags": ["EASY_KNOW"]}
+  {"id": "gem", "name": "Gem~", "glyph": "*", "color": "White", "breakChance": 0, "flags": ["EASY_KNOW"]},
+  {"id": "oil", "name": "Weapon Oil~", "glyph": "!", "color": "LightGreen", "breakChance": 100, "hates": ["cold"], "flags": ["EASY_KNOW"]}
 ]
