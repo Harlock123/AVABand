@@ -26,7 +26,8 @@ public sealed partial class GameSession
     /// <summary>
     /// Digging skill: race skill, Strength, and the best tool carried — the wielded weapon or any
     /// digger in the pack (4.2 uses the best digger automatically): +20 per point of tunnelling and
-    /// a tenth of its weight.
+    /// a tenth of its weight — and, as 4.2's calc_bonuses adds every worn object's, +20 for each point
+    /// of tunnelling on the rest of what you wear (a Ring of Digging, a Miner's Helm).
     /// </summary>
     public int DiggingSkill
     {
@@ -37,7 +38,8 @@ public sealed partial class GameSession
                         + AdjStrDig[StatTables.Index(p.Stats.GetValueOrDefault("str", 15))];
             var tools = p.Inventory.Pack.Where(i => i.Base.Id == "digger").Append(p.Inventory.Weapon).OfType<Item>();
             var best = tools.Select(ToolBonus).DefaultIfEmpty(0).Max();
-            return Math.Max(0, skill + best + RaceDigging());
+            var worn = p.Inventory.Equipped.Where(i => i != p.Inventory.Weapon).Sum(i => i.Modifier(ItemModifiers.Tunnel)) * 20;
+            return Math.Max(0, skill + best + worn + RaceDigging());
         }
     }
 

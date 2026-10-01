@@ -98,6 +98,13 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Lamps and gear for delvers** (AVABand's own kinds, `ava_objects.json`): the *Dwarven Lamp* (light
+2, never needs oil, +1 digging) and the *Elven Lantern* (light 2, never needs oil, +1 stealth), the
+*Miner's Helm* (4 armour, +1 light, +1 digging; the Armoury stocks it) and *Delver's Gloves* (2
+armour, +1 digging). Worn tunnelling now counts for digging as it does in 4.2.5's calc_bonuses
+(`GameSession.DiggingSkill`: +20 a point for everything worn besides the best tool) — which also
+makes Angband's own Ring of Digging work; before, only the digging tool counted.
+
 **Gem sets** (AVABand's own, `Game/GameSession.GemSets.cs`): stones set together in one pair of
 worn bracers answer one another. Three of a kind, of any quality, give a stronger form of their
 virtue — three rubies immunity to fire, three sapphires to cold, three topazes to lightning; three

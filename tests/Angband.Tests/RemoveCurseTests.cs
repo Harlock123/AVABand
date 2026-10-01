@@ -72,7 +72,7 @@ public class EasyKnowTests
     {
         var game = Arena.Create(4);
         var data = game.Data;
-        Assert.Equal(22, data.Objects.Count(k => k.Has("EASY_KNOW")));
+        Assert.Equal(22 + 2, data.Objects.Count(k => k.Has("EASY_KNOW"))); // (Angband's 22, and AVABand's two lamps)
         var lantern = game.Objects.Create("lantern");
         Angband.Core.Items.ObjectFactory.ApplyEgo(new Angband.Core.Randomness.GameRandom(1), lantern, data.Egos.Single(e => e.Id == "of_true_sight"), 10);
         Assert.True(game.Knowledge.KnowsKind(lantern));

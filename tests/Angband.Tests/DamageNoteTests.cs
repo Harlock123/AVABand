@@ -24,8 +24,14 @@ public class DamageNoteTests
     {
         var (game, seen) = Game();
         var orc = Arena.AddMonster(game, "cave_orc", game.Player.Position + new Loc(1, 0));
-        for (var i = 0; i < 20 && !seen.OfType<PlayerHurtEvent>().Any(); i++) game.RunMonsterTurn(orc);
-        var hurt = seen.OfType<PlayerHurtEvent>().First();
+        // (A cave orc may shoot as well as hit: the first hurt from a blow is the one wanted.)
+        bool ByBlow(PlayerHurtEvent h) => seen.Take(seen.IndexOf(h)).LastOrDefault(e => e is MessageEvent) is MessageEvent m && m.Text.Contains("hits you");
+        for (var i = 0; i < 60 && !seen.OfType<PlayerHurtEvent>().Any(ByBlow); i++)
+        {
+            game.Player.Hp = game.Player.MaxHp;
+            game.RunMonsterTurn(orc);
+        }
+        var hurt = seen.OfType<PlayerHurtEvent>().First(ByBlow);
         var at = seen.IndexOf(hurt);
         var note = Assert.IsType<DamageNoteEvent>(seen[at + 1]);
         Assert.Equal(hurt.Damage, note.Damage);

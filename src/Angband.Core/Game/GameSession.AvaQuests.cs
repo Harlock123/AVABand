@@ -267,6 +267,7 @@ public sealed partial class GameSession
 
     private void SetQuestFeature(Loc at, string terrainId)
     {
+        MoveAside(at); // (a level's own monster standing there: the trapped apprentice was found under one)
         ref var sq = ref Level[at];
         sq.Feature = Data.Terrain[terrainId].Index;
         sq.Trap = 0;
@@ -278,16 +279,24 @@ public sealed partial class GameSession
         if (Data.Monster(raceId) is not { } race) return null;
         // A monster of the level's own that happens to stand on the quest's spot steps aside (else the
         // quest's monster would be missing from its room, and the quest stuck for that visit).
-        if (Level.Monsters.At(at) is { } inTheWay)
-        {
-            if (Level.AllLocs().Where(l => l != at && Level.IsEmptyFloor(l) && l != Player.Position)
-                    .OrderBy(l => l.DistanceTo(at)).Select(l => (Loc?)l).FirstOrDefault() is not { } aside)
-                return null;
-            Level.Monsters.Move(inTheWay, aside);
-        }
+        if (!MoveAside(at)) return null;
         var m = _spawner.Place(Level, Rng, race, at, asleep);
         Scheduler.Add(m);
         return m;
+    }
+
+    /// <summary>
+    /// A monster of the level's own standing on a quest's spot steps aside, to the nearest empty floor;
+    /// false if there's nowhere for it to go.
+    /// </summary>
+    private bool MoveAside(Loc at)
+    {
+        if (Level.Monsters.At(at) is not { } inTheWay) return true;
+        if (Level.AllLocs().Where(l => l != at && Level.IsEmptyFloor(l) && l != Player.Position)
+                .OrderBy(l => l.DistanceTo(at)).Select(l => (Loc?)l).FirstOrDefault() is not { } aside)
+            return false;
+        Level.Monsters.Move(inTheWay, aside);
+        return true;
     }
 
     /// <summary>A quest item, tagged for its quest.</summary>

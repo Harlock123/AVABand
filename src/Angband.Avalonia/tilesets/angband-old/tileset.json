@@ -2106,6 +2106,10 @@
     "object:oil_of_frost": "ava_oil_of_frost.png",
     "object:oil_of_storms": "ava_oil_of_storms.png",
     "object:oil_of_corrosion": "ava_oil_of_corrosion.png",
-    "object:holy_water": "ava_holy_water.png"
+    "object:holy_water": "ava_holy_water.png",
+    "object:dwarven_lamp": "main:5,11",
+    "object:elven_lantern": "main:5,11",
+    "object:miners_helm": "main:3,8",
+    "object:delvers_gloves": "main:13,8"
   }
 }

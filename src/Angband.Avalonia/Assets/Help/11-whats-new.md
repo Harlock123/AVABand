@@ -5,6 +5,12 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Lamps and digging gear**: the Dwarven Lamp and Elven Lantern (no oil needed), the Miner's Helm
+  and Delver's Gloves.
+- **Fixed: a Ring of Digging did nothing** — only your digging tool counted. Everything you wear now
+  helps, as in Angband.
+- **Fixed: a monster could stand on the trapped apprentice** in his quest, so walking up to him
+  started a fight instead.
 - **Gem sets**: three matching stones in one pair of bracers give more (three rubies: immunity to
   fire); a ruby, a sapphire and a topaz together resist acid too.
 - **New curses for bags and bracers**: greedy bags that eat gold, leaden things twice as heavy, and

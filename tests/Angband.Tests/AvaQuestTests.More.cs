@@ -38,6 +38,26 @@ public partial class AvaQuestTests
         Assert.Equal(-15, game.AvaQuests.PriceAdjust["alchemist"]);
     }
 
+    /// <summary>No monster steps into the trapped apprentice's hollow (one did, and was hit for him: seed 4).</summary>
+    [Fact]
+    public void No_monster_shares_the_trapped_apprentices_hollow()
+    {
+        var q = Start(seed: 4);
+        var game = q.Game;
+        q.TakeQuest("apprentice");
+        q.Jump(game.AvaQuests.Get("apprentice")!.N("depth"));
+        var hollow = q.FeatureLoc("trapped_apprentice");
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        var beside = game.Level.AllLocs().First(l => l.ChebyshevTo(hollow) == 1 && game.Level.IsEmptyFloor(l));
+        var ghost = Arena.AddMonster(game, "poltergeist", beside);
+        game.Player.Position = game.Level.AllLocs().First(l => l.DistanceTo(hollow) > 8 && game.Level.IsEmptyFloor(l));
+        for (var i = 0; i < 200; i++)
+        {
+            game.Execute(new HoldCommand());
+            Assert.NotEqual(hollow, ghost.Position);
+        }
+    }
+
     [Fact]
     public void The_Apprentice_without_a_scroll_can_only_be_sent_alone_and_his_fate_is_settled_then()
     {

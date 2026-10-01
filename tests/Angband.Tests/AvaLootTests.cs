@@ -330,4 +330,47 @@ public class AvaLootTests
         diamonds.Execute(new SetGemCommand(bracers, Carry(diamonds, "chipped_diamond")));
         Assert.Equal(armour + 4 + 10, diamonds.Player.Armour); // the stone's own 4, and 10 for the set
     }
+
+    // --- Lamps, a helm and gloves for delvers ----------------------------------------------------
+
+    [Fact]
+    public void A_dwarven_lamp_lights_needs_no_oil_and_helps_you_dig()
+    {
+        var game = NewGame();
+        var dig = game.DiggingSkill;
+        var lamp = Carry(game, "dwarven_lamp");
+        game.Execute(new WieldCommand(lamp));
+        Assert.Equal(lamp, game.Player.Inventory.InSlot(EquipSlot.Light));
+        Assert.Equal(2, game.Player.LightRadius);
+        Assert.False(lamp.UsesFuel);
+        Assert.True(game.DiggingSkill > dig);
+        for (var i = 0; i < 50; i++) game.Execute(new HoldCommand());
+        Assert.Equal(2, game.Player.LightRadius); // still burning, with nothing to burn
+    }
+
+    [Fact]
+    public void An_elven_lantern_is_quiet_and_a_miners_helm_adds_light()
+    {
+        var game = NewGame();
+        var stealth = game.Player.Stealth;
+        game.Execute(new WieldCommand(Carry(game, "elven_lantern")));
+        Assert.Equal(stealth + 1, game.Player.Stealth);
+        game.Execute(new WieldCommand(Carry(game, "miners_helm")));
+        Assert.Equal(3, game.Player.LightRadius);
+        var dig = game.DiggingSkill;
+        game.Execute(new WieldCommand(Carry(game, "delvers_gloves")));
+        Assert.True(game.DiggingSkill > dig);
+        Assert.Contains("miners_helm", TestData.Game.Stores.Single(st => st.Id == "armoury").Stocked);
+    }
+
+    /// <summary>Angband's Ring of Digging counts, as every worn thing's tunnelling does in 4.2.5 (it didn't, before).</summary>
+    [Fact]
+    public void A_ring_of_digging_helps_you_dig()
+    {
+        var game = NewGame();
+        var dig = game.DiggingSkill;
+        var ring = Carry(game, "ring_of_digging");
+        game.Execute(new WieldCommand(ring));
+        Assert.Equal(dig + 20 * ring.Modifier(ItemModifiers.Tunnel), game.DiggingSkill);
+    }
 }

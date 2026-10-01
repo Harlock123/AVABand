@@ -1307,6 +1307,10 @@
     "object:oil_of_frost": "ava_oil_of_frost.png",
     "object:oil_of_storms": "ava_oil_of_storms.png",
     "object:oil_of_corrosion": "ava_oil_of_corrosion.png",
-    "object:holy_water": "ava_holy_water.png"
+    "object:holy_water": "ava_holy_water.png",
+    "object:dwarven_lamp": "item/misc/misc_lantern.png",
+    "object:elven_lantern": "item/misc/misc_lantern.png",
+    "object:miners_helm": "item/armor/headgear/helmet_1.png",
+    "object:delvers_gloves": "item/armor/hands/gauntlet_1.png"
   }
 }

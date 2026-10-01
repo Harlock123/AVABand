@@ -610,8 +610,10 @@ public sealed partial class GameSession
         var race = monster.Race;
         var name = Capitalize(MonsterName(monster));
         if (grid == Player.Position || Level.Decoy == grid) return true;
-        if (!confused && HatesGrid(monster, grid)) return false;
         var feature = Level.FeatureAt(grid);
+        // (AVABand's trapped apprentice is someone: no monster shares his hollow, confused or not.)
+        if (feature.Id == "trapped_apprentice") return false;
+        if (!confused && HatesGrid(monster, grid)) return false;
         if (feature.Has(TerrainFlags.Passable)) return true;
         void Stumble(ref bool did)
         {

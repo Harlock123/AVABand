@@ -298,6 +298,11 @@ BORROWED = [
     ("monster:the_keeper_of_the_stone", ["monster:nether_wraith", "monster:black_wraith", "monster:white_wraith"]),
     ("object:heart_of_the_mountain", ["object:arkenstone", "object-base:amulet"]),
     ("object:palantir", ["object:elfstone", "object:star", "object-base:light"]),
+    # AVABand's lamps, helm and gloves: their nearest Angband kind's picture.
+    ("object:dwarven_lamp", ["object:lantern", "object-base:light"]),
+    ("object:elven_lantern", ["object:lantern", "object-base:light"]),
+    ("object:miners_helm", ["object:metal_cap", "object-base:helm"]),
+    ("object:delvers_gloves", ["object:gauntlets", "object:leather_gloves", "object-base:gloves"]),
 ]
 
 

@@ -59,6 +59,13 @@ blades for a second hand, **'Thorn'** and the main gauche **of Dol Amroth**; the
 which finds more gold in every vein; and the **Boots of Strider**, made for long marches under a
 heavy load.
 
+## Lamps and digging gear
+
+A **Dwarven Lamp** or an **Elven Lantern** gives a steady light and never needs oil; the dwarves'
+helps you dig, the elves' helps you move quietly. A **Miner's Helm** (from the Armoury) carries a
+little light on your brow, and it and **Delver's Gloves** help you dig. A **Ring of Digging** helps
+too.
+
 ## Weapon oils
 
 A **weapon oil** is rubbed on your weapon (or your hands) — **U**, or *Apply* from its menu — and

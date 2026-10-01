@@ -3,6 +3,7 @@ using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Definitions;
 using Angband.Core.Game;
+using Angband.Core.Geometry;
 using Angband.Data;
 using Angband.Input;
 using Avalonia.Headless;
@@ -535,6 +536,11 @@ public sealed class SceneUiTests : IDisposable
         vm.Execute(new DebugJumpCommand(12));
         vm.SkipScenes();
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        // Somewhere with room for a foe two squares off and in view, whatever the level is like.
+        bool RoomNear(Loc at) => game.Level.AllLocs().Any(l => game.Level.IsEmptyFloor(l) && l.ChebyshevTo(at) == 2
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, at, l, 20));
+        if (!RoomNear(game.Player.Position))
+            game.Player.Position = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l) && RoomNear(l));
         vm.Execute(new HoldCommand());
         Assert.False(director.Boss);
 
