@@ -247,6 +247,8 @@ public static class ObjectInfo
         if (item.Sockets > 0)
             facts.Add($"it has {(item.Sockets == 1 ? "a socket" : $"{item.Sockets} sockets")} for gems"
                       + (item.Gems.Count == 0 ? ", all empty" : $", {item.Gems.Count} set"));
+        if (item.Trophy is { } worked && game.Data.Object(worked) is { } trophyKind)
+            facts.Add($"the armourer worked {ItemNaming.Plain(trophyKind.Name, false).ToLowerInvariant()} into it");
         if (GameSession.GemSets(item) is { Count: > 0 } sets)
             facts.Add($"worn, its stones make {(sets.Count == 1 ? "a set" : "sets")} — {string.Join("; ", sets.Select(s => s.Text))}");
         if (item.Kind.CarryPercent > 0)

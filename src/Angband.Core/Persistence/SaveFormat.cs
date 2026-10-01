@@ -125,6 +125,8 @@ public sealed class ItemSave
     public List<string>? AddedResists { get; set; }
     public List<string>? AddedFlags { get; set; }
     public List<string>? AddedCurses { get; set; }
+    /// <summary>AVABand: the trophy worked into a piece of armour (none in older saves).</summary>
+    public string? Trophy { get; set; }
 }
 
 public sealed class SlaySave

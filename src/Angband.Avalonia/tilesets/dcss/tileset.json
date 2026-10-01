@@ -1311,6 +1311,14 @@
     "object:dwarven_lamp": "item/misc/misc_lantern.png",
     "object:elven_lantern": "item/misc/misc_lantern.png",
     "object:miners_helm": "item/armor/headgear/helmet_1.png",
-    "object:delvers_gloves": "item/armor/hands/gauntlet_1.png"
+    "object:delvers_gloves": "item/armor/hands/gauntlet_1.png",
+    "object-base:trophy": "ava_trophy.png",
+    "object:red_dragon_scale": "ava_red_dragon_scale.png",
+    "object:white_dragon_scale": "ava_white_dragon_scale.png",
+    "object:blue_dragon_scale": "ava_blue_dragon_scale.png",
+    "object:black_dragon_scale": "ava_black_dragon_scale.png",
+    "object:green_dragon_scale": "ava_green_dragon_scale.png",
+    "object:troll_hide": "ava_troll_hide.png",
+    "object:spider_silk": "ava_spider_silk.png"
   }
 }

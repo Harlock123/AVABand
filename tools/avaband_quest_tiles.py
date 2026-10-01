@@ -3,8 +3,8 @@
 
 Draws small pixel-art tiles (CC0, made for AVABand) — the quests' places and things (the sealed
 door, the dwarven forge, the barrow altar, the hermit's door, the braziers, the trapped apprentice,
-the Key of Belegost) and AVABand's own items (the bags of holding, socketed bracers, gems and weapon
-oils, each gem and oil drawn in its kind's colour) — at each tileset's cell size (drawn at
+the Key of Belegost) and AVABand's own items (the bags of holding, socketed bracers, gems, weapon oils
+and monster trophies, each gem, oil and dragon scale drawn in its kind's colour) — at each tileset's cell size (drawn at
 16x16, scaled to fit), as ava_*.png in the tileset's folder; then writes every quest mapping into
 its tileset.json (the rest borrow the nearest tile the set already has: the inn a shop door, the
 relic an amulet, the shards a sword, Durgash an orc chief, Hathol a barrow-wight...). Re-run it after rebuilding any tileset.
@@ -238,6 +238,55 @@ def oil(color):
     return c
 
 
+def scale(color):
+    """A dragon's scale (AVABand's trophies), in the dragon's colour, ridged and pointed."""
+    c = canvas()
+    r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+    body = (r, g, b, 255)
+    ridge = (r * 6 // 10, g * 6 // 10, b * 6 // 10, 255)
+    shine = (min(255, r + 70), min(255, g + 70), min(255, b + 70), 255)
+    for y, (x0, x1) in enumerate([(5, 10), (4, 11), (3, 12), (3, 12), (3, 12), (4, 11), (4, 11), (5, 10), (6, 9), (7, 8)], start=3):
+        rect(c, x0, y, x1, y, body)
+    for y in range(4, 12):
+        px(c, 7, y, ridge)                           # the midrib
+    for x0, y in ((5, 6), (9, 6), (5, 9), (9, 9)):
+        px(c, x0, y, ridge)
+    px(c, 5, 4, shine)
+    px(c, 6, 4, shine)
+    return c
+
+
+def hide():
+    """A strip of troll hide, grey and knobbled."""
+    c = canvas()
+    skin, dark = hexc("#7a7468"), hexc("#4e4a42")
+    rect(c, 2, 4, 13, 11, skin)
+    for x, y in ((3, 4), (12, 11), (2, 11), (13, 4)):
+        px(c, x, y, CLEAR)
+    for x, y in ((4, 6), (8, 5), (11, 7), (6, 9), (10, 10)):
+        px(c, x, y, dark)
+    return c
+
+
+def silk():
+    """A skein of grey spider silk."""
+    c = canvas()
+    thread, shade = hexc("#c8c8d0"), hexc("#8a8a96")
+    for y in range(4, 13):
+        for x in range(3, 13):
+            if (x + y) % 3 == 0:
+                px(c, x, y, thread)
+            elif (x - y) % 4 == 0:
+                px(c, x, y, shade)
+    rect(c, 3, 8, 12, 8, thread)                     # the band round the skein
+    return c
+
+
+SCALE_COLOURS = {
+    "red_dragon_scale": "#d03020", "white_dragon_scale": "#e8f0f8", "blue_dragon_scale": "#3060e0",
+    "black_dragon_scale": "#404048", "green_dragon_scale": "#30a040",
+}
+
 # AVABand's weapon oils (ava_objects.json): each kind drawn in its colour.
 OIL_COLOURS = {
     "oil_of_venom": "#30b040", "oil_of_burning": "#e04020", "oil_of_frost": "#d8f0ff", "oil_of_storms": "#4070ff",
@@ -271,6 +320,11 @@ for _gem, _colour in GEM_COLOURS.items():
             continue
         DRAWN["object:" + _prefix + _gem] = _tile
 DRAWN["object-base:oil"] = ("ava_oil.png", lambda: oil("#30b040"), False)
+DRAWN["object-base:trophy"] = ("ava_trophy.png", lambda: scale("#d03020"), False)
+for _trophy, _colour in SCALE_COLOURS.items():
+    DRAWN["object:" + _trophy] = ("ava_" + _trophy + ".png", (lambda col: lambda: scale(col))(_colour), False)
+DRAWN["object:troll_hide"] = ("ava_troll_hide.png", hide, False)
+DRAWN["object:spider_silk"] = ("ava_spider_silk.png", silk, False)
 for _oil, _colour in OIL_COLOURS.items():
     DRAWN["object:" + _oil] = ("ava_" + _oil + ".png", (lambda col: lambda: oil(col))(_colour), False)
 # The rest borrow the nearest tile the set has (the first that exists).

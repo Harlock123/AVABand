@@ -191,6 +191,7 @@ public static class SaveGame
         AddedResists = i.AddedResists.Count == 0 ? null : [.. i.AddedResists],
         AddedFlags = i.AddedFlags.Count == 0 ? null : [.. i.AddedFlags],
         AddedCurses = i.AddedCurses.Count == 0 ? null : [.. i.AddedCurses],
+        Trophy = i.Trophy,
     };
 
     /// <summary>
@@ -333,6 +334,7 @@ public static class SaveGame
             item.AddedResists.AddRange(s.AddedResists ?? []);
             item.AddedFlags.AddRange(s.AddedFlags ?? []);
             item.AddedCurses.AddRange(s.AddedCurses ?? []);
+            item.Trophy = s.Trophy;
             return item;
         }
 

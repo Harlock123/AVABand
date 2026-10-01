@@ -98,6 +98,17 @@ the floor ("Your pack overflows!", Angband's `pack_overflow`, checked after ever
 same name, and no `{??}` — until, one player turn in 800 or so, it swallows something in the pack
 for good and shows its curse. The General Store buys bags.
 
+**Monster trophies** (AVABand's own, `Game/GameSession.Trophies.cs`; base `trophy`, seven kinds of
+commonness 0 — only ever taken from what you kill): a dragon leaves a scale in the colour of its
+breath (red fire, white cold, blue lightning, black acid, green poison; a many-coloured one any of
+them), a troll its hide, a great spider (from 750 ft) its silk — a unique always, others now and
+then (a dragon one time in three, a spider one in six, a troll one in eight; `TrophiesOf`), thief or
+not. The **Armoury**'s armourer works one into a piece of armour you wear or carry (its *Services*,
+or `!`: *Work a trophy*, or *The armourer's work* beside gem removal) for the trophy's worth in
+gold: the piece gains the trophy's resistance — the troll's hide, regeneration — one trophy to a
+piece (`Item.Trophy`, saved), never an artifact, and only where it adds something. The piece's
+description names the trophy worked into it.
+
 **Hoards** (AVABand's own, `Cave.Levels.cs` `PlaceHoard`; Angband's lairs and gauntlets have
 none): a lair's cavern holds a hoard at its heart — a great object and four piles of gold, made ten
 levels deeper, with one of AVABand's stones half the time and a pair of bracers a quarter of the

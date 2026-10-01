@@ -59,6 +59,14 @@ blades for a second hand, **'Thorn'** and the main gauche **of Dol Amroth**; the
 which finds more gold in every vein; and the **Boots of Strider**, made for long marches under a
 heavy load.
 
+## Trophies
+
+Some monsters leave something of themselves behind: a dragon a **scale** in the colour of its breath,
+a troll its **hide**, a great spider its **silk** — a unique always, others now and then. Take a
+trophy to the **Armoury** (2) and press **!** (*Work a trophy*): for gold, the armourer works it into
+a piece of your armour, which then resists what the trophy did — fire for a red dragon's scale,
+darkness for spider silk — or, for a troll's hide, heals you faster. One trophy to a piece.
+
 ## Lamps and digging gear
 
 A **Dwarven Lamp** or an **Elven Lantern** gives a steady light and never needs oil; the dwarves'

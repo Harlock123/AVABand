@@ -155,6 +155,9 @@ public sealed class Item
 
     /// <summary>On a set gem: the resistances, flags and curses it brought that its host didn't have (taken away with it).</summary>
     public List<string> AddedResists { get; } = [];
+
+    /// <summary>AVABand: the trophy the Armoury worked into this piece of armour (its kind), if any — one to a piece.</summary>
+    public string? Trophy { get; set; }
     public List<string> AddedFlags { get; } = [];
     public List<string> AddedCurses { get; } = [];
 
@@ -320,6 +323,7 @@ public sealed class Item
         foreach (var f in Flags) copy.Flags.Add(f);
         copy.Gems.AddRange(Gems.Select(g => g.Clone(g.Serial, g.Number)));
         copy.AddedResists.AddRange(AddedResists);
+        copy.Trophy = Trophy;
         copy.AddedFlags.AddRange(AddedFlags);
         copy.AddedCurses.AddRange(AddedCurses);
         return copy;

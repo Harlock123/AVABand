@@ -1317,6 +1317,14 @@
     "object:dwarven_lamp": "main:28,10",
     "object:elven_lantern": "main:28,10",
     "object:miners_helm": "main:14,13",
-    "object:delvers_gloves": "main:16,13"
+    "object:delvers_gloves": "main:16,13",
+    "object-base:trophy": "ava_trophy.png",
+    "object:red_dragon_scale": "ava_red_dragon_scale.png",
+    "object:white_dragon_scale": "ava_white_dragon_scale.png",
+    "object:blue_dragon_scale": "ava_blue_dragon_scale.png",
+    "object:black_dragon_scale": "ava_black_dragon_scale.png",
+    "object:green_dragon_scale": "ava_green_dragon_scale.png",
+    "object:troll_hide": "ava_troll_hide.png",
+    "object:spider_silk": "ava_spider_silk.png"
   }
 }

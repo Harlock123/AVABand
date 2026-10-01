@@ -52,6 +52,8 @@ public sealed partial class GameSession
             case "back": OpenStoreAfterAsking(parts[1], greet: false); break; // (back from a shop's service)
             case "gem": GemChoice(parts); break;
             case "ident": IdentifyChoice(parts); break;
+            case "trophy": TrophyChoice(parts); break;
+            case "armoury": if (parts.ElementAtOrDefault(1) == "trophy") OfferTrophyWork(); else OfferGemRemoval(); break;
             default: StoryChoice(parts); break;
         }
         return 0;

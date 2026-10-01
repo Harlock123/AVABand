@@ -1174,9 +1174,12 @@ public sealed partial class GameSession
     /// <summary>Drops a monster's treasure; returns how many objects and piles of gold fell.</summary>
     private (int Items, int Gold) DropMonsterLoot(Monster monster)
     {
+        // AVABand's trophies: what the body leaves (a dragon's scale...), thief or not.
+        var trophy = RollTrophy(monster);
+        if (trophy is not null) DropNear(trophy, monster.Position);
         // Loot rolled for a thief (and perhaps stolen) has already gone with the monster's carried items.
-        if (monster.LootRolled) return (0, 0);
-        int items = 0, golds = 0;
+        if (monster.LootRolled) return (trophy is null ? 0 : 1, 0);
+        int items = trophy is null ? 0 : 1, golds = 0;
         foreach (var item in RollMonsterLoot(monster))
         {
             DropNear(item, monster.Position);

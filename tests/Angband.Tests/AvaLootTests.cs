@@ -401,4 +401,86 @@ public class AvaLootTests
         Assert.True(reward.Loc.X > level.Width / 2);
         Assert.All(downs, d => Assert.True(d.X > level.Width / 2));
     }
+
+    // --- Monster trophies, and the Armoury's work ----------------------------------------------
+
+    [Theory]
+    [InlineData("mature_red_dragon", "red_dragon_scale")]
+    [InlineData("baby_multi_hued_dragon", "black_dragon_scale,blue_dragon_scale,green_dragon_scale,red_dragon_scale,white_dragon_scale")]
+    [InlineData("stone_troll", "troll_hide")]
+    [InlineData("giant_tarantula", "spider_silk")]
+    [InlineData("cave_orc", "")]
+    public void Dragons_trolls_and_great_spiders_leave_trophies(string race, string trophies)
+    {
+        var (kinds, _) = GameSession.TrophiesOf(TestData.Game.Monster(race)!);
+        Assert.Equal(trophies, string.Join(",", kinds.Order()));
+        foreach (var kind in kinds) Assert.Equal(0, TestData.Game.Object(kind)!.Commonness); // only ever taken, never found
+    }
+
+    [Fact]
+    public void A_unique_dragon_always_leaves_its_scale()
+    {
+        var game = NewGame();
+        game.Execute(new DebugJumpCommand(50));
+        var at = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l) && l.DistanceTo(game.Player.Position) > 5);
+        var smaug = new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("smaug_the_golden")!, at);
+        game.DamageMonster(smaug, 1_000_000);
+        Assert.Contains(game.Level.Objects.All, o => o.Item.Kind.Id == "red_dragon_scale" && o.Loc.DistanceTo(at) <= 3);
+    }
+
+    [Fact]
+    public void The_armourer_works_a_scale_into_your_armour_for_gold()
+    {
+        var game = NewGame();
+        var prompts = new List<QuestPromptEvent>();
+        game.Events.Subscribe<QuestPromptEvent>(prompts.Add);
+        var armour = game.Player.Inventory.InSlot(EquipSlot.Body)!;
+        var scale = Carry(game, "red_dragon_scale", 2);
+        game.Player.Gold = 2000;
+        game.Player.Position = game.Level.AllLocs().Single(l => game.Level.FeatureAt(l).Shop == "armoury");
+        game.Execute(new EnterStoreCommand());
+        Assert.Equal("Work a trophy", game.StoreServiceLabel);
+
+        game.Execute(new StoreServicesCommand());
+        game.Execute(new QuestChoiceCommand(prompts.Last().Choices.First(c => c.Id.StartsWith("trophy:pick:")).Id));
+        var into = prompts.Last().Choices.First(c => c.Id.EndsWith(":" + armour.Serial));
+        Assert.Contains("resist fire", into.Label);
+        game.Execute(new QuestChoiceCommand(into.Id));
+        Assert.Contains("fire", armour.Resists);
+        Assert.Equal("red_dragon_scale", armour.Trophy);
+        Assert.Equal(2000 - 600, game.Player.Gold);
+        Assert.Equal(1, scale.Number);
+        Assert.Contains("the armourer worked red dragon scale into it", ObjectInfo.DescribeItem(game, armour));
+        Assert.Equal(1, game.Player.Resists.GetValueOrDefault("fire"));
+
+        // One to a piece: the other scale can't go into it again.
+        Assert.Null(game.StoreServiceLabel); // (the other scale has nowhere left to go)
+
+        // And it's kept.
+        using var stream = new MemoryStream();
+        Angband.Core.Persistence.SaveGame.Save(game, stream);
+        stream.Position = 0;
+        var loaded = Angband.Core.Persistence.SaveGame.Load(TestData.Game, stream);
+        Assert.Equal("red_dragon_scale", loaded.Player.Inventory.InSlot(EquipSlot.Body)!.Trophy);
+    }
+
+    [Fact]
+    public void A_troll_hide_lends_regeneration_and_an_artifact_takes_no_trophy()
+    {
+        var game = NewGame();
+        var prompts = new List<QuestPromptEvent>();
+        game.Events.Subscribe<QuestPromptEvent>(prompts.Add);
+        var hide = Carry(game, "troll_hide");
+        var boots = CarryArtifact(game, "boots_of_strider");
+        game.Player.Gold = 5000;
+        game.Player.Position = game.Level.AllLocs().Single(l => game.Level.FeatureAt(l).Shop == "armoury");
+        game.Execute(new EnterStoreCommand());
+        game.Execute(new StoreServicesCommand());
+        game.Execute(new QuestChoiceCommand(prompts.Last().Choices.First(c => c.Id == "trophy:pick:" + hide.Serial).Id));
+        Assert.DoesNotContain(prompts.Last().Choices, c => c.Id.EndsWith(":" + boots.Serial));
+        var armour = game.Player.Inventory.InSlot(EquipSlot.Body)!;
+        game.Execute(new QuestChoiceCommand(prompts.Last().Choices.First(c => c.Id.EndsWith(":" + armour.Serial)).Id));
+        Assert.Contains(ItemFlags.Regen, armour.Flags);
+        Assert.Contains(ItemFlags.Regen, game.Player.GearFlags);
+    }
 }
