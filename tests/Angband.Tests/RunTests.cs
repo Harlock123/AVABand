@@ -37,6 +37,45 @@ public class RunTests
         Assert.Equal(new Loc(6, 4), game.Player.Position);
     }
 
+    /// <summary>A run taken a step at a time (for the interface to draw) goes as the run in one go does.</summary>
+    [Fact]
+    public void Run_TakenAStepAtATime_EndsWhereTheWholeRunDoes()
+    {
+        string[] map =
+        [
+            "##########",
+            "#@.....###",
+            "######.###",
+            "######.###",
+            "######.###",
+            "##########",
+        ];
+        var whole = Mapped(map);
+        whole.Execute(new RunCommand(Direction.East));
+
+        var stepped = Mapped(map);
+        var path = new List<Loc>();
+        stepped.Events.Subscribe<PlayerMovedEvent>(e => path.Add(e.To));
+        Assert.True(stepped.Execute(new RunStartCommand(Direction.East)));
+        Assert.True(stepped.IsRunning);
+        Assert.Single(path);
+        var steps = 1;
+        while (stepped.Execute(new RunOnCommand())) steps++;
+        Assert.False(stepped.IsRunning);
+        Assert.Equal(whole.Player.Position, stepped.Player.Position);
+        Assert.Equal(whole.GameTurn, stepped.GameTurn);
+        Assert.Equal(8, steps); // five east, three south: one square a step
+        Assert.Equal(path.Count, steps);
+        Assert.False(stepped.Execute(new RunOnCommand())); // nothing more
+
+        // Anything else ends a run under way.
+        var stopped = Mapped(map);
+        stopped.Execute(new RunStartCommand(Direction.East));
+        stopped.Execute(new HoldCommand());
+        Assert.False(stopped.IsRunning);
+        Assert.False(stopped.Execute(new RunOnCommand()));
+    }
+
     [Fact]
     public void Run_StopsWhereACorridorBranches()
     {

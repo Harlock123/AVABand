@@ -40,9 +40,40 @@ public sealed partial class GameSession
         _disturbed = true;
     }
 
+    // A run in progress, between its steps (AVABand: the interface can take a run a step at a time —
+    // RunStartCommand, then RunOnCommand — drawing each, as Angband's game loop does).
+    private bool _running;
+    private World.Level? _runLevel;
+    private int _runHp;
+    private Dictionary<int, Loc> _runSeen = [];
+    private int _runStep;
+
+    /// <summary>Whether a run is under way (one taken a step at a time has more steps to go).</summary>
+    public bool IsRunning => _running;
+
     /// <summary>Angband do_cmd_run: the first step is checked like a walk, then the run goes on by itself.</summary>
     private bool Run(Direction direction)
     {
+        if (!RunBegin(direction)) return false;
+        var moved = false;
+        while (true)
+        {
+            var (stepped, goesOn) = RunStep();
+            moved |= stepped;
+            if (!goesOn) return moved;
+        }
+    }
+
+    /// <summary>A run's first step (RunStartCommand): false if it didn't move.</summary>
+    private bool RunStart(Direction direction) => RunBegin(direction) && RunStep().Moved;
+
+    /// <summary>The next step of the run under way (RunOnCommand): false once it's over.</summary>
+    private bool RunOn() => _running && RunStep().Moved;
+
+    /// <summary>Checks the first step and sets the run up; false (and no run) if it can't start.</summary>
+    private bool RunBegin(Direction direction)
+    {
+        _running = false;
         if (direction is Direction.Here or Direction.None) return false;
         var dir = (int)direction;
         var first = Player.Position.Step(direction);
@@ -58,36 +89,47 @@ public sealed partial class GameSession
         }
 
         RunInit(dir);
-        var level = Level;
-        var hp = Player.Hp;
-        var seen = VisibleMonsters();
-        var moved = false;
+        _runLevel = Level;
+        _runHp = Player.Hp;
+        _runSeen = VisibleMonsters();
+        _runStep = 0;
         _disturbed = false;
+        _running = true;
+        return true;
+    }
 
-        for (var step = 0; step < MaxRunSteps && !IsGameOver; step++)
+    /// <summary>One step of the run: whether it moved, and whether the run goes on.</summary>
+    private (bool Moved, bool GoesOn) RunStep()
+    {
+        var step = _runStep++;
+        if (step >= MaxRunSteps || IsGameOver || (step > 0 && RunTest())) return (false, RunEnd());
+        // Angband move_player: running into lava asks first ("Lava blocks your path"); a run stops short.
+        if (ExpectedTerrainDamage(Player.Position.Step(FromKeypad(_runCurDir))) > 0 && !Player.Timed.Has(Effects.TimedIds.Confused))
         {
-            if (step > 0 && RunTest()) break;
-            // Angband move_player: running into lava asks first ("Lava blocks your path"); a run stops short.
-            if (ExpectedTerrainDamage(Player.Position.Step(FromKeypad(_runCurDir))) > 0 && !Player.Timed.Has(Effects.TimedIds.Confused))
-            {
-                if (step == 0) Publish(new MessageEvent("Lava blocks your path."));
-                break;
-            }
-            var from = Player.Position;
-            // Only the first step can be sent astray by confusion (Angband player_confuse_dir).
-            var energy = Walk(FromKeypad(_runCurDir), confuse: step == 0);
-            if (energy <= 0) break;
-            SpendAndAdvance(energy);
-            moved = true;
-
-            // Angband disturb: hurt, a monster coming into view (or one in view moving, with
-            // disturb_near), anything else that disturbs, a new level, or not having moved at all
-            // (an attack, a door opened).
-            if (Level != level || Player.Hp < hp || _disturbed || MonstersDisturb(seen) || Player.Position == from) break;
-            seen = VisibleMonsters();
+            if (step == 0) Publish(new MessageEvent("Lava blocks your path."));
+            return (false, RunEnd());
         }
+        var from = Player.Position;
+        // Only the first step can be sent astray by confusion (Angband player_confuse_dir).
+        var energy = Walk(FromKeypad(_runCurDir), confuse: step == 0);
+        if (energy <= 0) return (false, RunEnd());
+        SpendAndAdvance(energy);
+
+        // Angband disturb: hurt, a monster coming into view (or one in view moving, with
+        // disturb_near), anything else that disturbs, a new level, or not having moved at all
+        // (an attack, a door opened).
+        if (Level != _runLevel || Player.Hp < _runHp || _disturbed || MonstersDisturb(_runSeen) || Player.Position == from)
+            return (true, RunEnd());
+        _runSeen = VisibleMonsters();
+        return (true, true);
+    }
+
+    /// <summary>The run is over (false, for the step that ended it).</summary>
+    private bool RunEnd()
+    {
+        _running = false;
         _disturbed = false;
-        return moved;
+        return false;
     }
 
     /// <summary>Angband run_init: sets up a run in a new direction, spotting corridor entries.</summary>

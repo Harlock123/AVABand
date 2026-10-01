@@ -168,7 +168,7 @@ public sealed partial class MainWindowViewModel
             else if (what == DirectionFor.Device && _pendingDevice is { } device)
                 Execute(_pendingActivation ? new ActivateCommand(device, Direction: d) : new UseCommand(device, Direction: d));
             else if (what == DirectionFor.Tunnel) Execute(new TunnelCommand(d));
-            else if (what == DirectionFor.Run) Execute(new RunCommand(d));
+            else if (what == DirectionFor.Run) StartRun(d, action);
             else if (what == DirectionFor.Jump) Execute(new JumpCommand(d));
             else if (what == DirectionFor.Disarm) Execute(new DisarmCommand(d));
             else if (what == DirectionFor.Steal) Execute(new StealCommand(d));
@@ -184,7 +184,7 @@ public sealed partial class MainWindowViewModel
         }
         if (action.ToRunDirection() is { } run)
         {
-            Execute(new RunCommand(run));
+            StartRun(run, action);
             return;
         }
 

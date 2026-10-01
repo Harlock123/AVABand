@@ -134,9 +134,39 @@ public class InputUiTests
         game.Known.RememberAll(game.Level);
         game.UpdateView();
 
-        window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.Shift);
+        // Drawn a step at a time: the first step at once, the rest one after another (held here between steps).
+        vm.RunStepDelay = TimeSpan.FromHours(1);
+        window.KeyPress(Key.Right, RawInputModifiers.Shift, PhysicalKey.ArrowRight, null);
+        Assert.Equal(start + new Loc(1, 0), game.Player.Position);
+        Assert.True(vm.IsRunningSteps);
+        vm.RunStepNow();
+        vm.RunStepNow();
+        Assert.Equal(start + new Loc(3, 0), game.Player.Position);
+        // The key that started it, repeating while held, leaves it be.
+        window.KeyPress(Key.Right, RawInputModifiers.Shift, PhysicalKey.ArrowRight, null);
+        Assert.True(vm.IsRunningSteps);
+        Assert.Equal(start + new Loc(3, 0), game.Player.Position);
+        window.KeyRelease(Key.Right, RawInputModifiers.Shift, PhysicalKey.ArrowRight, null);
 
+        // Any other key stops it where it is, and does nothing more.
+        var turn = game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        Assert.False(vm.IsRunningSteps);
+        Assert.Equal(turn, game.GameTurn);
+        vm.RunStepNow();
+        Assert.Equal(start + new Loc(3, 0), game.Player.Position);
+
+        // On again, to the end.
+        window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.Shift);
+        vm.FinishRun();
+        Assert.False(vm.IsRunningSteps);
         Assert.Equal(start + new Loc(10, 0), game.Player.Position);
+
+        // With the option off, the whole run at once.
+        vm.SetOption(DisplayOptions.RunStepByStep, false);
+        window.KeyPressQwerty(PhysicalKey.ArrowLeft, RawInputModifiers.Shift);
+        Assert.False(vm.IsRunningSteps);
+        Assert.Equal(start, game.Player.Position);
     }
 
     /// <summary>In a menu, Shift+arrow moves the selection as the arrow does, rather than closing the menu.</summary>

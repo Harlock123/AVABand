@@ -50,6 +50,7 @@ public partial class MainWindow : Window
         {
             if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, _arrowClock.Elapsed);
             (DataContext as MainWindowViewModel)?.SceneKeyReleased(e.Key.ToString());
+            if (e.Key == _runKey) _runKey = null;
         }, RoutingStrategies.Tunnel, handledEventsToo: true);
         Deactivated += (_, _) => (DataContext as MainWindowViewModel)?.SceneKeyReleased(null);
         Deactivated += (_, _) => _arrowChord.Reset();
@@ -381,6 +382,12 @@ public partial class MainWindow : Window
     public void HandleGamepadAction(InputAction action)
     {
         if ((DataContext as MainWindowViewModel)?.SceneTakesInput(null) == true) return; // (as a key: see OnGameKeyDown)
+        if (DataContext is MainWindowViewModel { IsRunningSteps: true } running)
+        {
+            // A button stops a run being drawn, except the one that started it, repeating while held.
+            if (action != running.RunAction) running.StopRun();
+            return;
+        }
         if (OpenDialog is { } dialog)
         {
             DialogPad.Handle(dialog, action);
@@ -463,6 +470,23 @@ public partial class MainWindow : Window
     private void OnGameKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
+        // A run being drawn a step at a time: a key stops it where it is (as in Angband) and does no more —
+        // except the key that started it, repeating while it's held.
+        if (vm.IsRunningSteps)
+        {
+            if (e.Key != _runKey) vm.StopRun();
+            e.Handled = true;
+            return;
+        }
+        OnGameKey(vm, e);
+        if (vm.IsRunningSteps) _runKey = e.Key; // (this key started a run)
+    }
+
+    /// <summary>The key that started the run under way, until it's let go.</summary>
+    private Key? _runKey;
+
+    private void OnGameKey(MainWindowViewModel vm, KeyEventArgs e)
+    {
         // Scenes: keys typed ahead of one are dropped, and a key while one passes just ends it (as Escape).
         if (vm.SceneTakesInput(e.Key.ToString()))
         {
@@ -625,7 +649,12 @@ public partial class MainWindow : Window
         _replaying = true;
         try
         {
-            foreach (var stroke in Angband.Input.KeymapText.Parse(keys)) OnGameKeyDown(this, ToKeyEvent(stroke));
+            foreach (var stroke in Angband.Input.KeymapText.Parse(keys))
+            {
+                OnGameKeyDown(this, ToKeyEvent(stroke));
+                // (A keymap's run goes all the way at once: its next key mustn't stop it.)
+                if (DataContext is MainWindowViewModel { IsRunningSteps: true } vm) vm.FinishRun();
+            }
         }
         finally
         {

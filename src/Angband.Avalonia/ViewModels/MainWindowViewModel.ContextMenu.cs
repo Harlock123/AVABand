@@ -148,7 +148,7 @@ public sealed partial class MainWindowViewModel
         {
             menu.Add(("Pathfind to", () => Execute(new TravelCommand(loc))));
             menu.Add(("Walk towards", () => Execute(new WalkCommand(dir))));
-            menu.Add(("Run towards", () => Execute(new RunCommand(dir))));
+            menu.Add(("Run towards", () => StartRun(dir)));
         }
         if (_game.Player.Inventory.Bow is not null) menu.Add(("Fire on", () => AimAt(loc, InputAction.Fire)));
         menu.Add(("Throw to", () => AimAt(loc, InputAction.Throw)));

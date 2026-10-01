@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Runs are drawn a step at a time**: you see the way you came as the map fills in, instead of
+  arriving at the end at once. Any other key stops a run where it is. (Options → *Draw runs a step
+  at a time* to turn it off.)
 - **Scenes don't eat into your next moves**: keys pressed ahead of a scene are dropped instead of
   skipping it before you see it, and the key that ends a scene just ends it.
 - **The Wear/Wield prompt says whether each item suits you**: under each choice, the shops' note —

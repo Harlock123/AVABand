@@ -117,6 +117,15 @@ public sealed record TravelCommand(Loc Target) : GameCommand;
 /// <summary>Run one way until something interesting happens (Angband Shift+direction or '.').</summary>
 public sealed record RunCommand(Direction Direction) : GameCommand;
 
+/// <summary>
+/// AVABand: a run's first step, the run then taken a step at a time (<see cref="RunOnCommand"/>) so the
+/// interface can draw each one. Each step takes a step's time.
+/// </summary>
+public sealed record RunStartCommand(Direction Direction) : GameCommand;
+
+/// <summary>AVABand: the next step of the run under way (see <see cref="RunStartCommand"/>); false once it's over.</summary>
+public sealed record RunOnCommand : GameCommand;
+
 /// <summary>Enter the store whose entrance the player is standing on (Angband '_').</summary>
 public sealed record EnterStoreCommand : GameCommand;
 

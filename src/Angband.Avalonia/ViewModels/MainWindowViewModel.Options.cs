@@ -50,6 +50,8 @@ public static class DisplayOptions
     public const string ThreeMessageLines = "three_message_lines";
     /// <summary>AVABand's own: two arrow keys held together move diagonally (for keyboards without a keypad).</summary>
     public const string ArrowDiagonals = "arrow_key_diagonals";
+    /// <summary>AVABand's own: a run is drawn a step at a time (off: you're shown only where it ends).</summary>
+    public const string RunStepByStep = "draw_runs_step_by_step";
     /// <summary>AVABand's own: ask GitHub for a newer release when the game starts (off: only Help → Check for updates goes online).</summary>
     public const string CheckUpdatesAtStart = "check_updates_at_start";
 
@@ -84,6 +86,7 @@ public static class DisplayOptions
         new(RecordReplays, "Record every game as a replay", OptionKind.Interface, true),
         new(ThreeMessageLines, "Show three lines of messages (off: just the newest)", OptionKind.Interface, true),
         new(ArrowDiagonals, "Two arrow keys held together move diagonally", OptionKind.Interface, true),
+        new(RunStepByStep, "Draw runs a step at a time (off: show only where they end)", OptionKind.Interface, true),
         new(CheckUpdatesAtStart, "Check GitHub for a newer AVABand when the game starts", OptionKind.Interface, false),
     ];
 }

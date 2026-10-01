@@ -1659,7 +1659,14 @@ the context action, or a game command.
   first step is checked like a walk (a known wall says so and takes no time; a monster there is
   attacked, a closed door opened), and only that step can be sent astray by confusion. In menus,
   stores, lists and look mode Shift+direction moves like the plain direction. On a gamepad, hold the
-  left trigger and press a direction (D-pad or stick) to run.
+  left trigger and press a direction (D-pad or stick) to run. **Drawn a step at a time** (AVABand's
+  own; the option *Draw runs a step at a time*, on by default): rather than the whole run at once,
+  leaving you at its end with no sight of the way you came, the interface takes it a step at a time
+  (`RunStartCommand`, then `RunOnCommand` each 20 ms, `RunStepMs`; each recorded, so a replay plays
+  it back the same) and draws the map after each, as Angband's own game loop does. A key or button
+  stops the run where it is, as in Angband, and does nothing more — except the one that started it,
+  repeating while held; a keymap's run still goes all the way at once. `RunCommand` (the run in one
+  go) is unchanged, so older replays play as they did.
 - **Mouse**: resting the pointer on a square describes it in a small label at the foot of the map
   ("The cave orc (wounded, asleep)", "A down staircase") without touching the message line (off with
   the option *Describe the square under the mouse*); holding Shift with the mouse over a known square tints the route a click would travel (with *Allow mouse clicks to move the player* on; nothing when there is no known way); in look or target mode the line of fire from you to the cursor is tinted yellow up to where a shot would stop — the first wall or visible monster in the way, ringed (Angband's target path); left-click travels to a known square along the shortest known path (stopping when a

@@ -10,6 +10,8 @@
   diagonally, from the next new level on.
 - **Run** with Shift and a direction, or `.` then a direction: you keep going until something
   interesting happens — a monster appears, the corridor branches, you reach a door or an object.
+  The run is drawn a step at a time, so you can see the way you came; any other key stops it where
+  it is (Options → *Draw runs a step at a time* turns that off, showing only where it ends).
 - **Click** a square to travel there along the shortest known path (hold Shift to see the route
   in blue first); while looking or targeting, a yellow line shows where a shot would go, ringed where it
   would stop; **right-click** for a menu of

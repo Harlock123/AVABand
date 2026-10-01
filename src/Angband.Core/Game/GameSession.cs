@@ -177,6 +177,7 @@ public sealed partial class GameSession : ITurnHandler
     private bool ExecuteOnce(GameCommand command)
     {
         if (IsGameOver) return false;
+        if (command is not RunOnCommand) _running = false; // (anything else ends a run taken a step at a time)
         MarkTurnForDamageNotes();
         foreach (var m in Level.Monsters.All) m.IsDetected = false; // detection lasts until the next action
         if (RefusedByShape(command)) return false;
@@ -200,6 +201,8 @@ public sealed partial class GameSession : ITurnHandler
         }
         if (command is TravelCommand travel) return Travel(travel.Target);
         if (command is RunCommand run) return Run(run.Direction);
+        if (command is RunStartCommand start) return RunStart(start.Direction);
+        if (command is RunOnCommand) return RunOn();
 
         var energy = command switch
         {

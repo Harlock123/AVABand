@@ -259,6 +259,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         CursorMode = CursorMode.None;
         _pendingScenes.Clear();
         SkipScenes(); // a scene left from the last game (a death scene holding for Space) goes with it
+        StopRun();
         _game.Events.Subscribe<MessageEvent>(m => AddMessage(m.Text));
         _sawParalysis = false;
         _game.Events.Subscribe<MessageEvent>(m => { if (m.Text == "You are paralysed!") _sawParalysis = true; });
