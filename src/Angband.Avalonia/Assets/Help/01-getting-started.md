@@ -48,7 +48,9 @@ shop, monster, trap, bad wound...), and the first time you are blinded, confused
 paralysed, frightened, stunned or left in the dark — saying what cures it — each just once. Options → *Hints for new players* turns them off.
 
 - **Make a character**: Game → New character (Ctrl+N) picks a race, a class, stats and birth
-  options. If you are new, a Human or Dwarf **Warrior** is the forgiving choice.
+  options. If you are new, a Human or Dwarf **Warrior** is the forgiving choice. *Compare races*
+  sets every race side by side: stat changes, hit die, experience and what each can do (click one
+  to choose it).
 - **Shop in town**: walk onto a shop's number (1–8) to go in (the keeper may greet you, or pass on a
   hint worth hearing). Buy a few **Flasks of Oil** to
   throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. The

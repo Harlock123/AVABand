@@ -29,6 +29,20 @@ public sealed partial class StatRow(string id, string label) : ObservableObject
     public int Minimum => MinimumIndex <= 0 ? 0 : CharacterCreationViewModel.LowestMinimum - 1 + MinimumIndex;
 }
 
+/// <summary>
+/// One race in the creation screen's comparison: its stat changes, hit die, experience and what it
+/// can do (AVABand's abilities by name, when the birth option keeps them; Angband's own after them).
+/// </summary>
+public sealed record RaceComparisonRow(RaceDef Race, string Name, string Str, string Int, string Wis, string Dex, string Con,
+    string HitDie, string Experience, string Abilities, bool IsSelected)
+{
+    /// <summary>The row in words (its accessible name).</summary>
+    public string Spoken => $"{Name}: Strength {Say(Str)}, Intelligence {Say(Int)}, Wisdom {Say(Wis)}, Dexterity {Say(Dex)}, "
+                            + $"Constitution {Say(Con)}, hit die {HitDie}, experience {Experience}. {Abilities}";
+
+    private static string Say(string mod) => mod is "" or "0" ? "0" : mod;
+}
+
 /// <summary>One way of choosing stats, as the creation screen lists it.</summary>
 public sealed record StatMethodChoice(StatMethod Method, string Label)
 {
@@ -93,6 +107,9 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     public IReadOnlyList<RaceDef> Races { get; }
     public IReadOnlyList<ClassDef> Classes { get; }
     public ObservableCollection<StatRow> StatRows { get; } = [];
+
+    /// <summary>Every race side by side (Compare races), the chosen one marked.</summary>
+    public ObservableCollection<RaceComparisonRow> RaceComparison { get; } = [];
     public ObservableCollection<OptionRow> BirthOptionRows { get; } = [];
     public int Budget => HeroicBirth.Budget(Method, _data.Constants);
 
@@ -125,6 +142,10 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     public event Action<CharacterSpec>? Started;
 
     partial void OnSelectedRaceChanged(RaceDef? value) => Update();
+
+    /// <summary>Choosing a race from the comparison.</summary>
+    [RelayCommand]
+    private void ChooseRace(RaceDef race) => SelectedRace = race;
     partial void OnSelectedClassChanged(ClassDef? value) => Update();
     partial void OnNameChanged(string value) => Update();
 
@@ -250,6 +271,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
                 ? "Heroic roll: each stat 14 to 18/50 (Reroll, or set minimums and Autoroll)"
                 : "Rolled stats (Reroll, or set minimums and Autoroll)") + heroic;
         Error = IsPointBuy ? HeroicBirth.ValidatePointBuy(Method, BaseStats(), _data.Constants) : null;
+        UpdateRaceComparison();
         RaceDescription = (race?.Description ?? "")
                           + (race is { AvaAbilityText.Length: > 0 } ? $"\n\nAVABand: {race.AvaAbilityText}" : "");
         ClassDescription = cls?.Description ?? "";
@@ -280,6 +302,39 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     }
 
     /// <summary>A flag with no wording of its own, readably: "SOME_FLAG" → "some flag" (never the raw id).</summary>
+
+    /// <summary>Rebuilds the race comparison (the chosen race, and whether AVABand's abilities are on, change it).</summary>
+    private void UpdateRaceComparison()
+    {
+        var avaRaces = BirthOptionRows.FirstOrDefault(r => r.Id == OptionIds.AvaRaces)?.IsChecked ?? true;
+        string Stat(RaceDef r, string id) => Mod(r.Stats.GetValueOrDefault(id)) is { Length: > 0 } m ? m : "0";
+        RaceComparison.Clear();
+        foreach (var r in Races)
+        {
+            var abilities = new List<string>();
+            if (avaRaces) abilities.AddRange(AbilityNames(r.AvaAbilityText));
+            if (avaRaces && r.AvaCarryPercent != 0) abilities.Add($"carries {Math.Abs(r.AvaCarryPercent)}% {(r.AvaCarryPercent > 0 ? "more" : "less")}");
+            if (r.Infravision > 0) abilities.Add($"infravision {r.Infravision * 10} ft");
+            abilities.AddRange(Birth.Abilities(_data, r, null).Select(a => a.Name));
+            RaceComparison.Add(new RaceComparisonRow(r, r.Name, Stat(r, "str"), Stat(r, "int"), Stat(r, "wis"), Stat(r, "dex"), Stat(r, "con"),
+                $"d{r.HitDie}", $"{r.ExpFactor}%", abilities.Count > 0 ? string.Join(", ", abilities) : "nothing special",
+                ReferenceEquals(r, SelectedRace)));
+        }
+    }
+
+    /// <summary>
+    /// An ability text's names, each sentence's words before its colon: "Stone-thrower: +20 ... Second
+    /// breakfast: ... Small: carries ..." → "Stone-thrower", "second breakfast" (what it carries is said as
+    /// "carries 10% less", so those go).
+    /// </summary>
+    internal static IEnumerable<string> AbilityNames(string text)
+    {
+        var names = text.Split(". ", StringSplitOptions.RemoveEmptyEntries)
+            .Where(s => s.Contains(':') && !s[(s.IndexOf(':') + 1)..].TrimStart().StartsWith("carries", StringComparison.Ordinal))
+            .Select(s => s[..s.IndexOf(':')].Trim())
+            .ToList();
+        return names.Select((n, i) => i == 0 ? n : char.ToLowerInvariant(n[0]) + n[1..]);
+    }
 
     private static string Mod(int v) => v == 0 ? "" : v.ToString("+0;-0", CultureInfo.InvariantCulture);
 }

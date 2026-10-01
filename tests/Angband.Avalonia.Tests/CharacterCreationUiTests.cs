@@ -2,6 +2,8 @@ using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Game;
 using Angband.Data;
+using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 
 namespace Angband.Avalonia.Tests;
@@ -165,5 +167,44 @@ public class CharacterCreationUiTests
         var again = (CharacterCreationViewModel)window.OpenCharacterCreation().DataContext!;
         Assert.Equal(StatMethod.HeroicPointBuy, again.Method);
         Assert.Equal(5, again.StatRows.Single(r => r.Id == "dex").MinimumIndex);
+    }
+
+    /// <summary>Compare races: every race side by side, the chosen one marked; a click chooses one; AVABand's abilities only when on.</summary>
+    [AvaloniaFact]
+    public void CompareRaces_ListsEveryRace_AndChoosesOne()
+    {
+        var (window, _, _) = Open();
+        var creationWindow = window.OpenCharacterCreation();
+        var creation = (CharacterCreationViewModel)creationWindow.DataContext!;
+        Assert.Equal(creation.Races.Count, creation.RaceComparison.Count);
+        Assert.Single(creation.RaceComparison, r => r.IsSelected);
+
+        var dwarf = creation.RaceComparison.Single(r => r.Race.Id == "dwarf");
+        Assert.Equal("+2", dwarf.Str);
+        Assert.Equal("d11", dwarf.HitDie);
+        Assert.Equal("120%", dwarf.Experience);
+        Assert.StartsWith("Delver, carries 10% more", dwarf.Abilities);
+        Assert.Contains("Strength +2", dwarf.Spoken);
+        var human = creation.RaceComparison.Single(r => r.Race.Id == "human");
+        Assert.Equal("0", human.Str);
+        Assert.StartsWith("Two-weapon fighting", human.Abilities);
+        Assert.StartsWith("Stone-thrower, second breakfast, carries 10% less",
+            creation.RaceComparison.Single(r => r.Race.Id == "hobbit").Abilities);
+
+        creation.ChooseRaceCommand.Execute(dwarf.Race);
+        Assert.Equal("dwarf", creation.SelectedRace!.Id);
+        Assert.True(creation.RaceComparison.Single(r => r.Race.Id == "dwarf").IsSelected);
+
+        var panel = creationWindow.FindControl<global::Avalonia.Controls.Expander>("RaceComparisonPanel")!;
+        panel.IsExpanded = true;
+        creationWindow.CaptureRenderedFrame();
+        panel.BringIntoView();
+        creationWindow.CaptureRenderedFrame();
+        TileRenderingTests.Save(creationWindow, "compare-races");
+
+        // AVABand's racial abilities off: only Angband's own.
+        creation.BirthOptionRows.Single(o => o.Id == OptionIds.AvaRaces).IsChecked = false;
+        Assert.DoesNotContain("Delver", creation.RaceComparison.Single(r => r.Race.Id == "dwarf").Abilities);
+
     }
 }

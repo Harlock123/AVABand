@@ -220,7 +220,10 @@ A `GameSession` created with a seed and fed the same commands replays identicall
   (berserk, a sixth of their life back) and clear rubble at a blow; the Dúnedain have a level's
   whole feeling on arrival and hold life; High-Elves +1 light radius, with undead and demons in it
   at -2 speed (`Monster.AuraSlow`); Kobolds +10 searching, +15 disarming, and bare hands that
-  poison (+1d6 unless immune). The creation screen and the character sheet show each race's.
+  poison (+1d6 unless immune). The creation screen and the character sheet show each race's; the
+  creation screen's *Compare races* sets them all side by side — stat changes, hit die, experience,
+  and each race's abilities by name (AVABand's, while the birth option keeps them, its carrying,
+  infravision and Angband's own) — with the chosen race marked and a click choosing another.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
     level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
     near your depth, bring 2-4 of a potion, scroll or food no shop sells, a **bounty** on a living
