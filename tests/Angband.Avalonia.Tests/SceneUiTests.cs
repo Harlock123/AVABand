@@ -87,7 +87,8 @@ public sealed class SceneUiTests : IDisposable
     [AvaloniaFact]
     public void UpIntoTheTown_SaysSo_AndAKeyEndsTheScenes_AndDoesNothingMore()
     {
-        var (window, vm, _) = Open();
+        var (window, vm, view) = Open();
+        view.RunsByItself = false; // (held still: on a slow machine it could pass by itself mid-test)
         long now = 1000;
         vm.SceneClock = () => now;
         TakeStairs(vm, down: true);

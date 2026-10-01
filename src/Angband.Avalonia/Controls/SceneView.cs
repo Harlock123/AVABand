@@ -88,6 +88,9 @@ public sealed class SceneView : Control
 
     private global::Avalonia.Threading.DispatcherTimer? _clock;
     private readonly System.Diagnostics.Stopwatch _watch = new();
+
+    /// <summary>Whether the scene moves on by its own clock (tests turn it off and call <see cref="Advance"/>).</summary>
+    public bool RunsByItself { get; set; } = true;
     private (string Path, Bitmap Bitmap)? _picture;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -103,7 +106,7 @@ public sealed class SceneView : Control
         _clock ??= new global::Avalonia.Threading.DispatcherTimer(TimeSpan.FromMilliseconds(16),
             global::Avalonia.Threading.DispatcherPriority.Render, (_, _) => Tick());
         _watch.Restart();
-        _clock.Start();
+        if (RunsByItself) _clock.Start();
         FireCues(-1, 0);
         InvalidateVisual();
     }
