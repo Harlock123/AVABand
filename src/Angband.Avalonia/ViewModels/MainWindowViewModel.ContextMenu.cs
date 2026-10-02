@@ -101,6 +101,7 @@ public sealed partial class MainWindowViewModel
     [
         ("Knowledge", ShowKnowledge),
         ("Your journey", ShowJourney),
+        ("Quest log", ShowQuestLog),
         ("Show map", ShowOverviewMap),
         ("Show messages", ShowMessageHistory),
         ("Show monster list", ShowMonsterList),

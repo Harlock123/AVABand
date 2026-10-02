@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-02
 
+- **A quest log** (Ctrl+J, or Game → Quest log): a card for every quest and notice-board job you've
+  taken — who gave it, where it stands ("Step 2 of 3", "4 of 7 killed"), the steps behind you and the
+  one at hand, and a job's pay and a progress bar. Finished quests are listed after, faded.
+- **More jobs at once**: the notice board now has five postings, and you can take all five (it was
+  two of three). Story quests were never limited — take every one on offer.
 - **Spells to study in the cast list**: press `m` and any spell you've reached the level for but
   haven't studied is listed too, greyed, marked "study first (G)" — reaching its level doesn't
   teach it; `G` does.

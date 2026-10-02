@@ -498,7 +498,7 @@ public sealed class SceneUiTests : IDisposable
 
         // A quest done.
         vm.Scene = new AmbientScene(SceneKind.QuestComplete, "Quest complete: The Letter", 0, true, vm.PictureFor("quest-complete"),
-            Subtitle: "Your journal is in Knowledge (~).");
+            Subtitle: "Your quest log is on Ctrl+J.");
         Shot(window, scene, "scene-quest-complete");
     }
 

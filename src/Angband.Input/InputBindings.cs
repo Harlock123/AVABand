@@ -107,6 +107,7 @@ public sealed class InputBindings
         K(InputAction.HighScores, "Ctrl+H");
         K(InputAction.Feeling, "Ctrl+F");
         K(InputAction.MessageHistory, "Ctrl+P");
+        K(InputAction.QuestLog, "Ctrl+J"); // (J for journal; a Ctrl key, so the same in every keyset)
         K(InputAction.RepeatCommand, "Ctrl+V");
         K(InputAction.CommandCount, "Char:0");
         K(InputAction.OverviewMap, "Char:M"); // Angband's 'n' moves here (roguelike keys), so its roguelike key

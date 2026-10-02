@@ -57,7 +57,7 @@ public class ContextMenuUiTests
 
         Pick(vm, "Other");
         Assert.True(vm.IsPrompting);
-        Assert.Equal(["Knowledge", "Your journey", "Show map", "Show messages", "Show monster list", "Show object list",
+        Assert.Equal(["Knowledge", "Your journey", "Quest log", "Show map", "Show messages", "Show monster list", "Show object list",
             "Toggle ignored", "Ignore an item", "Clear out junk", "Tidy pack", "Options", "Commands"], vm.MenuLabels);
         vm.CancelPrompt();
         Assert.False(vm.IsPrompting);

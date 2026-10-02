@@ -57,6 +57,7 @@
         <MenuItem Header="_Daily dungeon..." Command="{Binding ShowDailyCommand}" />
         <MenuItem Header="_Watch a replay..." Command="{Binding WatchReplayCommand}" />
         <MenuItem Header="Your _journey..." Command="{Binding ShowJourneyCommand}" />
+        <MenuItem Header="_Quest log..." Command="{Binding ShowQuestLogCommand}" InputGesture="Ctrl+J" />
         <Separator />
         <MenuItem Header="_Save" Command="{Binding SaveGameCommand}" InputGesture="Ctrl+S" IsEnabled="{Binding CanSave}" />
         <MenuItem Header="_Load character..." Command="{Binding LoadGameCommand}" InputGesture="Ctrl+O" IsEnabled="{Binding CanSave}" />

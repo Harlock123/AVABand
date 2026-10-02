@@ -2,16 +2,24 @@
 
 Besides Angband's own quests (Sauron on level 99, Morgoth on level 100), AVABand has quests of
 its own — on by default; the birth option *AVABand's quests* turns them off for a new character.
-Each has a **thing** to find and a **place** to use it, and some a choice to make. Your journal is
-the **Quests** page of the Knowledge screen (`~`).
+Each has a **thing** to find and a **place** to use it, and some a choice to make.
+
+## The quest log
+
+Press **Ctrl+J** (or Game → Quest log) for the quest log: a card for every quest and notice-board
+job you've taken, those under way first. Each says who gave it, where it stands ("Step 2 of 3",
+"4 of 7 killed"), the steps behind you (ticked) and the one at hand, and for a job its pay and a bar
+for the count. Quests you've finished are listed after, faded. You can have as many story quests
+going at once as you like, and up to five board jobs. (The Knowledge screen's **Quests** page, `~`,
+still has the journal too.)
 
 ## The Prancing Pony
 
 The inn in town (the `9`). Walk in and Butterbur will tell you who has work: the quests on offer
 depend on your level. There is also a **notice board** with smaller jobs — hunt so many of a
 monster, bring back so many of something found only in the dungeon, claim a **bounty** on a unique,
-or **scout** down to a depth a few levels past your deepest. You can have two board jobs
-at a time; the postings change whenever you come back up to town, and you collect your pay at the
+or **scout** down to a depth a few levels past your deepest. The board has five postings,
+and you can take all five at once; the postings change whenever you come back up to town, and you collect your pay at the
 inn.
 
 ## The Arcane Artificer

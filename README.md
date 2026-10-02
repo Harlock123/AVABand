@@ -326,11 +326,16 @@ core kept busy.
     tiles (CC0; `art/CREDITS.md`): a race's body, hair or beard, and a class's armour or robes, helm or
     hat, cloak, boots and what it holds, in DCSS's own doll order, scaled up four times unsmoothed.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
-    level allows, and its **notice board** has three jobs at a time — hunt 4-10 of a monster from
+    level allows, and its **notice board** has five jobs at a time — hunt 4-10 of a monster from
     near your depth, bring 2-4 of a potion, scroll or food no shop sells, a **bounty** on a living
     unique no deeper than two levels past your deepest (not a quest's own), or **scouting** down to
-    a depth three to five levels past it — two taken at once, renewed whenever you come back up,
-    paid at the inn.
+    a depth three to five levels past it — all five can be taken at once, renewed whenever you come
+    back up, paid at the inn. Story quests have no limit: take every one on offer.
+  - **The quest log** (AVABand's own; Ctrl+J, Game → Quest log, or the player menu → Other;
+    `GameSession.QuestLog.cs`, `Views/QuestLogWindow`): a card for every quest and board job taken,
+    those under way first — who gave it, where it stands ("Step 2 of 3", "4 of 7 killed", "Ready:
+    collect your pay"), its steps so far (each story quest keeps the stages it has passed, in the
+    save) and the one at hand, and a job's pay and a bar for its count; those done after, faded.
   - **The Arcane Artificer** (the town's tenth building, `0`, kept by SlatriBartSlow;
     `Game/GameSession.Artificer.cs`, `GameSession.AvaQuests.Artificer.cs`): walking in, he offers to
     cut a socket for gems into anything of yours that could take one (`ArtificerSocketLimit`: body
@@ -393,7 +398,7 @@ core kept busy.
     give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
-    `QuestTag` in the save; the journal is the Knowledge screen's **Quests** page. One a monster
+    `QuestTag` in the save; the journal is the quest log (Ctrl+J) and the Knowledge screen's **Quests** page. One a monster
     drops on a full pack's account and left behind on the level turns up at the Prancing Pony
     ("Someone found this down below with your name on it"), so no quest can be lost that way. Every tileset draws the
     quest places and the key with small tiles of AVABand's own (`ava_*.png`, CC0), sized to the set,

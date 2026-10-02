@@ -262,6 +262,7 @@ public partial class MainWindow : Window
             _subscribed.ExitRequested -= OnExitRequested;
             _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
             _subscribed.JourneyRequested -= OnJourneyRequested;
+            _subscribed.QuestLogRequested -= OnQuestLogRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
             _subscribed.OpenUrlRequested -= OnOpenUrlRequested;
         }
@@ -286,6 +287,7 @@ public partial class MainWindow : Window
         vm.ExitRequested += OnExitRequested;
         vm.MessageHistoryRequested += OnMessageHistoryRequested;
         vm.JourneyRequested += OnJourneyRequested;
+        vm.QuestLogRequested += OnQuestLogRequested;
         vm.OverviewRequested += OnOverviewRequested;
         vm.OpenUrlRequested += OnOpenUrlRequested;
 
@@ -342,6 +344,9 @@ public partial class MainWindow : Window
 
     private void OnJourneyRequested(JourneyViewModel journey) =>
         DialogFit.Show(new JourneyWindow { DataContext = journey }, this);
+
+    private void OnQuestLogRequested(QuestLogViewModel log) =>
+        DialogFit.Show(new QuestLogWindow { DataContext = log }, this);
 
     /// <summary>A character card: drawn, saved, and opened in the picture viewer.</summary>
     private void OnCardRequested(CharacterCardViewModel card, string path)

@@ -101,6 +101,7 @@ public sealed partial class GameSession
 
     private void SetStage(AvaQuestState state, string stage, bool announce = true)
     {
+        if (state.Stage.Length > 0 && state.Stage != stage && state.History.LastOrDefault() != state.Stage) state.History.Add(state.Stage);
         state.Stage = stage;
         if (announce && QuestDef(state.Id) is { } def)
         {
@@ -224,7 +225,7 @@ public sealed partial class GameSession
                 var taken = AvaQuests.Quests.Values.Count(q => !q.IsDone);
                 AskQuest("The Prancing Pony",
                     "Firelight, pipe smoke and the smell of stew. Butterbur the innkeeper nods at you over the bar."
-                    + (taken > 0 ? $" You have {taken} quest{(taken == 1 ? "" : "s")} under way (your journal is in Knowledge, ~)." : ""),
+                    + (taken > 0 ? $" You have {taken} quest{(taken == 1 ? "" : "s")} under way (see the quest log, Ctrl+J)." : ""),
                     [.. choices]);
                 break;
             }

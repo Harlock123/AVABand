@@ -135,7 +135,7 @@
   }
  },
  {
-  "id": "chisel",
+  "id": "chisel", "source": "The Arcane Artificer",
   "name": "The Artificer's Chisel",
   "minLevel": 0,
   "offer": "SlatriBartSlow sets down his loupe. \"I had a workshop once, below — a good one, where the stone was quiet. Something came up out of the dark at {feet} ft (level {depth}) and I ran, and left my star-forged chisel on the bench. Without it every cut is a gamble. Bring it back, and I'll cut you a socket for nothing — and never slip on your gear again.\"",

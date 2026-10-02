@@ -5,15 +5,15 @@ using Angband.Core.Quests;
 
 namespace Angband.Core.Game;
 
-// The Prancing Pony's notice board: three postings at a time — hunt so many of a monster, bring so
+// The Prancing Pony's notice board: five postings at a time — hunt so many of a monster, bring so
 // many of a thing found in the dungeon (never one the shops sell), a bounty on a unique you could
 // face, or scouting a depth no deeper than a few levels past your deepest — renewed whenever you come
-// back up to town. Two can be taken at once; hunts count from when they're taken, and the pay is collected
+// back up to town. All five can be taken at once; hunts count from when they're taken, and the pay is collected
 // at the inn.
 public sealed partial class GameSession
 {
-    private const int BoardPostings = 3;
-    private const int BoardTakenMax = 2;
+    public const int BoardPostings = 5;
+    public const int BoardTakenMax = 5;
 
     /// <summary>Back in town from the dungeon: the postings nobody took are replaced.</summary>
     private void RenewBoard()

@@ -1,0 +1,54 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.QuestLogWindow"
+        x:DataType="vm:QuestLogViewModel"
+        Title="{Binding Title}"
+        Width="760" Height="720"
+        WindowStartupLocation="CenterOwner">
+  <DockPanel Margin="14">
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" />
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Summary}" Opacity="0.75" Margin="0,2,0,10" TextWrapping="Wrap" />
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+      <TextBlock Text="Story quests come from the Prancing Pony (9) and others; jobs from its notice board. Esc closes."
+                 Opacity="0.6" VerticalAlignment="Center" TextWrapping="Wrap" />
+      <Button Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" Margin="10,0,0,0" />
+    </Grid>
+    <ScrollViewer Background="#111111">
+      <ItemsControl x:Name="QuestCards" ItemsSource="{Binding Cards}" Margin="10">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:QuestLogCard">
+            <Border Background="#1b1d24" BorderBrush="#2e3340" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10"
+                    Opacity="{Binding CardOpacity}">
+              <StackPanel Spacing="6">
+                <Grid ColumnDefinitions="*,Auto">
+                  <StackPanel>
+                    <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" Foreground="#eee" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Source}" FontSize="12" Foreground="#8fa3bf" />
+                  </StackPanel>
+                  <TextBlock Grid.Column="1" Text="{Binding Status}" Foreground="{Binding StatusColor}" FontSize="12"
+                             FontWeight="SemiBold" VerticalAlignment="Top" Margin="12,2,0,0" MaxWidth="260" TextWrapping="Wrap" TextAlignment="Right" />
+                </Grid>
+                <ProgressBar IsVisible="{Binding HasCount}" Minimum="0" Maximum="{Binding Need}" Value="{Binding Have}" Height="6" MinHeight="6"
+                             Foreground="#c9a24a" Background="#2a2d36" />
+                <ItemsControl ItemsSource="{Binding Steps}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:QuestLogStepRow">
+                      <Grid ColumnDefinitions="20,*" Margin="0,2" Opacity="{Binding TextOpacity}">
+                        <TextBlock Text="{Binding Mark}" Foreground="#c9a24a" FontSize="13" />
+                        <TextBlock Grid.Column="1" Text="{Binding Text}" Foreground="#dcd6c8" FontSize="13" TextWrapping="Wrap" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock IsVisible="{Binding HasReward}" FontSize="12" Foreground="#e8c060">
+                  <Run Text="Reward: " Foreground="#8fa3bf" /><Run Text="{Binding Reward}" />
+                </TextBlock>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

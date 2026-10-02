@@ -97,6 +97,8 @@ public enum InputAction
     Inventory, Equipment, ClearJunk,
     /// <summary>Show where you've been on this level (AVABand's own). Added last so saved bindings keep their meaning.</summary>
     ShowTrail,
+    /// <summary>The quest log (AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    QuestLog,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -199,6 +201,7 @@ public static class InputActions
         InputAction.ContextMenu => "Menu for the square (the look cursor's, or yours)",
         InputAction.DescribeSurroundings => "Describe surroundings",
         InputAction.ShowTrail => "Show where you've been",
+        InputAction.QuestLog => "Quest log",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

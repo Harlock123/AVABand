@@ -224,7 +224,7 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>One of AVABand's quests brought to a good end.</summary>
     private void OnAvaQuestCompleted(AvaQuestCompletedEvent e) =>
-        AddScene(SceneKind.QuestComplete, $"Quest complete: {e.Name}", subtitle: "Your journal is in Knowledge (~).", pictures: ["quest-complete"]);
+        AddScene(SceneKind.QuestComplete, $"Quest complete: {e.Name}", subtitle: "Your quest log is on Ctrl+J.", pictures: ["quest-complete"]);
 
     /// <summary>
     /// A great foe slain: a unique from 500 ft down, or a quest's own (Durgash, Hathol, the Shade,

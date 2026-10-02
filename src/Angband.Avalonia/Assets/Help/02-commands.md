@@ -37,7 +37,7 @@
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,
   `W` scroll the map (locate), Ctrl+L centre it on you (handy with *Center map continuously* off).
-- `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home, your history — show only your notes, levels, uniques or artifacts, find lines by their words, and add a note — and Upgrades: what you have that would suit you better), `=` options, Ctrl+P message history.
+- `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home, your history — show only your notes, levels, uniques or artifacts, find lines by their words, and add a note — and Upgrades: what you have that would suit you better), `=` options, Ctrl+P message history, Ctrl+J the quest log.
 
 **The hotbar** under the map holds ten spells or items: **Alt+1** to **Alt+0**, or a click, uses
 one. Click an empty slot to fill it, or drag an item from the sidebar or a spell from the spell

@@ -10,6 +10,8 @@ public sealed class AvaQuestState
     public Dictionary<string, int> Numbers { get; set; } = new();
     /// <summary>Its words: the thief's name, the clues found...</summary>
     public Dictionary<string, string> Texts { get; set; } = new();
+    /// <summary>The stages it has passed through, oldest first, for the quest log (empty in older saves).</summary>
+    public List<string> History { get; set; } = [];
 
     public bool IsDone => Stage is "done" or "delivered" or "exposed" or "burned" or "lost" or "returned" or "kept" or "relieved" or "given" or "keep";
     public int N(string key) => Numbers.GetValueOrDefault(key);
