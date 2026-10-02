@@ -3,6 +3,11 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-02
+
+- **"a" for all in a shop**: asked "Quantity (1-N, a for all)?" when buying or selling more than
+  one, press `a` to trade the whole stack (or as many as you can pay for).
+
 ## 2026-10-01
 
 - **Breeders breed at Angband's pace**: a breeder now counts itself among the crowd around it, as in

@@ -142,8 +142,9 @@ public sealed partial class MainWindowViewModel
             Trade(item, all ? most : 1);
             return;
         }
-        // Angband store_purchase / store_sell: "Quantity (1-N):", one unless you say otherwise.
-        BeginNumberPrompt($"Quantity (1-{most})?", 1, n =>
+        // Angband store_purchase / store_sell: "Quantity (1-N):", one unless you say otherwise
+        // (and AVABand's own: A for all of them).
+        BeginNumberPrompt($"Quantity (1-{most}, a for all)?", 1, n =>
         {
             if (n <= 0)
             {
@@ -151,7 +152,7 @@ public sealed partial class MainWindowViewModel
                 return;
             }
             Trade(item, Math.Min(n, most));
-        }, most);
+        }, most, allowAll: true);
     }
 
     private void Trade(Angband.Core.Items.Item item, int count)

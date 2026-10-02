@@ -13,7 +13,7 @@ public sealed partial class MainWindowViewModel
     private bool _recallAnswered;
 
     // A number typed in answer to a question (the recall level), shown on the message line.
-    private (string Question, int Default, Action<int> Done, int Most)? _numberPrompt;
+    private (string Question, int Default, Action<int> Done, int Most, bool AllowAll)? _numberPrompt;
     private string _numberText = "";
 
     [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private bool _isEnteringNumber;
@@ -89,10 +89,13 @@ public sealed partial class MainWindowViewModel
             Execute(command);
         });
 
-    /// <summary>Asks for a number: digits, Backspace, Enter (the suggestion if nothing is typed), Escape.</summary>
-    private void BeginNumberPrompt(string question, int suggested, Action<int> done, int most = 999)
+    /// <summary>
+    /// Asks for a number: digits, Backspace, Enter (the suggestion if nothing is typed), Escape; with
+    /// <paramref name="allowAll"/>, A for all (<paramref name="most"/>) at once.
+    /// </summary>
+    private void BeginNumberPrompt(string question, int suggested, Action<int> done, int most = 999, bool allowAll = false)
     {
-        _numberPrompt = (question, suggested, done, most);
+        _numberPrompt = (question, suggested, done, most, allowAll);
         _numberText = "";
         IsEnteringNumber = true;
         ShowNumberPrompt();
@@ -115,11 +118,13 @@ public sealed partial class MainWindowViewModel
             LastMessage = "Cancelled.";
             return;
         }
-        if (enter)
+        var all = prompt.AllowAll && symbol is "a" or "A";
+        if (enter || all)
         {
             _numberPrompt = null;
             IsEnteringNumber = false;
-            prompt.Done(_numberText.Length > 0 ? int.Parse(_numberText, System.Globalization.CultureInfo.InvariantCulture) : prompt.Default);
+            prompt.Done(all ? prompt.Most
+                : _numberText.Length > 0 ? int.Parse(_numberText, System.Globalization.CultureInfo.InvariantCulture) : prompt.Default);
             Refresh();
             return;
         }

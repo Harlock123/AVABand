@@ -117,7 +117,7 @@ public sealed partial class MainWindowViewModel
         yield return ("exp_drained", () => player.Experience < player.MaxExperience,
             () => "Your experience was drained. A potion of Restore Life Levels brings it back; gear with Hold Life protects it.");
         yield return ("shop", () => IsInStore,
-            () => $"In a shop, a letter buys (and asks how many; Shift+letter takes the whole pile), Tab switches to selling, Esc leaves; {KeyName(InputAction.Inspect)} examines the highlighted item.");
+            () => $"In a shop, a letter buys (and asks how many: a number, or a for all; Shift+letter takes the whole pile), Tab switches to selling, Esc leaves; {KeyName(InputAction.Inspect)} examines the highlighted item.");
         yield return ("monster", () => player.Depth > 0 && game.Level.Monsters.All.Any(m => m.IsVisible),
             () => $"A monster! Walk into it to attack. {KeyName(InputAction.Look)} looks at it (the sidebar then recalls what you know); right-click it for everything you can do.");
         yield return ("trap", () => Near(10).Any(p => game.Known.IsKnown(p) && game.VisibleTrapAt(p) is not null),

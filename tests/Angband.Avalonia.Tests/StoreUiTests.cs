@@ -323,6 +323,39 @@ public class StoreUiTests
         Assert.Equal(had + 8, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
     }
 
+    /// <summary>AVABand's own: at "Quantity (1-N, a for all)?", A sells (or buys) the lot.</summary>
+    [AvaloniaFact]
+    public void At_the_quantity_A_trades_them_all()
+    {
+        var (window, vm, game) = OpenAt("general");
+        int Flasks() => game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number);
+        var stack = game.Objects.Create("flask_of_oil");
+        stack.Number = 12;
+        game.Knowledge.LearnKind(stack.Kind);
+        game.Player.Inventory.Add(stack);
+        var had = Flasks();
+        Assert.True(had >= 12);
+
+        vm.HandleAction(InputAction.SwitchPane);                         // selling
+        var row = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(row.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        Assert.True(vm.IsEnteringNumber);
+        Assert.Equal($"Quantity (1-{had}, a for all)? 1", vm.LastMessage);
+        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        Assert.False(vm.IsEnteringNumber);
+        Assert.Equal(0, Flasks());                                        // the whole stack sold
+        Assert.True(vm.IsInStore);
+
+        // Buying: A takes as many as there are (and you can pay for).
+        vm.HandleAction(InputAction.SwitchPane);
+        game.Player.Gold = 100_000;
+        row = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(row.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        var most = int.Parse(vm.LastMessage!.Split('-')[1].Split(',')[0]);
+        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.Shift);  // (a capital A as well)
+        Assert.Equal(most, Flasks());
+    }
+
     /// <summary>Debug → "Character marked by debug": unticking it clears the mark without asking; ticking puts it back.</summary>
     [AvaloniaFact]
     public void TheDebugMarkTick_ClearsAndRestoresTheMark()

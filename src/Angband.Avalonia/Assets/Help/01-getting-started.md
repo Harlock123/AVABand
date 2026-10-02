@@ -53,8 +53,9 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   to choose it).
 - **Shop in town**: walk onto a shop's number (1–8) to go in (9 is the Prancing Pony, the inn; 0 the Arcane Artificer, who cuts sockets for gems) (the keeper may greet you, or pass on a
   hint worth hearing). Buy a few **Flasks of Oil** to
-  throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. The
-  Home (8) keeps whatever you leave there. Under each piece of armour or weapon a line says how it
+  throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. Buying
+  or selling more than one, you're asked how many: type a number and Enter, or `a` for all of them.
+  The Home (8) keeps whatever you leave there. Under each piece of armour or weapon a line says how it
   compares with what you have ("Better", "Worse" or "Mixed", in green, red or amber), and arrows, shots
   and bolts say whether they fit your launcher. Inspecting something in your pack, or looking at it
   on the floor, says the same.
