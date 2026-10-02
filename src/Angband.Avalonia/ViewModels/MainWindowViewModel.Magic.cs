@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Core.Geometry;
+using Angband.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -9,10 +10,12 @@ namespace Angband.Avalonia.ViewModels;
 
 public enum SpellPromptKind { Cast, Study, Browse }
 
-/// <summary>A line in the spell list: level, mana, failure chance and state.</summary>
-public sealed record SpellRow(string Letter, string Name, int Level, int Mana, int Fail, string Note, string Description, SpellDef Spell)
+/// <summary>A line in the spell list: level, mana, failure chance and state; greyed when it can't be chosen here.</summary>
+public sealed record SpellRow(string Letter, string Name, int Level, int Mana, int Fail, string Note, string Description, SpellDef Spell,
+    bool Greyed = false)
 {
     public string Stats => Level > 0 ? $"Lv {Level,2}  Mana {Mana,2}  Fail {Fail,2}%" : "";
+    public double RowOpacity => Greyed ? 0.45 : 1;
 }
 
 public sealed record ClassChoice(string Id, string Name);
@@ -104,12 +107,15 @@ public sealed partial class MainWindowViewModel
             _ => _game.ClassSpells.Where(_game.HasBookFor),
         };
         var list = spells.ToList();
-        if (list.Count > 0 && OptionValue(DisplayOptions.BookFirst))
+        // AVABand's own: casting, the spells you could study now are listed too, greyed, after those you
+        // know (so the letters of those you know don't change) — a new spell isn't missed for want of G.
+        var studiable = kind == SpellPromptKind.Cast ? _game.StudyableSpells().ToList() : [];
+        if (list.Count + studiable.Count > 0 && OptionValue(DisplayOptions.BookFirst))
         {
-            BeginSpellBookPrompt(kind, list);
+            BeginSpellBookPrompt(kind, list, studiable);
             return;
         }
-        if (list.Count == 0)
+        if (list.Count + studiable.Count == 0)
         {
             AddMessage(kind switch
             {
@@ -120,7 +126,8 @@ public sealed partial class MainWindowViewModel
             return;
         }
 
-        ShowSpellRows(kind, list);
+        if (studiable.Count > 0) ShowSpellRows(kind, [.. list, .. studiable], [.. list.Select(s => s.Id)]);
+        else ShowSpellRows(kind, list);
     }
 
     private List<string>? _spellBooks;
@@ -130,11 +137,12 @@ public sealed partial class MainWindowViewModel
     /// Book-first menus (the option): which book, then its spells lettered by their place in it, as
     /// Angband's menus are — so its keymaps (maa') work as written.
     /// </summary>
-    private void BeginSpellBookPrompt(SpellPromptKind kind, List<Angband.Core.Definitions.SpellDef> offered)
+    private void BeginSpellBookPrompt(SpellPromptKind kind, List<Angband.Core.Definitions.SpellDef> offered,
+        List<Angband.Core.Definitions.SpellDef>? alsoListed = null)
     {
         _spellPromptKind = kind;
         _spellBookChoices = offered;
-        _spellBooks = [.. offered.Select(s => s.Book).Distinct()];
+        _spellBooks = [.. _game.ClassSpells.Where(s => offered.Contains(s) || alsoListed?.Contains(s) == true).Select(s => s.Book).Distinct()];
         ChoiceRows.Clear();
         PromptRows.Clear();
         SpellPromptRows.Clear();
@@ -172,6 +180,7 @@ public sealed partial class MainWindowViewModel
         var realm = _game.PlayerRealm!;
         _spellPromptKind = kind;
         _spellOffered = offered;
+        var studiable = _game.StudyableSpells().Select(s => s.Id).ToHashSet();
         PromptTitle = kind switch
         {
             SpellPromptKind.Cast => $"{Capitalize(realm.Verb)} which {realm.SpellNoun}?",
@@ -185,9 +194,11 @@ public sealed partial class MainWindowViewModel
             var spell = list[i];
             var info = _game.SpellInfo(spell)!;
             var note = _game.Player.LearnedSpells.Contains(spell.Id) ? (_game.Player.CastSpells.Contains(spell.Id) ? "" : "untried")
+                : kind != SpellPromptKind.Study && studiable.Contains(spell.Id) ? $"study first ({KeyName(InputAction.Study)})"
                 : info.Level > _game.Player.Level ? "difficult" : "unknown";
+            var greyed = offered is not null && !offered.Contains(spell.Id) && kind != SpellPromptKind.Browse;
             SpellPromptRows.Add(new SpellRow(((char)('a' + i)).ToString(), spell.Name, info.Level, info.Mana,
-                _game.SpellFailChance(spell), note, spell.Description, spell));
+                _game.SpellFailChance(spell), note, spell.Description, spell, greyed));
         }
         IsPrompting = true;
     }
@@ -202,7 +213,9 @@ public sealed partial class MainWindowViewModel
         {
             AddMessage(_spellPromptKind == SpellPromptKind.Study
                 ? $"You cannot learn that {_game.PlayerRealm!.SpellNoun} yet."
-                : $"You don't know that {_game.PlayerRealm!.SpellNoun}.");
+                : _game.StudyableSpells().Contains(spell)
+                    ? $"You haven't learned {spell.Name} yet: study it first ({KeyName(InputAction.Study)})."
+                    : $"You don't know that {_game.PlayerRealm!.SpellNoun}.");
             return;
         }
         switch (_spellPromptKind)

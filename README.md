@@ -727,7 +727,9 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   level-ups (hit points, skills, spell points). Spells live in Angband 4.2's books (below); you study them
   once you reach their level (`G`: mages, druids, necromancers, rogues, rangers and blackguards choose
   the spell; priests and paladins choose a book and are granted one of its prayers at random, as in
-  4.2), then cast them (`m`) with Angband's failure formula (base, minus
+  4.2), then cast them (`m`; AVABand's own: the cast list also shows, greyed and marked "study first
+  (G)", the spells you could study now, after those you know so their letters don't move — Angband
+  lists only learned ones, and a new spell is easily missed) with Angband's failure formula (base, minus
   3 per level above the spell, minus the stat bonus, plus 5 per missing mana point, with a stat-based
   minimum, which only ZERO_FAIL classes — mage, priest, druid, necromancer — can take below 5%).
   Casting without enough mana is allowed after confirmation but makes you faint. The first cast of

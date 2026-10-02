@@ -43,7 +43,8 @@ public class MagicUiTests
         Assert.Contains("You have learned the spell of Magic Missile.", vm.Messages);
 
         window.KeyPressQwerty(PhysicalKey.M, RawInputModifiers.None);
-        var row = Assert.Single(vm.SpellPromptRows);
+        var row = Assert.Single(vm.SpellPromptRows, r => !r.Greyed);       // (the two still to study, greyed after it)
+        Assert.Equal("Magic Missile", vm.SpellPromptRows[0].Name);
         Assert.Equal(20, row.Fail);
         Assert.Equal("untried", row.Note);
         TileRenderingTests.Save(window, "spell-cast-prompt");
@@ -51,6 +52,42 @@ public class MagicUiTests
         foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
         window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
         Assert.Equal("You have no target.", vm.LastMessage); // nothing to shoot
+    }
+
+    /// <summary>AVABand's own: the spells you could study now are in the cast list too, greyed, after those you know.</summary>
+    [AvaloniaFact]
+    public void TheCastList_ShowsSpellsToStudy_Greyed_AfterThoseYouKnow()
+    {
+        var (window, vm) = Open("mage");
+        // Nothing learned yet: the list still opens, every row greyed.
+        window.KeyPressQwerty(PhysicalKey.M, RawInputModifiers.None);
+        Assert.True(vm.IsPrompting);
+        Assert.All(vm.SpellPromptRows, r => Assert.True(r.Greyed));
+        Assert.All(vm.SpellPromptRows, r => Assert.Equal("study first (G)", r.Note));
+        window.KeyPressQwerty(PhysicalKey.Escape, RawInputModifiers.None);
+
+        vm.Game.Player.LearnedSpells.Add("find_traps_doors");               // the third in the book
+        window.KeyPressQwerty(PhysicalKey.M, RawInputModifiers.None);
+        Assert.Equal(["Find Traps, Doors & Stairs", "Magic Missile", "Light Room"], vm.SpellPromptRows.Select(r => r.Name));
+        Assert.Equal([false, true, true], vm.SpellPromptRows.Select(r => r.Greyed));
+        Assert.Equal(0.45, vm.SpellPromptRows[1].RowOpacity);
+        TileRenderingTests.Save(window, "spell-cast-prompt-studiable");
+
+        window.KeyPressQwerty(PhysicalKey.B, RawInputModifiers.None);       // a greyed one: not cast, but told why
+        Assert.Equal("You haven't learned Magic Missile yet: study it first (G).", vm.LastMessage);
+        Assert.Empty(vm.Game.Player.CastSpells);
+    }
+
+    [AvaloniaFact]
+    public void BookFirst_ListsABookWithOnlySpellsToStudy_Greyed()
+    {
+        var (window, vm) = Open("mage");
+        vm.SetOption(DisplayOptions.BookFirst, true);
+        window.KeyPressQwerty(PhysicalKey.M, RawInputModifiers.None);
+        Assert.Single(vm.ChoiceRows);                                         // [First Spells], nothing known in it yet
+        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        Assert.Contains(vm.SpellPromptRows, r => r.Name == "Magic Missile" && r.Greyed && r.Note == "study first (G)");
+        Assert.Contains(vm.SpellPromptRows, r => r.Name == "Fire Ball" && r.Greyed && r.Note == "difficult");
     }
 
     [AvaloniaFact]

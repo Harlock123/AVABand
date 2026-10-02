@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-02
 
+- **Spells to study in the cast list**: press `m` and any spell you've reached the level for but
+  haven't studied is listed too, greyed, marked "study first (G)" — reaching its level doesn't
+  teach it; `G` does.
 - **"a" for all in a shop**: asked "Quantity (1-N, a for all)?" when buying or selling more than
   one, press `a` to trade the whole stack (or as many as you can pay for).
 

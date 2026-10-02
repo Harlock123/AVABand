@@ -15,6 +15,8 @@ whatever you are) if not, so you don't buy the wrong one or sell one you need.
   paladins** choose a book and are granted a random prayer from it, as in 4.2.
 - `m` casts, `B` browses. Each spell costs mana and may **fail**: the chance, shown in the list,
   falls as you gain levels and your casting stat.
+- The cast list also shows, greyed after the spells you know, any you could learn right now, marked
+  "study first (G)" — reaching a spell's level doesn't teach it; `G` does.
 - Casting without enough mana is allowed after a question, but you faint — paralysed for a while.
 - The first time you cast a spell you gain experience.
 

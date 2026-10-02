@@ -395,7 +395,7 @@
                    Focusable="False" Cursor="Hand" Background="Transparent" Padding="0">
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:SpellRow">
-                <Grid ColumnDefinitions="Auto,200,Auto,Auto" Margin="0,1" ToolTip.Tip="{Binding Description}">
+                <Grid ColumnDefinitions="Auto,200,Auto,Auto" Margin="0,1" ToolTip.Tip="{Binding Description}" Opacity="{Binding RowOpacity}">
                   <TextBlock Grid.Column="0" MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
                              FontFamily="{StaticResource MonoFont}" FontSize="12" />
                   <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="#eee" FontSize="12" />
