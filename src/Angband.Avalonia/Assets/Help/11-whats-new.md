@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-02
 
+- **The Grimoire** (Help → The Grimoire): every spell in every spellbook, realm by realm — Arcane,
+  Divine, Nature and Necromantic — on parchment pages with an illuminated capital, a picture for
+  every spell and a cover for every book. Each spell says what it does and what it costs each class
+  that can learn it (yours marked ★, with when you can learn it); each book, where it's sold or
+  found. Search finds a spell in any book.
 - **Full screen**: the game now opens full screen (maximised where your system won't allow it).
   **F11**, or View → Full screen, switches it off and on, and it's remembered for next time.
 - **Fixed: "the same character" forgetting who you played.** Quick start, and *Play again* on the

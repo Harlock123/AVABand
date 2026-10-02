@@ -27,3 +27,8 @@ The pictures AVABand shows at moments of note. All are made for AVABand (CC0), r
 
 - **The creation screen's portraits** — every race in every class (and AVABand's Warrior/Mage and the other multiclasses), and each race alone in plain clothes — composed by `tools/portrait_art.py` from the player "paper doll" tiles of **Dungeon Crawl Stone Soup** (the DCSS tile set, by the DCSS development team and contributors): a race's base body, hair or beard, and a class's armour or robes, helm or hat, cloak, boots and what it holds, layered in DCSS's own doll order and scaled up four times without smoothing.
 - Licence: CC0 1.0 (public-domain dedication), as the DCSS tiles are.
+
+## grimoire/spells/*.png, grimoire/books/*.png, grimoire/realms/*.png, grimoire/parchment.png
+
+- **The Grimoire's pictures** — an icon for every spell, a cover for every spellbook and a sigil for every realm, chosen by `tools/grimoire_art.py` from the spell, invocation, item and monster tiles of **Dungeon Crawl Stone Soup** (the DCSS tile set, by the DCSS development team and contributors) and scaled up without smoothing; the parchment the pages are printed on is drawn by the same tool (no source image).
+- Licence: CC0 1.0 (public-domain dedication), as the DCSS tiles are.

@@ -263,6 +263,7 @@ public partial class MainWindow : Window
             _subscribed.MessageHistoryRequested -= OnMessageHistoryRequested;
             _subscribed.JourneyRequested -= OnJourneyRequested;
             _subscribed.QuestLogRequested -= OnQuestLogRequested;
+            _subscribed.GrimoireRequested -= OnGrimoireRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
             _subscribed.OpenUrlRequested -= OnOpenUrlRequested;
         }
@@ -288,6 +289,7 @@ public partial class MainWindow : Window
         vm.MessageHistoryRequested += OnMessageHistoryRequested;
         vm.JourneyRequested += OnJourneyRequested;
         vm.QuestLogRequested += OnQuestLogRequested;
+        vm.GrimoireRequested += OnGrimoireRequested;
         vm.OverviewRequested += OnOverviewRequested;
         vm.OpenUrlRequested += OnOpenUrlRequested;
 
@@ -372,6 +374,9 @@ public partial class MainWindow : Window
 
     private void OnQuestLogRequested(QuestLogViewModel log) =>
         DialogFit.Show(new QuestLogWindow { DataContext = log }, this);
+
+    private void OnGrimoireRequested(GrimoireViewModel grimoire) =>
+        DialogFit.Show(new GrimoireWindow { DataContext = grimoire }, this);
 
     /// <summary>A character card: drawn, saved, and opened in the picture viewer.</summary>
     private void OnCardRequested(CharacterCardViewModel card, string path)

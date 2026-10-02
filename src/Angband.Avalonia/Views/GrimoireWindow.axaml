@@ -1,0 +1,182 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.GrimoireWindow"
+        x:DataType="vm:GrimoireViewModel"
+        Title="{Binding Title}"
+        Width="1180" Height="820"
+        Background="#1c140e"
+        WindowStartupLocation="CenterOwner">
+  <Window.Styles>
+    <!-- Warm leather and gold, not the theme's blue. -->
+    <Style Selector="ListBox#BookList ListBoxItem:selected /template/ ContentPresenter">
+      <Setter Property="Background" Value="#5a3e1e" />
+    </Style>
+    <Style Selector="ListBox#BookList ListBoxItem:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#3a2a18" />
+    </Style>
+    <Style Selector="ListBox#BookList ListBoxItem:selected:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#6a4a24" />
+    </Style>
+    <Style Selector="TabItem:selected /template/ Border#PART_SelectedPipe">
+      <Setter Property="Background" Value="#e6c56e" />
+    </Style>
+  </Window.Styles>
+  <Window.Resources>
+    <!-- A gold ring for the spell pictures, and the gold of the rules and capitals. -->
+    <LinearGradientBrush x:Key="Gold" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#f6dc8a" Offset="0" />
+      <GradientStop Color="#b8892e" Offset="0.5" />
+      <GradientStop Color="#f1d27a" Offset="1" />
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="IconWell">
+      <GradientStop Color="#3a2c22" Offset="0" />
+      <GradientStop Color="#120c08" Offset="1" />
+    </RadialGradientBrush>
+
+    <!-- A rule with a flourish in the middle. -->
+    <DataTemplate x:Key="Rule" x:DataType="x:String">
+      <Grid ColumnDefinitions="*,Auto,*" Margin="0,14">
+        <Border Height="1" Background="#a0804a" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1" Text="{Binding}" Foreground="#8a6a32" FontSize="18" Margin="12,0" />
+        <Border Grid.Column="2" Height="1" Background="#a0804a" VerticalAlignment="Center" />
+      </Grid>
+    </DataTemplate>
+
+    <!-- One spell: its picture in a gold ring, its name, what it does, who learns it and for how much. -->
+    <DataTemplate x:Key="SpellEntry" x:DataType="vm:GrimoireSpell">
+      <StackPanel>
+        <Grid ColumnDefinitions="92,*" Margin="0,4">
+          <Border Width="76" Height="76" CornerRadius="38" BorderThickness="3" BorderBrush="{StaticResource Gold}"
+                  Background="{StaticResource IconWell}" VerticalAlignment="Top" BoxShadow="0 2 6 0 #60000000">
+            <!-- (round: a picture drawn in a square frame has its corners cut off by the ring) -->
+            <Border Width="70" Height="70" CornerRadius="35" ClipToBounds="True">
+              <Image Source="{Binding Icon}" Width="70" Height="70" RenderOptions.BitmapInterpolationMode="None" />
+            </Border>
+          </Border>
+          <StackPanel Grid.Column="1" Spacing="4" Margin="4,2,0,0">
+            <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="19" Foreground="{Binding Accent}" />
+            <TextBlock Text="{Binding Description}" Foreground="#3b2a1a" FontSize="14" TextWrapping="Wrap" />
+            <ItemsControl ItemsSource="{Binding Classes}" Margin="0,2,0,0">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:GrimoireClassLine">
+                  <TextBlock Text="{Binding Text}" FontWeight="{Binding Weight}" Foreground="#5e4a32" FontSize="12" TextWrapping="Wrap" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="{Binding YourNote}" IsVisible="{Binding HasYourNote}" FontStyle="Italic" Foreground="{Binding Accent}" FontSize="12.5" />
+          </StackPanel>
+        </Grid>
+        <TextBlock Text="·  ✦  ·" HorizontalAlignment="Center" Foreground="#a0804a" Margin="0,10" />
+      </StackPanel>
+    </DataTemplate>
+
+    <!-- A book's pages: cover and title, an illuminated word about its realm, then its spells. -->
+    <DataTemplate x:Key="BookPage" x:DataType="vm:GrimoireBook">
+      <StackPanel Margin="40,30,40,24">
+        <Grid ColumnDefinitions="Auto,*">
+          <Border BoxShadow="0 4 10 0 #70000000" VerticalAlignment="Top" Margin="0,0,22,0">
+            <Image Source="{Binding Cover}" Width="96" Height="96" RenderOptions.BitmapInterpolationMode="None" />
+          </Border>
+          <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+            <TextBlock Text="{Binding Kind}" FontStyle="Italic" Foreground="#6e5638" FontSize="13" />
+            <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="32" Foreground="{Binding Accent}" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Where}" Foreground="#4a3826" FontSize="13" />
+            <TextBlock Text="{Binding Readers}" Foreground="#4a3826" FontSize="13" TextWrapping="Wrap" />
+          </StackPanel>
+        </Grid>
+        <ContentControl Content="❦" ContentTemplate="{StaticResource Rule}" />
+        <Grid ColumnDefinitions="Auto,*">
+          <Border Width="60" Height="60" Background="{Binding Accent}" BorderBrush="{StaticResource Gold}" BorderThickness="3"
+                  CornerRadius="3" VerticalAlignment="Top" Margin="0,2,12,0" BoxShadow="0 2 5 0 #50000000">
+            <TextBlock Text="{Binding DropCap}" FontFamily="{StaticResource TitleFont}" FontSize="40" Foreground="#f6e7bd"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <TextBlock Grid.Column="1" Text="{Binding Intro}" FontStyle="Italic" Foreground="#3b2a1a" FontSize="14.5" TextWrapping="Wrap" LineHeight="21" />
+        </Grid>
+        <ContentControl Content="✦  ❧  ✦" ContentTemplate="{StaticResource Rule}" />
+        <ItemsControl x:Name="BookSpells" ItemsSource="{Binding Spells}" ItemTemplate="{StaticResource SpellEntry}" />
+      </StackPanel>
+    </DataTemplate>
+  </Window.Resources>
+
+  <DockPanel Margin="16">
+    <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="4,0,4,12">
+      <StackPanel>
+        <TextBlock Text="{Binding Title}" FontFamily="{StaticResource TitleFont}" FontSize="30" Foreground="#e6c56e" />
+        <TextBlock Text="{Binding Subtitle}" Foreground="#bfa98a" FontSize="13" />
+      </StackPanel>
+      <TextBox x:Name="SearchBox" Grid.Column="1" Width="300" VerticalAlignment="Center" Text="{Binding Search}"
+               PlaceholderText="Find a spell (a name or a word, e.g. heal, fire)" />
+    </Grid>
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="4,12,4,0">
+      <TextBlock Text="Pictures from Dungeon Crawl Stone Soup's tiles (CC0). Levels, mana and failure are each class's own; a spell's failure falls as you gain levels. Esc closes."
+                 Foreground="#9a8468" FontSize="11.5" VerticalAlignment="Center" TextWrapping="Wrap" />
+      <Button Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" Margin="12,0,0,0" />
+    </Grid>
+
+    <Panel>
+      <!-- The realms, each with its books down the side and the open book's pages. -->
+      <TabControl x:Name="RealmTabs" ItemsSource="{Binding Realms}" SelectedItem="{Binding SelectedRealm}" IsVisible="{Binding !IsSearching}">
+        <TabControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:GrimoireRealm">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Image Source="{Binding Sigil}" Width="32" Height="32" RenderOptions.BitmapInterpolationMode="None" />
+              <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="17" VerticalAlignment="Center" Foreground="#e6d3a8" />
+            </StackPanel>
+          </DataTemplate>
+        </TabControl.ItemTemplate>
+        <TabControl.ContentTemplate>
+          <DataTemplate x:DataType="vm:GrimoireRealm">
+            <Grid ColumnDefinitions="250,14,*" Margin="0,10,0,0">
+              <ListBox x:Name="BookList" ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook}" Background="#241a12">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:GrimoireBook">
+                    <Grid ColumnDefinitions="Auto,*" Margin="2,4" Opacity="{Binding ListOpacity}">
+                      <Image Source="{Binding Cover}" Width="48" Height="48" RenderOptions.BitmapInterpolationMode="None" />
+                      <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" FontFamily="{StaticResource TitleFont}" FontSize="14" Foreground="#ecdcb5" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Count}" FontSize="11.5" Foreground="#a08a6c" />
+                      </StackPanel>
+                    </Grid>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+              <Border Grid.Column="2" Background="{Binding $parent[Window].((vm:GrimoireViewModel)DataContext).PageBackground}"
+                      BorderBrush="{StaticResource Gold}" BorderThickness="2" CornerRadius="4" BoxShadow="0 6 18 0 #90000000" ClipToBounds="True">
+                <ScrollViewer x:Name="Page">
+                  <ContentControl Content="{Binding SelectedBook}" ContentTemplate="{StaticResource BookPage}" />
+                </ScrollViewer>
+              </Border>
+            </Grid>
+          </DataTemplate>
+        </TabControl.ContentTemplate>
+      </TabControl>
+
+      <!-- What a search found, in every book. -->
+      <Border IsVisible="{Binding IsSearching}" Background="{Binding PageBackground}" BorderBrush="{StaticResource Gold}" BorderThickness="2"
+              CornerRadius="4" BoxShadow="0 6 18 0 #90000000">
+        <ScrollViewer>
+          <StackPanel Margin="40,26">
+            <Grid ColumnDefinitions="*,Auto">
+              <TextBlock Text="Found in the Grimoire" FontFamily="{StaticResource TitleFont}" FontSize="26" Foreground="#5a3f1c" />
+              <Button Grid.Column="1" Content="Back to the books" Command="{Binding ClearSearchCommand}" VerticalAlignment="Center" />
+            </Grid>
+            <ContentControl Content="❦" ContentTemplate="{StaticResource Rule}" />
+            <TextBlock Text="Nothing in any of the books matches that." IsVisible="{Binding NoResults}" FontStyle="Italic" Foreground="#5e4a32" />
+            <ItemsControl x:Name="SearchResults" ItemsSource="{Binding SearchResults}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:GrimoireSpell">
+                  <StackPanel>
+                    <TextBlock Text="{Binding BookName, StringFormat=From [{0}]}" FontStyle="Italic" Foreground="#6e5638" FontSize="12" Margin="92,0,0,0" />
+                    <ContentControl Content="{Binding}" ContentTemplate="{StaticResource SpellEntry}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Panel>
+  </DockPanel>
+</Window>

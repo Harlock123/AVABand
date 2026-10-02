@@ -331,6 +331,15 @@ core kept busy.
     unique no deeper than two levels past your deepest (not a quest's own), or **scouting** down to
     a depth three to five levels past it — all five can be taken at once, renewed whenever you come
     back up, paid at the inn. Story quests have no limit: take every one on offer.
+  - **The Grimoire** (AVABand's own; Help → The Grimoire; `ViewModels/GrimoireViewModel.cs`,
+    `Views/GrimoireWindow`): every spell in every book, a tab for each realm (its sigil, colour and a
+    word about it under an illuminated capital), the books down the side (town books first, then by
+    depth, each with its cover, where it's sold or found and the classes that read it), and on a
+    parchment page each spell with its picture in a gold ring, what it does, and the level, mana,
+    base failure and first-cast experience for every class that learns it, multiclasses included
+    (yours marked ★, with when you can learn it). A search box finds spells across all the books.
+    The pictures (`art/grimoire`) are chosen from Dungeon Crawl Stone Soup's CC0 tiles by
+    `tools/grimoire_art.py`, which stops if any spell is left without one.
   - **The quest log** (AVABand's own; Ctrl+J, Game → Quest log, or the player menu → Other;
     `GameSession.QuestLog.cs`, `Views/QuestLogWindow`): a card for every quest and board job taken,
     those under way first — who gave it, where it stands ("Step 2 of 3", "4 of 7 killed", "Ready:

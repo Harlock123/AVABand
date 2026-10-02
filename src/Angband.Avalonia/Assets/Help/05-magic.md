@@ -13,6 +13,10 @@ whatever you are) if not, so you don't buy the wrong one or sell one you need.
 
 - `G` learns a spell once you reach its level. Mages and most casters choose; **priests and
   paladins** choose a book and are granted a random prayer from it, as in 4.2.
+- **The Grimoire** (Help → The Grimoire) has every spell in every book, realm by realm, with a
+  picture of each: what it does, and the level, mana and failure chance for each class that can
+  learn it — yours marked ★ — and where each book is sold or found. A search box finds a spell by
+  name or by what it does ("heal", "fire").
 - `m` casts, `B` browses. Each spell costs mana and may **fail**: the chance, shown in the list,
   falls as you gain levels and your casting stat.
 - The cast list also shows, greyed after the spells you know, any you could learn right now, marked
