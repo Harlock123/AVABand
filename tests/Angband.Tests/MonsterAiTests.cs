@@ -186,6 +186,30 @@ public class MonsterAiTests
         Assert.True(game.Level.Monsters.Count > 3, $"{game.Level.Monsters.Count} worms");
     }
 
+    /// <summary>
+    /// Angband counts the breeder itself among the crowd around it, so even a lone breeder breeds
+    /// only one turn in eight (not every turn).
+    /// </summary>
+    [Fact]
+    public void A_lone_breeder_breeds_one_turn_in_eight()
+    {
+        var game = Arena.Create(5, BigRoom);
+        game.Player.Hp = game.Player.MaxHp = 100_000;
+        game.Player.Stealth = 60;
+        var worm = Arena.AddMonster(game, "white_worm_mass", new Loc(10, 3));
+        var births = Collect<MonsterBredEvent>(game);
+        var wormTurns = 0;
+        for (var i = 0; i < 800; i++)
+        {
+            var energy = worm.Energy;
+            game.Execute(new HoldCommand());
+            if (worm.Energy < energy) wormTurns++;
+            foreach (var young in game.Level.Monsters.All.Where(m => m != worm).ToList()) game.Level.Monsters.Remove(young);
+        }
+        Assert.True(wormTurns > 100, $"{wormTurns} turns");
+        Assert.InRange(births.Count, wormTurns / 16, wormTurns / 4);
+    }
+
     [Fact]
     public void Breeding_StopsAtTheLevelCap()
     {

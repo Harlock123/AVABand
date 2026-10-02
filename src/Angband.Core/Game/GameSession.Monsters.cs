@@ -96,9 +96,10 @@ public sealed partial class GameSession
         if (breeders >= Data.Constants.MaxBreeders) return false;
         if (BreederSpent(monster.Race)) return false;
 
-        var neighbours = Level.Monsters.All.Count(m => m != monster && m.Position.ChebyshevTo(monster.Position) <= 1);
-        if (neighbours >= 4) return false;
-        if (neighbours > 0 && !Rng.OneIn(neighbours * Data.Constants.BreedRate)) return false;
+        // Angband counts the monsters in the 3x3 block around the breeder, the breeder itself among them.
+        var crowd = Level.Monsters.All.Count(m => m.Position.ChebyshevTo(monster.Position) <= 1);
+        if (crowd >= 4) return false;
+        if (!Rng.OneIn(crowd * Data.Constants.BreedRate)) return false;
 
         var spots = Level.Neighbors(monster.Position)
             .Where(p => Level.IsPassable(p) && Level[p].Monster == 0 && p != Player.Position)

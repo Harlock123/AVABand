@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Breeders breed at Angband's pace**: a breeder now counts itself among the crowd around it, as in
+  Angband, so a lone louse breeds one turn in eight rather than every turn, and one with three
+  neighbours not at all. Swarms grow about half as fast as they did.
 - **Breeders run out of young**: each kind of breeder has at most 250 young on a level (counted from
   when you arrived), so a corridor of lice you keep cutting down can no longer refill itself for
   ever. Leave and come back, and the count starts again.

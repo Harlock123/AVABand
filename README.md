@@ -566,7 +566,8 @@ core kept busy.
     hides for an ambush while the player is in a corridor, and surrounds in the open); **fleeing**
     to safety or hiding; a frightened monster with nowhere to go **freezes** (its fear becomes
     being held); the five-way `side_dirs` search, staggering from confusion and `RAND_25/50`;
-    **breeding** (`MULTIPLY`, capped per level; and AVABand's own limit, each breeder race at most
+    **breeding** (`MULTIPLY`, less often the more crowded, the breeder itself counted among the crowd
+    as Angband does, capped per level; and AVABand's own limit, each breeder race at most
     250 young on a level, counted from your arrival — Angband's cap counts only breeders alive at
     once, so a swarm thinned as fast as it bred could refill a corridor for ever —
     `GameSession.Breeders.cs`, the count kept in the save and begun again on each arrival, even on a
