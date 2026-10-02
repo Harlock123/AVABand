@@ -267,6 +267,7 @@ public sealed partial class MainWindowViewModel
             case InputAction.Browse: BeginSpellPrompt(SpellPromptKind.Browse); break;
             case InputAction.EnterStore: Execute(new EnterStoreCommand()); break;
             case InputAction.ToggleTiles: ToggleTiles(); break;
+            case InputAction.ToggleFullScreen: ToggleFullScreen(); break;
             case InputAction.ToggleMute: ToggleMute(); break;
             case InputAction.OpenSettings: SettingsRequested?.Invoke(); break;
             case InputAction.Options: ShowOptions(); break;

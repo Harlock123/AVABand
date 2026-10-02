@@ -97,6 +97,7 @@ public sealed class InputBindings
         K(InputAction.ToggleTiles, "Ctrl+T");
         K(InputAction.ToggleMute, "Ctrl+M");
         K(InputAction.OpenSettings, "F10");
+        K(InputAction.ToggleFullScreen, "F11");
         K(InputAction.ZoomIn, "Ctrl+OemPlus", "Ctrl+Add");
         K(InputAction.ZoomOut, "Ctrl+OemMinus", "Ctrl+Subtract");
         K(InputAction.NewGame, "Ctrl+N");

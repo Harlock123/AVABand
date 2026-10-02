@@ -62,6 +62,8 @@ public partial class App : Application
             };
             // Through the window, so the B button can close dialogs and the game ignores the pad behind them.
             if (pad is not null) pad.ActionTriggered += mainWindow.HandleGamepadAction;
+            // Full screen from the start, unless turned off (F11) last time.
+            if (vm.IsFullScreen) mainWindow.ApplyFullScreen(true);
             desktop.MainWindow = mainWindow;
         }
         base.OnFrameworkInitializationCompleted();

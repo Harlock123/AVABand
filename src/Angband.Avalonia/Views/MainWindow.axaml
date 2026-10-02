@@ -82,6 +82,8 @@
       <MenuItem Header="_View">
         <MenuItem Header="_Graphical tiles" Command="{Binding ToggleTilesCommand}" InputGesture="Ctrl+T"
                   ToggleType="CheckBox" IsChecked="{Binding UseTiles, Mode=OneWay}" IsEnabled="{Binding HasTilesets}" />
+        <MenuItem Header="_Full screen" Command="{Binding ToggleFullScreenCommand}" InputGesture="F11"
+                  ToggleType="CheckBox" IsChecked="{Binding IsFullScreen, Mode=OneWay}" />
         <MenuItem Header="_Options..." Command="{Binding ShowOptionsCommand}" InputGesture="OemPlus" />
         <MenuItem Header="_Settings..." Click="OnOpenSettings" InputGesture="F10" />
         <MenuItem Header="_Mute sound" Command="{Binding ToggleMuteCommand}" InputGesture="Ctrl+M"

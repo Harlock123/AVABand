@@ -28,7 +28,7 @@ a bell at death, the rent tearing and a thunderclap), at the effects volume. Too
 each one until you press Space (Escape skips the rest). Your own pictures in the AVABand `art` folder beside your saves
 (`stairs-down.png`, `stairs-up.png`, `recall-town.png`, `unique.png`, `death.png`...) replace them.
 
-**Ctrl+T** switches between letters and pictures, and **F10** (View → Display settings) chooses
+The game opens **full screen** (**F11**, or View → Full screen, toggles it, and it's remembered). **Ctrl+T** switches between letters and pictures, and **F10** (View → Display settings) chooses
 among nine tilesets — Angband's own Original, Nomad, Adam Bolt and David Gervais sets, Dungeon
 Crawl, Tangaria, DawnLike, RLTiles and Hexany's tinted one-colour set — with a live preview.
 

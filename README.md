@@ -1639,7 +1639,9 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   activation and curse powers (AVABand counts 20 each).
 
 ## Tilesets
-Press **Ctrl+T** to switch between ASCII and graphical tiles, and **F10** (View → Display settings)
+The main window opens **full screen** (AVABand's own; maximised where the system won't give a
+full-screen window): **F11** or View → Full screen toggles it, remembered in the settings
+(`FullScreen`). Press **Ctrl+T** to switch between ASCII and graphical tiles, and **F10** (View → Display settings)
 to pick a tileset and a scale (0.5x–4x), with a live preview. The choice is saved to
 `<AppData>/AVABand/settings.json`.
 

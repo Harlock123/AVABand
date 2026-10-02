@@ -135,6 +135,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.Options, "Game options"),
             (InputAction.OpenSettings, "Settings: display, sound, controls, options"),
             (InputAction.ToggleTiles, "Switch between tiles and letters"),
+            (InputAction.ToggleFullScreen, "Full screen on or off (the game opens full screen unless you turn it off)"),
             (InputAction.ToggleMute, "Mute or unmute sound"),
             (InputAction.ZoomIn, "Zoom in"),
             (InputAction.ZoomOut, "Zoom out"),

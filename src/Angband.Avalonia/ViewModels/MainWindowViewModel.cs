@@ -39,6 +39,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _showMonsterPanel = settings.ShowMonsterPanel;
         _showRecallPanel = settings.ShowRecallPanel;
         _showHotbar = settings.ShowHotbar;
+        _isFullScreen = settings.FullScreen;
         _showObjectPanel = settings.ShowObjectPanel;
         Preview = new PreviewMapSource(data, _cells);
         RefreshBindingRows();

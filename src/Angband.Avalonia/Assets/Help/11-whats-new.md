@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-02
 
+- **Full screen**: the game now opens full screen (maximised where your system won't allow it).
+  **F11**, or View → Full screen, switches it off and on, and it's remembered for next time.
 - **Fixed: "the same character" forgetting who you played.** Quick start, and *Play again* on the
   start menu, brought back the last character you *made* — so a Warrior/Mage you'd continued from a
   save could come back as a plain Warrior made since. They now bring back the one you last played.

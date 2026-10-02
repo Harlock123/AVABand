@@ -99,6 +99,8 @@ public enum InputAction
     ShowTrail,
     /// <summary>The quest log (AVABand's own). Added last so saved bindings keep their meaning.</summary>
     QuestLog,
+    /// <summary>Full screen on or off (AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    ToggleFullScreen,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -202,6 +204,7 @@ public static class InputActions
         InputAction.DescribeSurroundings => "Describe surroundings",
         InputAction.ShowTrail => "Show where you've been",
         InputAction.QuestLog => "Quest log",
+        InputAction.ToggleFullScreen => "Full screen",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

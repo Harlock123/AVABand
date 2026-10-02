@@ -304,9 +304,34 @@ public partial class MainWindow : Window
 
     private void OnOptionsRequested() => OpenSettings().ShowOptionsPage();
 
+    /// <summary>
+    /// Full screen as the game asks (AVABand's own): full screen where the system allows it, maximised
+    /// where it doesn't; off, the ordinary window. The app calls this as the window opens; F11 after.
+    /// </summary>
+    public void ApplyFullScreen(bool on)
+    {
+        _wantFullScreen = on;
+        WindowState = on ? WindowState.FullScreen : WindowState.Normal;
+        FallBackFromFullScreen();
+    }
+
+    private bool _wantFullScreen;
+
+    /// <summary>A system that won't give a full-screen window (it says so once the window is up) gets a maximised one.</summary>
+    private void FallBackFromFullScreen()
+    {
+        if (_wantFullScreen && IsVisible && WindowState != WindowState.FullScreen) WindowState = WindowState.Maximized;
+    }
+
+
     /// <summary>The inscription box takes the keyboard while it is open, with the text selected.</summary>
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(MainWindowViewModel.IsFullScreen) && sender is MainWindowViewModel full)
+        {
+            ApplyFullScreen(full.IsFullScreen);
+            return;
+        }
         if (e.PropertyName != nameof(MainWindowViewModel.IsInscribing) || sender is not MainWindowViewModel { IsInscribing: true }) return;
         if (this.FindControl<TextBox>("InscriptionBox") is not { } box) return;
         Dispatcher.UIThread.Post(() =>
@@ -429,6 +454,7 @@ public partial class MainWindow : Window
     protected override void OnOpened(EventArgs e)
     {
         base.OnOpened(e);
+        FallBackFromFullScreen();
         // With the option on, a quiet look for a newer release (it only speaks up if there is one).
         if (DataContext is MainWindowViewModel checking && !Design.IsDesignMode) _ = checking.CheckUpdatesAtStartAsync();
         // The title screen, whose choices cover a first run, a crash and a dead character too.
