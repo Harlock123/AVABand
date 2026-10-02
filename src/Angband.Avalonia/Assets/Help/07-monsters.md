@@ -28,6 +28,9 @@ have seen, so a monster you know nothing about may still be deadly.
 - Summoners call more the deeper you are and the stronger they are, around themselves (up to
   four squares away): hounds bring hounds, kin their own kind, the Nine each other. "But nothing
   comes." means none could answer. Monsters summoned by a trap or scroll wait for you to act first.
+- **Breeders** (lice, worm masses and the like) multiply into empty squares beside them. Each kind
+  has at most 250 young on a level, counted from when you arrived — so a swarm you keep cutting
+  down eventually runs dry. Leave the level and come back, and the count starts again.
 - Frightened monsters run and come back when they recover. Group monsters surround you in the
   open, and packs hide and wait while you're in a corridor — fight them there.
 - Monsters cast only with a clear line to you, and fail up to a quarter of the time (more when

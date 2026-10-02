@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-01
 
+- **Breeders run out of young**: each kind of breeder has at most 250 young on a level (counted from
+  when you arrived), so a corridor of lice you keep cutting down can no longer refill itself for
+  ever. Leave and come back, and the count starts again.
 - **Sconces on the walls of lit rooms**: a naturally lit room now has candles in brass sconces along
   its walls (a warm glow on the wall in ASCII), so you can tell it from a dark room before you step
   in. Turn them off with the option *Sconces on the walls of lit rooms*.

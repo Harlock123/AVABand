@@ -46,6 +46,12 @@ public sealed class Level
     /// <summary>Hidden squares that, once seen, count towards the object feeling (Angband SQUARE_FEEL).</summary>
     public HashSet<Loc> FeelSquares { get; } = [];
 
+    /// <summary>
+    /// AVABand's own: how many young each breeder race has had on this level (by race id), up to
+    /// <see cref="Game.GameSession.BirthsPerBreederPerLevel"/>. Starts again on each arrival.
+    /// </summary>
+    public Dictionary<string, int> Births { get; } = [];
+
     /// <summary>A ranger's decoy (Angband GLYPH:DECOY), which monsters that see it go for.</summary>
     public Loc? Decoy { get; set; }
 

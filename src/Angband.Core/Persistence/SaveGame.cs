@@ -217,7 +217,7 @@ public static class SaveGame
         {
             Width = level.Width, Height = level.Height, Depth = level.Depth, ProfileId = level.ProfileId, Seed = level.Seed,
             IsLit = level.IsLit, IsKnown = level.IsKnown, Terrain = terrainIds,
-            Feeling = level.Feeling, FeelingSquaresSeen = level.FeelingSquaresSeen,
+            Feeling = level.Feeling, FeelingSquaresSeen = level.FeelingSquaresSeen, Births = new(level.Births),
             Decoy = level.Decoy is { } decoy ? decoy.Y * level.Width + decoy.X : null,
             FeelSquares = level.FeelSquares.Select(p => p.Y * level.Width + p.X).Order().ToList(),
             Features = new ushort[squares.Length], Flags = new ushort[squares.Length], Known = new int[squares.Length],
@@ -406,6 +406,7 @@ public static class SaveGame
                 Decoy = ls.Decoy is { } decoy ? new Loc(decoy % ls.Width, decoy / ls.Width) : null,
                 Population = ls.Population.Length == 4 ? new PopulationBudget(ls.Population[0], ls.Population[1], ls.Population[2], ls.Population[3]) : default,
             };
+            foreach (var (race, n) in ls.Births) level.Births[race] = n;
             foreach (var i in ls.FeelSquares.Where(i => i >= 0 && i < ls.Width * ls.Height))
                 level.FeelSquares.Add(new Loc(i % ls.Width, i / ls.Width));
             var featureMap = ls.Terrain.Select(id =>

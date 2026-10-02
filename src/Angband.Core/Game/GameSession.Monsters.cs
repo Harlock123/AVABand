@@ -94,6 +94,7 @@ public sealed partial class GameSession
     {
         var breeders = Level.Monsters.All.Count(m => m.Race.Has(MonsterFlags.Multiply));
         if (breeders >= Data.Constants.MaxBreeders) return false;
+        if (BreederSpent(monster.Race)) return false;
 
         var neighbours = Level.Monsters.All.Count(m => m != monster && m.Position.ChebyshevTo(monster.Position) <= 1);
         if (neighbours >= 4) return false;
@@ -106,6 +107,7 @@ public sealed partial class GameSession
 
         var child = _spawner.Place(Level, Rng, monster.Race, Rng.Pick(spots), asleep: false);
         Scheduler.Add(child);
+        CountBirth(monster.Race);
         child.IsVisible = MonsterVisible(child);
         Publish(new MonsterBredEvent(monster.Race.Id, child.Position, child.IsVisible));
         if (child.IsVisible) LearnMonsterFlag(monster.Race, MonsterFlags.Multiply);

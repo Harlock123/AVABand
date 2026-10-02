@@ -293,6 +293,8 @@ public sealed class LevelSave
     public bool IsKnown { get; set; }
     public int Feeling { get; set; }
     public int FeelingSquaresSeen { get; set; }
+    /// <summary>AVABand's own: young each breeder race has had on this level (empty in older saves).</summary>
+    public Dictionary<string, int> Births { get; set; } = [];
     /// <summary>A ranger's decoy (square index), if any.</summary>
     public int? Decoy { get; set; }
     /// <summary>Hidden feeling squares not yet seen (square indices).</summary>

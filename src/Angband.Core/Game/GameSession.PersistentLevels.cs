@@ -93,6 +93,7 @@ public sealed partial class GameSession
         if (Level is not null) Vision.Reset(Level);
         ClearTarget();
         Level = stored.Level;
+        Level.Births.Clear(); // (a breeder's count starts again on each arrival)
         Known = stored.Known;
         Scent.Reset(Level);
         Noise.Reset(Level);
