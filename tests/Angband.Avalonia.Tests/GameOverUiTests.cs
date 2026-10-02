@@ -105,6 +105,37 @@ public sealed class GameOverUiTests : IDisposable
         Assert.False(vm.ShouldOfferStartMenu);
     }
 
+    /// <summary>
+    /// "The same character" is the one last played — created or loaded — not just the last one made:
+    /// a Warrior/Mage carried on from a save comes back as a Warrior/Mage, not as whoever was made since.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheSameCharacter_IsTheOneLastPlayed_EvenWhenLoaded()
+    {
+        var settings = new AppSettings();
+        var (window, vm) = Open(settings);
+        var saves = new SaveStore(Path.Combine(_dir, "saves"));
+        vm.UseSaves(saves, resume: false);
+        vm.StartCharacter(CharacterSpec.Default("human", "warrior_mage") with { Name = "Merlin" });
+        vm.SaveGame();
+        var merlin = saves.List().Single(e => e.Summary.Name == "Merlin").Path;
+        vm.StartCharacter(CharacterSpec.Default("dwarf", "warrior") with { Name = "Borin" }); // made since
+        Assert.Equal("warrior", settings.LastCharacter!.Class);
+
+        Assert.True(vm.TryLoad(merlin, out _));                       // carried on from the save
+        Assert.Equal(("Merlin", "warrior_mage"), (settings.LastCharacter!.Name, settings.LastCharacter.Class));
+
+        vm.Game.TakeHit(100_000, "a Cave orc");
+        var (_, menu) = MenuOf(window);
+        Assert.Equal("Play again as Merlin the Human Warrior/Mage", menu.Choices[0].Label);
+        vm.QuickStartCommand.Execute(null);                            // Game → Quick start (same character)
+        Assert.Equal(("Merlin", "warrior_mage"), (vm.Game.Player.Name, vm.Game.Player.Class!.Id));
+
+        // And after closing the game: the start menu offers the Warrior/Mage again.
+        var reopened = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null);
+        Assert.Equal("warrior_mage", reopened.Game.Player.Class!.Id);
+    }
+
     [AvaloniaFact]
     public void CtrlX_SavesTheCharacter_AndClosesTheGame()
     {

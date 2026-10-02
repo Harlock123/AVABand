@@ -631,7 +631,8 @@ core kept busy.
   often again, and a ranger at 1000 ft 45 → 73% of the time. Stats now
   matter: STR gives to-damage and carrying capacity, DEX to-hit and armour, WIS saving throw, CON
   hit points per level, INT/WIS spell points and failure rates. The screen previews the result by
-  creating the character in the engine; Quick start reuses the last character.
+  creating the character in the engine; Quick start reuses the last character played — made on the creation screen or carried on from a
+  save (so a Warrior/Mage continued from a save comes back as one, not as whoever was made since).
 - **Shops** (`Game/GameSession.Shops.cs`, `stores.json`): General Store, Armoury, Weapon Smiths,
   Bookseller, Alchemy shop, Magic shop, Black market and your Home, stocked as in Angband 4.2.5
   (`stores.json` is converted from `store.txt`; the upkeep follows `store.c`):

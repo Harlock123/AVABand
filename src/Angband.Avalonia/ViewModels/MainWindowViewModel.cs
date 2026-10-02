@@ -212,6 +212,16 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     /// <summary>Starts a game with a character from the creation screen, remembering it for quick starts.</summary>
     public void StartCharacter(CharacterSpec spec)
     {
+        RememberCharacter(spec);
+        StartGame((ulong)Environment.TickCount64, spec);
+    }
+
+    /// <summary>
+    /// The character to bring back for "the same character" (quick start, play again, the start menu):
+    /// the one last played, made on the creation screen or carried on from a save.
+    /// </summary>
+    private void RememberCharacter(CharacterSpec spec)
+    {
         _settings.LastCharacter = new SavedCharacter
         {
             Name = spec.Name, Race = spec.RaceId, Class = spec.ClassId,
@@ -221,7 +231,6 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         };
         _settings.LastClass = spec.ClassId;
         _saveSettings?.Invoke(_settings);
-        StartGame((ulong)Environment.TickCount64, spec);
     }
 
     public CharacterSpec? LastCharacter() => _settings.LastCharacter is { } c

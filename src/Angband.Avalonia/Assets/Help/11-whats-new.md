@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-02
 
+- **Fixed: "the same character" forgetting who you played.** Quick start, and *Play again* on the
+  start menu, brought back the last character you *made* — so a Warrior/Mage you'd continued from a
+  save could come back as a plain Warrior made since. They now bring back the one you last played.
 - **A quest log** (Ctrl+J, or Game → Quest log): a card for every quest and notice-board job you've
   taken — who gave it, where it stands ("Step 2 of 3", "4 of 7 killed"), the steps behind you and the
   one at hand, and a job's pay and a progress bar. Finished quests are listed after, faded.

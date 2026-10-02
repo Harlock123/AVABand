@@ -170,6 +170,8 @@ public sealed partial class MainWindowViewModel
         try
         {
             AttachGame(_saves.Load(_data, path));
+            // Carried on from a save, it's the character "the same character" means now (not whoever was made last).
+            if (_game.Player.DailyDate is null && SpecOf(_game) is { } spec) RememberCharacter(spec);
             AddMessage($"Welcome back, {_game.Player.Name} the {_game.Player.Race?.Name} {_game.Player.Class?.Name}.");
             Refresh();
             return true;
