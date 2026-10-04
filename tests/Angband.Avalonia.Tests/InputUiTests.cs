@@ -207,4 +207,51 @@ public class InputUiTests
         window.KeyReleaseQwerty(PhysicalKey.ArrowDown, RawInputModifiers.None);
         Assert.Equal(from + new Angband.Core.Geometry.Loc(1, 0), vm.Game.Player.Position);
     }
+
+    /// <summary>
+    /// Two arrows together answer "Direction?" diagonally too — disarming, opening, closing, tunnelling,
+    /// aiming — not only when walking (a keyboard with no keypad has no other diagonal arrows).
+    /// </summary>
+    [AvaloniaFact]
+    public void Up_and_Right_together_answer_a_direction_prompt_diagonally()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760, ArrowClock = () => TimeSpan.Zero };
+        window.Show();
+        TestKit.OpenGround(vm);
+        var game = vm.Game;
+        var ne = game.Player.Position + new Angband.Core.Geometry.Loc(1, -1);
+        var messages = new List<string>();
+        game.Events.Subscribe<Angband.Core.Game.MessageEvent>(m => messages.Add(m.Text));
+
+        // A trap to the north-east: D, then Up and Right together.
+        game.Level[ne].Trap = game.Data.Traps.First(t => !t.Warding && t.Id != "rune").Index;
+        game.Level[ne].Flags |= Angband.Core.World.SquareFlags.TrapVisible;
+        window.KeyPressQwerty(PhysicalKey.D, RawInputModifiers.Shift);
+        Assert.True(vm.IsAwaitingDirection);
+        window.KeyPressQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+        Assert.True(vm.IsAwaitingDirection);                                    // (the first arrow waits for a partner)
+        window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.ArrowRight, RawInputModifiers.None);
+        Assert.False(vm.IsAwaitingDirection);
+        Assert.DoesNotContain(messages, m => m.Contains("nothing there to disarm", StringComparison.OrdinalIgnoreCase));
+        Assert.True(game.Level[ne].Trap == 0 || messages.Count > 0, string.Join(" | ", messages)); // (the north-east trap was what it went for)
+        Assert.True(messages.Any(m => m.StartsWith("You have disarmed", StringComparison.Ordinal) || m.StartsWith("You failed", StringComparison.Ordinal)
+                                      || m.StartsWith("You set off", StringComparison.Ordinal) || m.StartsWith("You clear", StringComparison.Ordinal)), string.Join(" | ", messages));
+
+        // And a single arrow still answers straight.
+        var north = game.Player.Position + new Angband.Core.Geometry.Loc(0, -1);
+        game.Level[north].Trap = game.Data.Traps.First(t => !t.Warding && t.Id != "rune").Index;
+        game.Level[north].Flags |= Angband.Core.World.SquareFlags.TrapVisible;
+        messages.Clear();
+        window.KeyPressQwerty(PhysicalKey.D, RawInputModifiers.Shift);
+        window.KeyPressQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+        window.KeyReleaseQwerty(PhysicalKey.ArrowUp, RawInputModifiers.None);
+        Assert.False(vm.IsAwaitingDirection);
+        Assert.DoesNotContain(messages, m => m.Contains("nothing there to disarm", StringComparison.OrdinalIgnoreCase));
+    }
 }

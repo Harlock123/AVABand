@@ -1873,7 +1873,9 @@ the context action, or a game command.
 - **Arrow-key diagonals** (`Angband.Input/ArrowChord.cs`; option *Two arrow keys held together
   move diagonally*, on): Up and Right together step north-east, as the gamepad's D-pad does. A lone
   arrow waits 50 ms for a partner (letting go sooner moves at once), and held keys keep repeating —
-  diagonally while both are down. Only plain arrows bound to movement, at the command prompt.
+  diagonally while both are down. Only plain arrows bound to movement, at the command prompt and
+  at "Direction?" (disarm, open, close, tunnel, aim — once only at the command prompt, so a keyboard
+  without a keypad couldn't disarm a trap on a diagonal).
 - **Keysets**: AVABand's own keys are the default (arrows, the keypad and `hjklyubn` move; the
   commands are mostly Angband's original letters). Angband 4.2's two keysets are a click away —
   Settings → Controls → *Angband keys* (the original set: `l` look, `t` take off, `T` tunnel, `z`

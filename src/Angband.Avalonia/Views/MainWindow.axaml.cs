@@ -588,8 +588,11 @@ public partial class MainWindow : Window
             return;
         }
 
-        // Two arrow keys held together move diagonally (plain arrows, at the command prompt, as bound by default).
-        if (e.KeyModifiers == KeyModifiers.None && ArrowKeyDirection(e.Key) is { } arrow && !_replaying && vm.IsAtCommandPrompt && !vm.IsShowingTitle
+        // Two arrow keys held together move diagonally (plain arrows, as bound by default) — at the command
+        // prompt, and at "Direction?" too (disarm, open, close, tunnel, aim), where a keyboard with no keypad
+        // has no other way to give a diagonal.
+        if (e.KeyModifiers == KeyModifiers.None && ArrowKeyDirection(e.Key) is { } arrow && !_replaying
+            && (vm.IsAtCommandPrompt || vm.IsAwaitingDirection) && !vm.IsShowingTitle
             && !vm.IsEnteringCount && vm.OptionValue(DisplayOptions.ArrowDiagonals)
             && vm.Bindings.ForKey(e.Key.ToString()) == InputActions.FromDirection(arrow))
         {

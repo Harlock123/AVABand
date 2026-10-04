@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-04
 
+- **Fixed: two arrows together now answer "Direction?" diagonally** — disarming, opening, closing,
+  tunnelling or aiming at a diagonal square — not only when walking. (Without a keypad there was no
+  other way to give a diagonal there.)
 - **Buy back what you sold**: in a shop, **Ctrl+Z** takes back the last thing you sold, and **Tab**
   after the selling list shows everything sold on this visit, to buy back by its letter at the price
   you were paid (free, with "no selling" on). The list is cleared when you leave.
