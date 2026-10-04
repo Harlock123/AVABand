@@ -239,7 +239,7 @@ public sealed partial class GameSession
     private void OpenStoreAfterAsking(string shopId, bool greet = true)
     {
         if (!_stores.TryGetValue(shopId, out var store) || Level.FeatureAt(Player.Position).Shop != shopId) return;
-        Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+        BeginShopVisit(store);
         if (greet) GreetInShop(store);
     }
 

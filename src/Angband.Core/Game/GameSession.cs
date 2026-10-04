@@ -231,6 +231,7 @@ public sealed partial class GameSession : ITurnHandler
             EnterStoreCommand => EnterStore(),
             QuestChoiceCommand qc => ChooseQuest(qc.Choice),
             LeaveStoreCommand => LeaveStore(),
+            BuybackCommand back => BuyBack(back.Index),
             BuyCommand buy => Buy(buy.Item, buy.Count),
             SellCommand sell => Sell(sell.Item, sell.Count),
             StudyCommand study => Study(study.SpellId, study.Book),
@@ -398,7 +399,7 @@ public sealed partial class GameSession : ITurnHandler
             {
                 if (!QuestAtShop(shopId))
                 {
-                    Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+                    BeginShopVisit(store);
                     GreetInShop(store);
                 }
             }

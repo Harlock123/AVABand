@@ -41,6 +41,11 @@ public sealed partial class MainWindowViewModel
 
     [ObservableProperty] private bool _isInStore;
     [ObservableProperty] private bool _storeSellMode;
+    /// <summary>The buy-back list (AVABand's own): what you've sold on this visit, to buy back.</summary>
+    [ObservableProperty] private bool _storeBuybackMode;
+
+    /// <summary>Whether there's anything to buy back here (Tab then shows the list after selling).</summary>
+    public bool CanBuyBack => IsInStore && _game.Buyback.Count > 0;
     [ObservableProperty] private string _storeTitle = "";
     [ObservableProperty] private string _storeSubtitle = "";
     [ObservableProperty] private int _storeSelectedIndex;
@@ -49,7 +54,11 @@ public sealed partial class MainWindowViewModel
     /// The pane heading. Under birth_no_selling (on by default, as in Angband 4.2) the shops pay
     /// nothing, so — like 4.2's "Give which item?" — selling is called giving, and says why.
     /// </summary>
-    public string StoreModeText => _game.StoreHere?.IsHome == true
+    public string StoreModeText => StoreBuybackMode
+        ? "Buy back what you sold here (letter to buy it back, at the price you were paid; Ctrl+Z the last; Tab to buy)"
+        : PaneText + (StoreSellMode && CanBuyBack ? $" · {_game.Buyback.Count} to buy back: Tab, or Ctrl+Z for the last" : "");
+
+    private string PaneText => _game.StoreHere?.IsHome == true
         ? (StoreSellMode ? "Your belongings (letter to store, Tab for the home)" : "In your home (letter to take, Tab to store)")
         : _game.NoSelling
             ? (StoreSellMode
@@ -61,12 +70,32 @@ public sealed partial class MainWindowViewModel
     {
         IsInStore = true;
         StoreSellMode = false;
+        StoreBuybackMode = false;
         StoreSelectedIndex = 0;
         RefreshStore();
         if (ScreenReaderOn)
             Announce($"{StoreTitle}. {StoreSubtitle}. {StoreModeText}. {StoreRows.Count} {(StoreRows.Count == 1 ? "thing" : "things")}."
                      + (HasStoreService ? $" Service on offer: {StoreServiceLabel}, press !." : "")
                      + (StoreRows.FirstOrDefault() is { } first ? " " + first.Spoken : ""));
+    }
+
+    partial void OnStoreBuybackModeChanged(bool value)
+    {
+        StoreSelectedIndex = 0;
+        RefreshStore();
+    }
+
+    /// <summary>Ctrl+Z in a shop: buys back the last thing sold here, if there is one.</summary>
+    public void UndoLastSale()
+    {
+        if (!IsInStore) return;
+        if (_game.Buyback.Count == 0)
+        {
+            LastMessage = "You haven't sold anything here to buy back.";
+            return;
+        }
+        Execute(new BuybackCommand(_game.Buyback.Count - 1));
+        RefreshStore();
     }
 
     partial void OnStoreSellModeChanged(bool value)
@@ -117,6 +146,13 @@ public sealed partial class MainWindowViewModel
     {
         if (_game.StoreHere is not { } store) return;
         var item = row.Item;
+        if (StoreBuybackMode)
+        {
+            // A thing sold here goes back whole, as it was sold.
+            Execute(new BuybackCommand(StoreRows.IndexOf(row)));
+            RefreshStore();
+            return;
+        }
         if (StoreSellMode && row.IsEquipped)
         {
             // What you have on never goes at a keypress: ask first.
@@ -180,7 +216,14 @@ public sealed partial class MainWindowViewModel
                 if (StoreRows.ElementAtOrDefault(StoreSelectedIndex) is { } row) Transact(row, all: false);
                 break;
             case InputAction.SwitchPane or InputAction.Fire:
-                StoreSellMode = !StoreSellMode;
+                // Buy → sell → (buy back, if there's anything to) → buy.
+                if (StoreBuybackMode) StoreBuybackMode = false;
+                else if (StoreSellMode && CanBuyBack)
+                {
+                    StoreSellMode = false;
+                    StoreBuybackMode = true;
+                }
+                else StoreSellMode = !StoreSellMode;
                 break;
             case InputAction.Inspect:
                 if (StoreRows.ElementAtOrDefault(StoreSelectedIndex) is { } seen) AddMessage(Inspect(seen.Item));
@@ -208,6 +251,31 @@ public sealed partial class MainWindowViewModel
                 : $"{store.Owner?.Name ?? "The shopkeeper"}  ·  You have {_game.Player.Gold} gold"
                   + (_game.NoSelling ? "  ·  Shops pay nothing (birth option \"no selling\"): gold in the dungeon is increased instead" : "");
 
+        if (StoreBuybackMode && _game.Buyback.Count == 0)
+        {
+            // All bought back: back to selling.
+            StoreBuybackMode = false;
+            StoreSellMode = true;
+            return;
+        }
+        if (StoreBuybackMode)
+        {
+            var back = _game.Buyback;
+            for (var i = 0; i < back.Count && i < 26; i++)
+            {
+                var entry = back[i];
+                var item = entry.Item;
+                var flavor = _game.Knowledge.Flavor(item.Kind);
+                StoreRows.Add(new StoreRow(((char)('a' + i)).ToString(), item.Base.Glyph.ToString(),
+                    _cells.Color(flavor?.Color ?? item.Kind.Color ?? item.Base.Color), _game.Describe(item),
+                    entry.Price > 0 ? $"{entry.Price} gold" : "free",
+                    string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", item.Weight / 10.0), item));
+            }
+            StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
+            OnPropertyChanged(nameof(StoreModeText));
+            OnPropertyChanged(nameof(CanBuyBack));
+            return;
+        }
         var items = StoreSellMode
             ? _game.Player.Inventory.Pack.Concat(_game.Player.Inventory.Quiver).Concat(_game.Player.Inventory.Equipped)
                 .Where(i => _game.StoreWillBuy(store, i)).ToList()
@@ -236,6 +304,7 @@ public sealed partial class MainWindowViewModel
         }
         StoreSelectedIndex = Math.Clamp(StoreSelectedIndex, 0, Math.Max(0, StoreRows.Count - 1));
         OnPropertyChanged(nameof(StoreModeText));
+        OnPropertyChanged(nameof(CanBuyBack));
         OnPropertyChanged(nameof(StoreServiceLabel));
         OnPropertyChanged(nameof(HasStoreService));
     }

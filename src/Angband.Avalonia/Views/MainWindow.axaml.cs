@@ -686,6 +686,13 @@ public partial class MainWindow : Window
         }
 
         // In a store, ! asks for the shop's service (AVABand's gem removal, identifying).
+        // Ctrl+Z in a shop: buy back the last thing sold (AVABand's own).
+        if (vm.IsInStore && !vm.IsConfirming && e.Key == Key.Z && e.KeyModifiers == KeyModifiers.Control)
+        {
+            vm.UndoLastSale();
+            e.Handled = true;
+            return;
+        }
         if (!ctrlOrAlt && vm.IsInStore && !vm.IsConfirming && KeyboardInput.Symbol(e) == "!")
         {
             vm.OpenStoreServices();

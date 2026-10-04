@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-04
 
+- **Buy back what you sold**: in a shop, **Ctrl+Z** takes back the last thing you sold, and **Tab**
+  after the selling list shows everything sold on this visit, to buy back by its letter at the price
+  you were paid (free, with "no selling" on). The list is cleared when you leave.
 - **Shop lists are striped**: every other row is a shade lighter, so it's easy to follow an item's
   name across to its price and weight.
 - **Pick up a whole pile with `a`**: standing on a pile and pressing `g`, the first choice, `a)`, is

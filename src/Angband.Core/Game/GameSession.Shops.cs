@@ -376,13 +376,14 @@ public sealed partial class GameSession
             StockStaples(store);
             SortStock(store);
         }
-        Publish(new ShopEnteredEvent(store.Id, store.IsHome));
+        BeginShopVisit(store);
         GreetInShop(store);
         return 0;
     }
 
     private int LeaveStore()
     {
+        _buyback.Clear();
         if (StoreHere is { } store) Publish(new ShopLeftEvent(store.Id));
         return 0;
     }
@@ -484,7 +485,12 @@ public sealed partial class GameSession
             // Everything about it becomes known to the store (and the player: Angband learns the runes on a sale).
             Knowledge.LearnKind(sold.Kind);
             foreach (var rune in sold.Runes()) Knowledge.LearnRune(rune);
-            if (StoreCarry(store, sold) is null && sold.Artifact is { } art) LoseArtifact(art); // the store threw it away
+            var asSold = sold.Clone(sold.Serial, sold.Number); // (for the buy-back list: as it was, before the shop tops it up)
+            var before = store.Stock.FirstOrDefault(s => s.CanStackWith(sold))?.Number ?? 0;
+            var pile = StoreCarry(store, sold);
+            if (pile is null && sold.Artifact is { } art) LoseArtifact(art); // the store threw it away
+            else if (pile is not null)
+                RecordSale(store, asSold, price, pile, pile.Number - (ReferenceEquals(pile, sold) ? 0 : before), sold.Kind.Charges is null ? 0 : sold.Charges);
         }
         SortStock(store);
         Player.Gold += price;

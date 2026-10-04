@@ -323,6 +323,51 @@ public class StoreUiTests
         Assert.Equal(had + 8, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
     }
 
+    /// <summary>
+    /// AVABand's own: a slip of the finger undone. What's sold on this visit is listed after the selling
+    /// pane (Tab), to buy back by its letter, and Ctrl+Z takes back the last thing sold.
+    /// </summary>
+    [AvaloniaFact]
+    public void ASale_CanBeBoughtBack_FromItsOwnList_OrWithCtrlZ()
+    {
+        var (window, vm, game) = OpenAt("alchemist");
+        int Scrolls() => game.Player.Inventory.Pack.Where(i => i.Kind.Id == "phase_door").Sum(i => i.Number);
+        var had = Scrolls();
+        vm.HandleAction(InputAction.SwitchPane);                                    // selling
+        Assert.False(vm.CanBuyBack);
+        var row = vm.StoreRows.First(r => r.Item.Kind.Id == "phase_door");
+        vm.StoreTransact(row.Letter[0], all: false);                                // (one of them: no question)
+        if (vm.IsEnteringNumber) window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.Equal(had - 1, Scrolls());
+        Assert.True(vm.CanBuyBack);
+        Assert.Contains("to buy back", vm.StoreModeText);
+
+        vm.HandleAction(InputAction.SwitchPane);                                    // selling → buying back
+        Assert.True(vm.StoreBuybackMode);
+        var back = Assert.Single(vm.StoreRows);
+        Assert.Equal("free", back.Price);
+        TileRenderingTests.Save(window, "store-buyback");
+        window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
+        Assert.Equal(had, Scrolls());
+        Assert.False(vm.StoreBuybackMode);                                          // all bought back: selling again
+        Assert.True(vm.StoreSellMode);
+
+        // Ctrl+Z: the last sale, at once.
+        row = vm.StoreRows.First(r => r.Item.Kind.Id == "phase_door");
+        vm.StoreTransact(row.Letter[0], all: false);
+        if (vm.IsEnteringNumber) window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+        Assert.Equal(had - 1, Scrolls());
+        window.KeyPressQwerty(PhysicalKey.Z, RawInputModifiers.Control);
+        Assert.Equal(had, Scrolls());
+        window.KeyPressQwerty(PhysicalKey.Z, RawInputModifiers.Control);
+        Assert.Equal("You haven't sold anything here to buy back.", vm.LastMessage);
+
+        // Tab with nothing to buy back: selling → buying, as before.
+        vm.HandleAction(InputAction.SwitchPane);
+        Assert.False(vm.StoreSellMode);
+        Assert.False(vm.StoreBuybackMode);
+    }
+
     /// <summary>Every other row of a shop's list a shade lighter, so a name is easy to follow across to its price.</summary>
     [AvaloniaFact]
     public void TheShopsRows_AreStriped()
@@ -361,7 +406,9 @@ public class StoreUiTests
         Assert.Equal(0, Flasks());                                        // the whole stack sold
         Assert.True(vm.IsInStore);
 
-        // Buying: A takes as many as there are (and you can pay for).
+        // Buying: A takes as many as there are (and you can pay for). (Tab goes by the buy-back list first, after a sale.)
+        vm.HandleAction(InputAction.SwitchPane);
+        Assert.True(vm.StoreBuybackMode);
         vm.HandleAction(InputAction.SwitchPane);
         game.Player.Gold = 100_000;
         row = vm.StoreRows.First(r => r.Item.Kind.Id == "flask_of_oil");

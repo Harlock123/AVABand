@@ -56,6 +56,9 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   hint worth hearing). Buy a few **Flasks of Oil** to
   throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. Buying
   or selling more than one, you're asked how many: type a number and Enter, or `a` for all of them.
+  Sold something by mistake? **Ctrl+Z** buys back the last thing you sold, and **Tab** after the selling
+  list shows everything you've sold on this visit, to buy back at what you were paid (nothing, with
+  "no selling" on). The list is cleared when you leave the shop.
   The Home (8) keeps whatever you leave there. Under each piece of armour or weapon a line says how it
   compares with what you have ("Better", "Worse" or "Mixed", in green, red or amber), and arrows, shots
   and bolts say whether they fit your launcher. Inspecting something in your pack, or looking at it

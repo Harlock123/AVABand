@@ -321,7 +321,7 @@
             </DockPanel>
           </StackPanel>
           <TextBlock DockPanel.Dock="Bottom" Margin="0,10,0,0" Foreground="#888" FontSize="11" TextWrapping="Wrap"
-                     Text="letter: one · Shift+letter: whole stack · Tab (pad X): buy/sell · arrows + Enter (pad A) · I: examine · !: the shop's service · Esc (pad B): leave" />
+                     Text="letter: one · Shift+letter: whole stack · Tab (pad X): buy/sell/buy back · Ctrl+Z: buy back the last sale · arrows + Enter (pad A) · I: examine · !: the shop's service · Esc (pad B): leave" />
           <!-- The rows take no clicks (the keys choose), but the list does, so the mouse wheel scrolls it. -->
           <ListBox x:Name="StoreList" ItemsSource="{Binding StoreRows}" SelectedIndex="{Binding StoreSelectedIndex, Mode=OneWay}"
                    Focusable="False" Background="Transparent">

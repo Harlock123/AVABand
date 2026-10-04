@@ -715,7 +715,11 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
     a legitimate 4.2 game, so the character is still scored.
   - Bought items are fully known. The home stores up to 24 stacks.
   Walk onto an entrance (or press `_` / Confirm on it) to open the store screen (every other row a shade
-  lighter, AVABand's own, so a name is easy to follow across to its price): a letter buys or
+  lighter, AVABand's own, so a name is easy to follow across to its price; and a **buy-back list**, AVABand's own,
+  `GameSession.Buyback.cs`: what you sell is kept as it was sold for as long as you stay — Tab after the selling
+  pane lists it, a letter buys it back at the price you were paid (free under "no selling"), Ctrl+Z takes back
+  the last sale; it comes out of the shop's stock again, without the shop's top-up of fuel or charges, and the
+  list is cleared on leaving): a letter buys or
   sells, asking "Quantity (1-N)?" as Angband does when there is more than one to have (Enter for
   one, or type a number, or AVABand's own `a` for all of them; on the controller up/down change it
   by one, right/left by ten, A takes it), Shift+letter the whole stack at once, Tab (pad X) switches buying/selling, Esc (pad B) leaves.

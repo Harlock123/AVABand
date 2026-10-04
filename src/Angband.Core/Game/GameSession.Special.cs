@@ -248,7 +248,7 @@ public sealed partial class GameSession
     {
         if (PlayerShape is not { } shape) return false;
         if (command is not (UseCommand or ActivateCommand or WieldCommand or TakeOffCommand or ThrowCommand
-            or FireCommand or CastCommand or StudyCommand or RefuelCommand or BuyCommand or SellCommand)) return false;
+            or FireCommand or CastCommand or StudyCommand or RefuelCommand or BuyCommand or SellCommand or BuybackCommand)) return false;
         Publish(new MessageEvent($"You cannot do this while in {shape.Name} form."));
         return true;
     }
