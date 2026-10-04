@@ -284,7 +284,7 @@
       <Border x:Name="PeekFrame" IsVisible="{Binding IsPeeking}" BorderBrush="#d9b45a" BorderThickness="2" IsHitTestVisible="False">
         <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,8,0,0" Padding="10,3" Background="#D0201810"
                 BorderBrush="#d9b45a" BorderThickness="1" CornerRadius="4">
-          <TextBlock Text="Looking around — let go of Ctrl (or the mouse button, or the stick) to come back" Foreground="#f0dca0" FontSize="12.5" />
+          <TextBlock Text="{Binding PeekHint}" Foreground="#f0dca0" FontSize="12.5" />
         </Border>
       </Border>
 

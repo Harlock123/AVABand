@@ -37,9 +37,10 @@
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,
   `W` scroll the map (locate), Ctrl+L centre it on you (handy with *Center map continuously* off).
-- **Look around the map** without moving: hold **Ctrl** (**Cmd** on a Mac) and press or hold the
-  arrows (two together go diagonally), the keypad or Home/End/PgUp/PgDn — or drag with the middle
-  mouse button, or push the gamepad's right stick. The view slides over what you've seen of the
+- **Look around the map** without moving: hold **Ctrl** or **Alt** (on a Mac, **Option** — macOS
+  keeps Ctrl+arrows for itself) and press or hold the arrows (two together go diagonally), the keypad
+  or Home/End/PgUp/PgDn — or hold **Shift** and scroll (two fingers on a trackpad), drag with the
+  middle mouse button, or push the gamepad's right stick. The view slides over what you've seen of the
   level, lit a little brighter, with a marker in the middle and the top line naming what's there.
   Let go and it comes back to you. Nothing moves and no time passes.
 - `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home, your history — show only your notes, levels, uniques or artifacts, find lines by their words, and add a note — and Upgrades: what you have that would suit you better), `=` options, Ctrl+P message history, Ctrl+J the quest log, F11 full screen.

@@ -126,8 +126,9 @@ public sealed class InputBindings
         K(InputAction.CenterMap, "Ctrl+L");
         // The map menu and the hotbar cursor, for keyboards too (Alt+digit uses a slot directly).
         K(InputAction.ContextMenu, "Char:&");
-        K(InputAction.HotbarPrevious, "Alt+Left");
-        K(InputAction.HotbarNext, "Alt+Right");
+        // (Alt+[ and Alt+]: Alt with the arrows looks around the map, AVABand's own)
+        K(InputAction.HotbarPrevious, "Alt+OemOpenBrackets");
+        K(InputAction.HotbarNext, "Alt+OemCloseBrackets");
         K(InputAction.HotbarUse, "Alt+Enter");
         K(InputAction.DescribeSurroundings, "Ctrl+Shift+D");
         K(InputAction.ShowTrail, "Ctrl+B");
@@ -273,6 +274,7 @@ public sealed class InputBindings
                 Keymaps = new Dictionary<string, string>(loaded.Keymaps ?? [], StringComparer.Ordinal),
             };
             bindings.MoveHelpToQuestionMark();
+            bindings.MoveHotbarStepsOffAltArrows();
             bindings.AddMissingDefaults();
             return bindings;
         }
@@ -291,6 +293,25 @@ public sealed class InputBindings
         if (Keys.GetValueOrDefault("Char:?") == InputAction.ShowCommands && Keys.GetValueOrDefault("F1") == InputAction.ShowCommands
             && !Keys.ContainsValue(InputAction.Help))
             Keys["Char:?"] = InputAction.Help;
+    }
+
+    /// <summary>
+    /// Bindings saved when Alt+Left/Alt+Right stepped along the hotbar: those keys now look around the
+    /// map (Alt, like Ctrl, with the arrows), so the hotbar's steps move to Alt+[ and Alt+] — unless
+    /// the player has put something else on those.
+    /// </summary>
+    public void MoveHotbarStepsOffAltArrows()
+    {
+        foreach (var (old, action, now) in new[]
+                 {
+                     ("Alt+Left", InputAction.HotbarPrevious, "Alt+OemOpenBrackets"),
+                     ("Alt+Right", InputAction.HotbarNext, "Alt+OemCloseBrackets"),
+                 })
+        {
+            if (Keys.GetValueOrDefault(old) != action) continue;
+            Keys.Remove(old);
+            if (!Keys.ContainsKey(now)) Keys[now] = action;
+        }
     }
 
     /// <summary>

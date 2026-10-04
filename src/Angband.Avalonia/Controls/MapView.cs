@@ -117,6 +117,12 @@ public sealed class MapView : Control
     /// <summary>The middle button was let go (or the drag lost): the view comes back.</summary>
     public event Action? PanEnded;
 
+    /// <summary>Squares a notch of the wheel slides the view, with Shift held.</summary>
+    public const double WheelPanSquares = 3;
+
+    /// <summary>Shift-wheel movement not yet a whole square (a trackpad's small steps add up).</summary>
+    private (double X, double Y) _wheelPan;
+
     /// <summary>Where a middle-button drag last moved the view from, while one is under way.</summary>
     private Point? _panFrom;
 
@@ -196,8 +202,21 @@ public sealed class MapView : Control
         PointerExited += (_, _) => Hover(null);
         PointerWheelChanged += (_, e) =>
         {
-            Zoom?.Invoke(Math.Sign(e.Delta.Y));
             e.Handled = true;
+            if ((e.KeyModifiers & global::Avalonia.Input.KeyModifiers.Shift) != 0)
+            {
+                // Shift with the wheel (or two fingers on a trackpad) looks around (AVABand's own): a notch
+                // slides the view three squares, a trackpad's small steps add up; letting go of Shift ends it.
+                // (Shift turns a wheel sideways on some systems: either way, either axis.)
+                _wheelPan = (_wheelPan.X - e.Delta.X * WheelPanSquares, _wheelPan.Y - e.Delta.Y * WheelPanSquares);
+                var (dx, dy) = ((int)_wheelPan.X, (int)_wheelPan.Y);
+                if (dx == 0 && dy == 0) return;
+                _wheelPan = (_wheelPan.X - dx, _wheelPan.Y - dy);
+                Pan?.Invoke(dx, dy);
+                return;
+            }
+            _wheelPan = (0, 0);
+            Zoom?.Invoke(Math.Sign(e.Delta.Y));
         };
     }
 

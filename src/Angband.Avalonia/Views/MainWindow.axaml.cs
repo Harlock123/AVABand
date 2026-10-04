@@ -52,7 +52,12 @@ public partial class MainWindow : Window
         {
             // Looking around ends when Ctrl (Cmd on a Mac) is let go.
             _peekArrows.Remove(e.Key);
-            if (e.Key is Key.LeftCtrl or Key.RightCtrl or Key.LWin or Key.RWin) (DataContext as MainWindowViewModel)?.EndPeek();
+            if (e.Key is Key.LeftCtrl or Key.RightCtrl or Key.LWin or Key.RWin or Key.LeftAlt or Key.RightAlt or Key.LeftShift or Key.RightShift
+                && DataContext is MainWindowViewModel { IsPeeking: true } peeking)
+            {
+                peeking.EndPeek();
+                e.Handled = true; // (letting go of Alt after looking doesn't open the menu bar)
+            }
             if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, ArrowClock());
             (DataContext as MainWindowViewModel)?.SceneKeyReleased(e.Key.ToString());
             if (e.Key == _runKey) _runKey = null;
@@ -501,12 +506,12 @@ public partial class MainWindow : Window
     private readonly HashSet<Key> _peekArrows = [];
 
     /// <summary>
-    /// The way a key looks around: Ctrl (or Cmd) and nothing else held with an arrow, a keypad
+    /// The way a key looks around: Ctrl, Alt or Cmd (one, and nothing else) held with an arrow, a keypad
     /// direction, or Home/End/PgUp/PgDn (the keypad's diagonals); null for any other key.
     /// </summary>
     private Angband.Core.Geometry.Direction? PeekDirection(KeyEventArgs e)
     {
-        if (e.KeyModifiers is not (KeyModifiers.Control or KeyModifiers.Meta)) return null;
+        if (e.KeyModifiers is not (KeyModifiers.Control or KeyModifiers.Meta or KeyModifiers.Alt)) return null;
         if (ArrowKeyDirection(e.Key) is not null)
         {
             _peekArrows.Add(e.Key);
@@ -594,8 +599,8 @@ public partial class MainWindow : Window
             return;
         }
 
-        // Looking around (AVABand's own): Ctrl — Cmd on a Mac — with the arrows (two together go diagonally),
-        // the keypad or Home/End/PgUp/PgDn slides the view over the map; letting go of Ctrl brings it back.
+        // Looking around (AVABand's own): Ctrl or Alt (Cmd or Option on a Mac) with the arrows (two together go
+        // diagonally), the keypad or Home/End/PgUp/PgDn slides the view over the map; letting go brings it back.
         if (PeekDirection(e) is { } look && !_replaying && (vm.IsAtCommandPrompt || vm.IsPeeking) && !vm.IsShowingTitle)
         {
             vm.Peek(look);

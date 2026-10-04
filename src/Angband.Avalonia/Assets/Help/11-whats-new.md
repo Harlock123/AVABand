@@ -5,10 +5,12 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-03
 
-- **Look around the map without moving**: hold **Ctrl** (**Cmd** on a Mac) and use the arrows or the
-  keypad — or drag with the middle mouse button, or push a gamepad's right stick — and the view
+- **Look around the map without moving**: hold **Ctrl** or **Alt** (**Option** on a Mac) and use the
+  arrows or the keypad — or hold **Shift** and scroll (two fingers on a trackpad), drag with the
+  middle mouse button, or push a gamepad's right stick — and the view
   slides over what you've explored, lit a little brighter, with a marker and the top line naming
-  what's under it. Let go, and it's back on you.
+  what's under it. Let go, and it's back on you. (The hotbar's step keys move from Alt+←/→ to
+  **Alt+[** and **Alt+]**.)
 - **The quest satchel**: quest items — shards, keys, journal pages, the palantír — no longer take
   slots in your pack. They're listed under their own heading, *Quest satchel*, after your inventory
   (their weight still counts).

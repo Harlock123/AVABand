@@ -105,4 +105,49 @@ public class PeekUiTests
         Assert.False(vm.IsPeeking);
         Assert.Equal(me, vm.Game.Player.Position);
     }
+
+    /// <summary>Alt (Option on a Mac) works as Ctrl does — macOS keeps Ctrl+arrows, and a VM's Cmd is Super.</summary>
+    [AvaloniaFact]
+    public void AltArrows_LookAround_Too_AndTheHotbarStepsMoveToAltBrackets()
+    {
+        var (window, vm) = Open();
+        var me = vm.Game.Player.Position;
+        window.KeyPressQwerty(PhysicalKey.ArrowLeft, RawInputModifiers.Alt);
+        Assert.True(vm.IsPeeking);
+        Assert.Equal(Math.Max(0, me.X - MainWindowViewModel.PeekStep), vm.PeekCentre.X);
+        Assert.DoesNotContain(vm.HotbarSlots, h => h.Selected);              // (no longer the hotbar's step)
+        window.KeyReleaseQwerty(PhysicalKey.ArrowLeft, RawInputModifiers.Alt);
+        window.KeyReleaseQwerty(PhysicalKey.AltLeft, RawInputModifiers.None);
+        Assert.False(vm.IsPeeking);
+
+        window.KeyPressQwerty(PhysicalKey.BracketRight, RawInputModifiers.Alt); // Alt+] steps along the hotbar now
+        Assert.True(vm.HotbarSlots[1].Selected);
+        window.KeyPressQwerty(PhysicalKey.BracketLeft, RawInputModifiers.Alt);  // and Alt+[ back
+        Assert.True(vm.HotbarSlots[0].Selected);
+    }
+
+    /// <summary>Shift with the wheel — two fingers on a trackpad — looks around; letting go of Shift comes back.</summary>
+    [AvaloniaFact]
+    public void ShiftWheel_LooksAround_AndPlainWheelStillZooms()
+    {
+        var (window, vm) = Open();
+        var map = window.GetVisualDescendants().OfType<MapView>().First();
+        var middle = map.TranslatePoint(new Point(map.Bounds.Width / 2, map.Bounds.Height / 2), window)!.Value;
+        var me = vm.Game.Player.Position;
+        window.MouseWheel(middle, new Vector(0, -1), RawInputModifiers.Shift);  // a notch down: the view goes south
+        Assert.True(vm.IsPeeking);
+        Assert.Equal(Math.Min(vm.Game.Level.Height - 1, me.Y + 3), vm.PeekCentre.Y);
+        window.MouseWheel(middle, new Vector(0, 0.2), RawInputModifiers.Shift); // a trackpad's small step: not yet a square
+        Assert.Equal(Math.Min(vm.Game.Level.Height - 1, me.Y + 3), vm.PeekCentre.Y);
+        window.MouseWheel(middle, new Vector(0.5, 0.2), RawInputModifiers.Shift); // they add up (and sideways works)
+        Assert.Equal(Math.Min(vm.Game.Level.Height - 1, me.Y + 2), vm.PeekCentre.Y);
+        Assert.Equal(Math.Max(0, me.X - 1), vm.PeekCentre.X);
+        window.KeyReleaseQwerty(PhysicalKey.ShiftLeft, RawInputModifiers.None);
+        Assert.False(vm.IsPeeking);
+
+        var zoom = vm.MapFontSize;
+        window.MouseWheel(middle, new Vector(0, 1), RawInputModifiers.None);
+        Assert.False(vm.IsPeeking);
+        Assert.NotEqual(zoom, vm.MapFontSize);
+    }
 }

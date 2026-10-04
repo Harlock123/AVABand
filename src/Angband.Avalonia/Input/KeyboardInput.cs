@@ -35,6 +35,8 @@ public static class KeyboardInput
         Key.PageUp => "PageUp",
         Key.PageDown => "PageDown",
         Key.CapsLock => "CapsLock",
+        Key.OemOpenBrackets => "OemOpenBrackets", // (the same key as Oem4, whose name ToString may give)
+        Key.OemCloseBrackets => "OemCloseBrackets", // (and Oem6)
         _ => key.ToString(),
     };
 

@@ -3,8 +3,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Angband.Avalonia.ViewModels;
 
-// AVABand's own: looking around the map without moving. Hold Ctrl (Cmd on a Mac) with the arrows or
-// the keypad, drag with the middle mouse button, or push the gamepad's right stick, and the view slides
+// AVABand's own: looking around the map without moving. Hold Ctrl or Alt (Cmd or Option on a Mac) with
+// the arrows or the keypad, hold Shift and turn the wheel (or scroll with two fingers on a trackpad), drag
+// with the middle mouse button, or push the gamepad's right stick, and the view slides
 // over what you've seen of the level — the remembered squares lit a little brighter while you look,
 // a marker at the view's centre and the status line naming what's there. Let go, and it comes back to
 // you. Nothing moves and no time passes.
@@ -18,6 +19,9 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>Looking around: the view is away from you (the map draws a border and a marker).</summary>
     [ObservableProperty] private bool _isPeeking;
+
+    /// <summary>The label over the map while looking around.</summary>
+    public string PeekHint => "Looking around — let go (of Ctrl, Alt or Shift, the mouse button or the stick) to come back";
 
     /// <summary>The square at the middle of the view while looking around.</summary>
     public Loc PeekCentre => _peekCentre;

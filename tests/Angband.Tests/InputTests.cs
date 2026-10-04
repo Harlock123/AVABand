@@ -459,4 +459,29 @@ public class InputTests
         Assert.Equal(1, ended);
         Assert.Empty(actions);                                                  // the player never moved
     }
+
+    /// <summary>Alt+Left/Right look around the map now; the hotbar's steps are Alt+[ and Alt+], saved bindings moved along.</summary>
+    [Fact]
+    public void TheHotbarSteps_AreAltBrackets_AndSavedAltArrowsMoveThere()
+    {
+        var defaults = InputBindings.Defaults();
+        Assert.Equal(InputAction.HotbarPrevious, defaults.ForKey("Alt+OemOpenBrackets"));
+        Assert.Equal(InputAction.HotbarNext, defaults.ForKey("Alt+OemCloseBrackets"));
+        Assert.Equal(InputAction.None, defaults.ForKey("Alt+Left"));
+
+        var saved = InputBindings.Defaults();
+        saved.Keys.Remove("Alt+OemOpenBrackets");
+        saved.Keys.Remove("Alt+OemCloseBrackets");
+        saved.Keys["Alt+Left"] = InputAction.HotbarPrevious;
+        saved.Keys["Alt+Right"] = InputAction.HotbarNext;
+        saved.MoveHotbarStepsOffAltArrows();
+        Assert.Equal(InputAction.HotbarPrevious, saved.ForKey("Alt+OemOpenBrackets"));
+        Assert.Equal(InputAction.None, saved.ForKey("Alt+Left"));
+
+        // A player's own choice for those keys is left alone.
+        var chosen = InputBindings.Defaults();
+        chosen.Keys["Alt+Left"] = InputAction.Look;
+        chosen.MoveHotbarStepsOffAltArrows();
+        Assert.Equal(InputAction.Look, chosen.ForKey("Alt+Left"));
+    }
 }
