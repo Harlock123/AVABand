@@ -435,4 +435,28 @@ public class InputTests
             File.Delete(path);
         }
     }
+
+    /// <summary>AVABand's own: the right stick looks around the map, again and again while held; let go and it's over.</summary>
+    [Fact]
+    public void TheRightStick_LooksAround_RepeatingWhileHeld()
+    {
+        var (mapper, actions) = Pad();
+        var looks = new List<Angband.Core.Geometry.Direction>();
+        var ended = 0;
+        mapper.Peek += looks.Add;
+        mapper.PeekEnded += () => ended++;
+        var t = TimeSpan.Zero;
+        mapper.RightStick(0.1, 0.1, t);                                        // inside the dead zone: nothing
+        Assert.Empty(looks);
+        mapper.RightStick(0.9, 0, t);
+        Assert.Equal([Angband.Core.Geometry.Direction.East], looks);
+        mapper.Tick(t + GamepadMapper.PeekInterval);
+        mapper.Tick(t + GamepadMapper.PeekInterval * 2);
+        Assert.Equal(3, looks.Count);
+        mapper.RightStick(0, -0.9, t + GamepadMapper.PeekInterval * 2);         // turned north
+        Assert.Equal(Angband.Core.Geometry.Direction.North, looks[^1]);
+        mapper.RightStick(0, 0, t + GamepadMapper.PeekInterval * 3);
+        Assert.Equal(1, ended);
+        Assert.Empty(actions);                                                  // the player never moved
+    }
 }

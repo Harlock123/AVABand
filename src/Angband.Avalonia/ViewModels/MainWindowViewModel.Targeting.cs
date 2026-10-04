@@ -32,7 +32,7 @@ public sealed partial class MainWindowViewModel
     public Monster? LookedAt => IsLooking && _game.Level.Monsters.At(_cursor) is { IsVisible: true } m ? m : null;
 
     /// <summary>Where the cursor is (for drawing), when looking or targeting.</summary>
-    public Loc? Cursor => IsLooking ? _cursor : null;
+    public Loc? Cursor => IsPeeking ? _peekCentre : IsLooking ? _cursor : null;
 
     /// <summary>The current target (for drawing), when it is valid.</summary>
     public Loc? Target => OptionValue(DisplayOptions.ShowTarget) ? _game.TargetPosition() : null;

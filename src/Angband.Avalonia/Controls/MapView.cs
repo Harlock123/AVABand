@@ -111,6 +111,15 @@ public sealed class MapView : Control
     /// <summary>A map square was clicked; the flag is true for the secondary (right) button.</summary>
     public event Action<Angband.Core.Geometry.Loc, bool>? CellClicked;
 
+    /// <summary>A middle-button drag moved the map by so many squares (the view's centre goes the other way).</summary>
+    public event Action<int, int>? Pan;
+
+    /// <summary>The middle button was let go (or the drag lost): the view comes back.</summary>
+    public event Action? PanEnded;
+
+    /// <summary>Where a middle-button drag last moved the view from, while one is under way.</summary>
+    private Point? _panFrom;
+
     /// <summary>Mouse wheel: positive to zoom in, negative to zoom out.</summary>
     public event Action<int>? Zoom;
 
@@ -141,6 +150,14 @@ public sealed class MapView : Control
         {
             if (Source is null || _camera.Cell.Width <= 0) return;
             var p = e.GetPosition(this);
+            if (e.GetCurrentPoint(this).Properties.IsMiddleButtonPressed)
+            {
+                // A middle-button drag looks around the map (AVABand's own).
+                _panFrom = p;
+                e.Pointer.Capture(this);
+                e.Handled = true;
+                return;
+            }
             var x = _camera.OffsetX + (int)Math.Floor((p.X - _camera.OriginX) / _camera.Cell.Width);
             var y = _camera.OffsetY + (int)Math.Floor((p.Y - _camera.OriginY) / _camera.Cell.Height);
             if (x < 0 || y < 0 || x >= Source.Width || y >= Source.Height) return;
@@ -148,7 +165,34 @@ public sealed class MapView : Control
             CellClicked?.Invoke(new Angband.Core.Geometry.Loc(x, y), secondary);
             e.Handled = true;
         };
-        PointerMoved += (_, e) => Hover(CellAt(e.GetPosition(this)));
+        PointerMoved += (_, e) =>
+        {
+            if (_panFrom is { } from && _camera.Cell.Width > 0)
+            {
+                // The map follows the mouse: dragging right shows what lies to the west.
+                var p = e.GetPosition(this);
+                var dx = (int)((from.X - p.X) / _camera.Cell.Width);
+                var dy = (int)((from.Y - p.Y) / _camera.Cell.Height);
+                if (dx == 0 && dy == 0) return;
+                _panFrom = new Point(from.X - dx * _camera.Cell.Width, from.Y - dy * _camera.Cell.Height);
+                Pan?.Invoke(dx, dy);
+                return;
+            }
+            Hover(CellAt(e.GetPosition(this)));
+        };
+        PointerReleased += (_, e) =>
+        {
+            if (_panFrom is null || e.InitialPressMouseButton != global::Avalonia.Input.MouseButton.Middle) return;
+            _panFrom = null;
+            e.Pointer.Capture(null);
+            PanEnded?.Invoke();
+        };
+        PointerCaptureLost += (_, _) =>
+        {
+            if (_panFrom is null) return;
+            _panFrom = null;
+            PanEnded?.Invoke();
+        };
         PointerExited += (_, _) => Hover(null);
         PointerWheelChanged += (_, e) =>
         {

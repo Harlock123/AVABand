@@ -32,6 +32,8 @@ public partial class MainWindow : Window
             map.AddHandler(PointerPressedEvent, (_, e) => _mapPress = e.GetPosition(this.FindControl<Panel>("Overlay")),
                 RoutingStrategies.Tunnel, handledEventsToo: true);
             map.CellHovered += loc => (DataContext as MainWindowViewModel)?.HoverCell(loc);
+            map.Pan += (dx, dy) => (DataContext as MainWindowViewModel)?.PeekBy(dx, dy);
+            map.PanEnded += () => (DataContext as MainWindowViewModel)?.EndPeek();
             map.Zoom += delta =>
             {
                 if (DataContext is not MainWindowViewModel vm) return;
@@ -48,12 +50,20 @@ public partial class MainWindow : Window
         });
         AddHandler(KeyUpEvent, (_, e) =>
         {
+            // Looking around ends when Ctrl (Cmd on a Mac) is let go.
+            _peekArrows.Remove(e.Key);
+            if (e.Key is Key.LeftCtrl or Key.RightCtrl or Key.LWin or Key.RWin) (DataContext as MainWindowViewModel)?.EndPeek();
             if (ArrowKeyDirection(e.Key) is { } arrow) _arrowChord.Up(arrow, ArrowClock());
             (DataContext as MainWindowViewModel)?.SceneKeyReleased(e.Key.ToString());
             if (e.Key == _runKey) _runKey = null;
         }, RoutingStrategies.Tunnel, handledEventsToo: true);
         Deactivated += (_, _) => (DataContext as MainWindowViewModel)?.SceneKeyReleased(null);
         Deactivated += (_, _) => _arrowChord.Reset();
+        Deactivated += (_, _) =>
+        {
+            _peekArrows.Clear();
+            (DataContext as MainWindowViewModel)?.EndPeek();
+        };
         // Shift held shows the travel route under the mouse: follow it from keys and pointer alike.
         AddHandler(KeyDownEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: true), RoutingStrategies.Tunnel, handledEventsToo: true);
         AddHandler(KeyUpEvent, (_, e) => TrackShift(e.KeyModifiers, e.Key, down: false), RoutingStrategies.Tunnel, handledEventsToo: true);
@@ -487,6 +497,38 @@ public partial class MainWindow : Window
     /// <summary>The clock two-arrow diagonals are timed by (tests hold it still, so a slow machine can't split a pair).</summary>
     public Func<TimeSpan> ArrowClock { get; set; } = () => ArrowStopwatch.Elapsed;
 
+    /// <summary>The arrow keys held while looking around (two together go diagonally).</summary>
+    private readonly HashSet<Key> _peekArrows = [];
+
+    /// <summary>
+    /// The way a key looks around: Ctrl (or Cmd) and nothing else held with an arrow, a keypad
+    /// direction, or Home/End/PgUp/PgDn (the keypad's diagonals); null for any other key.
+    /// </summary>
+    private Angband.Core.Geometry.Direction? PeekDirection(KeyEventArgs e)
+    {
+        if (e.KeyModifiers is not (KeyModifiers.Control or KeyModifiers.Meta)) return null;
+        if (ArrowKeyDirection(e.Key) is not null)
+        {
+            _peekArrows.Add(e.Key);
+            var (dx, dy) = (0, 0);
+            foreach (var held in _peekArrows)
+                if (ArrowKeyDirection(held) is { } d) (dx, dy) = (dx + Angband.Core.Geometry.DirectionExtensions.Offset(d).X, dy + Angband.Core.Geometry.DirectionExtensions.Offset(d).Y);
+            return dx == 0 && dy == 0 ? null : Angband.Core.Geometry.DirectionExtensions.FromOffset(Math.Sign(dx), Math.Sign(dy));
+        }
+        return e.Key switch
+        {
+            Key.NumPad8 => Angband.Core.Geometry.Direction.North,
+            Key.NumPad2 => Angband.Core.Geometry.Direction.South,
+            Key.NumPad4 => Angband.Core.Geometry.Direction.West,
+            Key.NumPad6 => Angband.Core.Geometry.Direction.East,
+            Key.NumPad7 or Key.Home => Angband.Core.Geometry.Direction.NorthWest,
+            Key.NumPad9 or Key.PageUp => Angband.Core.Geometry.Direction.NorthEast,
+            Key.NumPad1 or Key.End => Angband.Core.Geometry.Direction.SouthWest,
+            Key.NumPad3 or Key.PageDown => Angband.Core.Geometry.Direction.SouthEast,
+            _ => null,
+        };
+    }
+
     private static Angband.Core.Geometry.Direction? ArrowKeyDirection(Key key) => key switch
     {
         Key.Up => Angband.Core.Geometry.Direction.North,
@@ -548,6 +590,15 @@ public partial class MainWindow : Window
         {
             _arrowChord.Down(arrow, ArrowClock());
             if (_arrowChord.IsWaiting) _arrowTimer.Start();
+            e.Handled = true;
+            return;
+        }
+
+        // Looking around (AVABand's own): Ctrl — Cmd on a Mac — with the arrows (two together go diagonally),
+        // the keypad or Home/End/PgUp/PgDn slides the view over the map; letting go of Ctrl brings it back.
+        if (PeekDirection(e) is { } look && !_replaying && (vm.IsAtCommandPrompt || vm.IsPeeking) && !vm.IsShowingTitle)
+        {
+            vm.Peek(look);
             e.Handled = true;
             return;
         }

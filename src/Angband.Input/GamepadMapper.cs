@@ -107,6 +107,11 @@ public sealed class GamepadMapper(InputBindings bindings)
     /// <summary>Call regularly (e.g. every frame) so held directions repeat.</summary>
     public void Tick(TimeSpan now)
     {
+        if (_peekDirection is { } look && now >= _nextPeek)
+        {
+            _nextPeek = now + PeekInterval;
+            Peek?.Invoke(look);
+        }
         if (_runAt is { } runAt && now >= runAt)
         {
             // The grace is over: run whichever way is held now (let go by now, and it's off).
@@ -133,21 +138,50 @@ public sealed class GamepadMapper(InputBindings bindings)
                 case InputAction.MoveEast: dx++; break;
             }
         }
-        if (dx == 0 && dy == 0)
+        if (dx == 0 && dy == 0) return StickDirection(_stickX, _stickY);
+        return DirectionExtensions.FromOffset(dx, dy);
+    }
+
+    /// <summary>A stick's direction, snapped to one of eight 45-degree sectors; null inside the dead zone.</summary>
+    public static Direction? StickDirection(double x, double y)
+    {
+        if (Math.Sqrt(x * x + y * y) < StickDeadZone) return null;
+        var sector = (int)Math.Round(Math.Atan2(y, x) / (Math.PI / 4));
+        var (dx, dy) = (((sector % 8) + 8) % 8) switch
         {
-            var magnitude = Math.Sqrt(_stickX * _stickX + _stickY * _stickY);
-            if (magnitude < StickDeadZone) return null;
-            // Snap the stick angle to one of eight 45-degree sectors.
-            var angle = Math.Atan2(_stickY, _stickX);
-            var sector = (int)Math.Round(angle / (Math.PI / 4));
-            var octant = ((sector % 8) + 8) % 8;
-            (dx, dy) = octant switch
-            {
-                0 => (1, 0), 1 => (1, 1), 2 => (0, 1), 3 => (-1, 1),
-                4 => (-1, 0), 5 => (-1, -1), 6 => (0, -1), _ => (1, -1),
-            };
+            0 => (1, 0), 1 => (1, 1), 2 => (0, 1), 3 => (-1, 1),
+            4 => (-1, 0), 5 => (-1, -1), 6 => (0, -1), _ => (1, -1),
+        };
+        return DirectionExtensions.FromOffset(dx, dy);
+    }
+
+    // --- The right stick looks around the map (AVABand's own) ------------------------------------
+
+    /// <summary>How often a held right stick slides the view another step.</summary>
+    public static readonly TimeSpan PeekInterval = TimeSpan.FromMilliseconds(110);
+
+    private Direction? _peekDirection;
+    private TimeSpan _nextPeek;
+
+    /// <summary>The right stick slides the view this way (again and again while it's held).</summary>
+    public event Action<Direction>? Peek;
+
+    /// <summary>The right stick was let go: the view comes back.</summary>
+    public event Action? PeekEnded;
+
+    /// <summary>Right stick position, each axis -1..1 (y down is positive, as SDL reports it).</summary>
+    public void RightStick(double x, double y, TimeSpan now)
+    {
+        var dir = StickDirection(x, y);
+        if (dir == _peekDirection) return;
+        var was = _peekDirection;
+        _peekDirection = dir;
+        if (dir is { } d)
+        {
+            Peek?.Invoke(d);
+            _nextPeek = now + PeekInterval;
         }
-        return dx == 0 && dy == 0 ? null : DirectionExtensions.FromOffset(dx, dy);
+        else if (was is not null) PeekEnded?.Invoke();
     }
 
     private bool IsMovementButton(string button) =>

@@ -87,7 +87,7 @@ public sealed unsafe class SdlGamepadProvider : IInputProvider
         Mapper.Tick(now);
     }
 
-    private double _lx, _ly;
+    private double _lx, _ly, _rx, _ry;
 
     private void Axis(GameControllerAxis axis, short value, TimeSpan now)
     {
@@ -96,6 +96,8 @@ public sealed unsafe class SdlGamepadProvider : IInputProvider
         {
             case GameControllerAxis.Leftx: _lx = v; Mapper.LeftStick(_lx, _ly, now); break;
             case GameControllerAxis.Lefty: _ly = v; Mapper.LeftStick(_lx, _ly, now); break;
+            case GameControllerAxis.Rightx: _rx = v; Mapper.RightStick(_rx, _ry, now); break;
+            case GameControllerAxis.Righty: _ry = v; Mapper.RightStick(_rx, _ry, now); break;
             case GameControllerAxis.Triggerleft: Mapper.Trigger("LeftTrigger", Math.Max(0, v), now); break;
             case GameControllerAxis.Triggerright: Mapper.Trigger("RightTrigger", Math.Max(0, v), now); break;
         }

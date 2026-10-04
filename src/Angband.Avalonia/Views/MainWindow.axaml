@@ -280,6 +280,14 @@
       <LayoutTransformControl LayoutTransform="{Binding InterfaceTransform}">
       <Panel x:Name="Overlay">
 
+      <!-- Looking around (Ctrl+arrows, a middle-button drag, the right stick): a gold border and a word on how to come back. -->
+      <Border x:Name="PeekFrame" IsVisible="{Binding IsPeeking}" BorderBrush="#d9b45a" BorderThickness="2" IsHitTestVisible="False">
+        <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,8,0,0" Padding="10,3" Background="#D0201810"
+                BorderBrush="#d9b45a" BorderThickness="1" CornerRadius="4">
+          <TextBlock Text="Looking around — let go of Ctrl (or the mouse button, or the stick) to come back" Foreground="#f0dca0" FontSize="12.5" />
+        </Border>
+      </Border>
+
       <!-- Hover to look: what is under the mouse, at the foot of the map. -->
       <Border x:Name="HoverLabel" IsVisible="{Binding HoverText, Converter={x:Static ObjectConverters.IsNotNull}}"
               HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8" Padding="8,3"

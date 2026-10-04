@@ -71,7 +71,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     public int Width => _game.Level.Width;
     public int Height => _game.Level.Height;
     /// <summary>The camera follows the player, or a free-roaming cursor.</summary>
-    public Loc Focus => IsLocating ? _locateCentre : IsLooking && _cursorFree ? _cursor : _game.Player.Position;
+    public Loc Focus => IsPeeking ? _peekCentre : IsLocating ? _locateCentre : IsLooking && _cursorFree ? _cursor : _game.Player.Position;
 
     public MapCell GetCell(int x, int y)
     {
@@ -186,7 +186,8 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     {
         var level = _game.Level;
         ref var sq = ref level[x, y];
-        if (!sq.Has(SquareFlags.Seen)) return _game.Known.IsKnown(new Loc(x, y)) ? new MapShade(0.38f) : default;
+        // (remembered: dimmed — less so while looking around, so the rooms and halls read clearly)
+        if (!sq.Has(SquareFlags.Seen)) return _game.Known.IsKnown(new Loc(x, y)) ? new MapShade(IsPeeking ? 0.16f : 0.38f) : default;
         if (sq.Has(SquareFlags.Glow) || !sq.Has(SquareFlags.Lit)) return new MapShade(0.04f);
         var radius = Math.Max(1, _game.Player.LightRadius);
         var near = Math.Clamp(new Loc(x, y).DistanceTo(_game.Player.Position) / (radius + 0.75), 0, 1);

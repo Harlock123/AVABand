@@ -62,6 +62,12 @@ public partial class App : Application
             };
             // Through the window, so the B button can close dialogs and the game ignores the pad behind them.
             if (pad is not null) pad.ActionTriggered += mainWindow.HandleGamepadAction;
+            // The right stick looks around the map; let go and the view comes back.
+            if (pad is not null)
+            {
+                pad.Mapper.Peek += vm.Peek;
+                pad.Mapper.PeekEnded += vm.EndPeek;
+            }
             // Full screen from the start, unless turned off (F11) last time.
             if (vm.IsFullScreen) mainWindow.ApplyFullScreen(true);
             desktop.MainWindow = mainWindow;

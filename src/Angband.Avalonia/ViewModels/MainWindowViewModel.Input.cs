@@ -83,6 +83,7 @@ public sealed partial class MainWindowViewModel
     public void HandleAction(InputAction action)
     {
         if (action == InputAction.None) return;
+        EndPeek(); // (any command brings the view back first)
         if (HandleWaitingScene(action)) return;
         if (IsShowingTitle)
         {
