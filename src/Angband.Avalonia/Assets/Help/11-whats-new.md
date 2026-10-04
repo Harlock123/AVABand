@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-03
 
+- **Shopfronts in town**: every shop is painted its own colour, with windows either side of the door
+  showing its wares (the Home's are curtained), a striped awning over the street, its name on a board
+  over the roof, and at night lit windows and a lantern by the door. In letters, each shop's number
+  stands on its colour. Two options (*Shopfronts in town*, *Shop names over their doors in town*) turn
+  them off.
 - **Look around the map without moving**: hold **Ctrl** or **Alt** (**Option** on a Mac) and use the
   arrows or the keypad — or hold **Shift** and scroll (two fingers on a trackpad), drag with the
   middle mouse button, or push a gamepad's right stick — and the view

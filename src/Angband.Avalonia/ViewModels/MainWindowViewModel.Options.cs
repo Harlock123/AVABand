@@ -46,6 +46,8 @@ public static class DisplayOptions
     public const string LightAndShadow = "light_and_shadow";
     /// <summary>AVABand's own: sconces on the walls of lit rooms (so a lit room's walls tell from an unlit one's).</summary>
     public const string Sconces = "sconces_in_lit_rooms";
+    public const string Shopfronts = "shopfronts_in_town";
+    public const string ShopNames = "shop_names_in_town";
     /// <summary>AVABand's own: record every game as a replay (replays/ beside the saves).</summary>
     public const string RecordReplays = "record_replays";
     /// <summary>AVABand's own: the message area shows the two messages before the newest too.</summary>
@@ -86,6 +88,8 @@ public static class DisplayOptions
         new(ScenesWait, "Scenes stay until you press Space (off: they pass by themselves)", OptionKind.Interface, false),
         new(LightAndShadow, "Light and shadow on the map (torchlight fades and flickers)", OptionKind.Interface, true),
         new(Sconces, "Sconces on the walls of lit rooms", OptionKind.Interface, true),
+        new(Shopfronts, "Shopfronts in town (coloured, with windows, awnings and lanterns)", OptionKind.Interface, true),
+        new(ShopNames, "Shop names over their doors in town", OptionKind.Interface, true),
         new(RecordReplays, "Record every game as a replay", OptionKind.Interface, true),
         new(ThreeMessageLines, "Show three lines of messages (off: just the newest)", OptionKind.Interface, true),
         new(ArrowDiagonals, "Two arrow keys held together move diagonally", OptionKind.Interface, true),

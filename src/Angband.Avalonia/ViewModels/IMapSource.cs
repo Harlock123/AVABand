@@ -52,4 +52,10 @@ public interface IMapSource
     /// <summary>Light and shadow on the map, if on: how dark each square is drawn.</summary>
     bool LightAndShadow => false;
     MapShade ShadeAt(int x, int y) => default;
+    /// <summary>A shopfront part on a square in town (AVABand's own), drawn over it.</summary>
+    ShopFacade? FacadeAt(int x, int y) => null;
+    /// <summary>Shop names to hang over their doors in town.</summary>
+    IReadOnlyList<ShopSign> ShopSigns => [];
+    /// <summary>Night in town: windows glow and lanterns burn.</summary>
+    bool IsNight => false;
 }

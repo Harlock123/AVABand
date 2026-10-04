@@ -1267,6 +1267,15 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
     as a flame does; lit rooms stay steady; squares you remember but can't see now are drawn
     darker. It shades whatever the map shows, ASCII or tiles (a slow clock, ten times a second,
     runs the flicker while torchlit squares are on screen).
+  - **Shopfronts in town** (AVABand's own; the options *Shopfronts in town* and *Shop names over their
+    doors in town*, both on; `MainWindowViewModel.Shopfronts.cs`, drawn by `MapView` over any tileset or
+    the letters): each building tinted its shop's colour; the wall squares either side of the door, on the
+    street side, become windows — a wooden frame, glass, and the shop's wares as the tileset draws them
+    (oil and rations, a shield and mail, books, potions, wands and rings…; the Home's are curtained) —
+    with a striped awning over the street in the shop's colour; at night the windows glow amber and a
+    lantern burns by each door; each shop's name hangs on a board over its roof; and in letters a shop's
+    number stands in white on its colour. Worked out from the town as built (door, street, the block of
+    wall around it), so older saves' towns get it too.
   - **Sconces on lit rooms' walls** (AVABand's own; the option *Sconces on the walls of lit rooms*,
     on by default): every few squares along the inner wall of a naturally lit room, a brass sconce
     with a burning candle (a warm glow over the wall in ASCII), so a lit room tells at a glance from

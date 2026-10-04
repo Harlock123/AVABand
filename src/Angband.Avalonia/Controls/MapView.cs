@@ -344,6 +344,8 @@ public sealed class MapView : Control
         var shading = source.LightAndShadow;
         var anyTorch = false;
         var flicker = Flicker();
+        var night = source.IsNight;
+        List<(Rect Dest, ShopFacade Part)>? lit = null; // (windows and doors, lit again over the shading at night)
         for (var y = offsetY; y < endY; y++)
         for (var x = offsetX; x < endX; x++)
         {
@@ -351,6 +353,11 @@ public sealed class MapView : Control
             var mapCell = source.GetCell(x, y);
             renderer.DrawCell(context, dest, mapCell);
             if (mapCell.Sconce) DrawSconce(context, dest, shading ? flicker : 1);
+            if (!mapCell.IsUnknown && source.FacadeAt(x, y) is { } facade)
+            {
+                DrawFacade(context, dest, facade, renderer, night);
+                if (night && facade.Kind != FacadeKind.Wall) (lit ??= []).Add((dest, facade));
+            }
             anyTorch |= shading && mapCell.Sconce; // (its flame flickers with the torchlight)
             if (!shading || mapCell.IsUnknown) continue;
             var shade = source.ShadeAt(x, y);
@@ -360,7 +367,11 @@ public sealed class MapView : Control
             var amount = Math.Clamp(shade.Torch ? shade.Amount * (2 - flicker) : shade.Amount, 0, 1);
             if (amount > 0.01) context.FillRectangle(ShadeBrushes[(byte)(255 * amount)], dest);
         }
-        UpdateFlickerClock(shading && anyTorch);
+        // At night the shops' windows glow and their lanterns burn, over the dark.
+        if (lit is not null)
+            foreach (var (dest, part) in lit) DrawShopLight(context, dest, part, flicker);
+        UpdateFlickerClock(shading && (anyTorch || lit is not null));
+        DrawShopSigns(context, source, offsetX, offsetY, endX, endY, originX, originY, cell);
 
         // The target (red corners) and the look/target cursor (a yellow box), over the map.
         Rect? CellRect(Angband.Core.Geometry.Loc p) =>
@@ -408,6 +419,141 @@ public sealed class MapView : Control
     private static readonly IBrush SconceBrass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xA8, 0x7A, 0x30));
     private static readonly IBrush SconceFlame = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0x8C, 0x20));
     private static readonly IBrush SconceCore = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0xE8, 0x90));
+
+    // --- Shopfronts in town (AVABand's own) -------------------------------------------------------
+
+    private static readonly IBrush FrameBrush = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0x3A, 0x26, 0x14));
+    private static readonly IBrush DayGlass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0xE0, 0xA8, 0xBC, 0xC8));
+    private static readonly IBrush NightGlass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0xF0, 0xE8, 0xA8, 0x50));
+    private static readonly IBrush AsciiDayGlass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0x70, 0x6A, 0x84, 0x96));
+    private static readonly IBrush AsciiNightGlass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0x90, 0xB0, 0x78, 0x30));
+    private static readonly IBrush Curtain = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0x8A, 0x2A, 0x2A));
+    private static readonly IBrush Canvas = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xEF, 0xE4, 0xC8));
+    private static readonly IPen MullionPen = new global::Avalonia.Media.Immutable.ImmutablePen(
+        new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0xC0, 0x3A, 0x26, 0x14)), 1);
+    private static readonly IBrush WindowGlow = new RadialGradientBrush
+    {
+        GradientStops = { new GradientStop(Color.FromArgb(0x60, 0xFF, 0xC0, 0x60), 0), new GradientStop(Color.FromArgb(0x00, 0xFF, 0xC0, 0x60), 1) },
+    }.ToImmutable();
+    private static readonly Dictionary<uint, IBrush> ShopBrushes = [];
+
+    private static IBrush ShopBrush(uint argb)
+    {
+        lock (ShopBrushes)
+        {
+            if (!ShopBrushes.TryGetValue(argb, out var brush))
+                ShopBrushes[argb] = brush = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromUInt32(argb));
+            return brush;
+        }
+    }
+
+    /// <summary>
+    /// A shopfront square: its building's walls tinted the shop's colour; a window (a wooden frame, glass
+    /// lit amber at night, the shop's ware behind it — or the Home's curtains); and over the street side
+    /// of the windows and the door, a striped awning in the shop's colour.
+    /// </summary>
+    private static void DrawFacade(DrawingContext context, Rect cell, ShopFacade part, IMapRenderer renderer, bool night)
+    {
+        if (part.Kind == FacadeKind.Wall)
+        {
+            context.FillRectangle(ShopBrush((part.Colour & 0x00FFFFFF) | 0x3C000000), cell);
+            return;
+        }
+        if (renderer is AsciiRenderer)
+        {
+            // In letters a window is its glass and the ware's symbol, and the awning is left out (too fine at this size).
+            if (part.Kind != FacadeKind.Window) return;
+            context.FillRectangle(night ? AsciiNightGlass : AsciiDayGlass, cell);
+            if (part.Ware is { } letter) renderer.DrawCell(context, cell, letter);
+            else context.FillRectangle(Curtain, cell.Deflate(cell.Width * 0.2));
+            return;
+        }
+        if (part.Kind == FacadeKind.Window)
+        {
+            var w = cell.Width;
+            context.FillRectangle(FrameBrush, cell.Deflate(w * 0.08));
+            var glass = cell.Deflate(w * 0.16);
+            context.FillRectangle(night ? NightGlass : DayGlass, glass);
+            if (part.Ware is { } ware) renderer.DrawCell(context, glass.Deflate(w * 0.05), ware);
+            else
+            {
+                // The Home: curtains drawn.
+                context.FillRectangle(Curtain, new Rect(glass.X, glass.Y, glass.Width * 0.42, glass.Height));
+                context.FillRectangle(Curtain, new Rect(glass.Right - glass.Width * 0.42, glass.Y, glass.Width * 0.42, glass.Height));
+            }
+            context.DrawLine(MullionPen, new Point(glass.Center.X, glass.Top), new Point(glass.Center.X, glass.Bottom));
+        }
+        DrawAwning(context, cell, part);
+    }
+
+    /// <summary>A striped awning along the street side of a square, in the shop's colour and canvas white.</summary>
+    private static void DrawAwning(DrawingContext context, Rect cell, ShopFacade part)
+    {
+        const double depth = 0.24;
+        const int stripes = 4;
+        var colour = ShopBrush(part.Colour);
+        if (part.StreetY != 0)
+        {
+            var h = cell.Height * depth;
+            var y = part.StreetY > 0 ? cell.Bottom - h : cell.Top;
+            var sw = cell.Width / stripes;
+            for (var i = 0; i < stripes; i++)
+                context.FillRectangle(i % 2 == 0 ? colour : Canvas, new Rect(cell.X + i * sw, y, sw, h));
+        }
+        else
+        {
+            var wd = cell.Width * depth;
+            var x = part.StreetX > 0 ? cell.Right - wd : cell.Left;
+            var sh = cell.Height / stripes;
+            for (var i = 0; i < stripes; i++)
+                context.FillRectangle(i % 2 == 0 ? colour : Canvas, new Rect(x, cell.Y + i * sh, wd, sh));
+        }
+    }
+
+    /// <summary>At night: a window's warm light spilling out, and a lantern burning beside each door.</summary>
+    private static void DrawShopLight(DrawingContext context, Rect cell, ShopFacade part, double flicker)
+    {
+        var (w, h) = (cell.Width, cell.Height);
+        if (part.Kind == FacadeKind.Window)
+        {
+            var glow = new Rect(cell.X - w * 0.6 + part.StreetX * w * 0.5, cell.Y - h * 0.6 + part.StreetY * h * 0.5, w * 2.2, h * 2.2);
+            using (context.PushOpacity(0.55 + 0.25 * flicker)) context.FillRectangle(WindowGlow, glow);
+            return;
+        }
+        // The lantern hangs at the street-side corner of the door.
+        var lx = cell.X + (part.StreetX != 0 ? (part.StreetX > 0 ? w * 0.92 : w * 0.08) : w * 0.86);
+        var ly = cell.Y + (part.StreetY != 0 ? (part.StreetY > 0 ? h * 0.9 : h * 0.1) : h * 0.18);
+        var r = w * (1.05 + 0.15 * flicker);
+        context.FillRectangle(SconceGlow, new Rect(lx - r, ly - r, r * 2, r * 2));
+        context.FillRectangle(SconceBrass, new Rect(lx - w * 0.07, ly - h * 0.1, w * 0.14, h * 0.2));
+        context.DrawEllipse(SconceFlame, null, new Point(lx, ly), w * 0.05, h * (0.07 + 0.02 * flicker));
+    }
+
+    /// <summary>Each shop's name, on a small board over its roof just behind the door, in its colour.</summary>
+    private static void DrawShopSigns(DrawingContext context, IMapSource source, int offsetX, int offsetY, int endX, int endY,
+        double originX, double originY, Size cell)
+    {
+        var signs = source.ShopSigns;
+        if (signs.Count == 0) return;
+        var size = Math.Clamp(cell.Height * 0.42, 10, 18);
+        foreach (var sign in signs)
+        {
+            if (sign.Door.X < offsetX - 4 || sign.Door.X >= endX + 4 || sign.Door.Y < offsetY - 2 || sign.Door.Y >= endY + 2) continue;
+            var text = new FormattedText(sign.Name, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                SignFace, size, SignText);
+            // Over the roof, clear of the door: back from the street by a square and a bit (and, beside a door
+            // that faces sideways, by half the board's width too).
+            var cx = originX + (sign.Door.X - offsetX + 0.5) * cell.Width - sign.StreetX * (cell.Width * 0.9 + text.Width / 2 + 6);
+            var cy = originY + (sign.Door.Y - offsetY + 0.5) * cell.Height - sign.StreetY * (cell.Height * 0.75 + text.Height / 2 + 2);
+            var board = new Rect(cx - text.Width / 2 - 6, cy - text.Height / 2 - 2, text.Width + 12, text.Height + 4);
+            context.DrawRectangle(SignBoard, new Pen(ShopBrush(sign.Colour), 1.5), board, 3, 3);
+            context.DrawText(text, new Point(board.X + 6, board.Y + 2));
+        }
+    }
+
+    private static readonly Typeface SignFace = new("avares://AVABand/Assets/Fonts#Cinzel");
+    private static readonly IBrush SignBoard = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromArgb(0xE6, 0x1C, 0x14, 0x0C));
+    private static readonly IBrush SignText = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xF3, 0xE6, 0xC4));
 
     private static void DrawSconce(DrawingContext context, Rect cell, double flicker)
     {

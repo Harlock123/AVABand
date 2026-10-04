@@ -51,7 +51,8 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   options. If you are new, a Human or Dwarf **Warrior** is the forgiving choice. *Compare races*
   sets every race side by side: stat changes, hit die, experience and what each can do (click one
   to choose it).
-- **Shop in town**: walk onto a shop's number (1–8) to go in (9 is the Prancing Pony, the inn; 0 the Arcane Artificer, who cuts sockets for gems) (the keeper may greet you, or pass on a
+- **Shop in town**: each shop is painted its own colour, with its wares in its windows, a striped
+  awning, its name over the roof, and a lantern lit by the door at night. Walk onto a shop's number (1–8) to go in (9 is the Prancing Pony, the inn; 0 the Arcane Artificer, who cuts sockets for gems) (the keeper may greet you, or pass on a
   hint worth hearing). Buy a few **Flasks of Oil** to
   throw (`v`), **Potions of Cure Light Wounds**, and **Scrolls of Phase Door** to get away. Buying
   or selling more than one, you're asked how many: type a number and Enter, or `a` for all of them.

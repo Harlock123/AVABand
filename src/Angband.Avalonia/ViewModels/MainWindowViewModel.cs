@@ -85,6 +85,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
                 ? _cells.Monster(Hallucination(_data.Monsters, p), terrain)
                 : _cells.Monster(monster.Race, terrain, MapCellBuilder.HasRareLook(monster.Id, level.Seed));
         if (terrain.IsUnknown) return terrain;
+        if (level.Depth == 0) terrain = ShopDoorLetters(terrain, p);
 
         ref var sq = ref level[x, y];
         if (ShowWholeMap || sq.Has(SquareFlags.Seen))
