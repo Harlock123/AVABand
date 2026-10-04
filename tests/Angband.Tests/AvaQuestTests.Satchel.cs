@@ -1,4 +1,7 @@
+using System.IO.Compression;
+using System.Text.Json.Nodes;
 using Angband.Core.Game;
+using Angband.Core.Persistence;
 using Angband.Core.Quests;
 
 namespace Angband.Tests;
@@ -98,4 +101,50 @@ public partial class AvaQuestTests
         q.Choose($"board:collect:{job.Id}");
         Assert.Equal(2, game.Player.Inventory.Pack.Where(i => i.Kind.Id == job.Target).Sum(i => i.Number)); // one taken, two kept
     }
+
+    /// <summary>
+    /// A save from before the satchel: its pack in the old order, a quest item among the potions and
+    /// scrolls, and every slot full. Loaded, the quest items move to the satchel and give their slots back.
+    /// </summary>
+    [Fact]
+    public void An_older_saves_quest_items_go_into_the_satchel_on_loading()
+    {
+        var q = Start();
+        var inv = q.Game.Player.Inventory;
+        foreach (var kind in new[] { "shard_of_the_hilt", "journal_page" }) inv.Add(q.Game.Objects.Create(kind));
+        foreach (var kind in q.Game.Data.Objects.Where(k => k.Base is "scroll" or "potion").Take(40))
+            if (inv.SlotsUsed < inv.PackSize) inv.Add(q.Game.Objects.Create(kind.Id));
+
+        // Write it, then put the quest items back where the old order had them (by base: "quest" before
+        // "scroll"), as a save made before the satchel would.
+        using var stream = new MemoryStream();
+        SaveGame.Save(q.Game, stream);
+        stream.Position = 0;
+        JsonNode file;
+        using (var unzip = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true)) file = JsonNode.Parse(unzip)!;
+        var pack = FindArray(file, "Pack")!;
+        var quest = pack.Where(n => n!["Kind"]?.GetValue<string>() is "shard_of_the_hilt" or "journal_page").ToList();
+        Assert.Equal(2, quest.Count);
+        foreach (var n in quest) pack.Remove(n);
+        var firstScroll = pack.Select((n, i) => (n, i)).First(t => t.n!["Kind"]!.GetValue<string>().StartsWith("scroll", StringComparison.Ordinal)
+                                                                   || q.Game.Data.Object(t.n["Kind"]!.GetValue<string>())?.Base == "scroll").i;
+        foreach (var n in quest) pack.Insert(firstScroll, n!.DeepClone());
+        var old = new MemoryStream();
+        using (var zip = new GZipStream(old, CompressionLevel.Fastest, leaveOpen: true))
+        using (var writer = new System.Text.Json.Utf8JsonWriter(zip)) file.WriteTo(writer);
+        old.Position = 0;
+
+        var loaded = SaveGame.Load(TestData.Game, old).Player.Inventory;
+        Assert.Equal(["journal_page", "shard_of_the_hilt"], loaded.Satchel.Select(i => i.Kind.Id).Order());
+        Assert.All(loaded.Pack.TakeLast(2), i => Assert.True(i.IsQuestItem));     // moved to the end
+        Assert.Equal(inv.SlotsUsed, loaded.SlotsUsed);                             // and taking no slots
+        Assert.True(loaded.SlotsUsed <= loaded.PackSize);
+    }
+
+    private static JsonArray? FindArray(JsonNode? node, string name) => node switch
+    {
+        JsonObject o => o.Select(kv => kv.Key == name && kv.Value is JsonArray a ? a : FindArray(kv.Value, name)).FirstOrDefault(a => a is not null),
+        JsonArray arr => arr.Select(n => FindArray(n, name)).FirstOrDefault(a => a is not null),
+        _ => null,
+    };
 }
