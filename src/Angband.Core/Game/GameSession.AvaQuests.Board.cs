@@ -8,7 +8,8 @@ namespace Angband.Core.Game;
 // The Prancing Pony's notice board: five postings at a time — hunt so many of a monster, bring so
 // many of a thing found in the dungeon (never one the shops sell), a bounty on a unique you could
 // face, or scouting a depth no deeper than a few levels past your deepest — renewed whenever you come
-// back up to town. All five can be taken at once; hunts count from when they're taken, and the pay is collected
+// back up to town. All five can be taken at once. A "bring" job counts what's carried and what's
+// in the Home, and can be handed in a little at a time (Progress counts what Butterbur has had); hunts count from when they're taken, and the pay is collected
 // at the inn.
 public sealed partial class GameSession
 {
@@ -95,16 +96,57 @@ public sealed partial class GameSession
         "hunt" => $"{JobTitle(job)} ({job.Progress} so far), for {job.Reward} gold at the Prancing Pony.",
         "bounty" => $"{JobTitle(job)} ({(job.Progress > 0 ? "done" : $"found about {Data.Monster(job.Target)?.Depth * Data.Constants.FeetPerLevel} ft")}), for {job.Reward} gold at the Prancing Pony.",
         "scout" => $"{JobTitle(job)} ({(JobComplete(job) ? "done" : $"deepest so far {Player.MaxDepth * Data.Constants.FeetPerLevel} ft")}), for {job.Reward} gold at the Prancing Pony.",
-        _ => $"{JobTitle(job)} to the Prancing Pony ({Math.Min(CarriedCount(job.Target), job.Count)} carried), for {job.Reward} gold.",
+        _ => $"{JobTitle(job)} to the Prancing Pony ({GatherSoFar(job)}), for {job.Reward} gold.",
     };
 
     private int CarriedCount(string kindId) => Player.Inventory.Pack.Where(i => i.Kind.Id == kindId).Sum(i => i.Number);
+
+    /// <summary>How many of a kind lie in the Home.</summary>
+    private int AtHome(string kindId) => HomeStock?.Where(i => i.Kind.Id == kindId).Sum(i => i.Number) ?? 0;
+
+    private List<Item>? HomeStock => _stores.Values.FirstOrDefault(s => s.IsHome)?.Stock;
+
+    /// <summary>A "bring" job's things to hand: carried, and in the Home.</summary>
+    public int GatherOnHand(BoardJob job) => CarriedCount(job.Target) + AtHome(job.Target);
+
+    /// <summary>"2 brought in, 1 carried, 1 at home" (the parts there are).</summary>
+    private string GatherSoFar(BoardJob job)
+    {
+        var parts = new List<string>();
+        if (job.Progress > 0) parts.Add($"{job.Progress} brought in");
+        if (CarriedCount(job.Target) is > 0 and var carried) parts.Add($"{carried} carried");
+        if (AtHome(job.Target) is > 0 and var home) parts.Add($"{home} at home");
+        return parts.Count == 0 ? "none yet" : string.Join(", ", parts);
+    }
+
+    /// <summary>Takes up to <paramref name="wanted"/> of a job's things, from the pack first, then the Home; how many it took.</summary>
+    private int TakeForJob(BoardJob job, int wanted)
+    {
+        var left = wanted;
+        foreach (var stack in Player.Inventory.Pack.Where(i => i.Kind.Id == job.Target).ToList())
+        {
+            if (left == 0) break;
+            var take = Math.Min(left, stack.Number);
+            Player.Inventory.Remove(stack, take, () => Objects.NextSerial++);
+            left -= take;
+        }
+        if (HomeStock is { } home)
+            foreach (var stack in home.Where(i => i.Kind.Id == job.Target).ToList())
+            {
+                if (left == 0) break;
+                var take = Math.Min(left, stack.Number);
+                if (take == stack.Number) home.Remove(stack);
+                else stack.Number -= take;
+                left -= take;
+            }
+        return wanted - left;
+    }
 
     private bool JobComplete(BoardJob job) => job.Kind switch
     {
         "hunt" or "bounty" => job.Progress >= job.Count,
         "scout" => Player.MaxDepth >= job.Count,
-        _ => CarriedCount(job.Target) >= job.Count,
+        _ => job.Progress + GatherOnHand(job) >= job.Count,
     };
 
     private void ShowBoard()
@@ -140,24 +182,33 @@ public sealed partial class GameSession
                 ShowBoard();
                 break;
             case "collect" when job.Taken && JobComplete(job):
-                if (job.Kind == "gather")
+                if (job.Kind == "gather") job.Progress += TakeForJob(job, job.Count - job.Progress);
+                PayJob(job);
+                break;
+            case "deliver" when job.Taken && job.Kind == "gather" && job.Progress < job.Count && GatherOnHand(job) > 0:
+            {
+                var given = TakeForJob(job, job.Count - job.Progress);
+                job.Progress += given;
+                if (job.Progress >= job.Count)
                 {
-                    var left = job.Count;
-                    foreach (var stack in Player.Inventory.Pack.Where(i => i.Kind.Id == job.Target).ToList())
-                    {
-                        var take = Math.Min(left, stack.Number);
-                        Player.Inventory.Remove(stack, take, () => Objects.NextSerial++);
-                        left -= take;
-                        if (left == 0) break;
-                    }
+                    PayJob(job);
+                    break;
                 }
-                Player.Gold += job.Reward;
-                AvaQuests.Board.Remove(job);
-                AvaQuests.JobsDone++;
-                Publish(new MessageEvent($"Butterbur counts out {job.Reward} gold. \"Well done. There's always more work.\""));
+                var thing = Data.Object(job.Target) is { } kind ? ItemNaming.Describe(Objects.Create(kind.Id, given), Knowledge, withArticle: false) : job.Target;
+                Publish(new MessageEvent($"Butterbur takes the {thing} and makes a mark on the note. \"{job.Count - job.Progress} more and the pay's yours.\""));
                 InnChoice("");
                 break;
+            }
         }
+    }
+
+    private void PayJob(BoardJob job)
+    {
+        Player.Gold += job.Reward;
+        AvaQuests.Board.Remove(job);
+        AvaQuests.JobsDone++;
+        Publish(new MessageEvent($"Butterbur counts out {job.Reward} gold. \"Well done. There's always more work.\""));
+        InnChoice("");
     }
 
     private void BoardMonsterKilled(Monster monster)

@@ -61,6 +61,9 @@ public sealed partial class MainWindowViewModel
 
     public ObservableCollection<ItemRow> EquipmentRows { get; } = [];
     public ObservableCollection<ItemRow> PackRows { get; } = [];
+    /// <summary>The quest satchel (AVABand's own): quest items, lettered after the pack's, taking none of its slots.</summary>
+    public ObservableCollection<ItemRow> SatchelRows { get; } = [];
+    [ObservableProperty] private bool _hasSatchelItems;
     public ObservableCollection<ItemRow> QuiverRows { get; } = [];
     public ObservableCollection<ItemRow> FloorRows { get; } = [];
     public ObservableCollection<ItemRow> PromptRows { get; } = [];
@@ -406,7 +409,10 @@ public sealed partial class MainWindowViewModel
                 EquipmentRows.Add(Row(Inventory.Slots[i].Type == EquipSlot.Shield && item.Base.IsWeapon ? "off hand" : Inventory.Slots[i].Name, item));
 
         PackRows.Clear();
-        for (var i = 0; i < inv.Pack.Count; i++) PackRows.Add(Row(((char)('a' + i)).ToString(), inv.Pack[i]));
+        SatchelRows.Clear();
+        for (var i = 0; i < inv.Pack.Count; i++)
+            (inv.Pack[i].IsQuestItem ? SatchelRows : PackRows).Add(Row(((char)('a' + i)).ToString(), inv.Pack[i]));
+        HasSatchelItems = SatchelRows.Count > 0;
 
         QuiverRows.Clear();
         for (var i = 0; i < inv.Quiver.Count; i++) QuiverRows.Add(Row(i.ToString(CultureInfo.InvariantCulture), inv.Quiver[i]));

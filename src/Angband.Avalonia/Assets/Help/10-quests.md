@@ -20,7 +20,12 @@ depend on your level. There is also a **notice board** with smaller jobs — hun
 monster, bring back so many of something found only in the dungeon, claim a **bounty** on a unique,
 or **scout** down to a depth a few levels past your deepest. The board has five postings,
 and you can take all five at once; the postings change whenever you come back up to town, and you collect your pay at the
-inn.
+inn. For a job that has you **bring** things, what you keep in your **Home** (8) counts as well as what
+you carry, and you can **hand them in a few at a time** ("Hand in what you have") — Butterbur keeps
+count, and pays when the last arrives.
+
+**Quest items ride in your quest satchel**: they're listed under their own heading, after your
+pack, and take none of its 23 slots (they still weigh what they weigh).
 
 ## The Arcane Artificer
 

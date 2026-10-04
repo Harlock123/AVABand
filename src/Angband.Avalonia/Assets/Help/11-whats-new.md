@@ -3,6 +3,15 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-03
+
+- **The quest satchel**: quest items — shards, keys, journal pages, the palantír — no longer take
+  slots in your pack. They're listed under their own heading, *Quest satchel*, after your inventory
+  (their weight still counts).
+- **Notice-board "bring" jobs are easier to carry**: what you keep in your Home counts toward them,
+  and you can hand them in a few at a time at the Prancing Pony ("Hand in what you have") — Butterbur
+  keeps count and pays when the last one arrives.
+
 ## 2026-10-02
 
 - **The Grimoire** (Help → The Grimoire): every spell in every spellbook, realm by realm — Arcane,

@@ -220,6 +220,9 @@ public sealed partial class GameSession
                 choices.AddRange(DeepInnChoices());
                 foreach (var job in AvaQuests.Board.Where(j => j.Taken && JobComplete(j)))
                     choices.Add(($"board:collect:{job.Id}", $"Collect your pay: {JobTitle(job)}"));
+                // A "bring" job not yet whole: hand in what you have (carried or at home) toward it.
+                foreach (var job in AvaQuests.Board.Where(j => j.Taken && j.Kind == "gather" && !JobComplete(j) && GatherOnHand(j) > 0))
+                    choices.Add(($"board:deliver:{job.Id}", $"Hand in what you have: {JobTitle(job)} ({job.Progress + GatherOnHand(job)} of {job.Count})"));
                 choices.Add(("inn:board", "Read the notice board"));
                 choices.Add(("inn:leave", "Leave"));
                 var taken = AvaQuests.Quests.Values.Count(q => !q.IsDone);

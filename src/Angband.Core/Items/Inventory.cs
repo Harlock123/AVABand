@@ -7,7 +7,9 @@ public sealed record EquipmentSlot(string Name, EquipSlot Type);
 
 /// <summary>
 /// The player's pack, quiver and equipment (Angband gear). The pack holds <c>PackSize</c> distinct
-/// stacks; every <c>QuiverSlotSize</c> missiles in the quiver use up one of those slots.
+/// stacks; every <c>QuiverSlotSize</c> missiles in the quiver use up one of those slots. AVABand's
+/// quest satchel: quest items (QUEST_ITEM) ride in the pack's list, last, but take none of its slots
+/// (their weight still counts).
 /// </summary>
 public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int quiverSize = 8)
 {
@@ -61,7 +63,7 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     private (bool Fits, Item? Match) QuiverPlace(Item item)
     {
         if (!BelongsInQuiver(item)) return (false, null);
-        if (_pack.Count + PackSlotsFor(QuiverCount + item.QuiverWeight) > PackSize) return (false, null);
+        if (PackStacks + PackSlotsFor(QuiverCount + item.QuiverWeight) > PackSize) return (false, null);
         var match = _quiver.FirstOrDefault(q => q.CanStackWith(item));
         if (!item.IsAmmo)
         {
@@ -88,8 +90,14 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     public Item? Bow => InSlot(EquipSlot.Bow);
     public Item? Light => InSlot(EquipSlot.Light);
 
-    /// <summary>Pack slots in use, counting the quiver.</summary>
-    public int SlotsUsed => _pack.Count + PackSlotsFor(QuiverCount);
+    /// <summary>Pack slots in use, counting the quiver (not the quest satchel).</summary>
+    public int SlotsUsed => PackStacks + PackSlotsFor(QuiverCount);
+
+    /// <summary>The pack's stacks that take a slot: all but quest items, which go in the satchel.</summary>
+    private int PackStacks => _pack.Count(i => !i.IsQuestItem);
+
+    /// <summary>The quest satchel: quest items carried (the last of the pack's list).</summary>
+    public IEnumerable<Item> Satchel => _pack.Where(i => i.IsQuestItem);
 
     /// <summary>Total carried weight including equipment, in tenths of a pound.</summary>
     public int TotalWeight => All.Sum(i => i.TotalWeight);
@@ -99,6 +107,7 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     /// <summary>Whether the whole stack could be added (merging or into a free slot).</summary>
     public bool CanCarry(Item item)
     {
+        if (item.IsQuestItem) return true; // (the satchel always has room)
         if (QuiverPlace(item).Fits) return true;
         if (_pack.Any(p => p.CanStackWith(item) && p.Number + item.Number <= p.Base.MaxStack)) return true;
         return SlotsUsed < PackSize;
@@ -255,10 +264,12 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
         return merged;
     }
 
-    /// <summary>Angband pack order: by base (in data order), then kind level, then name.</summary>
+    /// <summary>Angband pack order: by base (in data order), then kind level, then name; the quest satchel last.</summary>
     private void SortPack() => _pack.Sort((a, b) =>
     {
-        var c = string.CompareOrdinal(a.Base.Id, b.Base.Id);
+        var c = a.IsQuestItem.CompareTo(b.IsQuestItem);
+        if (c != 0) return c;
+        c = string.CompareOrdinal(a.Base.Id, b.Base.Id);
         if (c != 0) return c;
         c = a.Kind.Level.CompareTo(b.Kind.Level);
         return c != 0 ? c : string.CompareOrdinal(a.Kind.Id, b.Kind.Id);

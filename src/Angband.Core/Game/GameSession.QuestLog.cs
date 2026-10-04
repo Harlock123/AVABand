@@ -51,7 +51,7 @@ public sealed partial class GameSession
             "hunt" => (Math.Min(job.Progress, job.Count), job.Count, "killed"),
             "bounty" => (Math.Min(job.Progress, 1), 1, "slain"),
             "scout" => (Math.Min(Player.MaxDepth, job.Count), job.Count, "levels down"),
-            _ => (Math.Min(CarriedCount(job.Target), job.Count), job.Count, "carried"),
+            _ => (Math.Min(job.Progress + GatherOnHand(job), job.Count), job.Count, "brought in, carried or at home"),
         };
         var status = complete ? "Ready: collect your pay at the Prancing Pony" : $"{have} of {need} {unit}";
         List<QuestLogStep> steps =
@@ -71,7 +71,7 @@ public sealed partial class GameSession
             "hunt" => $"{JobTitle(job)} — only those killed since you took the note count.",
             "bounty" => $"Slay {Data.Monster(job.Target)?.Name ?? job.Target}, found about {Data.Monster(job.Target)?.Depth * feet} ft.",
             "scout" => $"Reach {job.Count * feet} ft (your deepest so far: {Player.MaxDepth * feet} ft).",
-            _ => $"{JobTitle(job)} — none of the shops sell them; the dungeon has them. Have them with you at the inn.",
+            _ => $"{JobTitle(job)} ({GatherSoFar(job)}) — no shop sells them; the dungeon has them. What you carry or keep in your Home counts, and you can hand them in a few at a time.",
         };
     }
 }

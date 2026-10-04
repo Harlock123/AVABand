@@ -432,18 +432,22 @@ public partial class AvaQuestTests
         q.TakeQuest("sealed_door");
         var state = game.AvaQuests.Get("sealed_door")!;
         q.Jump(state.N("keydepth"));
-        // A full pack: the key falls to the floor when Durgash dies.
+        // A full pack: the key still goes in, to the quest satchel, which takes no slot.
         var key = game.Objects.Create("key_of_belegost");
         foreach (var kind in game.Data.Objects.Where(k => k.Base is "scroll" or "potion").Take(40))
-            if (game.Player.Inventory.CanCarry(key)) game.Player.Inventory.Add(game.Objects.Create(kind.Id));
-        Assert.False(game.Player.Inventory.CanCarry(key));
+            if (game.Player.Inventory.SlotsUsed < game.Player.Inventory.PackSize) game.Player.Inventory.Add(game.Objects.Create(kind.Id));
+        Assert.Equal(game.Player.Inventory.PackSize, game.Player.Inventory.SlotsUsed);
+        Assert.True(game.Player.Inventory.CanCarry(key));
         q.Game.DamageMonster(q.Find("durgash_the_keybearer")!, 100_000);
-        Assert.Null(q.Carried("key_of_belegost"));
-        Assert.Contains(game.Level.Objects.All, o => o.Item.Kind.Id == "key_of_belegost");
+        var carried = q.Carried("key_of_belegost")!;
+        Assert.Contains(carried, game.Player.Inventory.Satchel);
+        Assert.Equal(game.Player.Inventory.PackSize, game.Player.Inventory.SlotsUsed);
+        Assert.Same(carried, game.Player.Inventory.Pack[^1]);              // (the satchel comes last)
 
+        // One left on a floor all the same (an older save's): it turns up at the Prancing Pony.
+        game.Player.Inventory.Remove(carried, 1, () => game.Objects.NextSerial++);
+        game.Level.Objects.Add(game.Player.Position, carried);
         q.Jump(1); // left behind
-        foreach (var item in game.Player.Inventory.Pack.Where(i => i.Base.Id is "scroll" or "potion").ToList())
-            game.Player.Inventory.Remove(item, item.Number, () => game.Objects.NextSerial++);
         q.EnterShop("inn");
         Assert.Contains(q.Said, s => s.Contains("with your name on it"));
         Assert.NotNull(q.Carried("key_of_belegost"));

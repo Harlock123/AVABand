@@ -214,6 +214,9 @@
           <ItemsControl ItemsSource="{Binding EquipmentRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="Inventory" />
           <ItemsControl ItemsSource="{Binding PackRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
+          <TextBlock Classes="header" Text="Quest satchel" IsVisible="{Binding HasSatchelItems}"
+                     ToolTip.Tip="Quest items ride here: they take none of your pack's slots (their weight still counts)." />
+          <ItemsControl x:Name="SatchelPanel" ItemsSource="{Binding SatchelRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="Quiver" />
           <ItemsControl ItemsSource="{Binding QuiverRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="On the floor" IsVisible="{Binding HasFloorItems}" />

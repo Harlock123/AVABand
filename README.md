@@ -406,6 +406,12 @@ core kept busy.
     shows every monster on it, and one time in three wakes them all and sends two greater undead;
     give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
+  - **The quest satchel** (AVABand's own; `Inventory.Satchel`): quest items ride in the pack's list,
+    sorted last and shown under their own sidebar heading, but take none of its slots (their weight
+    still counts), so a full pack always has room for one and never spills one. A notice-board
+    **bring** job counts what you carry and what's in the Home, and can be handed in a few at a time
+    ("Hand in what you have"; `BoardJob.Progress` keeps the count); paying out takes the pack's first,
+    then the Home's.
   - Quest items (`QUEST_ITEM`) can't be dropped, thrown, sold, ignored, stolen or burnt, and carry a
     `QuestTag` in the save; the journal is the quest log (Ctrl+J) and the Knowledge screen's **Quests** page. One a monster
     drops on a full pack's account and left behind on the level turns up at the Prancing Pony
