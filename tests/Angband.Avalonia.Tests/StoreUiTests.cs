@@ -323,6 +323,21 @@ public class StoreUiTests
         Assert.Equal(had + 8, game.Player.Inventory.All.Where(i => i.Kind.Id == "flask_of_oil").Sum(i => i.Number));
     }
 
+    /// <summary>Every other row of a shop's list a shade lighter, so a name is easy to follow across to its price.</summary>
+    [AvaloniaFact]
+    public void TheShopsRows_AreStriped()
+    {
+        var (window, vm, _) = OpenAt("general");
+        window.CaptureRenderedFrame();
+        var items = window.GetVisualDescendants().OfType<ListBox>().Single(l => l.Name == "StoreList")
+            .GetVisualDescendants().OfType<ListBoxItem>().ToList();
+        Assert.True(items.Count >= 4);
+        var shade = global::Avalonia.Media.Color.Parse("#1C2130");
+        Assert.All(items.Where((_, i) => i % 2 == 1), i => Assert.Equal(shade, (i.Background as global::Avalonia.Media.ISolidColorBrush)?.Color));
+        Assert.All(items.Where((_, i) => i % 2 == 0), i => Assert.NotEqual(shade, (i.Background as global::Avalonia.Media.ISolidColorBrush)?.Color));
+        TileRenderingTests.Save(window, "store-striped");
+    }
+
     /// <summary>AVABand's own: at "Quantity (1-N, a for all)?", A sells (or buys) the lot.</summary>
     [AvaloniaFact]
     public void At_the_quantity_A_trades_them_all()

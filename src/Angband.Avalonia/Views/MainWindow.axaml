@@ -329,6 +329,10 @@
               <Style Selector="ListBoxItem">
                 <Setter Property="IsHitTestVisible" Value="False" />
               </Style>
+              <!-- Every other row a shade lighter, so a name is easy to follow across to its price and weight. -->
+              <Style Selector="ListBoxItem:nth-child(2n)">
+                <Setter Property="Background" Value="#1C2130" />
+              </Style>
             </ListBox.Styles>
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:StoreRow">

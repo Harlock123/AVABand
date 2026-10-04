@@ -714,7 +714,8 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
     turns selling on (or off) mid-game — an AVABand addition, and not a cheat: either setting is
     a legitimate 4.2 game, so the character is still scored.
   - Bought items are fully known. The home stores up to 24 stacks.
-  Walk onto an entrance (or press `_` / Confirm on it) to open the store screen: a letter buys or
+  Walk onto an entrance (or press `_` / Confirm on it) to open the store screen (every other row a shade
+  lighter, AVABand's own, so a name is easy to follow across to its price): a letter buys or
   sells, asking "Quantity (1-N)?" as Angband does when there is more than one to have (Enter for
   one, or type a number, or AVABand's own `a` for all of them; on the controller up/down change it
   by one, right/left by ten, A takes it), Shift+letter the whole stack at once, Tab (pad X) switches buying/selling, Esc (pad B) leaves.
@@ -1891,7 +1892,7 @@ the context action, or a game command.
 
 Default keys:
 Arrows / numpad / `hjklyubn` move; Shift+arrow or Shift+keypad (or `H` `J` `L` `Y` `U` `N` — `K` and `B` stay toggle-ignore and browse) runs, and `.` + direction runs too; `<` `>` stairs, `o`/`c`/`T`/`D` + direction open/close/tunnel/disarm (`5` for underfoot), `5` or `,` hold, `s` + direction steal (rogues; others hold), `f` fire at the nearest visible monster, `R` rest, walk into a monster to attack,
-`w` wield, `t` take off, `q` quaff, `r` read, `E` eat, `d` drop, `v` throw, `g` pick up, `F` refuel,
+`w` wield, `t` take off, `q` quaff, `r` read, `E` eat, `d` drop, `v` throw, `g` pick up (AVABand's own: on a pile, `a) Everything here` takes it all and the pile's things are lettered from `b`), `F` refuel,
 `I` inspect, `a` aim a wand, `Z` use a staff, `z` zap a rod, `A` activate (these open an item list: press its letter, or Esc), `m` cast, `G` study, `B` browse spells,
 Debug menu: F5 regenerate the level, F8 jump to the next level, F6 go 5 levels deeper, F9 jump straight back to town (no recall delay or message), F7 show the whole map, *Cure all* (Angband's wizard cure-all: curses, stats, experience, hit points, mana, ailments and hunger), *Try a quest* (AVABand's: any of its quests at once — a new debug character of your race
 and class, raised to the level the quest suits and to the stats such a character would have, kitted

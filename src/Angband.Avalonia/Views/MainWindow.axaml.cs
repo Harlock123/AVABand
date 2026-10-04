@@ -248,7 +248,7 @@ public partial class MainWindow : Window
         if (DataContext is not MainWindowViewModel vm) return;
         var row = (e.Source as global::Avalonia.Visual)?.FindAncestorOfType<ListBoxItem>(includeSelf: true)?.DataContext;
         var letter = row switch { ItemRow r => r.Letter, SpellRow s => s.Letter, ChoiceRow c => c.Letter, _ => null };
-        var payload = row switch { ItemRow r => MainWindowViewModel.DragPayload(r.Item), SpellRow s => MainWindowViewModel.DragPayload(s.Spell), _ => null };
+        var payload = row switch { ItemRow { AllOfThem: false } r => MainWindowViewModel.DragPayload(r.Item), SpellRow s => MainWindowViewModel.DragPayload(s.Spell), _ => null };
         if (letter is { Length: > 0 }) BeginPending(e, payload, () => vm.PromptKey(letter[0])); // picked on release
     }
 

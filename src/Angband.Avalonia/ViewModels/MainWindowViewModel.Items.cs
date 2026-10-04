@@ -52,6 +52,9 @@ public sealed record ItemRow(string Letter, string Glyph, uint GlyphColor, strin
 
     /// <summary>The row in words (its accessible name): the note after the name.</summary>
     public string Spoken => HasAdvice ? $"{Name}. {Advice}" : Name;
+
+    /// <summary>The pickup prompt's first row (AVABand's own): everything here at once, not the one item behind it.</summary>
+    public bool AllOfThem { get; init; }
 }
 
 /// <summary>Inventory panel and Angband-style "which item?" prompts.</summary>
@@ -151,9 +154,18 @@ public sealed partial class MainWindowViewModel
             _ => "Inspect which item?",
         };
         PromptRows.Clear();
-        for (var i = 0; i < candidates.Count && i < 26; i++)
+        // Picking up from a pile (AVABand's own): a) takes everything here, and the pile's own things start at b).
+        var first = 0;
+        if (kind == ItemPromptKind.Pickup && candidates.Count > 1)
         {
-            var row = Row(((char)('a' + i)).ToString(), candidates[i]);
+            var weight = candidates.Where(i => !i.IsGold).Sum(i => i.TotalWeight);
+            PromptRows.Add(new ItemRow("a", "*", 0xFFFFE08A, $"Everything here ({candidates.Count} things)",
+                string.Format(CultureInfo.InvariantCulture, "{0:0.0} lb", weight / 10.0), candidates[0]) { AllOfThem = true });
+            first = 1;
+        }
+        for (var i = 0; i < candidates.Count && i + first < 26; i++)
+        {
+            var row = Row(((char)('a' + i + first)).ToString(), candidates[i]);
             // Wear or wield: each with the shops' note on how it compares with what it would replace.
             if (kind == ItemPromptKind.Wield && WieldAdvice(candidates[i]) is { } advice)
                 row = row with
@@ -192,6 +204,13 @@ public sealed partial class MainWindowViewModel
             else if (!AssignChosen(null, spellRow.Spell)) ChooseSpell(spellRow);
             return true;
         }
+        // The pickup prompt's a): everything here.
+        if (!char.IsAsciiDigit(key) && PromptRows.FirstOrDefault(r => r.Letter[0] == key) is { AllOfThem: true })
+        {
+            _assignSlot = null;
+            PickUpEverything();
+            return true;
+        }
         // A digit picks the item inscribed for it (Angband @q1, or @1 for any command).
         var item = char.IsAsciiDigit(key)
             ? PromptRows.Select(r => r.Item).FirstOrDefault(i => Inscription.HasTag(i, CommandKey(_promptKind), key))
@@ -205,6 +224,14 @@ public sealed partial class MainWindowViewModel
         if (AssignChosen(item, null)) return true; // filling a hotbar slot
         UseItemAsked(_promptKind, item);
         return true;
+    }
+
+    /// <summary>Picks up everything underfoot — asking first if anything there is inscribed to ask (Angband !g, !*).</summary>
+    private void PickUpEverything()
+    {
+        var here = Candidates(ItemPromptKind.Pickup).ToList();
+        if (here.Any(i => Inscription.AsksFirst(i, 'g'))) AskFirst("Really pick up everything here?", () => Execute(new PickupCommand()));
+        else Execute(new PickupCommand());
     }
 
     /// <summary>Uses an item as the command says — asking first if its inscription says to (Angband !d, !*).</summary>

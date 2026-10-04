@@ -3,6 +3,13 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-04
+
+- **Shop lists are striped**: every other row is a shade lighter, so it's easy to follow an item's
+  name across to its price and weight.
+- **Pick up a whole pile with `a`**: standing on a pile and pressing `g`, the first choice, `a)`, is
+  *Everything here*; the pile's things are lettered from `b)`.
+
 ## 2026-10-03
 
 - **Shopfronts in town**: every shop is painted its own colour, with windows either side of the door
