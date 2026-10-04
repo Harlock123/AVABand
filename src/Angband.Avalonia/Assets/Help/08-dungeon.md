@@ -20,7 +20,10 @@ you see only as far as your own light (option *Sconces on the walls of lit rooms
 ## Traps, doors and rubble
 
 Traps are hidden until you notice them: you see one when your search skill (better with level, and
-with gear of searching) is up to how well hidden it is. Running stops at a known one. Walking at a
+with gear of searching) is up to how well hidden it is. If you suspect something, press **`S`** to
+search carefully: a turn spent on the squares around you with your skill raised, more for every turn
+you keep searching in the same spot (`0`, a number, then `S` searches that many turns). It finds secret
+doors by touch, even in the dark, and tells you when there's nothing there. Running stops at a known one. Walking at a
 trap you know of tries to disarm it, as `D` does; `-` walks onto it on purpose. Strange runes are
 magical, disarmed with your magical disarming skill; the rest with the physical one. Feather
 falling lets you float down pits and trap doors unhurt, and trap immunity keeps you safe from all.

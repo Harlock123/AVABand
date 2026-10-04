@@ -192,6 +192,7 @@ public sealed partial class MainWindowViewModel
         switch (action)
         {
             case InputAction.Hold: Execute(new HoldCommand()); break;
+            case InputAction.Search: Execute(new SearchCommand()); break;
             case InputAction.Confirm: ContextAction(); break;
             case InputAction.Cancel: ClearCount(); break;
             case InputAction.StairsDown: Execute(new TakeStairsCommand(Down: true)); break;

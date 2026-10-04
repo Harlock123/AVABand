@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-04
 
+- **A search key, `S`**: a careful search of the squares around you, taking a turn, with your search
+  skill raised — and raised more for every turn you keep searching in the same spot (up to +50). It
+  finds traps that walking past missed, finds secret doors by touch even in the dark, and says "You
+  find nothing." when there's nothing. `0`, a number, then `S` searches that many turns.
 - **Fixed: two arrows together now answer "Direction?" diagonally** — disarming, opening, closing,
   tunnelling or aiming at a diagonal square — not only when walking. (Without a keypad there was no
   other way to give a diagonal there.)

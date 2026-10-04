@@ -177,6 +177,7 @@ public sealed partial class GameSession : ITurnHandler
     private bool ExecuteOnce(GameCommand command)
     {
         if (IsGameOver) return false;
+        ForgetSearching(command);
         if (command is not RunOnCommand) _running = false; // (anything else ends a run taken a step at a time)
         MarkTurnForDamageNotes();
         foreach (var m in Level.Monsters.All) m.IsDetected = false; // detection lasts until the next action
@@ -209,6 +210,7 @@ public sealed partial class GameSession : ITurnHandler
             WalkCommand walk => Walk(walk.Direction),
             JumpCommand jump => Walk(jump.Direction),
             HoldCommand => Hold(),
+            SearchCommand => CarefulSearch(),
             OpenCommand open => OpenAt(Player.Position.Step(open.Direction)),
             DisarmCommand disarm => Disarm(disarm.Direction),
             StealCommand steal => Steal(steal.Direction),

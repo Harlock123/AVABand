@@ -254,4 +254,20 @@ public class InputUiTests
         Assert.False(vm.IsAwaitingDirection);
         Assert.DoesNotContain(messages, m => m.Contains("nothing there to disarm", StringComparison.OrdinalIgnoreCase));
     }
+
+    /// <summary>S searches carefully (AVABand's own), and says so when there's nothing to find.</summary>
+    [AvaloniaFact]
+    public void S_searches_carefully()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var turn = vm.Game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.S, RawInputModifiers.Shift);
+        Assert.Equal("You find nothing.", vm.LastMessage);
+        Assert.True(vm.Game.GameTurn > turn);
+    }
 }

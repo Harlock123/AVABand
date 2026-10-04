@@ -1474,11 +1474,18 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   disarming and picking locks are ten times harder, stealing four times, devices a fifth; and
   secret doors aren't noticed. The Mushroom of Clear Mind, the Potion of Life and the Staff of
   Holiness cure it; resting waits it out.
-- **Secret doors** (`Game/GameSession.Search.cs`, Angband 4.2's `search()`): there is no search
-  command, as in 4.2. Any secret door beside you is found by itself after every step, when you hold
+- **Secret doors** (`Game/GameSession.Search.cs`, Angband 4.2's `search()`): 4.2 has no search
+  command (AVABand adds a careful one, below). Any secret door beside you is found by itself after every step, when you hold
   still (`5` / `,`) and when you arrive on a level ("You have found a secret door.", which stops a
   run) — unless you are blind, confused or standing in the dark. It becomes an ordinary closed door,
   locked one time in four. The rogue's *Find Traps, Doors and Stairs* reveals those within range.
+- **Careful search** (AVABand's own; `S`, `GameSession.CarefulSearch.cs`): since walking already finds
+  all it can, `S` spends a turn searching the eight squares around you with your search skill raised
+  by 10, and by 10 more for each turn you go on searching the same spot (up to +50) — so a trap a little
+  past your skill can be found by staying put a few turns — and by touch as well as by eye, so a secret
+  door is found even in the dark or blind. It says "You find nothing." when there's nothing; a count
+  (`0`, a number, `S`) searches that many turns and stops at a find; anything else in between starts
+  the bonus afresh.
 - **Object knowledge** (`Records/ObjectInfo.cs`, `ViewModels/KnowledgeViewModels.cs`): Angband's
   knowledge menu and object info. `~` (Game → Knowledge) opens one window with eleven tabs:
   *Monsters* (the recall browser above), *Objects* (every kind the character has seen — on the

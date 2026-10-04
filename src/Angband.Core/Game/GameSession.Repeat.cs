@@ -18,7 +18,7 @@ public sealed partial class GameSession
 
     /// <summary>Whether a command can be given a count (Angband's repeat_allowed).</summary>
     public static bool TakesCount(GameCommand command) =>
-        command is WalkCommand or HoldCommand or OpenCommand or CloseCommand or TunnelCommand or DisarmCommand;
+        command is WalkCommand or HoldCommand or OpenCommand or CloseCommand or TunnelCommand or DisarmCommand or SearchCommand;
 
     private bool Repeat(GameCommand command, int count)
     {
@@ -26,7 +26,7 @@ public sealed partial class GameSession
         if (command is TunnelCommand tunnel) return !IsGameOver && Tunnel(tunnel.Direction, count);
 
         // Walking and holding go on for the count; the others only while there's more to try.
-        var whileMore = command is not (WalkCommand or HoldCommand);
+        var whileMore = command is not (WalkCommand or HoldCommand or SearchCommand);
         var level = Level;
         var hp = Player.Hp;
         var seen = VisibleMonsters();

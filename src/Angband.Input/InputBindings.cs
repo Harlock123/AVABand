@@ -98,6 +98,7 @@ public sealed class InputBindings
         K(InputAction.ToggleMute, "Ctrl+M");
         K(InputAction.OpenSettings, "F10");
         K(InputAction.ToggleFullScreen, "F11");
+        K(InputAction.Search, "Char:S");
         K(InputAction.ZoomIn, "Ctrl+OemPlus", "Ctrl+Add");
         K(InputAction.ZoomOut, "Ctrl+OemMinus", "Ctrl+Subtract");
         K(InputAction.NewGame, "Ctrl+N");
@@ -225,6 +226,7 @@ public sealed class InputBindings
         K(InputAction.Study, "Char:G"); K(InputAction.Retire, "Char:Q"); K(InputAction.CharacterSheet, "Char:C");
         K(InputAction.OverviewMap, "Char:M");
         K(InputAction.Inventory, "Char:i"); K(InputAction.Equipment, "Char:e");
+        K(InputAction.Search, "Char:S"); // (AVABand's careful search; Angband 4.2 has none)
         return b;
     }
 
