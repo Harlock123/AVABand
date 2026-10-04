@@ -22,8 +22,8 @@ A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 12.
 | Settings | Taking the stairs down |
 | ![Going up: a stair climbing toward grey light](screenshots/stairs-up.png) | ![Up into the town: a stair climbing toward the evening sky](screenshots/stairs-up-town.png) |
 | Taking the stairs up | ...and up into the town |
-| ![Your journey: depth over time, each depth, and the history](screenshots/journey.png) | |
-| Your journey | |
+| ![Your journey: depth over time, each depth, and the history](screenshots/journey.png) | ![The town at night in tiles: each shop in its colour, its wares in lit windows, awnings, lanterns and its name](screenshots/town-night-tiles.png) |
+| Your journey | The town at night: the shopfronts |
 
 The screenshots are rendered by the real windows without a display, from fixed seeds:
 `tools/screenshots.sh` regenerates them all (`tests/Angband.Avalonia.Tests/ReadmeScreenshots.cs`

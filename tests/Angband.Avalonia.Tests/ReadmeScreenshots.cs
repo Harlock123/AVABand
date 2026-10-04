@@ -121,6 +121,16 @@ public class ReadmeScreenshots
         Shoot(window, "cast-a-spell");
     }
 
+    /// <summary>The town in tiles, by night: the shopfronts' colours, wares, awnings, lit windows and lanterns.</summary>
+    [AvaloniaFact]
+    public void TownAtNight()
+    {
+        var (window, vm) = Open("ranger", tiles: true);
+        vm.Game.Scheduler.SetGameTurn(vm.Game.Data.Constants.DayLength * 3 / 4);
+        vm.Execute(new HoldCommand()); // (a turn, so the status line says it's night)
+        Shoot(window, "town-night-tiles");
+    }
+
     [AvaloniaFact]
     public void Town()
     {
