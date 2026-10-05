@@ -51,8 +51,8 @@ public partial class App : Application
             }
             // Saved characters: continue the most recent living one (unless a seed was asked for).
             vm.UseRecords(RecordStore.Default());
-            vm.UseStrongroom(StrongroomStore.Default()); // (Butterbur's lockers, shared by all your characters)
             vm.UseSaves(SaveStore.Default(), resume: !(desktop.Args ?? []).Contains("--seed"));
+            vm.UseStrongroom(StrongroomStore.Default()); // (Butterbur's lockers, shared by all your characters; after the saves, to check them)
             foreach (var problem in problems) Trace.WriteLine(problem);
             ApplyDebugArguments(vm, desktop.Args ?? []);
             var args = desktop.Args ?? [];

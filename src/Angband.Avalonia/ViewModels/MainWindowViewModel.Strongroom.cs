@@ -14,6 +14,19 @@ public sealed partial class MainWindowViewModel
     {
         _strongroom = strongroom;
         _game.Strongroom = strongroom;
+        if (strongroom is StrongroomStore store)
+        {
+            // Which save to check, after a crash, for whether a change reached it.
+            store.CurrentSave = () => _saves is not null && !_game.IsTutorial && !_game.IsReplay ? _saves.PathFor(_game) : null;
+            store.Recover(); // (a game that stopped between the lockers and the save: made final, or undone)
+        }
+    }
+
+    /// <summary>The character saved (or not saveable): the strongroom's change is final.</summary>
+    private void CommitStrongroom()
+    {
+        TrySave();
+        if (_strongroom is StrongroomStore store) store.Commit();
     }
 
     /// <summary>A strongroom choice from the inn's menu: taking a locker's item out, or anything else there (then saving).</summary>
@@ -29,13 +42,13 @@ public sealed partial class MainWindowViewModel
                     return;
                 }
                 Execute(new TakeFromLockerCommand(locker.Id, locker.ItemJson, locker.Value));
-                TrySave();
+                CommitStrongroom();
             };
         if (choiceId.StartsWith("strongroom:store:", StringComparison.Ordinal))
             return () =>
             {
                 Execute(new QuestChoiceCommand(choiceId));
-                TrySave();
+                CommitStrongroom();
             };
         return null;
     }

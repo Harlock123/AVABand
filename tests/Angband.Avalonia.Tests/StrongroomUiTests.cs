@@ -64,4 +64,74 @@ public sealed class StrongroomUiTests : IDisposable
         Assert.Empty(store.Lockers);
         Assert.Equal(10_000 - GameSession.StrongroomWithdrawFee(locker.Value), vm.Game.Player.Gold);
     }
+
+    // --- Kept in step with the save, through a crash ----------------------------------------------
+
+    private static StrongroomLocker ASword(string id = "") => new(id, "{}", "a Long Sword", "Fallow the Paladin", "", 10, 500);
+
+    /// <summary>A store whose current save is a file in the test folder (written when asked).</summary>
+    private (StrongroomStore Store, string Save) WithSave()
+    {
+        Directory.CreateDirectory(_dir);
+        var save = Path.Combine(_dir, "Fallow.avasave");
+        File.WriteAllText(save, "old");
+        File.SetLastWriteTimeUtc(save, DateTime.UtcNow.AddMinutes(-5));
+        return (new StrongroomStore(_dir) { CurrentSave = () => save }, save);
+    }
+
+    private static void SaveWritten(string save)
+    {
+        File.WriteAllText(save, "new");
+        File.SetLastWriteTimeUtc(save, DateTime.UtcNow.AddSeconds(5));
+    }
+
+    [AvaloniaFact]
+    public void ALockerLeft_ButTheGameStoppedBeforeTheSave_IsUndone()
+    {
+        var (store, _) = WithSave();
+        store.Deposit(ASword());
+        Assert.Empty(store.Lockers);                                 // (not final yet)
+        Assert.Equal(1, new StrongroomStore(_dir).Recover());       // the next start: the save never had it gone
+        Assert.Empty(new StrongroomStore(_dir).Lockers);
+        Assert.Equal(0, new StrongroomStore(_dir).Recover());
+    }
+
+    [AvaloniaFact]
+    public void ALockerLeft_AndSaved_ButNotMadeFinal_IsKept()
+    {
+        var (store, save) = WithSave();
+        store.Deposit(ASword());
+        SaveWritten(save);                                           // saved without it, then the game stopped
+        new StrongroomStore(_dir).Recover();
+        Assert.Single(new StrongroomStore(_dir).Lockers);
+    }
+
+    [AvaloniaFact]
+    public void ALockerTaken_ButNotSaved_IsBackInItsLocker_AndSaved_IsGone()
+    {
+        var (store, save) = WithSave();
+        store.Deposit(ASword());
+        store.Commit();
+        var id = Assert.Single(store.Lockers).Id;
+        Assert.True(store.Remove(id));
+        Assert.Empty(store.Lockers);
+        Assert.False(store.Remove(id));                              // (not twice)
+        new StrongroomStore(_dir).Recover();                         // the game stopped before the save
+        Assert.Single(new StrongroomStore(_dir).Lockers);
+
+        var again = new StrongroomStore(_dir) { CurrentSave = () => save };
+        Assert.True(again.Remove(id));
+        SaveWritten(save);                                           // this time the save has it
+        new StrongroomStore(_dir).Recover();
+        Assert.Empty(new StrongroomStore(_dir).Lockers);
+    }
+
+    [AvaloniaFact]
+    public void ALockersFile_FromBeforeTheTwoSteps_StillOpens()
+    {
+        Directory.CreateDirectory(_dir);
+        File.WriteAllText(Path.Combine(_dir, "strongroom.json"),
+            System.Text.Json.JsonSerializer.Serialize(new List<StrongroomLocker> { ASword("old1") }));
+        Assert.Equal("old1", Assert.Single(new StrongroomStore(_dir).Lockers).Id);
+    }
 }

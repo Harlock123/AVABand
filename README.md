@@ -270,8 +270,11 @@ core kept busy.
   lockers in all; no artifacts, quest items or gold; and a character takes out only what isn't too far
   beyond them (item level at most twice theirs plus five). The item goes in as the save file writes it
   (`SaveGame.ItemToJson`), enchantments, sockets and gems and all, and comes out with fresh serials;
-  taking it out is a command carrying the item, so a replay needs no lockers file. The character is
-  saved at once after leaving or taking something. Daily-dungeon characters have none.
+  taking it out is a command carrying the item, so a replay needs no lockers file. Kept in step with the
+  character's save in two steps: the change is written to the lockers as pending (with which save, and
+  when), the character is saved, then the change is made final; a game that stops in between is sorted
+  out on the next start (`StrongroomStore.Recover`) — final if that save was written since, undone if
+  not — so an item is never in both a locker and a save, nor in neither. Daily-dungeon characters have none.
 - **Blows and armour weight, as Angband 4.2.5** (`Game/GameSession.AngbandBlows.cs`; the birth
   option *Angband 4.2's blows*, `birth_angband_blows`, on by default — off, each class's fixed blows
   as before): `calc_blows` from `player-calcs.c` — Strength for the weapon's weight (`adj_str_blow` ×
