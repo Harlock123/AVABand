@@ -76,4 +76,31 @@ public sealed partial class GameSession
         path.Reverse();
         return path;
     }
+
+    /// <summary>
+    /// The nearest staircase of a kind you know of, by the way there (AVABand's own: '>' or '<' away from the
+    /// stairs walks you to them); null if you know of none you can reach.
+    /// </summary>
+    public Loc? NearestKnownStairs(bool down)
+    {
+        var flag = down ? TerrainFlags.DownStair : TerrainFlags.UpStair;
+        var seen = new HashSet<Loc> { Player.Position };
+        var queue = new Queue<Loc>([Player.Position]);
+        while (queue.Count > 0)
+        {
+            var p = queue.Dequeue();
+            if (p != Player.Position && Data.Terrain[Known.Feature(p)].Has(flag)) return p;
+            foreach (var d in DirectionExtensions.Compass)
+            {
+                var n = p.Step(d);
+                if (!Level.InBounds(n) || !seen.Add(n) || !Known.IsKnown(n)) continue;
+                var feature = Data.Terrain[Known.Feature(n)];
+                if (!feature.Has(TerrainFlags.Passable) && !feature.Has(TerrainFlags.DoorClosed)) continue;
+                if (Level[n].Trap != 0 && Level[n].Has(SquareFlags.TrapVisible) && !feature.Has(flag)) continue;
+                if (feature.Has(TerrainFlags.Fiery)) continue;
+                queue.Enqueue(n);
+            }
+        }
+        return null;
+    }
 }

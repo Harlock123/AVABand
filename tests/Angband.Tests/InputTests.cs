@@ -484,4 +484,25 @@ public class InputTests
         chosen.MoveHotbarStepsOffAltArrows();
         Assert.Equal(InputAction.Look, chosen.ForKey("Alt+Left"));
     }
+
+    /// <summary>The nearest known staircase, by the way there — never one not yet found.</summary>
+    [Fact]
+    public void NearestKnownStairs_IsTheNearestFound_AndNoneUnfound()
+    {
+        var game = Arena.Create(1,
+            "##########",
+            "#@,,,,,,,#",
+            "#,,,,,,,,#",
+            "##########");
+        var near = new Loc(4, 1);
+        var far = new Loc(8, 1);
+        game.Level[near].Feature = game.Data.Terrain.Ids.DownStair;
+        game.Level[far].Feature = game.Data.Terrain.Ids.DownStair;
+        game.Known.Forget(near);
+        game.Known.Remember(game.Level, far);
+        Assert.Equal(far, game.NearestKnownStairs(down: true));                 // the nearer one isn't known yet
+        game.Known.Remember(game.Level, near);
+        Assert.Equal(near, game.NearestKnownStairs(down: true));
+        Assert.Null(game.NearestKnownStairs(down: false));
+    }
 }

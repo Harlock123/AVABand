@@ -36,6 +36,8 @@
 - `X` uses any item, whatever it is.
 - `m` cast a spell, `G` learn one, `B` or `b` browse your books.
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
+- `<` and `>` take the stairs you're standing on — or, anywhere else, walk you to the nearest up or
+  down staircase you've found (press again there to take it; something coming into view stops the walk).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,
   `W` scroll the map (locate), Ctrl+L centre it on you (handy with *Center map continuously* off).
 - **Look around the map** without moving: hold **Ctrl** or **Alt** (on a Mac, **Option** — macOS

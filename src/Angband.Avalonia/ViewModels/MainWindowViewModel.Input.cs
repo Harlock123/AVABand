@@ -195,8 +195,8 @@ public sealed partial class MainWindowViewModel
             case InputAction.Search: Execute(new SearchCommand()); break;
             case InputAction.Confirm: ContextAction(); break;
             case InputAction.Cancel: ClearCount(); break;
-            case InputAction.StairsDown: Execute(new TakeStairsCommand(Down: true)); break;
-            case InputAction.StairsUp: Execute(new TakeStairsCommand(Down: false)); break;
+            case InputAction.StairsDown: StairsKey(down: true); break;
+            case InputAction.StairsUp: StairsKey(down: false); break;
             case InputAction.Open: AskDirection(DirectionFor.Open); break;
             case InputAction.Close: AskDirection(DirectionFor.Close); break;
             case InputAction.Tunnel: AskDirection(DirectionFor.Tunnel); break;
@@ -302,6 +302,23 @@ public sealed partial class MainWindowViewModel
         else if (_game.Level.Has(p, TerrainFlags.UpStair)) Execute(new TakeStairsCommand(Down: false));
         else if (_game.Level.Objects.Any(p)) BeginItemPrompt(ItemPromptKind.Pickup);
         else Execute(new HoldCommand());
+    }
+
+    /// <summary>
+    /// '>' or '<': on a staircase of that kind, take it; anywhere else (AVABand's own), walk to the nearest
+    /// one you know of — press again there to take it.
+    /// </summary>
+    private void StairsKey(bool down)
+    {
+        var flag = down ? Angband.Core.Definitions.TerrainFlags.DownStair : Angband.Core.Definitions.TerrainFlags.UpStair;
+        if (_game.Level.Has(_game.Player.Position, flag) || _game.NearestKnownStairs(down) is not { } stairs)
+        {
+            Execute(new TakeStairsCommand(Down: down));
+            return;
+        }
+        AddMessage($"You head for the {(down ? "down" : "up")} staircase.");
+        Execute(new TravelCommand(stairs));
+        if (_game.Player.Position == stairs) AddMessage($"You are on the {(down ? "down" : "up")} staircase: press {(down ? ">" : "<")} again to take it.");
     }
 
     private void AskDirection(DirectionFor what)

@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **`>` and `<` walk you to the stairs**: away from a staircase, they take you to the nearest one of
+  that kind you've found; press again to take it.
 - **Butterbur's strongroom**: at the Prancing Pony, lockers shared by **all your characters**. Leave
   an item (50 gold and a twentieth of its worth) and any later character can take it out (100 gold and a
   tenth) — once they're far enough along for it. Six lockers; no artifacts or quest items.

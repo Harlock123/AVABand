@@ -270,4 +270,32 @@ public class InputUiTests
         Assert.Equal("You find nothing.", vm.LastMessage);
         Assert.True(vm.Game.GameTurn > turn);
     }
+
+    /// <summary>'>' away from the stairs walks to the nearest known down staircase; '>' again takes it.</summary>
+    [AvaloniaFact]
+    public void GreaterThan_AwayFromTheStairs_WalksToThem_AndAgainTakesThem()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var settings = new AppSettings();
+        settings.Options[DisplayOptions.Scenes] = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), [], settings, save: null);
+        vm.StartGame(42, "warrior");
+        foreach (var m in vm.Game.Level.Monsters.All.ToList()) vm.Game.Level.Monsters.Remove(m);
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        var game = vm.Game;
+        var stairs = game.Level.FindFeature(Angband.Core.Definitions.TerrainFlags.DownStair).First();
+        game.Player.Position = game.Level.AllLocs().First(p => game.Level.IsEmptyFloor(p) && p.DistanceTo(stairs) > 8 && game.FindPath(p, stairs) is not null);
+        // (the > key; again if something interrupts the walk — a townsperson wandering into view)
+        for (var i = 0; i < 10 && game.Player.Position != stairs; i++)
+        {
+            foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+            vm.HandleAction(Angband.Input.InputAction.StairsDown);
+        }
+        Assert.True(stairs == game.Player.Position, string.Join(" | ", vm.Messages.TakeLast(4)));
+        Assert.Equal(0, game.Player.Depth);
+        Assert.Contains(vm.Messages, m => m.StartsWith("You are on the down staircase", StringComparison.Ordinal));
+        vm.HandleAction(Angband.Input.InputAction.StairsDown);
+        Assert.Equal(1, game.Player.Depth);
+    }
 }
