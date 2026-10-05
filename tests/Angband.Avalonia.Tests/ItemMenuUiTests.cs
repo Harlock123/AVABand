@@ -217,7 +217,7 @@ public class ItemMenuUiTests
         vm.Execute(new WieldCommand(bracers));
         var worn = vm.Game.Player.Inventory.InSlot(EquipSlot.Arms)!;
         vm.OpenItemMenu(gem);
-        Assert.Contains("Set into your Pair of Leather Bracers", vm.MenuLabels);
+        Assert.Contains(vm.MenuLabels, l => l.StartsWith("Set into your Pair of Leather Bracers (", StringComparison.Ordinal)); // (and what it does)
         Choose(vm, "Set into your");
         Assert.Single(worn.Gems);
         Assert.Contains(vm.EquipmentRows, r => r.Name.Contains("Leather Bracers") && r.Name.Contains("Ruby"));
@@ -225,7 +225,7 @@ public class ItemMenuUiTests
         var bigger = Carry(vm, "iron_bracers");
         var sapphire = Carry(vm, "sapphire");
         vm.OpenItemMenu(bigger);
-        Assert.Contains("Set Sapphire here", vm.MenuLabels);
+        Assert.Contains(vm.MenuLabels, l => l.StartsWith("Set Sapphire here (", StringComparison.Ordinal));
         Choose(vm, "Set Sapphire here");
         Assert.Single(bigger.Gems);
         Assert.False(vm.Game.Player.Inventory.Contains(sapphire));

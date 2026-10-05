@@ -64,6 +64,9 @@ public sealed partial class MainWindowViewModel
 
     public ObservableCollection<ItemRow> EquipmentRows { get; } = [];
     public ObservableCollection<ItemRow> PackRows { get; } = [];
+    /// <summary>The gem pouch (AVABand's own): every gem carried, one pack slot for them all, each with what it does in a socket.</summary>
+    public ObservableCollection<ItemRow> PouchRows { get; } = [];
+    [ObservableProperty] private bool _hasPouchItems;
     /// <summary>The quest satchel (AVABand's own): quest items, lettered after the pack's, taking none of its slots.</summary>
     public ObservableCollection<ItemRow> SatchelRows { get; } = [];
     [ObservableProperty] private bool _hasSatchelItems;
@@ -436,9 +439,17 @@ public sealed partial class MainWindowViewModel
                 EquipmentRows.Add(Row(Inventory.Slots[i].Type == EquipSlot.Shield && item.Base.IsWeapon ? "off hand" : Inventory.Slots[i].Name, item));
 
         PackRows.Clear();
+        PouchRows.Clear();
         SatchelRows.Clear();
         for (var i = 0; i < inv.Pack.Count; i++)
-            (inv.Pack[i].IsQuestItem ? SatchelRows : PackRows).Add(Row(((char)('a' + i)).ToString(), inv.Pack[i]));
+        {
+            var item = inv.Pack[i];
+            var letter = ((char)('a' + i)).ToString();
+            if (item.IsQuestItem) SatchelRows.Add(Row(letter, item));
+            else if (Angband.Core.Items.Inventory.InPouch(item)) PouchRows.Add(GemRow(letter, item));
+            else PackRows.Add(Row(letter, item));
+        }
+        HasPouchItems = PouchRows.Count > 0;
         HasSatchelItems = SatchelRows.Count > 0;
 
         QuiverRows.Clear();
@@ -463,6 +474,13 @@ public sealed partial class MainWindowViewModel
             inv.SlotsUsed, inv.PackSize, room);
         if (free <= 0 && !_packWasFull && ScreenReaderOn) Announce("Your pack is full.");
         _packWasFull = free <= 0;
+    }
+
+    /// <summary>A gem's row: what it does in a socket, under its name.</summary>
+    private ItemRow GemRow(string letter, Item gem)
+    {
+        var row = Row(letter, gem); // (built afresh, not with 'with': the note's brush is made from its colour once)
+        return new ItemRow(row.Letter, row.Glyph, row.GlyphColor, row.Name, row.Weight, gem, "in a socket: " + _game.GemEffectText(gem), 0xFF9FB8D0);
     }
 
     private ItemRow Row(string letter, Item item)

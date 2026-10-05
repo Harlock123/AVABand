@@ -406,6 +406,12 @@ core kept busy.
     shows every monster on it, and one time in three wakes them all and sends two greater undead;
     give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
+  - **The gem pouch** (AVABand's own; `Inventory.Pouch`, `GameSession.GemPouch.cs`): gems ride in the
+    pack's list between its own things and the quest satchel, shown under a *Gem pouch* heading with
+    what each does in a socket, and all of them together take one pack slot (a full pack takes another
+    gem once the pouch is carried, and overflows its own things before gems); the set-a-gem menus name
+    each gem's effect too. The **Arcane Artificer** cuts three gems of a grade into one of the next
+    (chipped → flawed → whole) for a fifth of the finer stone's worth.
   - **The quest satchel** (AVABand's own; `Inventory.Satchel`): quest items ride in the pack's list,
     sorted last and shown under their own sidebar heading, but take none of its slots (their weight
     still counts), so a full pack always has room for one and never spills one. A notice-board

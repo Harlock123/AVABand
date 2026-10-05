@@ -36,7 +36,10 @@ public sealed partial class GameSession
         if (inv.SlotsUsed <= inv.PackSize) return;
         for (var guard = 0; inv.SlotsUsed > inv.PackSize && inv.Pack.Count > 0 && guard < 100; guard++)
         {
-            if ((inv.Pack.LastOrDefault(i => !i.IsQuestItem && inv.BestBag != i) ?? inv.Pack.LastOrDefault(i => !i.IsQuestItem)) is not { } spill) break;
+            // (the pack's own things before gems: dropping one kind of gem seldom frees the pouch's slot)
+            if ((inv.Pack.LastOrDefault(i => !i.IsQuestItem && !Inventory.InPouch(i) && inv.BestBag != i)
+                 ?? inv.Pack.LastOrDefault(i => !i.IsQuestItem && inv.BestBag != i)
+                 ?? inv.Pack.LastOrDefault(i => !i.IsQuestItem)) is not { } spill) break;
             inv.Remove(spill, spill.Number, () => Objects.NextSerial++);
             Publish(new MessageEvent($"Your pack overflows! You drop {Describe(spill)}."));
             DropNear(spill, Player.Position);

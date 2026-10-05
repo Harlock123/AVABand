@@ -30,4 +30,34 @@ public class SatchelUiTests
         Assert.Equal(slots, vm.Game.Player.Inventory.SlotsUsed);
         TileRenderingTests.Save(window, "quest-satchel");
     }
+
+    /// <summary>The gem pouch: gems under their own heading, between the pack and the satchel, each with what it does in a socket.</summary>
+    [AvaloniaFact]
+    public void Gems_ShowInTheGemPouch_WithTheirSocketEffects()
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory));
+        vm.StartGame(42, "warrior");
+        var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
+        window.Show();
+        Assert.False(vm.HasPouchItems);
+        var inv = vm.Game.Player.Inventory;
+        var slots = inv.SlotsUsed;
+        foreach (var kind in new[] { "ruby", "chipped_sapphire", "diamond" })
+        {
+            var gem = vm.Game.Objects.Create(kind);
+            vm.Game.Knowledge.LearnKind(gem.Kind);
+            inv.Add(gem);
+        }
+        inv.Add(vm.Game.Objects.Create("palantir"));
+        vm.Execute(new HoldCommand());
+        Assert.True(vm.HasPouchItems);
+        Assert.Equal(3, vm.PouchRows.Count);
+        Assert.Equal(slots + 1, inv.SlotsUsed);
+        Assert.Contains(vm.PouchRows, r => r.Name.Contains("Ruby") && r.Advice == "in a socket: +3 to-dam, resist fire");
+        // Lettered on from the pack, and the satchel after.
+        Assert.Equal(((char)('a' + vm.PackRows.Count)).ToString(), vm.PouchRows[0].Letter);
+        Assert.Equal(((char)('a' + vm.PackRows.Count + 3)).ToString(), vm.SatchelRows[0].Letter);
+        TileRenderingTests.Save(window, "gem-pouch");
+    }
 }

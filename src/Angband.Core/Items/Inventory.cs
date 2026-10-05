@@ -9,7 +9,8 @@ public sealed record EquipmentSlot(string Name, EquipSlot Type);
 /// The player's pack, quiver and equipment (Angband gear). The pack holds <c>PackSize</c> distinct
 /// stacks; every <c>QuiverSlotSize</c> missiles in the quiver use up one of those slots. AVABand's
 /// quest satchel: quest items (QUEST_ITEM) ride in the pack's list, last, but take none of its slots
-/// (their weight still counts).
+/// (their weight still counts). And AVABand's gem pouch: gems ride just before them, and all of them
+/// together take a single slot, however many kinds.
 /// </summary>
 public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int quiverSize = 8)
 {
@@ -93,8 +94,14 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     /// <summary>Pack slots in use, counting the quiver (not the quest satchel).</summary>
     public int SlotsUsed => PackStacks + PackSlotsFor(QuiverCount);
 
-    /// <summary>The pack's stacks that take a slot: all but quest items, which go in the satchel.</summary>
-    private int PackStacks => _pack.Count(i => !i.IsQuestItem);
+    /// <summary>The pack's stacks that take a slot: all but quest items (the satchel), with the gem pouch one slot for all its gems.</summary>
+    private int PackStacks => _pack.Count(i => !i.IsQuestItem && !InPouch(i)) + (_pack.Any(InPouch) ? 1 : 0);
+
+    /// <summary>A gem rides in the gem pouch.</summary>
+    public static bool InPouch(Item item) => item.Base.Id == "gem" && !item.IsQuestItem;
+
+    /// <summary>The gem pouch: the gems carried (between the pack's own things and the satchel).</summary>
+    public IEnumerable<Item> Pouch => _pack.Where(InPouch);
 
     /// <summary>The quest satchel: quest items carried (the last of the pack's list).</summary>
     public IEnumerable<Item> Satchel => _pack.Where(i => i.IsQuestItem);
@@ -108,6 +115,7 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     public bool CanCarry(Item item)
     {
         if (item.IsQuestItem) return true; // (the satchel always has room)
+        if (InPouch(item) && _pack.Any(InPouch)) return true; // (and the pouch, once it's carried, for any gem)
         if (QuiverPlace(item).Fits) return true;
         if (_pack.Any(p => p.CanStackWith(item) && p.Number + item.Number <= p.Base.MaxStack)) return true;
         return SlotsUsed < PackSize;
@@ -264,10 +272,13 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
         return merged;
     }
 
-    /// <summary>Angband pack order: by base (in data order), then kind level, then name; the quest satchel last.</summary>
+    /// <summary>The pack's own things first, then the gem pouch, then the quest satchel.</summary>
+    private static int Rank(Item item) => item.IsQuestItem ? 2 : InPouch(item) ? 1 : 0;
+
+    /// <summary>Angband pack order: by base (in data order), then kind level, then name; the gem pouch and the quest satchel last.</summary>
     private void SortPack() => _pack.Sort((a, b) =>
     {
-        var c = a.IsQuestItem.CompareTo(b.IsQuestItem);
+        var c = Rank(a).CompareTo(Rank(b));
         if (c != 0) return c;
         c = string.CompareOrdinal(a.Base.Id, b.Base.Id);
         if (c != 0) return c;

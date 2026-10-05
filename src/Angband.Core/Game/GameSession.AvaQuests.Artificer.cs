@@ -38,6 +38,7 @@ public sealed partial class GameSession
             choices.Add(($"artificer:cut:{piece.Serial}",
                 $"A socket in your {ItemNaming.Describe(piece, Knowledge, withArticle: false, full: false)}"
                 + $"{(Player.Inventory.Equipped.Contains(piece) ? " (worn)" : "")} — {(free ? "free" : $"{SocketCost(piece)} gold")}"));
+        if (Player.Inventory.Pouch.Any()) choices.Add(("artificer:gems", "Cut gems: three of a grade into one finer"));
         if (AvaQuests.Get("chisel") is null && Player.Level >= ChiselQuestLevel && Data.AvaQuest("chisel") is not null)
             choices.Add(("artificer:trouble", "\"You look troubled.\""));
         choices.Add(("none", "Leave"));
@@ -58,6 +59,12 @@ public sealed partial class GameSession
         {
             case ("artificer", "menu"):
                 ArtificerMenu();
+                return;
+            case ("artificer", "gems"):
+                GemCuttingMenu();
+                return;
+            case ("artificer", "cutgem") when parts.ElementAtOrDefault(2) is { } kind:
+                CutGems(kind);
                 return;
             case ("artificer", "trouble"):
                 if (Data.AvaQuest("chisel") is { } def && AvaQuests.Get("chisel") is null)

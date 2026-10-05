@@ -42,6 +42,12 @@ to lightning; three **emeralds**, **garnets** or **amethysts** add two more CON,
 **diamonds** ten more armour; three **opals** better infravision. A **ruby**, a **sapphire** and a
 **topaz** together resist acid too. You need bracers with three sockets, and to wear them.
 
+Your gems ride in a **gem pouch**: listed under their own heading, after your pack, each with what
+it does in a socket ("in a socket: +3 to-dam, resist fire"), and all of them together take **one**
+slot of your pack, however many kinds you carry. At the **Arcane Artificer** (0), *Cut gems* turns
+three gems of a grade into one of the next — three chipped rubies into a flawed ruby, three flawed into
+a ruby — for a fifth of the finer stone's worth (bloodstone, black onyx and star sapphire can't be cut).
+
 Only the **Armoury** (2) can take a gem out again — press **!** (or *Remove a gem*) in the shop — for
 some gold, and now and then the stone cracks. A cursed stone won't come out until its curse is
 broken.

@@ -50,10 +50,10 @@ public sealed partial class MainWindowViewModel
         // AVABand's socketed bracers: a gem goes into bracers with room, from either's menu.
         if (GameSession.IsGem(item) && inv.Pack.Contains(item))
             foreach (var host in _game.FreeSockets())
-                menu.Add(($"Set into your {ItemNaming.Describe(host, _game.Knowledge, withArticle: false, full: false)}", () => Execute(new SetGemCommand(host, item))));
+                menu.Add(($"Set into your {ItemNaming.Describe(host, _game.Knowledge, withArticle: false, full: false)} ({_game.GemEffectText(item)})", () => Execute(new SetGemCommand(host, item))));
         if (item.Sockets > item.Gems.Count && carried)
             foreach (var gem in inv.Pack.Where(GameSession.IsGem))
-                menu.Add(($"Set {ItemNaming.Describe(gem, _game.Knowledge, withArticle: false, full: false)} here", () => Execute(new SetGemCommand(item, gem))));
+                menu.Add(($"Set {ItemNaming.Describe(gem, _game.Knowledge, withArticle: false, full: false)} here ({_game.GemEffectText(gem)})", () => Execute(new SetGemCommand(item, gem))));
 
         if (_game.CanWieldOffHand(item)) menu.Add(("Wield in off hand", () => Execute(new WieldOffHandCommand(item)))); // AVABand's Humans
 

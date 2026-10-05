@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-04
 
+- **A gem pouch**: gems now ride under their own heading, *Gem pouch*, each with what it does in a
+  socket, and all of them together take just **one** pack slot, however many kinds you carry. The
+  set-a-gem menus say what each gem does too. And the **Arcane Artificer** now cuts gems: three of a
+  grade into one of the next (three chipped rubies into a flawed ruby), for a fee.
 - **A search key, `S`**: a careful search of the squares around you, taking a turn, with your search
   skill raised — and raised more for every turn you keep searching in the same spot (up to +50). It
   finds traps that walking past missed, finds secret doors by touch even in the dark, and says "You
