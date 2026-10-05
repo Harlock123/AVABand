@@ -106,6 +106,7 @@ public static class SaveGame
             History = [.. g.History.Select(h => new HistorySave { Turn = h.Turn, Depth = h.Depth, Text = h.Text, Artifact = h.Artifact, Lost = h.Lost })],
             QuestKills = new(g.QuestKills),
             AvaQuests = g.AvaQuests,
+            Stats = g.Stats,
             CharacterKills = new(g.CharacterKills),
             JourneyVisits = [.. g.Visits.Select(v => new JourneyVisitSave { Turn = v.Turn, Depth = v.Depth, Profile = v.Profile })],
             JourneyKills = [.. g.Kills.Select(k => new JourneyKillSave { Turn = k.Turn, Depth = k.Depth, Race = k.RaceId, Unique = k.Unique })],
@@ -364,6 +365,7 @@ public static class SaveGame
         g.RestoreHotbar(f.Hotbar);
         foreach (var (q, n) in f.QuestKills) g.QuestKills[q] = n;
         g.RestoreAvaQuests(f.AvaQuests);
+        g.RestoreStats(f.Stats);
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));

@@ -54,6 +54,8 @@ public sealed class SaveFile
     public Dictionary<string, int> QuestKills { get; set; } = [];
     /// <summary>AVABand's quests (absent in older saves).</summary>
     public Quests.AvaQuestLog? AvaQuests { get; set; }
+    /// <summary>AVABand's statistics (absent in older saves).</summary>
+    public Game.PlayStats? Stats { get; set; }
     public Dictionary<string, int> CharacterKills { get; set; } = [];
     /// <summary>The journey: levels arrived on and kills, in order (absent from older saves).</summary>
     public List<JourneyVisitSave> JourneyVisits { get; set; } = [];

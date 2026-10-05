@@ -279,6 +279,7 @@ public partial class MainWindow : Window
             _subscribed.JourneyRequested -= OnJourneyRequested;
             _subscribed.QuestLogRequested -= OnQuestLogRequested;
             _subscribed.GrimoireRequested -= OnGrimoireRequested;
+            _subscribed.StatsRequested -= OnStatsRequested;
             _subscribed.OverviewRequested -= OnOverviewRequested;
             _subscribed.OpenUrlRequested -= OnOpenUrlRequested;
         }
@@ -305,6 +306,7 @@ public partial class MainWindow : Window
         vm.JourneyRequested += OnJourneyRequested;
         vm.QuestLogRequested += OnQuestLogRequested;
         vm.GrimoireRequested += OnGrimoireRequested;
+        vm.StatsRequested += OnStatsRequested;
         vm.OverviewRequested += OnOverviewRequested;
         vm.OpenUrlRequested += OnOpenUrlRequested;
 
@@ -389,6 +391,9 @@ public partial class MainWindow : Window
 
     private void OnQuestLogRequested(QuestLogViewModel log) =>
         DialogFit.Show(new QuestLogWindow { DataContext = log }, this);
+
+    private void OnStatsRequested(StatsViewModel stats) =>
+        DialogFit.Show(new StatsWindow { DataContext = stats }, this);
 
     private void OnGrimoireRequested(GrimoireViewModel grimoire) =>
         DialogFit.Show(new GrimoireWindow { DataContext = grimoire }, this);

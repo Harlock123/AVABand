@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        x:Class="Angband.Avalonia.Views.StatsWindow"
+        x:DataType="vm:StatsViewModel"
+        Title="{Binding Title}"
+        Width="820" Height="640"
+        WindowStartupLocation="CenterOwner">
+  <Window.Resources>
+    <DataTemplate x:Key="StatLine" x:DataType="vm:StatsLine">
+      <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+        <TextBlock Text="{Binding What}" FontWeight="{Binding Weight}" Foreground="{Binding Color}" TextWrapping="Wrap" />
+        <TextBlock Grid.Column="1" Text="{Binding Value}" Foreground="#e6c35c" Margin="16,0,0,0" FontFamily="{StaticResource MonoFont}" />
+      </Grid>
+    </DataTemplate>
+  </Window.Resources>
+  <DockPanel Margin="16">
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" />
+    <TextBlock DockPanel.Dock="Top" Text="{Binding Summary}" Opacity="0.75" Margin="0,2,0,12" />
+    <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="0,10,0,0">
+      <TextBlock Text="Counted for this character since these were first kept. Esc closes." Opacity="0.6" VerticalAlignment="Center" />
+      <Button Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" />
+    </Grid>
+    <Grid ColumnDefinitions="*,24,280">
+      <ScrollViewer Background="#111111">
+        <ItemsControl x:Name="StatRows" ItemsSource="{Binding Rows}" ItemTemplate="{StaticResource StatLine}" Margin="12,8" />
+      </ScrollViewer>
+      <DockPanel Grid.Column="2">
+        <TextBlock DockPanel.Dock="Top" Text="Killed most" Foreground="#8fc1ff" FontWeight="SemiBold" Margin="0,0,0,6" />
+        <ScrollViewer Background="#111111">
+          <ItemsControl ItemsSource="{Binding Kills}" ItemTemplate="{StaticResource StatLine}" Margin="12,8" />
+        </ScrollViewer>
+      </DockPanel>
+    </Grid>
+  </DockPanel>
+</Window>

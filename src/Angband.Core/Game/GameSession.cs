@@ -33,6 +33,7 @@ public sealed partial class GameSession : ITurnHandler
         _spawner = new MonsterSpawner(data);
         InitItems();
         InitStores();
+        TrackStats();
     }
 
     /// <summary>An empty session for loading a save into (no starting kit, stores or level).</summary>
@@ -47,6 +48,7 @@ public sealed partial class GameSession : ITurnHandler
         Objects = new ObjectFactory(data) { CanBrowse = PlayerCanBrowse };
         Knowledge = new PlayerKnowledge(data, seed) { IgnoredCheck = IsMarkedIgnored };
         Player.Inventory = new Inventory(data.Constants.PackSize, data.Constants.QuiverSlotSize, data.Constants.QuiverSize);
+        TrackStats();
     }
 
     internal static GameSession CreateForLoad(GameData data, ulong seed, ulong townSeed) => new(data, seed, townSeed);
