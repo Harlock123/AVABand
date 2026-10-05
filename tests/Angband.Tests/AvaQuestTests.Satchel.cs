@@ -141,6 +141,48 @@ public partial class AvaQuestTests
         Assert.True(loaded.SlotsUsed <= loaded.PackSize);
     }
 
+    /// <summary>
+    /// A save from before the gem pouch: gems among the potions and scrolls, each kind its own slot, the
+    /// pack full. Loaded, the gems go into the pouch (after the pack's own things, before the satchel), all
+    /// of them in one slot, and nothing is lost.
+    /// </summary>
+    [Fact]
+    public void An_older_saves_gems_go_into_the_pouch_on_loading()
+    {
+        var q = Start();
+        var inv = q.Game.Player.Inventory;
+        string[] gems = ["ruby", "chipped_sapphire", "emerald", "flawed_topaz"];
+        foreach (var kind in gems) inv.Add(q.Game.Objects.Create(kind));
+        inv.Add(q.Game.Objects.Create("journal_page"));
+        foreach (var kind in q.Game.Data.Objects.Where(k => k.Base is "scroll" or "potion").Take(40))
+            if (inv.SlotsUsed < inv.PackSize) inv.Add(q.Game.Objects.Create(kind.Id));
+        var carried = inv.Pack.Sum(i => i.Number);
+
+        // Put the gems back where the old order had them: by base ("gem" before "potion"), first.
+        using var stream = new MemoryStream();
+        SaveGame.Save(q.Game, stream);
+        stream.Position = 0;
+        JsonNode file;
+        using (var unzip = new GZipStream(stream, CompressionMode.Decompress, leaveOpen: true)) file = JsonNode.Parse(unzip)!;
+        var pack = FindArray(file, "Pack")!;
+        var gemNodes = pack.Where(n => gems.Contains(n!["Kind"]?.GetValue<string>())).ToList();
+        Assert.Equal(gems.Length, gemNodes.Count);
+        foreach (var n in gemNodes) pack.Remove(n);
+        foreach (var n in gemNodes.AsEnumerable().Reverse()) pack.Insert(0, n!.DeepClone());
+        var old = new MemoryStream();
+        using (var zip = new GZipStream(old, CompressionLevel.Fastest, leaveOpen: true))
+        using (var writer = new System.Text.Json.Utf8JsonWriter(zip)) file.WriteTo(writer);
+        old.Position = 0;
+
+        var loaded = SaveGame.Load(TestData.Game, old).Player.Inventory;
+        Assert.Equal(gems.Order(), loaded.Pouch.Select(i => i.Kind.Id).Order());
+        var ranks = loaded.Pack.Select(i => i.IsQuestItem ? 2 : Angband.Core.Items.Inventory.InPouch(i) ? 1 : 0).ToList();
+        Assert.Equal(ranks.Order().ToList(), ranks);                               // pack, pouch, satchel
+        Assert.Equal(carried, loaded.Pack.Sum(i => i.Number));                     // nothing lost
+        Assert.Equal(inv.SlotsUsed, loaded.SlotsUsed);
+        Assert.True(loaded.SlotsUsed <= loaded.PackSize);
+    }
+
     private static JsonArray? FindArray(JsonNode? node, string name) => node switch
     {
         JsonObject o => o.Select(kv => kv.Key == name && kv.Value is JsonArray a ? a : FindArray(kv.Value, name)).FirstOrDefault(a => a is not null),
