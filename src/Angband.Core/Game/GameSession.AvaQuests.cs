@@ -46,6 +46,7 @@ public sealed partial class GameSession
             case "none": break;
             case "inn": InnChoice(parts.Length > 1 ? parts[1] : ""); break;
             case "strongroom": StrongroomChoice(parts); break;
+            case "caravan": CaravanChoice(parts); break;
             case "offer": ShowOffer(parts[1]); break;
             case "accept": AcceptQuest(parts[1]); break;
             case "board": BoardChoice(parts); break;

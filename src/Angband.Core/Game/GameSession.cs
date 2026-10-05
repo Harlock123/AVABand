@@ -412,6 +412,7 @@ public sealed partial class GameSession : ITurnHandler
             }
             else if (shopId == "inn") EnterInn();
             else if (shopId == "artificer") EnterArtificer();
+            else if (shopId == "caravan") EnterCaravan();
             else Publish(new MessageEvent($"The {Data.Shops.FirstOrDefault(s => s.Id == shopId)?.Name ?? shopId} is closed."));
         }
         else if (feature.Has(TerrainFlags.Stair))
@@ -637,6 +638,7 @@ public sealed partial class GameSession : ITurnHandler
             ApplyTownLighting();
             if (StoreDays > 0) UpdateStores();
             if (fromDepth > 0) RenewBoard(); // the notice board's untaken postings change while you're away
+            if (fromDepth > 0) CaravanOnReturn(); // (AVABand: a merchant caravan comes, stays, or goes)
         }
         _arriving = true;
         try

@@ -1315,6 +1315,7 @@
     "object:lesser_holy_water": "ava_holy_water.png",
     "object:greater_holy_water": "ava_holy_water.png",
     "terrain:shop_artificer": "ava_shop_artificer.png",
-    "object:star_forged_chisel": "main:15,10"
+    "object:star_forged_chisel": "main:15,10",
+    "terrain:shop_caravan": "ava_shop_caravan.png"
   }
 }

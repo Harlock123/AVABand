@@ -486,6 +486,7 @@ public sealed class MapView : Control
             context.FillRectangle(ShopBrush((part.Colour & 0x00FFFFFF) | 0x3C000000), cell);
             return;
         }
+        if (part.ShopId == "caravan") return; // (the caravan's wagon is a tile of its own; in letters, its & on its colour)
         if (renderer is AsciiRenderer)
         {
             // In letters a window is its glass and the ware's symbol, and the awning is left out (too fine at this size).

@@ -263,6 +263,12 @@ core kept busy.
   read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
   same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+- **Merchant caravans** (AVABand's own; `GameSession.Caravan.cs`): one return to town in four (from
+  250 ft), a caravan camps in the square — a wagon tile in every set (`ava_shop_caravan.png`, from
+  `tools/avaband_quest_tiles.py`), `&` in letters, named on the shopfronts — selling five good things made
+  deeper than you've been, at half as much again as their worth, fully known when bought; it stays three
+  returns. Its arrival and wares come from dice of their own, seeded from the town and the time, and the
+  serials and any artifact rolled are put back, so nothing else in the game shifts.
 - **The strongroom** (AVABand's own; `GameSession.Strongroom.cs`, `StrongroomStore`; birth option
   *The strongroom*, `birth_strongroom`, on): at the Prancing Pony, lockers shared by every character
   you play, kept in `<AppData>/AVABand/strongroom.json` (written through a temporary file) — an heirloom

@@ -35,6 +35,7 @@ public sealed partial class MainWindowViewModel
         ["home"] = (0xFFD09030, []),
         ["inn"] = (0xFF6AA04A, ["pint_of_fine_wine", "flask_of_whisky"]),
         ["artificer"] = (0xFF9A5AD0, ["ruby", "sapphire"]),
+        ["caravan"] = (0xFFD8A030, []), // (a wagon on open ground: the map draws it)
     };
 
     private Level? _facadeLevel;
@@ -101,7 +102,7 @@ public sealed partial class MainWindowViewModel
                 _facades[w] = new ShopFacade(FacadeKind.Window, shopId, look.Colour, street.X, street.Y, wares.Count == 0 ? null : wares[i++ % wares.Count]);
             }
             _facades[door] = new ShopFacade(FacadeKind.Door, shopId, look.Colour, street.X, street.Y);
-            var name = _data.Shops.FirstOrDefault(s => s.Id == shopId)?.Name ?? shopId;
+            var name = shopId == "caravan" ? "Merchant caravan" : _data.Shops.FirstOrDefault(s => s.Id == shopId)?.Name ?? shopId;
             _shopSigns.Add(new ShopSign(door, name, look.Colour, street.X, street.Y));
         }
         return _facades;

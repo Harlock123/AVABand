@@ -27,6 +27,13 @@ count, and pays when the last arrives.
 **Quest items ride in your quest satchel**: they're listed under their own heading, after your
 pack, and take none of its 23 slots (they still weigh what they weigh).
 
+## Merchant caravans
+
+Now and then, coming back up to town (once you've been 250 ft down), you'll find a **merchant caravan**
+camped in the square — a painted wagon (`&` in letters). Walk onto it: five rare, good things from deeper
+than you've been, at half as much again as they're worth, and fully known when you buy them. It stays for
+three of your returns, then moves on.
+
 ## The strongroom
 
 Under the Prancing Pony, Butterbur keeps **lockers shared by all your characters** — choose *The

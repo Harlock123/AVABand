@@ -77,4 +77,25 @@ public class ShopfrontUiTests
         vm.SetOption(DisplayOptions.Shopfronts, false);
         Assert.Equal(0u, vm.GetCell(door.X, door.Y).Background & 0x00FFFFFF);
     }
+
+    /// <summary>A merchant caravan in the square: its wagon (a tile of every set) and its name.</summary>
+    [AvaloniaFact]
+    public void ACaravan_IsDrawnAsAWagon_WithItsName()
+    {
+        var (window, vm) = Open(tiles: true);
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        game.GainExperience(game.ExperienceForLevel(14));
+        for (var i = 0; i < 60 && game.AvaQuests.Caravan is null; i++)
+        {
+            vm.Execute(new Angband.Core.Game.DebugJumpCommand(5));
+            vm.Execute(new Angband.Core.Game.DebugJumpCommand(0));
+            vm.SkipScenes();
+        }
+        Assert.NotNull(game.AvaQuests.Caravan);
+        Assert.Contains(vm.ShopSigns, s => s.Name == "Merchant caravan");
+        vm.ShowWholeMap = true;
+        vm.Revision++;
+        TileRenderingTests.Save(window, "town-caravan");
+    }
 }

@@ -285,6 +285,23 @@ def shopfront(digit, sign, emblem):
     return c
 
 
+def wagon():
+    """A merchant caravan's wagon (AVABand's caravans): a striped canvas cover over a wooden bed on two
+    wheels, standing on the town's cobbles."""
+    c = canvas()
+    stone_floor(c, "#4a4450", "#36323c")
+    for i, x0 in enumerate(range(2, 14, 3)):                  # the cover, striped amber and canvas
+        rect(c, x0, 3, x0 + 2, 8, hexc("#d8a030" if i % 2 == 0 else "#efe4c8"))
+    rect(c, 2, 2, 13, 2, hexc("#efe4c8"))                     # its rounded top
+    rect(c, 1, 9, 14, 11, hexc("#6a4422"))                    # the bed
+    rect(c, 1, 9, 14, 9, hexc("#8a5c30"))
+    for cx in (4, 11):                                        # the wheels
+        rect(c, cx - 1, 11, cx + 1, 14, hexc("#2a1c10"))
+        rect(c, cx - 2, 12, cx + 2, 13, hexc("#2a1c10"))
+        px(c, cx, 12, hexc("#8a5c30"))
+    return c
+
+
 def oil(color):
     """A stoppered flask of weapon oil (AVABand's oils), the oil in its colour."""
     c = canvas()
@@ -385,6 +402,7 @@ for _gem, _colour in GEM_COLOURS.items():
         DRAWN["object:" + _prefix + _gem] = _tile
 for _shop, (_digit, _sign, _emblem) in SHOPS.items():  # every shop's door, its own
     DRAWN["terrain:" + _shop] = ("ava_" + _shop + ".png", (lambda d, sg, e: lambda: shopfront(d, sg, e))(_digit, _sign, _emblem), True)
+DRAWN["terrain:shop_caravan"] = ("ava_shop_caravan.png", wagon, True)
 DRAWN["object-base:oil"] = ("ava_oil.png", lambda: oil("#30b040"), False)
 DRAWN["object-base:trophy"] = ("ava_trophy.png", lambda: scale("#d03020"), False)
 for _trophy, _colour in SCALE_COLOURS.items():

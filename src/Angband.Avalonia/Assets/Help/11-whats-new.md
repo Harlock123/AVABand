@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **Merchant caravans**: now and then a caravan camps in the town square with five rare, good things
+  from deeper than you've been — at a price. It stays three of your returns.
 - **Statistics** (Game → Statistics…): monsters killed and the ones you've killed most, damage dealt
   and taken, close calls, gold found, earned and spent, and what you've used along the way.
 - **Map pins**: right-click a square, *Pin a note here...*, and a little red flag marks it ("vault

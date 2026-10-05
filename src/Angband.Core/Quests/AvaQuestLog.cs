@@ -45,7 +45,20 @@ public sealed class AvaQuestLog
     /// <summary>Quest items left behind on a level (kind, tag), which turn up at the Prancing Pony.</summary>
     public List<LostQuestItem> LostAndFound { get; set; } = [];
 
+    /// <summary>A merchant caravan in the town square, if one is camped there (AVABand's own).</summary>
+    public Caravan? Caravan { get; set; }
+
     public AvaQuestState? Get(string id) => Quests.GetValueOrDefault(id);
+}
+
+/// <summary>A merchant caravan: where it's camped, how many more of your returns it stays, and its wares (as saves write items) and prices.</summary>
+public sealed class Caravan
+{
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int VisitsLeft { get; set; }
+    public List<string> Stock { get; set; } = [];
+    public List<long> Prices { get; set; } = [];
 }
 
 /// <summary>A quest item left behind on a level: what it was and which quest it belongs to.</summary>
