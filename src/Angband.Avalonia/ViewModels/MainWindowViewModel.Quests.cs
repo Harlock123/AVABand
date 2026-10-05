@@ -8,5 +8,5 @@ namespace Angband.Avalonia.ViewModels;
 public sealed partial class MainWindowViewModel
 {
     private void OnQuestPrompt(QuestPromptEvent prompt) =>
-        ShowMenu(prompt.Title, [.. prompt.Choices.Select(c => (c.Label, (Action)(() => Execute(new QuestChoiceCommand(c.Id)))))], prompt.Text);
+        ShowMenu(prompt.Title, [.. prompt.Choices.Select(c => (c.Label, StrongroomAction(c.Id) ?? (() => Execute(new QuestChoiceCommand(c.Id)))))], prompt.Text);
 }

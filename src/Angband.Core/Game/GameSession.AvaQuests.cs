@@ -45,6 +45,7 @@ public sealed partial class GameSession
         {
             case "none": break;
             case "inn": InnChoice(parts.Length > 1 ? parts[1] : ""); break;
+            case "strongroom": StrongroomChoice(parts); break;
             case "offer": ShowOffer(parts[1]); break;
             case "accept": AcceptQuest(parts[1]); break;
             case "board": BoardChoice(parts); break;
@@ -211,6 +212,9 @@ public sealed partial class GameSession
             case "board":
                 ShowBoard();
                 break;
+            case "strongroom":
+                if (StrongroomOn) StrongroomMenu();
+                break;
             case "leave":
                 break;
             default:
@@ -224,6 +228,7 @@ public sealed partial class GameSession
                 foreach (var job in AvaQuests.Board.Where(j => j.Taken && j.Kind == "gather" && !JobComplete(j) && GatherOnHand(j) > 0))
                     choices.Add(($"board:deliver:{job.Id}", $"Hand in what you have: {JobTitle(job)} ({job.Progress + GatherOnHand(job)} of {job.Count})"));
                 choices.Add(("inn:board", "Read the notice board"));
+                if (StrongroomOn) choices.Add(("inn:strongroom", "The strongroom (lockers for all your characters)"));
                 choices.Add(("inn:leave", "Leave"));
                 var taken = AvaQuests.Quests.Values.Count(q => !q.IsDone);
                 AskQuest("The Prancing Pony",

@@ -263,6 +263,15 @@ core kept busy.
   read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
   same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+- **The strongroom** (AVABand's own; `GameSession.Strongroom.cs`, `StrongroomStore`; birth option
+  *The strongroom*, `birth_strongroom`, on): at the Prancing Pony, lockers shared by every character
+  you play, kept in `<AppData>/AVABand/strongroom.json` (written through a temporary file) — an heirloom
+  left by one for the next. Leaving costs 50 gold and 5% of its worth, taking out 100 and 10%; six
+  lockers in all; no artifacts, quest items or gold; and a character takes out only what isn't too far
+  beyond them (item level at most twice theirs plus five). The item goes in as the save file writes it
+  (`SaveGame.ItemToJson`), enchantments, sockets and gems and all, and comes out with fresh serials;
+  taking it out is a command carrying the item, so a replay needs no lockers file. The character is
+  saved at once after leaving or taking something. Daily-dungeon characters have none.
 - **Blows and armour weight, as Angband 4.2.5** (`Game/GameSession.AngbandBlows.cs`; the birth
   option *Angband 4.2's blows*, `birth_angband_blows`, on by default — off, each class's fixed blows
   as before): `calc_blows` from `player-calcs.c` — Strength for the weapon's weight (`adj_str_blow` ×

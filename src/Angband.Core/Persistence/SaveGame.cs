@@ -179,6 +179,86 @@ public static class SaveGame
         SavedAtUtc = DateTime.UtcNow,
     };
 
+    private static Item? ItemFromSave(GameData data, GameSession g, ItemSave s, List<string> errors)
+{
+        if (data.Object(RenamedKinds.GetValueOrDefault(s.Kind, s.Kind)) is not { } kind || data.ObjectBase(kind.Base) is not { } b)
+        {
+            errors.Add($"unknown object '{s.Kind}'");
+            return null;
+        }
+        var item = new Item(s.Serial, kind, b, s.Number)
+        {
+            Damage = Dice.TryParse(s.Damage, out var d) ? d : kind.Damage,
+            Armour = s.Armour, ToHit = s.ToHit, ToDam = s.ToDam, ToAc = s.ToAc, Fuel = s.Fuel, GoldValue = s.GoldValue,
+            Charges = s.Charges, Timeout = s.Timeout, ChestState = s.ChestState,
+            OriginDepth = s.OriginDepth,
+            Note = s.Note,
+            QuestTag = s.QuestTag,
+            Ignored = s.Ignored,
+            Assessed = s.Assessed,
+            Ego = s.Ego is null ? null : data.Egos.FirstOrDefault(e => e.Id == s.Ego),
+            Artifact = s.Artifact is null ? null : g.Artifacts.FirstOrDefault(a => a.Id == s.Artifact),
+        };
+        if (s.Ego is not null && item.Ego is null) errors.Add($"unknown ego '{s.Ego}'");
+        if (s.Artifact is not null && item.Artifact is null) errors.Add($"unknown artifact '{s.Artifact}'");
+        item.Modifiers.Clear();
+        foreach (var (k, v) in s.Modifiers) item.Modifiers[k] = v;
+        item.Slays.Clear();
+        item.Slays.AddRange(s.Slays.Select(x => new SlayDef { MonsterFlag = x.Flag, Multiplier = x.Multiplier, Verb = x.Verb, Name = x.Name }));
+        item.Brands.Clear();
+        item.Brands.AddRange(s.Brands.Select(x => new BrandDef { Element = x.Element, Multiplier = x.Multiplier, Verb = x.Verb, Name = x.Name }));
+        item.Resists.Clear();
+        foreach (var r in s.Resists) item.Resists.Add(r);
+        item.Curses.Clear();
+        item.Curses.AddRange(s.Curses);
+        item.CursePowers.Clear();
+        foreach (var c in s.Curses)
+            item.CursePowers[c] = s.CursePowers.TryGetValue(c, out var power) ? power
+                : kind.CursePowers.GetValueOrDefault(c, Item.DefaultCursePower); // an older save: the data's, else the default
+        item.CurseTimeouts.Clear();
+        foreach (var (c, t) in s.CurseTimeouts) item.CurseTimeouts[c] = t;
+        if (s.Flags is { } flags)
+        {
+            item.Flags.Clear();
+            foreach (var f in flags) item.Flags.Add(f);
+        }
+        foreach (var gem in s.Gems ?? []) if (ItemFromSave(data, g, gem, errors) is { } set) item.Gems.Add(set);
+        item.AddedResists.AddRange(s.AddedResists ?? []);
+        item.AddedFlags.AddRange(s.AddedFlags ?? []);
+        item.AddedCurses.AddRange(s.AddedCurses ?? []);
+        item.Trophy = s.Trophy;
+        item.AddedSockets = s.AddedSockets;
+        return item;
+    }
+
+    /// <summary>An item as text (the save file's own form), to keep outside a save: AVABand's strongroom lockers.</summary>
+    public static string ItemToJson(Item item) => JsonSerializer.Serialize(ItemToSave(item), Json);
+
+    /// <summary>
+    /// An item back from <see cref="ItemToJson"/>, in this game, with fresh serials (it and any gems set in
+    /// it); null if it can't be read or names a kind the game no longer has.
+    /// </summary>
+    public static Item? ItemFromJson(GameSession game, string json)
+    {
+        try
+        {
+            if (JsonSerializer.Deserialize<ItemSave>(json, Json) is not { } save) return null;
+            void Renumber(ItemSave i)
+            {
+                i.Serial = game.Objects.NextSerial++;
+                foreach (var gem in i.Gems ?? []) Renumber(gem);
+            }
+            Renumber(save);
+            var errors = new List<string>();
+            var item = ItemFromSave(game.Data, game, save, errors);
+            return errors.Count == 0 ? item : null;
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
     private static ItemSave ItemToSave(Item i) => new()
     {
         Serial = i.Serial, Kind = i.Kind.Id, Number = i.Number, Damage = i.Damage.ToString(), Armour = i.Armour,
@@ -289,57 +369,7 @@ public static class SaveGame
         g.Knowledge.RestoreSeen(f.Knowledge.SeenKinds, f.Knowledge.SeenEgos, f.Knowledge.SeenArtifacts);
         g.Knowledge.RestoreKindNotes(f.Knowledge.KindNotes);
 
-        Item? ToItem(ItemSave s)
-        {
-            if (data.Object(RenamedKinds.GetValueOrDefault(s.Kind, s.Kind)) is not { } kind || data.ObjectBase(kind.Base) is not { } b)
-            {
-                errors.Add($"unknown object '{s.Kind}'");
-                return null;
-            }
-            var item = new Item(s.Serial, kind, b, s.Number)
-            {
-                Damage = Dice.TryParse(s.Damage, out var d) ? d : kind.Damage,
-                Armour = s.Armour, ToHit = s.ToHit, ToDam = s.ToDam, ToAc = s.ToAc, Fuel = s.Fuel, GoldValue = s.GoldValue,
-                Charges = s.Charges, Timeout = s.Timeout, ChestState = s.ChestState,
-                OriginDepth = s.OriginDepth,
-                Note = s.Note,
-                QuestTag = s.QuestTag,
-                Ignored = s.Ignored,
-                Assessed = s.Assessed,
-                Ego = s.Ego is null ? null : data.Egos.FirstOrDefault(e => e.Id == s.Ego),
-                Artifact = s.Artifact is null ? null : g.Artifacts.FirstOrDefault(a => a.Id == s.Artifact),
-            };
-            if (s.Ego is not null && item.Ego is null) errors.Add($"unknown ego '{s.Ego}'");
-            if (s.Artifact is not null && item.Artifact is null) errors.Add($"unknown artifact '{s.Artifact}'");
-            item.Modifiers.Clear();
-            foreach (var (k, v) in s.Modifiers) item.Modifiers[k] = v;
-            item.Slays.Clear();
-            item.Slays.AddRange(s.Slays.Select(x => new SlayDef { MonsterFlag = x.Flag, Multiplier = x.Multiplier, Verb = x.Verb, Name = x.Name }));
-            item.Brands.Clear();
-            item.Brands.AddRange(s.Brands.Select(x => new BrandDef { Element = x.Element, Multiplier = x.Multiplier, Verb = x.Verb, Name = x.Name }));
-            item.Resists.Clear();
-            foreach (var r in s.Resists) item.Resists.Add(r);
-            item.Curses.Clear();
-            item.Curses.AddRange(s.Curses);
-            item.CursePowers.Clear();
-            foreach (var c in s.Curses)
-                item.CursePowers[c] = s.CursePowers.TryGetValue(c, out var power) ? power
-                    : kind.CursePowers.GetValueOrDefault(c, Item.DefaultCursePower); // an older save: the data's, else the default
-            item.CurseTimeouts.Clear();
-            foreach (var (c, t) in s.CurseTimeouts) item.CurseTimeouts[c] = t;
-            if (s.Flags is { } flags)
-            {
-                item.Flags.Clear();
-                foreach (var f in flags) item.Flags.Add(f);
-            }
-            foreach (var gem in s.Gems ?? []) if (ToItem(gem) is { } set) item.Gems.Add(set);
-            item.AddedResists.AddRange(s.AddedResists ?? []);
-            item.AddedFlags.AddRange(s.AddedFlags ?? []);
-            item.AddedCurses.AddRange(s.AddedCurses ?? []);
-            item.Trophy = s.Trophy;
-            item.AddedSockets = s.AddedSockets;
-            return item;
-        }
+        Item? ToItem(ItemSave s) => ItemFromSave(data, g, s, errors);
 
         // Player.
         var ps = f.Player;

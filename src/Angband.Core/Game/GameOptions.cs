@@ -48,6 +48,8 @@ public static class OptionIds
     public const string Feelings = "birth_feelings";
     /// <summary>AVABand's own: its quests — the Prancing Pony, its notice board, and the quests below.</summary>
     public const string AvaQuests = "birth_ava_quests";
+    /// <summary>AVABand's strongroom: lockers at the Prancing Pony shared by all your characters.</summary>
+    public const string Strongroom = "birth_strongroom";
     /// <summary>AVABand's own: each race's extra ability (ava_races.json).</summary>
     public const string AvaRaces = "birth_ava_races";
     /// <summary>AVABand's own: Strength counts for more weight, Constitution a little, worn gear 75%, and the burden is named.</summary>
@@ -93,6 +95,7 @@ public static class OptionCatalog
         new(OptionIds.KnowRunes, "Know all runes on birth", OptionKind.Birth, false),
         new(OptionIds.KnowFlavors, "Know all flavors on birth", OptionKind.Birth, false),
         new(OptionIds.AvaQuests, "AVABand's quests (the Prancing Pony and its notice board)", OptionKind.Birth, true),
+        new(OptionIds.Strongroom, "The strongroom (lockers at the Prancing Pony shared by all your characters)", OptionKind.Birth, true),
         new(OptionIds.AvaRaces, "AVABand's racial abilities (a Dwarf's delving, a Human's two weapons...)", OptionKind.Birth, true),
         new(OptionIds.AngbandBlows, "Angband 4.2's blows (weapon weight, Strength, Dexterity) and casters' armour weight", OptionKind.Birth, true),
         new(OptionIds.AvaBurden, "AVABand's encumbrance (more from Strength and Constitution; worn gear weighs less)", OptionKind.Birth, true),

@@ -27,6 +27,15 @@ count, and pays when the last arrives.
 **Quest items ride in your quest satchel**: they're listed under their own heading, after your
 pack, and take none of its 23 slots (they still weigh what they weigh).
 
+## The strongroom
+
+Under the Prancing Pony, Butterbur keeps **lockers shared by all your characters** — choose *The
+strongroom* at the inn. Leave an item there (50 gold and a twentieth of its worth) and any character
+you play later, even after this one is gone, can take it out (100 gold and a tenth of its worth). There
+are six lockers in all. Butterbur won't keep artifacts or quest items, and a character can only take out
+what isn't too far beyond them: an item's level at most twice theirs plus five (the locker says at
+which level you can have it). The birth option *The strongroom* turns it off.
+
 ## The Arcane Artificer
 
 The town's tenth building (the `0`), where **SlatriBartSlow** cuts sockets for gems into your gear —

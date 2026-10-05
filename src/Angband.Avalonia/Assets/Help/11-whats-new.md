@@ -3,6 +3,12 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-05
+
+- **Butterbur's strongroom**: at the Prancing Pony, lockers shared by **all your characters**. Leave
+  an item (50 gold and a twentieth of its worth) and any later character can take it out (100 gold and a
+  tenth) — once they're far enough along for it. Six lockers; no artifacts or quest items.
+
 ## 2026-10-04
 
 - **A gem pouch**: gems now ride under their own heading, *Gem pouch*, each with what it does in a

@@ -288,6 +288,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     private void AttachGame(GameSession game)
     {
         _game = game;
+        _game.Strongroom ??= _strongroom;
         _game.Lore = _lore;
         CursorMode = CursorMode.None;
         _pendingScenes.Clear();

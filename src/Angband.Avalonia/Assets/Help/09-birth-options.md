@@ -18,6 +18,7 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
 - **Monsters learn from their mistakes** — they stop using attacks you resist.
 - **Know all runes on birth** / **Know all flavors on birth** — skip the learning.
 - **AVABand's quests** — the Prancing Pony, its notice board, and the quests below (on by default).
+- **The strongroom** — lockers at the Prancing Pony shared by all your characters (on by default).
 - **AVABand's racial abilities** — each race's extra ability (Help → Your character); off, the races
   are Angband 4.2.5's as they are (on by default).
 - **Angband 4.2's blows** — blows from your weapon's weight, Strength and Dexterity, heavy weapons

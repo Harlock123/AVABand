@@ -234,6 +234,7 @@ public sealed partial class GameSession : ITurnHandler
             QuestChoiceCommand qc => ChooseQuest(qc.Choice),
             LeaveStoreCommand => LeaveStore(),
             BuybackCommand back => BuyBack(back.Index),
+            TakeFromLockerCommand take => TakeFromLocker(take.LockerId, take.ItemJson, take.Value),
             BuyCommand buy => Buy(buy.Item, buy.Count),
             SellCommand sell => Sell(sell.Item, sell.Count),
             StudyCommand study => Study(study.SpellId, study.Book),
