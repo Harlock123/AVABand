@@ -378,7 +378,11 @@ public sealed partial class MainWindowViewModel
         if (OptionValue(DisplayOptions.MouseMovement)) Execute(new TravelCommand(loc));
     }
 
-    private string DescribeSquare(Loc p)
+    /// <summary>What's on a square, as Look says it — and a pin's note, if one is there (AVABand's own).</summary>
+    private string DescribeSquare(Loc p) =>
+        DescribeSquareAlone(p) + (_game.PinAt(p) is { } pin ? $" Pinned: \"{pin}\"." : "");
+
+    private string DescribeSquareAlone(Loc p)
     {
         if (!_game.Known.IsKnown(p)) return "You know nothing about that place.";
         if (_game.IsHallucinating) return "You see something strange."; // Angband aux_hallucinate

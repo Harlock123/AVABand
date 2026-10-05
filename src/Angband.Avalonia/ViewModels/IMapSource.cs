@@ -58,4 +58,6 @@ public interface IMapSource
     IReadOnlyList<ShopSign> ShopSigns => [];
     /// <summary>Night in town: windows glow and lanterns burn.</summary>
     bool IsNight => false;
+    /// <summary>A map pin on this cell (AVABand's own), drawn as a little flag.</summary>
+    bool HasPin(int x, int y) => false;
 }

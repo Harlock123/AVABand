@@ -154,6 +154,13 @@ public sealed partial class MainWindowViewModel
         }
         if (_game.Player.Inventory.Bow is not null) menu.Add(("Fire on", () => AimAt(loc, InputAction.Fire)));
         menu.Add(("Throw to", () => AimAt(loc, InputAction.Throw)));
+        // Map pins (AVABand's own): a note on the square, kept with the level.
+        if (_game.PinAt(loc) is not null)
+        {
+            menu.Add(("Change the pin...", () => BeginPin(loc)));
+            menu.Add(("Remove the pin", () => Execute(new PinCommand(loc, ""))));
+        }
+        else if (known) menu.Add(("Pin a note here...", () => BeginPin(loc)));
         return menu;
     }
 

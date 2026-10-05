@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **Map pins**: right-click a square, *Pin a note here...*, and a little red flag marks it ("vault
+  here", "come back with a pick") on the map and the level map; Look and the mouse read it out.
 - **Compare with what you wear**: in anything's menu (or `I` on it in a shop), an item laid beside
   what you wear in its slot, line by line — damage a turn, armour, stats, abilities, weight.
 - **Danger at a glance**: the monster list tags what **could kill you** (red) or is **dangerous**

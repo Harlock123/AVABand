@@ -30,6 +30,15 @@ public sealed class OverviewMapSource(MainWindowViewModel game) : IMapSource
     /// <summary>The player's block, outlined.</summary>
     public Loc? Highlight => Focus;
 
+    /// <summary>A pin anywhere in the block.</summary>
+    public bool HasPin(int x, int y)
+    {
+        for (var dy = 0; dy < Block; dy++)
+        for (var dx = 0; dx < Block; dx++)
+            if (game.HasPin(x * Block + dx, y * Block + dy)) return true;
+        return false;
+    }
+
     public MapCell GetCell(int x, int y)
     {
         var best = MapCell.Unknown;

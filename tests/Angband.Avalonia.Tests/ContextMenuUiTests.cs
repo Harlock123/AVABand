@@ -72,7 +72,7 @@ public class ContextMenuUiTests
         vm.ClickCell(jackal.Position, secondary: true);
         TileRenderingTests.Save(window, "context-menu");
         Assert.StartsWith("The jackal", vm.LastMessage); // what is there, as looking says it
-        Assert.Equal(["Look at", "Recall info", "Use item on", "Attack", "Walk towards", "Fire on", "Throw to"], vm.MenuLabels);
+        Assert.Equal(["Look at", "Recall info", "Use item on", "Attack", "Walk towards", "Fire on", "Throw to", "Pin a note here..."], vm.MenuLabels); // (and AVABand's map pin, last)
 
         Pick(vm, "Attack");
         Assert.False(vm.IsPrompting);

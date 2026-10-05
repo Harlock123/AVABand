@@ -52,6 +52,9 @@ public sealed class Level
     /// </summary>
     public Dictionary<string, int> Births { get; } = [];
 
+    /// <summary>The player's pins on this level (AVABand's own): a short note on a square, kept with the level.</summary>
+    public Dictionary<Loc, string> Pins { get; } = [];
+
     /// <summary>A ranger's decoy (Angband GLYPH:DECOY), which monsters that see it go for.</summary>
     public Loc? Decoy { get; set; }
 

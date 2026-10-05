@@ -36,6 +36,9 @@
 - `X` uses any item, whatever it is.
 - `m` cast a spell, `G` learn one, `B` or `b` browse your books.
 - `o` open, `c` close, `D` disarm, `T` tunnel, `R` rest, `s` steal (rogues).
+- **Map pins**: right-click a square and choose *Pin a note here...* ("vault here", "come back with a
+  pick"). A little red flag marks it on the map and the level map, and looking at it or hovering over it
+  reads the note. Right-click it again to change or remove it. Pins are kept with the level.
 - **Ctrl+E** explores: you walk on to the nearest part of the level you haven't seen, and keep going
   until something turns up — a monster in view, an object underfoot, a hurt — or there's nothing left.
 - `<` and `>` take the stairs you're standing on — or, anywhere else, walk you to the nearest up or

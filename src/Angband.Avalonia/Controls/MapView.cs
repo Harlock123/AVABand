@@ -367,6 +367,12 @@ public sealed class MapView : Control
             var amount = Math.Clamp(shade.Torch ? shade.Amount * (2 - flicker) : shade.Amount, 0, 1);
             if (amount > 0.01) context.FillRectangle(ShadeBrushes[(byte)(255 * amount)], dest);
         }
+        // Map pins (AVABand's own): a little red flag on each, over the shading.
+        for (var y = offsetY; y < endY; y++)
+        for (var x = offsetX; x < endX; x++)
+            if (source.HasPin(x, y))
+                DrawPin(context, new Rect(originX + (x - offsetX) * cell.Width, originY + (y - offsetY) * cell.Height, cell.Width, cell.Height));
+
         // At night the shops' windows glow and their lanterns burn, over the dark.
         if (lit is not null)
             foreach (var (dest, part) in lit) DrawShopLight(context, dest, part, flicker);
@@ -419,6 +425,27 @@ public sealed class MapView : Control
     private static readonly IBrush SconceBrass = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xA8, 0x7A, 0x30));
     private static readonly IBrush SconceFlame = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0x8C, 0x20));
     private static readonly IBrush SconceCore = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xFF, 0xE8, 0x90));
+
+    private static readonly IBrush PinFlag = new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xE0, 0x30, 0x30));
+    private static readonly IPen PinPole = new global::Avalonia.Media.Immutable.ImmutablePen(
+        new global::Avalonia.Media.Immutable.ImmutableSolidColorBrush(Color.FromRgb(0xF0, 0xE8, 0xD8)), 1.2);
+
+    /// <summary>A map pin: a pole and a red pennant in the top corner of its square.</summary>
+    private static void DrawPin(DrawingContext context, Rect cell)
+    {
+        var (w, h) = (Math.Max(cell.Width, 6), Math.Max(cell.Height, 6));
+        var x = cell.X + w * 0.18;
+        context.DrawLine(PinPole, new Point(x, cell.Y + h * 0.08), new Point(x, cell.Y + h * 0.62));
+        var flag = new StreamGeometry();
+        using (var g = flag.Open())
+        {
+            g.BeginFigure(new Point(x, cell.Y + h * 0.08), isFilled: true);
+            g.LineTo(new Point(x + w * 0.42, cell.Y + h * 0.2));
+            g.LineTo(new Point(x, cell.Y + h * 0.33));
+            g.EndFigure(isClosed: true);
+        }
+        context.DrawGeometry(PinFlag, null, flag);
+    }
 
     // --- Shopfronts in town (AVABand's own) -------------------------------------------------------
 

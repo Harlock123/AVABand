@@ -17,6 +17,19 @@ public sealed partial class MainWindowViewModel
     [ObservableProperty] private string _inscriptionTitle = "";
 
     private bool _noting;
+    private Angband.Core.Geometry.Loc? _pinning;
+
+    /// <summary>A map pin (AVABand's own): the text box asks for its note (empty: take the pin away).</summary>
+    public void BeginPin(Angband.Core.Geometry.Loc at)
+    {
+        _pinning = at;
+        InscriptionText = _game.PinAt(at) ?? "";
+        InscriptionTitle = "Pin a note here (empty to remove):";
+        IsInscribing = true;
+    }
+
+    /// <summary>A pin on this square of the map (for the map's little flag).</summary>
+    public bool HasPin(int x, int y) => _game.Level.Pins.ContainsKey(new Angband.Core.Geometry.Loc(x, y));
 
     /// <summary>':' (Angband do_cmd_note): the text box asks for a note for the history.</summary>
     public void BeginNote()
@@ -38,6 +51,13 @@ public sealed partial class MainWindowViewModel
     /// <summary>Enter: writes the inscription (an empty one removes it).</summary>
     public void CommitInscription()
     {
+        if (IsInscribing && _pinning is { } pin)
+        {
+            IsInscribing = false;
+            _pinning = null;
+            Execute(new PinCommand(pin, InscriptionText));
+            return;
+        }
         if (IsInscribing && _noting)
         {
             IsInscribing = false;
@@ -59,6 +79,7 @@ public sealed partial class MainWindowViewModel
         IsInscribing = false;
         _inscribing = null;
         _noting = false;
+        _pinning = null;
         LastMessage = "Cancelled.";
     }
 
