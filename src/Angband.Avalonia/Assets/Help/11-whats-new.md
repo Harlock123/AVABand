@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **Danger at a glance**: the monster list tags what **could kill you** (red) or is **dangerous**
+  (orange), from what you know of it, and what's **far out of depth**; the first time such a kind
+  comes into view on a level, you're warned ("Beware: …").
 - **Auto-explore (Ctrl+E)**: walks you on to the nearest part of the level you haven't seen, until a
   monster comes into view, you find something, you're hurt — or there's nothing left to explore.
 - **`>` and `<` walk you to the stairs**: away from a staircase, they take you to the nearest one of

@@ -41,3 +41,7 @@ have seen, so a monster you know nothing about may still be deadly.
 ## The monster list
 
 `[` lists the monsters you can see or sense; the sidebar can show it all the time (View menu).
+Each is tagged by how dangerous it is to **you**, from what you know of it: **could kill you** (red —
+its worst known attack could take all your hit points), **dangerous** (orange — half of them), or
+**far out of depth** (ten levels or more deeper than it belongs). The first time a deadly or
+far-out-of-depth kind comes into view on a level, you're warned: "Beware: the …".

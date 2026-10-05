@@ -83,9 +83,12 @@ public sealed partial class GameSession
             var asleep = e.Asleep[section];
             var sleep = asleep > 0 && count > 1 ? $" ({asleep} asleep)" : asleep == 1 && count == 1 ? " (asleep)" : "";
             var location = count == 1 ? ListLocation(e.Offset[section]) : "";
-            // Angband monster_list_entry_line_color: uniques violet, out-of-depth monsters red.
-            var color = e.Race.IsUnique ? "Violet" : e.Race.Depth > Player.Depth ? "Red" : "White";
-            rows.Add(new VisibleListRow(MonsterListName(e.Race, count) + sleep, color, location, e.Race.Glyph, e.Race.Color,
+            // Angband monster_list_entry_line_color: uniques violet, out-of-depth monsters red; and AVABand's
+            // danger tag — "could kill you" (red), "dangerous" (orange), "far out of depth".
+            var tag = DangerTag(e.Race);
+            var color = e.Race.IsUnique ? "Violet" : tag == "could kill you" ? "Red" : tag == "dangerous" ? "Orange"
+                : e.Race.Depth > Player.Depth ? "Red" : "White";
+            rows.Add(new VisibleListRow(MonsterListName(e.Race, count) + sleep + (tag is null ? "" : $" — {tag}"), color, location, e.Race.Glyph, e.Race.Color,
                 "monster:" + e.Race.Id));
         }
     }

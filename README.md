@@ -1229,7 +1229,10 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   Angband 4.2's `mon-list.c`/`ui-mon-list.c` and `obj-list.c`/`ui-obj-list.c`):
   - `[` lists the monsters you can see — "You can see 3 monsters:" — one line per race: "[U]" for
     uniques (in violet), a count otherwise, how many are asleep, and for a lone monster where it is
-    ("2 N 4 E"). Monsters out of depth are red. Those you only sense (detected, out of line of
+    ("2 N 4 E"). Monsters out of depth are red. AVABand's danger tags follow the name — "could kill you"
+    (red) and "dangerous" (orange) from what you know of it (the recall's Danger line), "far out of
+    depth" (ten levels or more below its native depth) — and a "Beware: …" message comes the first time a
+    deadly or far-out-of-depth kind comes into view on a level (`GameSession.Danger.cs`). Those you only sense (detected, out of line of
     sight) follow under "You are aware of 2 other monsters:". Deepest first; `x` re-sorts by the
     experience a kill would give you, any other key closes the list.
   - `]` lists the objects you know of on the level, each with where it is: piles in view, then
