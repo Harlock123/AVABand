@@ -428,6 +428,11 @@ core kept busy.
     shows every monster on it, and one time in three wakes them all and sends two greater undead;
     give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
+  - **The book bag** (AVABand's own; `Inventory.BookBag`): spellbooks of every realm ride in the
+    pack's list after its own things and before the gem pouch, shown under a *Book bag* heading, and all
+    of them together take one pack slot, so a caster's three or four books cost what a warrior's one
+    potion stack does (a full pack takes another book once the bag is carried; an overflowing pack spills
+    its own things before books). Old saves sort their books into the bag on loading.
   - **The gem pouch** (AVABand's own; `Inventory.Pouch`, `GameSession.GemPouch.cs`): gems ride in the
     pack's list between its own things and the quest satchel, shown under a *Gem pouch* heading with
     what each does in a socket, and all of them together take one pack slot (a full pack takes another

@@ -51,7 +51,8 @@ to lightning; three **emeralds**, **garnets** or **amethysts** add two more CON,
 
 Your gems ride in a **gem pouch**: listed under their own heading, after your pack, each with what
 it does in a socket ("in a socket: +3 to-dam, resist fire"), and all of them together take **one**
-slot of your pack, however many kinds you carry. At the **Arcane Artificer** (0), *Cut gems* turns
+slot of your pack, however many kinds you carry (spellbooks share one slot the same way, in the
+**book bag**: see Magic). At the **Arcane Artificer** (0), *Cut gems* turns
 three gems of a grade into one of the next — three chipped rubies into a flawed ruby, three flawed into
 a ruby — for a fifth of the finer stone's worth (bloodstone, black onyx and star sapphire can't be cut).
 

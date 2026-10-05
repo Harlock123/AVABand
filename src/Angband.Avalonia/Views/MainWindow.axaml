@@ -215,6 +215,9 @@
           <ItemsControl ItemsSource="{Binding EquipmentRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="Inventory" />
           <ItemsControl ItemsSource="{Binding PackRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
+          <TextBlock Classes="header" Text="Book bag" IsVisible="{Binding HasBookBagItems}"
+                     ToolTip.Tip="Your spellbooks: all of them together take one slot of your pack, however many you carry." />
+          <ItemsControl x:Name="BookBagPanel" ItemsSource="{Binding BookRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="Gem pouch" IsVisible="{Binding HasPouchItems}"
                      ToolTip.Tip="Your gems: all of them together take one slot of your pack, however many kinds." />
           <ItemsControl x:Name="PouchPanel" ItemsSource="{Binding PouchRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />

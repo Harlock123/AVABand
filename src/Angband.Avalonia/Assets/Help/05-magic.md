@@ -11,6 +11,11 @@ or **Necromantic Tome** — as in "a Holy Book of [Novice's Handbook]". In the s
 selling, each book is marked **for you** if your class can read it, or "not for a Warrior" (or
 whatever you are) if not, so you don't buy the wrong one or sell one you need.
 
+Your books ride in a **book bag**: listed under their own heading, after your pack's other things and
+before the gem pouch, and all of them together take **one** slot of your pack, however many you carry
+(and of whatever realm). Once you carry a book, a full pack still has room for another, and a pack
+that has to drop things to make room drops its other things first and keeps your books.
+
 - `G` learns a spell once you reach its level. Mages and most casters choose; **priests and
   paladins** choose a book and are granted a random prayer from it, as in 4.2.
 - **The Grimoire** (Help → The Grimoire) has every spell in every book, realm by realm, with a

@@ -9,8 +9,8 @@ public sealed record EquipmentSlot(string Name, EquipSlot Type);
 /// The player's pack, quiver and equipment (Angband gear). The pack holds <c>PackSize</c> distinct
 /// stacks; every <c>QuiverSlotSize</c> missiles in the quiver use up one of those slots. AVABand's
 /// quest satchel: quest items (QUEST_ITEM) ride in the pack's list, last, but take none of its slots
-/// (their weight still counts). And AVABand's gem pouch: gems ride just before them, and all of them
-/// together take a single slot, however many kinds.
+/// (their weight still counts). And AVABand's book bag and gem pouch: spellbooks, then gems, ride just
+/// before them, all the books together taking a single slot, and all the gems another.
 /// </summary>
 public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int quiverSize = 8)
 {
@@ -95,7 +95,14 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     public int SlotsUsed => PackStacks + PackSlotsFor(QuiverCount);
 
     /// <summary>The pack's stacks that take a slot: all but quest items (the satchel), with the gem pouch one slot for all its gems.</summary>
-    private int PackStacks => _pack.Count(i => !i.IsQuestItem && !InPouch(i)) + (_pack.Any(InPouch) ? 1 : 0);
+    private int PackStacks => _pack.Count(i => !i.IsQuestItem && !InPouch(i) && !InBookBag(i))
+                              + (_pack.Any(InPouch) ? 1 : 0) + (_pack.Any(InBookBag) ? 1 : 0);
+
+    /// <summary>A spellbook rides in the book bag (any realm's: magic, holy, nature, necromantic).</summary>
+    public static bool InBookBag(Item item) => item.Base.Id is "magic_book" or "prayer_book" or "nature_book" or "shadow_book" && !item.IsQuestItem;
+
+    /// <summary>The book bag: the spellbooks carried (after the pack's own things).</summary>
+    public IEnumerable<Item> BookBag => _pack.Where(InBookBag);
 
     /// <summary>A gem rides in the gem pouch.</summary>
     public static bool InPouch(Item item) => item.Base.Id == "gem" && !item.IsQuestItem;
@@ -116,6 +123,7 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     {
         if (item.IsQuestItem) return true; // (the satchel always has room)
         if (InPouch(item) && _pack.Any(InPouch)) return true; // (and the pouch, once it's carried, for any gem)
+        if (InBookBag(item) && _pack.Any(InBookBag)) return true; // (and the book bag, for any book)
         if (QuiverPlace(item).Fits) return true;
         if (_pack.Any(p => p.CanStackWith(item) && p.Number + item.Number <= p.Base.MaxStack)) return true;
         return SlotsUsed < PackSize;
@@ -272,8 +280,8 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
         return merged;
     }
 
-    /// <summary>The pack's own things first, then the gem pouch, then the quest satchel.</summary>
-    private static int Rank(Item item) => item.IsQuestItem ? 2 : InPouch(item) ? 1 : 0;
+    /// <summary>The pack's own things first, then the book bag, the gem pouch, and the quest satchel.</summary>
+    private static int Rank(Item item) => item.IsQuestItem ? 3 : InPouch(item) ? 2 : InBookBag(item) ? 1 : 0;
 
     /// <summary>Angband pack order: by base (in data order), then kind level, then name; the gem pouch and the quest satchel last.</summary>
     private void SortPack() => _pack.Sort((a, b) =>

@@ -37,7 +37,7 @@ public sealed partial class GameSession
         for (var guard = 0; inv.SlotsUsed > inv.PackSize && inv.Pack.Count > 0 && guard < 100; guard++)
         {
             // (the pack's own things before gems: dropping one kind of gem seldom frees the pouch's slot)
-            if ((inv.Pack.LastOrDefault(i => !i.IsQuestItem && !Inventory.InPouch(i) && inv.BestBag != i)
+            if ((inv.Pack.LastOrDefault(i => !i.IsQuestItem && !Inventory.InPouch(i) && !Inventory.InBookBag(i) && inv.BestBag != i)
                  ?? inv.Pack.LastOrDefault(i => !i.IsQuestItem && inv.BestBag != i)
                  ?? inv.Pack.LastOrDefault(i => !i.IsQuestItem)) is not { } spill) break;
             inv.Remove(spill, spill.Number, () => Objects.NextSerial++);

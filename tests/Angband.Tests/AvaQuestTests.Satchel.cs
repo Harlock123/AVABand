@@ -176,7 +176,7 @@ public partial class AvaQuestTests
 
         var loaded = SaveGame.Load(TestData.Game, old).Player.Inventory;
         Assert.Equal(gems.Order(), loaded.Pouch.Select(i => i.Kind.Id).Order());
-        var ranks = loaded.Pack.Select(i => i.IsQuestItem ? 2 : Angband.Core.Items.Inventory.InPouch(i) ? 1 : 0).ToList();
+        var ranks = loaded.Pack.Select(BagRank).ToList();
         Assert.Equal(ranks.Order().ToList(), ranks);                               // pack, pouch, satchel
         Assert.Equal(carried, loaded.Pack.Sum(i => i.Number));                     // nothing lost
         Assert.Equal(inv.SlotsUsed, loaded.SlotsUsed);

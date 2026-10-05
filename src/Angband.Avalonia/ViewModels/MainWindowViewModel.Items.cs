@@ -64,6 +64,9 @@ public sealed partial class MainWindowViewModel
 
     public ObservableCollection<ItemRow> EquipmentRows { get; } = [];
     public ObservableCollection<ItemRow> PackRows { get; } = [];
+    /// <summary>The book bag (AVABand's own): every spellbook carried, one pack slot for them all.</summary>
+    public ObservableCollection<ItemRow> BookRows { get; } = [];
+    [ObservableProperty] private bool _hasBookBagItems;
     /// <summary>The gem pouch (AVABand's own): every gem carried, one pack slot for them all, each with what it does in a socket.</summary>
     public ObservableCollection<ItemRow> PouchRows { get; } = [];
     [ObservableProperty] private bool _hasPouchItems;
@@ -452,6 +455,7 @@ public sealed partial class MainWindowViewModel
                 EquipmentRows.Add(Row(Inventory.Slots[i].Type == EquipSlot.Shield && item.Base.IsWeapon ? "off hand" : Inventory.Slots[i].Name, item));
 
         PackRows.Clear();
+        BookRows.Clear();
         PouchRows.Clear();
         SatchelRows.Clear();
         for (var i = 0; i < inv.Pack.Count; i++)
@@ -460,9 +464,11 @@ public sealed partial class MainWindowViewModel
             var letter = ((char)('a' + i)).ToString();
             if (item.IsQuestItem) SatchelRows.Add(Row(letter, item));
             else if (Angband.Core.Items.Inventory.InPouch(item)) PouchRows.Add(GemRow(letter, item));
+            else if (Angband.Core.Items.Inventory.InBookBag(item)) BookRows.Add(Row(letter, item));
             else PackRows.Add(Row(letter, item));
         }
         HasPouchItems = PouchRows.Count > 0;
+        HasBookBagItems = BookRows.Count > 0;
         HasSatchelItems = SatchelRows.Count > 0;
 
         QuiverRows.Clear();

@@ -29,7 +29,7 @@ public partial class AvaQuestTests
 
         // Order: the pack's own things, the pouch, the satchel.
         inv.Add(q.Game.Objects.Create("palantir"));
-        var ranks = inv.Pack.Select(i => i.IsQuestItem ? 2 : Inventory.InPouch(i) ? 1 : 0).ToList();
+        var ranks = inv.Pack.Select(BagRank).ToList();
         Assert.Equal(ranks.Order().ToList(), ranks);
 
         // A full pack still takes another gem, the pouch being carried; it overflows the pack's things, not gems.

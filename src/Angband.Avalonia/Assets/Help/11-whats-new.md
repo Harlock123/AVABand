@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **A book bag**: all your spellbooks now share **one** pack slot, under their own heading,
+  *Book bag*, after your pack's other things — so casters no longer give up three or four slots
+  to their books. A full pack still takes another book, and never spills one to make room. Books
+  in an older save go into the bag when it loads.
 - **New hints**: the quest log, the strongroom, the gem pouch, danger tags, looking around, exploring,
   map pins, careful search, comparing, the Grimoire and the statistics page each get a one-time tip the
   first time they'd help.
