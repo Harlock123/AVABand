@@ -103,6 +103,8 @@ public enum InputAction
     ToggleFullScreen,
     /// <summary>A careful search of the squares around you (AVABand's own). Added last so saved bindings keep their meaning.</summary>
     Search,
+    /// <summary>Auto-explore (AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    Explore,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -208,6 +210,7 @@ public static class InputActions
         InputAction.QuestLog => "Quest log",
         InputAction.ToggleFullScreen => "Full screen",
         InputAction.Search => "Search carefully",
+        InputAction.Explore => "Explore",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

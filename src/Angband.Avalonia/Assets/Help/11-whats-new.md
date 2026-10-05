@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **Auto-explore (Ctrl+E)**: walks you on to the nearest part of the level you haven't seen, until a
+  monster comes into view, you find something, you're hurt — or there's nothing left to explore.
 - **`>` and `<` walk you to the stairs**: away from a staircase, they take you to the nearest one of
   that kind you've found; press again to take it.
 - **Butterbur's strongroom**: at the Prancing Pony, lockers shared by **all your characters**. Leave

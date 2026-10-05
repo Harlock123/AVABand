@@ -201,6 +201,7 @@ public sealed partial class GameSession : ITurnHandler
             return Player.IsDead;
         }
         if (command is TravelCommand travel) return Travel(travel.Target);
+        if (command is ExploreCommand) return Explore();
         if (command is RunCommand run) return Run(run.Direction);
         if (command is RunStartCommand start) return RunStart(start.Direction);
         if (command is RunOnCommand) return RunOn();

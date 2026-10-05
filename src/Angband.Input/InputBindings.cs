@@ -98,6 +98,7 @@ public sealed class InputBindings
         K(InputAction.ToggleMute, "Ctrl+M");
         K(InputAction.OpenSettings, "F10");
         K(InputAction.ToggleFullScreen, "F11");
+        K(InputAction.Explore, "Ctrl+E"); // (a Ctrl key: the same in every keyset)
         K(InputAction.Search, "Char:S");
         K(InputAction.ZoomIn, "Ctrl+OemPlus", "Ctrl+Add");
         K(InputAction.ZoomOut, "Ctrl+OemMinus", "Ctrl+Subtract");

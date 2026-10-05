@@ -135,6 +135,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.Options, "Game options"),
             (InputAction.OpenSettings, "Settings: display, sound, controls, options"),
             (InputAction.ToggleTiles, "Switch between tiles and letters"),
+            (InputAction.Explore, "Explore: walk on to the nearest part of the level you haven't seen, until something turns up"),
             (InputAction.Search, "Search carefully: a turn spent on the squares around you, better the longer you keep at it (0 + a number: that many turns)"),
             (InputAction.ToggleFullScreen, "Full screen on or off (the game opens full screen unless you turn it off)"),
             (InputAction.ToggleMute, "Mute or unmute sound"),
