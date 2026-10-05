@@ -164,4 +164,38 @@ public class HintsUiTests
         vm.Execute(new HoldCommand());
         Assert.StartsWith("One of your stats was drained", vm.HintText);
     }
+
+    /// <summary>The newer systems' hints, each the first time it matters (the older hints already seen).</summary>
+    [AvaloniaFact]
+    public void TheNewerSystems_EachHaveTheirHint_WhenTheyFirstMatter()
+    {
+        var settings = new AppSettings();
+        settings.SeenHints.AddRange(["tutorial", "hurt", "paralysed", "blind", "confused", "poisoned", "afraid", "stun", "cut", "slow",
+            "image", "amnesia", "dark", "drained", "exp_drained", "shop", "monster", "trap", "hidden_traps", "pack_full", "floor",
+            "hungry", "light", "runes", "level"]);
+        var (_, vm, _) = Open(settings: settings);
+        var game = vm.Game;
+        string Next()
+        {
+            vm.DismissHint();
+            vm.Execute(new HoldCommand());
+            return vm.HintText;
+        }
+
+        game.Player.Inventory.Add(game.Objects.Create("ruby"));
+        Assert.StartsWith("Gems ride in your gem pouch", Next());
+        game.AvaQuests.Board.Add(new Angband.Core.Quests.BoardJob { Id = 1, Kind = "scout", Target = "5", Count = 5, Reward = 10, Taken = true });
+        Assert.StartsWith("Your quest log (Ctrl+J)", Next());
+
+        game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(2));
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        Assert.StartsWith("Hold Ctrl or Alt", Next());
+        Assert.StartsWith("Ctrl+E explores", Next());
+        Assert.StartsWith("Right-click a square to pin a note", Next());
+
+        game.GainExperience(game.ExperienceForLevel(4));
+        Assert.StartsWith("Game → Statistics", Next());
+        Assert.Contains("statistics", settings.SeenHints);
+    }
 }

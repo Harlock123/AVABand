@@ -138,6 +138,29 @@ public sealed partial class MainWindowViewModel
             () => $"Something you wear has runes you don't know yet. They show themselves as you use it or are hit; {KeyName(InputAction.Inspect)} shows what you know so far.");
         yield return ("level", () => player.Level >= 2,
             () => $"You went up a level: more hit points and better skills. The character sheet ({KeyName(InputAction.CharacterSheet)}) shows them.");
+        // AVABand's newer systems, each the first time it matters.
+        yield return ("quest_log", () => game.AvaQuests.Quests.Values.Any(q => !q.IsDone) || game.AvaQuests.Board.Any(j => j.Taken),
+            () => $"Your quest log ({KeyName(InputAction.QuestLog)}) shows every quest and notice-board job you've taken, and how far along each is.");
+        yield return ("strongroom", () => game.StrongroomOn && game.Level.FeatureAt(player.Position).Shop == "inn",
+            () => "Under the Prancing Pony is Butterbur's strongroom: leave something there and any of your later characters can take it out.");
+        yield return ("gem_pouch", () => player.Inventory.Pouch.Any(),
+            () => "Gems ride in your gem pouch — one pack slot for all of them — each with what it does in a socket. The Arcane Artificer (0) cuts three into one finer.");
+        yield return ("danger", () => player.Depth > 0 && game.Level.Monsters.All.Any(m => m.IsVisible && game.DangerTag(m.Race) is not null),
+            () => $"The monster list ({KeyName(InputAction.MonsterList)}) tags what could kill you, what's dangerous, and what's far out of depth. Mind them.");
+        yield return ("look_around", () => player.Depth > 0,
+            () => "Hold Ctrl or Alt (Option on a Mac) with the arrows — or Shift and scroll — to look around the map without moving; let go to come back.");
+        yield return ("explore", () => player.Depth > 0 && game.NearestUnexplored() is not null,
+            () => $"{KeyName(InputAction.Explore)} explores: you walk on to the nearest part of the level you haven't seen, until something turns up.");
+        yield return ("search", () => game.TrapsFound > 0,
+            () => $"Suspect a hidden trap or door? {KeyName(InputAction.Search)} searches the squares around you carefully — better the longer you keep at it.");
+        yield return ("compare", () => IsInStore && !StoreSellMode && StoreRows.Any(r => game.Compare(r.Item) is not null),
+            () => $"{KeyName(InputAction.Inspect)} on armour or a weapon lays it beside what you wear, line by line.");
+        yield return ("pins", () => player.Depth >= 2,
+            () => "Right-click a square to pin a note on it (\"vault here\", \"come back with a pick\") — a little flag keeps it on the map.");
+        yield return ("grimoire", () => player.LearnedSpells.Count > 0,
+            () => "Help → The Grimoire lists every spell in every book, with what each costs your class.");
+        yield return ("statistics", () => player.Level >= 5,
+            () => "Game → Statistics keeps your tallies: kills, damage, close calls, gold, and more.");
         yield return ("stairs", () => player.Depth >= 1,
             () => "You are in the dungeon: > goes down, < up. Deeper is richer and deadlier; a Word of Recall scroll takes you to town and back to your deepest level.");
     }

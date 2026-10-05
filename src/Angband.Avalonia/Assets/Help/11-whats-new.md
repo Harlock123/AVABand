@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **New hints**: the quest log, the strongroom, the gem pouch, danger tags, looking around, exploring,
+  map pins, careful search, comparing, the Grimoire and the statistics page each get a one-time tip the
+  first time they'd help.
 - **New notice-board jobs**: carry a sealed **parcel** to a shop in town, or **rescue** a traveller
   trapped in the dungeon before time runs out.
 - **Merchant caravans**: now and then a caravan camps in the town square with five rare, good things

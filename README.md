@@ -1404,7 +1404,11 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   - **Hints for new players** (AVABand's own; the option *Hints for new players*, on by default): the
     first time you are badly hurt, enter a shop, meet a monster in the dungeon, see a trap, stand on
     an item, get hungry, run low on light, wear something with unknown runes, gain a level or go
-    down the stairs — and the first time you are blinded, confused, poisoned, paralysed, frightened,
+    down the stairs; AVABand's newer systems as they first matter (the quest log once a quest or job
+    is under way, the strongroom at the inn, the gem pouch with a first gem, danger tags when a tagged
+    monster comes into view, looking around, auto-explore and map pins in the dungeon, careful search
+    after a trap, comparing in a shop, the Grimoire once a spell is learned, the statistics page from
+    level 5) — and the first time you are blinded, confused, poisoned, paralysed, frightened,
     stunned, cut, slowed, left without light, made to hallucinate or forget, or drained of a stat or
     experience, with what cures it as this game's potions do (Cure Light Wounds for blindness, Cure
     Serious Wounds for confusion and cuts, Cure Critical Wounds for poison and stunning, Boldness or
