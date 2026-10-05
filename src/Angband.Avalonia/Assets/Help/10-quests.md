@@ -18,7 +18,10 @@ still has the journal too.)
 The inn in town (the `9`). Walk in and Butterbur will tell you who has work: the quests on offer
 depend on your level. There is also a **notice board** with smaller jobs — hunt so many of a
 monster, bring back so many of something found only in the dungeon, claim a **bounty** on a unique,
-or **scout** down to a depth a few levels past your deepest. The board has five postings,
+or **scout** down to a depth a few levels past your deepest — or carry a sealed **parcel** to one of
+the shops in town (it rides in your quest satchel; walking into the shop hands it over), or **rescue** a
+traveller trapped at a depth before time runs out (arriving there, you hear them crying for help; step to
+them to free them — too late, and the note is crossed out). The board has five postings,
 and you can take all five at once; the postings change whenever you come back up to town, and you collect your pay at the
 inn. For a job that has you **bring** things, what you keep in your **Home** (8) counts as well as what
 you carry, and you can **hand them in a few at a time** ("Hand in what you have") — Butterbur keeps

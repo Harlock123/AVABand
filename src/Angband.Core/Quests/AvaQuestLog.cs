@@ -31,6 +31,11 @@ public sealed class BoardJob
     public int Progress { get; set; }
     public long Reward { get; set; }
     public bool Taken { get; set; }
+    /// <summary>A rescue's deadline (game turn); its traveller's square (-1: not placed) and the level it's on.</summary>
+    public long Deadline { get; set; }
+    public int AtX { get; set; } = -1;
+    public int AtY { get; set; } = -1;
+    public ulong LevelSeed { get; set; }
 }
 
 /// <summary>A character's AVABand quests: the story quests taken or found, the notice board, and what the town thinks of them.</summary>

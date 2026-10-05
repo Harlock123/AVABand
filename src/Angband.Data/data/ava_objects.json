@@ -21,6 +21,7 @@
   {"id": "water_of_ulmo", "name": "Phial~ of the Water of Ulmo", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 4, "color": "LightBlue",
    "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
    "description": "A phial of water drawn from a spring the Lord of Waters is said to have blessed. Poured out on a profaned altar, it will hallow it again."},
+  {"id": "sealed_parcel", "name": "Sealed Parcel", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 10, "color": "Umber", "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"], "description": "A parcel in oilcloth, tied with string and sealed with the Prancing Pony's wax, a shop's name chalked on it. Butterbur's errand: take it there."},
   {"id": "sealed_letter", "name": "Sealed Letter", "base": "quest", "level": 0, "commonness": 0, "cost": 0, "weight": 1, "color": "White",
    "effect": "quest_use", "flags": ["QUEST_ITEM"], "ignore": ["acid", "elec", "fire", "cold"],
    "description": "A letter folded tight and sealed with plain red wax, addressed in a careful hand: \"To the hermit below the town, and to no other.\""},

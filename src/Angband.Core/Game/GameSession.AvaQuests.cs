@@ -273,6 +273,7 @@ public sealed partial class GameSession
         if (!AvaQuestsOn || Level.Depth <= 0) return;
         if (_questRoomHere is { } room) FurnishRoom(room.Quest);
         StoryOnNewLevel();
+        PlaceRescues(); // (the board's rescues: a traveller trapped at this depth)
     }
 
     /// <summary>A square of the quest room: the first with this symbol.</summary>
@@ -337,7 +338,7 @@ public sealed partial class GameSession
     /// <summary>Having stepped onto a square: a quest's altar, forge or hermit's door.</summary>
     private void QuestStep(Loc at)
     {
-        if (AvaQuestsOn) StoryStep(at, Level.FeatureAt(at).Id);
+        if (AvaQuestsOn && !RescueStep(at)) StoryStep(at, Level.FeatureAt(at).Id);
     }
 
     /// <summary>

@@ -28,6 +28,7 @@ public sealed partial class GameSession
     private void BeginShopVisit(Store store)
     {
         _buyback.Clear();
+        if (AvaQuestsOn) DeliverParcels(store.Id); // (a board job's parcel for this shop)
         Publish(new ShopEnteredEvent(store.Id, store.IsHome));
     }
 

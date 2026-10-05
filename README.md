@@ -346,7 +346,11 @@ core kept busy.
   - **The Prancing Pony** (the town's ninth building, `9`): Butterbur offers the story quests your
     level allows, and its **notice board** has five jobs at a time — hunt 4-10 of a monster from
     near your depth, bring 2-4 of a potion, scroll or food no shop sells, a **bounty** on a living
-    unique no deeper than two levels past your deepest (not a quest's own), or **scouting** down to
+    unique no deeper than two levels past your deepest (not a quest's own), a **parcel** to carry to a shop
+    in town (a quest item, `sealed_parcel`; walking into the shop delivers it), a **rescue** at about your
+    deepest within 30,000 game turns (a trapped traveller placed far from you on arriving at that depth;
+    stepping to them frees them; past the deadline the job is crossed off; `GameSession.AvaQuests.Errands.cs`),
+    or **scouting** down to
     a depth three to five levels past it — all five can be taken at once, renewed whenever you come
     back up, paid at the inn. Story quests have no limit: take every one on offer.
   - **The Grimoire** (AVABand's own; Help → The Grimoire; `ViewModels/GrimoireViewModel.cs`,

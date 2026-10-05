@@ -20,6 +20,7 @@ public sealed partial class GameSession
     private void RenewBoard()
     {
         if (!AvaQuestsOn) return;
+        CheckRescueDeadlines();
         AvaQuests.Board.RemoveAll(j => !j.Taken);
         for (var tries = 0; AvaQuests.Board.Count(j => !j.Taken) < BoardPostings && tries < 20; tries++)
             if (MakeJob() is { } job) AvaQuests.Board.Add(job);
@@ -43,7 +44,11 @@ public sealed partial class GameSession
             };
         }
         // Now and then: a bounty on a unique, or a scouting job.
-        if (Rng.OneIn(3)) return Rng.OneIn(2) ? MakeBounty(deepest) : MakeScouting(deepest);
+        if (Rng.OneIn(3))
+            return Rng.RandInt0(4) switch
+            {
+                0 => MakeBounty(deepest), 1 => MakeScouting(deepest), 2 => MakeParcel(deepest), _ => MakeRescue(deepest),
+            };
         // Things the dungeon gives up that no shop sells.
         var stocked = Data.Stores.SelectMany(s => s.Staples.Concat(s.Stocked)).ToHashSet();
         var kinds = Data.Objects.Where(k => k.Commonness > 0 && (k.MinDepth ?? k.Level) <= deepest + 2 && k.Level <= deepest + 2
@@ -80,6 +85,8 @@ public sealed partial class GameSession
     {
         if (job.Kind == "bounty") return $"Bounty: {Data.Monster(job.Target)?.Name ?? job.Target}";
         if (job.Kind == "scout") return $"Scout down to {job.Count * Data.Constants.FeetPerLevel} ft";
+        if (job.Kind == "parcel") return $"Deliver a parcel to the {ShopName(job.Target)}";
+        if (job.Kind == "rescue") return $"Rescue a traveller trapped at {job.Count * Data.Constants.FeetPerLevel} ft";
         if (job.Kind == "hunt")
         {
             var race = Data.Monster(job.Target);
@@ -96,6 +103,8 @@ public sealed partial class GameSession
         "hunt" => $"{JobTitle(job)} ({job.Progress} so far), for {job.Reward} gold at the Prancing Pony.",
         "bounty" => $"{JobTitle(job)} ({(job.Progress > 0 ? "done" : $"found about {Data.Monster(job.Target)?.Depth * Data.Constants.FeetPerLevel} ft")}), for {job.Reward} gold at the Prancing Pony.",
         "scout" => $"{JobTitle(job)} ({(JobComplete(job) ? "done" : $"deepest so far {Player.MaxDepth * Data.Constants.FeetPerLevel} ft")}), for {job.Reward} gold at the Prancing Pony.",
+        "parcel" => $"{JobTitle(job)} ({(job.Progress > 0 ? "delivered" : "not yet")}), for {job.Reward} gold at the Prancing Pony.",
+        "rescue" => $"{JobTitle(job)} ({(job.Progress > 0 ? "rescued" : RescueTimeLeft(job))}), for {job.Reward} gold at the Prancing Pony.",
         _ => $"{JobTitle(job)} to the Prancing Pony ({GatherSoFar(job)}), for {job.Reward} gold.",
     };
 
@@ -146,6 +155,7 @@ public sealed partial class GameSession
     {
         "hunt" or "bounty" => job.Progress >= job.Count,
         "scout" => Player.MaxDepth >= job.Count,
+        "parcel" or "rescue" => job.Progress >= 1,
         _ => job.Progress + GatherOnHand(job) >= job.Count,
     };
 
@@ -173,11 +183,13 @@ public sealed partial class GameSession
         {
             case "take" when !job.Taken && AvaQuests.Board.Count(j => j.Taken) < BoardTakenMax:
                 job.Taken = true;
+                TakeErrand(job);
                 Publish(new MessageEvent($"You take the note down: {JobTitle(job)}."));
                 ShowBoard();
                 break;
             case "drop" when job.Taken:
                 AvaQuests.Board.Remove(job);
+                DropErrand(job);
                 Publish(new MessageEvent($"You pin the note back up for someone else: {JobTitle(job)}."));
                 ShowBoard();
                 break;

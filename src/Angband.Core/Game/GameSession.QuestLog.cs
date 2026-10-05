@@ -51,6 +51,8 @@ public sealed partial class GameSession
             "hunt" => (Math.Min(job.Progress, job.Count), job.Count, "killed"),
             "bounty" => (Math.Min(job.Progress, 1), 1, "slain"),
             "scout" => (Math.Min(Player.MaxDepth, job.Count), job.Count, "levels down"),
+            "parcel" => (job.Progress, 1, "delivered"),
+            "rescue" => (job.Progress, 1, "rescued"),
             _ => (Math.Min(job.Progress + GatherOnHand(job), job.Count), job.Count, "brought in, carried or at home"),
         };
         var status = complete ? "Ready: collect your pay at the Prancing Pony" : $"{have} of {need} {unit}";
@@ -71,6 +73,8 @@ public sealed partial class GameSession
             "hunt" => $"{JobTitle(job)} — only those killed since you took the note count.",
             "bounty" => $"Slay {Data.Monster(job.Target)?.Name ?? job.Target}, found about {Data.Monster(job.Target)?.Depth * feet} ft.",
             "scout" => $"Reach {job.Count * feet} ft (your deepest so far: {Player.MaxDepth * feet} ft).",
+            "parcel" => $"Take the sealed parcel (in your quest satchel) to the {ShopName(job.Target)}: walking in hands it over.",
+            "rescue" => $"Find the traveller trapped at {job.Count * feet} ft and free them ({RescueTimeLeft(job)}) — you'll hear them when you arrive.",
             _ => $"{JobTitle(job)} ({GatherSoFar(job)}) — no shop sells them; the dungeon has them. What you carry or keep in your Home counts, and you can hand them in a few at a time.",
         };
     }
