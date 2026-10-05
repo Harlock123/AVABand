@@ -22,6 +22,7 @@ public sealed partial class MainWindowViewModel
         var equipped = inv.Equipped.Contains(item);
         var carried = equipped || inv.Pack.Contains(item) || inv.Quiver.Contains(item);
         var menu = new List<(string, Action)> { ("Inspect", () => UseItemAsked(ItemPromptKind.Inspect, item)) };
+        if (_game.Compare(item) is not null) menu.Add(("Compare with what you wear", () => ShowComparison(item, stock: false)));
 
         var inBook = _game.ClassSpells.Where(s => s.Book == item.Kind.Id).ToList();
         if (inBook.Count > 0 && inv.Pack.Contains(item))

@@ -226,7 +226,12 @@ public sealed partial class MainWindowViewModel
                 else StoreSellMode = !StoreSellMode;
                 break;
             case InputAction.Inspect:
-                if (StoreRows.ElementAtOrDefault(StoreSelectedIndex) is { } seen) AddMessage(Inspect(seen.Item));
+                // (something you could wear: laid beside what you wear, line by line; anything else, described)
+                if (StoreRows.ElementAtOrDefault(StoreSelectedIndex) is { } seen)
+                {
+                    if (_game.Compare(seen.Item) is not null) ShowComparison(seen.Item, stock: !StoreSellMode && !StoreBuybackMode);
+                    else AddMessage(Inspect(seen.Item));
+                }
                 break;
             case InputAction.Cancel:
                 LeaveStore();

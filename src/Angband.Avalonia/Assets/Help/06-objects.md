@@ -26,6 +26,13 @@ Bags and bracers can carry curses of their own: a **greedy** bag nibbles at your
 bracers **of lead** weigh twice what they should, and bracers with **loose settings** now and then
 drop a stone at your feet (pick it up and set it again). Remove Curse deals with them as with any curse.
 
+## Comparing
+
+Choose **Compare with what you wear** from anything's menu (or press `I` on it in a shop) to see it
+beside what you wear in its slot, line by line: damage a turn (with the blows you'd have), to-hit and
+to-dam, armour, each stat and ability either gives, curses and weight — `+` where it's better, `−`
+where it's worse. Your own things compare once you know all their runes.
+
 ## Bracers and gems
 
 **Bracers** go on your arms, beside your gloves, and have one, two or three **sockets** for gems.

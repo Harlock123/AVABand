@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **Compare with what you wear**: in anything's menu (or `I` on it in a shop), an item laid beside
+  what you wear in its slot, line by line — damage a turn, armour, stats, abilities, weight.
 - **Danger at a glance**: the monster list tags what **could kill you** (red) or is **dangerous**
   (orange), from what you know of it, and what's **far out of depth**; the first time such a kind
   comes into view on a level, you're warned ("Beware: …").

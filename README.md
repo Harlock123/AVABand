@@ -741,6 +741,11 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   sells, asking "Quantity (1-N)?" as Angband does when there is more than one to have (Enter for
   one, or type a number, or AVABand's own `a` for all of them; on the controller up/down change it
   by one, right/left by ten, A takes it), Shift+letter the whole stack at once, Tab (pad X) switches buying/selling, Esc (pad B) leaves.
+- **Comparing** (AVABand's own; `GameSession.Compare.cs`): an item's menu offers *Compare with what you
+  wear*, and `I` on armour or a weapon in a shop does the same — the item beside what you wear in its
+  slot, a line each (damage a turn with the blows you'd have, blows, dice, to-hit, to-dam, a launcher's
+  multiplier, armour, every stat and ability either gives, curses, weight), marked `+` better and `−`
+  worse; your own things only once all their runes are known, so it never tells what you haven't learned.
 - **Object values** (`Items/ObjectPower.cs`, `Items/ItemValue.cs`; Angband 4.2 `obj-power.c`): what
   things are worth, for store prices, level feelings and the like.
   - Wearables and ammunition are priced by their *power* (`object_power`): damage dice, to-damage

@@ -401,6 +401,19 @@ public sealed partial class MainWindowViewModel
     }
 
     /// <summary>What the player knows about an item (the object info text, on one line).</summary>
+    /// <summary>
+    /// An item beside what you wear in its slot, line by line (AVABand's own) — for shop stock, or your own
+    /// things once you know all their runes (the comparison never tells what you haven't learned).
+    /// </summary>
+    public void ShowComparison(Item item, bool stock)
+    {
+        var known = stock || _game.Knowledge.IsFullyKnown(item);
+        var title = $"{Capitalize(_game.Describe(item))}";
+        var text = known ? _game.CompareText(item)
+            : "You don't know all of its runes yet, so it can't be compared fairly — wear it a while, or have it identified.";
+        ShowMenu(title, [("Close", () => { })], text);
+    }
+
     private string Inspect(Item item)
     {
         var lines = ObjectInfo.DescribeItem(_game, item).Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);

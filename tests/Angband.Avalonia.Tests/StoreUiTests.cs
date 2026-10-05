@@ -368,6 +368,22 @@ public class StoreUiTests
         Assert.False(vm.StoreBuybackMode);
     }
 
+    /// <summary>'I' on armour or a weapon in a shop lays it beside what you wear, line by line.</summary>
+    [AvaloniaFact]
+    public void Inspecting_Armour_InAShop_ComparesItWithWhatYouWear()
+    {
+        var (window, vm, game) = OpenAt("armoury");
+        var armour = vm.StoreRows.Select((r, i) => (r, i)).First(t => game.Compare(t.r.Item) is not null);
+        vm.StoreSelectedIndex = armour.i;
+        vm.HandleAction(InputAction.Inspect);
+        Assert.True(vm.IsPrompting);
+        Assert.StartsWith("Against your ", vm.PromptText);
+        Assert.Contains("Armour:", vm.PromptText);
+        TileRenderingTests.Save(window, "store-compare");
+        vm.PromptKey('a');                                                        // Close
+        Assert.True(vm.IsInStore);
+    }
+
     /// <summary>Every other row of a shop's list a shade lighter, so a name is easy to follow across to its price.</summary>
     [AvaloniaFact]
     public void TheShopsRows_AreStriped()
