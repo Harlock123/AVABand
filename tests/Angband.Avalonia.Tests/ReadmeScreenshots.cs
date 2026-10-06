@@ -106,6 +106,15 @@ public class ReadmeScreenshots
     public void CharacterSheet()
     {
         var (window, vm) = Open("warrior", tiles: true);
+        // Bracers with a ruby set, to show the arms slot and its sockets.
+        var game = vm.Game;
+        var bracers = game.Objects.Create("iron_bracers");
+        game.Knowledge.LearnKind(bracers.Kind);
+        game.Player.Inventory.Add(bracers);
+        game.Execute(new WieldCommand(bracers));
+        var ruby = game.Objects.Create("ruby");
+        game.Knowledge.LearnKind(ruby.Kind);
+        game.Execute(new SetGemCommand(game.Player.Inventory.Equipped.First(i => i.Kind.Id == "iron_bracers"), game.Player.Inventory.Add(ruby)!));
         vm.HandleAction(InputAction.CharacterSheet);
         Shoot(window.OwnedWindows.Last(), "character-sheet");
     }
