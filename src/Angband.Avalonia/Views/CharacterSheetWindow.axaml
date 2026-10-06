@@ -21,6 +21,7 @@
           <StackPanel VerticalAlignment="Center">
             <TextBlock Text="{Binding Label}" FontSize="11" Foreground="#8ab4f8" />
             <TextBlock Text="{Binding Name}" FontSize="12" Opacity="{Binding NameOpacity}" TextTrimming="CharacterEllipsis" />
+            <TextBlock Text="{Binding Sockets}" IsVisible="{Binding HasSockets}" FontSize="11" Foreground="#c9a0ff" TextTrimming="CharacterEllipsis" />
           </StackPanel>
         </DockPanel>
       </Border>
@@ -39,6 +40,7 @@
       <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding PaperDoll.Weapon}" ContentTemplate="{StaticResource SlotTemplate}" />
       <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding PaperDoll.RingLeft}" ContentTemplate="{StaticResource SlotTemplate}" />
       <ContentControl Grid.Row="3" Grid.Column="0" Content="{Binding PaperDoll.Hands}" ContentTemplate="{StaticResource SlotTemplate}" />
+      <ContentControl Grid.Row="4" Grid.Column="0" Content="{Binding PaperDoll.Arms}" ContentTemplate="{StaticResource SlotTemplate}" />
       <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding PaperDoll.Head}" ContentTemplate="{StaticResource SlotTemplate}" />
       <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding PaperDoll.Amulet}" ContentTemplate="{StaticResource SlotTemplate}" />
       <ContentControl Grid.Row="2" Grid.Column="1" Content="{Binding PaperDoll.Player}" ContentTemplate="{StaticResource SlotTemplate}" />

@@ -21,6 +21,10 @@ public sealed record PaperDollSlot(string Label, Item? Item, string Name, string
     public TilesetManifest? Tileset { get; init; }
     public double FontSize { get; init; } = 16;
 
+    /// <summary>AVABand: its sockets, gem by gem ("Ruby · empty"); empty for an item without any.</summary>
+    public string Sockets { get; init; } = "";
+    public bool HasSockets => Sockets.Length > 0;
+
     public bool IsEmpty => Item is null && !IsCharacter;
     public double NameOpacity => IsEmpty ? 0.45 : 1.0;
     /// <summary>The character in the middle of the doll, rather than a slot.</summary>
@@ -30,7 +34,7 @@ public sealed record PaperDollSlot(string Label, Item? Item, string Name, string
 /// <summary>
 /// The character sheet's paper doll: the character in the middle and each piece of equipment where
 /// it is worn — head, neck, body, cloak and feet down the middle, light, weapon, left ring and hands
-/// on one side, bow, shield, right ring on the other — drawn with the map's tiles or letters.
+/// and arms on one side, bow, shield, right ring on the other — drawn with the map's tiles or letters.
 /// </summary>
 public sealed class PaperDollViewModel
 {
@@ -46,11 +50,12 @@ public sealed class PaperDollViewModel
     public required PaperDollSlot Head { get; init; }
     public required PaperDollSlot Hands { get; init; }
     public required PaperDollSlot Feet { get; init; }
+    public required PaperDollSlot Arms { get; init; }
     public required PaperDollSlot Player { get; init; }
     public required string PlayerName { get; init; }
     /// <summary>Everything the doll shows, as text: when it differs, the doll is out of date.</summary>
     public string Signature { get; init; } = "";
     /// <summary>All the slots, in <see cref="Inventory.Slots"/> order.</summary>
     public IReadOnlyList<PaperDollSlot> Slots =>
-        [Weapon, Bow, RingLeft, RingRight, Amulet, Light, Body, Cloak, Shield, Head, Hands, Feet];
+        [Weapon, Bow, RingLeft, RingRight, Amulet, Light, Body, Cloak, Shield, Head, Hands, Feet, Arms];
 }

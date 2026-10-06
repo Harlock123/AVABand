@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-05
 
+- **The character sheet shows your bracers**: the paper doll has the **Arms** slot now, and any
+  piece with sockets lists them — "Sockets: Ruby · empty" — with each socket and what its gem gives
+  in the piece's description and the sheet's equipment list.
 - **A book bag**: all your spellbooks now share **one** pack slot, under their own heading,
   *Book bag*, after your pack's other things — so casters no longer give up three or four slots
   to their books. A full pack still takes another book, and never spills one to make room. Books

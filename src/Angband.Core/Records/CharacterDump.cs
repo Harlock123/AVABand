@@ -146,6 +146,8 @@ public static class CharacterDump
         {
             var slot = Inventory.Slots[i];
             Line($" {Letter(i)}) {Capitalize(slot.Name) + ':',-14} {(equipment[i] is { } item ? game.Describe(item) : "(nothing)")}");
+            if (equipment[i] is { Sockets: > 0 } socketed) // (AVABand: what's in each socket)
+                foreach (var socket in ObjectInfo.SocketLines(game, socketed)) Line($"{"",18}{socket}");
         }
 
         Section("Inventory");

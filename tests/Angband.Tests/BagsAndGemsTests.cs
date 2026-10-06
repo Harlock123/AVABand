@@ -117,6 +117,24 @@ public class BagsAndGemsTests
     }
 
     [Fact]
+    public void An_items_description_and_the_character_dump_list_each_socket()
+    {
+        var game = Game();
+        var bracers = Wear(game, "iron_bracers");
+        Assert.True(game.Execute(new SetGemCommand(bracers, Give(game, "ruby"))));
+        Assert.Equal(["Socket 1: Ruby (+3 to-dam, resist fire)", "Socket 2: empty"], Angband.Core.Records.ObjectInfo.SocketLines(game, bracers));
+        var info = Angband.Core.Records.ObjectInfo.DescribeItem(game, bracers);
+        Assert.Contains("Socket 1: Ruby (+3 to-dam, resist fire)\nSocket 2: empty", info);
+
+        var dump = Angband.Core.Records.CharacterDump.Build(game, [], DateTime.UnixEpoch);
+        var lines = dump.Split('\n').Select(l => l.TrimEnd('\r')).ToList();
+        var arms = lines.FindIndex(l => l.Contains("Arms:") && l.Contains("Iron Bracers"));
+        Assert.True(arms >= 0, dump);
+        Assert.Equal("Socket 1: Ruby (+3 to-dam, resist fire)", lines[arms + 1].Trim());
+        Assert.Equal("Socket 2: empty", lines[arms + 2].Trim());
+    }
+
+    [Fact]
     public void The_armourer_takes_a_gem_out_for_gold_and_its_virtue_goes_with_it()
     {
         var removed = 0;

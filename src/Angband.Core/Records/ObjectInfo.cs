@@ -281,6 +281,9 @@ public static class ObjectInfo
               .Append(recharge is null ? ".\n" : $" (it recharges in {recharge} turns).\n");
         }
 
+        // AVABand: each socket, and the gem in it (with what it gives), or empty.
+        if (!sampleOnly && item.Sockets > 0) sb.Append(string.Join("\n", SocketLines(game, item))).Append('\n');
+
         var runes = KnownProperties(game, item);
         if (runes.Count > 0) sb.Append(string.Join(" ", runes)).Append('\n');
         if (!sampleOnly && !k.IsFullyKnown(item) && b.Id != "bag") sb.Append("You do not know all of its runes.\n"); // (a Bag of Devouring keeps its secret)
@@ -288,6 +291,23 @@ public static class ObjectInfo
         var description = item.Artifact?.Description is { Length: > 0 } ad && (sampleOnly || k.IsFullyKnown(item)) ? ad : item.Kind.Description;
         if (description.Length > 0) sb.Append('\n').Append(description).Append('\n');
         return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>
+    /// AVABand: an item's sockets, one line each — "Socket 1: ruby (+3 to-dam, resist fire)", or
+    /// "Socket 2: empty" — for the item's description and the character sheet.
+    /// </summary>
+    public static IReadOnlyList<string> SocketLines(GameSession game, Item item)
+    {
+        var lines = new List<string>();
+        for (var i = 0; i < item.Sockets; i++)
+        {
+            if (i >= item.Gems.Count) { lines.Add($"Socket {i + 1}: empty"); continue; }
+            var gem = item.Gems[i];
+            var effect = game.GemEffectText(gem);
+            lines.Add($"Socket {i + 1}: {ItemNaming.Describe(gem, game.Knowledge, withArticle: false, full: false)}{(effect.Length > 0 ? $" ({effect})" : "")}");
+        }
+        return lines;
     }
 
     /// <summary>The object's known properties: modifiers, slays, brands, resistances, abilities and curses.</summary>

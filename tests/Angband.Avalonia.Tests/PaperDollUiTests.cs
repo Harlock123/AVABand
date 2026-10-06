@@ -40,8 +40,10 @@ public class PaperDollUiTests
         Assert.Contains(doll.Slots, s => s.Item is { } i && i.Base.Slot == Angband.Core.Definitions.EquipSlot.Body);
         Assert.True(doll.Head.IsEmpty);
         Assert.Equal("(nothing)", doll.Head.Name);
-        Assert.Equal(12, doll.Slots.Count);
-        Assert.Equal(12, doll.Slots.Count(s => s.Label.Length > 0));
+        Assert.Equal(13, doll.Slots.Count);
+        Assert.Equal(13, doll.Slots.Count(s => s.Label.Length > 0));
+        Assert.Equal("Arms", doll.Arms.Label);                    // AVABand's bracers' slot
+        Assert.True(doll.Arms.IsEmpty);
 
         // Each slot draws its item as the map does: the weapon's letter, in its colour.
         Assert.Equal(gear.Weapon!.Base.Glyph, doll.Weapon.Picture.GetCell(0, 0).Glyph);
@@ -50,8 +52,33 @@ public class PaperDollUiTests
         Assert.Equal("Human Warrior", doll.Player.Label);
         var grid = sheet.GetVisualDescendants().OfType<Grid>().Single(g => g.Name == "PaperDoll");
         Assert.True(grid.IsVisible);
-        Assert.Equal(13, grid.GetVisualDescendants().OfType<MapView>().Count());
+        Assert.Equal(14, grid.GetVisualDescendants().OfType<MapView>().Count());
         TileRenderingTests.Save(sheet, "paper-doll-ascii");
+    }
+
+    [AvaloniaFact]
+    public void TheArmsSlot_ShowsTheBracers_AndTheirSocketsInTheTooltip()
+    {
+        var (window, vm) = Open(tiles: false);
+        var game = vm.Game;
+        var bracers = game.Objects.Create("iron_bracers");
+        game.Knowledge.LearnKind(bracers.Kind);
+        game.Player.Inventory.Add(bracers);
+        Assert.True(game.Execute(new Angband.Core.Game.WieldCommand(bracers)));
+        bracers = game.Player.Inventory.Equipped.First(i => i.Kind.Id == "iron_bracers");
+        var ruby = game.Objects.Create("ruby");
+        game.Knowledge.LearnKind(ruby.Kind);
+        Assert.True(game.Execute(new Angband.Core.Game.SetGemCommand(bracers, game.Player.Inventory.Add(ruby)!)));
+        vm.HandleAction(InputAction.CharacterSheet);
+        var sheet = Assert.IsType<CharacterSheetWindow>(window.OwnedWindows.Last());
+        var doll = ((CharacterSheetViewModel)sheet.DataContext!).PaperDoll!;
+        Assert.Same(bracers, doll.Arms.Item);
+        Assert.Contains("Socket 1: Ruby (+3 to-dam, resist fire)", doll.Arms.Description);
+        Assert.Contains("Socket 2: empty", doll.Arms.Description);
+        Assert.Equal("Sockets: Ruby · empty", doll.Arms.Sockets);
+        Assert.False(doll.Weapon.HasSockets);
+        Assert.Contains("Socket 2: empty", ((CharacterSheetViewModel)sheet.DataContext!).Text);
+        TileRenderingTests.Save(sheet, "paper-doll-arms");
     }
 
     [AvaloniaFact]

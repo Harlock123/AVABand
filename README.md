@@ -1158,9 +1158,11 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   a per-slot resistance grid that shows unknown runes as `?`, equipment, pack, quiver, home, spells
   with failure rates, uniques slain, the player history — the start of the quest, levels reached, uniques killed, artifacts found and your notes (`:`); an artifact gone for good — left behind on a level, or sold off by a shop — is marked "(LOST)", and one never found reads "Missed the Phial of Galadriel", as Angband 4.2's history does — last messages), under a **paper doll**: your character in
   the middle and each piece of equipment where it is worn — head, amulet, body armour and boots
-  down the centre, light, weapon, left ring and gloves on one side, bow, shield, right ring and
-  cloak on the other — drawn with the map's own tiles (or coloured letters in ASCII mode), named,
-  and described in full on hover. While the sheet is open the doll keeps up with the game: putting
+  down the centre, light, weapon, left ring, gloves and bracers (AVABand's arms slot) on one side,
+  bow, shield, right ring and cloak on the other — drawn with the map's own tiles (or coloured
+  letters in ASCII mode), named, and described in full on hover; a socketed piece lists its sockets
+  under its name ("Sockets: Ruby · empty"), and its description and the dump's equipment list give
+  each socket a line, with what the gem in it gives. While the sheet is open the doll keeps up with the game: putting
   things on or taking them off, a torch burning down, a rune learned, hit points colouring the
   `@`, or a change of tiles redraw it (the text below stays as it was when opened). "Save to file" writes it to
   `<AppData>/AVABand/dumps/`. Ctrl+H shows the high-score table (`<AppData>/AVABand/scores.json`,
