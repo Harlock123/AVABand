@@ -11,7 +11,8 @@ played; this page keeps it all (Help → What's new...).
   - growing weak (or faint, or starving) **asks whether to eat** your best food, and resting,
     exploring and travelling won't start while you're weak until you've eaten;
   - a new option, *Eat by yourself when weak from hunger*, eats for you instead of asking;
-  - warnings as your food runs out, and before you go down from town with none;
+  - warnings as your food runs out, and before you leave town with none (down the stairs, or by
+    Word of Recall);
   - **Ctrl+Shift+E** eats your best food straight away, without a menu.
 
 ## 2026-10-05

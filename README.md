@@ -1186,7 +1186,8 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
     the option *Eat by yourself when weak from hunger* on, you just do, and are told). Resting, exploring
     and travelling won't start while you're weak until you've eaten (with nothing to eat, you're asked
     whether to go on anyway). "You have one meal left." and "You have no food left." as it runs out
-    (not when selling it in a shop), and going down the stairs from town with no food asks first.
+    (not when selling it in a shop), and leaving town with no food — down the stairs, or by Word of Recall
+    (scroll, rod, spell or activation) — asks first.
     **Ctrl+Shift+E** eats your best food without a menu. Food here is what you know and does nothing
     but feed you — rations, slime molds, biscuits, waybread, honey-cakes, then scrolls of Remove Hunger
     (not if you can't read) — never whisky or a mushroom with a sting; the most filling that won't

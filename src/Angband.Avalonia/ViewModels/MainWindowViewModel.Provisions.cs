@@ -26,7 +26,8 @@ public sealed partial class MainWindowViewModel
     /// <summary>The level hunger fell to during the last command (weak or worse), for asking afterwards.</summary>
     private HungerLevel? _hungerFell;
     private bool _hungerAnswered;
-    private bool _noFoodAnswered;
+    /// <summary>The way down the player has said to take without food (kept until it's done, past other questions).</summary>
+    private GameCommand? _noFoodAnswered;
 
     private static readonly IBrush Starving = new ImmutableSolidColorBrush(Color.FromUInt32(0xFFFF5050));
     private static readonly IBrush WeakBrush = new ImmutableSolidColorBrush(Color.FromUInt32(0xFFFF9933));
@@ -124,24 +125,25 @@ public sealed partial class MainWindowViewModel
         return true;
     }
 
-    /// <summary>Going down the stairs from town without any food: ask first. True if it asked.</summary>
+    /// <summary>
+    /// Leaving town for the dungeon without any food — down the stairs, or by Word of Recall (the scroll,
+    /// a rod, a spell or an activation): ask first. True if it asked.
+    /// </summary>
     private bool AskAboutNoFood(GameCommand command)
     {
-        if (_noFoodAnswered)
-        {
-            _noFoodAnswered = false;
-            return false;
-        }
-        if (command is not TakeStairsCommand { Down: true } || _game.Player.Depth != 0 || _game.Provisions > 0
-            || !_game.Level.Has(_game.Player.Position, Angband.Core.Definitions.TerrainFlags.DownStair)) return false;
-        AskYesNo("You're carrying no food (the General Store, 1, sells rations). Go down anyway?", yes =>
+        if (Equals(_noFoodAnswered, command) || _game.Player.Depth != 0 || _game.Provisions > 0) return false;
+        var stairs = command is TakeStairsCommand { Down: true }
+                     && _game.Level.Has(_game.Player.Position, Angband.Core.Definitions.TerrainFlags.DownStair);
+        var recall = _game.StartsRecall(command);
+        if (!stairs && !recall) return false;
+        AskYesNo($"You're carrying no food (the General Store, 1, sells rations). {(recall ? "Recall to the dungeon" : "Go down")} anyway?", yes =>
         {
             if (!yes)
             {
                 LastMessage = "Cancelled.";
                 return;
             }
-            _noFoodAnswered = true;
+            _noFoodAnswered = command;
             Execute(command);
         });
         return true;
@@ -154,7 +156,7 @@ public sealed partial class MainWindowViewModel
     private void AfterHunger(int mealsBefore)
     {
         _hungerAnswered = false;
-        _noFoodAnswered = false;
+        _noFoodAnswered = null;
         if (_game.Player.IsDead)
         {
             _hungerFell = null;

@@ -146,6 +146,30 @@ public class HungerUiTests
     }
 
     [AvaloniaFact]
+    public void RecallingFromTownWithNoFood_AsksFirst()
+    {
+        var (window, vm, game) = Open();
+        RemoveFood(game);
+        var scroll = game.Player.Inventory.Pack.First(i => i.Kind.Id == "scroll_of_word_of_recall");
+        game.Player.MaxDepth = 5;
+        vm.Execute(new UseCommand(scroll));
+        Assert.Equal("You're carrying no food (the General Store, 1, sells rations). Recall to the dungeon anyway? (y/n)", vm.LastMessage);
+        window.KeyPressQwerty(PhysicalKey.N, RawInputModifiers.None);
+        Assert.Equal(0, game.Player.RecallTimer);
+        vm.Execute(new UseCommand(scroll));
+        window.KeyPressQwerty(PhysicalKey.Y, RawInputModifiers.None);
+        Assert.False(vm.IsConfirming);
+        Assert.True(game.Player.RecallTimer > 0);
+
+        // With food, no question.
+        var (_, vm2, game2) = Open();
+        game2.Player.MaxDepth = 5;
+        vm2.Execute(new UseCommand(game2.Player.Inventory.Pack.First(i => i.Kind.Id == "scroll_of_word_of_recall")));
+        Assert.False(vm2.IsConfirming);
+        Assert.True(game2.Player.RecallTimer > 0);
+    }
+
+    [AvaloniaFact]
     public void TheEatKey_EatsYourBestFood_WithoutAMenu()
     {
         var (_, vm, game) = Open();

@@ -329,7 +329,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     /// <summary>Runs a command from any input device.</summary>
     public void Execute(GameCommand command)
     {
-        if (AskAboutRecall(command) || AskAboutLava(command) || TutorialStairs(command) || AskAboutHunger(command) || AskAboutNoFood(command)) return;
+        if (AskAboutNoFood(command) || AskAboutRecall(command) || AskAboutLava(command) || TutorialStairs(command) || AskAboutHunger(command)) return;
         command = WithCount(command);
         var meals = _game.Provisions;
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
