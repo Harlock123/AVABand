@@ -131,7 +131,8 @@ public sealed partial class MainWindowViewModel
         yield return ("floor", () => game.Level.Objects.At(player.Position).Any(i => !i.IsGold && !Hidden(i)),
             () => $"{KeyName(InputAction.Pickup)} picks up what you stand on (it is listed under \"On the floor\" in the sidebar).");
         yield return ("hungry", () => game.HungerLevel <= HungerLevel.Hungry,
-            () => $"You are hungry: eat something ({KeyName(InputAction.Eat)}). Rations are sold in the General Store (1).");
+            () => $"You are hungry: eat something ({KeyName(InputAction.Eat)}, or {KeyName(InputAction.EatBest)} for your best food straight away). "
+                  + "The Food line in the sidebar shows how fed you are and how many meals you carry; rations are sold in the General Store (1).");
         yield return ("light", () => player.Inventory.Light is { Fuel: > 0 and < 1000 } light && light.Kind.Fuel > 0,
             () => $"Your light is running low. Refuel it ({KeyName(InputAction.Refuel)}) with a Flask of Oil or another torch, or wield a new one ({KeyName(InputAction.Wield)}).");
         yield return ("runes", () => player.Inventory.Equipped.Any(i => !game.Knowledge.IsFullyKnown(i) && i.Runes().Any()),

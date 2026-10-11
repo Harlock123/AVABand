@@ -74,7 +74,11 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
 - Your hit points are on the status bar at the bottom. When they run low, **leave**: quaff a
   potion, read Phase Door, take the stairs, or run.
 - Rest (`R`) to heal and regain spell points when nothing is about.
-- Eat when you are hungry; the status bar says so.
+- Eat when you are hungry. The **Food** line in the sidebar shows how fed you are and how many meals
+  you carry; it turns orange and pulses when you're weak from hunger, and then the game asks whether
+  to eat (Options: *Eat by yourself when weak from hunger* does it for you). **Ctrl+Shift+E** eats
+  your best food at once. Keep a few rations — the General Store (1) sells them; the game warns you
+  as they run out, and before you go down from town with none.
 - A monster you don't know is dangerous until you know it isn't. Look at it (`x` or `l`, as your
   keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all —
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,

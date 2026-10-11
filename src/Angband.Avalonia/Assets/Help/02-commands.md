@@ -41,6 +41,8 @@
   reads the note. Right-click it again to change or remove it. Pins are kept with the level.
 - **Ctrl+E** explores: you walk on to the nearest part of the level you haven't seen, and keep going
   until something turns up — a monster in view, an object underfoot, a hurt — or there's nothing left.
+- **Ctrl+Shift+E** eats your best food straight away, without a menu (the most filling food that
+  won't gorge you; a scroll of Remove Hunger only if you've no food).
 - `<` and `>` take the stairs you're standing on — or, anywhere else, walk you to the nearest up or
   down staircase you've found (press again there to take it; something coming into view stops the walk).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,

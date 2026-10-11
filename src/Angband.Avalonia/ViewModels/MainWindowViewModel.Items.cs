@@ -479,6 +479,7 @@ public sealed partial class MainWindowViewModel
         HasFloorItems = FloorRows.Count > 0;
 
         GoldText = $"Gold {p.Gold}";
+        RefreshFood();
         // The weight that counts (worn gear three quarters, with AVABand's rules) against what can be carried unhindered.
         var penalty = _game.BurdenPenalty;
         var slow = penalty > 0 ? $" · {_game.BurdenName} (-{penalty} speed)" : "";

@@ -105,6 +105,8 @@ public enum InputAction
     Search,
     /// <summary>Auto-explore (AVABand's own). Added last so saved bindings keep their meaning.</summary>
     Explore,
+    /// <summary>Eat your best food, without a menu (AVABand's own). Added last so saved bindings keep their meaning.</summary>
+    EatBest,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -211,6 +213,7 @@ public static class InputActions
         InputAction.ToggleFullScreen => "Full screen",
         InputAction.Search => "Search carefully",
         InputAction.Explore => "Explore",
+        InputAction.EatBest => "Eat your best food",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

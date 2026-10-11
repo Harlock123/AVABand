@@ -58,6 +58,8 @@ public static class DisplayOptions
     public const string RunStepByStep = "draw_runs_step_by_step";
     /// <summary>AVABand's own: ask GitHub for a newer release when the game starts (off: only Help → Check for updates goes online).</summary>
     public const string CheckUpdatesAtStart = "check_updates_at_start";
+    /// <summary>AVABand's own: on growing weak from hunger, eat your best food by yourself instead of being asked.</summary>
+    public const string AutoEat = "eat_automatically_when_weak";
 
     /// <summary>
     /// Defaults follow Angband, except that AVABand has always lit torchlight in yellow and kept the
@@ -95,6 +97,7 @@ public static class DisplayOptions
         new(ArrowDiagonals, "Two arrow keys held together move diagonally", OptionKind.Interface, true),
         new(RunStepByStep, "Draw runs a step at a time (off: show only where they end)", OptionKind.Interface, true),
         new(CheckUpdatesAtStart, "Check GitHub for a newer AVABand when the game starts", OptionKind.Interface, false),
+        new(AutoEat, "Eat by yourself when weak from hunger (off: you're asked)", OptionKind.Interface, false),
     ];
 }
 

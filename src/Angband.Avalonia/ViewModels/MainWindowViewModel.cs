@@ -306,6 +306,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Events.Subscribe<PlayerMovedEvent>(e => NoteTrail(e.From));
         _game.Events.Subscribe<PlayerDiedEvent>(OnPlayerDied);
         _game.Events.Subscribe<RecalledEvent>(OnRecalled);
+        _game.Events.Subscribe<HungerChangedEvent>(OnHungerChanged);
         _game.Events.Subscribe<UniqueFirstSeenEvent>(OnUniqueFirstSeen);
         _game.Events.Subscribe<FellEvent>(OnFell);
         _game.Events.Subscribe<AvaQuestCompletedEvent>(OnAvaQuestCompleted);
@@ -328,8 +329,9 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
     /// <summary>Runs a command from any input device.</summary>
     public void Execute(GameCommand command)
     {
-        if (AskAboutRecall(command) || AskAboutLava(command) || TutorialStairs(command)) return;
+        if (AskAboutRecall(command) || AskAboutLava(command) || TutorialStairs(command) || AskAboutHunger(command) || AskAboutNoFood(command)) return;
         command = WithCount(command);
+        var meals = _game.Provisions;
         Effects.Clear(); // a new command cuts short whatever the last one is still showing
         _messagesAtCommand = _messagesAdded;
         var fromDepth = _game.Player.Depth;
@@ -339,6 +341,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         UpdateBossMusic();
         _game.AimAtTargetNext = false;
         CountDownHint();
+        AfterHunger(meals);
         AutosaveIfDue();
         Refresh();
     }

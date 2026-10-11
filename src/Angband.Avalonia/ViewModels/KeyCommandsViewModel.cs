@@ -64,6 +64,7 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.Quaff, "Quaff (drink) a potion"),
             (InputAction.Read, "Read a scroll"),
             (InputAction.Eat, "Eat some food"),
+            (InputAction.EatBest, "Eat your best food straight away (no menu; rations first)"),
             (InputAction.Refuel, "Refuel your light"),
             (InputAction.Inspect, "Inspect an item: what it does and what you know of it"),
             (InputAction.Inscribe, "Inscribe an item (e.g. @q1, !d)"),

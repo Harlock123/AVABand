@@ -1179,6 +1179,18 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   the `HUNGRY` sound when worse); getting hungry interrupts resting. New characters start just below
   Full. Food: rations, slime molds, biscuits, and 4.2.5's Scroll of Remove Hunger. Gear: Amulet of
   Slow Digestion and Amulet of Regeneration (their runes are learned on wearing). The status bar shows the level whenever you're not simply Fed.
+  - **Hunger safeguards** (AVABand's own; `GameSession.Provisions.cs`, `MainWindowViewModel.Provisions.cs`):
+    a **food meter** in the sidebar under the weight line — how fed you are, coloured (green Fed, yellow
+    Hungry, orange Weak, red Faint and Starving; blue Full), a bar, and how many meals you carry —
+    which pulses from Weak on. Growing weak, faint or starving asks *"Eat a Ration of Food?"* (or, with
+    the option *Eat by yourself when weak from hunger* on, you just do, and are told). Resting, exploring
+    and travelling won't start while you're weak until you've eaten (with nothing to eat, you're asked
+    whether to go on anyway). "You have one meal left." and "You have no food left." as it runs out
+    (not when selling it in a shop), and going down the stairs from town with no food asks first.
+    **Ctrl+Shift+E** eats your best food without a menu. Food here is what you know and does nothing
+    but feed you — rations, slime molds, biscuits, waybread, honey-cakes, then scrolls of Remove Hunger
+    (not if you can't read) — never whisky or a mushroom with a sting; the most filling that won't
+    gorge you comes first. Every meal is an ordinary command, so replays keep them.
 - **Lava** (4.2.5's `terrain.txt` and `player_take_terrain_damage`): standing in it burns for
   100 + 1d100 fire, resisted as fire and halved by feather falling, and may burn what you carry; a
   step that would cost over a third of your hit points asks first ("The lava will scald you!"), and

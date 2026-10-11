@@ -38,6 +38,15 @@
   </Window.Resources>
 
   <Window.Styles>
+    <!-- AVABand's own: the food meter pulses once you're weak from hunger. -->
+    <Style Selector="Border.urgent">
+      <Style.Animations>
+        <Animation Duration="0:0:0.8" IterationCount="Infinite" PlaybackDirection="Alternate">
+          <KeyFrame Cue="0%"><Setter Property="Opacity" Value="1" /></KeyFrame>
+          <KeyFrame Cue="100%"><Setter Property="Opacity" Value="0.35" /></KeyFrame>
+        </Animation>
+      </Style.Animations>
+    </Style>
     <Style Selector="TextBlock.header">
       <Setter Property="Foreground" Value="#8ab4f8" />
       <Setter Property="FontWeight" Value="SemiBold" />
@@ -203,6 +212,15 @@
           <Border x:Name="BurdenLine" AutomationProperties.Name="{Binding BurdenSpoken}">
             <TextBlock Text="{Binding BurdenText}" AutomationProperties.AccessibilityView="Raw"
                        Foreground="#aaa" FontSize="12" TextWrapping="Wrap" />
+          </Border>
+          <!-- AVABand's own: the food meter — how fed you are, and how many meals you carry. -->
+          <Border x:Name="FoodMeter" Classes.urgent="{Binding FoodUrgent}" AutomationProperties.Name="{Binding FoodSpoken}"
+                  ToolTip.Tip="How fed you are, and how many meals you carry. Weak from hunger, you're asked to eat; Ctrl+Shift+E eats your best food.">
+            <StackPanel Spacing="2" AutomationProperties.AccessibilityView="Raw">
+              <TextBlock Text="{Binding FoodText}" Foreground="{Binding FoodBrush}" FontSize="12" TextWrapping="Wrap" />
+              <ProgressBar Minimum="0" Maximum="{Binding FoodMax}" Value="{Binding FoodValue}" Foreground="{Binding FoodBrush}"
+                           Height="5" MinHeight="5" />
+            </StackPanel>
           </Border>
           <!-- The monster health bar (Angband): the monster last targeted, looked at or struck. -->
           <StackPanel x:Name="HealthBar" Orientation="Horizontal" Spacing="8" IsVisible="{Binding HealthVisible}" Margin="0,4,0,0">

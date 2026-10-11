@@ -3,6 +3,17 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-10
+
+- **Hunger safeguards**, so you don't starve unawares:
+  - a **Food** meter in the sidebar — how fed you are, in colour, and how many meals you carry —
+    which pulses once you're weak from hunger;
+  - growing weak (or faint, or starving) **asks whether to eat** your best food, and resting,
+    exploring and travelling won't start while you're weak until you've eaten;
+  - a new option, *Eat by yourself when weak from hunger*, eats for you instead of asking;
+  - warnings as your food runs out, and before you go down from town with none;
+  - **Ctrl+Shift+E** eats your best food straight away, without a menu.
+
 ## 2026-10-05
 
 - **The character sheet shows your bracers**: the paper doll has the **Arms** slot now, and any
