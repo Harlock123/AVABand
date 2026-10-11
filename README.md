@@ -24,8 +24,8 @@ A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 12.
 | Taking the stairs up | ...and up into the town |
 | ![Your journey: depth over time, each depth, and the history](screenshots/journey.png) | ![The town at night in tiles: each shop in its colour, its wares in lit windows, awnings, lanterns and its name](screenshots/town-night-tiles.png) |
 | Your journey | The town at night: the shopfronts |
-| ![The sidebar: five kinds of potion sharing one slot in the potion belt, and the Alchemist's Bandolier in the quest satchel](screenshots/quest-satchel.png) | |
-| The quest satchel, with the bandolier the Frozen Cellar earns | |
+| ![The sidebar: five kinds of potion sharing one slot in the potion belt, and the Alchemist's Bandolier in the quest satchel](screenshots/quest-satchel.png) | ![The Load dialog importing a save from another computer: a newer copy of a character already here, asking before it replaces it](screenshots/import-save.png) |
+| The quest satchel, with the bandolier the Frozen Cellar earns | Importing a save from another computer |
 
 The screenshots are rendered by the real windows without a display, from fixed seeds:
 `tools/screenshots.sh` regenerates them all (`tests/Angband.Avalonia.Tests/ReadmeScreenshots.cs`

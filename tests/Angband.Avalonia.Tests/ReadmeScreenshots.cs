@@ -141,6 +141,61 @@ public class ReadmeScreenshots
         Shoot(window, "quest-satchel");
     }
 
+    /// <summary>
+    /// The Load dialog importing a save from another computer: three characters here, and a newer copy of
+    /// one of them chosen, so it asks before replacing. (A temporary folder; the save times are fixed.)
+    /// </summary>
+    [AvaloniaFact]
+    public void ImportSave()
+    {
+        var (window, vm) = Open("warrior", tiles: true);
+        var data = vm.Game.Data;
+        var root = Directory.CreateTempSubdirectory("avaband-readme-import-").FullName;
+        try
+        {
+            var here = new SaveStore(Path.Combine(root, "saves"));
+            var elsewhere = new SaveStore(Path.Combine(root, "elsewhere"));
+            string Save(SaveStore store, string name, string cls, ulong seed, int level, int depth, int maxDepth, long turn, DateTime savedUtc)
+            {
+                var game = GameSession.NewGame(data, seed, cls);
+                game.Player.Name = name;
+                if (level > 1) game.GainExperience(game.ExperienceForLevel(level - 1));
+                (game.Player.Depth, game.Player.MaxDepth) = (depth, maxDepth);
+                game.Scheduler.SetGameTurn(turn);
+                var path = store.Save(game);
+                SetSavedAt(path, savedUtc);
+                return path;
+            }
+            Save(here, "Brego", "warrior", 11, 18, 0, 14, 412_000, new DateTime(2025, 1, 1, 21, 15, 0, DateTimeKind.Utc));
+            Save(here, "Elwing", "mage", 12, 9, 6, 7, 151_000, new DateTime(2024, 12, 30, 19, 40, 0, DateTimeKind.Utc));
+            Save(here, "Haldor", "ranger", 13, 24, 0, 22, 690_000, new DateTime(2024, 12, 28, 17, 5, 0, DateTimeKind.Utc));
+            // Brego, played on at the other computer: deeper, and newer.
+            var copy = Save(elsewhere, "Brego", "warrior", 11, 21, 0, 18, 508_000, new DateTime(2025, 1, 3, 18, 30, 0, DateTimeKind.Utc));
+
+            var dialog = new LoadGameViewModel(here, data);
+            var load = new LoadGameWindow { DataContext = dialog };
+            load.Show(window);
+            dialog.BeginImport(copy);
+            Shoot(load, "import-save");
+            load.Close();
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    /// <summary>Restamps a save's "saved at" (it's written with the real time), so the picture is the same every run.</summary>
+    private static void SetSavedAt(string path, DateTime savedUtc)
+    {
+        System.Text.Json.Nodes.JsonNode file;
+        using (var read = File.OpenRead(path))
+        using (var unzip = new System.IO.Compression.GZipStream(read, System.IO.Compression.CompressionMode.Decompress))
+            file = System.Text.Json.Nodes.JsonNode.Parse(unzip)!;
+        file["Summary"]!["SavedAtUtc"] = savedUtc;
+        using var write = File.Create(path);
+        using var zip = new System.IO.Compression.GZipStream(write, System.IO.Compression.CompressionLevel.Fastest);
+        using var writer = new System.Text.Json.Utf8JsonWriter(zip);
+        file.WriteTo(writer);
+    }
+
     [AvaloniaFact]
     public void SpellMenu()
     {
