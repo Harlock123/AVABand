@@ -119,6 +119,28 @@ public class ReadmeScreenshots
         Shoot(window.OwnedWindows.Last(), "character-sheet");
     }
 
+    /// <summary>The quest satchel holding the Alchemist's Bandolier, and the potion belt it gives above it.</summary>
+    [AvaloniaFact]
+    public void QuestSatchel()
+    {
+        var (window, vm) = Open("warrior", tiles: true);
+        var game = vm.Game;
+        var inv = game.Player.Inventory;
+        void Carry(string kind, int number = 1)
+        {
+            var item = game.Objects.Create(kind, number);
+            game.Knowledge.LearnKind(item.Kind);
+            inv.Add(item);
+        }
+        Carry(Angband.Core.Items.Inventory.BeltKind); // (the Frozen Cellar's reward)
+        Carry("cure_serious_wounds", 3);
+        Carry("speed");
+        Carry("potion_of_heroism", 2);
+        Carry("potion_of_resist_poison");
+        vm.HandleAction(InputAction.Hold); // a turn passes and the panel catches up
+        Shoot(window, "quest-satchel");
+    }
+
     [AvaloniaFact]
     public void SpellMenu()
     {
