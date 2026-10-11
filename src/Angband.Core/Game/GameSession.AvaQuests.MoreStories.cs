@@ -63,6 +63,7 @@ public sealed partial class GameSession
     {
         if (DeepRoomFor(depth) is { } deep) return deep;
         if (ChiselRoomFor(depth) is { } chisel) return chisel;
+        if (HolderRoomFor(depth) is { } holder) return holder;
         if (Active("apprentice") is { Stage: "find" } apprentice && depth == apprentice.N("depth")) return ("apprentice", "quest_apprentice_cave");
         if (Active("warden") is { } warden && depth == warden.N("depth") && !KilledUniques.Contains("the_shade_of_the_stair"))
             return ("warden", "quest_warden_hall");
@@ -85,6 +86,7 @@ public sealed partial class GameSession
     {
         if (FurnishDeepRoom(quest)) return true;
         if (FurnishChiselRoom(quest)) return true;
+        if (FurnishHolderRoom(quest)) return true;
         var depth = Level.Depth;
         switch (quest)
         {
@@ -153,6 +155,7 @@ public sealed partial class GameSession
     private bool MoreAtShop(string shopId)
     {
         if (DeepAtShop(shopId)) return true;
+        if (HolderAtShop(shopId)) return true;
         switch (shopId)
         {
             case "alchemist" when Active("apprentice") is { Stage: "rescued" }:
@@ -178,6 +181,7 @@ public sealed partial class GameSession
     private bool MoreChoice(string[] parts)
     {
         if (DeepChoice(parts)) return true;
+        if (HolderChoice(parts)) return true;
         switch (parts[0])
         {
             case "apprentice" when parts[1] == "recall" && Active("apprentice") is { Stage: "find" } a && Carrying("scroll_of_word_of_recall") is { } scroll:
@@ -236,6 +240,7 @@ public sealed partial class GameSession
     {
         if (DeepUse(kindId)) return true;
         if (ChiselUse(kindId)) return true;
+        if (HolderUse(kindId)) return true;
         if (kindId != "wardens_taper") return false;
         Publish(new MessageEvent("Step onto each cold brazier in the Wardens' hall to light it."));
         return true;

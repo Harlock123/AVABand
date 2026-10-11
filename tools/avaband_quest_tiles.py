@@ -438,6 +438,11 @@ BORROWED = [
     ("object:palantir", ["object:elfstone", "object:star", "object-base:light"]),
     # The Arcane Artificer's door, and his star-forged chisel.
     ("object:star_forged_chisel", ["object:shovel", "object-base:digger"]),
+    # The Frozen Cellar and the Burning Library: what's fetched, and the potion belt and scroll case they earn.
+    ("object:alchemists_crate", ["object:large_wooden_chest", "object:small_wooden_chest", "object-base:chest"]),
+    ("object:scorched_folio", ["object-base:scroll"]),
+    ("object:alchemists_bandolier", ["object:sling", "object-base:sling"]),
+    ("object:scribes_case", ["object-base:magic_book"]),
     # AVABand's lamps, helm and gloves: their nearest Angband kind's picture.
     ("object:dwarven_lamp", ["object:lantern", "object-base:light"]),
     ("object:elven_lantern", ["object:lantern", "object-base:light"]),

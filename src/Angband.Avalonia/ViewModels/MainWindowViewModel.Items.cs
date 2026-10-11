@@ -479,8 +479,8 @@ public sealed partial class MainWindowViewModel
             if (item.IsQuestItem) SatchelRows.Add(Row(letter, item));
             else if (Angband.Core.Items.Inventory.InPouch(item)) PouchRows.Add(GemRow(letter, item));
             else if (Angband.Core.Items.Inventory.InBookBag(item)) BookRows.Add(Row(letter, item));
-            else if (Angband.Core.Items.Inventory.InCase(item)) CaseRows.Add(Row(letter, item));
-            else if (Angband.Core.Items.Inventory.InBelt(item)) BeltRows.Add(Row(letter, item));
+            else if (inv.InCase(item)) CaseRows.Add(Row(letter, item));
+            else if (inv.InBelt(item)) BeltRows.Add(Row(letter, item));
             else PackRows.Add(Row(letter, item));
         }
         HasPouchItems = PouchRows.Count > 0;

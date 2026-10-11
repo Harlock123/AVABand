@@ -145,5 +145,27 @@
    "returned": "You brought SlatriBartSlow his chisel. He owes you a socket for nothing, and asks half for the rest — and his hand no longer slips.",
    "kept": "You kept SlatriBartSlow's star-forged chisel. It has one cut left in it for you, into anything that would take a socket, even an artifact."
   }
+ },
+ {
+  "id": "cellar",
+  "name": "The Frozen Cellar",
+  "minLevel": 5,
+  "offer": "The Alchemist's porter is drinking alone by the fire, his lips still blue. \"We kept the best stock in a cellar below, {feet} ft down, where it's cool. It's not cool now — it's frozen solid, and something that likes it so has moved in. There's a crate of the Alchemist's potions in there yet. Bring it out before the frost cracks every flask, and he'll give you his own bandolier: a padded belt that holds eight kinds of potion in one place, and keeps them from the cold.\"{warning}",
+  "stages": {
+   "find": "The Alchemist's crate of potions is in a frozen cellar at {feet} ft (level {depth}). Find it and bring it out.",
+   "found": "You have the Alchemist's crate. Take it to the Alchemy shop (5).",
+   "done": "You brought the Alchemist his crate, and carry his bandolier: your potions ride in it now, up to eight kinds in one pack slot, and safer from the cold."
+  }
+ },
+ {
+  "id": "library",
+  "name": "The Burning Library",
+  "minLevel": 8,
+  "offer": "A scribe with singed sleeves and a bandaged hand finds you at the bar. \"My master's library is below the town, {feet} ft down. Was, I should say: fire-drakes, or worse, came up through the floor. Three of his folios are still on the shelves, if they haven't burned. Bring them to the Bookseller and you'll have my master's scroll case: eight kinds of scroll in one place, and it's never let a page burn.\"{warning}",
+  "stages": {
+   "find": "Three folios are still on the shelves of a burning library at {feet} ft (level {depth}): {folios} of 3 found so far. Bring them to the Bookseller (4).",
+   "deliver": "You have all three folios. Take them to the Bookseller (4).",
+   "done": "You brought the scribe's folios to the Bookseller, and carry his master's scroll case: your scrolls ride in it now, up to eight kinds in one pack slot, and safer from fire and acid."
+  }
  }
 ]

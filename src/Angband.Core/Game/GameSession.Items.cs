@@ -354,6 +354,7 @@ public sealed partial class GameSession
                 var stack = Player.Inventory.Add(taken)!;
                 NoticeKnacks(stack);
                 Publish(new MessageEvent($"You have {Describe(stack)}."));
+                QuestPickedUp(stack); // (a second of a quest's things joins the first: the quest counts it)
                 picked++;
                 continue;
             }

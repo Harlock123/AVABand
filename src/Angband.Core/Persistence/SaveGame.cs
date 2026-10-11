@@ -424,8 +424,13 @@ public static class SaveGame
         foreach (var (id, value) in ps.Timed)
             if (data.Timed(id) is { } def) p.Timed.Set(def, value);
         foreach (var (id, grade) in ps.OilGrades ?? []) p.OilGrades[id] = grade;
-        foreach (var item in ps.Pack.Select(ToItem).OfType<Item>()) p.Inventory.Add(item);
-        foreach (var item in ps.Quiver.Select(ToItem).OfType<Item>()) p.Inventory.Add(item);
+        // Quest items first: the potion belt and scroll case among them make room for what rides in them.
+        // Anything that still won't fit (a save from before they were earned) goes to the Home, not lost.
+        var unplaced = new List<Item>();
+        foreach (var item in ps.Pack.Select(ToItem).OfType<Item>().OrderBy(i => i.IsQuestItem ? 0 : 1))
+            if (p.Inventory.Add(item) is null) unplaced.Add(item);
+        foreach (var item in ps.Quiver.Select(ToItem).OfType<Item>())
+            if (p.Inventory.Add(item) is null) unplaced.Add(item);
         for (var slot = 0; slot < ps.Equipment.Count && slot < Inventory.Slots.Count; slot++)
             if (ps.Equipment[slot] is { } e && ToItem(e) is { } worn) p.Inventory.RestoreEquipment(slot, worn);
 
@@ -548,6 +553,8 @@ public static class SaveGame
         }
         // Saved in a town from before a building was added: the town as it is now.
         g.RebuildTownIfOutdated();
+        // Saved before the potion belt and scroll case were earned: what no longer fits goes home.
+        g.SendOverflowHome(unplaced);
         return g;
     }
 }

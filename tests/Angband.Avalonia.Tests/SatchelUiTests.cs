@@ -97,6 +97,8 @@ public class SatchelUiTests
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         var inv = vm.Game.Player.Inventory;
+        inv.Add(vm.Game.Objects.Create(Inventory.BeltKind));                  // (both earned: the quests' rewards)
+        inv.Add(vm.Game.Objects.Create(Inventory.CaseKind));
         foreach (var kind in vm.Game.Data.Objects.Where(k => k.Base == "potion" && !k.Flags.Contains("QUEST_ITEM")).Take(10))
             inv.Add(vm.Game.Objects.Create(kind.Id));
         inv.Add(vm.Game.Objects.Create(vm.Game.Data.Objects.First(k => k.Base == "scroll").Id));

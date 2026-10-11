@@ -41,7 +41,7 @@ public class InscriptionUiTests
         window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
         Assert.False(vm.IsInscribing);
         Assert.Equal("@q1", potion.Note);
-        Assert.Contains(vm.BeltRows, r => r.Name.EndsWith("{@q1}"));
+        Assert.Contains(vm.PackRows, r => r.Name.EndsWith("{@q1}"));
 
         // '}' takes it off again.
         vm.HandleAction(InputAction.Uninscribe);

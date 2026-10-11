@@ -11,7 +11,8 @@ public sealed record EquipmentSlot(string Name, EquipSlot Type);
 /// quest satchel: quest items (QUEST_ITEM) ride in the pack's list, last, but take none of its slots
 /// (their weight still counts). And AVABand's potion belt, scroll case, book bag and gem pouch ride just
 /// before them, in that order: all the books together take a single slot, and all the gems another; the
-/// belt and the case take one slot for up to eight kinds each, and a slot more for every kind past that.
+/// belt and the case — once earned (quest rewards, carried in the satchel) — take one slot for up to
+/// eight kinds each, and a slot more for every kind past that.
 /// </summary>
 public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int quiverSize = 8)
 {
@@ -109,20 +110,32 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     /// <summary>How many kinds of scroll the scroll case holds (more take a pack slot each).</summary>
     public const int CaseSize = 8;
 
-    /// <summary>A potion rides in the potion belt.</summary>
-    public static bool InBelt(Item item) => item.Base.Id == "potion" && !item.IsQuestItem;
+    /// <summary>The potion belt itself: the Alchemist's Bandolier, the Frozen Cellar's reward.</summary>
+    public const string BeltKind = "alchemists_bandolier";
+
+    /// <summary>The scroll case itself: the Scribe's Case, the Burning Library's reward.</summary>
+    public const string CaseKind = "scribes_case";
+
+    /// <summary>Whether the potion belt is carried.</summary>
+    public bool HasBelt => _pack.Any(i => i.Kind.Id == BeltKind);
+
+    /// <summary>Whether the scroll case is carried.</summary>
+    public bool HasCase => _pack.Any(i => i.Kind.Id == CaseKind);
+
+    /// <summary>A potion rides in the potion belt, once you have one.</summary>
+    public bool InBelt(Item item) => item.Base.Id == "potion" && !item.IsQuestItem && HasBelt;
 
     /// <summary>The potion belt: the potions carried (first of the bags).</summary>
     public IEnumerable<Item> Belt => _pack.Where(InBelt);
 
-    /// <summary>A scroll rides in the scroll case.</summary>
-    public static bool InCase(Item item) => item.Base.Id == "scroll" && !item.IsQuestItem;
+    /// <summary>A scroll rides in the scroll case, once you have one.</summary>
+    public bool InCase(Item item) => item.Base.Id == "scroll" && !item.IsQuestItem && HasCase;
 
     /// <summary>The scroll case: the scrolls carried (after the potion belt).</summary>
     public IEnumerable<Item> ScrollCase => _pack.Where(InCase);
 
     /// <summary>Whether a thing rides in one of the bags (potion belt, scroll case, book bag, gem pouch) rather than the pack itself.</summary>
-    public static bool InBag(Item item) => InBelt(item) || InCase(item) || InBookBag(item) || InPouch(item);
+    public bool InBag(Item item) => InBelt(item) || InCase(item) || InBookBag(item) || InPouch(item);
 
     /// <summary>A spellbook rides in the book bag (any realm's: magic, holy, nature, necromantic).</summary>
     public static bool InBookBag(Item item) => item.Base.Id is "magic_book" or "prayer_book" or "nature_book" or "shadow_book" && !item.IsQuestItem;
@@ -309,17 +322,26 @@ public sealed class Inventory(int packSize = 23, int quiverSlotSize = 40, int qu
     }
 
     /// <summary>The pack's own things first, then the potion belt, the scroll case, the book bag, the gem pouch, and the quest satchel.</summary>
-    public static int Rank(Item item) =>
-        item.IsQuestItem ? 5 : InPouch(item) ? 4 : InBookBag(item) ? 3 : InCase(item) ? 2 : InBelt(item) ? 1 : 0;
+    public int Rank(Item item) => Rank(item, HasBelt, HasCase);
 
-    /// <summary>Angband pack order: by base (in data order), then kind level, then name; the gem pouch and the quest satchel last.</summary>
-    private void SortPack() => _pack.Sort((a, b) =>
+    private static int Rank(Item item, bool belt, bool scrollCase) =>
+        item.IsQuestItem ? 5 : InPouch(item) ? 4 : InBookBag(item) ? 3
+        : scrollCase && item.Base.Id == "scroll" ? 2 : belt && item.Base.Id == "potion" ? 1 : 0;
+
+    /// <summary>Angband pack order: by base (in data order), then kind level, then name; the bags and the quest satchel last.</summary>
+    private void SortPack()
     {
-        var c = Rank(a).CompareTo(Rank(b));
+        var (belt, scrollCase) = (HasBelt, HasCase);
+        _pack.Sort((a, b) => Compare(a, b, belt, scrollCase));
+    }
+
+    private static int Compare(Item a, Item b, bool belt, bool scrollCase)
+    {
+        var c = Rank(a, belt, scrollCase).CompareTo(Rank(b, belt, scrollCase));
         if (c != 0) return c;
         c = string.CompareOrdinal(a.Base.Id, b.Base.Id);
         if (c != 0) return c;
         c = a.Kind.Level.CompareTo(b.Kind.Level);
         return c != 0 ? c : string.CompareOrdinal(a.Kind.Id, b.Kind.Id);
-    });
+    }
 }

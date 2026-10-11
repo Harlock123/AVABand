@@ -5,7 +5,7 @@
 // to each level the quest names (a debug jump, recorded), and heads for what the quest wants there —
 // Durgash, the sealed door, the Seal, the forge, a shard, the altar, Hathol, the hermit's door, a
 // ledger page's carrier, the thief, the trapped apprentice, the nearest cold brazier and then the
-// Shade, the Heart of the Mountain, Grishnag, the palantír — walking there square by square (the Cartographer, which waits on rare kinds of level, is
+// Shade, the Heart of the Mountain, Grishnag, the palantír, the Alchemist's crate, the scribe's folios — walking there square by square (the Cartographer, which waits on rare kinds of level, is
 // left to the tests); it fights, heals and flees as
 // the plain bot does whenever something awake comes near or it is hurt. It answers each question
 // the quest asks as a player finishing the quest would (the Letter's way depends on the seed).
@@ -25,7 +25,7 @@ internal static class QuestBot
     private static readonly Dictionary<string, int> Levels = new()
     {
         ["sealed_door"] = 16, ["burden"] = 22, ["broken_blade"] = 24, ["consecration"] = 30, ["letter"] = 18, ["thief"] = 22, ["board"] = 15,
-        ["apprentice"] = 22, ["warden"] = 32, ["heart"] = 38, ["watch"] = 40, ["stone"] = 45, ["chisel"] = 26,
+        ["apprentice"] = 22, ["warden"] = 32, ["heart"] = 38, ["watch"] = 40, ["stone"] = 45, ["chisel"] = 26, ["cellar"] = 10, ["library"] = 14,
     };
 
     public const int Budget = 6000;
@@ -74,6 +74,8 @@ internal static class QuestBot
                 "watch" => Watch(run),
                 "stone" => Stone(run),
                 "chisel" => Chisel(run),
+                "cellar" => Cellar(run),
+                "library" => Library(run),
                 _ => false,
             };
         }
@@ -241,6 +243,48 @@ internal static class QuestBot
         Answer(r, "chisel:return");
         if (r.Prompt?.Choices.FirstOrDefault(c => c.Id.StartsWith("artificer:cut:", StringComparison.Ordinal)) is { } cut) Answer(r, cut.Id);
         return s.Stage == "returned";
+    }
+
+    /// <summary>The Frozen Cellar: the Alchemist's crate fetched from the cold, for his bandolier.</summary>
+    private static bool Cellar(Run r)
+    {
+        if (!Take(r, "cellar")) return false;
+        var s = r.Game.AvaQuests.Get("cellar")!;
+        for (var tries = 0; tries < 4 && s.Stage == "find" && !r.OutOfTime; tries++)
+        {
+            Jump(r, s.N("depth"));
+            Pursue(r, () => s.Stage != "find", () => FloorItem(r, "alchemists_crate"), pickup: true, patience: 2500);
+        }
+        if (s.Stage != "found") return false;
+        HandIn(r, "alchemist", "cellar:give");
+        return s.Stage == "done" && r.Game.Player.Inventory.HasBelt;
+    }
+
+    /// <summary>The Burning Library: three folios fetched from the fire, for the scribe's case.</summary>
+    private static bool Library(Run r)
+    {
+        if (!Take(r, "library")) return false;
+        var s = r.Game.AvaQuests.Get("library")!;
+        for (var tries = 0; tries < 4 && s.Stage == "find" && !r.OutOfTime; tries++)
+        {
+            Jump(r, s.N("depth"));
+            Pursue(r, () => s.Stage != "find", () => FloorItem(r, "scorched_folio"), pickup: true, patience: 2500);
+        }
+        if (s.Stage != "deliver") return false;
+        HandIn(r, "bookseller", "library:give");
+        return s.Stage == "done" && r.Game.Player.Inventory.HasCase;
+    }
+
+    /// <summary>Into a shop to hand something in: past anything else that asks first (a caravan come to town).</summary>
+    private static void HandIn(Run r, string shopId, string answer)
+    {
+        for (var tries = 0; tries < 3 && !r.OutOfTime; tries++)
+        {
+            GoInto(r, shopId);
+            if (r.Prompt?.Choices.Any(c => c.Id == answer) == true) break;
+            if (r.Prompt is not null) Answer(r, r.Prompt.Choices[^1].Id); // (whatever it was: the last choice, to leave it; then on to the door)
+        }
+        Answer(r, answer);
     }
 
     private static bool Warden(Run r)
@@ -478,7 +522,7 @@ internal static class QuestBot
 
     public static void Report(GameData data, int seeds)
     {
-        var quests = new[] { "sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "warden", "heart", "watch", "stone", "chisel", "board" };
+        var quests = new[] { "sealed_door", "burden", "broken_blade", "consecration", "letter", "thief", "apprentice", "warden", "heart", "watch", "stone", "chisel", "cellar", "library", "board" };
         var classes = new[] { "warrior", "mage", "ranger" };
         Console.WriteLine("quest          done  died  decisions  potions  levels   (per class: warrior / mage / ranger, " + seeds + " seeds each)");
         foreach (var quest in quests)
@@ -504,6 +548,7 @@ internal static class QuestBot
             ("consecration", "warrior", 101), ("letter", "mage", 505), ("letter", "warrior", 506), ("letter", "rogue", 507),
             ("thief", "warrior", 102), ("board", "ranger", 202), ("apprentice", "warrior", 404), ("warden", "warrior", 101),
             ("heart", "warrior", 303), ("watch", "warrior", 101), ("stone", "warrior", 311), ("chisel", "warrior", 101),
+            ("cellar", "warrior", 101), ("library", "ranger", 202),
         };
         foreach (var (quest, cls, seed) in cases)
         {

@@ -28,7 +28,7 @@ public class InventoryUiTests
     {
         var (_, vm) = Open();
         Assert.Contains(vm.EquipmentRows, r => r.Name.StartsWith("a Dagger"));
-        Assert.Contains(vm.BeltRows, r => r.Name == "2 Potions of Cure Light Wounds"); // (in the potion belt)
+        Assert.Contains(vm.PackRows, r => r.Name == "2 Potions of Cure Light Wounds"); // (no potion belt yet: a quest earns it)
         Assert.Contains(vm.QuiverRows, r => r.Name.StartsWith("40 Iron Shots"));
     }
 
@@ -45,7 +45,7 @@ public class InventoryUiTests
 
         window.KeyPressQwerty(PhysicalKey.A, RawInputModifiers.None);
         Assert.False(vm.IsPrompting);
-        Assert.Contains(vm.BeltRows, r => r.Name == "a Potion of Cure Light Wounds");
+        Assert.Contains(vm.PackRows, r => r.Name == "a Potion of Cure Light Wounds");
     }
 
     [AvaloniaFact]

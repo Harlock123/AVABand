@@ -1310,6 +1310,10 @@
     "object:greater_holy_water": "ava_holy_water.png",
     "terrain:shop_artificer": "ava_shop_artificer.png",
     "object:star_forged_chisel": "avaband_shovel.png",
-    "terrain:shop_caravan": "ava_shop_caravan.png"
+    "terrain:shop_caravan": "ava_shop_caravan.png",
+    "object:alchemists_crate": "dungeon/chest_2_closed.png",
+    "object:scorched_folio": "item/scroll/scroll_new.png",
+    "object:alchemists_bandolier": "item/weapon/ranged/sling_1.png",
+    "object:scribes_case": "item/book/red_new.png"
   }
 }

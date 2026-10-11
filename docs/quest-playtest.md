@@ -134,3 +134,19 @@ is immune to its element, double if it's hurt by it. `quests 5` after that (and 
 
 The Stone is still hard on mages — not because of the Keeper now, but the depth: the drakes that
 live at 2500–3100 ft. That's the dungeon, as it would be without the quest.
+
+## The Frozen Cellar and the Burning Library (2026-10-11)
+
+The two quests that earn the potion belt and the scroll case, played by the bot with a warrior, a
+mage and a ranger on three seeds each (`quests one <quest> <class> <seed>`):
+
+| quest | at its usual level (10 / 14) | at its lowest (5 / 8) | a veteran (35) |
+|---|---|---|---|
+| The Frozen Cellar | 9 of 9, none died | 3 of 6 (warrior, mage) | 6 of 6, none died |
+| The Burning Library | 9 of 9, none died | 6 of 6, none died | 6 of 6, none died |
+
+At level 5 one mage died in the cellar (six potions drunk), and two runs never took the quest: a
+town veteran drained the bot to level 4 before it reached the inn. At level 35 the rooms were deeper
+(near the bot's deepest) with five or six extra guards; the bot needed more turns (up to 4,900 decisions for the
+library) but never died. The bot first stalled on the library: its second and third folios were
+picked up by walking onto them, which didn't tell the quest — fixed, and now tested.

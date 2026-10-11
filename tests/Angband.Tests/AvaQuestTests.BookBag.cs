@@ -9,8 +9,6 @@ namespace Angband.Tests;
 /// <summary>The book bag: every spellbook carried shares one pack slot.</summary>
 public partial class AvaQuestTests
 {
-    /// <summary>Where a thing sorts in the pack: its own things, the potion belt, the scroll case, the book bag, the gem pouch, the quest satchel.</summary>
-    private static int BagRank(Item i) => Inventory.Rank(i);
 
     private static string[] BookKinds(Quester q) =>
         [.. q.Game.Data.Objects.Where(k => k.Base is "magic_book" or "prayer_book" or "nature_book" or "shadow_book").Select(k => k.Id).Take(8)];
@@ -34,7 +32,7 @@ public partial class AvaQuestTests
         // Order: the pack's own things, the book bag, the gem pouch, the satchel.
         inv.Add(q.Game.Objects.Create("palantir"));
         inv.Add(q.Game.Objects.Create("flask_of_oil"));
-        var ranks = inv.Pack.Select(BagRank).ToList();
+        var ranks = inv.Pack.Select(inv.Rank).ToList();
         Assert.Equal(ranks.Order().ToList(), ranks);
 
         // A full pack still takes another book, the bag being carried.
@@ -85,7 +83,7 @@ public partial class AvaQuestTests
 
         var loaded = SaveGame.Load(TestData.Game, old).Player.Inventory;
         Assert.Equal(books.Order(), loaded.BookBag.Select(i => i.Kind.Id).Order());
-        var ranks = loaded.Pack.Select(BagRank).ToList();
+        var ranks = loaded.Pack.Select(loaded.Rank).ToList();
         Assert.Equal(ranks.Order().ToList(), ranks);
         Assert.Equal(carried, loaded.Pack.Sum(i => i.Number));                     // nothing lost
         Assert.Equal(inv.SlotsUsed, loaded.SlotsUsed);

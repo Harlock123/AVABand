@@ -56,6 +56,9 @@ public sealed partial class GameSession
             case "chisel":
                 PlanChiselQuest(s);
                 break;
+            case "cellar" or "library":
+                PlanHolderQuest(s);
+                break;
             case "thief":
                 var thief = Suspects[Rng.RandInt0(Suspects.Length)];
                 s.Texts["thief"] = thief;
@@ -512,6 +515,7 @@ public sealed partial class GameSession
     {
         DeepPickedUp(item);
         ChiselPickedUp(item);
+        HolderPickedUp(item);
         switch (item.Kind.Id)
         {
             case "key_of_belegost" when Active("sealed_door") is { Stage: "hunt" } door:

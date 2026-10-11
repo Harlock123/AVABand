@@ -80,6 +80,13 @@ socket into anything that would take one, even an artifact.
   of four suspects. Pages of its ledger, carried by monsters above 1000 ft, each hold a clue; put
   them together, and hunt the one they point to — only the thief has the box. Bring it back to the
   Black market (6).
+- **The Frozen Cellar** (from level 5): the Alchemist's best potions are in a cellar below that's
+  frozen solid, and things that like the cold have moved in. Bring the crate to the Alchemy shop (5)
+  and he gives you his **bandolier**, the **potion belt**: up to eight kinds of potion in one pack
+  slot, and frost is half as likely to shatter them.
+- **The Burning Library** (from level 8): fire-breathers have broken into a scribe's library. Find
+  his three folios on its shelves and bring them to the Bookseller (4) for his master's **scroll
+  case**: up to eight kinds of scroll in one pack slot, and fire is half as likely to burn them.
 - **The Cartographer** (from level 6): map most (three quarters) of a cavern, a labyrinth and one
   of the old mines — magic mapping counts — and take the maps to the Bookseller (4). He tells you
   the depth of each; any other you come across counts too.
@@ -90,6 +97,10 @@ socket into anything that would take one, even an artifact.
 - **The Warden's Fires** (from level 20): the Shade of the Stair can't be harmed while the three
   braziers in its hall are cold. Step onto each with the Warden's Taper to light it, then put the
   Shade down — but it puts out any fire it lingers beside, so be quick.
+
+Like every quest, the Frozen Cellar and the Burning Library are set a little past the deepest you've
+been, so taken late they're deeper. They also grow with you: the further past their level you are,
+the tougher their guards, and the more of them (one more for every five levels, up to six).
 
 For seasoned characters, three more:
 

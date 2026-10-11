@@ -427,16 +427,26 @@ core kept busy.
     a palantír in a drowned vault, kept by the Keeper of the Stone; used, it maps the level and
     shows every monster on it, and one time in three wakes them all and sends two greater undead;
     give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
+    Two quests earn the potion belt and scroll case (`GameSession.AvaQuests.Holders.cs`): *The Frozen
+    Cellar* (from level 5): the Alchemist's crate of potions, in a cellar guarded by things that like
+    the cold, brought to the Alchemy shop for his bandolier; *The Burning Library* (from level 8):
+    three of a scribe's folios, in a library guarded by things that like the fire, brought to the
+    Bookseller for his master's scroll case. Both scale with the character: set past your deepest like
+    every quest, with guards a level tougher for every four levels past the quest's own and one more
+    for every five (six at most), and a warning in the offer when you're well past it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
   - **The potion belt and scroll case** (AVABand's own; `Inventory.Belt`, `Inventory.ScrollCase`):
-    potions, then scrolls, ride in the pack's list after its own things and before the book bag, shown
+    earned, not given: they work only while you carry the Alchemist's Bandolier (`Inventory.BeltKind`)
+    or the Scribe's Case (`Inventory.CaseKind`), quest rewards that ride in the satchel. Potions, then scrolls, ride in the pack's list after its own things and before the book bag, shown
     under *Potion belt* and *Scroll case* headings. Each holds up to eight kinds (`BeltSize`,
     `CaseSize`) in one pack slot; every kind past eight takes a slot of its own, and the heading says
     so ("Potion belt (10 kinds; 2 take a pack slot each)"), so the pack still has to be managed. A
     full pack takes another kind while the holder has room; an overflowing pack spills its own things
     before potions and scrolls. Both shelter what they hold (`GameSession.Holders.cs`): a potion in
     the belt or a scroll in the case is half as likely to be destroyed by an element that harms it
-    (frost, shards, sound or force for potions; fire or acid for scrolls).
+    (frost, shards, sound or force for potions; fire or acid for scrolls). A save from before they
+    had to be earned loads its quest items first, and whatever its pack can't hold without them goes
+    to the Home (`SendOverflowHome`), not lost.
   - **The book bag** (AVABand's own; `Inventory.BookBag`): spellbooks of every realm ride in the
     pack's list after the scroll case and before the gem pouch, shown under a *Book bag* heading, and all
     of them together take one pack slot, so a caster's three or four books cost what a warrior's one

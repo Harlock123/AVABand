@@ -127,7 +127,9 @@ public sealed partial class MainWindowViewModel
                   + $"them; it grows with your level and with gear of Searching (your character sheet, {KeyName(InputAction.CharacterSheet)}, shows it).");
         yield return ("pack_full", () => player.Inventory.SlotsUsed >= player.Inventory.PackSize
                                          && game.Level.Objects.At(player.Position).Any(i => !i.IsGold && !Hidden(i) && !player.Inventory.CanCarry(i)),
-            () => "Your pack is full, so you can't pick this up. Drop something, eat or drink it, or use Game → Clear out junk; a bag of holding gives more room.");
+            () => "Your pack is full, so you can't pick this up. Drop something, eat or drink it, or use Game → Clear out junk; a bag of holding gives more room."
+                  + (player.Inventory.HasBelt && player.Inventory.HasCase ? ""
+                      : " At the Prancing Pony (9), The Frozen Cellar and The Burning Library earn a potion belt and a scroll case: eight kinds each in one slot."));
         yield return ("floor", () => game.Level.Objects.At(player.Position).Any(i => !i.IsGold && !Hidden(i)),
             () => $"{KeyName(InputAction.Pickup)} picks up what you stand on (it is listed under \"On the floor\" in the sidebar).");
         yield return ("hungry", () => game.HungerLevel <= HungerLevel.Hungry,

@@ -49,13 +49,15 @@ to lightning; three **emeralds**, **garnets** or **amethysts** add two more CON,
 **diamonds** ten more armour; three **opals** better infravision. A **ruby**, a **sapphire** and a
 **topaz** together resist acid too. You need bracers with three sockets, and to wear them.
 
-Your potions ride in a **potion belt** and your scrolls in a **scroll case**, each listed under its
-own heading after your pack's other things. Each holds up to **eight kinds** in one slot of your
-pack; every kind past eight takes a slot of its own, and the heading tells you when that's
-happening ("Potion belt (10 kinds; 2 take a pack slot each)"). While the belt or case has room, a
-full pack still takes another kind of potion or scroll. They also **shelter** what they hold: a
-potion in the belt is half as likely to shatter from frost, shards, sound or force, and a scroll in
-the case half as likely to burn or dissolve in fire or acid.
+Once you've earned them, your potions ride in a **potion belt** and your scrolls in a **scroll
+case**. A new character has neither: the quests *The Frozen Cellar* and *The Burning Library*, at
+the Prancing Pony (9), reward them (see Quests). Each is listed under its own heading after your
+pack's other things. Each holds up to **eight kinds** in one slot of your pack; every kind past
+eight takes a slot of its own, and the heading tells you when that's happening ("Potion belt (10
+kinds; 2 take a pack slot each)"). While the belt or case has room, a full pack still takes another
+kind of potion or scroll. They also **shelter** what they hold: a potion in the belt is half as
+likely to shatter from frost, shards, sound or force, and a scroll in the case half as likely to
+burn or dissolve in fire or acid.
 
 Your gems ride in a **gem pouch**: listed under their own heading, after your pack, each with what
 it does in a socket ("in a socket: +3 to-dam, resist fire"), and all of them together take **one**

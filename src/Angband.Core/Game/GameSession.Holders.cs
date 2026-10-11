@@ -12,5 +12,5 @@ public sealed partial class GameSession
 
     /// <summary>Whether a thing in the pack rides in the potion belt or scroll case, and so is sheltered.</summary>
     public bool Sheltered(Item item) =>
-        (Inventory.InBelt(item) || Inventory.InCase(item)) && Player.Inventory.Pack.Contains(item);
+        (Player.Inventory.InBelt(item) || Player.Inventory.InCase(item)) && Player.Inventory.Pack.Contains(item);
 }

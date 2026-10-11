@@ -2085,6 +2085,10 @@
     "object:greater_holy_water": "ava_holy_water.png",
     "terrain:shop_artificer": "ava_shop_artificer.png",
     "object:star_forged_chisel": "main:18,9",
-    "terrain:shop_caravan": "ava_shop_caravan.png"
+    "terrain:shop_caravan": "ava_shop_caravan.png",
+    "object:alchemists_crate": "main:17,3",
+    "object:scorched_folio": "main:17,7",
+    "object:alchemists_bandolier": "main:4,16",
+    "object:scribes_case": "main:16,8"
   }
 }

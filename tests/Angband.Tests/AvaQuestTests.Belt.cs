@@ -2,9 +2,16 @@ using Angband.Core.Items;
 
 namespace Angband.Tests;
 
-/// <summary>The potion belt and the scroll case: up to eight kinds each share one pack slot.</summary>
+/// <summary>The potion belt and the scroll case (once earned): up to eight kinds each share one pack slot.</summary>
 public partial class AvaQuestTests
 {
+    /// <summary>Both holders, as their quests give them.</summary>
+    private static void GiveHolders(Quester q)
+    {
+        q.Game.Player.Inventory.Add(q.Game.Objects.Create(Inventory.BeltKind));
+        q.Game.Player.Inventory.Add(q.Game.Objects.Create(Inventory.CaseKind));
+    }
+
     private static string[] KindsOf(Quester q, string @base, int count) =>
         [.. q.Game.Data.Objects.Where(k => k.Base == @base && !k.Flags.Contains("QUEST_ITEM")).Select(k => k.Id).Take(count)];
 
@@ -14,6 +21,7 @@ public partial class AvaQuestTests
     public void Up_to_eight_kinds_share_one_slot_and_each_past_that_takes_its_own(string @base)
     {
         var q = Start();
+        GiveHolders(q);
         var inv = q.Game.Player.Inventory;
         foreach (var held in inv.Pack.Where(i => i.Base.Id == @base).ToList())          // (start with an empty holder)
             inv.Remove(held, held.Number, () => q.Game.Objects.NextSerial++);
@@ -29,7 +37,7 @@ public partial class AvaQuestTests
         inv.Add(q.Game.Objects.Create(kinds[9]));
         Assert.Equal(before + 3, inv.SlotsUsed);
 
-        var ranks = inv.Pack.Select(BagRank).ToList();
+        var ranks = inv.Pack.Select(inv.Rank).ToList();
         Assert.Equal(ranks.Order().ToList(), ranks);                          // pack, belt, case, books, gems, satchel
     }
 
@@ -37,6 +45,7 @@ public partial class AvaQuestTests
     public void A_full_pack_takes_another_kind_only_while_the_holder_has_room()
     {
         var q = Start();
+        GiveHolders(q);
         var inv = q.Game.Player.Inventory;
         foreach (var held in inv.Pack.Where(i => i.Base.Id is "potion" or "scroll").ToList())
             inv.Remove(held, held.Number, () => q.Game.Objects.NextSerial++);
@@ -59,6 +68,7 @@ public partial class AvaQuestTests
     public void The_belt_and_case_halve_the_chance_of_losing_what_they_hold(string kind, string element)
     {
         var q = Start();
+        GiveHolders(q);
         var game = q.Game;
         var inv = game.Player.Inventory;
         foreach (var held in inv.Pack.Where(i => i.Kind.Id == kind).ToList())
