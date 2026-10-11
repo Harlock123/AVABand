@@ -71,6 +71,8 @@
         <Separator />
         <MenuItem Header="_Save" Command="{Binding SaveGameCommand}" InputGesture="Ctrl+S" IsEnabled="{Binding CanSave}" />
         <MenuItem Header="_Load character..." Command="{Binding LoadGameCommand}" InputGesture="Ctrl+O" IsEnabled="{Binding CanSave}" />
+        <MenuItem Header="_Export this character..." Command="{Binding ExportCharacterCommand}" IsEnabled="{Binding CanSave}"
+                  ToolTip.Tip="Save, then copy this character's save anywhere, to take to another computer (Load character → Import a save there)." />
         <Separator />
         <MenuItem Header="_Character sheet..." Command="{Binding ShowCharacterSheetCommand}" InputGesture="Shift+C" />
         <MenuItem Header="_High scores..." Command="{Binding ShowHighScoresCommand}" InputGesture="Ctrl+H" />

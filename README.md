@@ -1161,7 +1161,16 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   this character* can roll back a damaged or unwanted save ("Restore and load"; the save it replaces
   is kept as a backup too, and the character's history notes the restore). A character whose save
   is missing or unreadable is still listed, from its newest backup. A dead character's backups go
-  with its save, so permadeath stays permanent; deleting a character deletes them too. The game autosaves on every
+  with its save, so permadeath stays permanent; deleting a character deletes them too. **Moving a
+  character to another computer** (AVABand's own; `SaveStore.PlanImport`/`Import`/`Export`,
+  `MainWindowViewModel.Transfer.cs`): the Load dialog's *Export...* copies the selected save anywhere
+  (Game → *Export this character...* saves the one in play first), *Import a save...* (also on the
+  title screen: *Import a save from another computer*) checks a save — readable, not from a newer
+  version, alive, everything in it known to this game — and copies it into the saves folder under its
+  own name (a renamed copy is fine). A save of the same character (name and seed) already there is
+  replaced only when asked ("Replace it?", saying which is newer), and is kept among its earlier saves,
+  so the import can be undone; *Open saves folder* shows the folder. The strongroom, high scores,
+  graveyard and settings stay on each computer. The game autosaves on every
   level change, when switching characters, on exit and every five minutes of play (the option
   *Save every five minutes while playing*, on by default), and continues the most recent living
   character on start-up. If the last session didn't close properly (a crash, a power cut — a small

@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-11
 
+- **Move a character to another computer**: Game → *Export this character...* (or *Export...* in
+  the Load window) copies its save anywhere; on the other computer, *Import a save from another
+  computer* on the title screen (or *Import a save...* in the Load window) checks it and adds it to
+  your saved characters. Replacing the same character asks first, and keeps the old save among its
+  earlier saves. *Open saves folder* shows where your saves are kept.
 - **The potion belt and scroll case are now quest rewards**, not something every character has:
   - **The Frozen Cellar** (from level 5): bring the Alchemist's crate of potions out of a frozen
     cellar for his bandolier, the potion belt;

@@ -99,7 +99,7 @@ public sealed partial class MainWindowViewModel
     public LoadGameViewModel CreateLoadGame()
     {
         var store = _saves ?? SaveStore.Default();
-        var dialog = new LoadGameViewModel(store);
+        var dialog = new LoadGameViewModel(store, _data);
         dialog.LoadRequested += entry =>
         {
             // Keep the current character before switching to another (or before rolling it back).

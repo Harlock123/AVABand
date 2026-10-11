@@ -264,6 +264,8 @@ public partial class MainWindow : Window
             _subscribed.PropertyChanged -= OnViewModelPropertyChanged;
             _subscribed.NewCharacterRequested -= OnNewCharacterRequested;
             _subscribed.LoadRequested -= OnLoadRequested;
+            _subscribed.ImportRequested -= OnImportRequested;
+            _subscribed.PickExportFile = null;
             _subscribed.ReplayFileRequested -= OnReplayFileRequested;
             _subscribed.CharacterSheetRequested -= OnCharacterSheetRequested;
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
@@ -291,6 +293,8 @@ public partial class MainWindow : Window
         vm.PropertyChanged += OnViewModelPropertyChanged;
         vm.NewCharacterRequested += OnNewCharacterRequested;
         vm.LoadRequested += OnLoadRequested;
+        vm.ImportRequested += OnImportRequested;
+        vm.PickExportFile = PickExportFileAsync;
         vm.ReplayFileRequested += OnReplayFileRequested;
         vm.CharacterSheetRequested += OnCharacterSheetRequested;
         vm.HighScoresRequested += OnHighScoresRequested;
@@ -363,6 +367,25 @@ public partial class MainWindow : Window
     private void OnNewCharacterRequested() => OpenCharacterCreation();
 
     private void OnLoadRequested() => OpenLoadGame();
+
+    /// <summary>Import a save: the Load dialog, straight into its file picker.</summary>
+    private async void OnImportRequested()
+    {
+        if (OpenLoadGame().DataContext is LoadGameViewModel load) await load.ImportCommand.ExecuteAsync(null);
+    }
+
+    private async Task<string?> PickExportFileAsync(string suggested)
+    {
+        var file = await StorageProvider.SaveFilePickerAsync(new global::Avalonia.Platform.Storage.FilePickerSaveOptions
+        {
+            Title = "Export this character (to take to another computer)",
+            SuggestedFileName = suggested,
+            DefaultExtension = Angband.Core.Persistence.SaveGame.Extension,
+            FileTypeChoices = [new global::Avalonia.Platform.Storage.FilePickerFileType("AVABand saves") { Patterns = ["*" + Angband.Core.Persistence.SaveGame.Extension] }],
+            ShowOverwritePrompt = true,
+        });
+        return file is null ? null : global::Avalonia.Platform.Storage.StorageProviderExtensions.TryGetLocalPath(file);
+    }
 
     private void OnCharacterSheetRequested(CharacterSheetViewModel sheet)
     {

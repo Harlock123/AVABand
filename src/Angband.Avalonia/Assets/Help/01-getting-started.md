@@ -9,6 +9,13 @@ offers to resume from the last save and says how long ago that was. Earlier save
 character are kept too (the last five, ten minutes or more apart): Game → Load character → *Earlier
 saves of this character* rolls one back if a save is ever damaged.
 
+To play a character on another computer, use **Game → Export this character...** (or **Export...**
+in the Load window) to copy its save to a USB stick or a shared folder. On the other computer,
+choose **Import a save from another computer** on the title screen (or **Import a save...** in the
+Load window). If that computer already has the same character, you're asked before it's replaced, and
+the one replaced is kept among its earlier saves. Your Home goes with the character; the strongroom,
+high scores, graveyard and settings stay on each computer.
+
 ## Your first steps
 
 The game opens on its **title screen**: *Continue* your last character (or, if they died, *Play

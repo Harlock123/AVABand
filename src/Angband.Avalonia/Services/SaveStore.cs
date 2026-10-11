@@ -25,6 +25,16 @@ public sealed record SaveEntry(string Path, SaveSummary Summary, bool IsBackup =
 }
 
 /// <summary>
+/// A save chosen for importing, checked: what it holds, the file it will become in the saves folder,
+/// and what's there already (the same character: name and seed), if anything.
+/// </summary>
+public sealed record ImportPlan(string Source, SaveSummary Summary, string Target, SaveEntry? Existing)
+{
+    /// <summary>The file chosen is the save already in the folder (nothing to copy).</summary>
+    public bool AlreadyHere => string.Equals(System.IO.Path.GetFullPath(Source), System.IO.Path.GetFullPath(Target), StringComparison.Ordinal);
+}
+
+/// <summary>
 /// The folder of saved characters (<c>&lt;AppData&gt;/AVABand/saves</c>). One file per character, named
 /// after the character and its seed, written atomically so a crash mid-save never loses the old one.
 /// Backups (AVABand's own): as a save is replaced, the one before it is kept in <c>saves/backups</c>
@@ -84,6 +94,12 @@ public sealed class SaveStore(string directory)
             // Next start-up will ask once, harmlessly.
         }
     }
+
+    /// <summary>The character's own file name for a save listed (a backup's: the save it belongs to).</summary>
+    public string PathFor(SaveEntry entry) =>
+        entry.Path.StartsWith(BackupDirectory, StringComparison.Ordinal)
+            ? System.IO.Path.Combine(Directory, StemOfBackup(entry.Path) + SaveGame.Extension)
+            : entry.Path;
 
     public string PathFor(GameSession game) =>
         System.IO.Path.Combine(Directory, $"{Sanitize(game.Player.Name)}-{game.Seed:x}{SaveGame.Extension}");
@@ -165,7 +181,7 @@ public sealed class SaveStore(string directory)
         return new SaveEntry(main, backup.Summary, RestoredFrom: backup.Summary.SavedAtUtc);
     }
 
-    private static SaveEntry? ReadEntry(string path)
+    internal static SaveEntry? ReadEntry(string path)
     {
         try
         {
@@ -201,6 +217,46 @@ public sealed class SaveStore(string directory)
                 if (BackupFiles(stem).Select(ReadEntry).FirstOrDefault(e => e is not null) is { } newest)
                     entries.Add(newest with { IsBackup = true, MainDamaged = true });
         return entries.OrderByDescending(e => e.Summary.SavedAtUtc).ToList();
+    }
+
+    /// <summary>
+    /// Checks a save from elsewhere (another computer's, copied over): readable, made by this version or
+    /// an older one, its character alive, and every thing in it known to this game. Throws
+    /// <see cref="SaveGameException"/> (or an IO error) saying what's wrong.
+    /// </summary>
+    public ImportPlan PlanImport(GameData data, string source)
+    {
+        SaveSummary summary;
+        using (var stream = File.OpenRead(source)) summary = SaveGame.ReadSummary(stream);
+        if (summary.IsDead) throw new SaveGameException($"{summary.Name} has died: a dead character's save can't be played.");
+        var game = SaveGame.LoadFromFile(data, source); // (the whole of it, so nothing fails later, at Load)
+        var target = PathFor(game);
+        var existing = File.Exists(target) ? ReadEntry(target) : null;
+        return new ImportPlan(source, summary, target, existing);
+    }
+
+    /// <summary>
+    /// Copies a checked save into the folder. A save of the same character already here is replaced,
+    /// and kept among its earlier saves (backups), so the import can be undone from the Load dialog.
+    /// </summary>
+    public SaveEntry Import(ImportPlan plan)
+    {
+        if (plan.AlreadyHere) return new SaveEntry(plan.Target, plan.Summary);
+        System.IO.Directory.CreateDirectory(Directory);
+        if (plan.Existing is not null) KeepBackup(plan.Target, force: true);
+        var temp = plan.Target + ".importing";
+        File.Copy(plan.Source, temp, overwrite: true);
+        File.Move(temp, plan.Target, overwrite: true);
+        return new SaveEntry(plan.Target, plan.Summary);
+    }
+
+    /// <summary>Copies a save out of the folder, to take to another computer (the save itself stays).</summary>
+    public void Export(string savePath, string destination)
+    {
+        if (string.Equals(System.IO.Path.GetFullPath(savePath), System.IO.Path.GetFullPath(destination), StringComparison.Ordinal)) return;
+        var temp = destination + ".exporting";
+        File.Copy(savePath, temp, overwrite: true);
+        File.Move(temp, destination, overwrite: true);
     }
 
     /// <summary>Deletes a save and its backups (from the Load dialog, asked twice; or at death).</summary>
