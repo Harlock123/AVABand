@@ -157,3 +157,17 @@ jobs:
             retry gh release create latest artifacts/* --prerelease --target "$GITHUB_SHA" \
               --title "Latest build (main)" --notes "$notes"
           fi
+      - name: Refresh the portfolio site
+        # Asks Harlock123.github.io to rebuild now, so harlock123.com and harlock123.github.io offer this build
+        # straight away instead of at their daily rebuild. Never fails the release.
+        env:
+          SITE_REFRESH_TOKEN: ${{ secrets.SITE_REFRESH_TOKEN }}
+        run: |
+          if [ -z "$SITE_REFRESH_TOKEN" ]; then
+            echo "::notice::SITE_REFRESH_TOKEN is not set; the site will pick this build up at its daily rebuild."
+            exit 0
+          fi
+          curl -sSf -X POST https://api.github.com/repos/Harlock123/Harlock123.github.io/dispatches \
+            -H "Authorization: Bearer $SITE_REFRESH_TOKEN" -H "Accept: application/vnd.github+json" \
+            -d "{\"event_type\":\"portfolio-refresh\",\"client_payload\":{\"repo\":\"$GITHUB_REPOSITORY\"}}" \
+            || echo "::warning::Could not ask the site to refresh; it will pick this build up at its daily rebuild."
