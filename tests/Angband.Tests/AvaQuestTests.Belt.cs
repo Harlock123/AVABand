@@ -52,4 +52,22 @@ public partial class AvaQuestTests
         Assert.False(inv.CanCarry(q.Game.Objects.Create(potions[8])));         // a ninth kind needs a pack slot
         Assert.False(inv.CanCarry(q.Game.Objects.Create(KindsOf(q, "scroll", 1)[0]))); // (and the case itself needs one)
     }
+
+    [Theory]
+    [InlineData("cure_light_wounds", "cold")]
+    [InlineData("phase_door", "fire")]
+    public void The_belt_and_case_halve_the_chance_of_losing_what_they_hold(string kind, string element)
+    {
+        var q = Start();
+        var game = q.Game;
+        var inv = game.Player.Inventory;
+        foreach (var held in inv.Pack.Where(i => i.Kind.Id == kind).ToList())
+            inv.Remove(held, held.Number, () => game.Objects.NextSerial++);
+        var stack = inv.Add(game.Objects.Create(kind, 40))!;
+        Assert.True(game.Sheltered(stack));
+        Assert.False(game.Sheltered(game.Objects.Create(kind)));                // (only what's carried)
+
+        game.InventoryDamage(element, 10_000);                                 // a sure hit, halved
+        Assert.InRange(40 - stack.Number, 10, 30);                             // about twenty of forty lost, not all
+    }
 }

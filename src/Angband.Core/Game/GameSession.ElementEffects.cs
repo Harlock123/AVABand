@@ -282,7 +282,8 @@ public sealed partial class GameSession
     /// Angband inven_damage: each vulnerable thing in the pack (not what is worn or wielded, and
     /// never artifacts) may be hurt — weapons and armour lose a point of enchantment, anything
     /// else is destroyed, one at a time with the chance <paramref name="chance"/> in 10,000
-    /// (a quarter of that for rods). Returns how many were destroyed.
+    /// (a quarter of that for rods, and half for what rides in AVABand's potion belt or scroll case).
+    /// Returns how many were destroyed.
     /// </summary>
     public int InventoryDamage(string element, int chance)
     {
@@ -307,7 +308,7 @@ public sealed partial class GameSession
                 Publish(new MessageEvent($"{(item.Number > 1 ? "One of y" : "Y")}our {Name()} was damaged!"));
                 continue;
             }
-            var each = item.IsRod ? chance / 4 : chance;
+            var each = item.IsRod ? chance / 4 : Sheltered(item) ? chance / HolderShelter : chance;
             var lost = 0;
             for (var i = 0; i < item.Number; i++)
                 if (Rng.RandInt0(10_000) < each) lost++;

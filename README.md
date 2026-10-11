@@ -434,7 +434,9 @@ core kept busy.
     `CaseSize`) in one pack slot; every kind past eight takes a slot of its own, and the heading says
     so ("Potion belt (10 kinds; 2 take a pack slot each)"), so the pack still has to be managed. A
     full pack takes another kind while the holder has room; an overflowing pack spills its own things
-    before potions and scrolls.
+    before potions and scrolls. Both shelter what they hold (`GameSession.Holders.cs`): a potion in
+    the belt or a scroll in the case is half as likely to be destroyed by an element that harms it
+    (frost, shards, sound or force for potions; fire or acid for scrolls).
   - **The book bag** (AVABand's own; `Inventory.BookBag`): spellbooks of every realm ride in the
     pack's list after the scroll case and before the gem pouch, shown under a *Book bag* heading, and all
     of them together take one pack slot, so a caster's three or four books cost what a warrior's one

@@ -176,11 +176,10 @@ public class AvaLootTests
     [InlineData("insulated", "cold", "cure_light_wounds")]
     public void A_guarding_bag_keeps_the_pack_safe_from_its_element(string ego, string element, string kind)
     {
-        // Without the bag, a sure hit destroys them all; with it, none.
+        // Without the bag, a sure hit destroys some (the belt or case shelters the rest); with it, none.
         var bare = NewGame();
-        var lost = Carry(bare, kind, 5);
-        Assert.True(bare.InventoryDamage(element, 10_000) >= 5);
-        Assert.DoesNotContain(lost, bare.Player.Inventory.Pack);
+        Carry(bare, kind, 5);
+        Assert.True(bare.InventoryDamage(element, 10_000) > 0);
 
         var game = NewGame();
         var stack = Carry(game, kind, 5);

@@ -234,10 +234,10 @@
           <TextBlock Classes="header" Text="Inventory" />
           <ItemsControl ItemsSource="{Binding PackRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="{Binding BeltHeader}" IsVisible="{Binding HasBeltItems}"
-                     ToolTip.Tip="Your potions: up to eight kinds share one slot of your pack; each kind past eight takes a slot of its own." />
+                     ToolTip.Tip="Your potions: up to eight kinds share one slot of your pack; each kind past eight takes a slot of its own. The padded belt halves the chance of frost, shards, sound or force shattering them." />
           <ItemsControl x:Name="BeltPanel" ItemsSource="{Binding BeltRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="{Binding CaseHeader}" IsVisible="{Binding HasCaseItems}"
-                     ToolTip.Tip="Your scrolls: up to eight kinds share one slot of your pack; each kind past eight takes a slot of its own." />
+                     ToolTip.Tip="Your scrolls: up to eight kinds share one slot of your pack; each kind past eight takes a slot of its own. The case halves the chance of fire or acid destroying them." />
           <ItemsControl x:Name="CasePanel" ItemsSource="{Binding CaseRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />
           <TextBlock Classes="header" Text="Book bag" IsVisible="{Binding HasBookBagItems}"
                      ToolTip.Tip="Your spellbooks: all of them together take one slot of your pack, however many you carry." />

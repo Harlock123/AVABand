@@ -5,6 +5,9 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-11
 
+- **The belt and case protect what they hold**: a potion in the potion belt is half as likely to
+  shatter from frost, shards, sound or force, and a scroll in the scroll case half as likely to
+  burn or dissolve in fire or acid.
 - **A potion belt and a scroll case**: up to eight kinds of potion share **one** pack slot, and
   up to eight kinds of scroll another, each under its own heading (*Potion belt*, *Scroll case*)
   after your pack's other things. Each kind past eight takes a slot of its own, and the heading
