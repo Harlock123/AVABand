@@ -41,7 +41,7 @@ public class InscriptionUiTests
         window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
         Assert.False(vm.IsInscribing);
         Assert.Equal("@q1", potion.Note);
-        Assert.Contains(vm.PackRows, r => r.Name.EndsWith("{@q1}"));
+        Assert.Contains(vm.BeltRows, r => r.Name.EndsWith("{@q1}"));
 
         // '}' takes it off again.
         vm.HandleAction(InputAction.Uninscribe);
@@ -108,7 +108,7 @@ public class InscriptionUiTests
         objects.SetAutoInscription();
         Assert.Equal("@q9", vm.Game.Knowledge.KindNote(row.Kind!));
         Assert.All(vm.Game.Player.Inventory.Pack.Where(i => i.Kind == row.Kind), i => Assert.Equal("@q9", i.Note));
-        Assert.Contains(vm.PackRows, r => r.Name.EndsWith("{@q9}"));
+        Assert.Contains(vm.PackRows.Concat(vm.BeltRows).Concat(vm.CaseRows), r => r.Name.EndsWith("{@q9}"));
     }
 }
 

@@ -3,6 +3,13 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-11
+
+- **A potion belt and a scroll case**: up to eight kinds of potion share **one** pack slot, and
+  up to eight kinds of scroll another, each under its own heading (*Potion belt*, *Scroll case*)
+  after your pack's other things. Each kind past eight takes a slot of its own, and the heading
+  says so, so you still choose what to carry.
+
 ## 2026-10-10
 
 - **Hunger safeguards**, so you don't starve unawares:

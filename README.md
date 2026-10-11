@@ -428,8 +428,15 @@ core kept busy.
     shows every monster on it, and one time in three wakes them all and sends two greater undead;
     give it to the White Council's messenger at the Bookseller (two great objects) or keep it.
     `docs/quest-playtest.md` has what the quest bot and the level counts said about every quest.
+  - **The potion belt and scroll case** (AVABand's own; `Inventory.Belt`, `Inventory.ScrollCase`):
+    potions, then scrolls, ride in the pack's list after its own things and before the book bag, shown
+    under *Potion belt* and *Scroll case* headings. Each holds up to eight kinds (`BeltSize`,
+    `CaseSize`) in one pack slot; every kind past eight takes a slot of its own, and the heading says
+    so ("Potion belt (10 kinds; 2 take a pack slot each)"), so the pack still has to be managed. A
+    full pack takes another kind while the holder has room; an overflowing pack spills its own things
+    before potions and scrolls.
   - **The book bag** (AVABand's own; `Inventory.BookBag`): spellbooks of every realm ride in the
-    pack's list after its own things and before the gem pouch, shown under a *Book bag* heading, and all
+    pack's list after the scroll case and before the gem pouch, shown under a *Book bag* heading, and all
     of them together take one pack slot, so a caster's three or four books cost what a warrior's one
     potion stack does (a full pack takes another book once the bag is carried; an overflowing pack spills
     its own things before books). Old saves sort their books into the bag on loading.

@@ -24,7 +24,7 @@ public class TidyPackTests
         game.Execute(new TidyPackCommand());
         var stack = Assert.Single(game.Player.Inventory.Pack, i => i.Kind.Id == "phase_door");
         Assert.Equal(5, stack.Number);
-        Assert.Equal(slots - 1, game.Player.Inventory.SlotsUsed);
+        Assert.Equal(slots, game.Player.Inventory.SlotsUsed); // (both in the scroll case's one slot all along)
         Assert.StartsWith("You tidy your pack: 1 stack merged.", said[^1]);
         Assert.Contains($"of {game.Player.Inventory.PackSize} slots used", said[^1]);
 

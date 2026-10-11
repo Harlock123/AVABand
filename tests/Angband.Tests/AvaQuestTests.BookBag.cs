@@ -9,8 +9,8 @@ namespace Angband.Tests;
 /// <summary>The book bag: every spellbook carried shares one pack slot.</summary>
 public partial class AvaQuestTests
 {
-    /// <summary>Where a thing sorts in the pack: its own things, the book bag, the gem pouch, the quest satchel.</summary>
-    private static int BagRank(Item i) => i.IsQuestItem ? 3 : Inventory.InPouch(i) ? 2 : Inventory.InBookBag(i) ? 1 : 0;
+    /// <summary>Where a thing sorts in the pack: its own things, the potion belt, the scroll case, the book bag, the gem pouch, the quest satchel.</summary>
+    private static int BagRank(Item i) => Inventory.Rank(i);
 
     private static string[] BookKinds(Quester q) =>
         [.. q.Game.Data.Objects.Where(k => k.Base is "magic_book" or "prayer_book" or "nature_book" or "shadow_book").Select(k => k.Id).Take(8)];

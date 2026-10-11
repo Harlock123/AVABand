@@ -64,6 +64,14 @@ public sealed partial class MainWindowViewModel
 
     public ObservableCollection<ItemRow> EquipmentRows { get; } = [];
     public ObservableCollection<ItemRow> PackRows { get; } = [];
+    /// <summary>The potion belt (AVABand's own): every potion carried, one pack slot for up to eight kinds.</summary>
+    public ObservableCollection<ItemRow> BeltRows { get; } = [];
+    [ObservableProperty] private bool _hasBeltItems;
+    [ObservableProperty] private string _beltHeader = "Potion belt";
+    /// <summary>The scroll case (AVABand's own): every scroll carried, one pack slot for up to eight kinds.</summary>
+    public ObservableCollection<ItemRow> CaseRows { get; } = [];
+    [ObservableProperty] private bool _hasCaseItems;
+    [ObservableProperty] private string _caseHeader = "Scroll case";
     /// <summary>The book bag (AVABand's own): every spellbook carried, one pack slot for them all.</summary>
     public ObservableCollection<ItemRow> BookRows { get; } = [];
     [ObservableProperty] private bool _hasBookBagItems;
@@ -444,6 +452,10 @@ public sealed partial class MainWindowViewModel
         _game.Player.Inventory.Equipped.Contains(item) ? null
             : _game.AdviceFor(item, _game.Knowledge.IsFullyKnown(item), buying: !_game.Player.Inventory.Contains(item));
 
+    /// <summary>A capped holder's heading: its name, and once it's overfull, how many kinds spill into the pack's own slots.</summary>
+    private static string HolderHeader(string name, int kinds, int size) =>
+        kinds <= size ? name : $"{name} ({kinds} kinds; {kinds - size} take a pack slot each)";
+
     private void RefreshInventory()
     {
         var p = _game.Player;
@@ -455,6 +467,8 @@ public sealed partial class MainWindowViewModel
                 EquipmentRows.Add(Row(Inventory.Slots[i].Type == EquipSlot.Shield && item.Base.IsWeapon ? "off hand" : Inventory.Slots[i].Name, item));
 
         PackRows.Clear();
+        BeltRows.Clear();
+        CaseRows.Clear();
         BookRows.Clear();
         PouchRows.Clear();
         SatchelRows.Clear();
@@ -465,10 +479,16 @@ public sealed partial class MainWindowViewModel
             if (item.IsQuestItem) SatchelRows.Add(Row(letter, item));
             else if (Angband.Core.Items.Inventory.InPouch(item)) PouchRows.Add(GemRow(letter, item));
             else if (Angband.Core.Items.Inventory.InBookBag(item)) BookRows.Add(Row(letter, item));
+            else if (Angband.Core.Items.Inventory.InCase(item)) CaseRows.Add(Row(letter, item));
+            else if (Angband.Core.Items.Inventory.InBelt(item)) BeltRows.Add(Row(letter, item));
             else PackRows.Add(Row(letter, item));
         }
         HasPouchItems = PouchRows.Count > 0;
         HasBookBagItems = BookRows.Count > 0;
+        HasBeltItems = BeltRows.Count > 0;
+        HasCaseItems = CaseRows.Count > 0;
+        BeltHeader = HolderHeader("Potion belt", BeltRows.Count, Angband.Core.Items.Inventory.BeltSize);
+        CaseHeader = HolderHeader("Scroll case", CaseRows.Count, Angband.Core.Items.Inventory.CaseSize);
         HasSatchelItems = SatchelRows.Count > 0;
 
         QuiverRows.Clear();

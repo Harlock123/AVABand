@@ -49,6 +49,12 @@ to lightning; three **emeralds**, **garnets** or **amethysts** add two more CON,
 **diamonds** ten more armour; three **opals** better infravision. A **ruby**, a **sapphire** and a
 **topaz** together resist acid too. You need bracers with three sockets, and to wear them.
 
+Your potions ride in a **potion belt** and your scrolls in a **scroll case**, each listed under its
+own heading after your pack's other things. Each holds up to **eight kinds** in one slot of your
+pack; every kind past eight takes a slot of its own, and the heading tells you when that's
+happening ("Potion belt (10 kinds; 2 take a pack slot each)"). While the belt or case has room, a
+full pack still takes another kind of potion or scroll.
+
 Your gems ride in a **gem pouch**: listed under their own heading, after your pack, each with what
 it does in a socket ("in a socket: +3 to-dam, resist fire"), and all of them together take **one**
 slot of your pack, however many kinds you carry (spellbooks share one slot the same way, in the
