@@ -2,6 +2,8 @@ using Avalonia.VisualTree;
 using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Game;
+using Angband.Core.Definitions;
+using Angband.Core.Geometry;
 using Angband.Core.World;
 using Angband.Data;
 using Angband.Data.Tiles;
@@ -26,10 +28,10 @@ public class ReadmeScreenshots
     private static readonly IReadOnlyList<TilesetManifest> Tilesets = TilesetCatalog.Discover([TilesetCatalog.DefaultDirectory]);
 
     private static (MainWindow Window, MainWindowViewModel Vm) Open(string classId, bool tiles, string tileset = "gervais", ulong seed = 42,
-        bool scenes = false)
+        bool scenes = false, double tileScale = 1.5, int width = 1440, int height = 900)
     {
         MainWindow.ShowCreationOnFirstRun = false;
-        var settings = new AppSettings { UseTiles = tiles, TilesetId = tileset, TileScale = 1.5, Muted = true };
+        var settings = new AppSettings { UseTiles = tiles, TilesetId = tileset, TileScale = tileScale, Muted = true };
         settings.Options[DisplayOptions.Hints] = false; // no tips over the pictures
         settings.Options[DisplayOptions.Scenes] = scenes; // (only the stair shots are of scenes)
         var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), Tilesets, settings, save: null)
@@ -37,7 +39,7 @@ public class ReadmeScreenshots
             Clock = () => ShotTime, // the character dump's date, fixed so the sheet looks the same every run
         };
         vm.StartGame(seed, classId);
-        var window = new MainWindow { DataContext = vm, Width = 1440, Height = 900 };
+        var window = new MainWindow { DataContext = vm, Width = width, Height = height };
         window.Show();
         return (window, vm);
     }
@@ -59,25 +61,73 @@ public class ReadmeScreenshots
     private static void Dispatcher() => global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
 
     /// <summary>Down into the dungeon, with a few monsters and objects in view of the start.</summary>
-    private static void Descend(MainWindowViewModel vm, int depth = 5)
+    private static void Descend(MainWindowViewModel vm, int depth = 5) =>
+        Descend(vm, depth, ["cave_spider", "bullroarer", "kobold_archer", "cave_spider"], ["cure_light_wounds", "dagger", "phase_door"], awake: 1);
+
+    private static void Descend(MainWindowViewModel vm, int depth, string[] monsters, string[] objects, int awake, int minRoom = 0)
     {
         var game = vm.Game;
         game.MarkDebugUsed(); // the jumps below are debug commands; don't stop to ask
         for (var d = 0; d < depth; d += 5) vm.HandleAction(InputAction.JumpDeeper); // debug: 5 levels at a time
         // A level where the player starts in a lit room well inside the map, so the view is centred on it.
+        // (For a busy picture, minRoom asks for a big room round the start; it's lit up below.)
         bool Good() => game.Player.Position is var at && at.X > 35 && at.X < game.Level.Width - 35 && at.Y > 12
-                       && at.Y < game.Level.Height - 12 && game.Level[at].Has(SquareFlags.Room) && game.Level[at].Has(SquareFlags.Glow);
-        for (var tries = 0; tries < 40 && !Good(); tries++) vm.HandleAction(InputAction.RegenerateLevel);
+                       && at.Y < game.Level.Height - 12 && game.Level[at].Has(SquareFlags.Room)
+                       && (minRoom > 0 ? game.Level.AllLocs().Count(l => l.DistanceTo(at) < 9 && game.Level.IsEmptyFloor(l)
+                                                                         && game.Level[l].Has(SquareFlags.Room)) >= minRoom
+                                       : game.Level[at].Has(SquareFlags.Glow));
+        if (minRoom == 0)
+            for (var tries = 0; tries < 40 && !Good(); tries++) vm.HandleAction(InputAction.RegenerateLevel);
+        if (minRoom > 0)
+        {
+            // Find the roomiest spot on the level, away from the edges, and put the player there.
+            int Roominess(Loc at) => game.Level.AllLocs().Count(l => l.DistanceTo(at) < 9 && game.Level.IsEmptyFloor(l)
+                                                                   && game.Level[l].Has(SquareFlags.Room));
+            for (var tries = 0; tries < 20; tries++)
+            {
+                var best = game.Level.AllLocs()
+                    .Where(l => l.X > 35 && l.X < game.Level.Width - 35 && l.Y > 12 && l.Y < game.Level.Height - 12
+                                && game.Level.IsEmptyFloor(l) && game.Level[l].Has(SquareFlags.Room) && (l.X + l.Y) % 3 == 0)
+                    .Select(l => (Loc: l, Score: Roominess(l)))
+                    .OrderByDescending(t => t.Score).FirstOrDefault();
+                if (best.Score >= minRoom)
+                {
+                    game.Player.Position = best.Loc;
+                    break;
+                }
+                vm.HandleAction(InputAction.RegenerateLevel);
+            }
+            // Map the surroundings, as magic mapping would, so the corridors and rooms round about show too.
+            foreach (var l in game.Level.AllLocs().Where(l => l.ChebyshevTo(game.Player.Position) <= 30))
+            {
+                var f = game.Level.FeatureAt(l);
+                if (f.Has(TerrainFlags.Passable) || f.HasAny(TerrainFlags.DoorAny | TerrainFlags.Stair | TerrainFlags.Rubble)
+                    || game.Level.Neighbors(l).Any(game.Level.IsPassable))
+                    game.Known.Remember(game.Level, l);
+            }
+
+            // Light the whole room, as a Scroll of Light would, so all of it (and everyone in it) shows.
+            var start = game.Player.Position;
+            var queue = new Queue<Loc>([start]);
+            var seen = new HashSet<Loc> { start };
+            while (queue.Count > 0)
+            {
+                var q = queue.Dequeue();
+                game.Level[q].Flags |= SquareFlags.Glow;
+                if (!game.Level.IsPassable(q) && q != start) continue;
+                foreach (var n in game.Level.Neighbors(q))
+                    if (game.Level[n].Has(SquareFlags.Room) && seen.Add(n)) queue.Enqueue(n);
+            }
+            game.UpdateView();
+        }
         foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
         var p = game.Player.Position;
         var spots = game.Level.AllLocs()
-            .Where(l => l.DistanceTo(p) is > 2 and < 7 && game.Level.IsEmptyFloor(l) && game.Level[l].Has(SquareFlags.Seen))
+            .Where(l => l.DistanceTo(p) is > 2 && l.DistanceTo(p) < (minRoom > 0 ? 9 : 7) && game.Level.IsEmptyFloor(l) && game.Level[l].Has(SquareFlags.Seen))
             .OrderBy(l => (l.X * 7919 + l.Y * 104729) % 97).ToList();
         var spawner = new Angband.Core.Monsters.MonsterSpawner(game.Data);
-        string[] monsters = ["cave_spider", "bullroarer", "kobold_archer", "cave_spider"];
         for (var i = 0; i < monsters.Length && i < spots.Count; i++)
-            if (game.Data.Monster(monsters[i]) is { } race) spawner.Place(game.Level, game.Rng, race, spots[i], asleep: i != 1);
-        string[] objects = ["cure_light_wounds", "dagger", "phase_door"];
+            if (game.Data.Monster(monsters[i]) is { } race) spawner.Place(game.Level, game.Rng, race, spots[i], asleep: i >= awake);
         for (var i = 0; i < objects.Length && monsters.Length + i < spots.Count; i++)
             game.Level.Objects.Add(spots[monsters.Length + i], game.Objects.Create(objects[i]));
         game.UpdateView();
@@ -92,6 +142,23 @@ public class ReadmeScreenshots
         vm.ShowMonsterPanel = true;
         vm.ShowObjectPanel = true;
         Shoot(window, "dungeon-tiles");
+    }
+
+    /// <summary>
+    /// The picture for the portfolio site's card: 16:9, so the site has nothing to crop, with bigger tiles
+    /// and a busier room: an orc war party and its shaman, a cave bear and a pair of wolves, loot on the
+    /// floor, and the monster and object lists alongside.
+    /// </summary>
+    [AvaloniaFact]
+    public void Portfolio_Card()
+    {
+        var (window, vm) = Open("warrior", tiles: true, seed: 11, tileScale: 2.25, width: 1600, height: 900);
+        Descend(vm, 10,
+            ["grishnakh_the_hill_orc", "cave_orc", "orc_shaman", "cave_orc", "snaga", "cave_bear", "wolf", "wolf", "giant_spider"],
+            ["cure_light_wounds", "long_sword", "phase_door", "wand_of_magic_missile", "flask_of_oil"], awake: 5, minRoom: 70);
+        vm.ShowMonsterPanel = true;
+        vm.ShowObjectPanel = true;
+        Shoot(window, "portfolio-card");
     }
 
     [AvaloniaFact]
