@@ -186,7 +186,8 @@ public sealed record JunkItem(Item Item, string Why, bool Ticked);
 
 // AVABand's "Clear out junk": the carried things ignoring would suit — worth nothing as far as you
 // know, carrying a curse you know of, or of known bad quality. Artifacts, worn gear and anything
-// inscribed !k or !* are left out, as ignoring by quality leaves them.
+// inscribed !k or !* are left out, as ignoring by quality leaves them; so are quest items, which no
+// shop pays for but which are never junk.
 public sealed partial class GameSession
 {
     public IReadOnlyList<JunkItem> JunkCandidates()
@@ -194,7 +195,7 @@ public sealed partial class GameSession
         var list = new List<JunkItem>();
         foreach (var item in Player.Inventory.Pack.Concat(Player.Inventory.Quiver))
         {
-            if (item.IsArtifact || item.Ignored || IsMarkedIgnored(item) || Inscription.AsksFirst(item, 'k')) continue;
+            if (item.IsArtifact || item.IsQuestItem || item.Ignored || IsMarkedIgnored(item) || Inscription.AsksFirst(item, 'k')) continue;
             var reasons = new List<string>();
             var judged = Knowledge.KnowsKind(item) && (Knowledge.IsFullyKnown(item) || !ItemValue.HasVariablePower(item));
             var value = ItemValue.Known(item, Data, Knowledge);

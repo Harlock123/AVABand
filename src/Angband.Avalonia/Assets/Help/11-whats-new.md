@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-11
 
+- **Fixed: quest items called junk.** *Tidy pack* and *Clear out junk* no longer list quest items
+  (the crate, the folios and the like) as worthless: no shop pays for them, but they're never junk.
 - **Move a character to another computer**: Game → *Export this character...* (or *Export...* in
   the Load window) copies its save anywhere; on the other computer, *Import a save from another
   computer* on the title screen (or *Import a save...* in the Load window) checks it and adds it to
