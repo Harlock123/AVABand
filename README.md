@@ -2,6 +2,10 @@
 
 A cross-platform Angband clone in C# / .NET 10 (LTS) and Avalonia 12.
 
+[![Ten seconds from the trailer: a mage's fire ball, lightning and dragon's flame among an orc pack, then the same room in each of the nine tile sets](screenshots/trailer.webp)](https://github.com/Harlock123/AVABand/releases/download/latest/AVABand-trailer.mp4)
+
+**[Watch the one-minute trailer](https://github.com/Harlock123/AVABand/releases/download/latest/AVABand-trailer.mp4)** (MP4, 8 MB; made headlessly from the game by `tools/trailer.sh`).
+
 ![Five levels down with the David Gervais tiles: Bullroarer, a kobold archer and two cave spiders, with the monster and object lists beside the map](screenshots/dungeon-tiles.png)
 
 ## Screenshots

@@ -51,10 +51,26 @@ public class TrailerFrames
         public void Shot(int frames = 1)
         {
             Pump();
+            Tidy(Window);
             var frame = Window.CaptureRenderedFrame() ?? throw new InvalidOperationException("no frame");
             var file = $"f{_frames.Count:D5}.png";
             frame.Save(Path.Combine(_dir, file), global::Avalonia.Media.Imaging.PngBitmapEncoderOptions.Default);
             _frames.Add((file, frames));
+        }
+
+        /// <summary>
+        /// What a player wouldn't care to see in a trailer, left out of the picture only: the Debug menu
+        /// (the game keeps it) and the seed at the end of the status bar.
+        /// </summary>
+        private static void Tidy(Window window)
+        {
+            foreach (var item in window.GetVisualDescendants().OfType<MenuItem>())
+                if (item.Header is "_Debug") item.IsVisible = false;
+            if (window.DataContext is MainWindowViewModel vm && vm.StatusText.Contains("  |  Seed ", StringComparison.Ordinal))
+            {
+                vm.StatusText = System.Text.RegularExpressions.Regex.Replace(vm.StatusText, @"  \|  Seed \d+", "");
+                Pump();
+            }
         }
 
         /// <summary>Keeps the last frame up a while longer.</summary>
