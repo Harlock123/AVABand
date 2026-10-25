@@ -24,7 +24,7 @@ public sealed class JourneyViewModel
         Points = [.. game.Visits.Select(v => new JourneyPoint(v.Turn, v.Depth)), new JourneyPoint(game.GameTurn, p.Depth)];
         Markers =
         [
-            .. game.Kills.Where(k => k.Unique).Select(k => new JourneyMarker(k.Turn, k.Depth, false, game.Data.Monster(k.RaceId)?.Name ?? k.RaceId)),
+            .. game.Kills.Where(k => k.Unique).Select(k => new JourneyMarker(k.Turn, k.Depth, false, game.MonsterRace(k.RaceId)?.Name ?? k.RaceId)),
             .. game.History.Where(h => h.Artifact is not null && h.Text.StartsWith("Found ", StringComparison.Ordinal))
                 .Select(h => new JourneyMarker(h.Turn, h.Depth, true, h.Text[6..])),
         ];

@@ -18,7 +18,7 @@ public sealed class FeatRecord
 
 /// <summary>
 /// AVABand's feats (the Knowledge screen's Feats page): milestones across every character you play —
-/// depths reached, levels, uniques slain, quests done, and a win with each class. A character that
+/// depths reached, levels, uniques slain, quests done, ghosts laid to rest, and a win with each class. A character that
 /// cheated or used a debug command, the tutorial and replays earn none.
 /// </summary>
 public static class Feats
@@ -47,6 +47,9 @@ public static class Feats
             g => g.AvaQuests.Get("watch") is { Stage: "relieved" } w && w.N("held") >= GameSession.WatchTurns));
         feats.Add(new("stone_kept", "The Eye Looks Back", "Keep the palantír, and look into it ten times.",
             g => g.AvaQuests.Get("stone") is { Stage: "keep" } s && s.N("looks") >= 10));
+        feats.Add(new("ghost", "Rest Now", "Lay the ghost of one of your fallen characters to rest.", g => g.Ghosts.Laid.Count >= 1));
+        feats.Add(new("ghosts_3", "Keeper of the Barrows", "Lay three ghosts of your fallen characters to rest with one character.",
+            g => g.Ghosts.Laid.Count >= 3));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
         foreach (var quest in data.Quests)
             if (data.Monster(quest.Race) is { } boss)

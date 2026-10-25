@@ -52,8 +52,8 @@ application-data folder).
 slain; 100,000 gold carried; an artifact worn; a first and then every one of the Prancing Pony's
 quests done well; the deep quests' own (the Heart given back, the watchtower held all 200 turns
 rather than won by Grishnag's death, the palantír kept and looked into ten times — the stone quest
-counts the looks); ten notice-board jobs; the daily dungeon's (a first try, 1000 ft in one, and
-seven days running — these from the daily board, `FeatBook.CheckBoard`, as each try is recorded and
+counts the looks); a fallen character's ghost laid to rest, and three with one character; ten
+notice-board jobs; the daily dungeon's (a first try, 1000 ft in one, and seven days running — these from the daily board, `FeatBook.CheckBoard`, as each try is recorded and
 at start-up); Sauron and Morgoth slain; and a win with each class.
 They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
 ft.)"), kept in `feats.json` beside the scores with who did each first and when, and listed on
@@ -74,7 +74,9 @@ if they were there long) and played on from there in the main window. **Characte
 words) draw a 1200×675 picture to share — name, race and class, level, depths, points, uniques or
 what killed them and the epitaph, over the scene that suits (the kind of level they're on, or the
 graveyard at dusk) — saved in `cards/` beside the records and opened in your picture viewer. Kept in `graveyard.json` beside the scores; the first time, the
-dead the high scores remember are brought in. Cheats, the tutorial and replays aren't buried.
+dead the high scores remember are brought in. Cheats, the tutorial and replays aren't buried. A
+stone keeps what its character wore at the end, for its ghost (below), and, once that ghost is laid
+to rest, who did it and when ("Their ghost was laid to rest by …").
 
 **The daily dungeon** (AVABand's own, `Game/DailyDungeon.cs`; Game → Daily dungeon..., and on the
 title screen): one dungeon a day, the same for everyone — the seed is FNV-1a of the UTC date, and
@@ -265,6 +267,32 @@ core kept busy.
   read, so Angband's own files stay untouched; a later file replaces an earlier one's entry of the
   same id, so a test checks they never reuse an Angband id). On by default; the birth option *AVABand's quests*
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
+- **Ghosts of fallen characters** (AVABand's own; `Game/GameSession.Ghosts.cs`; birth option *Ghosts of
+  fallen characters*, `birth_ava_ghosts`, on): the graveyard's dead walk again. Each game started or
+  loaded is handed the newest 40 headstones that can (not a winner's, not a death in town, not one
+  laid to rest — and never the character's own), copied into the save as `FallenGhost`s with the gear
+  each wore, before its replay starts recording, so loading and replays never need `graveyard.json`.
+  A new level at the exact depth one fell at — the level where they died, not near it — gives each
+  such ghost a 1-in-4 chance (`FallenGhosts.Chance`), one ghost a level, rolled only when one could
+  walk there (so a game without any plays as before); it starts on empty floor more than 10 squares
+  from where you arrive and out of its line of sight, and walks once for each character until it is
+  laid to rest. The ghost (`FallenGhosts.BuildRace`) is a unique `G` in its class's colour (the `ghost`
+  tile in every set, through the race's `TileAs`) named "The Ghost of Bramble", undead, walking
+  through walls, of level depth + 3 + a quarter of however far the character's level was past the
+  depth; with (10 × level + level²) hit points, scaled 80% (a mage) to 125% (a warrior) by the
+  class's hit die (about 290 for a level-12 warrior who fell at 350 ft, 1100 for a level-30 mage at
+  1500 ft), speed +2 and a quarter of its level (at most +20), armour 12 + 1½ × level; a cold touch
+  and its class's blows ((1 + level/8)d8; a necromancer's and a blackguard's drain experience); and
+  for a caster three attack spells and two others it could have cast at its level, from its realm's
+  stand-ins (a mage's magic missile, frost and fire bolts and blink, a priest's wounds, scare and
+  heal, a necromancer's nether bolt and darkness, a druid's stinking cloud and lightning, a ranger's
+  arrows...). Seen, it wails of what killed it ("Grip, Farmer Maggot's Dog ended me here..."). Beaten,
+  it is laid to rest — the headstone is marked for every character after, unless the game is a
+  cheat's, the tutorial or a replay — and lets fall one of the things it wore, at random (never a
+  torch or a quest item), and two piles of gold: an artifact as itself only if this game hasn't made
+  it and both games used the standard set, otherwise a great ego of its kind; a headstone from
+  before stones kept gear gives a great item suited to the class. Not in the daily dungeon or the
+  tutorial. Two feats: *Rest Now* and *Keeper of the Barrows* (three with one character).
 - **Merchant caravans** (AVABand's own; `GameSession.Caravan.cs`): one return to town in four (from
   250 ft), a caravan camps in the square — a wagon tile in every set (`ava_shop_caravan.png`, from
   `tools/avaband_quest_tiles.py`), `&` in letters, named on the shopfronts — selling five things made 15

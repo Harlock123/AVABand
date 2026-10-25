@@ -27,6 +27,31 @@ public sealed class FallenRecord
     /// <summary>The replay of its whole game, if one was recorded ("watch their last moments").</summary>
     public string? ReplayPath { get; set; }
 
+    /// <summary>
+    /// What it wore at the end, as the save file writes each item (<c>SaveGame.ItemToJson</c>): its ghost's
+    /// gear (AVABand's ghosts). Null on headstones from before the graveyard kept it.
+    /// </summary>
+    public List<string>? Equipment { get; set; }
+
+    /// <summary>It played with random artifacts (so an artifact it wore is its own game's, not one of the standard set).</summary>
+    public bool Randarts { get; set; }
+
+    /// <summary>Who laid its ghost to rest ("Bob the Elf Mage"), and when; null while it still walks.</summary>
+    public string? LaidToRestBy { get; set; }
+    public DateTime? LaidToRestUtc { get; set; }
+
+    /// <summary>Which end this is, for its ghost (the same death always has the same key).</summary>
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string Key => $"{Seed:x}-{DateUtc.Ticks:x}";
+
+    /// <summary>Keeps what the character wore at the end (and whether its artifacts were random ones), for its ghost.</summary>
+    public FallenRecord KeepGear(Game.GameSession game)
+    {
+        Equipment = [.. game.Player.Inventory.Equipped.Select(Persistence.SaveGame.ItemToJson)];
+        Randarts = game.RandartSeed is not null;
+        return this;
+    }
+
     public static FallenRecord From(ScoreEntry e, string? dumpPath = null, string? replayPath = null)
     {
         var record = new FallenRecord
@@ -112,6 +137,18 @@ public sealed class Graveyard
     {
         Fallen.RemoveAll(f => SameEnd(f, record));
         Fallen.Insert(0, record);
+    }
+
+    /// <summary>
+    /// A ghost laid to rest (AVABand's ghosts): its headstone says by whom and when, and it walks for no
+    /// one again. False if there's no such headstone, or it was laid to rest already.
+    /// </summary>
+    public bool LayToRest(string key, string by, DateTime whenUtc)
+    {
+        if (Fallen.FirstOrDefault(f => f.Key == key) is not { LaidToRestBy: null } fallen) return false;
+        fallen.LaidToRestBy = by;
+        fallen.LaidToRestUtc = whenUtc;
+        return true;
     }
 
     private static bool SameEnd(FallenRecord a, FallenRecord b) => a.Name == b.Name && a.Seed == b.Seed && a.DateUtc == b.DateUtc;

@@ -626,6 +626,7 @@ public sealed partial class GameSession : ITurnHandler
             DisguiseMonsters();
             PrepareQuestLevel();
             OnNewLevel();
+            PlaceGhost(); // (AVABand: perhaps the ghost of someone who fell at this depth)
             _questRoomHere = null;
             PrepareFeeling();
             CheatPeek();

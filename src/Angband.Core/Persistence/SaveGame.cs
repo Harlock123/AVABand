@@ -108,6 +108,7 @@ public static class SaveGame
             AvaQuests = g.AvaQuests,
             Stats = g.Stats,
             CharacterKills = new(g.CharacterKills),
+            Ghosts = g.Ghosts,
             JourneyVisits = [.. g.Visits.Select(v => new JourneyVisitSave { Turn = v.Turn, Depth = v.Depth, Profile = v.Profile })],
             JourneyKills = [.. g.Kills.Select(k => new JourneyKillSave { Turn = k.Turn, Depth = k.Depth, Race = k.RaceId, Unique = k.Unique })],
             Knowledge = new KnowledgeSave
@@ -367,6 +368,7 @@ public static class SaveGame
         g.RestoreAvaQuests(f.AvaQuests);
         g.RestoreStats(f.Stats);
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
+        g.RestoreGhosts(f.Ghosts); // (before the levels: a ghost on one is its own race)
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));
         g.Knowledge.RestoreSeen(f.Knowledge.SeenKinds, f.Knowledge.SeenEgos, f.Knowledge.SeenArtifacts);
@@ -473,7 +475,7 @@ public static class SaveGame
 
             foreach (var ms in ls.Monsters)
             {
-                if (data.Monster(ms.Race) is not { } race)
+                if (g.MonsterRace(ms.Race) is not { } race)
                 {
                     errors.Add($"unknown monster '{ms.Race}'");
                     continue;
@@ -483,7 +485,7 @@ public static class SaveGame
                     Hp = ms.Hp, Energy = ms.Energy, Sleep = ms.Sleep, Stun = ms.Stun, Disenchanted = ms.Disenchanted, Confused = ms.Confused, Fear = ms.Fear,
                     Held = ms.Held, Fast = ms.Fast, Slow = ms.Slow, Tracking = ms.Tracking, Aware = ms.Aware, Active = ms.Active,
                     GroupId = ms.GroupId == 0 ? ms.Id : ms.GroupId,
-                    Camouflaged = ms.Camouflaged, BodyguardOf = ms.BodyguardOf, KnownPlayer = ms.KnownPlayer is { } learned ? new Dictionary<string, int>(learned) : [], OriginalRace = ms.OriginalRace is null ? null : data.Monster(ms.OriginalRace), MimicItem = ms.MimicItem is null ? null : ToItem(ms.MimicItem),
+                    Camouflaged = ms.Camouflaged, BodyguardOf = ms.BodyguardOf, KnownPlayer = ms.KnownPlayer is { } learned ? new Dictionary<string, int>(learned) : [], OriginalRace = ms.OriginalRace is null ? null : g.MonsterRace(ms.OriginalRace), MimicItem = ms.MimicItem is null ? null : ToItem(ms.MimicItem),
                     MoveTarget = ms.WanderTarget is [var wx, var wy] ? new Loc(wx, wy) : default,
                 };
                 m.Carried.AddRange(ms.Carried.Select(ToItem).OfType<Item>());

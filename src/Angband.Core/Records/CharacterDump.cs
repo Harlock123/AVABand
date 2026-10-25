@@ -216,7 +216,7 @@ public static class CharacterDump
         {
             Section("Uniques slain");
             foreach (var id in game.KilledUniques.Order(StringComparer.Ordinal))
-                Line($" {data.Monster(id)?.Name ?? id}");
+                Line($" {game.MonsterRace(id)?.Name ?? id}");
         }
 
         if (game.History.Count > 0)

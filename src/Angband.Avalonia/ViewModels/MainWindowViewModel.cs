@@ -321,6 +321,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         Messages.Clear();
         _history.Clear();
         _lastCommand = null;
+        UseGraveyardGhosts(); // (AVABand's ghosts: before the replay starts, so it has them)
         StartRecording();
         CloseTitle(); // a game started or loaded from the title screen
         Refresh();

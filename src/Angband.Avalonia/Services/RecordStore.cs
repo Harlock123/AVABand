@@ -71,6 +71,13 @@ public sealed class RecordStore(string directory)
         SaveGraveyard(yard);
     }
 
+    /// <summary>A fallen character's ghost laid to rest (AVABand's ghosts): its headstone says by whom, and when.</summary>
+    public void LayToRest(string key, string by)
+    {
+        var yard = LoadGraveyard();
+        if (yard.LayToRest(key, by, DateTime.UtcNow)) SaveGraveyard(yard);
+    }
+
     /// <summary>The feats done across every character (AVABand's own).</summary>
     public string FeatsPath => Path.Combine(Directory, "feats.json");
 

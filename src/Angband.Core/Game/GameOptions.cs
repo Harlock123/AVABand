@@ -58,6 +58,8 @@ public static class OptionIds
     public const string AngbandBlows = "birth_angband_blows";
     /// <summary>AVABand's own: spells fail half as often (GameSession.SpellFailChance).</summary>
     public const string AvaEasyCasting = "birth_ava_easy_casting";
+    /// <summary>AVABand's own: the ghosts of your fallen characters, on the levels where they fell (GameSession.Ghosts).</summary>
+    public const string AvaGhosts = "birth_ava_ghosts";
 
     // Cheat options.
     public const string CheatHear = "cheat_hear";
@@ -102,6 +104,7 @@ public static class OptionCatalog
         new(OptionIds.AngbandBlows, "Angband 4.2's blows (weapon weight, Strength, Dexterity) and casters' armour weight", OptionKind.Birth, true),
         new(OptionIds.AvaBurden, "AVABand's encumbrance (more from Strength and Constitution; worn gear weighs less)", OptionKind.Birth, true),
         new(OptionIds.AvaEasyCasting, "AVABand's easier casting (spell failure halved)", OptionKind.Birth, true),
+        new(OptionIds.AvaGhosts, "Ghosts of fallen characters (on the levels where they fell)", OptionKind.Birth, true),
 
         new(OptionIds.CheatHear, "Cheat: Peek into monster creation", OptionKind.Cheat, false),
         new(OptionIds.CheatRoom, "Cheat: Peek into dungeon creation", OptionKind.Cheat, false),

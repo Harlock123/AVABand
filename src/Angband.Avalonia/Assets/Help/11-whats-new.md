@@ -3,6 +3,17 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-26
+
+- **Ghosts of fallen characters**: your dead heroes now and then turn up on the level where they
+  died — one time in four on a new level at that depth — as a named ghost in their class's colour,
+  as tough as a unique there, passing through walls, fighting as their class did and casting some of
+  their spells; it wails of what killed it when you first see it. Kill it to lay it to rest for good
+  (its headstone says who did it) and win back one of the things it wore, and gold — an artifact you
+  already have comes as a fine ego of its kind. Headstones keep their character's gear from now on;
+  an older one's ghost leaves a good item suited to its class. A new birth option, *Ghosts of fallen
+  characters*, on by default; never in the daily dungeon or the tutorial. Two new feats go with it.
+
 ## 2026-10-25
 
 - **Easier casting**: a new birth option, *AVABand's easier casting*, on by default — and on for the

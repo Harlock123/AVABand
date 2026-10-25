@@ -232,7 +232,7 @@ public sealed partial class MainWindowViewModel
     /// </summary>
     private void OnMonsterKilledForScene(MonsterKilledEvent e)
     {
-        if (!e.IsUnique || _data.Monster(e.RaceId) is not { } race || !IsGreatFoe(race)) return;
+        if (!e.IsUnique || _game.MonsterRace(e.RaceId) is not { } race || !IsGreatFoe(race)) return;
         var where = _game.Player.Depth == 0 ? "in the town" : $"at {_game.Player.Depth * 50} ft";
         AddScene(SceneKind.BossSlain, $"{char.ToUpperInvariant(race.Name[0])}{race.Name[1..]} is slain", race.Glyph.ToString(),
             _cells.Color(race.Color), where, "boss-slain");

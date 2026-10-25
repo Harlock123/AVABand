@@ -72,5 +72,5 @@ public sealed partial class GameSession
     /// <summary>The monsters killed most, most first (name, count).</summary>
     public IReadOnlyList<(string Name, int Count)> TopKills(int count = 10) =>
         [.. CharacterKills.OrderByDescending(kv => kv.Value).ThenBy(kv => kv.Key, StringComparer.Ordinal).Take(count)
-            .Select(kv => (Data.Monster(kv.Key)?.Name ?? kv.Key, kv.Value))];
+            .Select(kv => (MonsterRace(kv.Key)?.Name ?? kv.Key, kv.Value))];
 }

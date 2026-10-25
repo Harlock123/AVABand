@@ -18,6 +18,12 @@ public sealed record HeadstoneRow(FallenRecord Fallen)
     public string Epitaph => Fallen.Epitaph;
     public bool Won => Fallen.Won;
     public bool HasReplay => Fallen.ReplayPath is { } path && File.Exists(path);
+
+    /// <summary>Who laid its ghost to rest, and when (AVABand's ghosts); null while it still walks.</summary>
+    public string? Rest => Fallen.LaidToRestBy is { } by
+        ? $"Their ghost was laid to rest by {by}"
+          + (Fallen.LaidToRestUtc is { } when ? $" on {when.ToLocalTime().ToString("d", CultureInfo.CurrentCulture)}." : ".")
+        : null;
 }
 
 /// <summary>
@@ -76,7 +82,7 @@ public sealed partial class GraveyardViewModel : ObservableObject
             Story = "";
             return;
         }
-        var header = $"{value.Name}, {value.Title}\n{value.End}.\n\n“{value.Epitaph}”\n\n";
+        var header = $"{value.Name}, {value.Title}\n{value.End}.\n\n“{value.Epitaph}”\n\n" + (value.Rest is { } rest ? rest + "\n\n" : "");
         string? dump = null;
         try
         {

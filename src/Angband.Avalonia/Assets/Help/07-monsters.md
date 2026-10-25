@@ -16,6 +16,22 @@ great threat" to "could kill you outright". When you look at a monster (`x`), on
 you or take half your life says so: "(unhurt, asleep, could kill you)". It only judges by what you
 have seen, so a monster you know nothing about may still be deadly.
 
+## Ghosts of the fallen
+
+Your characters who died on this computer may walk again (the birth option *Ghosts of fallen
+characters*, on by default). Now and then — one time in four for each, on a new level at the very
+depth they fell at — "A chill runs through you": the ghost of one of them is somewhere on the level,
+out of sight of where you came in. It is a `G` in its class's colour, named for them ("The Ghost of
+Bramble"), as tough as a unique of that depth and tougher for a character who was high in level,
+and it passes through walls. It fights as its class did, with a cold touch, and a caster's ghost
+casts some of its old spells. When you first see it, it wails of what killed it.
+
+Beat it and it is laid to rest for good — for every character after you too, and its headstone in
+the graveyard says who did it — and it lets fall one of the things it wore when it died, and gold.
+An artifact this game has already made comes as a fine ego of the same kind instead. Each ghost
+walks only once for each character; leave it be and it may wait for the next. Ghosts never walk in
+the daily dungeon or the tutorial.
+
 ## How monsters behave
 
 - They wake when you are noisy (stealth helps) and follow your scent and sound. A monster that

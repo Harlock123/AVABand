@@ -57,6 +57,8 @@ public sealed class SaveFile
     /// <summary>AVABand's statistics (absent in older saves).</summary>
     public Game.PlayStats? Stats { get; set; }
     public Dictionary<string, int> CharacterKills { get; set; } = [];
+    /// <summary>AVABand's ghosts of fallen characters: those this character may meet, has met and laid to rest (absent in older saves).</summary>
+    public Game.GhostLog? Ghosts { get; set; }
     /// <summary>The journey: levels arrived on and kills, in order (absent from older saves).</summary>
     public List<JourneyVisitSave> JourneyVisits { get; set; } = [];
     public List<JourneyKillSave> JourneyKills { get; set; } = [];
