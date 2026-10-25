@@ -67,6 +67,77 @@ public class StoreStockTests
         Assert.All(books.Stock, b => Assert.Equal(b.Base.MaxStack, b.Number));
     }
 
+    private static GameSession Caster(string cls, int level, ulong seed = 1)
+    {
+        var game = GameSession.NewGame(TestData.Game, seed, CharacterSpec.Default("human", cls));
+        if (level > 1) game.GainExperience(game.ExperienceForLevel(level - 1));
+        return game;
+    }
+
+    private static string[] DungeonBooks(GameSession game, Store books) =>
+        [.. books.Stock.Where(i => !books.Def.Always.Contains(i.Kind.Id)).Select(i => i.Kind.Id).Order()];
+
+    [Fact]
+    public void TheBookseller_KeepsNoDungeonBook_TooFarAhead()
+    {
+        var game = Caster("priest", 1);
+        var books = game.Stores["bookseller"];
+        game.Maintain(books);
+        Assert.Empty(DungeonBooks(game, books));
+        Assert.Equal(books.Def.Always.Order(), books.Stock.Select(i => i.Kind.Id).Order());
+    }
+
+    [Fact]
+    public void TheBookseller_KeepsYourDungeonBooks_FromFiveLevelsBeforeTheirFirstSpell()
+    {
+        // A priest's first prayer in Healing and Sanctuary is at level 10, in Battle Blessings 20.
+        var game = Caster("priest", 4);
+        var books = At(game, "bookseller");
+        game.Execute(new EnterStoreCommand());
+        Assert.Empty(DungeonBooks(game, books));
+
+        game.GainExperience(game.ExperienceForLevel(4) - game.Player.Experience); // level 5
+        game.Execute(new EnterStoreCommand());
+        Assert.Equal(["healing_and_sanctuary"], DungeonBooks(game, books));
+        Assert.Equal(10 + 1, books.Stock.Count); // the town books stay
+
+        // It never runs out, at its full price.
+        var healing = books.Stock.Single(i => i.Kind.Id == "healing_and_sanctuary");
+        Assert.True(books.IsAlways(healing));
+        game.Player.Gold = 1_000_000;
+        var price = game.BuyPrice(books, healing);
+        Assert.True(price >= ItemValue.Of(healing, TestData.Game));
+        game.Execute(new BuyCommand(healing, 2));
+        Assert.Equal(2, game.Player.Inventory.Pack.Where(i => i.Kind.Id == "healing_and_sanctuary").Sum(i => i.Number));
+        Assert.Equal(1_000_000 - 2 * price, game.Player.Gold);
+        Assert.Equal(healing.Base.MaxStack, healing.Number);
+        for (var i = 0; i < 5; i++) game.Maintain(books);
+        Assert.Contains(books.Stock, i => i.Kind.Id == "healing_and_sanctuary" && i.Number == i.Base.MaxStack);
+
+        game.GainExperience(game.ExperienceForLevel(24) - game.Player.Experience); // level 25
+        game.Maintain(books);
+        Assert.Equal(["battle_blessings", "healing_and_sanctuary", "wrath_of_the_valar"], DungeonBooks(game, books));
+    }
+
+    [Fact]
+    public void TheBookseller_KeepsOnlyYourClassesBooks()
+    {
+        var warrior = Caster("warrior", 50);
+        warrior.Maintain(warrior.Stores["bookseller"]);
+        Assert.Empty(DungeonBooks(warrior, warrior.Stores["bookseller"]));
+
+        var mage = Caster("mage", 50);
+        mage.Maintain(mage.Stores["bookseller"]);
+        Assert.Equal(["arcane_control", "wizards_tome_of_power"], DungeonBooks(mage, mage.Stores["bookseller"]));
+
+        var rogue = Caster("rogue", 50);
+        rogue.Maintain(rogue.Stores["bookseller"]);
+        Assert.Equal(["arcane_control"], DungeonBooks(rogue, rogue.Stores["bookseller"]));
+
+        // Never at the black market, or anywhere else.
+        Assert.All(mage.Stores.Values.Where(s => s.Id != "bookseller"), s => Assert.Empty(mage.PlayerStaplesFor(s)));
+    }
+
     [Fact]
     public void Staples_NeverRunOut_ButEnchantedOnesDo()
     {

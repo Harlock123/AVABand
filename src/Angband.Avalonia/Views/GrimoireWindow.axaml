@@ -110,7 +110,7 @@
                PlaceholderText="Find a spell (a name or a word, e.g. heal, fire)" />
     </Grid>
     <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto" Margin="4,12,4,0">
-      <TextBlock Text="Pictures from Dungeon Crawl Stone Soup's tiles (CC0). Levels, mana and failure are each class's own; a spell's failure falls as you gain levels. Esc closes."
+      <TextBlock Text="Pictures from Dungeon Crawl Stone Soup's tiles (CC0). Levels, mana and base failure are each class's own; your level and casting stat lower the failure (and AVABand's easier casting halves it): the cast list (m) shows your chance. Esc closes."
                  Foreground="#9a8468" FontSize="11.5" VerticalAlignment="Center" TextWrapping="Wrap" />
       <Button Grid.Column="1" Content="Close" Classes="accent" Click="OnClose" Margin="12,0,0,0" />
     </Grid>

@@ -33,9 +33,12 @@ pack, and take none of its 23 slots (they still weigh what they weigh).
 ## Merchant caravans
 
 Now and then, coming back up to town (once you've been 250 ft down), you'll find a **merchant caravan**
-camped in the square — a painted wagon (`&` in letters). Walk onto it: five rare, good things from deeper
-than you've been, at half as much again as they're worth, and fully known when you buy them. It stays for
-three of your returns, then moves on.
+camped in the square — a painted wagon (`&` in letters). Walk onto it: five rare things made well below
+where you've been (fifteen levels deeper, and never from shallower than 1250 ft) — weapons, armour and
+ammunition that are always egos, and now and then a ring, an amulet, a wand, a staff or a rod worth at
+least 1000 gold. Nothing is ever cursed, and there are no artifacts. Each costs **three times** what it's
+worth (no haggling, no discounts), and is fully known when you buy it. It stays for three of your returns,
+then moves on.
 
 ## The strongroom
 

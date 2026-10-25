@@ -4,7 +4,10 @@
 
 Casters learn spells from books of their realm: arcane (mages, rogues, rangers), divine
 (priests, paladins), nature (druids, rangers) and necromantic (necromancers, blackguards). The
-first books are sold in town, the deeper ones found in the dungeon.
+first books are sold in town, the deeper ones found in the dungeon — a little more often than in
+Angband 4.2.5, and now and then a book you can't read turns out to be one of yours you haven't got.
+Once you're within five levels of the first spell your class learns from a dungeon book, the
+**Bookseller** keeps it in stock for you too, at its full price, and never runs out of it.
 
 A book's name says its kind — a **Magic Book** (arcane), **Holy Book** (divine), **Nature Book**
 or **Necromantic Tome** — as in "a Holy Book of [Novice's Handbook]". In the shops, buying or
@@ -20,11 +23,13 @@ other things first and keeps your books.
 - `G` learns a spell once you reach its level. Mages and most casters choose; **priests and
   paladins** choose a book and are granted a random prayer from it, as in 4.2.
 - **The Grimoire** (Help → The Grimoire) has every spell in every book, realm by realm, with a
-  picture of each: what it does, and the level, mana and failure chance for each class that can
-  learn it — yours marked ★ — and where each book is sold or found. A search box finds a spell by
+  picture of each: what it does, and the level, mana and base failure chance for each class that
+  can learn it — yours marked ★ — and where each book is sold or found. A search box finds a spell by
   name or by what it does ("heal", "fire").
 - `m` casts, `B` browses. Each spell costs mana and may **fail**: the chance, shown in the list,
-  falls as you gain levels and your casting stat.
+  falls as you gain levels and your casting stat. With the birth option **AVABand's easier
+  casting** (on by default) the chance shown is half Angband 4.2.5's — the 5% floor most classes
+  can't go below becomes 2% — though being stunned or forgetful still costs you in full.
 - The cast list also shows, greyed after the spells you know, any you could learn right now, marked
   "study first (G)" — reaching a spell's level doesn't teach it; `G` does.
 - Casting without enough mana is allowed after a question, but you faint — paralysed for a while.

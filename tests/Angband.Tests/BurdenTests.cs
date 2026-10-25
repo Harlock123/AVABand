@@ -105,4 +105,18 @@ public class BurdenTests
         Assert.Equal(-10, Make(race: "hobbit").CarryPercent);
         Assert.Equal(0, Make(race: "half_troll", races: false).CarryPercent);
     }
+
+    [Fact]
+    public void The_character_sheet_shows_the_weight_that_counts()
+    {
+        foreach (var ava in new[] { true, false })
+        {
+            var game = Make(ava);
+            Assert.True(game.Player.Inventory.Equipped.Any(), "a warrior starts with gear on");
+            var line = Angband.Core.Records.CharacterDump.Build(game).Split('\n').First(l => l.Contains("Burden "));
+            Assert.Contains($"Burden {game.BurdenWeight / 10}.{game.BurdenWeight % 10} lb", line);
+            if (ava) Assert.True(game.BurdenWeight < game.Player.Inventory.TotalWeight); // worn gear counts three quarters
+            else Assert.Equal(game.Player.Inventory.TotalWeight, game.BurdenWeight);
+        }
+    }
 }

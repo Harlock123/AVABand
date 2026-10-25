@@ -267,9 +267,10 @@ core kept busy.
   (`birth_ava_quests`) turns them off. Angband's own quests (Sauron, Morgoth, the win) are unchanged.
 - **Merchant caravans** (AVABand's own; `GameSession.Caravan.cs`): one return to town in four (from
   250 ft), a caravan camps in the square — a wagon tile in every set (`ava_shop_caravan.png`, from
-  `tools/avaband_quest_tiles.py`), `&` in letters, named on the shopfronts — selling five good things made
-  deeper than you've been, at half as much again as their worth, fully known when bought; it stays three
-  returns. Its arrival and wares come from dice of their own, seeded from the town and the time, and the
+  `tools/avaband_quest_tiles.py`), `&` in letters, named on the shopfronts — selling five things made 15
+  levels below your deepest (level 25 at least): weapons, armour and ammunition always egos (`great`),
+  and one try in three a ring, amulet, wand, staff or rod worth 1000 gold or more; never cursed, never an
+  artifact; at three times their worth, fully known when bought; it stays three returns. Its arrival and wares come from dice of their own, seeded from the town and the time, and the
   serials and any artifact rolled are put back, so nothing else in the game shifts.
 - **The strongroom** (AVABand's own; `GameSession.Strongroom.cs`, `StrongroomStore`; birth option
   *The strongroom*, `birth_strongroom`, on): at the Prancing Pony, lockers shared by every character
@@ -710,7 +711,9 @@ core kept busy.
   - *Staples* (`always`) never run out: a full pile of 40 that buying doesn't reduce — the General
     Store's food, oil, torches, cloaks, shovels, picks and ammunition; the Alchemist's Cure Light
     Wounds, Phase Door, Word of Recall and Remove Curse; and every one of the ten town books at the
-    Bookseller (the dungeon books are only found below). Enchanted copies of a staple sell out.
+    Bookseller. AVABand's own: the Bookseller also keeps, as staples for you alone, each dungeon book
+    your class reads, from five levels before its first spell for you (`Store.PlayerStaples`,
+    `GameSession.PlayerStaplesFor`; multiclass levels count). Enchanted copies of a staple sell out.
   - Books are named with their kind, as in 4.2 ("a Magic Book of [First Spells]", "a Holy Book of
     [Novice's Handbook]", a Nature Book, a Necromantic Tome), and in a shop, buying or selling, each
     carries a badge — **for you** if the class can read it (`GameSession.BookNote`, Angband's
@@ -821,7 +824,14 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   (G)", the spells you could study now, after those you know so their letters don't move — Angband
   lists only learned ones, and a new spell is easily missed) with Angband's failure formula (base, minus
   3 per level above the spell, minus the stat bonus, plus 5 per missing mana point, with a stat-based
-  minimum, which only ZERO_FAIL classes — mage, priest, druid, necromancer — can take below 5%).
+  minimum, which only ZERO_FAIL classes — mage, priest, druid, necromancer — can take below 5%). With
+  the birth option *AVABand's easier casting* (`birth_ava_easy_casting`, on by default, and on for
+  older saves, which have no value for it) the chance is halved once it's held between the minimum and
+  50% — so the 5% floor is 2% and fear's +20 counts 10 — before stunning (+15/+25) and amnesia (50 +
+  half) add theirs in full. Dungeon books (those no town shop sells) are half as common again in what
+  the dungeon makes (`ObjectFactory.DungeonBookBoost`), and one time in 25 a book a caster can't read
+  becomes one of their dungeon books they have neither in the pack nor at home, if one is native to the
+  level (`WantedBookChance`); stores don't use `Make`, so their stock is unchanged.
   Casting without enough mana is allowed after confirmation but makes you faint. The first cast of
   each spell gives experience. Spell points regenerate like hit points.
   - **The books** (`spells.json` and `objects.json` follow Angband 4.2.5's

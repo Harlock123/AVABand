@@ -45,7 +45,7 @@ public sealed partial class GameSession : ITurnHandler
         Rng = new GameRandom(seed);
         _generator = new DungeonGenerator(data);
         _spawner = new MonsterSpawner(data);
-        Objects = new ObjectFactory(data) { CanBrowse = PlayerCanBrowse };
+        Objects = new ObjectFactory(data) { CanBrowse = PlayerCanBrowse, WantsBook = PlayerWantsBook };
         Knowledge = new PlayerKnowledge(data, seed) { IgnoredCheck = IsMarkedIgnored };
         Player.Inventory = new Inventory(data.Constants.PackSize, data.Constants.QuiverSlotSize, data.Constants.QuiverSize);
         TrackStats();

@@ -11,8 +11,10 @@ public sealed partial class CharacterSheetViewModel(string title, string text, F
 {
     public string Title { get; } = title;
     public string Text { get; } = text;
-    /// <summary>The text in colour, when it has any (monster recall); otherwise plain <see cref="Text"/>.</summary>
+    /// <summary>The text in colour, when it has any (monster recall, the sheet's stats); otherwise plain <see cref="Text"/>.</summary>
     public IReadOnlyList<ColoredRun>? Runs { get; init; }
+    /// <summary>Whether the text is laid out in columns (the character sheet), kept unwrapped even in colour.</summary>
+    public bool Columns { get; init; }
     /// <summary>
     /// The character's equipment where it is worn (the character sheet only); replaced while the
     /// sheet is open whenever what it shows changes.
@@ -28,9 +30,9 @@ public sealed partial class CharacterSheetViewModel(string title, string text, F
     private PaperDollViewModel? _paperDoll;
     public bool HasPaperDoll => PaperDoll is not null;
     /// <summary>Prose (monster recall) wraps; the character sheet keeps its columns.</summary>
-    public global::Avalonia.Media.TextWrapping Wrapping => Runs is null ? global::Avalonia.Media.TextWrapping.NoWrap : global::Avalonia.Media.TextWrapping.Wrap;
+    public global::Avalonia.Media.TextWrapping Wrapping => Runs is null || Columns ? global::Avalonia.Media.TextWrapping.NoWrap : global::Avalonia.Media.TextWrapping.Wrap;
     public global::Avalonia.Controls.Primitives.ScrollBarVisibility HorizontalScroll =>
-        Runs is null ? global::Avalonia.Controls.Primitives.ScrollBarVisibility.Auto : global::Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled;
+        Runs is null || Columns ? global::Avalonia.Controls.Primitives.ScrollBarVisibility.Auto : global::Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled;
     public bool CanSave => save is not null;
 
     [ObservableProperty] private string _status = "";

@@ -73,7 +73,10 @@ tells you a minimum is out of reach. Heroic characters still enter the high scor
 - **Constitution** — hit points (and, a little, how much you carry).
 
 Stats above 18 are written 18/10, 18/50 and so on up to 18/220. Drained stats come back when you
-gain a level, and with certain mushrooms and potions (Vigor, Restoration).
+gain a level, and with certain mushrooms, potions and rods (Vigor, Life, Restoration).
+
+*Stats and terms explained* (the next page of the help) says what each stat does, and every number on
+the character sheet — blows, might, speed, skills, failure and the rest.
 
 ## Blows
 

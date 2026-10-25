@@ -47,6 +47,23 @@ public sealed class RecordsUiTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void TheCharacterSheet_ColoursStatsAtThePotionMaximum_AndDrained_InItsColumns()
+    {
+        var (window, vm, _) = Open();
+        vm.Game.Player.NaturalStats["str"] = Angband.Core.Magic.StatTables.PotionCap;
+        vm.Game.Player.StatDrain["dex"] = 1;
+        vm.Game.RecalculateBonuses();
+        window.KeyPressQwerty(PhysicalKey.C, RawInputModifiers.Shift);
+
+        var sheet = (CharacterSheetViewModel)window.OwnedWindows.OfType<CharacterSheetWindow>().Last().DataContext!;
+        var coloured = sheet.Runs!.Where(r => r.Brush is not null).Select(r => r.Text).ToList();
+        Assert.Contains(Angband.Core.Magic.StatTables.Format(vm.Game.Player.Stats["str"]), coloured);
+        Assert.Contains(Angband.Core.Magic.StatTables.Format(vm.Game.Player.Stats["dex"]), coloured);
+        Assert.Equal(global::Avalonia.Media.TextWrapping.NoWrap, sheet.Wrapping); // the columns stay
+        Assert.DoesNotContain("as high as potions", sheet.Text);                // (the key is for the screen)
+    }
+
+    [AvaloniaFact]
     public void Death_RecordsTheScore_WritesADump_AndShowsTheTable()
     {
         var (window, vm, records) = Open();

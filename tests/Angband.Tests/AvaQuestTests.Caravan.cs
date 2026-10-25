@@ -1,5 +1,9 @@
+using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Core.Geometry;
+using Angband.Core.Items;
+using Angband.Core.Persistence;
+using Angband.Core.Randomness;
 
 namespace Angband.Tests;
 
@@ -73,5 +77,56 @@ public partial class AvaQuestTests
         Assert.Null(q.Game.AvaQuests.Caravan);
         Assert.Contains(q.Said, s => s == "The merchant caravan has moved on.");
         Assert.DoesNotContain(q.Game.Level.AllLocs(), p => q.Game.Level.FeatureAt(p).Shop == "caravan");
+    }
+
+    [Fact]
+    public void The_caravans_wares_are_deep_egos_and_fine_trinkets_never_cursed_or_artifacts_at_three_times_their_worth()
+    {
+        var q = Start(level: 30);
+        var game = q.Game;
+        var seen = new HashSet<string>();
+        foreach (var depth in new[] { 5, 12, 30, 60 })
+        {
+            game.Player.MaxDepth = depth;
+            Assert.Equal(Math.Max(25, depth + 15), game.CaravanLevel); // never shallower than 1250 ft
+            for (ulong seed = 1; seed <= 25; seed++)
+            {
+                var caravan = game.MakeCaravan(new GameRandom(seed * 7919 + (ulong)depth))!;
+                Assert.Equal(GameSession.CaravanWares, caravan.Stock.Count); // always a full wagon
+                for (var i = 0; i < caravan.Stock.Count; i++)
+                {
+                    var item = SaveGame.ItemFromJson(game, caravan.Stock[i])!;
+                    Assert.Null(item.Artifact);
+                    Assert.False(item.IsCursed, $"{item.Kind.Id} is cursed");
+                    Assert.Equal(game.CaravanLevel, item.OriginDepth);
+                    Assert.Equal(Math.Max(10, ItemValue.Of(item, TestData.Game) * item.Number * 3), caravan.Prices[i]);
+                    var trinket = item.Base.Slot is EquipSlot.Ring or EquipSlot.Amulet || item.Base.Id is "wand" or "staff" or "rod";
+                    if (trinket) Assert.True(ItemValue.Of(item, TestData.Game) >= GameSession.CaravanTrinketValue, $"{item.Kind.Id} is cheap");
+                    else
+                    {
+                        Assert.True(item.IsWearable || item.IsAmmo, $"{item.Kind.Id} isn't gear");
+                        Assert.NotNull(item.Ego);
+                    }
+                    seen.Add(trinket ? item.Base.Id : "gear");
+                }
+            }
+        }
+        // Rings, amulets and devices come too, beside the gear.
+        Assert.Contains("gear", seen);
+        Assert.Contains(seen, k => k is "ring" or "amulet");
+        Assert.Contains(seen, k => k is "wand" or "staff" or "rod");
+    }
+
+    [Fact]
+    public void Making_a_caravan_moves_nothing_else_in_the_game()
+    {
+        var q = Start(level: 30);
+        var game = q.Game;
+        game.Player.MaxDepth = 40;
+        var serial = game.Objects.NextSerial;
+        var artifacts = game.Objects.CreatedArtifacts.Count;
+        for (ulong seed = 1; seed <= 20; seed++) game.MakeCaravan(new GameRandom(seed));
+        Assert.Equal(serial, game.Objects.NextSerial);
+        Assert.Equal(artifacts, game.Objects.CreatedArtifacts.Count);
     }
 }

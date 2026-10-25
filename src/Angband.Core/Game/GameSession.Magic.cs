@@ -291,6 +291,10 @@ public sealed partial class GameSession
     public bool PlayerCanBrowse(ObjectKindDef kind) =>
         Player.Class is { } cls && Data.Spells.Any(s => s.Book == kind.Id && s.Classes.ContainsKey(cls.SpellClass ?? cls.Id));
 
+    /// <summary>AVABand: a book of the player's class that they have neither in the pack nor at home.</summary>
+    private bool PlayerWantsBook(ObjectKindDef kind) =>
+        PlayerCanBrowse(kind) && !Player.Inventory.Pack.Any(i => i.Kind == kind) && HomeStock?.Any(i => i.Kind == kind) != true;
+
     /// <summary>
     /// For a book, whether it's the player's (so a newcomer doesn't buy, or sell, the wrong kind):
     /// "for you", or "not for a Warrior"; null for anything else.
@@ -307,7 +311,17 @@ public sealed partial class GameSession
     public IEnumerable<SpellDef> StudyableSpells() =>
         ClassSpells.Where(s => SpellInfo(s)!.Level <= Player.Level && !Player.LearnedSpells.Contains(s.Id) && HasBookFor(s));
 
-    /// <summary>Angband spell_chance: base fail, less 3 per level above the spell and the stat bonus.</summary>
+    /// <summary>
+    /// AVABand's easier casting (the birth option birth_ava_easy_casting, on by default — and for a
+    /// character from before it, as the save has no value for it): spells fail half as often.
+    /// </summary>
+    private bool AvaEasyCasting => Options[OptionIds.AvaEasyCasting];
+
+    /// <summary>
+    /// Angband spell_chance: base fail, less 3 per level above the spell and the stat bonus. With
+    /// AVABand's easier casting the chance is halved once it's held between the minimum and 50%, so
+    /// the minimum (5% becomes 2%) and fear are halved, but stunning and amnesia count in full.
+    /// </summary>
     public int SpellFailChance(SpellDef spell)
     {
         if (SpellInfo(spell) is not { } info) return 100;
@@ -322,6 +336,7 @@ public sealed partial class GameSession
         // held between the minimum and 50% before stunning adds to it.
         if (PlayerAfraid) chance += 20;
         chance = Math.Clamp(chance, minimum, Math.Max(minimum, 50));
+        if (AvaEasyCasting) chance /= 2;
         var stun = Player.Timed[TimedIds.Stun];
         if (stun > 50) chance += 25;
         else if (stun > 0) chance += 15;

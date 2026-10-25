@@ -15,8 +15,17 @@ public sealed class Store(StoreDef def, ShopDef shop, StoreOwnerDef? owner)
     public string Name => Shop.Name;
     public bool IsHome => Def.Home;
 
+    /// <summary>
+    /// AVABand: kinds kept in stock for this character alone, as staples — the Bookseller's dungeon
+    /// books for your class, once you're near their first spell (GameSession.PlayerStaplesFor).
+    /// </summary>
+    public IReadOnlySet<string> PlayerStaples { get; internal set; } = new HashSet<string>(StringComparer.Ordinal);
+
+    /// <summary>Every kind the store always stocks: its own and the character's.</summary>
+    public IEnumerable<string> AllStaples => Def.Staples.Concat(PlayerStaples.Where(id => !Def.Staples.Contains(id)));
+
     /// <summary>Whether the store always stocks this kind (Angband store_is_staple).</summary>
-    public bool IsStaple(ObjectKindDef kind) => Def.Staples.Contains(kind.Id);
+    public bool IsStaple(ObjectKindDef kind) => Def.Staples.Contains(kind.Id) || PlayerStaples.Contains(kind.Id);
 
     /// <summary>
     /// A plain staple the store never runs out of: buying it leaves the pile as it is (Angband's
@@ -134,12 +143,34 @@ public sealed partial class GameSession
     /// <summary>Missing staples are made and every staple piled high (store_maint).</summary>
     private void StockStaples(Store store)
     {
-        foreach (var id in store.Def.Staples)
+        store.PlayerStaples = PlayerStaplesFor(store);
+        foreach (var id in store.AllStaples)
         {
             if (Data.Object(id) is not { } kind) continue;
             var staple = store.Stock.FirstOrDefault(i => i.Kind == kind && store.IsAlways(i)) ?? CreateStaple(store, kind);
             if (staple is not null) staple.Number = staple.Base.MaxStack;
         }
+    }
+
+    /// <summary>Levels before a dungeon book's first spell for your class that the Bookseller starts keeping it.</summary>
+    public const int BookStapleLead = 5;
+
+    /// <summary>
+    /// AVABand: the Bookseller (a store whose staples are books) keeps, beside the town books, each
+    /// dungeon book (one no shop in town stocks) holding spells for your class, from
+    /// <see cref="BookStapleLead"/> levels before the first of them — your highest level counts,
+    /// so a drained character keeps them. Never the black market.
+    /// </summary>
+    internal IReadOnlySet<string> PlayerStaplesFor(Store store)
+    {
+        var books = new HashSet<string>(StringComparer.Ordinal);
+        if (store.IsHome || store.Def.BlackMarket
+            || !store.Def.Staples.Any(id => Data.Object(id) is { } kind && ItemNaming.IsBook(kind.Base))) return books;
+        foreach (var book in ClassSpells.GroupBy(s => s.Book))
+            if (Data.Object(book.Key) is { } kind && Objects.IsDungeonBook(kind)
+                && book.Min(s => SpellInfo(s)!.Level) - BookStapleLead <= Player.MaxLevel)
+                books.Add(book.Key);
+        return books;
     }
 
     /// <summary>
@@ -371,8 +402,10 @@ public sealed partial class GameSession
             return 0;
         }
         if (QuestAtShop(store.Id)) return 0;
-        // A staple the store lacks (one added to the game since the save was made) is in by now.
-        if (!store.IsHome && store.Def.Staples.Any(id => !store.Stock.Any(i => i.Kind.Id == id && store.IsAlways(i))))
+        // A staple the store lacks (one added to the game since the save was made, or a book the
+        // character has come near since the last maintenance) is in by now.
+        if (!store.IsHome) store.PlayerStaples = PlayerStaplesFor(store);
+        if (!store.IsHome && store.AllStaples.Any(id => !store.Stock.Any(i => i.Kind.Id == id && store.IsAlways(i))))
         {
             StockStaples(store);
             SortStock(store);

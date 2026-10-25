@@ -61,6 +61,9 @@ public sealed partial class MainWindowViewModel
         var sheet = new CharacterSheetViewModel($"{p.Name} the {p.Race?.Name} {p.Class?.Name}", BuildDump(),
             _records is null ? null : () => _records.WriteDump(_game, BuildDump()))
         {
+            // The stats coloured: at the potions' maximum, or drained (the file gets the plain text).
+            Runs = ColoredText.FromMarked(CharacterDump.BuildMarked(_game, Messages.Take(20).Reverse(), Clock()), _cells),
+            Columns = true,
             PaperDoll = CreatePaperDoll(),
         };
         _openSheets.Add(sheet);

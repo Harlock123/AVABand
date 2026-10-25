@@ -66,10 +66,16 @@ public static class StatTables
 
     public const int MaxLevel = 50;
 
-    /// <summary>Stat value (3..40, where 19+ means 18/10, 18/20...) to table index.</summary>
     /// <summary>Angband adj_str_blow (throwing range, and with Angband's blows, Strength's part in them).</summary>
     public static readonly int[] StrBlow = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240];
 
+    /// <summary>
+    /// The highest natural stat a potion (or the like) raises: 18/100. Beyond it only gear takes a
+    /// stat further, up to 18/220 (though a character can be born above it).
+    /// </summary>
+    public const int PotionCap = 28;
+
+    /// <summary>Stat value (3..40, where 19+ means 18/10, 18/20...) to table index.</summary>
     public static int Index(int stat) => Math.Clamp(stat - 3, 0, ManaPerLevel.Length - 1);
 
     /// <summary>Displays a stat the Angband way: 3..18, then 18/10, 18/20 ... 18/220.</summary>

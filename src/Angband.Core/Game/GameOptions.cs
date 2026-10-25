@@ -56,6 +56,8 @@ public static class OptionIds
     public const string AvaBurden = "birth_ava_burden";
     /// <summary>Angband 4.2's blows (from weapon weight, Strength and Dexterity), heavy weapons, and casters' armour weight.</summary>
     public const string AngbandBlows = "birth_angband_blows";
+    /// <summary>AVABand's own: spells fail half as often (GameSession.SpellFailChance).</summary>
+    public const string AvaEasyCasting = "birth_ava_easy_casting";
 
     // Cheat options.
     public const string CheatHear = "cheat_hear";
@@ -99,6 +101,7 @@ public static class OptionCatalog
         new(OptionIds.AvaRaces, "AVABand's racial abilities (a Dwarf's delving, a Human's two weapons...)", OptionKind.Birth, true),
         new(OptionIds.AngbandBlows, "Angband 4.2's blows (weapon weight, Strength, Dexterity) and casters' armour weight", OptionKind.Birth, true),
         new(OptionIds.AvaBurden, "AVABand's encumbrance (more from Strength and Constitution; worn gear weighs less)", OptionKind.Birth, true),
+        new(OptionIds.AvaEasyCasting, "AVABand's easier casting (spell failure halved)", OptionKind.Birth, true),
 
         new(OptionIds.CheatHear, "Cheat: Peek into monster creation", OptionKind.Cheat, false),
         new(OptionIds.CheatRoom, "Cheat: Peek into dungeon creation", OptionKind.Cheat, false),

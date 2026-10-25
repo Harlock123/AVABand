@@ -146,7 +146,8 @@ public sealed partial class GrimoireViewModel : ObservableObject
         var readers = AllClasses.Where(c => spells.Any(s => s.Classes.ContainsKey(c.SpellClass ?? c.Id))).Select(c => c.Name).ToList();
         var where = SoldIn(id) is { } store
             ? $"Sold in town, at the {store}."
-            : $"Found in the dungeon, from about {Math.Max(1, kind?.MinDepth ?? kind?.Level ?? 1) * _data.Constants.FeetPerLevel} ft.";
+            : $"Found in the dungeon, from about {Math.Max(1, kind?.MinDepth ?? kind?.Level ?? 1) * _data.Constants.FeetPerLevel} ft"
+              + $" — and at the Bookseller, for a class that reads it, from {GameSession.BookStapleLead} levels before its first spell.";
         var you = _game?.Player.Class;
         var forYou = you is not null && spells.Any(s => s.Classes.ContainsKey(you.SpellClass ?? you.Id));
         return new GrimoireBook(id, name, $"{style.Kind} · {realm.Name} magic", GrimoireArt.Book(id), where,

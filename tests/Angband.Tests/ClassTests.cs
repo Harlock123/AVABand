@@ -129,6 +129,7 @@ public class ClassTests
         Assert.True(rat.IsVisible, "unlight shows the square next door");
 
         var bolt = game.Data.Spell("nether_bolt")!;
+        game.Options[OptionIds.AvaEasyCasting] = false; // Angband 4.2.5's chance, not halved
         var inDark = game.SpellFailChance(bolt);
         game.Level[game.Player.Position].Flags |= Angband.Core.World.SquareFlags.Glow;
         Assert.Equal(Math.Min(95, inDark + 25), game.SpellFailChance(bolt));

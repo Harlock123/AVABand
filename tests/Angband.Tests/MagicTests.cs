@@ -120,6 +120,7 @@ public class MagicTests
     public void FailChance_FollowsAngbandsFormula()
     {
         var game = GameSession.NewGame(TestData.Game, 4, "mage");
+        game.Options[OptionIds.AvaEasyCasting] = false; // Angband 4.2.5's chance, not halved
         var missile = TestData.Game.Spell("magic_missile")!;
         // base 22, INT 18 takes 2 off, level difference 0.
         Assert.Equal(20, game.SpellFailChance(missile));

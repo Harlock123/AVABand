@@ -65,7 +65,7 @@ public sealed partial class GameSession
         // Stats a character of that level would have raised by now (a point for every eight levels, as
         // from potions of Strength and the like), so it can carry and swing what it's given.
         foreach (var stat in CharacterSpec.StatIds)
-            Player.NaturalStats[stat] = Math.Min(28, Player.NaturalStats.GetValueOrDefault(stat, 15) + level / 8);
+            Player.NaturalStats[stat] = Math.Min(Magic.StatTables.PotionCap, Player.NaturalStats.GetValueOrDefault(stat, 15) + level / 8);
         RecalculateAfterStatChange();
         // The starting kit it's outgrowing goes first (the light stays until a better one comes).
         foreach (var old in Player.Inventory.All.Where(i => i.IsWearable && i.Base.Slot != EquipSlot.Light).ToList())

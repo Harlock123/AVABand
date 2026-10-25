@@ -96,6 +96,7 @@ public class RealmSpellTests
         int Fail(string cls, string spellId)
         {
             var game = Hero(cls, 4, 50);
+            game.Options[OptionIds.AvaEasyCasting] = false; // Angband 4.2.5's minimum, not halved
             game.Player.NaturalStats[game.PlayerRealm!.Stat] = game.Player.Stats[game.PlayerRealm.Stat] = 40;
             game.Player.Mana = game.Player.MaxMana = 100;
             return game.SpellFailChance(game.Data.Spell(spellId)!);

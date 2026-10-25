@@ -30,6 +30,22 @@ public sealed class ObjectFactory(GameData data)
     /// <summary>Whether the player could read a book of this kind (Angband obj_kind_can_browse); null: any.</summary>
     public Func<ObjectKindDef, bool>? CanBrowse { get; set; }
 
+    /// <summary>AVABand: whether the player could read a book of this kind and has none yet; null: no one's looking.</summary>
+    public Func<ObjectKindDef, bool>? WantsBook { get; set; }
+
+    /// <summary>AVABand: a dungeon book is this much more common (in percent) in what <see cref="Make"/> finds.</summary>
+    public const int DungeonBookBoost = 50;
+
+    /// <summary>
+    /// AVABand: one time in this many, a book the player can't read becomes, in <see cref="Make"/>,
+    /// a dungeon book they could and don't have (if one is native to the level).
+    /// </summary>
+    public const int WantedBookChance = 25;
+
+    /// <summary>The books some shop in town sells (the black market aside).</summary>
+    private readonly HashSet<string> _townBooks = data.Stores.Where(s => !s.Home && !s.BlackMarket)
+        .SelectMany(s => s.Staples.Concat(s.Stocked)).ToHashSet(StringComparer.Ordinal);
+
     public Item Create(ObjectKindDef kind, int number = 1)
     {
         var item = new Item(NextSerial++, kind, data.ObjectBase(kind.Base) ?? throw new GameDataException($"Object '{kind.Id}' has unknown base '{kind.Base}'."), number);
@@ -62,7 +78,8 @@ public sealed class ObjectFactory(GameData data)
     /// Angband get_obj_num: a kind for <paramref name="level"/>, weighted by commonness — now and then
     /// from far deeper, and never from past the deepest allocation level (100).
     /// </summary>
-    public ObjectKindDef? PickKind(GameRandom rng, int level, Func<ObjectKindDef, bool>? filter = null)
+    public ObjectKindDef? PickKind(GameRandom rng, int level, Func<ObjectKindDef, bool>? filter = null,
+        Func<ObjectKindDef, int>? weight = null)
     {
         if (level > 0 && rng.OneIn(GreatObjectChance))
             level = 1 + level * MaxObjectDepth / rng.RandInt1(MaxObjectDepth);
@@ -73,7 +90,7 @@ public sealed class ObjectFactory(GameData data)
                 && data.ObjectBase(k.Base) is { } b && b.Id != "gold"
                 && (filter?.Invoke(k) ?? true))
             .ToList();
-        return rng.PickWeighted(eligible, k => k.Commonness);
+        return rng.PickWeighted(eligible, weight ?? (k => k.Commonness));
     }
 
     /// <summary>
@@ -99,12 +116,21 @@ public sealed class ObjectFactory(GameData data)
             _ => null,
         };
         // Angband make_object: three tries at a kind, rejecting most books the player can't read
-        // (one in five is kept all the same).
+        // (one in five is kept all the same). AVABand: dungeon books are found a little more often,
+        // and now and then a book the player can't read is one of theirs instead.
         ObjectKindDef? kind = null;
+        var depth = good ? level + 10 : level;
         for (var tries = 3; tries > 0; tries--)
         {
-            kind = PickKind(rng, good ? level + 10 : level, filter);
-            if (kind is null || CanBrowse is null || !IsBook(kind) || CanBrowse(kind) || rng.OneIn(5)) break;
+            kind = PickKind(rng, depth, filter, DropWeight);
+            if (kind is null || CanBrowse is null || !IsBook(kind) || CanBrowse(kind)) break;
+            if (WantsBook is { } wants && rng.OneIn(WantedBookChance)
+                && PickKind(rng, depth, k => IsDungeonBook(k) && wants(k) && (filter?.Invoke(k) ?? true)) is { } theirs)
+            {
+                kind = theirs;
+                break;
+            }
+            if (rng.OneIn(5)) break;
             kind = null;
         }
         if (kind is null) return null;
@@ -120,6 +146,13 @@ public sealed class ObjectFactory(GameData data)
 
     /// <summary>Angband tval_is_book_k: a magic, prayer, nature or shadow book.</summary>
     public bool IsBook(ObjectKindDef kind) => ItemNaming.IsBook(kind.Base);
+
+    /// <summary>AVABand: a book no shop in town sells — one only the dungeon (or the Bookseller, for your class) has.</summary>
+    public bool IsDungeonBook(ObjectKindDef kind) => IsBook(kind) && !_townBooks.Contains(kind.Id);
+
+    /// <summary>A kind's weight in what <see cref="Make"/> finds: its commonness, a dungeon book's <see cref="DungeonBookBoost"/>% more.</summary>
+    private int DropWeight(ObjectKindDef kind) =>
+        IsDungeonBook(kind) ? kind.Commonness * (100 + DungeonBookBoost) / 100 : kind.Commonness;
 
     /// <summary>
     /// Angband kind_is_good: what a good drop may be — armour and weapons that don't start damaged,

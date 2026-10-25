@@ -45,7 +45,7 @@ public class MagicUiTests
         window.KeyPressQwerty(PhysicalKey.M, RawInputModifiers.None);
         var row = Assert.Single(vm.SpellPromptRows, r => !r.Greyed);       // (the two still to study, greyed after it)
         Assert.Equal("Magic Missile", vm.SpellPromptRows[0].Name);
-        Assert.Equal(20, row.Fail);
+        Assert.Equal(10, row.Fail); // 4.2.5's 20, halved by AVABand's easier casting
         Assert.Equal("untried", row.Note);
         TileRenderingTests.Save(window, "spell-cast-prompt");
 

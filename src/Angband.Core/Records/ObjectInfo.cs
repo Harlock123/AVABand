@@ -273,6 +273,7 @@ public static class ObjectInfo
                 "staff" => "used", "rod" => "zapped", "oil" => "applied", _ => "used",
             };
             sb.Append($"When {verb}, it {EffectText(data, effect)}.\n");
+            if (PotionCapNote(game, effect) is { } capped) sb.Append(capped).Append('\n');
         }
         if (item.Activation is { Length: > 0 } act)
         {
@@ -291,6 +292,21 @@ public static class ObjectInfo
         var description = item.Artifact?.Description is { Length: > 0 } ad && (sampleOnly || k.IsFullyKnown(item)) ? ad : item.Kind.Description;
         if (description.Length > 0) sb.Append('\n').Append(description).Append('\n');
         return sb.ToString().TrimEnd();
+    }
+
+    /// <summary>
+    /// For something that raises stats, those of yours it can't raise any further (natural
+    /// <see cref="Magic.StatTables.PotionCap"/>, 18/100, or more): "Your strength is already as high as
+    /// potions can raise it (18/100); this would only restore it if drained." Null if none are.
+    /// </summary>
+    public static string? PotionCapNote(GameSession game, string effect)
+    {
+        var capped = ItemEffects.Parse(effect).Where(e => e.Name == "gain_stat").Select(e => e.Arg(0)).Distinct()
+            .Where(s => game.Player.NaturalStats.GetValueOrDefault(s) >= Magic.StatTables.PotionCap).Select(Stat).ToList();
+        if (capped.Count == 0) return null;
+        var (are, them) = capped.Count == 1 ? ("is", "it") : ("are", "them");
+        return $"Your {Join(capped)} {are} already as high as potions can raise {them} "
+               + $"({Magic.StatTables.Format(Magic.StatTables.PotionCap)}); this would only restore {them} if drained.";
     }
 
     /// <summary>

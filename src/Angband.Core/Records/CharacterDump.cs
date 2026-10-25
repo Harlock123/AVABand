@@ -16,7 +16,29 @@ public static class CharacterDump
 {
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
 
-    public static string Build(GameSession game, IEnumerable<string>? recentMessages = null, DateTime? when = null)
+    /// <summary>The colour of a stat drained below its natural value (it wins over <see cref="AtMaximumColor"/>).</summary>
+    public const string DrainedColor = "LightRed";
+    /// <summary>The colour of a stat no potion will raise further (natural <see cref="StatTables.PotionCap"/> or more).</summary>
+    public const string AtMaximumColor = "Gold";
+
+    /// <summary>A stat's colour on the sheet: drained, at the potions' maximum, or null for neither.</summary>
+    public static string? StatColor(Player p, string stat) =>
+        p.StatDrain.GetValueOrDefault(stat) > 0 ? DrainedColor
+        : p.NaturalStats.GetValueOrDefault(stat) >= StatTables.PotionCap ? AtMaximumColor
+        : null;
+
+    public static string Build(GameSession game, IEnumerable<string>? recentMessages = null, DateTime? when = null) =>
+        Build(game, recentMessages, when, marked: false);
+
+    /// <summary>
+    /// The sheet as the window shows it: <see cref="Build(GameSession, IEnumerable{string}?, DateTime?)"/>
+    /// with each stat's current value coloured (<see cref="StatColor"/>, marked as <see cref="RecallMarkup"/>)
+    /// and a line saying what the colours mean. Files and the clipboard get the plain text.
+    /// </summary>
+    public static string BuildMarked(GameSession game, IEnumerable<string>? recentMessages = null, DateTime? when = null) =>
+        Build(game, recentMessages, when, marked: true);
+
+    private static string Build(GameSession game, IEnumerable<string>? recentMessages, DateTime? when, bool marked)
     {
         var p = game.Player;
         var data = game.Data;
@@ -44,7 +66,7 @@ public static class CharacterDump
             $"Exp    {p.Experience}",
             $"Next   {next}",
             $"Gold   {p.Gold}",
-            $"Burden {p.Inventory.TotalWeight / 10}.{p.Inventory.TotalWeight % 10} lb (slowed past {p.WeightLimit / 20}.{p.WeightLimit / 2 % 10})",
+            $"Burden {game.BurdenWeight / 10}.{game.BurdenWeight % 10} lb (slowed past {p.WeightLimit / 20}.{p.WeightLimit / 2 % 10})",
         ];
         string[] right =
         [
@@ -106,8 +128,12 @@ public static class CharacterDump
             var raceMod = p.Race?.Stats.GetValueOrDefault(stat) ?? 0;
             var classMod = p.Class?.Stats.GetValueOrDefault(stat) ?? 0;
             var baseValue = p.BaseStats.GetValueOrDefault(stat, p.Stats.GetValueOrDefault(stat) - raceMod - classMod);
-            Line(string.Create(Inv, $" {stat.ToUpperInvariant(),-4}  {StatTables.Format(baseValue),6}  {Signed(raceMod),4}  {Signed(classMod),5}  {StatTables.Format(p.Stats.GetValueOrDefault(stat)),7}"));
+            var current = StatTables.Format(p.Stats.GetValueOrDefault(stat));
+            if (marked && StatColor(p, stat) is { } color) current = new string(' ', Math.Max(0, 7 - current.Length)) + RecallMarkup.Color(current, color);
+            Line(string.Create(Inv, $" {stat.ToUpperInvariant(),-4}  {StatTables.Format(baseValue),6}  {Signed(raceMod),4}  {Signed(classMod),5}  {current,7}"));
         }
+        if (marked)
+            Line($" ({RecallMarkup.Color("gold", AtMaximumColor)}: as high as potions raise it · {RecallMarkup.Color("red", DrainedColor)}: drained, until restored)");
 
         // --- Skills ---
         Section("Skills");

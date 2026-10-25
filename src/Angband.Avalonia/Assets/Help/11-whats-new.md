@@ -3,6 +3,31 @@
 The newest changes first. After an update, AVABand shows you what's arrived since you last
 played; this page keeps it all (Help → What's new...).
 
+## 2026-10-25
+
+- **Easier casting**: a new birth option, *AVABand's easier casting*, on by default — and on for the
+  characters you already have — halves every spell's failure chance. The 5% floor most classes can't
+  go below becomes 2%, and fear's penalty is halved too; being stunned or forgetful still costs you
+  in full. The chance in the cast list is the halved one.
+- **The Bookseller keeps your dungeon books**: once you're within five levels of the first spell your
+  class learns from a dungeon book, the Bookseller has it in stock for you, at its full price, and
+  never runs out. In the dungeon, those books turn up a little more often, and now and then a book
+  you can't read turns out to be one of yours you haven't got.
+- **Stats and terms explained**: a new help page, after *Your character*, on what each stat does and
+  every number on the character sheet — how to get more blows (Strength, Dexterity and a lighter
+  weapon; speed gives you more turns instead), might, shots, speed, skills, failure and the rest.
+- **Stats at their maximum**: on the character sheet a stat no potion will raise any further (18/100
+  or more) is shown in gold, and a drained one in red. A potion of Strength (or the like) drunk at
+  18/100 says you're as strong as you can be made, still restoring the stat if it's drained, and its
+  description warns you beforehand.
+- **Richer caravans**: the merchant caravan's wares are now made fifteen levels below your deepest
+  (never shallower than 1250 ft); its weapons, armour and ammunition are always egos, it brings
+  rings, amulets, wands, staffs and rods worth having too, and nothing is cursed — at three times
+  what they're worth.
+- **Fixed: the sheet's Burden.** The character sheet's Burden line now shows the weight that
+  counts against you, with worn gear at three quarters under AVABand's encumbrance, as the sidebar
+  does; it used to show everything at full weight.
+
 ## 2026-10-11
 
 - **Fixed: quest items called junk.** *Tidy pack* and *Clear out junk* no longer list quest items

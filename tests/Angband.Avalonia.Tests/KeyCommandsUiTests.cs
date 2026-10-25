@@ -39,7 +39,7 @@ public class KeyCommandsUiTests
         });
         var help = Assert.IsType<HelpWindow>(window.OwnedWindows.Last());
         var topics = (HelpViewModel)help.DataContext!;
-        Assert.Equal(["Getting started", "Moving and commands", "Your character", "Fighting", "Magic", "Objects",
+        Assert.Equal(["Getting started", "Moving and commands", "Your character", "Stats and terms explained", "Fighting", "Magic", "Objects",
             "Monsters", "The dungeon", "Birth options", "Quests", "What's new"], topics.Topics.Select(t => t.Title));
         global::Avalonia.Threading.Dispatcher.UIThread.RunJobs();
         var shown = help.GetLogicalDescendants().OfType<TextBlock>().Select(t => t.Inlines?.Count > 0

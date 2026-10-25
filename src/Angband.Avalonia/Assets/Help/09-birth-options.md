@@ -27,6 +27,9 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
 - **AVABand's encumbrance** — Strength keeps adding to what you carry where Angband's stops,
   Constitution adds a little, worn gear weighs three quarters, Heroism and Berserk help, and the
   burden is named (Help → Your character); off, Angband 4.2.5's rule (on by default).
+- **AVABand's easier casting** — spells fail half as often as in Angband 4.2.5: the least a class
+  can reach drops from 5% to 2%, and fear's penalty is halved too, but stunning and amnesia still
+  count in full (Help → Magic). On by default, and on for characters made before it existed.
 - **Persistent levels (experimental)** — levels are kept when you leave them.
 - **To-damage is a percentage of dice (experimental)** — to-dam makes each damage die bigger by a
   percentage instead of adding to every blow; slays and brands multiply the dice; criticals add

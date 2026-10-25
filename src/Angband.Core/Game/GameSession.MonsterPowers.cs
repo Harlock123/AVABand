@@ -76,13 +76,20 @@ public sealed partial class GameSession
 
     /// <summary>
     /// A permanent stat gain (Angband player_stat_inc, as from potions of Strength): one point, up to
-    /// 18/100, also restoring any drain.
+    /// <see cref="StatTables.PotionCap"/> (18/100), also restoring any drain. At the cap it only
+    /// restores, and says the stat is as high as potions go (still used up, and still learned).
     /// </summary>
     public bool GainStat(string stat)
     {
-        Player.StatDrain[stat] = 0;
         var natural = Player.NaturalStats.GetValueOrDefault(stat, 15);
-        if (natural < 28) Player.NaturalStats[stat] = natural + 1;
+        if (natural >= StatTables.PotionCap)
+        {
+            RestoreStat(stat);
+            Publish(new MessageEvent($"You feel as {StatAdjective(stat, good: true)} as you can be made."));
+            return true;
+        }
+        Player.StatDrain[stat] = 0;
+        Player.NaturalStats[stat] = natural + 1;
         Publish(new MessageEvent($"You feel very {StatAdjective(stat, good: true)}!"));
         RecalculateAfterStatChange();
         return true;
