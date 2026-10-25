@@ -31,6 +31,7 @@ public sealed partial class GameSession
     private int MonsterTurn(Monster monster)
     {
         if (Player.IsDead || !monster.IsActive) return EnergyTable.MoveEnergy;
+        if (monster.IsAlly) return HirelingTurn(monster); // (AVABand's hireling: their own turn)
         if (monster.Camouflaged && monster.MimicItem is not null) return EnergyTable.MoveEnergy;
         if (!CheckActive(monster)) return EnergyTable.MoveEnergy;
         if (ProcessMonsterTimed(monster)) return EnergyTable.MoveEnergy;
@@ -41,6 +42,7 @@ public sealed partial class GameSession
         if (race.Has(MonsterFlags.Multiply) && TryMultiply(monster)) return EnergyTable.MoveEnergy;
         if (monster.IsVisible) Lore.For(race.Id).TurnsWatched++;
         if (MakeRangedAttack(monster)) return EnergyTable.MoveEnergy;
+        if (MonsterFightsHireling(monster)) return EnergyTable.MoveEnergy;
         MonsterMoveTurn(monster);
         return EnergyTable.MoveEnergy;
     }
@@ -70,7 +72,7 @@ public sealed partial class GameSession
     /// </summary>
     private void MonsterTerrainDamage(Monster monster)
     {
-        if (!Level.Has(monster.Position, TerrainFlags.Fiery) || monster.Race.Has("IM_FIRE")) return;
+        if (!Level.Has(monster.Position, TerrainFlags.Fiery) || monster.Race.Has("IM_FIRE") || monster.IsAlly) return;
         var name = Capitalize(MonsterName(monster));
         monster.Hp -= 100 + Rng.RandInt1(100);
         if (monster.Hp >= 0)
@@ -148,9 +150,10 @@ public sealed partial class GameSession
     /// <summary>Monsters regenerate every 100 game turns (Angband regen_monster; their conditions wear off on their own turns).</summary>
     private void MonsterUpkeep(long gameTurn)
     {
+        HirelingUpkeep(gameTurn); // (AVABand's hireling heals at a rate of their own)
         foreach (var monster in Level.Monsters.All.ToList())
         {
-            if (gameTurn % 100 == 0 && monster.Hp < monster.MaxHp)
+            if (gameTurn % 100 == 0 && monster.Hp < monster.MaxHp && !monster.IsAlly)
             {
                 var gain = monster.MaxHp / 100;
                 if (gain == 0 && Rng.OneIn(2)) gain = 1;

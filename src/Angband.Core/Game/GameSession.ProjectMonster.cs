@@ -39,6 +39,13 @@ public sealed partial class GameSession
     /// </summary>
     internal void ProjectileHitsMonster(Monster monster, string source, string? element, int damage, int r = 0)
     {
+        // (AVABand: a blast that catches your hireling hurts them, plainly — nothing else of it touches them.)
+        if (monster.IsAlly)
+        {
+            if (monster.IsVisible && damage > 0) Publish(new MessageEvent($"{Hireling?.Name ?? MonsterName(monster)} is caught in the blast{DamageNote(damage)}."));
+            HurtHireling(damage, "a blast of your own");
+            return;
+        }
         var hit = new MonsterHit(monster, damage, r, monster.IsVisible);
         if (element is not null) MonsterElementHandler(hit, element);
         if (hit.Skipped) return;

@@ -107,6 +107,7 @@ public static class SaveGame
             QuestKills = new(g.QuestKills),
             AvaQuests = g.AvaQuests,
             Stats = g.Stats,
+            Hireling = g.Hireling, FallenCompanions = g.FallenCompanions.Count == 0 ? null : g.FallenCompanions,
             CharacterKills = new(g.CharacterKills),
             Ghosts = g.Ghosts,
             JourneyVisits = [.. g.Visits.Select(v => new JourneyVisitSave { Turn = v.Turn, Depth = v.Depth, Profile = v.Profile })],
@@ -335,6 +336,7 @@ public static class SaveGame
                 KnownPlayer = m.KnownPlayer.Count == 0 ? null : new Dictionary<string, int>(m.KnownPlayer),
                 MimicItem = m.MimicItem is null ? null : ItemToSave(m.MimicItem), Carried = m.Carried.Select(ItemToSave).ToList(), LootRolled = m.LootRolled,
                 WanderTarget = [m.MoveTarget.X, m.MoveTarget.Y], Tracking = m.Tracking, Aware = m.Aware, Active = m.Active, GroupId = m.GroupId,
+                HatesAlly = m.HatesAlly,
             });
         }
 
@@ -366,6 +368,7 @@ public static class SaveGame
         g.RestoreHotbar(f.Hotbar);
         foreach (var (q, n) in f.QuestKills) g.QuestKills[q] = n;
         g.RestoreAvaQuests(f.AvaQuests);
+        g.RestoreHireling(f.Hireling, f.FallenCompanions); // (before the levels: the hireling's body is made from it)
         g.RestoreStats(f.Stats);
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.RestoreGhosts(f.Ghosts); // (before the levels: a ghost on one is its own race)
@@ -475,7 +478,9 @@ public static class SaveGame
 
             foreach (var ms in ls.Monsters)
             {
-                if (g.MonsterRace(ms.Race) is not { } race)
+                // (AVABand's hireling: a race made from the save's record, not the data.)
+                var hireling = ms.Race == Hireling.RaceId && g.Hireling is { } h ? g.HirelingRace(h) : null;
+                if ((hireling ?? g.MonsterRace(ms.Race)) is not { } race)
                 {
                     errors.Add($"unknown monster '{ms.Race}'");
                     continue;
@@ -490,6 +495,8 @@ public static class SaveGame
                 };
                 m.Carried.AddRange(ms.Carried.Select(ToItem).OfType<Item>());
                 m.LootRolled = ms.LootRolled;
+                m.HatesAlly = ms.HatesAlly;
+                if (hireling is not null) g.AttachHireling(m);
                 level.Monsters.Restore(m);
             }
             level.Monsters.ReserveUpTo(ls.NextMonsterId);

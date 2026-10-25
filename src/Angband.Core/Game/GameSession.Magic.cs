@@ -562,11 +562,12 @@ public sealed partial class GameSession
     private bool ProjectBoltEffect(string name, Loc? target, Action<Monster> hit, string? element = null)
     {
         if (SpellTarget(target) is not { } aim) return false;
+        // (AVABand: a bolt passes your hireling by.)
         var path = ProjectionPath.Compute(Level, Player.Position, aim, MaxRange, PathFlags.StopAtCreature,
-            p => Level.Monsters.At(p) is not null);
+            p => Level.Monsters.At(p) is { IsAlly: false });
         Publish(new MissileFiredEvent(name, Player.Position, path));
         ShowProjection(Player.Position, path, null, element, ProjectionKind.Bolt);
-        if (path.Count > 0 && Level.Monsters.At(path[^1]) is { } monster)
+        if (path.Count > 0 && Level.Monsters.At(path[^1]) is { IsAlly: false } monster)
         {
             TrackHealth(monster); // a bolt affects it and nobody else
             hit(monster);
@@ -585,7 +586,7 @@ public sealed partial class GameSession
         foreach (var p in path)
         {
             if (!Level.Has(p, TerrainFlags.Project)) break;
-            if (Level.Monsters.At(p) is { } monster) ProjectileHitsMonster(monster, name, element, damage);
+            if (Level.Monsters.At(p) is { IsAlly: false } monster) ProjectileHitsMonster(monster, name, element, damage);
         }
     }
 
@@ -594,7 +595,7 @@ public sealed partial class GameSession
     {
         if (SpellTarget(target) is not { } aim) return;
         var path = ProjectionPath.Compute(Level, Player.Position, aim, MaxRange, PathFlags.StopAtCreature,
-            p => Level.Monsters.At(p) is not null);
+            p => Level.Monsters.At(p) is { IsAlly: false });
         var center = path.Count == 0 ? Player.Position : path[^1];
         if (!Level.Has(center, TerrainFlags.Project) && path.Count > 1) center = path[^2];
         Publish(new MissileFiredEvent(name, Player.Position, path));

@@ -101,6 +101,10 @@ public sealed class InputBindings
         K(InputAction.Explore, "Ctrl+E"); // (a Ctrl key: the same in every keyset)
         K(InputAction.Search, "Char:S");
         K(InputAction.EatBest, "Ctrl+Shift+E"); // (a Ctrl key: the same in every keyset)
+        // Your hireling's orders (Ctrl keys: the same in every keyset).
+        K(InputAction.HirelingFollow, "Ctrl+Shift+F");
+        K(InputAction.HirelingHold, "Ctrl+Shift+H");
+        K(InputAction.HirelingAttack, "Ctrl+Shift+A");
         K(InputAction.ZoomIn, "Ctrl+OemPlus", "Ctrl+Add");
         K(InputAction.ZoomOut, "Ctrl+OemMinus", "Ctrl+Subtract");
         K(InputAction.NewGame, "Ctrl+N");

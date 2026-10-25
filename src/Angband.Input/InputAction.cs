@@ -107,6 +107,11 @@ public enum InputAction
     Explore,
     /// <summary>Eat your best food, without a menu (AVABand's own). Added last so saved bindings keep their meaning.</summary>
     EatBest,
+    /// <summary>
+    /// Orders to your hireling: follow close, hold here, go for your target (AVABand's own). Added last so
+    /// saved bindings keep their meaning.
+    /// </summary>
+    HirelingFollow, HirelingHold, HirelingAttack,
 }
 
 public enum InputDevice { Keyboard, Mouse, Gamepad }
@@ -214,6 +219,9 @@ public static class InputActions
         InputAction.Search => "Search carefully",
         InputAction.Explore => "Explore",
         InputAction.EatBest => "Eat your best food",
+        InputAction.HirelingFollow => "Hireling: follow close",
+        InputAction.HirelingHold => "Hireling: hold here",
+        InputAction.HirelingAttack => "Hireling: attack my target",
         InputAction.AimWand => "Aim a wand",
         InputAction.UseStaff => "Use a staff",
         InputAction.ZapRod => "Zap a rod",

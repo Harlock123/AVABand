@@ -13,6 +13,13 @@ played; this page keeps it all (Help → What's new...).
   already have comes as a fine ego of its kind. Headstones keep their character's gear from now on;
   an older one's ghost leaves a good item suited to its class. A new birth option, *Ghosts of fallen
   characters*, on by default; never in the daily dungeon or the tutorial. Two new feats go with it.
+- **A sword for hire**: at the Prancing Pony, *Hire a sword* offers two or three warriors and
+  archers a day, no higher in level than you, for a fee and a share of the gold you pick up. They
+  follow you down, fight beside you, take blows meant for you, fall back when badly hurt, and grow
+  slowly — and if they fall, it's for good (the Knowledge screen's *Companions* page remembers them).
+  Ctrl+Shift+F, H and A tell them to follow close, hold, or go for your target; your bolts pass them
+  by, but your blasts don't. A new birth option, *Hirelings*, on by default (never in the daily
+  dungeon), and two new feats.
 
 ## 2026-10-25
 

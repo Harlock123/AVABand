@@ -44,7 +44,7 @@ public sealed partial class GameSession
     public bool TargetOkay(int range = MaxRange)
     {
         if (TargetMonster is { } m)
-            return m.IsActive && Level.Monsters.All.Contains(m) && (m.IsVisible || m.IsDetected)
+            return m.IsActive && !m.IsAlly && Level.Monsters.All.Contains(m) && (m.IsVisible || m.IsDetected)
                    && ProjectionPath.Projectable(Level, Player.Position, m.Position, range);
         if (TargetLocation is { } p)
             return Level.InBounds(p) && ProjectionPath.Projectable(Level, Player.Position, p, range);
@@ -162,7 +162,7 @@ public sealed partial class GameSession
 
     public IReadOnlyList<Monster> TargetableMonsters() =>
         Level.Monsters.All
-            .Where(m => m.IsVisible && ProjectionPath.Projectable(Level, Player.Position, m.Position, MaxRange))
+            .Where(m => m.IsVisible && !m.IsAlly && ProjectionPath.Projectable(Level, Player.Position, m.Position, MaxRange))
             .OrderBy(m => Player.Position.DistanceTo(m.Position)).ThenBy(m => m.Id)
             .ToList();
 }

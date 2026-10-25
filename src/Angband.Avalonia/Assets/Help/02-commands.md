@@ -43,6 +43,10 @@
   until something turns up — a monster in view, an object underfoot, a hurt — or there's nothing left.
 - **Ctrl+Shift+E** eats your best food straight away, without a menu (the most filling food that
   won't gorge you; a scroll of Remove Hunger only if you've no food).
+- **Your hireling's orders** (a sword hired at the Prancing Pony): **Ctrl+Shift+F** follow close,
+  **Ctrl+Shift+H** hold here, **Ctrl+Shift+A** go for your target (choose one with `*` first). They
+  take no time; Game → *Hireling* and your own right-click menu have them too, and in town that menu
+  sends them home.
 - `<` and `>` take the stairs you're standing on — or, anywhere else, walk you to the nearest up or
   down staircase you've found (press again there to take it; something coming into view stops the walk).
 - `x` or `l` look at what is nearby (monsters, objects, traps, doors, stairs…), `*` choose a target, `[` monster list, `]` object list, `M` the level map,
@@ -53,7 +57,7 @@
   middle mouse button, or push the gamepad's right stick. The view slides over what you've seen of the
   level, lit a little brighter, with a marker in the middle and the top line naming what's there.
   Let go and it comes back to you. Nothing moves and no time passes.
-- `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home, your history — show only your notes, levels, uniques or artifacts, find lines by their words, and add a note — and Upgrades: what you have that would suit you better), `=` options, Ctrl+P message history, Ctrl+J the quest log, F11 full screen.
+- `C` character sheet, `~` knowledge (monsters, objects, runes, curses, egos, artifacts, terrain, traps, shapes, an equipment comparison, your home, your history — show only your notes, levels, uniques or artifacts, find lines by their words, and add a note — Upgrades: what you have that would suit you better, and Companions: your hireling and those who fell), `=` options, Ctrl+P message history, Ctrl+J the quest log, F11 full screen.
 
 **The hotbar** under the map holds ten spells or items: **Alt+1** to **Alt+0**, or a click, uses
 one. Click an empty slot to fill it, or drag an item from the sidebar or a spell from the spell

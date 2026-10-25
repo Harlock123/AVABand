@@ -110,7 +110,7 @@ public sealed partial class GameSession
         foreach (var p in path)
         {
             if (!Level.Has(p, TerrainFlags.Project)) break;
-            if (Level.Monsters.At(p) is { } m) ProjectileHitsMonster(m, _effectSource, element, damage);
+            if (Level.Monsters.At(p) is { IsAlly: false } m) ProjectileHitsMonster(m, _effectSource, element, damage);
         }
     }
 

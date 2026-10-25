@@ -45,6 +45,7 @@ public sealed partial class GameSession
         {
             case "none": break;
             case "inn": InnChoice(parts.Length > 1 ? parts[1] : ""); break;
+            case "hire": HireChoice(parts); break;
             case "strongroom": StrongroomChoice(parts); break;
             case "caravan": CaravanChoice(parts); break;
             case "offer": ShowOffer(parts[1]); break;
@@ -160,6 +161,7 @@ public sealed partial class GameSession
         if (!AvaQuestsOn)
         {
             Publish(new MessageEvent("The Prancing Pony's common room is quiet: there's no work to be had here."));
+            if (HirelingsOn) HireMenu(); // (AVABand's hirelings are there without the quests)
             return;
         }
         ReturnLostQuestItems();
@@ -216,6 +218,9 @@ public sealed partial class GameSession
             case "strongroom":
                 if (StrongroomOn) StrongroomMenu();
                 break;
+            case "hire":
+                if (HirelingsOn) HireMenu();
+                break;
             case "leave":
                 break;
             default:
@@ -230,6 +235,7 @@ public sealed partial class GameSession
                     choices.Add(($"board:deliver:{job.Id}", $"Hand in what you have: {JobTitle(job)} ({job.Progress + GatherOnHand(job)} of {job.Count})"));
                 choices.Add(("inn:board", "Read the notice board"));
                 if (StrongroomOn) choices.Add(("inn:strongroom", "The strongroom (lockers for all your characters)"));
+                if (HirelingsOn) choices.Add(("inn:hire", Hireling is { } h ? $"Your hireling, {h.Title}" : "Hire a sword"));
                 choices.Add(("inn:leave", "Leave"));
                 var taken = AvaQuests.Quests.Values.Count(q => !q.IsDone);
                 AskQuest("The Prancing Pony",

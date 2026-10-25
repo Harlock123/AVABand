@@ -608,7 +608,7 @@ public sealed partial class GameSession
     private bool AffectMonstersInView(string status, int power, string? kind = null)
     {
         var any = false;
-        foreach (var m in Level.Monsters.All.Where(m => Level[m.Position].Has(SquareFlags.View) && MatchesKind(m, kind)).ToList())
+        foreach (var m in Level.Monsters.All.Where(m => Level[m.Position].Has(SquareFlags.View) && !m.IsAlly && MatchesKind(m, kind)).ToList())
         {
             any = true;
             if (status == "haste")
@@ -644,7 +644,7 @@ public sealed partial class GameSession
     {
         var any = false;
         foreach (var m in Level.Monsters.All
-                     .Where(m => Level[m.Position].Has(SquareFlags.View) && MatchesKind(m, flag))
+                     .Where(m => Level[m.Position].Has(SquareFlags.View) && !m.IsAlly && MatchesKind(m, flag))
                      .OrderBy(m => m.Id).ToList())
         {
             any = true;
@@ -796,7 +796,7 @@ public sealed partial class GameSession
         foreach (var p in Level.AllLocs().Where(p => p.DistanceTo(Player.Position) <= radius && p != Player.Position))
         {
             if (!Level.InBoundsFully(p) || Level.FeatureAt(p).Has(TerrainFlags.Permanent) || Level.FeatureAt(p).Has(TerrainFlags.Stair)) continue;
-            if (Level.Monsters.At(p) is { } m && !m.Race.Has("QUESTOR")) Level.Monsters.Remove(m);
+            if (Level.Monsters.At(p) is { IsAlly: false } m && !m.Race.Has("QUESTOR")) Level.Monsters.Remove(m);
             foreach (var item in Level.Objects.At(p).Where(i => !i.IsArtifact).ToList()) Level.Objects.Remove(p, item);
             ref var sq = ref Level[p];
             sq.Trap = 0;

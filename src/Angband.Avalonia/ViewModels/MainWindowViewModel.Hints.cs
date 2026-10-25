@@ -118,7 +118,7 @@ public sealed partial class MainWindowViewModel
             () => "Your experience was drained. A potion of Restore Life Levels brings it back; gear with Hold Life protects it.");
         yield return ("shop", () => IsInStore,
             () => $"In a shop, a letter buys (and asks how many: a number, or a for all; Shift+letter takes the whole pile), Tab switches to selling, Esc leaves; {KeyName(InputAction.Inspect)} examines the highlighted item.");
-        yield return ("monster", () => player.Depth > 0 && game.Level.Monsters.All.Any(m => m.IsVisible),
+        yield return ("monster", () => player.Depth > 0 && game.Level.Monsters.All.Any(m => m.IsVisible && !m.IsAlly),
             () => $"A monster! Walk into it to attack. {KeyName(InputAction.Look)} looks at it (the sidebar then recalls what you know); right-click it for everything you can do.");
         yield return ("trap", () => Near(10).Any(p => game.Known.IsKnown(p) && game.VisibleTrapAt(p) is not null),
             () => $"A ^ is a trap. Walking at it tries to disarm it ({KeyName(InputAction.Disarm)} does too); {KeyName(InputAction.WalkIntoTrap)} walks onto it on purpose.");
@@ -146,9 +146,12 @@ public sealed partial class MainWindowViewModel
             () => $"Your quest log ({KeyName(InputAction.QuestLog)}) shows every quest and notice-board job you've taken, and how far along each is.");
         yield return ("strongroom", () => game.StrongroomOn && game.Level.FeatureAt(player.Position).Shop == "inn",
             () => "Under the Prancing Pony is Butterbur's strongroom: leave something there and any of your later characters can take it out.");
+        yield return ("hireling", () => game.Hireling is not null,
+            () => $"Your hireling follows you and fights beside you (the green outline). Orders: {KeyName(InputAction.HirelingFollow)} follow close, "
+                  + $"{KeyName(InputAction.HirelingHold)} hold here, {KeyName(InputAction.HirelingAttack)} go for your target. Your bolts pass them by; your blasts don't.");
         yield return ("gem_pouch", () => player.Inventory.Pouch.Any(),
             () => "Gems ride in your gem pouch — one pack slot for all of them — each with what it does in a socket. The Arcane Artificer (0) cuts three into one finer.");
-        yield return ("danger", () => player.Depth > 0 && game.Level.Monsters.All.Any(m => m.IsVisible && game.DangerTag(m.Race) is not null),
+        yield return ("danger", () => player.Depth > 0 && game.Level.Monsters.All.Any(m => m.IsVisible && !m.IsAlly && game.DangerTag(m.Race) is not null),
             () => $"The monster list ({KeyName(InputAction.MonsterList)}) tags what could kill you, what's dangerous, and what's far out of depth. Mind them.");
         yield return ("look_around", () => player.Depth > 0,
             () => "Hold Ctrl or Alt (Option on a Mac) with the arrows — or Shift and scroll — to look around the map without moving; let go to come back.");

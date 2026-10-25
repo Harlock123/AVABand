@@ -209,7 +209,7 @@ public sealed partial class GameSession
     /// (rest, travel, tunnelling).
     /// </summary>
     private Dictionary<int, Geometry.Loc> VisibleMonsters() =>
-        Level.Monsters.All.Where(m => m.IsVisible).ToDictionary(m => m.Id, m => m.Position);
+        Level.Monsters.All.Where(m => m.IsVisible && !m.IsAlly).ToDictionary(m => m.Id, m => m.Position);
 
     /// <summary>
     /// Angband disturb: a monster coming into view always disturbs; one already in view moving
@@ -217,7 +217,7 @@ public sealed partial class GameSession
     /// </summary>
     private bool MonstersDisturb(Dictionary<int, Geometry.Loc> before)
     {
-        foreach (var m in Level.Monsters.All.Where(m => m.IsVisible))
+        foreach (var m in Level.Monsters.All.Where(m => m.IsVisible && !m.IsAlly))
         {
             if (!before.TryGetValue(m.Id, out var was)) return true;
             if (Options[OptionIds.DisturbNear] && was != m.Position) return true;

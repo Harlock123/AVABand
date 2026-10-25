@@ -91,7 +91,7 @@ public sealed partial class GameSession
 
     /// <summary>Angband monster_can_move: the square is empty, or MOVE_BODY lets it push past a lesser monster there.</summary>
     private bool MonsterCanMove(Monster monster, Loc grid) =>
-        Level.Monsters.At(grid) is not { } other || (monster.Race.Has(MonsterFlags.MoveBody) && Worth(monster) > Worth(other));
+        Level.Monsters.At(grid) is not { } other || (monster.Race.Has(MonsterFlags.MoveBody) && Worth(monster) > Worth(other) && !other.IsAlly);
 
     /// <summary>Angband monster_near_permwall: permanent rock (or a 5% whim) between a wall-passer and an unseen player.</summary>
     private bool NearPermWall(Monster monster)
@@ -213,6 +213,14 @@ public sealed partial class GameSession
                 didSomething = true;
                 break;
             }
+            // (AVABand: your hireling in its way, it strikes at them.)
+            if (Level.Monsters.At(grid) is { IsAlly: true } ally && !monster.IsAlly)
+            {
+                if (monster.Race.Has(MonsterFlags.NeverBlow)) continue;
+                MonsterAttacksHireling(monster, ally);
+                didSomething = true;
+                break;
+            }
             if (monster.Race.Has(MonsterFlags.NeverMove))
             {
                 if (monster.IsVisible) LearnMonsterFlag(monster.Race, MonsterFlags.NeverMove);
@@ -271,7 +279,7 @@ public sealed partial class GameSession
     private bool GetMove(Monster monster, out int dir, out bool tracking)
     {
         dir = 0;
-        var target = DecoyFor(monster) ?? Player.Position;
+        var target = DecoyFor(monster) ?? HirelingTargetFor(monster) ?? Player.Position;
         var groupAi = monster.Race.Has(MonsterFlags.GroupAi);
         var (minRange, _) = CombatRange(monster);
         var offset = new Loc(0, 0);
@@ -361,7 +369,7 @@ public sealed partial class GameSession
     private bool GetMoveAdvance(Monster monster, out bool track)
     {
         track = false;
-        var target = DecoyFor(monster) ?? Player.Position;
+        var target = DecoyFor(monster) ?? HirelingTargetFor(monster) ?? Player.Position;
         var baseHearing = monster.Race.Hearing - Player.Stealth / 3;
         var noiseHere = Noise[monster.Position];
         var currentNoise = baseHearing - noiseHere;
@@ -371,7 +379,8 @@ public sealed partial class GameSession
             monster.MoveTarget = target;
             return true;
         }
-        if (CanSee(monster))
+        // (AVABand: or it has your hireling in its sights.)
+        if (CanSee(monster) || target != Player.Position && HirelingHere?.Position == target)
         {
             monster.MoveTarget = target;
             return true;

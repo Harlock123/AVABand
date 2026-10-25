@@ -328,8 +328,8 @@ public sealed partial class GameSession
     private void TakeGold(Item gold)
     {
         Level.Objects.Remove(Player.Position, gold);
-        Player.Gold += gold.GoldValue;
         Publish(new MessageEvent($"You have found {gold.GoldValue} gold pieces worth of {ItemNaming.Plain(gold.Kind.Name, false)}."));
+        Player.Gold += TakeHirelingShare(gold.GoldValue); // (AVABand: your hireling's share comes out first)
         Publish(new ItemPickedUpEvent(gold.Kind.Id, gold.GoldValue, Gold: true));
     }
 
@@ -597,7 +597,7 @@ public sealed partial class GameSession
             if (!Level.Has(grid, TerrainFlags.Project)) break;
             landing = grid;
             flown++;
-            if (Level.Monsters.At(grid) is not { } monster) continue;
+            if (Level.Monsters.At(grid) is not { IsAlly: false } monster) continue; // (your hireling ducks)
 
             var chance = CombatMath.MissileChance(skill, toHit, Player.Position.DistanceTo(grid));
             if (!CombatMath.TestHit(Rng, chance, monster.Race.Armour, monster.IsVisible)) continue;

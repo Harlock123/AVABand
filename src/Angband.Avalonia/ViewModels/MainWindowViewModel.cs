@@ -83,6 +83,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         if (level.Monsters.At(p) is { } monster && (monster.IsVisible || monster.IsDetected || ShowWholeMap))
             return _game.IsHallucinating
                 ? _cells.Monster(Hallucination(_data.Monsters, p), terrain)
+                : monster.IsAlly && _game.Hireling is { } hireling ? _cells.Ally(monster.Race, GameSession.HirelingPicture(hireling), terrain)
                 : _cells.Monster(monster.Race, terrain, MapCellBuilder.HasRareLook(monster.Id, level.Seed));
         if (terrain.IsUnknown) return terrain;
         if (level.Depth == 0) terrain = ShopDoorLetters(terrain, p);

@@ -228,6 +228,7 @@ public sealed partial class GameSession : ITurnHandler
             DropCommand drop => Drop(drop.Item, drop.Count),
             WieldCommand wield => Wield(wield.Item),
             TakeOffCommand takeOff => TakeOff(takeOff.Item),
+            HirelingOrderCommand order => OrderHireling(order.Order),
             UseCommand use => WithUncurse(use.Uncurse, () => WithGlyph(use.Glyph, () => Use(use.Item, use.Target, use.Direction))),
             ActivateCommand activate => WithGlyph(activate.Glyph, () => Activate(activate.Item, activate.Target, activate.Direction)),
             ResumeShapeCommand => ResumeNormalShape(),
@@ -316,8 +317,9 @@ public sealed partial class GameSession : ITurnHandler
         }
         foreach (var monster in Level.Monsters.All)
         {
-            monster.IsVisible = MonsterVisible(monster);
-            if (monster.IsVisible) NoteSighting(monster);
+            // (AVABand: your hireling carries a light of their own, so is seen whenever in view.)
+            monster.IsVisible = MonsterVisible(monster) || monster.IsAlly && Level[monster.Position].Has(SquareFlags.View) && !Player.IsBlind;
+            if (monster.IsVisible && !monster.IsAlly) NoteSighting(monster);
         }
         foreach (var p in Vision.Viewed)
             if (Level[p].Has(SquareFlags.Seen))
@@ -380,6 +382,12 @@ public sealed partial class GameSession : ITurnHandler
         {
             Reveal(hidden); // bumping into it gives it away (and uses the turn)
             return EnergyTable.MoveEnergy;
+        }
+        // (AVABand: walking into your hireling, you change places.)
+        if (Level.Monsters.At(target) is { IsAlly: true } ally && Level.IsPassable(target))
+        {
+            Level.Monsters.Move(ally, Player.Position);
+            if (ally.IsVisible) Publish(new MessageEvent($"You change places with {Hireling?.Name ?? MonsterName(ally)}."));
         }
         if (Level.Monsters.At(target) is { } monster) return PlayerMelee(monster);
 
@@ -569,6 +577,7 @@ public sealed partial class GameSession : ITurnHandler
         KeepLostQuestItems();
         if (Level is not null)
         {
+            TakeHirelingAlong(); // (AVABand: your hireling comes with you, so the level never keeps them)
             if (persist && !fresh) StoreCurrentLevel(); // (its artifacts stay with it)
             else PreserveUnfoundArtifacts();
         }
@@ -641,6 +650,7 @@ public sealed partial class GameSession : ITurnHandler
             if (fromDepth > 0) RenewBoard(); // the notice board's untaken postings change while you're away
             if (fromDepth > 0) CaravanOnReturn(); // (AVABand: a merchant caravan comes, stays, or goes)
         }
+        HirelingArrives(fromDepth);
         _arriving = true;
         try
         {

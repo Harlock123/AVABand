@@ -428,7 +428,7 @@ public sealed partial class GameSession
 
     /// <summary>The most wounded visible-to-it monster of the caster's kind nearby, if any.</summary>
     private Monster? WoundedKin(Monster caster) => Level.Monsters.All
-        .Where(m => m != caster && m.Race.Glyph == caster.Race.Glyph && m.Hp < m.MaxHp
+        .Where(m => m != caster && !m.IsAlly && m.Race.Glyph == caster.Race.Glyph && m.Hp < m.MaxHp
                     && m.Position.DistanceTo(caster.Position) <= 10)
         .OrderBy(m => m.Hp * 100 / Math.Max(1, m.MaxHp)).ThenBy(m => m.Id)
         .FirstOrDefault();

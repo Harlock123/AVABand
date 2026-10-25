@@ -51,6 +51,9 @@ public static class Feats
         feats.Add(new("ghosts_3", "Keeper of the Barrows", "Lay three ghosts of your fallen characters to rest with one character.",
             g => g.Ghosts.Laid.Count >= 3));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
+        feats.Add(new("hireling_20", "Old Comrades", "See a hireling of yours reach level 20.", g => g.Hireling is { Level: >= 20 }));
+        feats.Add(new("hireling_deep", "There and Back Again",
+            $"Come back up to town from {20 * data.Constants.FeetPerLevel} ft or deeper with the same hireling.", g => g.Hireling is { DeepestReturned: >= 20 }));
         foreach (var quest in data.Quests)
             if (data.Monster(quest.Race) is { } boss)
                 feats.Add(new($"quest_{quest.Id}", $"{boss.Name} Falls", $"Slay {boss.Name}.", g => g.KilledUniques.Contains(boss.Id)));

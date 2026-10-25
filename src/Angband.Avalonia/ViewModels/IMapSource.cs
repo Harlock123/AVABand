@@ -45,6 +45,8 @@ public interface IMapSource
     Loc? Target => null;
     /// <summary>A square to outline lightly (the player, with Angband's highlight_player).</summary>
     Loc? Highlight => null;
+    /// <summary>AVABand: where your hireling stands, outlined in green.</summary>
+    Loc? Ally => null;
     /// <summary>A path to draw over the map: where a click would travel, or where a shot would fly.</summary>
     IReadOnlyList<Loc> ShownPath => [];
     /// <summary>The shown path is a line of fire (it ends where the shot would stop), not a route.</summary>

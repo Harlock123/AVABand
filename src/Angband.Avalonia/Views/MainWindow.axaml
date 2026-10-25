@@ -83,6 +83,11 @@
         <MenuItem Header="_Message history..." Command="{Binding ShowMessageHistoryCommand}" InputGesture="Ctrl+P" />
         <MenuItem Header="Level _feeling" Command="{Binding ShowFeelingCommand}" InputGesture="Ctrl+F" />
         <MenuItem Header="_Tidy pack" Command="{Binding TidyPackCommand}" />
+        <MenuItem Header="H_ireling" IsEnabled="{Binding HasHireling}">
+          <MenuItem Header="_Follow close" Command="{Binding HirelingFollowCommand}" InputGesture="Ctrl+Shift+F" />
+          <MenuItem Header="_Hold here" Command="{Binding HirelingHoldCommand}" InputGesture="Ctrl+Shift+H" />
+          <MenuItem Header="_Attack my target" Command="{Binding HirelingAttackCommand}" InputGesture="Ctrl+Shift+A" />
+        </MenuItem>
         <MenuItem Header="Clear out _junk..." Command="{Binding ClearJunkCommand}" />
         <MenuItem Header="_Retire (after winning)" Command="{Binding RetireCommand}" InputGesture="Shift+Q" />
         <MenuItem Header="Shops pay _gold when you sell" Command="{Binding ToggleShopsPayGoldCommand}"
@@ -230,6 +235,14 @@
               <Run Text="[" Foreground="White" /><Run Text="{Binding HealthStars}" Foreground="{Binding HealthBrush}" /><Run Text="{Binding HealthRest}" Foreground="White" /><Run Text="]" Foreground="White" />
             </TextBlock>
             <TextBlock Text="{Binding HealthName}" Foreground="#ccc" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="200" />
+          </StackPanel>
+          <!-- AVABand's hireling: their health, level and orders, while they are on the level. -->
+          <StackPanel x:Name="HirelingBar" Orientation="Horizontal" Spacing="8" IsVisible="{Binding HirelingVisible}"
+                      ToolTip.Tip="Your hireling. Orders: Ctrl+Shift+F follow close, Ctrl+Shift+H hold here, Ctrl+Shift+A attack your target.">
+            <TextBlock FontFamily="{StaticResource MonoFont}" FontSize="14">
+              <Run Text="[" Foreground="White" /><Run Text="{Binding HirelingStars}" Foreground="{Binding HirelingBrush}" /><Run Text="{Binding HirelingRest}" Foreground="White" /><Run Text="]" Foreground="White" />
+            </TextBlock>
+            <TextBlock Text="{Binding HirelingName}" Foreground="#9e9" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="210" />
           </StackPanel>
           <TextBlock Classes="header" Text="Equipment" />
           <ItemsControl ItemsSource="{Binding EquipmentRows}" ItemTemplate="{StaticResource ItemRowTemplate}" />

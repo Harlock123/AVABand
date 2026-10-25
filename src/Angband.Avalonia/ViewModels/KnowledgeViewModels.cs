@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Angband.Core.Game;
 using Angband.Core.Items;
 using Angband.Core.Records;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -220,6 +221,9 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     /// <summary>AVABand: what you carry or keep at home that the shops' note calls better than what you have on.</summary>
     public KnowledgeCategoryViewModel? Upgrades { get; init; }
 
+    /// <summary>AVABand: your hireling, and those who fell in your service.</summary>
+    public KnowledgeCategoryViewModel? Companions { get; init; }
+
     /// <summary>The character history, as Angband's history screen and dump show it (the lines the filter lets through).</summary>
     [ObservableProperty] private string _history = "";
 
@@ -286,7 +290,7 @@ public sealed partial class KnowledgeViewModel : ObservableObject
         RefreshHistory();
     }
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests, 13 feats, 14 upgrades).</summary>
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests, 13 feats, 14 upgrades, 15 companions).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -317,6 +321,7 @@ public sealed partial class MainWindowViewModel
             Quests = CreateQuestJournal(),
             Feats = CreateFeatsPage(),
             Upgrades = CreateUpgrades(),
+            Companions = CreateCompanions(),
         };
         knowledge.RefreshHistory();
         return knowledge;
@@ -345,6 +350,28 @@ public sealed partial class MainWindowViewModel
         return new KnowledgeCategoryViewModel("Upgrades",
             rows.Count == 1 ? "1 thing you have would suit you better" : $"{rows.Count} things you have would suit you better (or in part)",
             "Nothing you carry or keep at home would suit you better than what you have on.", rows);
+    }
+
+    /// <summary>
+    /// AVABand's Companions page: the hireling with you (level, share, earnings, kills) and every one who
+    /// fell in your service — where, to what, and after how long.
+    /// </summary>
+    public KnowledgeCategoryViewModel CreateCompanions()
+    {
+        var feet = _data.Constants.FeetPerLevel;
+        var rows = new List<KnowledgeRow>();
+        if (_game.Hireling is { } h)
+            rows.Add(new KnowledgeRow(h.Look == "human" ? "p" : "h", _cells.Color("LightGreen"), h.Title, $"with you, level {h.Level}",
+                () => $"{h.Title}, {h.Look}, level {h.Level} ({GameSession.HirelingDoing(h)})\n\nFee {h.Fee} gold, then {h.Share}% of the gold you find "
+                      + $"({h.Earned} gold so far). {h.Kills} {(h.Kills == 1 ? "foe" : "foes")} slain. Deepest together: {h.DeepestTogether * feet} ft."));
+        foreach (var f in _game.FallenCompanions.AsEnumerable().Reverse())
+            rows.Add(new KnowledgeRow("+", _cells.Color("Slate"), $"{f.Name} the {(f.Role == HirelingRole.Archer ? "archer" : "warrior")}",
+                $"fell at {f.Depth * feet} ft", () => $"{f.Name}, {f.Look}, level {f.Level}\n\nFell at {f.Depth * feet} ft, killed by {f.KilledBy}, "
+                    + $"after {f.Served / 10} turns in your service. {f.Kills} {(f.Kills == 1 ? "foe" : "foes")} slain."));
+        return new KnowledgeCategoryViewModel("Companions", _game.FallenCompanions.Count == 0 ? (_game.Hireling is null ? "No companions yet" : "1 hireling with you")
+                : $"{_game.FallenCompanions.Count} fallen", _game.HirelingsOn
+                ? "No one has gone down with you yet. Swords can be hired at the Prancing Pony (9) in town."
+                : "This character was made without hirelings.", rows);
     }
 
     /// <summary>AVABand's quest journal: every quest taken or found, and the notice-board jobs taken.</summary>

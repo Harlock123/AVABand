@@ -53,8 +53,10 @@ slain; 100,000 gold carried; an artifact worn; a first and then every one of the
 quests done well; the deep quests' own (the Heart given back, the watchtower held all 200 turns
 rather than won by Grishnag's death, the palantír kept and looked into ten times — the stone quest
 counts the looks); a fallen character's ghost laid to rest, and three with one character; ten
-notice-board jobs; the daily dungeon's (a first try, 1000 ft in one, and seven days running — these from the daily board, `FeatBook.CheckBoard`, as each try is recorded and
-at start-up); Sauron and Morgoth slain; and a win with each class.
+notice-board jobs; a hireling at level 20, and one brought back up from 1000 ft; the daily dungeon's
+(a first try, 1000 ft in one, and seven days running — these from the daily board,
+`FeatBook.CheckBoard`, as each try is recorded and at start-up); Sauron and Morgoth slain; and a win
+with each class.
 They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
 ft.)"), kept in `feats.json` beside the scores with who did each first and when, and listed on
 the Knowledge screen's **Feats** page. A character that cheated or used a debug command, the
@@ -312,6 +314,40 @@ core kept busy.
   when), the character is saved, then the change is made final; a game that stops in between is sorted
   out on the next start (`StrongroomStore.Recover`) — final if that save was written since, undone if
   not — so an item is never in both a locker and a save, nor in neither. Daily-dungeon characters have none.
+- **Hirelings** (AVABand's own; `GameSession.Hireling.cs`, `GameSession.HirelingFight.cs`; birth option
+  *Hirelings*, `birth_ava_hirelings`, on; never in the daily dungeon or the tutorial): at the Prancing Pony,
+  *Hire a sword* offers two or three a day (`HireCandidates`, from dice of their own seeded from the game
+  and the day, so nothing else shifts and asking again shows the same faces) — a human, dwarf, elf or
+  hobbit, a warrior or an archer, of your level or up to three below, for a fee (30 gold a level and 4 a
+  level squared, a fifth more for an archer, x1.2 at a 10% share down to x0.8 at 20%) and a share of
+  the gold you pick up, 10-20%, taken as you pick it up (so never owed). One at a time. Their body is an
+  ordinary monster marked `Monster.IsAlly`, of a race made from the `Hireling` record (unique, so nothing
+  tramples, polymorphs or banishes it; saved as race `hireling` and rebuilt on loading); their turn is
+  their own (`HirelingTurn`): below a quarter of their hit points they fall back from the foes they can
+  see (back at half); otherwise a foe beside them is struck (warrior: 2d4 + level/3, two blows, three
+  from level 15, four from 30; archer: a 1d6 knife), an archer shoots one in a clear line (1d9 + level/3,
+  x2, x3 from level 20, range 10 or 12; never through you or another monster), a warrior steps toward
+  one, else they come back down your noise to within two squares. Foes: the one you named (Ctrl+Shift+A
+  on your target), else the nearest awake, visible one within their sight (6, or an archer's range) and
+  within 7 of you; holding (Ctrl+Shift+H), a warrior fights only what is beside them; Ctrl+Shift+F
+  follows. Hit points 15 + 7 a level (an archer 10 + 5), armour 12 + 2 a level (8 + 1.5), skill 50 + 3
+  a level (30 + 2; the bow 50 + 3), a point of speed every ten levels; a fiftieth of their hit points
+  back every 100 game turns, all of it in town. Monsters: one beside them and not beside you strikes at
+  them (`MonsterFightsHireling`, its blows' to-hit against their armour, no side effects), one they
+  have hurt (`Monster.HatesAlly`, saved) makes for them while they are the nearer, and one whose way they
+  block strikes them; monsters' spells and breath are aimed at you alone. Your bolts, beams, missiles
+  and throws pass them by (`ProjectBoltEffect`, `FlyMissile`), spells that pick out monsters (sleep,
+  scare, dispel, banish, *Destruction*...) leave them be, blasts (balls, breaths, arcs, earthquakes)
+  hurt them; they're never a target, never stop a rest or a run, and you change places walking into
+  them. Experience: a kill of theirs is worth half to you and all of Angband's exp x level ÷ their
+  level to them, a third for one they helped with; twice your table to level, never past your level.
+  They follow you through every change of level and arrive beside you (taken off a level before it is
+  kept or thrown away). Death is for good: a message, a history line and a `FallenCompanion` in the
+  save, on the Knowledge screen's *Companions* page. In town you part ways (they go home). Shown in
+  light green with a green outline on the map, drawn as a monster of their folk and role in tilesets
+  (`HirelingPicture`), with a health bar of their own in the sidebar; orders on the keys, Game →
+  Hireling and your right-click menu. Two feats: *Old Comrades* (a hireling at level 20) and *There and
+  Back Again* (back up to town from 1000 ft or deeper with the same one). The bots never hire.
 - **Blows and armour weight, as Angband 4.2.5** (`Game/GameSession.AngbandBlows.cs`; the birth
   option *Angband 4.2's blows*, `birth_angband_blows`, on by default — off, each class's fixed blows
   as before): `calc_blows` from `player-calcs.c` — Strength for the weapon's weight (`adj_str_blow` ×

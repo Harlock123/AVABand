@@ -42,7 +42,7 @@ public sealed partial class GameSession
         var entries = new List<MonsterListEntry>();
         foreach (var m in Level.Monsters.All)
         {
-            if (!(m.IsVisible || m.IsDetected) || m.Camouflaged) continue;
+            if (!(m.IsVisible || m.IsDetected) || m.Camouflaged || m.IsAlly) continue;
             var entry = entries.FirstOrDefault(e => e.Race == m.Race);
             if (entry is null) entries.Add(entry = new MonsterListEntry(m.Race));
             var section = ProjectionPath.Projectable(Level, Player.Position, m.Position, MaxRange) ? 0 : 1;

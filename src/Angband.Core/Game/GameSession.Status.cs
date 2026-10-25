@@ -358,7 +358,7 @@ public sealed partial class GameSession
     /// </summary>
     private bool Rest()
     {
-        if (Level.Monsters.All.Any(m => m.IsVisible))
+        if (Level.Monsters.All.Any(m => m.IsVisible && !m.IsAlly))
         {
             Publish(new MessageEvent("You cannot rest with monsters nearby."));
             return false;
@@ -375,7 +375,7 @@ public sealed partial class GameSession
 
             SpendAndAdvance(EnergyTable.MoveEnergy);
             rested = true;
-            if (Level.Monsters.All.Any(m => m.IsVisible))
+            if (Level.Monsters.All.Any(m => m.IsVisible && !m.IsAlly))
             {
                 Publish(new MessageEvent("You stop resting: something comes into view."));
                 break;

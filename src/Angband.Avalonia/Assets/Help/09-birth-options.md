@@ -33,6 +33,8 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
 - **Ghosts of fallen characters** — now and then, on a new level at the depth one of your dead
   characters fell at, its ghost walks; beat it to lay it to rest and win back one of the things it
   wore (Help → Monsters). On by default; never in the daily dungeon or the tutorial.
+- **Hirelings** — a sword for hire at the Prancing Pony follows you down for a fee and a share of
+  your gold (Help → Quests); never in the daily dungeon or the tutorial (on by default).
 - **Persistent levels (experimental)** — levels are kept when you leave them.
 - **To-damage is a percentage of dice (experimental)** — to-dam makes each damage die bigger by a
   percentage instead of adding to every blow; slays and brands multiply the dice; criticals add

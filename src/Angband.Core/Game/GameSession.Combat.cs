@@ -25,6 +25,11 @@ public sealed partial class GameSession
     /// </summary>
     private int PlayerMelee(Monster monster)
     {
+        if (monster.IsAlly)
+        {
+            Publish(new MessageEvent($"You hold your blow: that's {Hireling?.Name ?? "your hireling"}."));
+            return 0;
+        }
         var name = MonsterName(monster);
         if (PlayerAfraid)
         {
@@ -73,6 +78,7 @@ public sealed partial class GameSession
     /// </summary>
     private int PlayerBlow(Monster monster, Item? offHand = null, int toHitPenalty = 0)
     {
+        if (monster.IsAlly) return -1; // (AVABand: never at your own hireling)
         var name = MonsterName(monster);
         TrackHealth(monster); // Angband py_attack_real: health_track
         var weapon = offHand ?? Player.Inventory.Weapon;
@@ -245,7 +251,7 @@ public sealed partial class GameSession
     /// <summary>The closest visible monster the player has a clear shot at.</summary>
     public Monster? NearestTarget(int range = MaxRange) =>
         Level.Monsters.All
-            .Where(m => (m.IsVisible || m.IsDetected) && Player.Position.DistanceTo(m.Position) <= range
+            .Where(m => (m.IsVisible || m.IsDetected) && !m.IsAlly && Player.Position.DistanceTo(m.Position) <= range
                         && ProjectionPath.Projectable(Level, Player.Position, m.Position, range))
             .OrderBy(m => Player.Position.DistanceTo(m.Position))
             .ThenBy(m => m.Id)
@@ -306,10 +312,17 @@ public sealed partial class GameSession
     /// survivor you can see shows how it was hurt (Angband message_pain, as missiles, spells and
     /// breath do; melee doesn't).
     /// </summary>
-    /// <param name="deathNote">Said instead of "You have slain ..." if it dies (a spell's "The orc dies.").</param>
-    public bool DamageMonster(Monster monster, int damage, bool pain = false, string? deathNote = null)
+    /// <param name="deathNote">Said instead of "You have slain ..." if it dies (a spell's "The orc dies."); empty, nothing is.</param>
+    /// <param name="byHireling">Your hireling's blow or arrow (AVABand): the kill is theirs.</param>
+    public bool DamageMonster(Monster monster, int damage, bool pain = false, string? deathNote = null, bool byHireling = false)
     {
-        Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage));
+        // (AVABand: what reaches your hireling — an earthquake, say — hurts them, and is no kill of yours.)
+        if (monster.IsAlly)
+        {
+            HurtHireling(damage, "your own hand");
+            return !monster.IsActive;
+        }
+        Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage, Ally: byHireling));
         Reveal(monster);
         WakeMonster(monster);
         monster.Hp -= damage;
@@ -317,7 +330,7 @@ public sealed partial class GameSession
         if (monster.Hp < 0)
         {
             if (QuestUndying(monster)) return false; // (Hathol, while his altar lies profaned)
-            KillMonster(monster, deathNote);
+            KillMonster(monster, deathNote, byHireling);
             return true;
         }
         if (pain && monster.IsVisible && PainMessage(monster, damage) is { } hurt)
@@ -356,15 +369,18 @@ public sealed partial class GameSession
     private static string SingularVerb(string text) =>
         System.Text.RegularExpressions.Regex.Replace(text, @"\[([^|\]]*)(\|[^\]]*)?\]", m => m.Groups[1].Value);
 
-    private void KillMonster(Monster monster, string? deathNote = null)
+    private void KillMonster(Monster monster, string? deathNote = null, bool byHireling = false)
     {
         // A shapechanged monster dies as what it really is (Sauron, not Wolf-Sauron).
         var race = monster.OriginalRace ?? monster.Race;
         var name = MonsterName(monster);
         var destroyed = race.Has(MonsterFlags.Undead) || race.Has("NONLIVING");
-        Publish(new MessageEvent(deathNote ?? $"You have {(destroyed ? "destroyed" : "slain")} {name}."));
+        if (deathNote is not "") Publish(new MessageEvent(deathNote ?? $"You have {(destroyed ? "destroyed" : "slain")} {name}."));
 
         var (whole, fraction) = CombatMath.KillExperience(race.Experience, race.Depth, Player.Level);
+        // (AVABand: your hireling's kill is worth half as much to you; they learn from it, or from one they had a hand in.)
+        if (byHireling) (whole, fraction) = (whole / 2, (int)(((long)(whole % 2) * 0x10000 + fraction) / 2));
+        HirelingKillCredit(race, killed: byHireling, helped: monster.HatesAlly);
         Player.ExperienceFraction += fraction;
         if (Player.ExperienceFraction >= 0x10000)
         {
@@ -386,7 +402,7 @@ public sealed partial class GameSession
         var (items, gold) = DropMonsterLoot(monster);
         NoteKill(monster, items, gold);
         Publish(new MonsterKilledEvent(race.Id, monster.Position, whole, race.IsUnique));
-        BloodlustOnKill();
+        if (!byHireling) BloodlustOnKill();
         if (monster == Commanded) ReleaseCommand(announce: false);
         if (InArena && !Level.Monsters.All.Any()) LeaveArena();
     }

@@ -97,5 +97,11 @@ public sealed class Monster : IActor
     /// <summary>The group it was placed with (the leader's id; its own for a monster alone).</summary>
     public int GroupId { get; set; }
 
+    /// <summary>AVABand's hireling: on your side (it never hunts you, and the level's monsters are its foes).</summary>
+    public bool IsAlly { get; set; }
+
+    /// <summary>AVABand: struck by your hireling, it has a grudge against it (and the hireling shares in its death).</summary>
+    public bool HatesAlly { get; set; }
+
     public override string ToString() => $"{Race.Id}#{Id}@{Position}";
 }

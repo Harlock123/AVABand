@@ -34,7 +34,7 @@ public sealed partial class GameSession
 
             // Angband disturbs travel when anything interesting happens: being hurt, a monster coming
             // into view, or (with disturb_near) one in view moving.
-            if (Player.Hp < hp || _disturbed || MonstersDisturb(seen) || Level.Monsters.At(next) is not null) break;
+            if (Player.Hp < hp || _disturbed || MonstersDisturb(seen) || Level.Monsters.At(next) is { IsAlly: false }) break;
             seen = VisibleMonsters();
             if (Level.Objects.Any(Player.Position)) break;
         }

@@ -129,6 +129,9 @@ public sealed record RunOnCommand : GameCommand;
 /// <summary>Enter the store whose entrance the player is standing on (Angband '_').</summary>
 public sealed record EnterStoreCommand : GameCommand;
 
+/// <summary>AVABand: an order to your hireling (follow close, hold here, go for your target; in town, go home). Takes no time.</summary>
+public sealed record HirelingOrderCommand(HirelingOrder Order) : GameCommand;
+
 /// <summary>An answer to the last quest prompt (<see cref="QuestPromptEvent"/>). Takes no time.</summary>
 public sealed record QuestChoiceCommand(string Choice) : GameCommand;
 

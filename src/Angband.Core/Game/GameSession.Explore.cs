@@ -47,7 +47,7 @@ public sealed partial class GameSession
             SpendAndAdvance(energy);
             moved = true;
             if (Player.Position == target) reached.Add(target);
-            if (Player.Hp < hp || _disturbed || MonstersDisturb(seen) || Level.Monsters.At(next) is not null) break;
+            if (Player.Hp < hp || _disturbed || MonstersDisturb(seen) || Level.Monsters.At(next) is { IsAlly: false }) break;
             seen = VisibleMonsters();
             if (Level.Objects.Any(Player.Position)) break; // (something here to look at)
         }

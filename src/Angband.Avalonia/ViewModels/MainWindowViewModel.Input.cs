@@ -195,6 +195,9 @@ public sealed partial class MainWindowViewModel
             case InputAction.Search: Execute(new SearchCommand()); break;
             case InputAction.Explore: Execute(new ExploreCommand()); break;
             case InputAction.EatBest: EatBest(); break;
+            case InputAction.HirelingFollow: Execute(new HirelingOrderCommand(HirelingOrder.Follow)); break;
+            case InputAction.HirelingHold: Execute(new HirelingOrderCommand(HirelingOrder.Hold)); break;
+            case InputAction.HirelingAttack: Execute(new HirelingOrderCommand(HirelingOrder.Attack)); break;
             case InputAction.Confirm: ContextAction(); break;
             case InputAction.Cancel: ClearCount(); break;
             case InputAction.StairsDown: StairsKey(down: true); break;

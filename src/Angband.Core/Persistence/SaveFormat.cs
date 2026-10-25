@@ -56,6 +56,10 @@ public sealed class SaveFile
     public Quests.AvaQuestLog? AvaQuests { get; set; }
     /// <summary>AVABand's statistics (absent in older saves).</summary>
     public Game.PlayStats? Stats { get; set; }
+    /// <summary>AVABand: the sword in your hire (its body is among the level's monsters, as race "hireling"); null for none.</summary>
+    public Game.Hireling? Hireling { get; set; }
+    /// <summary>AVABand: hirelings who fell in your service (absent in older saves).</summary>
+    public List<Game.FallenCompanion>? FallenCompanions { get; set; }
     public Dictionary<string, int> CharacterKills { get; set; } = [];
     /// <summary>AVABand's ghosts of fallen characters: those this character may meet, has met and laid to rest (absent in older saves).</summary>
     public Game.GhostLog? Ghosts { get; set; }
@@ -253,6 +257,8 @@ public sealed class MonsterSave
     public bool Aware { get; set; }
     public bool Active { get; set; }
     public int GroupId { get; set; }
+    /// <summary>AVABand: it bears your hireling a grudge (false in older saves).</summary>
+    public bool HatesAlly { get; set; }
 }
 
 public sealed class ObjectPileSave

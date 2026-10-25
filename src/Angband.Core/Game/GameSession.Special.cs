@@ -95,7 +95,7 @@ public sealed partial class GameSession
     /// <summary>Angband PROBE: learn everything about the monsters in view, and how hurt they are.</summary>
     private bool Probe()
     {
-        var seen = Level.Monsters.All.Where(m => m.IsVisible && Level[m.Position].Has(SquareFlags.View)).ToList();
+        var seen = Level.Monsters.All.Where(m => m.IsVisible && !m.IsAlly && Level[m.Position].Has(SquareFlags.View)).ToList();
         if (seen.Count == 0)
         {
             Publish(new MessageEvent("You sense no monsters to probe."));

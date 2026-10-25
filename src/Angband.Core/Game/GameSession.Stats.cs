@@ -37,6 +37,7 @@ public sealed partial class GameSession
     {
         Events.Subscribe<MonsterDamagedEvent>(e =>
         {
+            if (e.Ally) return; // (the hireling's blows, or blows on it)
             Stats.DamageDealt += e.Damage;
             Stats.BiggestHit = Math.Max(Stats.BiggestHit, e.Damage);
         });

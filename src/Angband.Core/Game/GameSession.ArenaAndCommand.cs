@@ -47,7 +47,7 @@ public sealed partial class GameSession
     }
 
     /// <summary>The monster the spell is aimed at: the explicit target, or the one aimed at by default.</summary>
-    private Monster? AimedMonster() => (_effectTarget ?? AimPoint()) is { } p ? Level.Monsters.At(p) : null;
+    private Monster? AimedMonster() => (_effectTarget ?? AimPoint()) is { } p && Level.Monsters.At(p) is { IsAlly: false } m ? m : null;
 
     /// <summary>
     /// Angband SPOT (Zone of Unmagic): an explosion centred on the player, at full strength out to
@@ -229,6 +229,7 @@ public sealed partial class GameSession
             {
                 var to = m.Position.Step(walk.Direction);
                 if (!Level.InBounds(to) || to == Player.Position) return 0;
+                if (Level.Monsters.At(to) is { IsAlly: true }) return 0; // (not at your hireling)
                 if (Level.Monsters.At(to) is { } victim)
                 {
                     CommandedAttack(m, victim);

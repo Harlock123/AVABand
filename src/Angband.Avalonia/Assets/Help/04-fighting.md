@@ -50,6 +50,26 @@ held, light blue stunned, umber confused, violet afraid. Below the sidebar, **Mo
 shows everything you know about that monster, and fills in as you learn more (View → *Monster
 recall in the sidebar* turns it off).
 
+## Your hireling
+
+A sword hired at the Prancing Pony (Help → Quests) fights beside you: a **warrior** goes for what
+comes near and swings at it, an **archer** shoots what they can see from afar (never through you)
+and keeps a knife for anything beside them. They leave sleeping monsters alone unless you tell them
+otherwise (`*` a target, then **Ctrl+Shift+A**). Monsters fight back: one beside your hireling and
+not beside you strikes at them, and one they have hurt goes for them while they are the nearer. Only
+monsters' blows reach a hireling — spells and breath are aimed at you.
+
+**Your bolts, beams, arrows and throws pass them by**, and your spells that pick out monsters
+(sleep, scare, confuse, dispel, banish...) leave them be; but **blasts catch them** — a ball, a
+breath, an arc or an earthquake hurts them like anything else in it. They never strike you; walk
+into them and you change places.
+
+Below a quarter of their hit points they **fall back** out of the fight, and come back at half. They
+heal slowly (a fiftieth of their hit points every ten turns), and fully when you're back in town.
+They learn from the kills they make (half its worth goes to you) and a little from those they help
+with, more slowly than you, and never past your own level. If they die, it's for good: the
+Knowledge screen's *Companions* page remembers them.
+
 ## Show damage
 
 The option *Show damage player deals to monsters* adds the damage to each hit's message and

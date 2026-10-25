@@ -153,7 +153,7 @@ public sealed partial class GameSession
             return 0;
         }
         var p = Player.Position.Step(dir);
-        if (!Level.InBounds(p) || Level.Monsters.At(p) is not { } monster || !monster.IsVisible)
+        if (!Level.InBounds(p) || Level.Monsters.At(p) is not { IsAlly: false } monster || !monster.IsVisible)
         {
             Publish(new MessageEvent("There is no one there to steal from."));
             return 0;
@@ -344,7 +344,7 @@ public sealed partial class GameSession
     /// <summary>The visible monsters in view that match, nearest first.</summary>
     private List<Monster> MonstersInView(Func<Monster, bool> match) =>
         Level.Monsters.All
-            .Where(m => m.IsVisible && Level[m.Position].Has(SquareFlags.View) && match(m))
+            .Where(m => m.IsVisible && !m.IsAlly && Level[m.Position].Has(SquareFlags.View) && match(m))
             .OrderBy(m => m.Position.DistanceTo(Player.Position)).ThenBy(m => m.Id).ToList();
 
     private static bool IsLiving(MonsterRaceDef race) => !race.Has(MonsterFlags.Undead) && !race.Has("NONLIVING");
@@ -412,7 +412,7 @@ public sealed partial class GameSession
     /// <summary>Angband SWEEP (Whirlwind Attack): blows against every adjacent monster.</summary>
     private void Sweep(int blows)
     {
-        var targets = Level.Neighbors(Player.Position).Select(Level.Monsters.At).OfType<Monster>().OrderBy(m => m.Id).ToList();
+        var targets = Level.Neighbors(Player.Position).Select(Level.Monsters.At).OfType<Monster>().Where(m => !m.IsAlly).OrderBy(m => m.Id).ToList();
         if (targets.Count == 0)
         {
             Publish(new MessageEvent("You swing wildly at the empty air."));
@@ -433,7 +433,7 @@ public sealed partial class GameSession
     private void Leap(int blows)
     {
         var aim = _effectTarget ?? AimPoint();
-        if (aim is not { } target || Level.Monsters.At(target) is not { } monster)
+        if (aim is not { } target || Level.Monsters.At(target) is not { IsAlly: false } monster)
         {
             Publish(new MessageEvent("You have no one to leap at."));
             return;

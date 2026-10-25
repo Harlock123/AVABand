@@ -181,7 +181,7 @@ public sealed partial class GameSession
             if (!Level.InBounds(grid)) continue;
 
             // Visible monsters, visible traps and seen objects stop the run.
-            if (Level.Monsters.At(grid) is { IsVisible: true }) return true;
+            if (Level.Monsters.At(grid) is { IsVisible: true, IsAlly: false }) return true;
             if (Level[grid].Trap != 0 && Level[grid].Has(SquareFlags.TrapVisible)) return true;
             if (Known.RememberedObject(grid) is not null && Level.Objects.At(grid).Any(o => !IsIgnored(o))) return true;
 
@@ -215,7 +215,7 @@ public sealed partial class GameSession
             var newDir = Cycle[Chome[prevDir] + i];
             var grid = Player.Position.Step(FromKeypad(prevDir)).Step(FromKeypad(newDir));
             if (!Level.InBounds(grid)) continue;
-            if (Level.Monsters.At(grid) is { IsVisible: true, Camouflaged: false }) return true;
+            if (Level.Monsters.At(grid) is { IsVisible: true, Camouflaged: false, IsAlly: false }) return true;
         }
 
         if (_runOpenArea)

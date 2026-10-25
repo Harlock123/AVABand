@@ -153,6 +153,7 @@
       <TabItem Header="Quests" Content="{Binding Quests}" />
       <TabItem Header="Feats" Content="{Binding Feats}" />
       <TabItem Header="Upgrades" Content="{Binding Upgrades}" />
+      <TabItem Header="Companions" Content="{Binding Companions}" />
     </TabControl>
   </DockPanel>
 </Window>

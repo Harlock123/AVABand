@@ -29,8 +29,11 @@ public enum ProjectionKind { Missile, Bolt, Beam, Ball, Breath }
 public sealed record ProjectionEvent(Loc From, IReadOnlyList<Loc> Path, IReadOnlyList<Loc> Burst, string? Element,
     ProjectionKind Kind) : IGameEvent;
 
-/// <summary>A monster took damage (for Angband's show_damage numbers).</summary>
-public sealed record MonsterDamagedEvent(int MonsterId, Loc Loc, int Damage) : IGameEvent;
+/// <summary>
+/// A monster took damage (for Angband's show_damage numbers). <paramref name="Ally"/>: dealt by your
+/// hireling, or to it — not damage you dealt (the statistics leave it out).
+/// </summary>
+public sealed record MonsterDamagedEvent(int MonsterId, Loc Loc, int Damage, bool Ally = false) : IGameEvent;
 public sealed record MonsterKilledEvent(string RaceId, Loc Loc, int Experience, bool IsUnique = false) : IGameEvent;
 public sealed record PlayerHurtEvent(int Damage, int Hp, int MaxHp) : IGameEvent;
 
@@ -96,6 +99,10 @@ public sealed record SpellLearnedEvent(string SpellId) : IGameEvent;
 public sealed record SpellCastEvent(string SpellId, string Realm = "arcane") : IGameEvent;
 public sealed record MonsterBredEvent(string RaceId, Loc Loc, bool Seen = false) : IGameEvent;
 public sealed record MonsterSpellEvent(int MonsterId, string SpellId, bool Seen, string? Sound = null) : IGameEvent;
+/// <summary>AVABand: a sword hired at the Prancing Pony.</summary>
+public sealed record HirelingHiredEvent(string Name) : IGameEvent;
+/// <summary>AVABand: your hireling fell (for good).</summary>
+public sealed record HirelingFallenEvent(string Name, string KilledBy) : IGameEvent;
 
 /// <summary>
 /// Synchronous publish/subscribe hub. Presentation concerns (sound, animations, message log)

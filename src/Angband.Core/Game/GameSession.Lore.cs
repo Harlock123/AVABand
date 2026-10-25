@@ -85,6 +85,7 @@ public sealed partial class GameSession
     {
         if (IsHallucinating) return "something strange"; // Angband aux_hallucinate
         var pct = m.MaxHp <= 0 ? 100 : Math.Max(0, m.Hp) * 100 / m.MaxHp;
+        if (m.IsAlly && Hireling is { } h) return HirelingLook(h, pct);
         var states = new List<string>
         {
             pct >= 100 ? "unhurt" : pct >= 60 ? "somewhat wounded" : pct >= 25 ? "wounded" : pct >= 10 ? "badly wounded" : "almost dead",

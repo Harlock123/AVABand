@@ -91,6 +91,7 @@ public sealed partial class MainWindowViewModel
         menu.Add(("Rest", () => HandleAction(InputAction.Rest)));
         if (level.Objects.At(here).Any(i => !Hidden(i))) menu.Add(("Pick up", () => HandleAction(InputAction.Pickup)));
         menu.Add(("Character", ShowCharacterSheet));
+        if (_game.Hireling is { } hireling) menu.Add(($"Orders for {hireling.Name}", () => ShowMenu("", HirelingMenu())));
         if (!CenterPlayer) menu.Add(("Center map", CenterMap));
         menu.Add(("Other", () => ShowMenu("", OtherMenu())));
         return menu;
@@ -126,14 +127,15 @@ public sealed partial class MainWindowViewModel
         var adjacent = Math.Max(Math.Abs(loc.X - player.X), Math.Abs(loc.Y - player.Y)) == 1;
 
         var menu = new List<(string, Action)> { ("Look at", () => LookAt(loc)) };
-        if (monster is not null && !_game.IsHallucinating) menu.Add(("Recall info", () => ShowRecall(monster.Race)));
+        if (monster is { IsAlly: false } && !_game.IsHallucinating) menu.Add(("Recall info", () => ShowRecall(monster.Race)));
         menu.Add(("Use item on", () => AimAt(loc, InputAction.UseItem)));
         if (CanCastSpells) menu.Add(("Cast on", () => AimAt(loc, InputAction.Cast)));
         if (adjacent)
         {
-            if (monster is not null) menu.Add(("Attack", () => Execute(new WalkCommand(dir))));
+            if (monster is { IsAlly: true }) menu.Add(("Change places", () => Execute(new WalkCommand(dir))));
+            else if (monster is not null) menu.Add(("Attack", () => Execute(new WalkCommand(dir))));
             if (known && _game.ChestAt(loc) is not null) menu.Add(("Open chest", () => Execute(new OpenCommand(dir))));
-            if (monster is not null && _game.ClassHas(ClassFlags.Steal)) menu.Add(("Steal", () => Execute(new StealCommand(dir))));
+            if (monster is { IsAlly: false } && _game.ClassHas(ClassFlags.Steal)) menu.Add(("Steal", () => Execute(new StealCommand(dir))));
             if (_game.VisibleTrapAt(loc) is not null)
             {
                 menu.Add(("Disarm", () => Execute(new DisarmCommand(dir))));

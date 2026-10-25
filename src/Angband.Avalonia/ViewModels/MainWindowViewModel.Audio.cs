@@ -187,7 +187,7 @@ public sealed partial class MainWindowViewModel
     {
         if (_audio is null) return;
         var level = _game.Level;
-        if (level.Depth > 0 && level.Monsters.All.FirstOrDefault(m => m.IsVisible && IsGreatFoe(m.Race)) is { } foe)
+        if (level.Depth > 0 && level.Monsters.All.FirstOrDefault(m => m.IsVisible && !m.IsAlly && IsGreatFoe(m.Race)) is { } foe)
             _bossInView = (foe.Id, _game.GameTurn);
         else if (_bossInView is { } b && (level.Depth == 0 || level.Monsters.All.All(m => m.Id != b.Id) || _game.GameTurn - b.Seen > BossMusicLinger))
             _bossInView = null;

@@ -49,6 +49,21 @@ are six lockers in all. Butterbur won't keep artifacts or quest items, and a cha
 what isn't too far beyond them: an item's level at most twice theirs plus five (the locker says at
 which level you can have it). The birth option *The strongroom* turns it off.
 
+## Swords for hire
+
+At the Prancing Pony, *Hire a sword* (with the birth option *Hirelings*, on by default; never in the
+daily dungeon). Each day two or three hard-faced folk by the fire would go down with you — a human,
+dwarf, elf or hobbit, a **warrior** or an **archer**, of your level or up to three below — for a
+**fee** up front and a **share** of the gold you pick up, 10% to 20% (the bigger the share, the
+smaller the fee), taken as you pick it up. Only one at a time. They follow you everywhere — down the
+stairs, through trapdoors and on Word of Recall — and arrive beside you; in town their wounds are
+seen to. Give them orders (follow close, hold here, go for your target: Help → Moving and commands),
+and see Help → Fighting for how they fight. They learn and grow — more hit points, blows and
+damage — but never past your own level. If they fall it's for good; the Knowledge screen's
+*Companions* page keeps them. In town, *Your hireling* at the inn (or your right-click menu) lets
+you part ways, and they go home. Two feats are theirs: a hireling at level 20, and coming back up to
+town from 1000 ft or deeper with the same one.
+
 ## The Arcane Artificer
 
 The town's tenth building (the `0`), where **SlatriBartSlow** cuts sockets for gems into your gear —

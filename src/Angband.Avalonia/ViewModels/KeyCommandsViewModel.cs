@@ -87,6 +87,11 @@ public sealed partial class KeyCommandsViewModel : ObservableObject
             (InputAction.UseItem, "Use any item: quaff, read, eat, aim, use, zap or activate it, as it needs"),
             (InputAction.Steal, "Steal from a monster next to you (rogues)"),
         ]),
+        ("Your hireling", [
+            (InputAction.HirelingFollow, "Hireling: follow close, and fight what comes near (the order they start with)"),
+            (InputAction.HirelingHold, "Hireling: hold this spot (an archer still shoots, a warrior fights only what's beside them)"),
+            (InputAction.HirelingAttack, "Hireling: go for your target (choose one with * first)"),
+        ]),
         ("Repeating", [
             (InputAction.RepeatCommand, "Do the last command again: cast, fire, throw, use an item, dig, disarm... (aimed ones aim afresh)"),
             (InputAction.CommandCount, "Type a count, then walk, hold, tunnel, open or disarm that many times (until disturbed)"),

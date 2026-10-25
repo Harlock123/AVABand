@@ -385,6 +385,7 @@ public sealed class MapView : Control
                 ? new Rect(originX + (p.X - offsetX) * cell.Width, originY + (p.Y - offsetY) * cell.Height, cell.Width, cell.Height)
                 : null;
         if (source.ShownPath.Count > 0) DrawPath(context, source.ShownPath, source.PathIsAim, CellRect, cell);
+        if (source.Ally is { } ally && CellRect(ally) is { } a) context.DrawRectangle(null, AllyPen, a.Deflate(1), 3, 3);
         if (source.Target is { } target && CellRect(target) is { } t) DrawCorners(context, t, TargetPen);
         if (source.Cursor is { } cursor && CellRect(cursor) is { } c) context.DrawRectangle(null, CursorPen, c.Deflate(1));
         if (source.Highlight is { } highlight && CellRect(highlight) is { } h) context.DrawRectangle(null, HighlightPen, h.Deflate(0.5));
@@ -657,6 +658,8 @@ public sealed class MapView : Control
     private static readonly IPen HighlightPen = new Pen(new SolidColorBrush(Color.FromRgb(0xFF, 0xE0, 0x40)), 1);
 
     private static readonly IPen TargetPen = new Pen(new SolidColorBrush(Color.FromRgb(0xFF, 0x40, 0x40)), 2);
+    /// <summary>AVABand's hireling: a rounded green outline, so a friend is never taken for a foe.</summary>
+    private static readonly IPen AllyPen = new Pen(new SolidColorBrush(Color.FromRgb(0x50, 0xE0, 0x60)), 1.5);
     private static readonly IPen CursorPen = new Pen(new SolidColorBrush(Color.FromRgb(0xFF, 0xE0, 0x40)), 2);
 
     private static void DrawCorners(DrawingContext context, Rect r, IPen pen)

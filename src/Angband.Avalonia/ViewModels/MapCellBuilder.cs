@@ -69,6 +69,13 @@ public sealed class MapCellBuilder
             under.TileKey, under.Lighting);
 
     /// <summary>
+    /// AVABand's hireling: their own glyph in the ally's light green (ASCII), and the picture of a monster
+    /// of their folk and role (<paramref name="pictureRaceId"/>) in a tileset.
+    /// </summary>
+    public MapCell Ally(MonsterRaceDef race, string pictureRaceId, MapCell under) =>
+        new(race.Glyph, Color(race.Color), Black, "monster:" + pictureRaceId, TileLighting.Lit, null, under.TileKey, under.Lighting);
+
+    /// <summary>
     /// Whether this monster is the one in a thousand of its race with a rare look — fixed for the
     /// monster (by its id and its level's seed), so it doesn't flicker between redraws or saves.
     /// </summary>

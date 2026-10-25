@@ -18,6 +18,7 @@ public sealed partial class MainWindowViewModel
 
     private void UpdateHealthBar()
     {
+        UpdateHirelingBar(); // (AVABand's hireling has a bar of their own, under this one)
         if (_game.HealthBarFor() is not { } bar)
         {
             HealthVisible = false;

@@ -96,6 +96,11 @@ public sealed partial class GameSession
             SpendAndAdvance(EnergyTable.MoveEnergy);
             return true;
         }
+        if (Level.Monsters.At(target) is { IsAlly: true } ally)
+        {
+            Publish(new MessageEvent($"{Hireling?.Name ?? MonsterName(ally)} is in the way."));
+            return false;
+        }
         if (Level.Monsters.At(target) is { } monster)
         {
             Publish(new MessageEvent("There is a monster in the way!"));

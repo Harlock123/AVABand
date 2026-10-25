@@ -132,7 +132,7 @@ public sealed partial class GameSession
     private int CallMonster(Loc spot, SummonDef type, string? kinBase)
     {
         var callable = Level.Monsters.All
-            .Where(m => SummonOkay(type, m.Race, kinBase) && !ProjectionPath.Projectable(Level, spot, m.Position, 255))
+            .Where(m => !m.IsAlly && SummonOkay(type, m.Race, kinBase) && !ProjectionPath.Projectable(Level, spot, m.Position, 255))
             .ToList();
         if (callable.Count == 0) return 0;
         var mon = callable[Rng.RandInt0(Math.Max(1, callable.Count - 1))]; // as Angband: randint0(count - 1)
