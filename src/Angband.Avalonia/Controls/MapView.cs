@@ -76,12 +76,23 @@ public sealed class MapView : Control
     private global::Avalonia.Threading.DispatcherTimer? _clock;
     private readonly System.Diagnostics.Stopwatch _clockWatch = new();
 
+    /// <summary>
+    /// Whether the effects move on by the view's own clock (the trailer's frame capture turns it off and
+    /// calls <see cref="MapEffects.Advance"/> itself, a frame at a time, as SceneView's tests do).
+    /// </summary>
+    public bool RunsByItself { get; set; } = true;
+
     private void StartClock()
     {
-        _clock ??= new global::Avalonia.Threading.DispatcherTimer(TimeSpan.FromMilliseconds(16),
-            global::Avalonia.Threading.DispatcherPriority.Render, (_, _) => Tick());
+        if (_clock is null)
+        {
+            // (Made stopped: the constructor that takes the callback starts the timer at once.)
+            _clock = new global::Avalonia.Threading.DispatcherTimer(global::Avalonia.Threading.DispatcherPriority.Render)
+                { Interval = TimeSpan.FromMilliseconds(16) };
+            _clock.Tick += (_, _) => Tick();
+        }
         _clockWatch.Restart();
-        _clock.Start();
+        if (RunsByItself) _clock.Start();
         InvalidateVisual();
     }
 

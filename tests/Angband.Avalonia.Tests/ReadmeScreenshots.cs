@@ -64,7 +64,7 @@ public class ReadmeScreenshots
     private static void Descend(MainWindowViewModel vm, int depth = 5) =>
         Descend(vm, depth, ["cave_spider", "bullroarer", "kobold_archer", "cave_spider"], ["cure_light_wounds", "dagger", "phase_door"], awake: 1);
 
-    private static void Descend(MainWindowViewModel vm, int depth, string[] monsters, string[] objects, int awake, int minRoom = 0)
+    internal static void Descend(MainWindowViewModel vm, int depth, string[] monsters, string[] objects, int awake, int minRoom = 0)
     {
         var game = vm.Game;
         game.MarkDebugUsed(); // the jumps below are debug commands; don't stop to ask

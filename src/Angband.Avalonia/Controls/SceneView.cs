@@ -103,8 +103,13 @@ public sealed class SceneView : Control
             _clock?.Stop();
             return;
         }
-        _clock ??= new global::Avalonia.Threading.DispatcherTimer(TimeSpan.FromMilliseconds(16),
-            global::Avalonia.Threading.DispatcherPriority.Render, (_, _) => Tick());
+        if (_clock is null)
+        {
+            // (Made stopped, so RunsByItself holds from the first scene: the constructor that takes the callback starts it.)
+            _clock = new global::Avalonia.Threading.DispatcherTimer(global::Avalonia.Threading.DispatcherPriority.Render)
+                { Interval = TimeSpan.FromMilliseconds(16) };
+            _clock.Tick += (_, _) => Tick();
+        }
         _watch.Restart();
         if (RunsByItself) _clock.Start();
         FireCues(-1, 0);
