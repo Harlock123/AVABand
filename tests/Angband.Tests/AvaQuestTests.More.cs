@@ -165,10 +165,11 @@ public partial class AvaQuestTests
     }
 
     [Fact]
-    public void The_board_posts_bounties_on_uniques_and_scouting_too()
+    public void The_board_posted_bounties_on_uniques_and_scouting_too()
     {
         var q = Start(level: 12);
         var game = q.Game;
+        game.BeforeBounties = true; // (as in a replay from before the bounty poster: since, it has the uniques; AvaQuestTests.Bounty.cs)
         var kinds = new HashSet<string>();
         for (var i = 0; i < 40 && !(kinds.Contains("bounty") && kinds.Contains("scout")); i++)
         {

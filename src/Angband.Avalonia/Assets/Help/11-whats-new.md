@@ -5,6 +5,12 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Bounties on uniques**: the Prancing Pony's notice board now keeps a WANTED poster up — a
+  living unique from your deepest to a little past it, with a hint where it haunts and its picture.
+  Take it, slay the unique, and Butterbur pays gold by its level and a trophy of it; if it dies some
+  other way, the bounty lapses. The quest log lists it, the museum marks the unique "Bounty claimed",
+  and there are two new feats, *Bounty Hunter* and *Hunter of Legends* (Help → Quests). The board's
+  postings have pictures now too: the monster to hunt, the thing to bring.
 - **The town grows with you**: every quest finished and every notice-board job done earns the town
   renown, and in five stages it improves — lamps that light the square at night, the rubble cleared
   and a well dug, market stalls, a fountain and a lamp by every shop door, and last a statue of you —

@@ -23,6 +23,7 @@ public sealed partial class GameSession
     {
         var log = new List<QuestLogEntry>();
         foreach (var job in AvaQuests.Board.Where(j => j.Taken)) log.Add(JobEntry(job));
+        if (Bounty is { Taken: true } bounty) log.Add(BountyEntry(bounty));
         foreach (var state in AvaQuests.Quests.Values.Reverse())
             if (QuestDef(state.Id) is not null) log.Add(StoryEntry(state));
         foreach (var plea in Enumerable.Reverse(Ghosts.Pleas))

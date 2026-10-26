@@ -483,9 +483,16 @@
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:ChoiceRow">
                 <StackPanel Orientation="Horizontal" Margin="0,1">
-                  <TextBlock MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb"
+                  <TextBlock MinWidth="22" Text="{Binding Letter, StringFormat={}{0})}" Foreground="#bbb" VerticalAlignment="Center"
                              FontFamily="{StaticResource MonoFont}" FontSize="12" />
-                  <TextBlock Text="{Binding Text}" Foreground="#eee" FontSize="12" />
+                  <!-- (The notice board's postings: the monster to hunt, the thing to bring.) -->
+                  <Panel Width="24" Height="24" Margin="0,0,6,0" IsVisible="{Binding HasPictureColumn}">
+                    <Border CornerRadius="3" Background="#0b0a08" IsVisible="{Binding HasPicture}">
+                      <controls:MapView Source="{Binding Picture}" FitToBounds="True" UseTiles="{Binding UseTiles}"
+                                        Tileset="{Binding Tileset}" CellFontSize="{Binding FontSize}" />
+                    </Border>
+                  </Panel>
+                  <TextBlock Text="{Binding Text}" Foreground="#eee" FontSize="12" VerticalAlignment="Center" />
                 </StackPanel>
               </DataTemplate>
             </ListBox.ItemTemplate>

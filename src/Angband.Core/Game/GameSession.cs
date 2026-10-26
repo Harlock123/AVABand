@@ -658,6 +658,7 @@ public sealed partial class GameSession : ITurnHandler
             ApplyTownLighting();
             if (StoreDays > 0) UpdateStores();
             if (fromDepth > 0) RenewBoard(); // the notice board's untaken postings change while you're away
+            if (fromDepth > 0) BountyOnReturn(); // (and its bounty on a unique may lapse, or come down)
             if (fromDepth > 0) CaravanOnReturn(); // (AVABand: a merchant caravan comes, stays, or goes)
             if (fromDepth > 0) TownWelcome(); // (AVABand: what your renown has done for the town)
         }

@@ -91,9 +91,9 @@ public sealed partial class MainWindowViewModel
     /// <summary>After a command: what's new for the museum is recorded (and an artifact or unique said).</summary>
     private void CheckMuseum()
     {
-        var before = _museum.Artifacts.Count + _museum.Uniques.Count + _museum.Monsters.Count;
+        var before = _museum.Artifacts.Count + _museum.Uniques.Count + _museum.Monsters.Count + _museum.CountBounties();
         foreach (var name in _museum.Check(_game)) AddMessage($"A first for the museum: {name}.");
-        if (_museum.Artifacts.Count + _museum.Uniques.Count + _museum.Monsters.Count != before) _records?.SaveMuseum(_museum);
+        if (_museum.Artifacts.Count + _museum.Uniques.Count + _museum.Monsters.Count + _museum.CountBounties() != before) _records?.SaveMuseum(_museum);
     }
 
     [RelayCommand]
@@ -123,8 +123,8 @@ public sealed partial class MainWindowViewModel
 
         var uniques = Angband.Core.Records.Museum.UniqueRaces(_data).OrderBy(r => r.Depth).ThenBy(r => r.Name, StringComparer.Ordinal).Select(r =>
             _museum.Uniques.TryGetValue(r.Id, out var e)
-                ? Drawn(new MuseumPiece(r.Name, By(e, "Slain"), true, new SingleCellSource(_cells.Monster(r, floor)),
-                    $"{r.Name}\n\n{By(e, "Slain")}.\n\n{_game.Recall(r)}"))
+                ? Drawn(new MuseumPiece(r.Name, By(e, "Slain") + (e.Bounty ? " · Bounty claimed" : ""), true, new SingleCellSource(_cells.Monster(r, floor)),
+                    $"{r.Name}\n\n{By(e, "Slain")}.{(e.Bounty ? " Bounty claimed." : "")}\n\n{_game.Recall(r)}"))
                 : _museum.Monsters.ContainsKey(r.Id)
                     ? Drawn(new MuseumPiece(r.Name, "Seen, but never slain", false, new SingleCellSource(_cells.Monster(r, floor)),
                         $"{r.Name}\n\nSeen, but never slain.\n\n{_game.Recall(r)}"))

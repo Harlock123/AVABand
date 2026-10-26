@@ -10,14 +10,14 @@ Press **Ctrl+J** (or Game → Quest log) for the quest log: a card for every que
 job you've taken, those under way first. Each says who gave it, where it stands ("Step 2 of 3",
 "4 of 7 killed"), the steps behind you (ticked) and the one at hand, and for a job its pay and a bar
 for the count. Quests you've finished are listed after, faded. You can have as many story quests
-going at once as you like, and up to five board jobs. (The Knowledge screen's **Quests** page, `~`,
+going at once as you like, up to five board jobs, and the board's bounty on a unique. (The Knowledge screen's **Quests** page, `~`,
 still has the journal too.)
 
 ## The Prancing Pony
 
 The inn in town (the `9`). Walk in and Butterbur will tell you who has work: the quests on offer
 depend on your level. There is also a **notice board** with smaller jobs — hunt so many of a
-monster, bring back so many of something found only in the dungeon, claim a **bounty** on a unique,
+monster, bring back so many of something found only in the dungeon,
 or **scout** down to a depth a few levels past your deepest — or carry a sealed **parcel** to one of
 the shops in town (it rides in your quest satchel; walking into the shop hands it over), or **rescue** a
 traveller trapped at a depth before time runs out (arriving there, you hear them crying for help; step to
@@ -29,6 +29,20 @@ count, and pays when the last arrives.
 
 **Quest items ride in your quest satchel**: they're listed under their own heading, after your
 pack, and take none of its 23 slots (they still weigh what they weigh).
+
+## Bounties on uniques
+
+Beside the jobs, the board keeps one **bounty** poster up: WANTED, a living unique you could face —
+one whose home is from your deepest to five levels past it (never Sauron or Morgoth, nor one you've
+already slain) — with a rough idea where it's found ("said to haunt the levels around 600–750 ft") and
+the reward. Take it down to take it on (it doesn't count against your five jobs). Slay the unique
+while it's yours (your hireling's kill counts too) and Butterbur pays at the inn: gold by the
+unique's level, and a **trophy** of it — its own kind if it leaves one (a dragon's scale, a troll's
+hide), otherwise a *Hunter's Trophy* inscribed with its name. If the unique dies some other way, the
+bounty lapses. A poster nobody takes comes down after three of your returns to town, and a new one
+goes up whenever one is claimed. The quest log lists the bounty you've taken, the museum marks a
+unique slain for one "Bounty claimed", and there are feats for claiming one and five. There are no
+bounties in the daily dungeon, the weekly challenge or the tutorial.
 
 ## The town grows with you
 

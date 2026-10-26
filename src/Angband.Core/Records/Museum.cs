@@ -12,11 +12,13 @@ public sealed class MuseumEntry
     /// <summary>"Bob the Elf Mage"; empty for what was known before the museum opened.</summary>
     public string Character { get; set; } = "";
     public int Depth { get; set; }
+    /// <summary>For a unique: whether one of your characters has claimed a bounty on it (false in older museums).</summary>
+    public bool Bounty { get; set; }
 }
 
 /// <summary>
 /// The museum (AVABand's own, <c>museum.json</c> beside the scores): across every character, each
-/// standard artifact found, each unique slain, and each kind of monster seen — and who did it first.
+/// standard artifact found, each unique slain (and whether for a bounty), and each kind of monster seen — and who did it first.
 /// Like the feats, a cheat's, a debug user's, the tutorial's and a replay's finds don't count; a game
 /// with random artifacts adds no artifacts (they aren't the standard set).
 /// </summary>
@@ -33,6 +35,9 @@ public sealed class Museum
 
     /// <summary>The kinds of monster the museum counts: the game's own races (not ghosts or hirelings).</summary>
     public static IEnumerable<MonsterRaceDef> Races(GameData data) => data.Monsters.Where(r => !r.Has(MonsterFlags.Questor) || r.IsUnique);
+
+    /// <summary>How many uniques' places are marked "Bounty claimed".</summary>
+    public int CountBounties() => Uniques.Values.Count(e => e.Bounty);
 
     /// <summary>The uniques it counts.</summary>
     public static IEnumerable<MonsterRaceDef> UniqueRaces(GameData data) => Races(data).Where(r => r.IsUnique);
@@ -92,6 +97,9 @@ public sealed class Museum
                 Uniques[id] = Entry();
                 news.Add(race.Name);
             }
+        // A bounty claimed on a unique marks its place, whoever slew it first.
+        foreach (var id in game.AvaQuests.BountiesClaimed)
+            if (Uniques.TryGetValue(id, out var slain)) slain.Bounty = true;
         foreach (var (id, l) in game.Lore.Races)
             if ((l.Sights > 0 || l.TotalKills > 0) && !Monsters.ContainsKey(id) && data.Monster(id) is { } race && (!race.Has(MonsterFlags.Questor) || race.IsUnique))
                 Monsters[id] = Entry();

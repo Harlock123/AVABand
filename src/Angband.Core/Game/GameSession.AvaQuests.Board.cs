@@ -10,7 +10,8 @@ namespace Angband.Core.Game;
 // face, or scouting a depth no deeper than a few levels past your deepest — renewed whenever you come
 // back up to town. All five can be taken at once. A "bring" job counts what's carried and what's
 // in the Home, and can be handed in a little at a time (Progress counts what Butterbur has had); hunts count from when they're taken, and the pay is collected
-// at the inn.
+// at the inn. (Bounties on uniques have their own poster now, GameSession.AvaQuests.Bounty.cs; the
+// postings have them only where that's off: seeded runs, the tutorial, and replays from before it.)
 public sealed partial class GameSession
 {
     public const int BoardPostings = 5;
@@ -47,7 +48,8 @@ public sealed partial class GameSession
         if (Rng.OneIn(3))
             return Rng.RandInt0(4) switch
             {
-                0 => MakeBounty(deepest), 1 => MakeScouting(deepest), 2 => MakeParcel(deepest), _ => MakeRescue(deepest),
+                0 => BountiesOn ? null : MakeBounty(deepest), // (the bounty poster has the uniques now)
+                1 => MakeScouting(deepest), 2 => MakeParcel(deepest), _ => MakeRescue(deepest),
             };
         // Things the dungeon gives up that no shop sells.
         var stocked = Data.Stores.SelectMany(s => s.Staples.Concat(s.Stocked)).ToHashSet();
@@ -162,22 +164,38 @@ public sealed partial class GameSession
     private void ShowBoard()
     {
         if (AvaQuests.Board.Count == 0) RenewBoard();
-        var choices = new List<(string, string)>();
+        if (BountiesOn && AvaQuests.Bounty is null) PostBounty();
+        var choices = new List<(string Id, string Label, string? Picture)>();
+        AddBountyChoices(choices);
         var taken = AvaQuests.Board.Count(j => j.Taken);
         foreach (var job in AvaQuests.Board)
         {
-            if (job.Taken) choices.Add(($"board:drop:{job.Id}", $"Give up: {JobTitle(job)} ({job.Reward} gold)"));
-            else if (taken < BoardTakenMax) choices.Add(($"board:take:{job.Id}", $"Take: {JobTitle(job)} ({job.Reward} gold)"));
+            if (job.Taken) choices.Add(($"board:drop:{job.Id}", $"Give up: {JobTitle(job)} ({job.Reward} gold)", JobPicture(job)));
+            else if (taken < BoardTakenMax) choices.Add(($"board:take:{job.Id}", $"Take: {JobTitle(job)} ({job.Reward} gold)", JobPicture(job)));
         }
-        choices.Add(("inn:", "Back"));
-        AskQuest("The notice board", taken >= BoardTakenMax
-                ? "Notes pinned three deep, most of them years old. You already have as many jobs as you can manage."
-                : "Notes pinned three deep, most of them years old. A few are fresh.",
-            [.. choices]);
+        choices.Add(("inn:", "Back", null));
+        var text = taken >= BoardTakenMax
+            ? "Notes pinned three deep, most of them years old. You already have as many jobs as you can manage."
+            : "Notes pinned three deep, most of them years old. A few are fresh.";
+        if (Bounty is { } bounty) text += "\n\n" + BountyPoster(bounty);
+        AskQuest("The notice board", text, choices);
     }
+
+    /// <summary>What the board draws beside a posting: the monster to hunt, or the thing to bring.</summary>
+    private static string? JobPicture(BoardJob job) => job.Kind switch
+    {
+        "hunt" or "bounty" => $"monster:{job.Target}",
+        "gather" => $"object:{job.Target}",
+        _ => null,
+    };
 
     private void BoardChoice(string[] parts)
     {
+        if (parts.ElementAtOrDefault(1) == "bounty")
+        {
+            BountyChoice(parts.ElementAtOrDefault(2) ?? "");
+            return;
+        }
         if (parts.Length < 3 || !int.TryParse(parts[2], out var id) || AvaQuests.Board.FirstOrDefault(j => j.Id == id) is not { } job) return;
         switch (parts[1])
         {

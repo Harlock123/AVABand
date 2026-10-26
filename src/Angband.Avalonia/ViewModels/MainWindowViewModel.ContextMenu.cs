@@ -48,13 +48,18 @@ public sealed partial class MainWindowViewModel
     /// <summary>A paragraph under the menu's title (a quest's words), or empty.</summary>
     [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty] private string _promptText = "";
 
-    private void ShowMenu(string title, List<(string Label, Action Act)> entries, string text = "")
+    /// <param name="pictures">What to draw beside each entry (null for none), if any are drawn.</param>
+    private void ShowMenu(string title, List<(string Label, Action Act)> entries, string text = "", IReadOnlyList<IMapSource?>? pictures = null)
     {
         PromptRows.Clear();
         SpellPromptRows.Clear();
         ChoiceRows.Clear();
         _menuActions = [.. entries.Select(e => e.Act)];
-        for (var i = 0; i < entries.Count; i++) ChoiceRows.Add(new ChoiceRow(((char)('a' + i)).ToString(), entries[i].Label));
+        for (var i = 0; i < entries.Count; i++)
+            ChoiceRows.Add(new ChoiceRow(((char)('a' + i)).ToString(), entries[i].Label)
+            {
+                Picture = pictures?.ElementAtOrDefault(i), HasPictureColumn = pictures is not null, UseTiles = UseTiles, Tileset = SelectedTileset, FontSize = MapFontSize,
+            });
         PromptTitle = title.Length > 0 ? title : "Choose:";
         PromptText = text;
         PromptSelectedIndex = 0;

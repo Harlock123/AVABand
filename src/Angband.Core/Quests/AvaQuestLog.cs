@@ -55,7 +55,29 @@ public sealed class AvaQuestLog
     /// <summary>A merchant caravan in the town square, if one is camped there (AVABand's own).</summary>
     public Caravan? Caravan { get; set; }
 
+    /// <summary>The bounty on a unique posted on the notice board, if there is one (none in older saves).</summary>
+    public UniqueBounty? Bounty { get; set; }
+
+    /// <summary>The uniques whose bounties this character has claimed (race ids, oldest first).</summary>
+    public List<string> BountiesClaimed { get; set; } = [];
+
     public AvaQuestState? Get(string id) => Quests.GetValueOrDefault(id);
+}
+
+/// <summary>
+/// A bounty on a living unique, posted on the notice board: who, the pay, the rough depth the poster
+/// gives, whether you've taken it, whether you've slain it (and have the pay to collect), and how many
+/// more of your returns to town it stays up untaken.
+/// </summary>
+public sealed class UniqueBounty
+{
+    public string Race { get; set; } = "";
+    public long Reward { get; set; }
+    /// <summary>The shallowest level of the poster's hint ("said to haunt the levels around..."); the hint spans four.</summary>
+    public int HintFrom { get; set; }
+    public bool Taken { get; set; }
+    public bool Slain { get; set; }
+    public int VisitsLeft { get; set; }
 }
 
 /// <summary>A merchant caravan: where it's camped, how many more of your returns it stays, and its wares (as saves write items) and prices.</summary>

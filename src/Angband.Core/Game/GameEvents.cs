@@ -43,8 +43,11 @@ public sealed record PlayerHurtEvent(int Damage, int Hp, int MaxHp) : IGameEvent
 /// </summary>
 public sealed record DamageNoteEvent(int Damage) : IGameEvent;
 
-/// <summary>One answer to a quest's question (its id comes back in a <see cref="QuestChoiceCommand"/>).</summary>
-public sealed record QuestChoice(string Id, string Label);
+/// <summary>
+/// One answer to a quest's question (its id comes back in a <see cref="QuestChoiceCommand"/>), and what
+/// to draw beside it, if anything: "monster:id" or "object:id" (the notice board's postings).
+/// </summary>
+public sealed record QuestChoice(string Id, string Label, string? Picture = null);
 
 /// <summary>
 /// AVABand's quests ask something — at the inn, a sealed door, a forge, a shop — and the UI shows the

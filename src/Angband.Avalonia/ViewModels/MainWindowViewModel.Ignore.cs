@@ -4,8 +4,17 @@ using Angband.Core.Items;
 
 namespace Angband.Avalonia.ViewModels;
 
-/// <summary>One line of a choice menu (the ignore menu).</summary>
-public sealed record ChoiceRow(string Letter, string Text);
+/// <summary>One line of a choice menu (the ignore menu), and a picture beside it if it has one (the notice board's postings).</summary>
+public sealed record ChoiceRow(string Letter, string Text)
+{
+    public IMapSource? Picture { get; init; }
+    public bool UseTiles { get; init; }
+    public Angband.Data.Tiles.TilesetManifest? Tileset { get; init; }
+    public double FontSize { get; init; } = 16;
+    public bool HasPicture => Picture is not null;
+    /// <summary>Whether the menu has pictures at all (a row without one keeps its place, so the words line up).</summary>
+    public bool HasPictureColumn { get; init; }
+}
 
 // Ignoring in the UI (Angband ui-object.c): Ctrl+D picks an item, then offers "This item only",
 // "All <kind>", "All <type> <ego>", "All <quality> <type>"; 'K' shows ignored items again.

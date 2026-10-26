@@ -55,6 +55,8 @@ public static class Feats
         feats.Add(new("ghost_avenged", "Unfinished Business", "Slay what killed a ghost that pleaded with you, and lay it to rest.",
             g => g.Ghosts.Pleas.Any(p => p.Stage == GhostPlea.Avenged)));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
+        feats.Add(new("bounty", "Bounty Hunter", "Claim a bounty on a unique from the notice board.", g => g.AvaQuests.BountiesClaimed.Count >= 1));
+        feats.Add(new("bounty_5", "Hunter of Legends", "Claim five bounties on uniques with one character.", g => g.AvaQuests.BountiesClaimed.Count >= 5));
         feats.Add(new("hireling_20", "Old Comrades", "See a hireling of yours reach level 20.", g => g.Hireling is { Level: >= 20 }));
         feats.Add(new("hireling_deep", "There and Back Again",
             $"Come back up to town from {20 * data.Constants.FeetPerLevel} ft or deeper with the same hireling.", g => g.Hireling is { DeepestReturned: >= 20 }));

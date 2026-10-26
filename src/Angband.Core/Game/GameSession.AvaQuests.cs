@@ -29,10 +29,14 @@ public sealed partial class GameSession
     private HashSet<string> _questChoices = [];
 
     /// <summary>Asks the player something; the answers allowed are these, until the next question.</summary>
-    private void AskQuest(string title, string text, params (string Id, string Label)[] choices)
+    private void AskQuest(string title, string text, params (string Id, string Label)[] choices) =>
+        AskQuest(title, text, [.. choices.Select(c => (c.Id, c.Label, (string?)null))]);
+
+    /// <summary>Asks the player something, with a picture beside some of the answers ("monster:id", "object:id").</summary>
+    private void AskQuest(string title, string text, IReadOnlyList<(string Id, string Label, string? Picture)> choices)
     {
         _questChoices = choices.Select(c => c.Id).ToHashSet();
-        Publish(new QuestPromptEvent(title, text, [.. choices.Select(c => new QuestChoice(c.Id, c.Label))]));
+        Publish(new QuestPromptEvent(title, text, [.. choices.Select(c => new QuestChoice(c.Id, c.Label, c.Picture))]));
     }
 
     /// <summary>An answer: only one the last question offered counts.</summary>
@@ -99,6 +103,9 @@ public sealed partial class GameSession
             if (QuestDef(state.Id) is { } def) list.Add((def.Name, state.IsDone, QuestText(state.Id)));
         foreach (var job in AvaQuests.Board.Where(j => j.Taken))
             list.Add(($"Notice board: {JobTitle(job)}", false, JobText(job)));
+        if (Bounty is { Taken: true } bounty)
+            list.Add(($"Notice board: {BountyTitle(bounty)}", false,
+                $"{BountyTitle(bounty)} ({(bounty.Slain ? "done" : $"said to haunt {BountyHint(bounty)}")}), for {BountyPay(bounty)} at the Prancing Pony."));
         return list;
     }
 
@@ -230,6 +237,7 @@ public sealed partial class GameSession
                 choices.AddRange(DeepInnChoices());
                 foreach (var job in AvaQuests.Board.Where(j => j.Taken && JobComplete(j)))
                     choices.Add(($"board:collect:{job.Id}", $"Collect your pay: {JobTitle(job)}"));
+                if (Bounty is { Slain: true } bounty) choices.Add(("board:bounty:collect", $"Collect the bounty: {BountyTitle(bounty)}"));
                 // A "bring" job not yet whole: hand in what you have (carried or at home) toward it.
                 foreach (var job in AvaQuests.Board.Where(j => j.Taken && j.Kind == "gather" && !JobComplete(j) && GatherOnHand(j) > 0))
                     choices.Add(($"board:deliver:{job.Id}", $"Hand in what you have: {JobTitle(job)} ({job.Progress + GatherOnHand(job)} of {job.Count})"));
@@ -366,6 +374,7 @@ public sealed partial class GameSession
         }
         StoryMonsterKilled(monster);
         BoardMonsterKilled(monster);
+        BountyMonsterKilled(monster);
     }
 
     /// <summary>A quest monster that won't die yet (Hathol, while his altar lies profaned). True if it rose again.</summary>
