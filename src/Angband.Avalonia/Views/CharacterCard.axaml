@@ -34,5 +34,26 @@
                    Foreground="#e2d3ae" TextWrapping="Wrap" Margin="0,16,0,0" />
       </StackPanel>
     </DockPanel>
+    <!-- The frame (an unlock earned through feats): a band, a thin line inside it, a glow, and ornaments on the band. -->
+    <Panel x:Name="FramePanel" IsVisible="{Binding HasFrame}">
+      <Border BorderBrush="{Binding Frame.Outer}" BorderThickness="{Binding Frame.BandThickness}" BoxShadow="{Binding Frame.Glow}" />
+      <Border BorderBrush="{Binding Frame.Inner}" BorderThickness="2" Margin="{Binding Frame.InnerMargin}" Opacity="0.85" />
+        <Path HorizontalAlignment="Left" VerticalAlignment="Top" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path HorizontalAlignment="Right" VerticalAlignment="Top" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path HorizontalAlignment="Left" VerticalAlignment="Bottom" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path HorizontalAlignment="Right" VerticalAlignment="Bottom" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path IsVisible="{Binding HasSideOrnaments}" HorizontalAlignment="Center" VerticalAlignment="Top" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path IsVisible="{Binding HasSideOrnaments}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path IsVisible="{Binding HasSideOrnaments}" HorizontalAlignment="Left" VerticalAlignment="Center" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+        <Path IsVisible="{Binding HasSideOrnaments}" HorizontalAlignment="Right" VerticalAlignment="Center" Data="{Binding Frame.OrnamentShape}" Fill="{Binding Frame.Ornament}" Stroke="#99000000" StrokeThickness="1.5"
+              Stretch="Fill" Width="{Binding Frame.OrnamentSize}" Height="{Binding Frame.OrnamentSize}" Margin="{Binding Frame.OrnamentMargin}" />
+    </Panel>
   </Panel>
 </UserControl>

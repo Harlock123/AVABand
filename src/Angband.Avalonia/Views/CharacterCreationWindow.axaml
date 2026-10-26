@@ -107,6 +107,14 @@
         <Border Background="#12151c" CornerRadius="6" Padding="12" Margin="0,10,0,0">
           <TextBlock Text="{Binding Preview}" TextWrapping="Wrap" FontSize="13" LineHeight="20" />
         </Border>
+        <!-- The starting kit: the class's own, or one unlocked through feats (only shown when there is a choice). -->
+        <StackPanel x:Name="KitPanel" Spacing="4" Margin="0,6,0,0" IsVisible="{Binding HasKitChoice}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Starting kit" FontWeight="SemiBold" VerticalAlignment="Center" Width="84" />
+            <ComboBox x:Name="KitBox" ItemsSource="{Binding Kits}" SelectedItem="{Binding SelectedKit}" MinWidth="200" />
+          </StackPanel>
+          <TextBlock Text="{Binding SelectedKit.Description}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" />
+        </StackPanel>
         <!-- Difficulty presets (they set the birth options below) and the challenge runs. -->
         <StackPanel x:Name="DifficultyPanel" Spacing="6" Margin="0,10,0,4">
           <StackPanel Orientation="Horizontal" Spacing="8">

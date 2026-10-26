@@ -50,6 +50,12 @@ public sealed class AppSettings
     /// <summary>Interface options (Angband's '=' menu), by Angband name; missing ones take their defaults.</summary>
     public Dictionary<string, bool> Options { get; set; } = [];
 
+    /// <summary>The frame drawn around character cards (an unlock's id: "trophy", "gold"...; null: plain).</summary>
+    public string? CardFrame { get; set; }
+
+    /// <summary>How many times the title screen has shown: it takes the unlocked title scenes in turn.</summary>
+    public int TitleShows { get; set; }
+
     /// <summary>
     /// The mods switched off in Settings → Mods, by folder name (AVABand's own): the loader skips them at the
     /// next start. Mods are on unless listed here, so a newly added one loads without a visit to Settings.
@@ -107,4 +113,6 @@ public sealed class SavedCharacter
     public Dictionary<string, int> AutorollMinimums { get; set; } = [];
     /// <summary>The birth options chosen with this character.</summary>
     public Dictionary<string, bool> BirthOptions { get; set; } = [];
+    /// <summary>The starting kit chosen (an alternative unlocked through feats; null: the class's own).</summary>
+    public string? Kit { get; set; }
 }

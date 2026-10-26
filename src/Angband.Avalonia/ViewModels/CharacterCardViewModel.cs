@@ -11,6 +11,14 @@ public sealed record CharacterCardViewModel(string Name, string Title, IReadOnly
 {
     public bool HasEpitaph => Epitaph is not null;
     public string Mark => Fallen ? "Here lies" : "Still adventuring";
+
+    /// <summary>The frame drawn round the card (an unlock chosen in Settings → Display; null: none).</summary>
+    public CardFrameStyle? Frame { get; init; }
+
+    public bool HasFrame => Frame is not null;
+
+    /// <summary>The ornaments half-way along the sides, for the frames that have them.</summary>
+    public bool HasSideOrnaments => Frame?.SideOrnaments == true;
 }
 
 public sealed partial class MainWindowViewModel
@@ -59,6 +67,7 @@ public sealed partial class MainWindowViewModel
 
     private void RequestCard(CharacterCardViewModel card)
     {
+        card = card with { Frame = ChosenCardFrame };
         if (CardDirectory is not { } folder)
         {
             AddMessage("Character cards are saved beside your records; there are none here.");

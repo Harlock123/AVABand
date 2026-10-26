@@ -94,7 +94,11 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
 - A monster you don't know is dangerous until you know it isn't. Look at it (`x` or `l`, as your
   keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all —
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,
-  quests, the daily dungeon, a win with each class), with who reached each first. **Game → The graveyard** keeps a
+  quests, the daily dungeon, a win with each class), with who reached each first. Some feats unlock
+  something — another title-screen picture, a frame for your character cards (Settings → Display →
+  *Card frame*), or another starting kit on the creation screen (the *Delver's kit* and the
+  *Scholar's kit* trade the Word of Recall scroll for goods worth no more, so the gold left over is
+  the same or a little more) — and the **Unlocks** page lists them all, with what earns each. **Game → The graveyard** keeps a
   headstone for every character who died or retired, with their story — and *Watch their last
   moments* replays how they fell, while *Save a clip* makes an animated picture (a GIF) of it to
   share (the menu when a character dies offers one too). **Game → The museum** gathers what all your characters have

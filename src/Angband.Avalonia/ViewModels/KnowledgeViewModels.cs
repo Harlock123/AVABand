@@ -224,6 +224,9 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     /// <summary>AVABand: your hireling, and those who fell in your service.</summary>
     public KnowledgeCategoryViewModel? Companions { get; init; }
 
+    /// <summary>AVABand: the rewards feats unlock, earned or not.</summary>
+    public KnowledgeCategoryViewModel? Unlocks { get; init; }
+
     /// <summary>The character history, as Angband's history screen and dump show it (the lines the filter lets through).</summary>
     [ObservableProperty] private string _history = "";
 
@@ -290,7 +293,7 @@ public sealed partial class KnowledgeViewModel : ObservableObject
         RefreshHistory();
     }
 
-    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests, 13 feats, 14 upgrades, 15 companions).</summary>
+    /// <summary>The open tab (0 monsters, 1 objects, 2 runes, 3 curses, 4 egos, 5 artifacts, 6 features, 7 traps, 8 shapes, 9 equipment, 10 home, 11 history, 12 quests, 13 feats, 14 upgrades, 15 companions, 16 unlocks).</summary>
     [ObservableProperty] private int _selectedTab;
 }
 
@@ -322,6 +325,7 @@ public sealed partial class MainWindowViewModel
             Feats = CreateFeatsPage(),
             Upgrades = CreateUpgrades(),
             Companions = CreateCompanions(),
+            Unlocks = CreateUnlocksPage(),
         };
         knowledge.RefreshHistory();
         return knowledge;

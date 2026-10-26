@@ -78,8 +78,9 @@ public sealed partial class GameSession
         ApplySkills();
 
         // Angband player_outfit: the class's kit, paid for out of the starting gold (never below nothing).
+        // (AVABand: or one of its alternative kits, worth no more.)
         InitItems(generalKit: false);
-        var worth = GiveKit(cls.StartingKit, $"Class '{cls.Id}' kit");
+        var worth = GiveKit(StartingKits.For(cls, spec.Kit), $"Class '{cls.Id}' kit");
         p.Gold = (int)Math.Max(0, Birth.StartingGold(spec, Data.Constants) - worth);
 
         // Necromancers shun the light: the torch everyone starts with goes in the pack.

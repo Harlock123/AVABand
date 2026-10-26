@@ -5,6 +5,13 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Unlocks earned through feats**: rewards for collectors that change nothing about the game's
+  balance. Some feats unlock another picture behind the title screen (they take turns), a frame for
+  your character cards (eight in all: trophy, spectral, iron, dawn, gold, and silver, elven and
+  mithril for 5, 15 and 30 feats; choose one in Settings → Display), or another starting kit on the
+  creation screen — the *Delver's kit* or the *Scholar's kit*, which trade the Word of Recall scroll
+  for supplies or scrolls of lore worth no more. A feat that unlocks something says so, and the
+  Knowledge screen's new **Unlocks** page lists them all, with what earns each.
 - **Clips**: *Save a clip* in the graveyard (beside *Watch their last moments*), or on the menu
   when a character dies, makes an animated picture (a GIF) of their last moments to share — the
   end of their game played back from its replay, in the tiles or letters you play with, with who

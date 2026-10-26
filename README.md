@@ -69,6 +69,24 @@ tutorial and replays earn none. The first time, the feats characters did before 
 are filled in from the high-score table (the depths, levels and wins it records; no cheat ever
 enters it), each credited to the first to do it.
 
+**Unlocks** (AVABand's own, `Records/Unlocks.cs`): rewards earned through feats that change nothing
+about the game's balance — a reason to start another character. Four **title scenes** (bundled scene
+pictures: the deep-descent shaft for 1000 ft, the Prancing Pony's letter of thanks for a first Pony
+quest, the dwarves' halls for the Heart given back, the fallen crown for ten uniques) take turns
+behind the title (`AppSettings.TitleShows`). Eight **card frames** (trophy for a first unique,
+spectral for a ghost laid to rest, iron for *Iron Will*, dawn for a daily try, gold for a win, and
+silver, elven and mithril for 5, 15 and 30 feats of any kind) are drawn round character cards with
+Avalonia shapes and brushes (`ViewModels/CardFrames.cs`, chosen in Settings → Display → *Card
+frame*). Two **starting kits** (`Game/StartingKits.cs`: the *Delver's kit* for 2000 ft, the
+*Scholar's kit* for level 20) are offered on the creation screen (`CharacterSpec.Kit`, null for the
+class's own): each trades the class kit's Word of Recall scroll for goods worth no more (ten flasks
+of oil, five rations and five Phase Door; or Magic Mapping, Detect Invisible, Blessing, Light and
+Remove Hunger), so the kit is paid for out of the same starting gold and leaves as much or a little
+more; with *birth_no_recall* nothing is traded, and quick starts and the daily dungeon always take
+the standard kit. Unlocks are worked out from `feats.json` (nothing more is saved); a feat that
+unlocks something says so ("Unlocked: The Long Fall (a title-screen scene: ...)."), and the
+Knowledge screen's **Unlocks** page lists every one, earned or not, with what earns it.
+
 **The graveyard** (AVABand's own, `Records/Graveyard.cs`; Game → The graveyard..., and on the title
 screen once someone lies there): a headstone for every character that died or retired — not just
 the hundred best the high-score table keeps — carved with its name, race and class, level and

@@ -144,7 +144,7 @@ public sealed partial class MainWindowViewModel
         {
             var board = _records.LoadDaily();
             var best = board.For(day).First();
-            foreach (var feat in _featBook.CheckBoard(board, FeatDefs)) AddMessage($"Feat: {feat.Name}! ({feat.Description})");
+            AnnounceFeats(_featBook.CheckBoard(board, FeatDefs));
             _records.SaveFeats(_featBook);
             AddMessage($"Daily dungeon, {day}: try {done.Attempt} reached {done.MaxDepth * 50} ft"
                        + (ReferenceEquals(best, done) || best.Attempt == done.Attempt ? " — your best today." : $" (your best today: {best.MaxDepth * 50} ft)."));

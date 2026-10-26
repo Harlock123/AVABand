@@ -75,6 +75,12 @@ public sealed partial class ChallengeRow : ObservableObject
     }
 }
 
+/// <summary>A starting kit the creation screen offers: the class's own (no id), or one unlocked through feats.</summary>
+public sealed record KitChoice(string? Id, string Label, string Description)
+{
+    public override string ToString() => Label;
+}
+
 /// <summary>One way of choosing stats, as the creation screen lists it.</summary>
 public sealed record StatMethodChoice(StatMethod Method, string Label)
 {
@@ -109,9 +115,14 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     private readonly GameData _data;
     private readonly Random _random = new();
 
-    public CharacterCreationViewModel(GameData data, CharacterSpec? last, IReadOnlyDictionary<string, int>? minimums = null)
+    public CharacterCreationViewModel(GameData data, CharacterSpec? last, IReadOnlyDictionary<string, int>? minimums = null,
+        IReadOnlyList<StartingKitDef>? kits = null)
     {
         _data = data;
+        // The class's own kit, then any others unlocked through feats (AVABand's own).
+        Kits = [new KitChoice(null, "Standard kit", "The class's own kit, as Angband gives it."),
+                .. (kits ?? []).Select(k => new KitChoice(k.Id, k.Name, k.Description + " The gold left over is the same or a little more."))];
+        _selectedKit = Kits.FirstOrDefault(k => k.Id == last?.Kit) ?? Kits[0];
         Races = data.Races;
         Classes = [.. data.Classes, .. data.Multiclasses]; // (Angband's nine, then AVABand's Warrior/Mage and the rest)
         foreach (var (id, label) in StatLabels)
@@ -139,6 +150,16 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
 
     public IReadOnlyList<RaceDef> Races { get; }
     public IReadOnlyList<ClassDef> Classes { get; }
+
+    /// <summary>The starting kits on offer: the standard one, and those unlocked through feats.</summary>
+    public IReadOnlyList<KitChoice> Kits { get; }
+
+    /// <summary>Whether there is a kit to choose (some unlocked).</summary>
+    public bool HasKitChoice => Kits.Count > 1;
+
+    [ObservableProperty] private KitChoice _selectedKit;
+
+    partial void OnSelectedKitChanged(KitChoice value) => Update();
     public ObservableCollection<StatRow> StatRows { get; } = [];
 
     /// <summary>Every race side by side (Compare races), the chosen one marked.</summary>
@@ -350,7 +371,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
             ? null
             : new CharacterSpec(string.IsNullOrWhiteSpace(Name) ? "Adventurer" : Name.Trim(), SelectedRace.Id, SelectedClass.Id,
                 BaseStats(), Method,
-                BirthOptionRows.ToDictionary(r => r.Id, r => r.IsChecked));
+                BirthOptionRows.ToDictionary(r => r.Id, r => r.IsChecked)) { Kit = SelectedKit?.Id };
 
     /// <summary>Refreshes modifiers, points and the preview (by creating the character for real).</summary>
     private void Update()

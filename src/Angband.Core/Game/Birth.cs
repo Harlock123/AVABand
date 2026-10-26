@@ -23,6 +23,12 @@ public sealed record CharacterSpec(
 {
     public static readonly string[] StatIds = ["str", "int", "wis", "dex", "con"];
 
+    /// <summary>
+    /// AVABand's alternative starting kit (<see cref="StartingKits"/>, an unlock earned through feats);
+    /// null for the class's standard kit, which quick starts and the daily dungeon always use.
+    /// </summary>
+    public string? Kit { get; init; }
+
     /// <summary>A plain character: every stat 15, which is what quick starts use.</summary>
     public static CharacterSpec Default(string raceId, string classId, string name = "Adventurer") =>
         new(name, raceId, classId, StatIds.ToDictionary(s => s, _ => 15));

@@ -23,8 +23,16 @@ public sealed partial class MainWindowViewModel
     {
         var fresh = _featBook.Check(_game, FeatDefs);
         if (fresh.Count == 0) return;
-        foreach (var feat in fresh) AddMessage($"Feat: {feat.Name}! ({feat.Description})");
+        AnnounceFeats(fresh);
         _records?.SaveFeats(_featBook);
+    }
+
+    /// <summary>Says the feats just done, and anything they unlock.</summary>
+    private void AnnounceFeats(IReadOnlyList<FeatDef> fresh)
+    {
+        foreach (var feat in fresh) AddMessage($"Feat: {feat.Name}! ({feat.Description})");
+        foreach (var unlock in Unlocks.NewlyEarned(_featBook, fresh)) AddMessage($"Unlocked: {unlock.Name} ({unlock.Description}).");
+        if (fresh.Count > 0) UnlocksChanged();
     }
 
     /// <summary>Knowledge → Feats: every feat, done or not, and who did it first.</summary>

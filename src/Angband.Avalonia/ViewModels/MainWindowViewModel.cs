@@ -232,6 +232,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
             Stats = new Dictionary<string, int>(spec.BaseStats), Rolled = !spec.Method.IsPointBuy(), Heroic = spec.Method.IsHeroic(),
             AutorollMinimums = _autorollMinimums ?? _settings.LastCharacter?.AutorollMinimums ?? [],
             BirthOptions = spec.Options is { } birth ? new Dictionary<string, bool>(birth) : [],
+            Kit = spec.Kit,
         };
         _settings.LastClass = spec.ClassId;
         _saveSettings?.Invoke(_settings);
@@ -246,7 +247,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
                 (true, false) => StatMethod.Roll,
                 _ => StatMethod.PointBuy,
             },
-            c.BirthOptions.Count > 0 ? c.BirthOptions : null)
+            c.BirthOptions.Count > 0 ? c.BirthOptions : null) { Kit = EarnedKits.Any(k => k.Id == c.Kit) ? c.Kit : null }
         : null;
 
     /// <summary>True until a character has been created (the app then opens the creation screen).</summary>
@@ -264,7 +265,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
 
     public CharacterCreationViewModel CreateCharacterCreation()
     {
-        var creation = new CharacterCreationViewModel(_data, LastCharacter(), _settings.LastCharacter?.AutorollMinimums);
+        var creation = new CharacterCreationViewModel(_data, LastCharacter(), _settings.LastCharacter?.AutorollMinimums, EarnedKits);
         creation.Started += spec =>
         {
             _autorollMinimums = creation.Minimums();
