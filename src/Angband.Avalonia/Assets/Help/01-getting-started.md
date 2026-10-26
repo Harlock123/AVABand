@@ -126,6 +126,32 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   **Game → Save a character card** makes a picture of your
   character to share (the graveyard can make one for a headstone too).
 
+## Seasonal events
+
+Now and then the calendar brings a **seasonal event**: **All Hallows' Eve** (24 October to
+7 November) and **Midwinter** (18 December to 6 January), by your own computer's date. A character
+made while one runs is **born in it**, and keeps it **for life** — a character born at All Hallows'
+Eve still meets its monsters in December, and one made the week after it ends never will. Its
+replays play it back the same whatever the date you watch them.
+
+- **Its monsters** join the dungeon's at their own depths: for All Hallows' Eve the pumpkin-headed
+  scarecrow (from 200 ft), swarms of belfry bats, the corpse-candle that leads travellers astray,
+  and, from 1100 ft, **the Headless Horseman**; for Midwinter the frost sprite, packs of winter
+  wolves, the rime troll, and from 1200 ft **Rimefang, Lord of the Winter Pack**. You can read
+  their lore and find them in the museum like any other.
+- **Keepsakes**: now and then one of them lets fall something with a themed name — a *Carved
+  Pumpkin Lantern*, a *Sugar Skull*, a *Witch's Hat*; a *Holly-Wreath Cloak*, a *Gingerbread
+  Biscuit*, a *Yule Candle*. Each is an ordinary lantern, ration, cap, cloak, biscuit or torch in
+  everything but its name; the event's unique always drops one.
+- **The town** says what season it is when you arrive, and the title screen dresses up while the
+  event runs (put a `title-halloween` or `title-midwinter` picture in your art folder to use your own).
+- **A feat for each**: *Trick or Treat* (slay the Headless Horseman) and *Midwinter's Night* (slay
+  Rimefang).
+
+The daily dungeon, the weekly challenge and the tutorial are never born in an event. If you'd
+rather play without them, turn off **Settings → Display → Seasonal events**: characters made after
+that are born in none (those already born keep theirs).
+
 ## Where to learn more
 
 The other pages here cover moving and commands, your character, fighting, magic, objects,

@@ -81,6 +81,12 @@ public sealed class Item
     /// </summary>
     public string? QuestTag { get; set; }
 
+    /// <summary>
+    /// AVABand's seasonal keepsakes: the id of the themed name and description it goes by
+    /// (<see cref="Game.Seasons.Cosmetic"/>); in everything else it is its kind. Saved.
+    /// </summary>
+    public string? Cosmetic { get; set; }
+
     /// <summary>A quest item (QUEST_ITEM): can't be dropped, thrown, sold, ignored, stolen or burnt.</summary>
     public bool IsQuestItem => Kind.Has("QUEST_ITEM");
     /// <summary>Power of a curse when none is recorded (older saves, data without one).</summary>
@@ -207,6 +213,7 @@ public sealed class Item
         && (Note is null || other.Note is null || Note == other.Note)
         && Ignored == other.Ignored
         && QuestTag == other.QuestTag
+        && Cosmetic == other.Cosmetic
         && Gems.Count == 0 && other.Gems.Count == 0;
 
     /// <summary>
@@ -306,7 +313,7 @@ public sealed class Item
         {
             Damage = Damage, Armour = Armour, ToHit = ToHit, ToDam = ToDam, ToAc = ToAc, Fuel = Fuel, Charges = Charges, Timeout = Timeout, ChestState = ChestState,
             GoldValue = GoldValue, Ego = Ego, Artifact = Artifact, OriginDepth = OriginDepth, Note = Note,
-            Ignored = Ignored, Assessed = Assessed, QuestTag = QuestTag,
+            Ignored = Ignored, Assessed = Assessed, QuestTag = QuestTag, Cosmetic = Cosmetic,
         };
         copy.Modifiers.Clear();
         foreach (var (k, v) in Modifiers) copy.Modifiers[k] = v;

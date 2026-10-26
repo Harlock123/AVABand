@@ -89,6 +89,7 @@ public static class ModCatalog
         new(DataLoader.BlowEffectsFile, "blow_effects", Shape.Keyed, Id),
         new(DataLoader.MonstersFile, "monsters", Shape.Keyed, Id),
         new(DataLoader.AvaMonstersFile, "monsters", Shape.Keyed, Id),
+        new(DataLoader.AvaSeasonalMonstersFile, "seasonal_monsters", Shape.Keyed, Id),
         new(DataLoader.MonsterSpellsFile, "monster_spells", Shape.Keyed, Id),
         new(DataLoader.RealmsFile, "realms", Shape.Keyed, Id),
         new(DataLoader.ClassesFile, "classes", Shape.Keyed, Id),

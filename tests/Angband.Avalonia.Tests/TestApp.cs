@@ -11,6 +11,8 @@ public static class TestAppBuilder
     public static AppBuilder BuildAvaloniaApp()
     {
         Angband.Avalonia.Views.MainWindow.ShowCreationOnFirstRun = false;
+        // Out of season, so no test's character is born in a seasonal event because of the day it runs (SeasonUiTests sets its own).
+        Angband.Avalonia.ViewModels.MainWindowViewModel.DefaultSeasonClock = () => new DateTime(2026, 6, 15, 12, 0, 0);
         return AppBuilder.Configure<App>()
             .UseSkia()
             .UseHeadless(new AvaloniaHeadlessPlatformOptions { UseHeadlessDrawing = false });

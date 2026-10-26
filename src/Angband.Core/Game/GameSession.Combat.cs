@@ -408,6 +408,7 @@ public sealed partial class GameSession
         GhostKilled(monster); // (AVABand: a fallen character's ghost laid to rest)
         GhostAvenged(monster); // (AVABand: or what killed one, and the ghost that pleaded for it rests)
         RivalKilled(monster); // (AVABand: one of your rival band slain)
+        SeasonalKilled(monster); // (AVABand: a seasonal monster may let fall a keepsake)
         DropCarried(monster);
         var (items, gold) = DropMonsterLoot(monster);
         NoteKill(monster, items, gold);

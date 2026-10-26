@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
+using Angband.Core.Game;
 using Angband.Core.Items;
 using Angband.Core.Records;
 using Angband.Data.Tiles;
@@ -128,13 +129,17 @@ public sealed partial class MainWindowViewModel
                 : _museum.Monsters.ContainsKey(r.Id)
                     ? Drawn(new MuseumPiece(r.Name, "Seen, but never slain", false, new SingleCellSource(_cells.Monster(r, floor)),
                         $"{r.Name}\n\nSeen, but never slain.\n\n{_game.Recall(r)}"))
-                    : Drawn(new MuseumPiece("?", $"{r.Depth * 50} ft", false, missing, $"A unique of {r.Depth * 50} ft, not yet met."))).ToList();
+                    : Drawn(new MuseumPiece("?", $"{r.Depth * 50} ft", false, missing, Seasons.Of(r.Id) is { } season
+                        ? $"A unique of {r.Depth * 50} ft who comes only for a character born at {season.Name}, not yet met."
+                        : $"A unique of {r.Depth * 50} ft, not yet met."))).ToList();
 
         var bestiary = Angband.Core.Records.Museum.Races(_data).OrderBy(r => r.Depth).ThenBy(r => r.Name, StringComparer.Ordinal).Select(r =>
             _museum.Monsters.TryGetValue(r.Id, out var e)
                 ? Drawn(new MuseumPiece(r.Name, By(e, "First seen"), true, new SingleCellSource(_cells.Monster(r, floor)),
                     $"{r.Name}\n\n{By(e, "First seen")}.\n\n{_game.Recall(r)}"))
-                : Drawn(new MuseumPiece("?", $"{r.Depth * 50} ft", false, missing, $"A monster of {r.Depth * 50} ft, not yet seen."))).ToList();
+                : Drawn(new MuseumPiece("?", $"{r.Depth * 50} ft", false, missing, Seasons.Of(r.Id) is { } season
+                    ? $"A monster of {r.Depth * 50} ft that comes only for a character born at {season.Name}, not yet seen."
+                    : $"A monster of {r.Depth * 50} ft, not yet seen."))).ToList();
 
         return new MuseumViewModel(new MuseumShelf("Artifacts", "artifacts found", artifacts),
             new MuseumShelf("Uniques", "uniques slain", uniques), new MuseumShelf("Bestiary", "kinds of monster seen", bestiary));

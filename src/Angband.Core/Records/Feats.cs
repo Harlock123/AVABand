@@ -20,7 +20,7 @@ public sealed class FeatRecord
 
 /// <summary>
 /// AVABand's feats (the Knowledge screen's Feats page): milestones across every character you play —
-/// depths reached, levels, uniques slain, quests done, ghosts laid to rest, and a win with each class. A character that
+/// depths reached, levels, uniques slain, quests done, ghosts laid to rest, seasonal events' uniques, and a win with each class. A character that
 /// cheated or used a debug command, the tutorial and replays earn none.
 /// </summary>
 public static class Feats
@@ -54,6 +54,9 @@ public static class Feats
             g => g.Ghosts.Laid.Count >= 3));
         feats.Add(new("ghost_avenged", "Unfinished Business", "Slay what killed a ghost that pleaded with you, and lay it to rest.",
             g => g.Ghosts.Pleas.Any(p => p.Stage == GhostPlea.Avenged)));
+        // AVABand's seasonal events: each one's unique, slain by a character born in it.
+        foreach (var season in Seasons.All)
+            feats.Add(new(season.FeatId, season.FeatName, season.FeatDescription, g => g.KilledUniques.Contains(season.Unique)));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
         feats.Add(new("bounty", "Bounty Hunter", "Claim a bounty on a unique from the notice board.", g => g.AvaQuests.BountiesClaimed.Count >= 1));
         feats.Add(new("bounty_5", "Hunter of Legends", "Claim five bounties on uniques with one character.", g => g.AvaQuests.BountiesClaimed.Count >= 5));

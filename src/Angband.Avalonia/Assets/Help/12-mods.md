@@ -35,7 +35,7 @@ A few lists are keyed by something other than an id: `histories.json` by `chart`
 
 The same names as the game's own; a mod needs only the ones it changes.
 
-- **Monsters** — `monsters.json`, `ava_monsters.json`, `monster_bases.json`, `monster_spells.json`, `summons.json`, `pain.json`, `blow_methods.json`, `blow_effects.json`.
+- **Monsters** — `monsters.json`, `ava_monsters.json`, `ava_seasonal_monsters.json` (the seasonal events' own, met only by a character born in their event), `monster_bases.json`, `monster_spells.json`, `summons.json`, `pain.json`, `blow_methods.json`, `blow_effects.json`.
 - **Objects** — `objects.json`, `ava_objects.json`, `object_bases.json`, `ava_object_bases.json`, `egos.json`, `ava_egos.json`, `artifacts.json`, `ava_artifacts.json`, `curses.json`, `ava_curses.json`, `flavors.json`, `object_properties.json`, `slays.json`, `brands.json`, `starting_kit.json`.
 - **Characters** — `races.json`, `ava_races.json`, `classes.json`, `ava_classes.json`, `realms.json`, `spells.json`, `histories.json`, `player_properties.json`, `shapes.json`.
 - **The world** — `terrain.json`, `ava_terrain.json`, `traps.json`, `chest_traps.json`, `dungeon_profiles.json`, `pits.json`, `town.json`, `stores.json`, `quests.json`, `ava_quests.json`.

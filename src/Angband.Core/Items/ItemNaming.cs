@@ -28,6 +28,9 @@ public static class ItemNaming
         if (item.Kind.IsSpecialArtifactKind && !artifactKnown && !knowledge.IsAware(item.Kind)
             && knowledge.Flavor(item.Kind) is { } stone)
             noun = $"{stone.Name} {Plain(item.Base.Name, plural)}";
+        // (AVABand's seasonal keepsakes go by their own name: "a Carved Pumpkin Lantern".)
+        else if (Game.Seasons.Cosmetic(item.Cosmetic) is { } keepsake)
+            noun = Plain(keepsake.Name, plural);
         else if (!knowsKind && knowledge.Flavor(item.Kind) is { } flavor)
         {
             var pattern = item.Base.Flavor == "scroll"

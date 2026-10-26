@@ -53,6 +53,12 @@ public sealed class AppSettings
     /// <summary>The frame drawn around character cards (an unlock's id: "trophy", "gold"...; null: plain).</summary>
     public string? CardFrame { get; set; }
 
+    /// <summary>
+    /// Settings → Display, "Seasonal events" (AVABand's own): a character made while one runs is born in it.
+    /// Off, new characters are born in none, and the title screen keeps its usual look.
+    /// </summary>
+    public bool SeasonalEvents { get; set; } = true;
+
     /// <summary>How many times the title screen has shown: it takes the unlocked title scenes in turn.</summary>
     public int TitleShows { get; set; }
 

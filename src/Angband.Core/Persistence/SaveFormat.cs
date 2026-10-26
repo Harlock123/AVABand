@@ -109,6 +109,8 @@ public sealed class ItemSave
     public string? Note { get; set; }
     /// <summary>AVABand's quests: the quest the item belongs to (absent for other items and in older saves).</summary>
     public string? QuestTag { get; set; }
+    /// <summary>AVABand's seasonal keepsakes: the themed name it goes by (absent for other items and in older saves).</summary>
+    public string? Cosmetic { get; set; }
     public bool Ignored { get; set; }
     public bool Assessed { get; set; }
     public string Damage { get; set; } = "0";
@@ -205,6 +207,8 @@ public sealed class PlayerSave
     public string? DailyDate { get; set; }
     public string? WeeklyWeek { get; set; }
     public string? WeeklyTwist { get; set; }
+    /// <summary>AVABand's seasonal events: the event the character was born in (absent for none and in older saves).</summary>
+    public string? Season { get; set; }
     public long SpeedRunResult { get; set; }
     public bool SecondChanceUsed { get; set; }
     public Dictionary<string, int> NaturalStats { get; set; } = [];

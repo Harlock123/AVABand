@@ -155,7 +155,7 @@ public sealed class DeathRecap
                 ? $"Even resisted, a breath of {name} from a healthy monster hurts. Keep your hit points well above what it can breathe, and wound it from afar first."
                 : $"A breath of {name} killed you. Breaths are strongest from a healthy monster; resistance to {name} takes much of the sting out of it.");
         }
-        if (race is { IsUnique: true } || game.Data.Monsters.Any(m => m.IsUnique && m.Name == killedBy))
+        if (race is { IsUnique: true } || game.Data.AllMonsters.Any(m => m.IsUnique && m.Name == killedBy))
         {
             var name = race?.Name ?? killedBy;
             return (DeathTip.Unique, $"{name} is a unique, far tougher than its kin. Look at it (x or l) to read what you know of it, and leave it for later if it's beyond you.");

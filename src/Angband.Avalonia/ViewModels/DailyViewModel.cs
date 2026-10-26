@@ -159,7 +159,7 @@ public sealed partial class MainWindowViewModel
     {
         var day = DailyDungeon.Today();
         var spec = DailyDungeon.SpecFor(_data, day, DailyName);
-        StartGame(DailyDungeon.SeedFor(day), spec, game => game.Player.DailyDate = DailyDungeon.Stamp(day));
+        StartGame(DailyDungeon.SeedFor(day), spec, game => game.Player.DailyDate = DailyDungeon.Stamp(day), seasonal: false);
         AddMessage($"Today's daily dungeon ({DailyDungeon.Stamp(day)}): the same for everyone who plays it today. Good luck.");
     }
 
@@ -185,7 +185,7 @@ public sealed partial class MainWindowViewModel
         var week = WeeklyChallenge.ThisWeek();
         var spec = WeeklyChallenge.SpecFor(_data, week, DailyName);
         var twist = WeeklyChallenge.TwistFor(week);
-        StartGame(WeeklyChallenge.SeedFor(week), spec, game => WeeklyChallenge.Prepare(game, week));
+        StartGame(WeeklyChallenge.SeedFor(week), spec, game => WeeklyChallenge.Prepare(game, week), seasonal: false);
         AddMessage($"This week's challenge ({week}), the same for everyone who plays it this week. The twist — {twist.Name}: {twist.Description} Good luck.");
     }
 

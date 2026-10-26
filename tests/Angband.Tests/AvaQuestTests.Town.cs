@@ -54,7 +54,8 @@ public partial class AvaQuestTests
         q.Jump(0);
         Assert.Equal(2, game.TownStage);
         Assert.Single(q.Said, s => s.StartsWith("The town has grown with your renown.", StringComparison.Ordinal));
-        Assert.Contains(q.Said, s => s.Contains("Lamps now light the square") && s.Contains("a well is dug"));
+        Assert.Contains("Lamps now light the square at night.", q.Said); // (a line for each stage)
+        Assert.Contains(q.Said, s => s.StartsWith("The rubble is cleared", StringComparison.Ordinal) && s.Contains("a well is dug"));
         Assert.Equal(4, CountFeature(game.Level, "town_lamp"));
         Assert.Equal(1, CountFeature(game.Level, "town_well"));
         Assert.Equal(0, CountFeature(game.Level, "passable_rubble"));

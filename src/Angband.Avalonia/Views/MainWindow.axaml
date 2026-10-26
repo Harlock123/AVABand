@@ -514,6 +514,8 @@
   <!-- The title screen: Thangorodrim, the logo, and what to do. -->
   <Panel x:Name="TitleScreen" IsVisible="{Binding IsShowingTitle}" Background="#050305" ClipToBounds="True">
     <Image Source="{Binding TitleBackground}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    <!-- A seasonal event, while it runs, painted over Thangorodrim. -->
+    <controls:SeasonalTitleOverlay x:Name="TitleSeasonOverlay" Season="{Binding TitleSeasonPainted}" IsHitTestVisible="False" />
     <Border IsHitTestVisible="False">
       <Border.Background>
         <LinearGradientBrush StartPoint="0%,55%" EndPoint="0%,100%">

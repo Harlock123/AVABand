@@ -13,7 +13,8 @@ public sealed record TitleChoice(string Letter, string Label, string? Detail, Ac
 // continue the character saved last (or, if it died, play it again), make a new one (or Play now,
 // with one made for you), load another, the high scores, or leave. It stays up while a dialog it opened is showing, and goes when a game
 // starts or loads. Its pictures can be replaced like the scenes' (title.png / title-logo.png in the
-// art folder); title scenes unlocked through feats take turns behind it.
+// art folder); title scenes unlocked through feats take turns behind it, and a seasonal event, while it
+// runs, is painted over it (see MainWindowViewModel.Seasons).
 public sealed partial class MainWindowViewModel
 {
     [ObservableProperty] private bool _isShowingTitle;
@@ -23,9 +24,11 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>
     /// The picture behind the title (the player's own title.png/jpg, or the bundled one) — or, with
-    /// title scenes unlocked through feats, each of them in turn (<see cref="TitleScene"/>).
+    /// title scenes unlocked through feats, each of them in turn (<see cref="TitleScene"/>). While a
+    /// seasonal event runs, the player's own picture of it stands in for the first (else it is painted over).
     /// </summary>
-    public Bitmap? TitleBackground => LoadBitmap(PictureFor(TitleScene) ?? PictureFor("title"));
+    public Bitmap? TitleBackground =>
+        LoadBitmap((TitleSeason is { } season ? PictureFor(SeasonPicture(season)) : null) ?? PictureFor(TitleScene) ?? PictureFor("title"));
 
     public Bitmap? TitleLogo => LoadBitmap(PictureFor("title-logo"));
 
@@ -87,7 +90,7 @@ public sealed partial class MainWindowViewModel
             TitleChoices.Add(new TitleChoice(((char)('a' + i)).ToString(), choices[i].Label, choices[i].Detail, choices[i].Act));
         TitleSelectedIndex = 0;
         NextTitleScene();
-        OnPropertyChanged(nameof(TitleBackground));
+        TitleSeasonChanged();
         OnPropertyChanged(nameof(TitleLogo));
         IsShowingTitle = true;
         if (_audio is not null) _audio.Director.TitleScreen = true;

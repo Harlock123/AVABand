@@ -61,6 +61,11 @@ public static class DataLoader
     /// </summary>
     public const string AvaTerrainFile = "ava_terrain.json";
     public const string AvaMonstersFile = "ava_monsters.json";
+    /// <summary>
+    /// AVABand's seasonal monsters (<see cref="Angband.Core.Game.Seasons"/>): kept apart from the rest, so they
+    /// join the dungeon only for a character born in their event.
+    /// </summary>
+    public const string AvaSeasonalMonstersFile = "ava_seasonal_monsters.json";
     public const string AvaObjectBasesFile = "ava_object_bases.json";
     public const string AvaObjectsFile = "ava_objects.json";
     public const string AvaVaultsFile = "ava_vaults.json";
@@ -170,6 +175,7 @@ public static class DataLoader
         var blowMethods = new Merged<BlowMethodDef>(m => m.Id);
         var blowEffects = new Merged<BlowEffectDef>(e => e.Id);
         var monsters = new Merged<MonsterJson>(m => m.Id);
+        var seasonalMonsters = new Merged<MonsterJson>(m => m.Id);
         var monsterSpells = new Merged<MonsterSpellDef>(s => s.Id);
         var realms = new Merged<RealmDef>(r => r.Id);
         var classes = new Merged<ClassDef>(c => c.Id);
@@ -215,6 +221,7 @@ public static class DataLoader
             blowEffects.AddRange(Read<List<BlowEffectDef>>(dir, BlowEffectsFile, errors));
             monsters.AddRange(Read<List<MonsterJson>>(dir, MonstersFile, errors));
             monsters.AddRange(Read<List<MonsterJson>>(dir, AvaMonstersFile, errors));
+            seasonalMonsters.AddRange(Read<List<MonsterJson>>(dir, AvaSeasonalMonstersFile, errors));
             monsterSpells.AddRange(Read<List<MonsterSpellDef>>(dir, MonsterSpellsFile, errors));
             realms.AddRange(Read<List<RealmDef>>(dir, RealmsFile, errors));
             classes.AddRange(Read<List<ClassDef>>(dir, ClassesFile, errors));
@@ -269,9 +276,15 @@ public static class DataLoader
         var trapDefs = traps.Items.Select(t => ToTrap(t, colors, errors)).ToList();
         CheckGenerationData(profiles.Items, vaults.Items, roomTemplates.Items, pits.Items, monsterBases.Items, objectBases.Items, errors);
         var monsterDefs = monsters.Items.Select(m => ToMonster(m, colors, errors)).ToList();
-        CheckCombatReferences(elements.Items, timedEffects.Items, blowMethods.Items, blowEffects.Items, monsterDefs, errors);
-        CheckSpellReferences(monsterSpells.Items, monsterDefs, elements.Items, timedEffects.Items, errors);
-        CheckSummons(summons.Items, monsterSpells.Items, monsterBases.Items, monsterDefs, errors);
+        var seasonalDefs = seasonalMonsters.Items.Select(m => ToMonster(m, colors, errors)).ToList();
+        foreach (var m in seasonalDefs.Where(m => monsterDefs.Any(x => x.Id == m.Id)))
+            errors.Add($"{AvaSeasonalMonstersFile}: monster '{m.Id}' is already one of the game's own.");
+        foreach (var m in seasonalDefs.Where(m => m.TileAs is { } tile && monsterDefs.All(x => x.Id != tile)))
+            errors.Add($"seasonal monster '{m.Id}' is drawn as unknown monster '{m.TileAs}'.");
+        List<MonsterRaceDef> everyMonster = [.. monsterDefs, .. seasonalDefs];
+        CheckCombatReferences(elements.Items, timedEffects.Items, blowMethods.Items, blowEffects.Items, everyMonster, errors);
+        CheckSpellReferences(monsterSpells.Items, everyMonster, elements.Items, timedEffects.Items, errors);
+        CheckSummons(summons.Items, monsterSpells.Items, monsterBases.Items, everyMonster, errors);
         foreach (var el in elements.Items)
         {
             CheckColor(colors, el.Color, $"element '{el.Id}'", errors);
@@ -375,6 +388,7 @@ public static class DataLoader
             BlowMethods = blowMethods.Items,
             BlowEffects = blowEffects.Items,
             Monsters = monsterDefs,
+            SeasonalMonsters = seasonalDefs,
             MonsterSpells = monsterSpells.Items,
             Realms = realms.Items,
             Classes = classes.Items,
@@ -549,6 +563,7 @@ public static class DataLoader
             Mimics = m.Mimics ?? [],
             Shapes = m.Shapes ?? [],
             Description = m.Description ?? "",
+            TileAs = m.TileAs,
         };
     }
 
@@ -888,6 +903,8 @@ public static class DataLoader
         public string? Description { get; init; }
         public List<string>? Shapes { get; init; }
         public List<string>? Mimics { get; init; }
+        /// <summary>The race whose tile it is drawn with, where a tileset has none of its own (AVABand's seasonal monsters).</summary>
+        public string? TileAs { get; init; }
     }
 
     private sealed class TownJson

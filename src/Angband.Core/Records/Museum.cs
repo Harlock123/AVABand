@@ -33,8 +33,8 @@ public sealed class Museum
     /// <summary>Whether what was known before there was a museum has been filled in (once).</summary>
     public bool Backfilled { get; set; }
 
-    /// <summary>The kinds of monster the museum counts: the game's own races (not ghosts or hirelings).</summary>
-    public static IEnumerable<MonsterRaceDef> Races(GameData data) => data.Monsters.Where(r => !r.Has(MonsterFlags.Questor) || r.IsUnique);
+    /// <summary>The kinds of monster the museum counts: the game's own races and the seasonal ones (not ghosts or hirelings).</summary>
+    public static IEnumerable<MonsterRaceDef> Races(GameData data) => data.AllMonsters.Where(r => !r.Has(MonsterFlags.Questor) || r.IsUnique);
 
     /// <summary>How many uniques' places are marked "Bounty claimed".</summary>
     public int CountBounties() => Uniques.Values.Count(e => e.Bounty);

@@ -153,7 +153,7 @@ public sealed partial class GameSession
 
     /// <summary>The monsters drawn with a symbol that the player has met, weakest first (for recall).</summary>
     public IReadOnlyList<MonsterRaceDef> KnownMonstersWithSymbol(char symbol) =>
-        [.. Data.Monsters.Where(r => r.Glyph == symbol && Lore.Find(r.Id) is { } l && l.Sights > 0)
+        [.. Data.AllMonsters.Where(r => r.Glyph == symbol && Lore.Find(r.Id) is { } l && l.Sights > 0)
             .OrderBy(r => r.Depth).ThenBy(r => r.Name, StringComparer.Ordinal)];
 
     /// <summary>The trap the player knows of at a square, if any.</summary>

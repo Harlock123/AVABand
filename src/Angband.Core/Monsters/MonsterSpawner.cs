@@ -14,6 +14,12 @@ public sealed class MonsterSpawner(GameData data)
     public const int OutOfDepthAmount = 10;
 
     /// <summary>
+    /// AVABand's seasonal monsters that join the races picked from (the game asks: those of its character's
+    /// event, or none); after the game's own, so a game without them picks exactly as before.
+    /// </summary>
+    public Func<IReadOnlyList<MonsterRaceDef>>? Seasonal { get; init; }
+
+    /// <summary>
     /// Picks a race for <paramref name="depth"/>, weighted by 1/rarity. Town monsters only appear in
     /// town; unavailable uniques are skipped.
     /// </summary>
@@ -26,7 +32,7 @@ public sealed class MonsterSpawner(GameData data)
 
         // Quest monsters (Sauron, Morgoth) only ever appear where their quest puts them, and
         // FORCE_DEPTH ones never out of depth (Angband get_mon_num).
-        var eligible = data.Monsters.Where(r =>
+        var eligible = (Seasonal?.Invoke() is { Count: > 0 } seasonal ? data.Monsters.Concat(seasonal) : data.Monsters).Where(r =>
                 (depth == 0 ? r.Depth == 0 : r.Depth > 0 && r.Depth <= depth)
                 && !r.Has(MonsterFlags.Questor)
                 && !(r.Has(MonsterFlags.ForceDepth) && r.Depth > levelDepth)

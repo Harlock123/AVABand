@@ -134,7 +134,7 @@ public static class SaveGame
                 Shape = p.Shape, StatScramble = new(p.StatScramble),
                 ConHpRemainder = p.ConHpRemainder, Regenerates = p.Regenerates, Infravision = p.Infravision,
                 MaxMana = p.MaxMana, Mana = p.Mana, ManaFraction = p.ManaFraction,
-                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, WeeklyWeek = p.WeeklyWeek, WeeklyTwist = p.WeeklyTwist, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
+                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, WeeklyWeek = p.WeeklyWeek, WeeklyTwist = p.WeeklyTwist, Season = p.Season, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
                 MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, RecallDepth = p.RecallDepth, DeepDescentTimer = p.DeepDescentTimer,
                 LearnedSpells = [.. p.LearnedSpells], CastSpells = p.CastSpells.Order(StringComparer.Ordinal).ToList(),
                 BaseSpeed = p.BaseSpeed, BaseArmour = p.BaseArmour, BaseToHit = p.BaseToHit, BaseToDam = p.BaseToDam,
@@ -200,6 +200,7 @@ public static class SaveGame
             OriginDepth = s.OriginDepth,
             Note = s.Note,
             QuestTag = s.QuestTag,
+            Cosmetic = s.Cosmetic,
             Ignored = s.Ignored,
             Assessed = s.Assessed,
             Ego = s.Ego is null ? null : data.Egos.FirstOrDefault(e => e.Id == s.Ego),
@@ -273,7 +274,7 @@ public static class SaveGame
         Slays = i.Slays.Select(s => new SlaySave { Flag = s.MonsterFlag, Multiplier = s.Multiplier, Verb = s.Verb, Name = s.Name }).ToList(),
         Brands = i.Brands.Select(b => new BrandSave { Element = b.Element, Multiplier = b.Multiplier, Verb = b.Verb, Name = b.Name }).ToList(),
         Resists = [.. i.Resists], Curses = [.. i.Curses], CursePowers = new(i.CursePowers), CurseTimeouts = new(i.CurseTimeouts), Flags = [.. i.Flags], OriginDepth = i.OriginDepth, Note = i.Note, Ignored = i.Ignored, Assessed = i.Assessed,
-        QuestTag = i.QuestTag,
+        QuestTag = i.QuestTag, Cosmetic = i.Cosmetic,
         Gems = i.Gems.Count == 0 ? null : [.. i.Gems.Select(ItemToSave)],
         AddedResists = i.AddedResists.Count == 0 ? null : [.. i.AddedResists],
         AddedFlags = i.AddedFlags.Count == 0 ? null : [.. i.AddedFlags],
@@ -412,6 +413,7 @@ public static class SaveGame
         p.DailyDate = ps.DailyDate;
         p.WeeklyWeek = ps.WeeklyWeek;
         p.WeeklyTwist = ps.WeeklyTwist;
+        p.Season = ps.Season;
         p.SpeedRunResult = ps.SpeedRunResult;
         p.SecondChanceUsed = ps.SecondChanceUsed;
         // Saves from before gear stat bonuses: the current stats were the natural ones.

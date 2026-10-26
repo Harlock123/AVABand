@@ -138,6 +138,12 @@ public sealed class Player : IActor
     public string? WeeklyTwist { get; set; }
 
     /// <summary>
+    /// The seasonal event this character was born in (its id, from <see cref="Seasons"/>), or null: kept
+    /// for life — a Hallowe'en character still meets its event's monsters in December — and so in its replay.
+    /// </summary>
+    public string? Season { get; set; }
+
+    /// <summary>
     /// A daily dungeon or weekly challenge character: the same game for everyone, so none of what
     /// makes your games your own — hirelings, ghosts, the strongroom, challenges.
     /// </summary>

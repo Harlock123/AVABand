@@ -30,7 +30,7 @@ public sealed partial class GameSession : ITurnHandler
         Rng = new GameRandom(seed);
         TownSeed = Rng.NextULong();
         _generator = new DungeonGenerator(data);
-        _spawner = new MonsterSpawner(data);
+        _spawner = new MonsterSpawner(data) { Seasonal = SeasonalRaces };
         Scheduler.SpeedBonus = TwistSpeedBonus; // (the weekly challenge's restless foes)
         InitItems();
         InitStores();
@@ -45,7 +45,7 @@ public sealed partial class GameSession : ITurnHandler
         TownSeed = townSeed;
         Rng = new GameRandom(seed);
         _generator = new DungeonGenerator(data);
-        _spawner = new MonsterSpawner(data);
+        _spawner = new MonsterSpawner(data) { Seasonal = SeasonalRaces };
         Scheduler.SpeedBonus = TwistSpeedBonus; // (the weekly challenge's restless foes)
         Objects = new ObjectFactory(data) { CanBrowse = PlayerCanBrowse, WantsBook = PlayerWantsBook };
         Knowledge = new PlayerKnowledge(data, seed) { IgnoredCheck = IsMarkedIgnored };
@@ -141,6 +141,7 @@ public sealed partial class GameSession : ITurnHandler
             if (race is null && data.Races.Count > 0) throw new ArgumentException($"Unknown race '{spec.RaceId}'.", nameof(spec));
             game.ApplyCharacter(spec, race, cls);
             if (race is not null) game.RollBackground(race);
+            game.Player.Season = Seasons.Find(spec.Season)?.Id; // (AVABand: born in a seasonal event, for life)
         }
         game.MakeRivals(); // (AVABand: this character's rival band, from dice of its own)
         game.ChangeLevel(0, StairArrival.None);
@@ -658,6 +659,7 @@ public sealed partial class GameSession : ITurnHandler
         if (depth == 0)
         {
             ApplyTownLighting();
+            SeasonalTown(); // (AVABand: the town keeps the seasonal event its character was born in)
             if (StoreDays > 0) UpdateStores();
             if (fromDepth > 0) RenewBoard(); // the notice board's untaken postings change while you're away
             if (fromDepth > 0) BountyOnReturn(); // (and its bounty on a unique may lapse, or come down)

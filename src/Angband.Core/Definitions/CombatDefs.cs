@@ -266,7 +266,7 @@ public sealed class MonsterRaceDef
     /// <summary>Object kinds a mimic poses as until found out (Angband "mimic:" lines).</summary>
     public IReadOnlyList<string> Mimics { get; init; } = [];
     public string Description { get; init; } = "";
-    /// <summary>The race whose tile it is drawn with, where a tileset has none of its own (AVABand's ghosts).</summary>
+    /// <summary>The race whose tile it is drawn with, where a tileset has none of its own (AVABand's ghosts and seasonal monsters).</summary>
     public string? TileAs { get; init; }
 
     public bool Has(string flag) => Flags.Contains(flag);

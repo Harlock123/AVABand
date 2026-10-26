@@ -29,6 +29,13 @@ public sealed record CharacterSpec(
     /// </summary>
     public string? Kit { get; init; }
 
+    /// <summary>
+    /// The seasonal event to be born in (<see cref="Seasons"/>, by its id): the app gives the one running
+    /// on the player's own date, unless Settings → "Seasonal events" is off; null for none, which the
+    /// daily dungeon, the weekly challenge and the tutorial always are.
+    /// </summary>
+    public string? Season { get; init; }
+
     /// <summary>A plain character: every stat 15, which is what quick starts use.</summary>
     public static CharacterSpec Default(string raceId, string classId, string name = "Adventurer") =>
         new(name, raceId, classId, StatIds.ToDictionary(s => s, _ => 15));

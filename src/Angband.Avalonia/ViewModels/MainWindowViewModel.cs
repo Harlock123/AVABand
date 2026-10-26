@@ -276,15 +276,18 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         return creation;
     }
 
-    private void StartGame(ulong seed, CharacterSpec? spec, Action<GameSession>? prepare = null)
+    /// <param name="seasonal">Whether the character is born in the seasonal event running today (not the daily dungeon or the weekly challenge).</param>
+    private void StartGame(ulong seed, CharacterSpec? spec, Action<GameSession>? prepare = null, bool seasonal = true)
     {
         // Starting afresh keeps the character being left behind (if still alive).
         TrySave();
+        if (spec is not null) spec = spec with { Season = seasonal ? SeasonToday?.Id : null };
         var game = spec is null ? GameSession.NewGame(_data, seed) : GameSession.NewGame(_data, seed, spec);
         prepare?.Invoke(game);
         AttachGame(game);
         AddMessage($"Welcome, {_game.Player.Name} the {_game.Player.Race?.Name} {_game.Player.Class?.Name}! (seed {seed})"
                    + (_game.StudyableSpells().Any() ? " Press G to learn your first spell." : ""));
+        if (_game.Season is { } season) AddMessage(SeasonWelcome(season));
         Refresh();
     }
 

@@ -56,6 +56,12 @@
             <TextBlock VerticalAlignment="Center" Opacity="0.7" TextWrapping="Wrap"
                        Text="Drawn round the character cards you save. More frames are unlocked by feats (Knowledge → Unlocks)." />
           </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="12">
+            <ToggleSwitch x:Name="SeasonalSwitch" OnContent="Seasonal events" OffContent="Seasonal events off"
+                          IsChecked="{Binding SeasonalEvents}" />
+            <TextBlock VerticalAlignment="Center" Opacity="0.7" TextWrapping="Wrap" MaxWidth="560"
+                       Text="A character made during All Hallows' Eve or Midwinter is born in it, and meets its monsters for life. Off, new characters are born in none." />
+          </StackPanel>
         </StackPanel>
     
         <TextBlock DockPanel.Dock="Bottom" Margin="0,12,0,0" Opacity="0.7" TextWrapping="Wrap"

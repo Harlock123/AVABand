@@ -103,6 +103,7 @@ public static class CharacterDump
             Line($" Second chance: {(p.SecondChanceUsed ? "spent" : "still to come")}.");
         if (game.ChallengeNames.Count > 0)
             Line($" Challenges: {string.Join(", ", game.ChallengeNames)}" + (game.SpeedRunStatus is { } run ? $" ({run})" : "") + ".");
+        if (game.Season is { } season) Line($" Born at {season.Name}: its monsters walk the dungeon for this character.");
         if (p.Mods.Count > 0) Line($" Mods: {string.Join(", ", p.Mods)} (played with mods: tagged [Modded] in the scores).");
         if (game.IsCheater) Line($" Cheated ({string.Join(", ", game.CheatsUsed.Order(StringComparer.Ordinal))}): not scored.");
 

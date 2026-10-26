@@ -1,0 +1,400 @@
+[
+ {
+  "id": "pumpkin_headed_scarecrow",
+  "name": "pumpkin-headed scarecrow",
+  "glyph": "g",
+  "color": "Orange",
+  "depth": 4,
+  "rarity": 1,
+  "speed": 0,
+  "hitPoints": 16,
+  "armour": 14,
+  "sleep": 20,
+  "hearing": 12,
+  "smell": 0,
+  "experience": 7,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d5"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d5"
+   }
+  ],
+  "flags": [
+   "NONLIVING",
+   "EMPTY_MIND",
+   "NO_FEAR",
+   "NO_CONF",
+   "NO_SLEEP",
+   "HURT_FIRE",
+   "RAND_25",
+   "BASH_DOOR",
+   "CLEAR_WEB"
+  ],
+  "base": "golem",
+  "tileAs": "flesh_golem",
+  "description": "A scarecrow of sacking and straw, lurching off its pole on legs of broom-handle. Its head is a carved pumpkin with a candle guttering behind the grin, and it swings its stick arms at anything that comes near the fields it no longer guards."
+ },
+ {
+  "id": "belfry_bat",
+  "name": "belfry bat",
+  "plural": "belfry bats",
+  "glyph": "b",
+  "color": "LightDark",
+  "depth": 5,
+  "rarity": 2,
+  "speed": 20,
+  "hitPoints": 5,
+  "armour": 12,
+  "sleep": 30,
+  "hearing": 10,
+  "smell": 0,
+  "experience": 3,
+  "blows": [
+   {
+    "method": "bite",
+    "effect": "hurt",
+    "damage": "1d3"
+   }
+  ],
+  "flags": [
+   "ANIMAL",
+   "RAND_50",
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d4",
+    "race": "same"
+   }
+  ],
+  "base": "bat",
+  "tileAs": "fruit_bat",
+  "description": "A small black bat, one of a whole swarm shaken loose from some ruined bell-tower. Alone it is nothing; a cloud of them, wheeling and screeching about your head, is something else."
+ },
+ {
+  "id": "corpse_candle",
+  "name": "corpse-candle",
+  "glyph": "E",
+  "color": "LightGreen",
+  "depth": 10,
+  "rarity": 2,
+  "speed": 10,
+  "hitPoints": 18,
+  "armour": 30,
+  "sleep": 0,
+  "hearing": 20,
+  "smell": 0,
+  "experience": 22,
+  "blows": [
+   {
+    "method": "touch",
+    "effect": "confuse",
+    "damage": "1d4"
+   },
+   {
+    "method": "touch",
+    "effect": "fire",
+    "damage": "1d6"
+   }
+  ],
+  "flags": [
+   "NONLIVING",
+   "EMPTY_MIND",
+   "RAND_50",
+   "NO_FEAR",
+   "NO_CONF",
+   "NO_SLEEP",
+   "IM_FIRE",
+   "IM_POIS",
+   "CLEAR_WEB"
+  ],
+  "spellFrequency": 6,
+  "spells": [
+   "BLINK",
+   "CONF"
+  ],
+  "base": "elemental",
+  "tileAs": "will_o_the_wisp",
+  "description": "A pale green flame that bobs over the ground where the dead lie, a lesser cousin of the will o' the wisp. Old folk say it walks the road a coffin will take; it would rather lead you off the road altogether."
+ },
+ {
+  "id": "the_headless_horseman",
+  "name": "The Headless Horseman",
+  "glyph": "W",
+  "color": "Orange",
+  "depth": 22,
+  "rarity": 3,
+  "speed": 10,
+  "hitPoints": 560,
+  "armour": 70,
+  "sleep": 20,
+  "hearing": 30,
+  "smell": 0,
+  "experience": 700,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "3d8"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "3d8"
+   },
+   {
+    "method": "touch",
+    "effect": "terrify",
+    "damage": "0"
+   }
+  ],
+  "flags": [
+   "UNIQUE",
+   "MALE",
+   "UNDEAD",
+   "EVIL",
+   "COLD_BLOOD",
+   "IM_COLD",
+   "IM_POIS",
+   "NO_CONF",
+   "NO_SLEEP",
+   "NO_STUN",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "CLEAR_WEB",
+   "DROP_2",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "spellFrequency": 6,
+  "spells": [
+   "SCARE",
+   "DARKNESS",
+   "BO_FIRE"
+  ],
+  "base": "wraith",
+  "tileAs": "uvatha_the_horseman",
+  "description": "A rider in a mouldering cloak on a black horse that strikes sparks from the stone, with nothing at all above his collar. In the crook of his arm he carries a pumpkin, carved and burning, and he hurls its fire at whoever dares to stand in his road."
+ },
+ {
+  "id": "frost_sprite",
+  "name": "frost sprite",
+  "glyph": "E",
+  "color": "White",
+  "depth": 7,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 10,
+  "armour": 20,
+  "sleep": 10,
+  "hearing": 20,
+  "smell": 0,
+  "experience": 9,
+  "blows": [
+   {
+    "method": "touch",
+    "effect": "cold",
+    "damage": "1d6"
+   },
+   {
+    "method": "touch",
+    "effect": "cold",
+    "damage": "1d4"
+   }
+  ],
+  "flags": [
+   "RAND_50",
+   "IM_COLD",
+   "HURT_FIRE",
+   "NO_CONF",
+   "NO_SLEEP",
+   "CLEAR_WEB"
+  ],
+  "spellFrequency": 8,
+  "spells": [
+   "BLINK"
+  ],
+  "base": "elemental",
+  "tileAs": "cold_vortex",
+  "description": "A tiny, giggling thing of frost and starlight that leaves fern-patterns of ice wherever it goes. Its touch is the cold that cracks the mere on a midwinter night."
+ },
+ {
+  "id": "winter_wolf",
+  "name": "winter wolf",
+  "plural": "winter wolves",
+  "glyph": "C",
+  "color": "LightBlue",
+  "depth": 14,
+  "rarity": 1,
+  "speed": 10,
+  "hitPoints": 30,
+  "armour": 40,
+  "sleep": 15,
+  "hearing": 30,
+  "smell": 50,
+  "experience": 35,
+  "blows": [
+   {
+    "method": "bite",
+    "effect": "hurt",
+    "damage": "1d4"
+   },
+   {
+    "method": "bite",
+    "effect": "cold",
+    "damage": "1d5"
+   }
+  ],
+  "flags": [
+   "ANIMAL",
+   "CLEAR_WEB",
+   "RAND_25",
+   "BASH_DOOR",
+   "IM_COLD",
+   "GROUP_AI"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "2d6",
+    "race": "same"
+   }
+  ],
+  "base": "canine",
+  "tileAs": "white_wolf",
+  "description": "A grey-blue wolf that comes down out of the north with the first hard frost. Its breath hangs in the air like smoke, and its bite leaves rime in the wound."
+ },
+ {
+  "id": "rime_troll",
+  "name": "rime troll",
+  "glyph": "T",
+  "color": "LightBlue",
+  "depth": 18,
+  "rarity": 1,
+  "speed": 0,
+  "hitPoints": 120,
+  "armour": 60,
+  "sleep": 50,
+  "hearing": 20,
+  "smell": 20,
+  "experience": 85,
+  "blows": [
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d6"
+   },
+   {
+    "method": "hit",
+    "effect": "hurt",
+    "damage": "1d6"
+   },
+   {
+    "method": "bite",
+    "effect": "cold",
+    "damage": "2d5"
+   }
+  ],
+  "flags": [
+   "TROLL",
+   "EVIL",
+   "MALE",
+   "REGENERATE",
+   "IM_COLD",
+   "HURT_FIRE",
+   "OPEN_DOOR",
+   "BASH_DOOR",
+   "CLEAR_WEB",
+   "DROP_20"
+  ],
+  "friends": [
+   {
+    "chance": 60,
+    "number": "1d3",
+    "race": "same"
+   }
+  ],
+  "base": "troll",
+  "tileAs": "snow_troll",
+  "description": "A troll whose hide has frozen white and hard as the glacier it slept in. The midwinter cold has woken it, hungry, and it is in no hurry to sleep again."
+ },
+ {
+  "id": "rimefang_lord_of_the_winter_pack",
+  "name": "Rimefang, Lord of the Winter Pack",
+  "glyph": "C",
+  "color": "White",
+  "depth": 24,
+  "rarity": 3,
+  "speed": 20,
+  "hitPoints": 480,
+  "armour": 60,
+  "sleep": 10,
+  "hearing": 30,
+  "smell": 50,
+  "experience": 900,
+  "blows": [
+   {
+    "method": "bite",
+    "effect": "cold",
+    "damage": "2d8"
+   },
+   {
+    "method": "bite",
+    "effect": "hurt",
+    "damage": "2d8"
+   },
+   {
+    "method": "claw",
+    "effect": "hurt",
+    "damage": "1d10"
+   },
+   {
+    "method": "claw",
+    "effect": "hurt",
+    "damage": "1d10"
+   }
+  ],
+  "flags": [
+   "UNIQUE",
+   "MALE",
+   "NAME_COMMA",
+   "ANIMAL",
+   "SMART",
+   "IM_COLD",
+   "NO_CONF",
+   "NO_FEAR",
+   "BASH_DOOR",
+   "CLEAR_WEB",
+   "DROP_1",
+   "DROP_GOOD",
+   "ONLY_ITEM"
+  ],
+  "friends": [
+   {
+    "chance": 100,
+    "number": "3d4",
+    "race": "winter_wolf"
+   },
+   {
+    "chance": 60,
+    "number": "2d4",
+    "race": "white_wolf"
+   }
+  ],
+  "spellFrequency": 6,
+  "spells": [
+   "SCARE",
+   "BO_COLD"
+  ],
+  "base": "canine",
+  "tileAs": "white_wolf",
+  "description": "A huge white wolf with eyes like chips of blue ice, who leads the winter wolves down from the north on the longest night of the year. Where he howls the snow follows, and his pack follows him."
+ }
+]

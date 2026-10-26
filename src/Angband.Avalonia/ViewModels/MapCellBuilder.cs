@@ -65,7 +65,7 @@ public sealed class MapCellBuilder
     public MapCell Monster(MonsterRaceDef race, MapCell under, bool rare = false) =>
         new(race.Glyph, Color(PurpleUniques && race.IsUnique ? "Violet" : race.Color), Black,
             (rare ? "monster-rare:" : "monster:") + race.Id, TileLighting.Lit,
-            rare ? "monster:" + race.Id : race.TileAs is { } tile ? "monster:" + tile : "monster-name:" + race.Name.ToLowerInvariant(),
+            rare ? "monster:" + (race.TileAs ?? race.Id) : race.TileAs is { } tile ? "monster:" + tile : "monster-name:" + race.Name.ToLowerInvariant(),
             under.TileKey, under.Lighting);
 
     /// <summary>

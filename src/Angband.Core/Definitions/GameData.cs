@@ -48,6 +48,15 @@ public sealed class GameData
     public IReadOnlyList<BlowMethodDef> BlowMethods { get; init; } = [];
     public IReadOnlyList<BlowEffectDef> BlowEffects { get; init; } = [];
     public IReadOnlyList<MonsterRaceDef> Monsters { get; init; } = [];
+
+    /// <summary>
+    /// AVABand's seasonal monsters (ava_seasonal_monsters.json): not among <see cref="Monsters"/>, so the
+    /// dungeon draws on them only for a character born in their event (<see cref="Game.Seasons"/>).
+    /// </summary>
+    public IReadOnlyList<MonsterRaceDef> SeasonalMonsters { get; init; } = [];
+
+    /// <summary>Every race there is to know of — the game's own, then the seasonal ones — for lore, recall and the museum.</summary>
+    public IEnumerable<MonsterRaceDef> AllMonsters => Monsters.Concat(SeasonalMonsters);
     public IReadOnlyList<MonsterSpellDef> MonsterSpells { get; init; } = [];
     public IReadOnlyList<RealmDef> Realms { get; init; } = [];
     public IReadOnlyList<ClassDef> Classes { get; init; } = [];
@@ -137,7 +146,7 @@ public sealed class GameData
     public TimedEffectDef? Timed(string id) => TimedEffects.FirstOrDefault(t => t.Id == id);
     public BlowMethodDef? BlowMethod(string id) => BlowMethods.FirstOrDefault(m => m.Id == id);
     public BlowEffectDef? BlowEffect(string id) => BlowEffects.FirstOrDefault(e => e.Id == id);
-    public MonsterRaceDef? Monster(string id) => Monsters.FirstOrDefault(m => m.Id == id);
+    public MonsterRaceDef? Monster(string id) => Monsters.FirstOrDefault(m => m.Id == id) ?? SeasonalMonsters.FirstOrDefault(m => m.Id == id);
 
     /// <summary>Looks up a trap by its 1-based square index.</summary>
     public TrapDef? TrapByIndex(ushort index) => index == 0 || index > Traps.Count ? null : Traps[index - 1];

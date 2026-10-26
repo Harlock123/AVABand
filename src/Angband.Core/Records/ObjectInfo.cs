@@ -289,7 +289,8 @@ public static class ObjectInfo
         if (runes.Count > 0) sb.Append(string.Join(" ", runes)).Append('\n');
         if (!sampleOnly && !k.IsFullyKnown(item) && b.Id != "bag") sb.Append("You do not know all of its runes.\n"); // (a Bag of Devouring keeps its secret)
 
-        var description = item.Artifact?.Description is { Length: > 0 } ad && (sampleOnly || k.IsFullyKnown(item)) ? ad : item.Kind.Description;
+        var description = item.Artifact?.Description is { Length: > 0 } ad && (sampleOnly || k.IsFullyKnown(item)) ? ad
+            : Seasons.Cosmetic(item.Cosmetic)?.Description ?? item.Kind.Description; // (a seasonal keepsake tells its own)
         if (description.Length > 0) sb.Append('\n').Append(description).Append('\n');
         return sb.ToString().TrimEnd();
     }

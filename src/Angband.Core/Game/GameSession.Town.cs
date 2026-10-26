@@ -53,7 +53,7 @@ public sealed partial class GameSession
     /// <summary>Levels added to the most a shop's stock is made at, at this stage.</summary>
     public static int TownShopMagic(int stage) => 2 * TownShopSlots(stage);
 
-    private string? _townNews;
+    private List<string>? _townNews;
 
     /// <summary>Coming back up to town: the stage your renown has earned is reached (before the town is built).</summary>
     private void GrowTown()
@@ -61,7 +61,7 @@ public sealed partial class GameSession
         if (!TownGrowthOn) return;
         var earned = TownStageFor(TownRenown);
         if (earned <= AvaQuests.TownStage) return;
-        var news = string.Join(" ", TownStageNews.Skip(AvaQuests.TownStage + 1).Take(earned - AvaQuests.TownStage));
+        var news = TownStageNews.Skip(AvaQuests.TownStage + 1).Take(earned - AvaQuests.TownStage).ToList();
         AvaQuests.TownStage = earned;
         _townNews = news;
     }
@@ -72,7 +72,9 @@ public sealed partial class GameSession
         if (_townNews is { } news)
         {
             _townNews = null;
-            Publish(new MessageEvent($"The town has grown with your renown. {news}"));
+            // (A line for each stage, so none runs off the message bar.)
+            Publish(new MessageEvent("The town has grown with your renown."));
+            foreach (var line in news) Publish(new MessageEvent(line));
             return;
         }
         if (TownStage > 0) Publish(new MessageEvent(TownThriving[(int)(GameTurn / 10 % TownThriving.Length)]));

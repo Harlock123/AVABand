@@ -5,6 +5,14 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Seasonal events**: a character made during **All Hallows' Eve** (24 October – 7 November,
+  on now) or **Midwinter** (18 December – 6 January) is born in it, and keeps it for life. Its own
+  monsters join the dungeon — pumpkin-headed scarecrows, belfry bats, corpse-candles and the
+  Headless Horseman; frost sprites, winter wolves, rime trolls and Rimefang, Lord of the Winter
+  Pack — some drop keepsakes (a carved pumpkin lantern, a sugar skull, a holly-wreath cloak: the
+  ordinary thing under a themed name), the town and the title screen dress up for it, and each
+  event has a feat. Not in the daily dungeon, the weekly challenge or the tutorial; turn it off in
+  Settings → Display (Help → Getting started).
 - **Rival adventurers** (a new birth option, on by default): every new character has a rival band —
   a leader and two companions, each of a race and a class ("Brannor's band") — going down the
   dungeon alongside you. Back in town you hear what they've been up to: they get a little deeper,

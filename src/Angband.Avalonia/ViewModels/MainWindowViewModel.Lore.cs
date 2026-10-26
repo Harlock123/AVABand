@@ -88,7 +88,7 @@ public sealed partial class MainWindowViewModel
     /// <param name="symbol">Only the monsters shown with this symbol ('/' then "Recall details?").</param>
     public MonsterKnowledgeViewModel CreateMonsterKnowledge(char? symbol = null)
     {
-        var rows = _data.Monsters
+        var rows = _data.AllMonsters
             .Where(r => _lore.Find(r.Id) is { } l && (l.Sights > 0 || l.TotalKills > 0 || l.Deaths > 0))
             .Where(r => symbol is null || r.Glyph == symbol)
             .OrderBy(r => r.Depth).ThenBy(r => r.Name, StringComparer.Ordinal)
