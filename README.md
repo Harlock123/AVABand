@@ -1297,6 +1297,16 @@ it on the floor (`x`), and it sits under each choice in the *Wear or wield* prom
   controller picks, and Esc leaves the dead character on screen. Starting the game with no living
   character to continue shows the same menu ("Your last adventure ended: …") rather than dropping
   a fresh character into town unasked.
+- **Death recap** (AVABand's own; `Angband.Core/Records/DeathRecap.cs`): after a death (not a
+  winner's retirement) the game-over menu shows *What happened* above its choices — the last five
+  hurts (who or what, how much, the hit points left; ticks of poison, bleeding or hunger counted
+  together), the escapes and healing left unused in the pack (found by their effects — teleport,
+  teleport other, teleport level, deep descent, recall, heal 20 or more — and only of kinds the
+  player recognises, so no flavour is spoiled), and one tip chosen by fixed rules: starvation,
+  poison or bleeding, too deep for the character level, a quick escape unused, healing unused, a
+  breath, a unique, staying in a fight at a third of the hit points, the town, or a general one.
+  The session keeps its last eight hurts in memory only (not saved, no dice rolled, so replays play
+  the same); the character dump of a dead character adds a *[Last moments]* section.
 - **Character dumps and scores** (`Angband.Core/Records`): `C` opens the character sheet, a
   plain-text dump in the style of Angband's (summary, stats with race/class adjustments, skills,
   a per-slot resistance grid that shows unknown runes as `?`, equipment, pack, quiver, home, spells

@@ -29,6 +29,7 @@ public sealed partial class GameSession
         damage -= DamageReduction;
         if (Player.IsDead || damage <= 0) return;
         Player.Hp -= damage;
+        RecordHurt(damage, killer, tick: !note); // (AVABand's death recap)
         Disturb();
         CombatRegenOnWound(damage, killer);
         Publish(new PlayerHurtEvent(damage, Player.Hp, Player.MaxHp));

@@ -80,6 +80,11 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
 
 - Your hit points are on the status bar at the bottom. When they run low, **leave**: quaff a
   potion, read Phase Door, take the stairs, or run.
+- If you die, the game-over window says **what happened**: the last few blows and hurts, with
+  the hit points each left you; any escapes (Phase Door, Teleportation, Word of Recall...) and
+  healing still in your pack; and one tip chosen by how you fell — too deep for your level, a
+  breath you didn't resist, a unique, hunger or poison. Only things you have learned to recognise
+  are named. The character dump keeps it under *Last moments*.
 - Rest (`R`) to heal and regain spell points when nothing is about.
 - Eat when you are hungry. The **Food** line in the sidebar shows how fed you are and how many meals
   you carry; it turns orange and pulses when you're weak from hunger, and then the game asks whether

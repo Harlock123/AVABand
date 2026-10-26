@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **A death recap that teaches**: when a character dies, the game-over window now says what
+  happened — the last five blows and hurts, with the hit points each left you, the escapes and
+  healing you still had in your pack (only ones you recognise), and one plain tip chosen by how you
+  fell. The tutorial and the daily dungeon show it too, and the character dump keeps it under
+  *Last moments* (Help → Getting started).
 - **A second chance**: a new birth option, on in the *Relaxed* preset — once, a death no deeper than
   250 ft wakes you in the Prancing Pony instead of ending the character (Help → Birth options).
 - **Smarter pickup**: walking over ammunition your launcher fires picks it up whatever its

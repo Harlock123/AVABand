@@ -15,6 +15,28 @@
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>
+    <!-- AVABand's own death recap: the last hurts, what went unused, and a tip. -->
+    <Border x:Name="RecapPanel" IsVisible="{Binding HasRecap}" Background="#1a1512" BorderBrush="#4a3a2a" BorderThickness="1"
+            CornerRadius="6" Padding="14,12">
+      <StackPanel Spacing="8">
+        <TextBlock Text="What happened" FontWeight="SemiBold" />
+        <ItemsControl ItemsSource="{Binding Recap.Hurts}" IsVisible="{Binding Recap.HasHurts}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="13" Opacity="0.85" Margin="0,1" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Recap.Unused}" IsVisible="{Binding Recap.HasUnused}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="13" Foreground="#e8a87c" Margin="0,1" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <TextBlock x:Name="RecapTip" Text="{Binding Recap.Tip}" TextWrapping="Wrap" Foreground="#e6c35c" />
+      </StackPanel>
+    </Border>
     <ItemsControl x:Name="ChoiceList" ItemsSource="{Binding Choices}" Margin="0,4,0,0">
       <ItemsControl.ItemTemplate>
         <DataTemplate x:DataType="vm:GameOverChoice">

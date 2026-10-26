@@ -33,7 +33,7 @@ public sealed partial class MainWindowViewModel
         if (scoreLine is not null) lines.Add(scoreLine);
         var again = SpecOf(_game);
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel(p.IsWinner ? "Your adventure is over" : "You have died",
-            lines, Choices(again, () => { if (again is not null) StartCharacter(again); }, sheet: true)));
+            lines, Choices(again, () => { if (again is not null) StartCharacter(again); }, sheet: true)) { Recap = RecapOf(_game) });
     }
 
     /// <summary>At start-up with no living character: how the last one ended, and what next.</summary>
@@ -51,6 +51,9 @@ public sealed partial class MainWindowViewModel
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel("Welcome back", lines,
             Choices(LastCharacter(), () => AddMessage("A new adventure begins."), sheet: false)));
     }
+
+    /// <summary>AVABand's death recap, for a death (null for a winner's retirement).</summary>
+    private static GameOverRecap? RecapOf(GameSession game) => DeathRecap.For(game) is { } recap ? GameOverRecap.From(recap) : null;
 
     private static string Where(int depth) => depth == 0 ? "in the town" : $"at {depth * 50} ft (level {depth})";
 

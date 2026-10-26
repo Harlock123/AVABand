@@ -71,7 +71,7 @@ public sealed partial class MainWindowViewModel
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel("The tutorial ended early", [
             $"{_game.Player.Name} was killed by {_game.Player.KilledBy}. In the tutorial that costs nothing.",
         ], [.. Choices(null, () => { }, sheet: false).Prepend(new GameOverChoice("", "Try the tutorial again", StartTutorial))
-            .Select((c, i) => c with { Letter = ((char)('a' + i)).ToString() })]));
+            .Select((c, i) => c with { Letter = ((char)('a' + i)).ToString() })]) { Recap = RecapOf(_game) });
         return true;
     }
 

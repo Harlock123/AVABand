@@ -3,6 +3,7 @@ using Angband.Avalonia.ViewModels;
 using Angband.Avalonia.Views;
 using Angband.Core.Records;
 using Angband.Data;
+using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -55,6 +56,54 @@ public sealed class GameOverUiTests : IDisposable
         Assert.NotSame(dead, vm.Game);
         Assert.False(vm.Game.Player.IsDead);
         Assert.Equal(0, vm.Game.Player.Depth);
+    }
+
+    /// <summary>AVABand's death recap: the last hurts, the escapes and healing left in the pack, and a tip.</summary>
+    [AvaloniaFact]
+    public void Dying_ShowsWhatHappened_WhatWentUnused_AndATip()
+    {
+        var (window, vm) = Open();
+        var game = vm.Game;
+        game.Player.Depth = 3;
+        game.Player.Level = 5;
+        game.Player.Hp = game.Player.MaxHp = 60;
+        var phase = game.Objects.Create("phase_door", 3);
+        game.Knowledge.LearnKind(phase.Kind);
+        game.Player.Inventory.Add(phase);
+        game.TakeHit(12, "a Cave orc");
+        game.TakeHit(20, "a Snaga");
+        game.TakeHit(100_000, "Grip, Farmer Maggot's Dog");
+
+        var (dialog, menu) = MenuOf(window);
+        var recap = Assert.IsType<GameOverRecap>(menu.Recap);
+        Assert.Equal(["A Cave orc: 12 damage, 48 hit points left", "A Snaga: 20 damage, 28 hit points left",
+            "Grip, Farmer Maggot's Dog: 100000 damage, dead"], recap.Hurts);
+        Assert.Single(recap.Unused, u => u.StartsWith("Escapes you didn't use: ") && u.Contains("Phase Door"));
+        Assert.StartsWith("You died with", recap.Tip);
+        Assert.True(dialog.FindControl<Border>("RecapPanel")!.IsVisible);
+        Assert.Equal(recap.Tip, dialog.FindControl<TextBlock>("RecapTip")!.Text);
+        dialog.UpdateLayout();
+        TileRenderingTests.Save(dialog, "death-recap");
+
+        // A winner retires: no recap.
+        var (window2, vm2) = Open();
+        vm2.Game.Player.IsWinner = true;
+        vm2.Game.TakeHit(100_000, "a Cave orc");
+        var (dialog2, menu2) = MenuOf(window2);
+        Assert.Null(menu2.Recap);
+        Assert.False(dialog2.FindControl<Border>("RecapPanel")!.IsVisible);
+    }
+
+    /// <summary>The tutorial's game-over shows the recap too.</summary>
+    [AvaloniaFact]
+    public void DyingInTheTutorial_ShowsTheRecapToo()
+    {
+        var (window, vm) = Open();
+        vm.StartTutorial();
+        vm.Game.TakeHit(100_000, "a jackal");
+        var (_, menu) = MenuOf(window);
+        Assert.Equal("The tutorial ended early", menu.Title);
+        Assert.Equal("A jackal: 100000 damage, dead", Assert.IsType<GameOverRecap>(menu.Recap).Hurts[^1]);
     }
 
     [AvaloniaFact]

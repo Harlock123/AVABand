@@ -173,8 +173,10 @@ public sealed partial class GameSession
                 break;
             case MonsterSpellKind.Breath:
                 ShowProjection(here, [], BreathArc(here, Player.Position), spell.Element, ProjectionKind.Breath);
+                _hurtByBreath = true; // (for the death recap)
                 ElementalHit(spell.Element, Math.Min(spell.BreathCap, Math.Max(1, monster.Hp / Math.Max(1, spell.BreathDivisor))), killer,
                     race.Power, monster.Position);
+                _hurtByBreath = false;
                 DestroyFloorObjects(BreathArc(monster.Position, Player.Position), spell.Element);
                 break;
             case MonsterSpellKind.Wound when spell.PowerScaled:
@@ -345,7 +347,9 @@ public sealed partial class GameSession
             LearnAboutPlayer(_actingMonster, resistedAs); // the caster sees how well it worked
         }
         if (selfInflicted) damage /= 10;
+        _hurtElement = elementId; // (for the death recap)
         TakeHit(damage, killer);
+        _hurtElement = null;
         // Then what the element does besides (Angband project_player's handlers).
         if (elementId is not null && !Player.IsDead) ElementSideEffects(elementId, damage, power, source);
     }

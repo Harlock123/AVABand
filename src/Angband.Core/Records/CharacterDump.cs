@@ -232,6 +232,14 @@ public static class CharacterDump
                 Line($"{h.Turn,10}{h.Depth * 50,7}'  {h.Shown}");
         }
 
+        // AVABand's own death recap: the last hurts, what went unused, and a tip (only for the dead,
+        // and only when this game saw the hurts — a loaded game starts with none).
+        if (DeathRecap.For(game) is { Hurts.Count: > 0 } recap)
+        {
+            Section("Last moments");
+            foreach (var l in recap.Lines()) Line($" {l}");
+        }
+
         var messages = recentMessages?.ToList();
         if (messages is { Count: > 0 })
         {
