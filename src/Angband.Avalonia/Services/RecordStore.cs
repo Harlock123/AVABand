@@ -95,6 +95,23 @@ public sealed class RecordStore(string directory)
         }
     }
 
+    /// <summary>The museum: artifacts, uniques and monsters across every character (AVABand's own).</summary>
+    public string MuseumPath => Path.Combine(Directory, "museum.json");
+
+    public Museum LoadMuseum() => Museum.Load(MuseumPath);
+
+    public void SaveMuseum(Museum museum)
+    {
+        try
+        {
+            museum.Save(MuseumPath);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Like the feats, a pleasure: a failed write is forgotten.
+        }
+    }
+
     public Angband.Core.Monsters.MonsterLoreBook LoadLore() => Angband.Core.Monsters.MonsterLoreBook.Load(LorePath);
 
     public void SaveLore(Angband.Core.Monsters.MonsterLoreBook lore)

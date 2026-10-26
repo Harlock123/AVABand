@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **The museum** (Game → The museum..., or from the title screen): every artifact your characters
+  have found, every unique they've slain and every kind of monster they've seen, each shown with its
+  picture, who did it first, how deep and when — and an empty place for each still to come. It starts
+  with the monsters you already remember and the artifacts your fallen heroes wore.
 - **Difficulty presets**: *Relaxed*, *Classic* and *Hard* buttons on the creation screen set the
   birth options that matter most in one go (Help → Birth options); the full list stays underneath.
 - **Challenge runs**: tick *Ironman*, *Forced descent*, *No shopping* or *Speed run* (1000 ft within

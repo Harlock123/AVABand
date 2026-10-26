@@ -270,6 +270,7 @@ public partial class MainWindow : Window
             _subscribed.CharacterSheetRequested -= OnCharacterSheetRequested;
             _subscribed.HighScoresRequested -= OnHighScoresRequested;
             _subscribed.GraveyardRequested -= OnGraveyardRequested;
+            _subscribed.MuseumRequested -= OnMuseumRequested;
             _subscribed.CardRequested -= OnCardRequested;
             _subscribed.DailyRequested -= OnDailyRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
@@ -299,6 +300,7 @@ public partial class MainWindow : Window
         vm.CharacterSheetRequested += OnCharacterSheetRequested;
         vm.HighScoresRequested += OnHighScoresRequested;
         vm.GraveyardRequested += OnGraveyardRequested;
+        vm.MuseumRequested += OnMuseumRequested;
         vm.CardRequested += OnCardRequested;
         vm.DailyRequested += OnDailyRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
@@ -443,6 +445,8 @@ public partial class MainWindow : Window
     private void OnDailyRequested(DailyViewModel daily) => DialogFit.Show(new DailyWindow { DataContext = daily }, this);
 
     private void OnGraveyardRequested(GraveyardViewModel yard) => DialogFit.Show(new GraveyardWindow { DataContext = yard }, this);
+
+    private void OnMuseumRequested(MuseumViewModel museum) => DialogFit.Show(new MuseumWindow { DataContext = museum }, this);
 
     private void OnHighScoresRequested(HighScoresViewModel scores) =>
         DialogFit.Show(new HighScoresWindow { DataContext = scores }, this);

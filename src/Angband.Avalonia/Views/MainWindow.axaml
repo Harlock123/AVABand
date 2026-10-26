@@ -77,6 +77,7 @@
         <MenuItem Header="_Character sheet..." Command="{Binding ShowCharacterSheetCommand}" InputGesture="Shift+C" />
         <MenuItem Header="_High scores..." Command="{Binding ShowHighScoresCommand}" InputGesture="Ctrl+H" />
         <MenuItem Header="The _graveyard..." Command="{Binding ShowGraveyardCommand}" />
+        <MenuItem Header="The m_useum..." Command="{Binding ShowMuseumCommand}" />
         <MenuItem Header="Save a character _card..." Command="{Binding SaveCharacterCardCommand}" />
         <MenuItem Header="_Knowledge..." Command="{Binding ShowKnowledgeCommand}" InputGesture="Shift+OemTilde" />
         <MenuItem Header="_Repeat last command" Command="{Binding RepeatLastCommandCommand}" InputGesture="Ctrl+V" />

@@ -70,6 +70,8 @@ public sealed partial class MainWindowViewModel
         if (!IsFirstRun) choices.Add(("Today's daily dungeon", "the same dungeon for everyone, today", ShowDaily));
         if (_records is not null) choices.Add(("High scores", null, ShowHighScores));
         if (_records?.LoadGraveyard().Fallen.Count > 0) choices.Add(("The graveyard", "those who went before", ShowGraveyard));
+        if (_records is not null && _museum.Artifacts.Count + _museum.Uniques.Count > 0)
+            choices.Add(("The museum", "what your characters have found and slain", ShowMuseum));
         choices.Add(("Exit", null, () => ExitRequested?.Invoke()));
         for (var i = 0; i < choices.Count; i++)
             TitleChoices.Add(new TitleChoice(((char)('a' + i)).ToString(), choices[i].Label, choices[i].Detail, choices[i].Act));

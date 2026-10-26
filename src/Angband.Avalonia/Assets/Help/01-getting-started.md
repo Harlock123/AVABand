@@ -14,7 +14,7 @@ in the Load window) to copy its save to a USB stick or a shared folder. On the o
 choose **Import a save from another computer** on the title screen (or **Import a save...** in the
 Load window). If that computer already has the same character, you're asked before it's replaced, and
 the one replaced is kept among its earlier saves. Your Home goes with the character; the strongroom,
-high scores, graveyard and settings stay on each computer.
+high scores, graveyard, museum and settings stay on each computer.
 
 ## Your first steps
 
@@ -91,7 +91,9 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,
   quests, the daily dungeon, a win with each class), with who reached each first. **Game → The graveyard** keeps a
   headstone for every character who died or retired, with their story — and *Watch their last
-  moments* replays how they fell. **Game → Daily dungeon** is the same dungeon and character
+  moments* replays how they fell. **Game → The museum** gathers what all your characters have
+  done: every artifact found, every unique slain and every kind of monster seen, each with who did it
+  first, and empty places for those still to come. **Game → Daily dungeon** is the same dungeon and character
   for everyone each day — compare how far you got with friends, and swap replays: *Copy result*
   puts a line about your try on the clipboard to paste to them, and *Save replay as…* saves its
   replay to send.

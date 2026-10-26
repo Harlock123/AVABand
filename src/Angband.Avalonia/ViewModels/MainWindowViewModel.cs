@@ -340,6 +340,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         NoteForRepeat(command, _game.Execute(command));
         ShowScenes(command, fromDepth);
         CheckFeats();
+        CheckMuseum();
         UpdateBossMusic();
         _game.AimAtTargetNext = false;
         CountDownHint();

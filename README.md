@@ -85,6 +85,18 @@ dead the high scores remember are brought in. Cheats, the tutorial and replays a
 stone keeps what its character wore at the end, for its ghost (below), and, once that ghost is laid
 to rest, who did it and when ("Their ghost was laid to rest by …").
 
+**The museum** (AVABand's own, `Records/Museum.cs`; Game → The museum..., and on the title screen once
+it holds an artifact or a unique): three rooms across every character — **Artifacts** (each of the
+standard set found, ordered by level), **Uniques** (each slain, by depth; one met but not slain shows
+dimmed) and the **Bestiary** (each kind of monster seen, by depth) — each piece drawn as on the map
+(tiles or letters), with who brought it in, how deep and when, beside its tale or your memory of the
+monster; the places still empty show only their level or depth ("Only what's in the museum" hides
+them). Checked after each command like the feats; a first artifact or unique is said ("A first for the
+museum: …"). Kept in `museum.json` beside the scores; the first time it fills in from the shared
+monster memory (`lore.json`: every monster seen, every unique killed) and the artifacts the headstones'
+characters wore. Cheats, debug users, the tutorial and replays add nothing, and a game with random
+artifacts adds no artifacts.
+
 **The daily dungeon** (AVABand's own, `Game/DailyDungeon.cs`; Game → Daily dungeon..., and on the
 title screen): one dungeon a day, the same for everyone — the seed is FNV-1a of the UTC date, and
 the day's character (race, class and rolled stats; your name) is drawn from it, with the default

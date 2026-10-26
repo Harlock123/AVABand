@@ -18,6 +18,7 @@ public sealed partial class MainWindowViewModel
     {
         _records = records;
         UseLore(records.LoadLore());
+        UseMuseum(records);
         _featBook = records.LoadFeats();
         if (!_featBook.Backfilled)
         {

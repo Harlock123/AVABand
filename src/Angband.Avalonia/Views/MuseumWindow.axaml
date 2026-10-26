@@ -1,0 +1,72 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Angband.Avalonia.ViewModels"
+        xmlns:controls="using:Angband.Avalonia.Controls"
+        x:Class="Angband.Avalonia.Views.MuseumWindow"
+        x:DataType="vm:MuseumViewModel"
+        Title="The museum"
+        Width="1100" Height="720"
+        WindowStartupLocation="CenterOwner">
+  <!-- A hall of three rooms: each piece on its plinth (its picture, as on the map), empty places for those still to come. -->
+  <Window.DataTemplates>
+    <DataTemplate DataType="vm:MuseumShelf">
+      <Grid ColumnDefinitions="*,12,460" Margin="0,8,0,0">
+        <DockPanel>
+          <DockPanel DockPanel.Dock="Top" Margin="2,0,2,6">
+            <CheckBox DockPanel.Dock="Right" Content="Only what's in the museum" IsChecked="{Binding OnlyFound}" />
+            <TextBlock Text="{Binding Summary}" Foreground="#d8c79a" VerticalAlignment="Center" FontStyle="Italic" />
+          </DockPanel>
+          <ListBox ItemsSource="{Binding Pieces}" SelectedItem="{Binding Selected}" Background="#14120f">
+            <ListBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:MuseumPiece">
+                <DockPanel Opacity="{Binding Opacity}">
+                  <Border DockPanel.Dock="Left" Width="40" Height="40" Margin="0,0,10,0" CornerRadius="4" Background="#0b0a08"
+                          BorderBrush="#5a4a2a" BorderThickness="1">
+                    <Panel>
+                      <controls:MapView Source="{Binding Picture}" FitToBounds="True" UseTiles="{Binding UseTiles}"
+                                        Tileset="{Binding Tileset}" CellFontSize="{Binding FontSize}" IsVisible="{Binding IsFound}" />
+                      <TextBlock Text="?" IsVisible="{Binding IsMissing}" Foreground="#6b5d44" FontSize="20" FontWeight="Bold"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Panel>
+                  </Border>
+                  <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="#f0e6cf" TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding Note}" FontSize="11" Foreground="#a89878" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                </DockPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+        <Border Grid.Column="2" Background="#1a1712" CornerRadius="6" BorderBrush="#4a3d24" BorderThickness="1">
+          <ScrollViewer>
+            <SelectableTextBlock Text="{Binding Selected.Detail, FallbackValue=''}" TextWrapping="Wrap" Foreground="#e8dfcc"
+                                 FontSize="13" LineHeight="20" Margin="14" />
+          </ScrollViewer>
+        </Border>
+      </Grid>
+    </DataTemplate>
+  </Window.DataTemplates>
+  <Border Background="#0f0d0a">
+    <DockPanel Margin="16">
+      <DockPanel DockPanel.Dock="Top" Margin="4,0,4,6">
+        <Button DockPanel.Dock="Right" Content="Close" Classes="accent" Click="OnClose" />
+        <StackPanel>
+          <TextBlock Text="The museum" FontFamily="{StaticResource TitleFont}" FontSize="26" Foreground="#e8c872" />
+          <TextBlock Text="{Binding Summary}" Foreground="#b8a888" FontStyle="Italic" />
+        </StackPanel>
+      </DockPanel>
+      <TabControl x:Name="Rooms">
+        <TabItem Header="Artifacts">
+          <ContentControl Content="{Binding Artifacts}" />
+        </TabItem>
+        <TabItem Header="Uniques">
+          <ContentControl Content="{Binding Uniques}" />
+        </TabItem>
+        <TabItem Header="Bestiary">
+          <ContentControl Content="{Binding Bestiary}" />
+        </TabItem>
+      </TabControl>
+    </DockPanel>
+  </Border>
+</Window>
