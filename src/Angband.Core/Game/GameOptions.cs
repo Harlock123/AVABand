@@ -25,6 +25,10 @@ public static class OptionIds
     public const string ShowFlavors = "show_flavors";
     public const string DisturbNear = "disturb_near";
     public const string NotifyRecharge = "notify_recharge";
+    /// <summary>AVABand's own: pick up ammunition your launcher fires, whatever its enchantment (GameSession.Pickup).</summary>
+    public const string PickupAmmo = "pickup_ammo";
+    /// <summary>AVABand's own: pick up flavoured things whose kind you haven't learned yet (GameSession.Pickup).</summary>
+    public const string PickupUnknown = "pickup_unknown";
     /// <summary>AVABand's own: the damage monsters and effects deal you, on their messages.</summary>
     public const string ShowDamageTaken = "show_damage_taken";
     /// <summary>AVABand's own: open diagonal-only squeezes in new levels (for keyboards without a keypad).</summary>
@@ -84,6 +88,8 @@ public static class OptionCatalog
         new(OptionIds.UseOldTarget, "Use old target by default", OptionKind.Interface, true),
         new(OptionIds.PickupAlways, "Always pickup items", OptionKind.Interface, false),
         new(OptionIds.PickupInven, "Always pickup items matching inventory", OptionKind.Interface, true),
+        new(OptionIds.PickupAmmo, "Always pick up ammunition for the launcher you wield", OptionKind.Interface, true),
+        new(OptionIds.PickupUnknown, "Always pick up potions, scrolls, wands, rings... you haven't learned yet", OptionKind.Interface, true),
         new(OptionIds.ShowFlavors, "Show flavors in object descriptions", OptionKind.Interface, false),
         new(OptionIds.DisturbNear, "Disturb whenever viewable monster moves", OptionKind.Interface, true),
         new(OptionIds.NotifyRecharge, "Notify on object recharge", OptionKind.Interface, false),

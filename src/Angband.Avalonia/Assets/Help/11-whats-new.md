@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Smarter pickup**: walking over ammunition your launcher fires picks it up whatever its
+  enchantment, and so does walking over a potion, scroll, wand, ring or the like you haven't learned
+  yet (two new options, both on). Right-click anything for *Always pick these up* or *Never pick
+  these up*; Settings → Options lists your pickup rules (Help → Objects).
 - **The museum** (Game → The museum..., or from the title screen): every artifact your characters
   have found, every unique they've slain and every kind of monster they've seen, each shown with its
   picture, who did it first, how deep and when — and an empty place for each still to come. It starts

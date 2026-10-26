@@ -237,6 +237,23 @@
                        Opacity="0.7" FontSize="12" TextWrapping="Wrap" />
           </StackPanel>
 
+          <TextBlock Text="Pickup rules" FontSize="18" FontWeight="SemiBold" Margin="0,14,0,0" />
+          <TextBlock Opacity="0.7" TextWrapping="Wrap"
+                     Text="This character's rules for whole kinds of things, set from an item's menu (right-click it: Always pick these up, Never pick these up). An item's own =g or !g inscription comes first; g always picks up." />
+          <TextBlock Text="No rules yet." Opacity="0.5" FontStyle="Italic" IsVisible="{Binding !HasPickupRules}" />
+          <ItemsControl x:Name="PickupRules" ItemsSource="{Binding PickupRuleRows}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:PickupRuleRow">
+                <Grid ColumnDefinitions="260,180,Auto" Margin="0,2">
+                  <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                  <TextBlock Grid.Column="1" Text="{Binding RuleText}" VerticalAlignment="Center" Opacity="0.75" />
+                  <Button Grid.Column="2" Content="Remove" Padding="8,2"
+                          Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RemovePickupRuleCommand}" CommandParameter="{Binding}" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
           <TextBlock Text="Birth" FontSize="18" FontWeight="SemiBold" Margin="0,14,0,0" />
           <TextBlock Opacity="0.7" TextWrapping="Wrap"
                      Text="Chosen when a character is created (Game → New character) and fixed for its life. These are this character's." />

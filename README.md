@@ -85,6 +85,14 @@ dead the high scores remember are brought in. Cheats, the tutorial and replays a
 stone keeps what its character wore at the end, for its ghost (below), and, once that ghost is laid
 to rest, who did it and when ("Their ghost was laid to rest by …").
 
+**Smarter pickup** (AVABand's own, `Game/GameSession.Pickup.cs`): on top of Angband's `pickup_always`,
+`pickup_inven` and the `=g` / `!g` inscriptions, two interface options — `pickup_ammo` (ammunition the
+wielded launcher fires, whatever its enchantment, into the quiver) and `pickup_unknown` (flavoured
+things whose kind you haven't learned), both on — and **pickup rules** by kind, *Always* or *Never*,
+set from any item's menu, listed with *Remove* in Settings → Options, saved with the character and
+recorded in replays. An item's own inscription comes first; "never" beats matching what you carry.
+Replays recorded before (version 1) play back with the two options off.
+
 **The museum** (AVABand's own, `Records/Museum.cs`; Game → The museum..., and on the title screen once
 it holds an artifact or a unique): three rooms across every character — **Artifacts** (each of the
 standard set found, ordered by level), **Uniques** (each slain, by depth; one met but not slain shows

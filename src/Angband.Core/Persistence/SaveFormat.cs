@@ -84,6 +84,8 @@ public sealed class KnowledgeSave
     public List<string> SeenArtifacts { get; set; } = [];
     /// <summary>Auto-inscriptions by kind.</summary>
     public Dictionary<string, string> KindNotes { get; set; } = [];
+    /// <summary>AVABand's pickup rules by kind ("always" or "never"); null in older saves.</summary>
+    public Dictionary<string, string>? PickupRules { get; set; }
 }
 
 /// <summary>Ignore settings (Angband: kinds, egos per item type, and quality per type).</summary>

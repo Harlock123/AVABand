@@ -195,13 +195,20 @@ public sealed partial class GameSession
     /// <summary>
     /// Angband auto_pickup_okay: how many of a floor object to pick up by itself — everything with
     /// pickup_always, items matching the pack with pickup_inven, and as the <c>=g</c> / <c>!g</c>
-    /// inscriptions say (<see cref="Inscription.AutoPickupCount"/>).
+    /// inscriptions say (<see cref="Inscription.AutoPickupCount"/>). AVABand's own on top
+    /// (GameSession.Pickup.cs): your pickup rules for its kind, ammunition for your launcher and
+    /// things you haven't learned yet.
     /// </summary>
     private int AutoPickupCount(Item item)
     {
+        var canCarry = Player.Inventory.CanCarry(item) ? item.Number : 0;
+        if (canCarry <= 0) return 0;
+        var inscribed = Inscription.Has(item, "!g") || Inscription.Has(item, "=g");
+        if (!inscribed && PickupRuleFor(item.Kind) is { } rule) return rule == PickupRule.Always ? canCarry : 0;
         var matching = Player.Inventory.Pack.Concat(Player.Inventory.Quiver).Where(i => i.CanStackWith(item)).ToList();
-        return Inscription.AutoPickupCount(item, Player.Inventory.CanCarry(item) ? item.Number : 0, matching,
-            Options[OptionIds.PickupAlways], Options[OptionIds.PickupInven]);
+        var count = Inscription.AutoPickupCount(item, canCarry, matching, Options[OptionIds.PickupAlways], Options[OptionIds.PickupInven]);
+        if (count > 0 || inscribed || matching.Any(i => Inscription.Has(i, "!g"))) return count;
+        return Options[OptionIds.PickupAmmo] && FitsLauncher(item) || Options[OptionIds.PickupUnknown] && IsUnlearned(item) ? canCarry : 0;
     }
 
     /// <summary>

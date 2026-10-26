@@ -72,6 +72,14 @@ public sealed partial class MainWindowViewModel
         menu.Add(("Inscribe", () => UseItemAsked(ItemPromptKind.Inscribe, item)));
         if (item.Note is not null) menu.Add(("Uninscribe", () => UseItemAsked(ItemPromptKind.Uninscribe, item)));
         menu.Add((_game.IsMarkedIgnored(item) ? "Unignore" : "Ignore", () => UseItemAsked(ItemPromptKind.Ignore, item)));
+        // AVABand's pickup rules: for every one of its kind, from now on.
+        if (!item.IsGold && item.Artifact is null)
+        {
+            var rule = _game.PickupRuleFor(item.Kind);
+            if (rule != PickupRule.Always) menu.Add(("Always pick these up", () => SetPickupRule(item, PickupRule.Always)));
+            if (rule != PickupRule.Never) menu.Add(("Never pick these up", () => SetPickupRule(item, PickupRule.Never)));
+            if (rule is not null) menu.Add(("Pick these up as usual", () => SetPickupRule(item, null)));
+        }
         return menu;
     }
 

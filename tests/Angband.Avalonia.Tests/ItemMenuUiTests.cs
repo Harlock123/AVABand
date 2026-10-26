@@ -49,7 +49,7 @@ public class ItemMenuUiTests
         var potion = Carry(vm, "cure_serious_wounds");
         vm.OpenItemMenu(potion);
         Assert.StartsWith("A Potion of Cure Serious Wounds", vm.PromptTitle);
-        Assert.Equal(["Inspect", "Quaff", "Drop", "Throw", "Inscribe", "Ignore"], vm.MenuLabels);
+        Assert.Equal(["Inspect", "Quaff", "Drop", "Throw", "Inscribe", "Ignore", "Always pick these up", "Never pick these up"], vm.MenuLabels);
         Choose(vm, "Quaff");
         Assert.False(vm.Game.Player.Inventory.Contains(potion));
     }
@@ -349,5 +349,36 @@ public class ItemMenuUiTests
         game.Level.Objects.Add(game.Player.Position, game.Objects.Create("pick")); // (nothing in the pack it could join)
         vm.Execute(new HoldCommand());
         Assert.StartsWith("Your pack is full, so you can't pick this up.", vm.HintText);
+    }
+
+    [AvaloniaFact]
+    public void Pickup_rules_are_set_from_the_item_menu_and_listed_in_settings()
+    {
+        var vm = Start();
+        var flasks = Carry(vm, "flask_of_oil", 3);
+        vm.OpenItemMenu(flasks);
+        Choose(vm, "Always pick these up");
+        Assert.Equal(PickupRule.Always, vm.Game.PickupRuleFor(flasks.Kind));
+        Assert.Contains(vm.Messages, m => m.StartsWith("You will pick up Flasks of Oil", StringComparison.Ordinal));
+        var row = Assert.Single(vm.PickupRuleRows);
+        Assert.Equal("always picked up", row.RuleText);
+        Assert.True(vm.HasPickupRules);
+
+        vm.OpenItemMenu(flasks);
+        Assert.DoesNotContain("Always pick these up", vm.MenuLabels);
+        Choose(vm, "Never pick these up");
+        Assert.Equal(PickupRule.Never, vm.Game.PickupRuleFor(flasks.Kind));
+        vm.OpenItemMenu(flasks);
+        Assert.Contains("Pick these up as usual", vm.MenuLabels);
+        vm.CancelPrompt();
+
+        vm.RemovePickupRuleCommand.Execute(vm.PickupRuleRows[0]);
+        Assert.Empty(vm.PickupRuleRows);
+        Assert.Null(vm.Game.PickupRuleFor(flasks.Kind));
+
+        var settings = new SettingsWindow { DataContext = vm };
+        settings.Show();
+        Assert.NotNull(settings.FindControl<ItemsControl>("PickupRules"));
+        settings.Close();
     }
 }

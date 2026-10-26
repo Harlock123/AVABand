@@ -122,6 +122,7 @@ public static class SaveGame
                 SeenEgos = g.Knowledge.SeenEgos.Order(StringComparer.Ordinal).ToList(),
                 SeenArtifacts = g.Knowledge.SeenArtifacts.Order(StringComparer.Ordinal).ToList(),
                 KindNotes = new Dictionary<string, string>(g.Knowledge.KindNotes),
+                PickupRules = g.PickupRules.Count == 0 ? null : g.PickupRules.ToDictionary(r => r.Key, r => r.Value == PickupRule.Always ? "always" : "never"),
             },
             Player = new PlayerSave
             {
@@ -376,6 +377,7 @@ public static class SaveGame
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));
         g.Knowledge.RestoreSeen(f.Knowledge.SeenKinds, f.Knowledge.SeenEgos, f.Knowledge.SeenArtifacts);
         g.Knowledge.RestoreKindNotes(f.Knowledge.KindNotes);
+        g.RestorePickupRules(f.Knowledge.PickupRules);
 
         Item? ToItem(ItemSave s) => ItemFromSave(data, g, s, errors);
 

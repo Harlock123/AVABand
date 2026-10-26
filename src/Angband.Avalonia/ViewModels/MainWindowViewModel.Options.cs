@@ -236,6 +236,7 @@ public sealed partial class MainWindowViewModel
         foreach (var o in OptionCatalog.OfKind(OptionKind.Cheat))
             CheatOptionRows.Add(new OptionRow(o, _game.Options[o.Id], true, SetOption));
         OnPropertyChanged(nameof(CheaterText));
+        RefreshPickupRules();
         IgnoreQualityRows.Clear();
         foreach (var type in Ignoring.Types)
             IgnoreQualityRows.Add(new IgnoreQualityRow(type, _game.Ignore.QualityFor(type.Id), (id, level) =>

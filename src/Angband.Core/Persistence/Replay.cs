@@ -20,7 +20,8 @@ public sealed record ReplayEnd(long GameTurn, int Depth, int X, int Y, int Hp, b
 /// </summary>
 public sealed class ReplayFile
 {
-    public const int CurrentVersion = 1;
+    /// <summary>2: AVABand's pickup rules and its pickup_ammo / pickup_unknown options (off when playing back a 1).</summary>
+    public const int CurrentVersion = 2;
     public const string Extension = ".avareplay";
 
     public int Version { get; set; } = CurrentVersion;
@@ -123,6 +124,9 @@ public sealed class ReplayPlayer
         using var stream = new MemoryStream(Convert.FromBase64String(file.StartSave));
         Game = SaveGame.Load(data, stream);
         Game.IsReplay = true;
+        // A game recorded before AVABand's smarter pickup played without it.
+        if (file.Version < 2)
+            foreach (var id in new[] { OptionIds.PickupAmmo, OptionIds.PickupUnknown }) Game.SetOption(id, false);
     }
 
     public GameSession Game { get; }
@@ -161,6 +165,10 @@ public sealed class ReplayPlayer
             case "ignore-kind": if (g.Data.Object(S(0)) is { } kind) g.SetKindIgnored(kind, B(1)); break;
             case "ignore-ego": if (g.Data.Egos.FirstOrDefault(e => e.Id == S(0)) is { } ego) g.SetEgoIgnored(ego, B(1)); break;
             case "ignore-quality": g.SetIgnoreQuality(S(0), Enum.Parse<IgnoreLevel>(S(1))); break;
+            case "pickup-rule":
+                if (g.Data.Object(S(0)) is { } pk)
+                    g.SetPickupRule(pk, args![1]?.GetValue<string>() switch { "always" => PickupRule.Always, "never" => PickupRule.Never, _ => null });
+                break;
             case "inscribe-kind": if (g.Data.Object(S(0)) is { } k) g.SetAutoInscription(k, args![1]?.GetValue<string>()); break;
             case "note": g.AddNote(S(0)); break;
             case "shops-pay": g.SetShopsPay(B(0)); break;

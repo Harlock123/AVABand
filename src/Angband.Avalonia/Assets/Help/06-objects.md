@@ -126,6 +126,23 @@ and the top line ignores everything ticked — dropped and hidden, as ignoring a
 brings it back if you change your mind. A cursed thing that is still worth something starts
 unticked, and artifacts, worn gear and anything inscribed `!k` are never listed.
 
+## Picking things up
+
+Walking onto gold always takes it; other things are picked up by themselves when:
+
+- you carry some just like them (*Always pickup items matching inventory*, on);
+- they're ammunition your launcher fires, whatever their enchantment — straight into the quiver
+  (*Always pick up ammunition for the launcher you wield*, on);
+- they're potions, scrolls, mushrooms, wands, staffs, rods, rings or amulets you haven't learned yet
+  (*Always pick up ... you haven't learned yet*, on);
+- or you've made a **pickup rule** for their kind: right-click one (in your pack, or on the floor)
+  and choose *Always pick these up* or *Never pick these up* ("never" leaves them lying, but still
+  shows them, and `g` still takes them). Settings → Options lists your rules, with *Remove*; they're
+  this character's.
+
+The options are in Settings → Options; *Always pickup items* takes everything. An item's own `=g`
+(always) or `!g` (never) inscription comes before all of these, and ignored things are never picked up.
+
 ## Inscriptions
 
 `{` inscribes an item. Some inscriptions do things, as in Angband: `@q1` lets you quaff it with
