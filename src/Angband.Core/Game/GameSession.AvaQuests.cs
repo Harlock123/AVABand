@@ -239,7 +239,7 @@ public sealed partial class GameSession
                 choices.Add(("inn:leave", "Leave"));
                 var taken = AvaQuests.Quests.Values.Count(q => !q.IsDone);
                 AskQuest("The Prancing Pony",
-                    "Firelight, pipe smoke and the smell of stew. Butterbur the innkeeper nods at you over the bar."
+                    "Firelight, pipe smoke and the smell of stew. Butterbur the innkeeper nods at you over the bar." + TownInnWord
                     + (taken > 0 ? $" You have {taken} quest{(taken == 1 ? "" : "s")} under way (see the quest log, Ctrl+J)." : ""),
                     [.. choices]);
                 break;

@@ -50,8 +50,55 @@ public class QuestUiTests
         Assert.NotNull(game.AvaQuests.Get("broken_blade"));
 
         var journal = vm.CreateKnowledge().Quests!;
-        var row = Assert.Single(journal.Rows);
-        Assert.Equal("The Broken Blade", row.Name);
-        Assert.Contains("You have 0 of 3", row.Describe());
+        Assert.Equal(["The town", "The Broken Blade"], journal.Rows.Select(r => r.Name));
+        Assert.Contains("You have 0 of 3", journal.Rows[1].Describe());
+    }
+
+    /// <summary>The town grown with your renown: on the map (in tiles and in letters, by day and by night), and on the Quests page.</summary>
+    [AvaloniaTheory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void The_town_grows_on_the_map_and_the_quests_page_says_how_far(bool tiles)
+    {
+        MainWindow.ShowCreationOnFirstRun = false;
+        var tilesets = Angband.Data.Tiles.TilesetCatalog.Discover([Angband.Data.Tiles.TilesetCatalog.DefaultDirectory]);
+        var vm = new MainWindowViewModel(DataLoader.Load(DataLoader.DefaultDataDirectory), tilesets,
+            new AppSettings { UseTiles = tiles, TilesetId = "adam-bolt", TileScale = 1 }, save: null);
+        vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.StartGame(42, "warrior");
+        var game = vm.Game;
+        var window = new MainWindow { DataContext = vm, Width = 1400, Height = 760 };
+        window.Show();
+        vm.ShowWholeMap = true;
+        var mode = tiles ? "tiles" : "ascii";
+        TileRenderingTests.Save(window, $"town-stage0-{mode}");
+
+        var town = vm.CreateKnowledge().Quests!.Rows[0];
+        Assert.Equal("The town", town.Name);
+        Assert.Equal("renown 0, stage 0", town.Note);
+        Assert.Contains("Next, at renown 1: Lamps now light the square at night.", town.Describe());
+
+        game.AvaQuests.JobsDone = 15;
+        vm.Execute(new DebugJumpCommand(3));
+        vm.Execute(new DebugJumpCommand(0));
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        Assert.Equal(5, game.TownStage);
+        vm.ShowWholeMap = true;
+        TileRenderingTests.Save(window, $"town-stage5-{mode}");
+        town = vm.CreateKnowledge().Quests!.Rows[0];
+        Assert.Equal("renown 15, stage 5", town.Note);
+        Assert.Contains("The town can grow no more", town.Describe());
+
+        // By night: the lamps light the square, and the walls they light carry sconces.
+        game.Scheduler.SetGameTurn(game.Data.Constants.DayLength / 2 + 10);
+        vm.Execute(new DebugJumpCommand(3));
+        vm.Execute(new DebugJumpCommand(0));
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        Assert.False(game.IsDaytime);
+        vm.ShowWholeMap = false;
+        game.Player.Position = game.Level.AllLocs().First(p => game.Level.FeatureAt(p).Id == "town_fountain") + new Angband.Core.Geometry.Loc(0, 1);
+        game.UpdateView();
+        vm.Refresh();
+        TileRenderingTests.Save(window, $"town-stage5-night-{mode}");
     }
 }

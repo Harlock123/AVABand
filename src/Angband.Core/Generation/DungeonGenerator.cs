@@ -38,7 +38,7 @@ public sealed record LevelRequest(int Depth, ulong Seed, StairArrival Arrival = 
     bool? ConnectStairs = null, IReadOnlyList<StairJoin>? Joins = null, Loc? PreferredStart = null, bool Persistent = false,
     bool Quest = false, bool AboveStored = false, bool BelowStored = false,
     IReadOnlyList<StairJoin>? OneOffAbove = null, IReadOnlyList<StairJoin>? OneOffBelow = null,
-    bool NoDiagonalSqueezes = false, string? QuestRoom = null, bool QuestRoomOptional = false);
+    bool NoDiagonalSqueezes = false, string? QuestRoom = null, bool QuestRoomOptional = false, int TownStage = 0);
 
 /// <summary>A staircase a persistent level must have at <see cref="Loc"/> (a down staircase if <see cref="Down"/>).</summary>
 public sealed record StairJoin(Loc Loc, bool Down);
@@ -112,7 +112,7 @@ public sealed class DungeonGenerator
     {
         var profile = _data.Profiles.FirstOrDefault(p => p.Id == "town") ?? new DungeonProfileDef { Id = "town", Name = "town" };
         var ctx = new GenContext(_data, profile, 0, rng);
-        if (!new TownGenerator().Generate(ctx)) return null;
+        if (!new TownGenerator(request.TownStage).Generate(ctx)) return null;
         var start = Allocator.PlacePlayer(ctx, request.Arrival, request.ConnectStairs ?? _data.Constants.ConnectedStairs);
         if (start is not { } s || LevelValidator.Validate(ctx.Level, s, _data.Constants).Count > 0) return null;
         if (request.NoDiagonalSqueezes) Connectivity.OpenDiagonalSqueezes(ctx.Level);

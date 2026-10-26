@@ -30,6 +30,24 @@ count, and pays when the last arrives.
 **Quest items ride in your quest satchel**: they're listed under their own heading, after your
 pack, and take none of its 23 slots (they still weigh what they weigh).
 
+## The town grows with you
+
+Every story quest you finish and every notice-board job you're paid for earns the town **renown**
+(each character has their own). At 1, 3, 6, 10 and 15 the town improves, and you'll see it the next
+time you come back up from the dungeon (it's announced then, once):
+
+1. **Lamps** in the square (`¡` in letters), lit at night, so the middle of town isn't dark.
+2. The **rubble cleared** from the streets and a **well** dug (`○`); the shops keep a little more
+   stock, and better made.
+3. **Market stalls** in the square (`Π`); the shops stock more again.
+4. A **fountain** at the heart of the square (`◎`) and a **lamp by every shop door**; better stock still.
+5. A **statue of you** in the square (`♙`), and the best stock the town has seen.
+
+The shops' improvement is modest: a pile more on the shelves for each stage from the second, and
+things made a couple of levels better. Butterbur and the townsfolk notice too. The Knowledge
+screen's **Quests** page (`~`) starts with *The town*: your renown, its stage, and what the next one
+brings. The daily dungeon, the weekly challenge and the tutorial keep the town as it always was.
+
 ## Merchant caravans
 
 Now and then, coming back up to town (once you've been 250 ft down), you'll find a **merchant caravan**

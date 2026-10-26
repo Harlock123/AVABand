@@ -2089,6 +2089,11 @@
     "object:alchemists_crate": "main:17,3",
     "object:scorched_folio": "main:17,7",
     "object:alchemists_bandolier": "main:4,16",
-    "object:scribes_case": "main:16,8"
+    "object:scribes_case": "main:16,8",
+    "terrain:town_lamp": "ava_town_lamp.png",
+    "terrain:town_well": "ava_town_well.png",
+    "terrain:market_stall": "ava_market_stall.png",
+    "terrain:town_fountain": "ava_town_fountain.png",
+    "terrain:town_statue": "ava_town_statue.png"
   }
 }

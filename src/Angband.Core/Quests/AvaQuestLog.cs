@@ -45,6 +45,8 @@ public sealed class AvaQuestLog
     public List<BoardJob> Board { get; set; } = [];
     public int NextJobId { get; set; } = 1;
     public int JobsDone { get; set; }
+    /// <summary>The stage the town has grown to with your renown (AVABand's own; 0 in older saves, as the town was).</summary>
+    public int TownStage { get; set; }
     /// <summary>Percent added to a store's prices (negative: a discount), for what you did for or against it.</summary>
     public Dictionary<string, int> PriceAdjust { get; set; } = new();
     /// <summary>Quest items left behind on a level (kind, tag), which turn up at the Prancing Pony.</summary>

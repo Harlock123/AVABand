@@ -334,17 +334,19 @@ public sealed partial class GameSession : ITurnHandler
 
     /// <summary>
     /// Town lighting (Angband cave_illuminate): by day everything is lit and known; by night only the
-    /// shop entrances glow, though the player still remembers the buildings and walls.
+    /// shop entrances glow (and, as the town grows, the squares its lamps light), though the player
+    /// still remembers the buildings and walls.
     /// </summary>
     private void ApplyTownLighting()
     {
         var day = IsDaytime;
         Level.IsLit = day;
+        var lamplit = day ? new HashSet<Loc>() : TownLampLight(); // (AVABand: the lamps your renown has put up)
         foreach (var p in Level.AllLocs())
         {
             ref var sq = ref Level[p];
             var feature = Level.FeatureAt(p);
-            var glow = day || feature.Has(TerrainFlags.Shop);
+            var glow = day || feature.Has(TerrainFlags.Shop) || lamplit.Contains(p);
             sq.Flags = glow ? sq.Flags | SquareFlags.Glow : sq.Flags & ~SquareFlags.Glow;
             if (day || !feature.Has(TerrainFlags.Floor)) Known.Remember(Level, p);
         }
@@ -397,6 +399,7 @@ public sealed partial class GameSession : ITurnHandler
         if (feature.Has(TerrainFlags.DoorClosed)) return OpenDoor(target, announceFailure: true);
 
         if (!feature.Has(TerrainFlags.Passable) && QuestBump(target)) return 0;
+        if (!feature.Has(TerrainFlags.Passable) && TownBump(target)) return 0;
         if (!feature.Has(TerrainFlags.Passable))
         {
             var what = feature.Has(TerrainFlags.Rubble) ? "a pile of rubble"
@@ -600,13 +603,15 @@ public sealed partial class GameSession : ITurnHandler
         else
         {
             var joins = persist ? JoinsFor(depth) : default;
+            if (depth == 0 && fromDepth > 0) GrowTown(); // (AVABand: the town grows with your renown)
             _questRoomHere = QuestRoomFor(depth);
             var generated = _generator.Generate(new LevelRequest(depth, seed, arrival,
                 ProfileId: _questRoomHere is null && QuestAt(depth) is null ? QuestProfileFor(depth) : null, ConnectStairs: Options[OptionIds.ConnectStairs],
                 Joins: joins.Joins, OneOffAbove: joins.OneOffAbove, OneOffBelow: joins.OneOffBelow, PreferredStart: persist && Level is not null ? from : null,
                 Persistent: persist, Quest: QuestAt(depth) is not null, NoDiagonalSqueezes: Options[OptionIds.NoDiagonalSqueezes],
                 QuestRoom: _questRoomHere?.Room, QuestRoomOptional: QuestRoomOptional,
-                AboveStored: persist && _storedLevels.ContainsKey(depth - 1), BelowStored: persist && _storedLevels.ContainsKey(depth + 1)));
+                AboveStored: persist && _storedLevels.ContainsKey(depth - 1), BelowStored: persist && _storedLevels.ContainsKey(depth + 1),
+                TownStage: depth == 0 ? TownStage : 0));
 
             if (Level is not null) Vision.Reset(Level);
             ClearTarget();
@@ -654,6 +659,7 @@ public sealed partial class GameSession : ITurnHandler
             if (StoreDays > 0) UpdateStores();
             if (fromDepth > 0) RenewBoard(); // the notice board's untaken postings change while you're away
             if (fromDepth > 0) CaravanOnReturn(); // (AVABand: a merchant caravan comes, stays, or goes)
+            if (fromDepth > 0) TownWelcome(); // (AVABand: what your renown has done for the town)
         }
         HirelingArrives(fromDepth);
         _arriving = true;

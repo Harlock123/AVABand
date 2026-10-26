@@ -166,10 +166,12 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         if ((p.X + p.Y) % 4 != 0 || !OptionValue(DisplayOptions.Sconces)) return false;
         var level = _game.Level;
         if (!level[p].Has(SquareFlags.Glow)) return false;
+        // (the town by night: the walls the lamps light, as the town grows with your renown)
+        var townNight = level.Depth == 0 && !level.IsLit;
         foreach (var d in new[] { new Loc(0, 1), new Loc(0, -1), new Loc(1, 0), new Loc(-1, 0) })
         {
             var n = p + d;
-            if (level.InBounds(n) && level[n].Has(SquareFlags.Glow) && level[n].Has(SquareFlags.Room)
+            if (level.InBounds(n) && level[n].Has(SquareFlags.Glow) && (townNight || level[n].Has(SquareFlags.Room))
                 && !level.FeatureAt(n).Has(TerrainFlags.Wall) && level.IsPassable(n))
                 return true;
         }

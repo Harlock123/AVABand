@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **The town grows with you**: every quest finished and every notice-board job done earns the town
+  renown, and in five stages it improves — lamps that light the square at night, the rubble cleared
+  and a well dug, market stalls, a fountain and a lamp by every shop door, and last a statue of you —
+  while the shops stock a little more, and better made. Each stage is announced when you come back
+  up; the Knowledge screen's Quests page shows your renown and what's next (Help → Quests).
 - **Pleading ghosts**: now and then the ghost of a fallen character doesn't fight you but begs you
   to slay what killed it — the monster (or the unique) is somewhere on the level, and the plea goes
   in your quest log. Avenge it and the ghost is laid to rest, letting fall two or three of the

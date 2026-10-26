@@ -108,7 +108,7 @@ public sealed partial class GameSession
     /// <summary>
     /// Angband store_maint: some stock is sold off (the black market first clears anything no longer
     /// worth its while), missing staples are made and piled high, then new items come in until the
-    /// store's range is met.
+    /// store's range is met (AVABand: a wider range as the town grows with your renown).
     /// </summary>
     internal void Maintain(Store store)
     {
@@ -118,9 +118,10 @@ public sealed partial class GameSession
         if (def.BlackMarket)
             foreach (var item in store.Stock.Where(i => !BlackMarketOk(i)).ToList()) RemoveStock(store, item);
 
+        var more = def.BlackMarket ? 0 : TownShopSlots(TownStage); // (AVABand: the town grown with your renown)
         if (def.Turnover > 0)
         {
-            var stock = Math.Clamp(store.Stock.Count - Rng.RandInt1(def.Turnover), 0, def.MaxItems);
+            var stock = Math.Clamp(store.Stock.Count - Rng.RandInt1(def.Turnover), 0, def.MaxItems + more);
             while (store.Stock.Count > stock) DeleteRandom(store);
         }
         else if (def.Staples.Count > 0 && store.Stock.Count > 0)
@@ -134,7 +135,7 @@ public sealed partial class GameSession
         if (def.Turnover > 0)
         {
             var stock = Math.Clamp(store.Stock.Count + Rng.RandInt1(def.Turnover),
-                def.MinItems + def.Staples.Count, def.MaxItems + def.Staples.Count);
+                def.MinItems + more + def.Staples.Count, def.MaxItems + more + def.Staples.Count);
             for (var attempts = 0; store.Stock.Count < stock && attempts < 10_000; attempts++) CreateRandom(store);
         }
         SortStock(store);
@@ -216,7 +217,7 @@ public sealed partial class GameSession
     /// <summary>
     /// Angband store_create_random: up to six tries at an item for the shelves. Ordinary stores pick
     /// from their list with a little magic (level 1 to store_magic_level, more once the player has
-    /// been below dlvl 20); the black market takes anything from well below the player's deepest
+    /// been below dlvl 20, and more as the town grows); the black market takes anything from well below the player's deepest
     /// level, as long as it is worth its prices. Damaged, cursed or worthless items are refused.
     /// </summary>
     private bool CreateRandom(Store store)
@@ -226,7 +227,7 @@ public sealed partial class GameSession
         if (def.BlackMarket)
             (minLevel, maxLevel) = (Player.MaxDepth + 5, Player.MaxDepth + 20);
         else
-            (minLevel, maxLevel) = (1, Data.Constants.StoreMagicLevel + Math.Max(Player.MaxDepth - 20, 0));
+            (minLevel, maxLevel) = (1, Data.Constants.StoreMagicLevel + Math.Max(Player.MaxDepth - 20, 0) + TownShopMagic(TownStage));
         minLevel = Math.Min(minLevel, 55);
         maxLevel = Math.Min(maxLevel, 70);
 

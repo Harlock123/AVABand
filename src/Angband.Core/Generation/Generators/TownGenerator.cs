@@ -8,9 +8,10 @@ namespace Angband.Core.Generation.Generators;
 /// <summary>
 /// The town: a walled square of streets with one building per shop. Lots are laid out on a grid so
 /// every building is ringed by street, which guarantees every entrance can be reached. The layout
-/// depends only on the town seed, so the town looks the same on every visit.
+/// depends only on the town seed, so the town looks the same on every visit — and on the stage
+/// your renown has brought it to (AVABand's own, TownGrowth), built last of all.
 /// </summary>
-internal sealed class TownGenerator : ILevelGenerator
+internal sealed class TownGenerator(int stage = 0) : ILevelGenerator
 {
     public string Id => "town";
 
@@ -54,6 +55,7 @@ internal sealed class TownGenerator : ILevelGenerator
         ctx.SetFeature(st, ctx.F.DownStair);
 
         ctx.Level.Population = new PopulationBudget(ctx.Rng.RandRange(4, 8), 0, 0, 0);
+        if (stage > 0) TownGrowth.Apply(ctx, stage); // (no dice: stage 0 is the town as it always was)
         return true;
     }
 

@@ -302,6 +302,100 @@ def wagon():
     return c
 
 
+def cobbles(c):
+    """The town's cobbles, under each of the things the town puts up as it grows (as under the wagon)."""
+    stone_floor(c, "#4a4450", "#36323c")
+
+
+def lamp_post():
+    """A lamp post (the town grown with your renown): an iron post on a foot, a glass lamp lit at the top."""
+    c = canvas()
+    cobbles(c)
+    iron, dark, shine = hexc("#9a9aa8"), hexc("#141418"), hexc("#d0d0dc")
+    rect(c, 4, 13, 11, 15, dark)                     # the foot
+    rect(c, 6, 4, 9, 13, dark)                       # the post, outlined
+    rect(c, 7, 5, 8, 13, iron)
+    rect(c, 7, 5, 7, 12, shine)
+    rect(c, 4, 4, 11, 4, dark)                       # the lamp's cap
+    rect(c, 5, 0, 10, 0, dark)
+    rect(c, 5, 14, 10, 14, iron)
+    rect(c, 5, 1, 10, 3, hexc("#ffd060"))            # the lamp, lit
+    rect(c, 6, 1, 9, 3, hexc("#fff0a0"))
+    px(c, 7, 2, hexc("#ffffff"))
+    px(c, 4, 2, hexc("#ffb84a", 140))                # its glow
+    px(c, 11, 2, hexc("#ffb84a", 140))
+    return c
+
+
+def well():
+    """A stone well with a little roof and a bucket."""
+    c = canvas()
+    cobbles(c)
+    roof, post, stone, water = hexc("#8a3a24"), hexc("#6a4422"), hexc("#9a96a0"), hexc("#2050c0")
+    for y, (x0, x1) in enumerate([(6, 9), (4, 11), (2, 13)]):
+        rect(c, x0, y, x1, y, roof)                  # the roof
+    rect(c, 3, 3, 3, 9, post)                        # its posts
+    rect(c, 12, 3, 12, 9, post)
+    rect(c, 7, 3, 7, 6, hexc("#c8b080"))             # the rope and bucket
+    rect(c, 6, 7, 8, 8, post)
+    rect(c, 2, 10, 13, 15, stone)                    # the stone ring
+    rect(c, 4, 10, 11, 11, water)
+    for x in (2, 6, 10):
+        rect(c, x, 13, x, 15, hexc("#6a6670"))
+    return c
+
+
+def stall():
+    """A market stall: a striped awning on two posts over a trestle of goods."""
+    c = canvas()
+    cobbles(c)
+    for i, x0 in enumerate(range(1, 15, 2)):         # the awning, striped red and cream
+        rect(c, x0, 1, x0 + 1, 4, hexc("#c83a2a" if i % 2 == 0 else "#efe4c8"))
+    for x in range(1, 15, 2):
+        px(c, x, 5, hexc("#c83a2a"))                 # its scalloped edge
+    rect(c, 2, 5, 2, 14, hexc("#6a4422"))            # the posts
+    rect(c, 13, 5, 13, 14, hexc("#6a4422"))
+    rect(c, 1, 10, 14, 11, hexc("#8a5c30"))          # the trestle
+    for x, col in ((3, "#e04030"), (5, "#40b040"), (7, "#f0d050"), (9, "#e04030"), (11, "#f0a030")):
+        rect(c, x, 8, x + 1, 9, hexc(col))           # its goods
+    return c
+
+
+def fountain():
+    """A round fountain: a stone basin of water, a jet in the middle."""
+    c = canvas()
+    cobbles(c)
+    stone, water, light = hexc("#b0acb8"), hexc("#3070e0"), hexc("#a0d8ff")
+    for y, (x0, x1) in enumerate([(5, 10), (3, 12), (2, 13), (1, 14), (1, 14), (1, 14), (2, 13), (3, 12), (5, 10)], start=5):
+        rect(c, x0, y, x1, y, stone)                 # the basin
+    for y, (x0, x1) in enumerate([(5, 10), (3, 12), (3, 12), (3, 12), (3, 12), (5, 10)], start=6):
+        rect(c, x0, y, x1, y, water)
+    rect(c, 7, 2, 8, 9, light)                       # the jet
+    for x, y in ((5, 2), (10, 2), (4, 4), (11, 4), (6, 1), (9, 1)):
+        px(c, x, y, light)                           # its spray
+    px(c, 5, 8, light)
+    px(c, 10, 10, light)
+    return c
+
+
+def statue():
+    """A statue on a plinth: a figure in pale stone, sword raised."""
+    c = canvas()
+    cobbles(c)
+    stone, shade, plinth = hexc("#e0dcd0"), hexc("#a8a498"), hexc("#7a7684")
+    rect(c, 3, 12, 12, 15, plinth)                   # the plinth
+    rect(c, 4, 12, 11, 12, hexc("#9a96a4"))
+    rect(c, 7, 1, 8, 2, stone)                       # the head
+    rect(c, 6, 3, 9, 7, stone)                       # the body
+    rect(c, 9, 3, 9, 7, shade)
+    rect(c, 6, 8, 6, 11, stone)                      # the legs
+    rect(c, 9, 8, 9, 11, shade)
+    rect(c, 4, 3, 5, 4, stone)                       # the raised arm
+    rect(c, 3, 0, 3, 3, hexc("#c8c8d0"))             # and the sword
+    rect(c, 2, 3, 4, 3, shade)
+    return c
+
+
 def oil(color):
     """A stoppered flask of weapon oil (AVABand's oils), the oil in its colour."""
     c = canvas()
@@ -403,6 +497,12 @@ for _gem, _colour in GEM_COLOURS.items():
 for _shop, (_digit, _sign, _emblem) in SHOPS.items():  # every shop's door, its own
     DRAWN["terrain:" + _shop] = ("ava_" + _shop + ".png", (lambda d, sg, e: lambda: shopfront(d, sg, e))(_digit, _sign, _emblem), True)
 DRAWN["terrain:shop_caravan"] = ("ava_shop_caravan.png", wagon, True)
+# The town as it grows with your renown.
+DRAWN["terrain:town_lamp"] = ("ava_town_lamp.png", lamp_post, True)
+DRAWN["terrain:town_well"] = ("ava_town_well.png", well, True)
+DRAWN["terrain:market_stall"] = ("ava_market_stall.png", stall, True)
+DRAWN["terrain:town_fountain"] = ("ava_town_fountain.png", fountain, True)
+DRAWN["terrain:town_statue"] = ("ava_town_statue.png", statue, True)
 DRAWN["object-base:oil"] = ("ava_oil.png", lambda: oil("#30b040"), False)
 DRAWN["object-base:trophy"] = ("ava_trophy.png", lambda: scale("#d03020"), False)
 for _trophy, _colour in SCALE_COLOURS.items():

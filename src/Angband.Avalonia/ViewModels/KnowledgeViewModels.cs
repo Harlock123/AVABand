@@ -378,7 +378,7 @@ public sealed partial class MainWindowViewModel
                 : "This character was made without hirelings.", rows);
     }
 
-    /// <summary>AVABand's quest journal: every quest taken or found, and the notice-board jobs taken.</summary>
+    /// <summary>AVABand's quest journal: how the town is doing, every quest taken or found, and the notice-board jobs taken.</summary>
     public KnowledgeCategoryViewModel CreateQuestJournal()
     {
         var rows = _game.QuestJournal()
@@ -386,9 +386,27 @@ public sealed partial class MainWindowViewModel
                 () => $"{q.Name}{(q.Done ? " (done)" : "")}\n\n{q.Text}"))
             .ToList();
         var active = rows.Count(r => r.Note == "under way");
-        return new KnowledgeCategoryViewModel("Quests", rows.Count == 0 ? "No quests yet" : $"{active} under way, {rows.Count - active} done",
+        var summary = rows.Count == 0 ? "No quests yet" : $"{active} under way, {rows.Count - active} done";
+        if (_game.TownGrowthOn) rows.Insert(0, CreateTownRow());
+        return new KnowledgeCategoryViewModel("Quests", summary,
             _game.AvaQuestsOn ? "No quests yet. The Prancing Pony (9) in town has work, and there are things to be found below."
                 : "This character was made without AVABand's quests.", rows);
+    }
+
+    /// <summary>"The town": its renown, the stage it has reached, and what the next one brings.</summary>
+    private KnowledgeRow CreateTownRow()
+    {
+        var stage = _game.TownStage;
+        var renown = _game.TownRenown;
+        var last = GameSession.TownStageNews.Length - 1;
+        var text = $"The town\n\nRenown {renown} (each story quest finished and each notice-board job done adds one). Stage {stage} of {last}.\n\n"
+                   + string.Join("\n", GameSession.TownStageNews.Take(stage + 1).Skip(stage == 0 ? 0 : 1).Select(n => "- " + n))
+                   + (stage < last
+                       ? $"\n\nNext, at renown {GameSession.TownStageRenown[stage + 1]}"
+                         + (GameSession.TownStageFor(renown) > stage ? " (earned: you'll see it when you next come up from the dungeon)" : "")
+                         + $": {GameSession.TownStageNews[stage + 1]}"
+                       : "\n\nThe town can grow no more: it is all your renown could make it.");
+        return new KnowledgeRow("¡", _cells.Color(stage > 0 ? "Yellow" : "Slate"), "The town", $"renown {renown}, stage {stage}", () => text);
     }
 
     /// <summary>
