@@ -123,6 +123,9 @@ public sealed class Player : IActor
     /// or -1 once the time ran out.
     /// </summary>
     public long SpeedRunResult { get; set; }
+
+    /// <summary>The second chance (AVABand's birth option) has been spent.</summary>
+    public bool SecondChanceUsed { get; set; }
     public string? KilledBy { get; set; }
     public bool IsResting { get; set; }
 

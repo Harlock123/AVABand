@@ -55,18 +55,18 @@ public static class Challenges
     /// <summary>The presets, easiest first. Classic is the game's defaults.</summary>
     public static IReadOnlyList<DifficultyPreset> Presets { get; } =
     [
-        new("relaxed", "Relaxed", "Everything known from the start, connected stairs, easier casting, hirelings, and monsters that don't learn your weak spots.",
-            Preset(connect: true, aiLearn: false, know: true, easyCasting: true, hirelings: true)),
+        new("relaxed", "Relaxed", "Everything known from the start, connected stairs, easier casting, hirelings, monsters that don't learn your weak spots, and a second chance if you fall early on.",
+            Preset(connect: true, aiLearn: false, know: true, easyCasting: true, hirelings: true, secondChance: true)),
         new("classic", "Classic", "AVABand as it comes: connected stairs, easier casting and hirelings; monsters learn, and you learn runes and flavours as you go.",
-            Preset(connect: true, aiLearn: true, know: false, easyCasting: true, hirelings: true)),
+            Preset(connect: true, aiLearn: true, know: false, easyCasting: true, hirelings: true, secondChance: false)),
         new("hard", "Hard", "Angband's casting, no connected stairs and no hirelings; monsters learn, and you learn everything the hard way.",
-            Preset(connect: false, aiLearn: true, know: false, easyCasting: false, hirelings: false)),
+            Preset(connect: false, aiLearn: true, know: false, easyCasting: false, hirelings: false, secondChance: false)),
     ];
 
-    private static Dictionary<string, bool> Preset(bool connect, bool aiLearn, bool know, bool easyCasting, bool hirelings) => new()
+    private static Dictionary<string, bool> Preset(bool connect, bool aiLearn, bool know, bool easyCasting, bool hirelings, bool secondChance) => new()
     {
         [OptionIds.ConnectStairs] = connect, [OptionIds.AiLearn] = aiLearn, [OptionIds.KnowRunes] = know, [OptionIds.KnowFlavors] = know,
-        [OptionIds.AvaEasyCasting] = easyCasting, [OptionIds.Hirelings] = hirelings,
+        [OptionIds.AvaEasyCasting] = easyCasting, [OptionIds.Hirelings] = hirelings, [OptionIds.AvaSecondChance] = secondChance,
     };
 
     /// <summary>The preset these options match, or null (custom).</summary>

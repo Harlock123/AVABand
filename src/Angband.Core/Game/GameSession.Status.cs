@@ -43,7 +43,7 @@ public sealed partial class GameSession
                     : "So great was his prowess and skill in warfare, the Elves said: 'The Mormegil cannot be slain, save by mischance.'"));
                 return;
             }
-            if (CheatDeath()) return;
+            if (CheatDeath() || SecondChance(killer)) return;
             Player.IsDead = true;
             Player.KilledBy = killer;
             NoteDeath();

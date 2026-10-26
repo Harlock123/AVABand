@@ -198,6 +198,7 @@ public sealed class PlayerSave
     public bool HeroicBirth { get; set; }
     public string? DailyDate { get; set; }
     public long SpeedRunResult { get; set; }
+    public bool SecondChanceUsed { get; set; }
     public Dictionary<string, int> NaturalStats { get; set; } = [];
     public Dictionary<string, int> StatDrain { get; set; } = [];
     public long MaxExperience { get; set; }

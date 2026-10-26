@@ -256,6 +256,38 @@ public sealed partial class GameSession
     /// Angband cheat_live: death is refused. The character is healed, cured and sent back to town
     /// (Angband's "cheat death"); the cheat has already cost them their score.
     /// </summary>
+    /// <summary>The deepest a death can be and still be forgiven by the second chance (250 ft).</summary>
+    public const int SecondChanceDepth = 5;
+
+    /// <summary>Whether this character still has its second chance (and could use one here).</summary>
+    public bool SecondChanceReady =>
+        Options[OptionIds.AvaSecondChance] && !Player.SecondChanceUsed && Player.DailyDate is null && !IsTutorial;
+
+    /// <summary>
+    /// AVABand's second chance (birth option, on in the Relaxed preset): the first death no deeper than
+    /// 250 ft wakes you in town with a third of your hit points, your ills cured, once a character —
+    /// and noted in the history. Not a cheat: the character still enters the high scores.
+    /// </summary>
+    private bool SecondChance(string killer)
+    {
+        if (!SecondChanceReady || Player.Depth > SecondChanceDepth) return false;
+        Player.SecondChanceUsed = true;
+        Player.Hp = Math.Max(1, Player.MaxHp / 3);
+        Player.HpFraction = 0;
+        foreach (var (id, _) in Player.Timed.Active.ToList())
+            if (Data.Timed(id) is { Harmful: true } def) Player.Timed.Set(def, 0);
+        Player.Food = Math.Max(Player.Food, Data.Constants.FoodFull - 1);
+        Player.RecallTimer = 0;
+        Player.DeepDescentTimer = 0;
+        AddHistory($"Fell to {killer} at {Player.Depth * Data.Constants.FeetPerLevel} ft — and was given a second chance");
+        Publish(new MessageEvent($"Everything goes dark... You wake by the fire in the Prancing Pony. Someone carried you up from "
+                                 + $"{(Player.Depth == 0 ? "the street" : $"{Player.Depth * Data.Constants.FeetPerLevel} ft")}. "
+                                 + "That was your second chance: there won't be another."));
+        RecalculateBonuses();
+        if (Player.Depth > 0) ChangeLevel(0, StairArrival.None);
+        return true;
+    }
+
     private bool CheatDeath()
     {
         if (!Options[OptionIds.CheatLive]) return false;

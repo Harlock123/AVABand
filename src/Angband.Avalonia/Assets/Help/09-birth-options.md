@@ -8,7 +8,7 @@ Three buttons on the creation screen set the options that make the most differen
 as you left them, and the list underneath is there to fine-tune ("Custom" when it matches none).
 
 - **Relaxed** — every rune and flavour known from the start, connected stairs, easier casting,
-  hirelings, and monsters that don't learn what you resist.
+  hirelings, monsters that don't learn what you resist, and a second chance (below).
 - **Classic** — AVABand as it comes (the defaults).
 - **Hard** — Angband 4.2.5's spell failure, no connected stairs and no hirelings.
 
@@ -64,6 +64,11 @@ them applies in the daily dungeon or the tutorial.
   wore (Help → Monsters). On by default; never in the daily dungeon or the tutorial.
 - **Hirelings** — a sword for hire at the Prancing Pony follows you down for a fee and a share of
   your gold (Help → Quests); never in the daily dungeon or the tutorial (on by default).
+- **A second chance** — once in a character's life, a death no deeper than 250 ft doesn't end it: you
+  wake by the fire in the Prancing Pony with a third of your hit points and your poison, cuts and the
+  like cured, and the history notes it. The next death is for real. It isn't a cheat — the character
+  still counts for the high scores and feats. Off by default; on in the *Relaxed* preset; never in
+  the daily dungeon or the tutorial.
 - **Challenge: no shopping** / **Challenge: speed run** — the challenges above.
 - **Persistent levels (experimental)** — levels are kept when you leave them.
 - **To-damage is a percentage of dice (experimental)** — to-dam makes each damage die bigger by a

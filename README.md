@@ -373,6 +373,11 @@ core kept busy.
   (`HirelingPicture`), with a health bar of their own in the sidebar; orders on the keys, Game →
   Hireling and your right-click menu. Two feats: *Old Comrades* (a hireling at level 20) and *There and
   Back Again* (back up to town from 1000 ft or deeper with the same one). The bots never hire.
+- **A second chance** (AVABand's own; birth option *A second chance*, `birth_ava_second_chance`, off, on in
+the Relaxed preset; `GameSession.SecondChance`): once a character, a death at 250 ft or shallower wakes
+them in town with a third of their hit points, harmful timed effects cured and food topped up
+(`Player.SecondChanceUsed`, saved), noted in the history and the dump. Not a cheat; never in the daily
+dungeon or the tutorial.
 - **Difficulty presets and challenge runs** (AVABand's own; `Game/Challenges.cs`): the creation screen's
   *Relaxed* / *Classic* / *Hard* buttons set the birth options that matter most (connected stairs,
   monster learning, runes and flavours known, easier casting, hirelings; Classic is the defaults, and

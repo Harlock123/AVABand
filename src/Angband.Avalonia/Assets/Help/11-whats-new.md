@@ -5,6 +5,8 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **A second chance**: a new birth option, on in the *Relaxed* preset — once, a death no deeper than
+  250 ft wakes you in the Prancing Pony instead of ending the character (Help → Birth options).
 - **Smarter pickup**: walking over ammunition your launcher fires picks it up whatever its
   enchantment, and so does walking over a potion, scroll, wand, ring or the like you haven't learned
   yet (two new options, both on). Right-click anything for *Always pick these up* or *Never pick
