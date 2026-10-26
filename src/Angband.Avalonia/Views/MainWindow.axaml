@@ -64,6 +64,7 @@
         <MenuItem x:Name="NewGameAsMenu" Header="Quick start _as" />
         <MenuItem Header="_Tutorial (learn the basics)" Command="{Binding StartTutorialCommand}" />
         <MenuItem Header="_Daily dungeon..." Command="{Binding ShowDailyCommand}" />
+        <MenuItem Header="Weekl_y challenge..." Command="{Binding ShowWeeklyCommand}" />
         <MenuItem Header="_Watch a replay..." Command="{Binding WatchReplayCommand}" />
         <MenuItem Header="Your _journey..." Command="{Binding ShowJourneyCommand}" />
         <MenuItem Header="S_tatistics..." Command="{Binding ShowStatsCommand}" />

@@ -96,6 +96,30 @@ public sealed class TitleScreenUiTests : IDisposable
     }
 
     [AvaloniaFact]
+    public void The_title_offers_this_weeks_challenge_after_the_daily_dungeon_and_plays_it()
+    {
+        var settings = new AppSettings { LastCharacter = new SavedCharacter { Name = "Borin", Race = "dwarf", Class = "warrior" } };
+        var (window, vm, _) = Open(settings, v => v.UseSaves(new SaveStore(Path.Combine(_dir, "saves")), resume: true));
+        var labels = vm.TitleChoices.Select(c => c.Label).ToList();
+        var week = Angband.Core.Game.WeeklyChallenge.ThisWeek();
+        var twist = Angband.Core.Game.WeeklyChallenge.TwistFor(week);
+        var choice = vm.TitleChoices.Single(c => c.Label == "This week's challenge");
+        Assert.Equal(labels.IndexOf("Today's daily dungeon") + 1, labels.IndexOf(choice.Label));
+        Assert.Equal($"the same for everyone all week, with a twist: {twist.Name}", choice.Detail);
+        TileRenderingTests.Save(window, "title-weekly");
+
+        // Its letter opens the week's window; playing starts the week's game.
+        window.KeyPressQwerty(Enum.Parse<PhysicalKey>(choice.Letter.ToUpperInvariant()), RawInputModifiers.None);
+        var dialog = window.OwnedWindows.OfType<DailyWindow>().Last();
+        var weekly = Assert.IsType<DailyViewModel>(dialog.DataContext);
+        Assert.True(weekly.IsWeekly);
+        weekly.PlayCommand.Execute(null);
+        Assert.False(vm.IsShowingTitle);
+        Assert.Equal(week, vm.Game.Player.WeeklyWeek);
+        Assert.Equal("Borin", vm.Game.Player.Name);
+    }
+
+    [AvaloniaFact]
     public void Arrows_move_the_highlight_and_the_title_stays_until_a_game_starts()
     {
         var (window, vm, _) = Open(new AppSettings());

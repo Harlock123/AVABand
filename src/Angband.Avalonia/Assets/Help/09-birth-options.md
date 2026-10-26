@@ -16,7 +16,7 @@ as you left them, and the list underneath is there to fine-tune ("Custom" when i
 
 Ways to make a run harder, ticked on the creation screen. Each gives the high scores and the
 character's headstone a tag (*[Ironman]*) and has feats of its own. They can be combined; none of
-them applies in the daily dungeon or the tutorial.
+them applies in the daily dungeon, the weekly challenge or the tutorial.
 
 - **Ironman** — *Force player descent* and *Word of Recall has no effect*: every staircase leads
   down, and you never see the town again. Feats for reaching 1000 ft and for winning.
@@ -61,14 +61,14 @@ them applies in the daily dungeon or the tutorial.
   count in full (Help → Magic). On by default, and on for characters made before it existed.
 - **Ghosts of fallen characters** — now and then, on a new level at the depth one of your dead
   characters fell at, its ghost walks; beat it to lay it to rest and win back one of the things it
-  wore (Help → Monsters). On by default; never in the daily dungeon or the tutorial.
+  wore (Help → Monsters). On by default; never in the daily dungeon, the weekly challenge or the tutorial.
 - **Hirelings** — a sword for hire at the Prancing Pony follows you down for a fee and a share of
-  your gold (Help → Quests); never in the daily dungeon or the tutorial (on by default).
+  your gold (Help → Quests); never in the daily dungeon, the weekly challenge or the tutorial (on by default).
 - **A second chance** — once in a character's life, a death no deeper than 250 ft doesn't end it: you
   wake by the fire in the Prancing Pony with a third of your hit points and your poison, cuts and the
   like cured, and the history notes it. The next death is for real. It isn't a cheat — the character
   still counts for the high scores and feats. Off by default; on in the *Relaxed* preset; never in
-  the daily dungeon or the tutorial.
+  the daily dungeon, the weekly challenge or the tutorial.
 - **Challenge: no shopping** / **Challenge: speed run** — the challenges above.
 - **Persistent levels (experimental)** — levels are kept when you leave them.
 - **To-damage is a percentage of dice (experimental)** — to-dam makes each damage die bigger by a

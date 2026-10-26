@@ -31,7 +31,7 @@ public sealed record TakeFromLockerCommand(string LockerId, string ItemJson, lon
 // you play — an heirloom left by one, for the next. Leaving something costs 50 gold and 5% of its worth;
 // taking it out 100 and 10%. Six lockers in all; no artifacts or quest items; and a character takes out
 // only what isn't too far past them (an item's level at most twice theirs and five). A birth option
-// turns it off, and daily-dungeon characters have none.
+// turns it off, and daily-dungeon and weekly-challenge characters have none.
 public sealed partial class GameSession
 {
     /// <summary>How many lockers there are, for all your characters together.</summary>
@@ -40,8 +40,8 @@ public sealed partial class GameSession
     /// <summary>The lockers (set by the app; null in replays and tests unless a test gives one).</summary>
     public IStrongroom? Strongroom { get; set; }
 
-    /// <summary>Whether this character can use the strongroom: the birth option, the inn's quests, and not a daily-dungeon character.</summary>
-    public bool StrongroomOn => Options[OptionIds.Strongroom] && AvaQuestsOn && Player.DailyDate is null && !NoShopping;
+    /// <summary>Whether this character can use the strongroom: the birth option, the inn's quests, and not a daily-dungeon or weekly-challenge character.</summary>
+    public bool StrongroomOn => Options[OptionIds.Strongroom] && AvaQuestsOn && !Player.IsSeededRun && !NoShopping;
 
     /// <summary>What leaving an item costs: 50 gold and 5% of its worth.</summary>
     public long StrongroomDepositFee(Item item) => 50 + ItemWorth(item) / 20;

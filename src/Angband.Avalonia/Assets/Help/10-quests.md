@@ -52,7 +52,7 @@ which level you can have it). The birth option *The strongroom* turns it off.
 ## Swords for hire
 
 At the Prancing Pony, *Hire a sword* (with the birth option *Hirelings*, on by default; never in the
-daily dungeon). Each day two or three hard-faced folk by the fire would go down with you — a human,
+daily dungeon or the weekly challenge). Each day two or three hard-faced folk by the fire would go down with you — a human,
 dwarf, elf or hobbit, a **warrior** or an **archer**, of your level or up to three below — for a
 **fee** up front and a **share** of the gold you pick up, 10% to 20% (the bigger the share, the
 smaller the fee), taken as you pick it up. Only one at a time. They follow you everywhere — down the

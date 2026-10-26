@@ -59,7 +59,8 @@ rather than won by Grishnag's death, the palantír kept and looked into ten time
 counts the looks); a fallen character's ghost laid to rest, and three with one character; ten
 notice-board jobs; a hireling at level 20, and one brought back up from 1000 ft; the daily dungeon's
 (a first try, 1000 ft in one, and seven days running — these from the daily board,
-`FeatBook.CheckBoard`, as each try is recorded and at start-up); the challenge runs' (1000 ft as an
+`FeatBook.CheckBoard`, as each try is recorded and at start-up); the weekly challenge's (a first
+try, 1000 ft in one, and four weeks running, the same way from its board); the challenge runs' (1000 ft as an
 Ironman and a win as one, 1500 ft with forced descent, 1000 ft without shopping, and a speed run
 made); Sauron and Morgoth slain; and a win with each class.
 They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
@@ -147,6 +148,27 @@ Priest reached 1450 ft (level 18), 12,345 points — killed by …", `DailyEntry
 replay as…* saves the try's replay wherever you like as `AVABand-daily-<day>-try<n>.avareplay`.
 Daily characters are ordinary games in
 every other way: saved, scored, buried.
+
+**The weekly challenge** (AVABand's own, `Game/WeeklyChallenge.cs` and `Game/GameSession.Weekly.cs`;
+Game → Weekly challenge..., and *This week's challenge* on the title screen): the daily dungeon's idea
+for a whole ISO week, Monday to Sunday in UTC ("2026-W44"; a year's last week can run into January).
+The seed is FNV-1a of "AVABand weekly" and the week, the week's character is drawn from it as the
+daily's is, and the week has a **twist** on the rules: *Darkness* (no room lit below the town),
+*Glass cannon* (+50% damage dealt and taken), *Famine* (digestion doubled), *Swarm* (half as many
+again of a level's randomly placed monsters, with their friends), *Restless foes* (+2 speed for every
+monster, in the turn scheduler), *Gold rush* (gold found doubled) or *Lean times* (only the General
+Store and your Home will sell; the caravan won't). The twists take turns, three places on each week,
+so none repeats two weeks running and each comes round every seven weeks. The week and the twist are
+kept with the character (`Player.WeeklyWeek`, `Player.WeeklyTwist`), so its save and its replay play
+the same rules; every twist is checked against them, so ordinary and daily games are untouched.
+Tries are unlimited, as the daily's are: each goes in `weekly.json` beside the scores, numbered and
+best-first, with its replay, shown in the daily dungeon's window with the twist described, *Copy
+result* ("AVABand weekly 2026-W44 (Darkness): Bob the Human Warrior reached 1250 ft (level 18), 9,876
+points — killed by …; 3 tries.", `WeeklyEntry.ShareLine`) and *Save replay as…*
+(`AVABand-weekly-<week>-try<n>.avareplay`). Like daily characters (`Player.IsSeededRun`), weekly ones
+have no hirelings, ghosts, strongroom or challenge runs. Three feats come from the weekly board
+(`FeatBook.CheckWeeklyBoard`): *Weekly Warrior* (a first try), *Week's Deepest* (1000 ft in one) and
+*Four Weeks Running* (tries four weeks in a row, across a year's end too).
 
 **Bags of holding** (AVABand's own, `Game/GameSession.Bags.cs`; base `bag` in `ava_object_bases.json`):
 carried in the pack, not worn — only the best one counts. A *Sack of Holding* (from 500 ft) lets
@@ -348,7 +370,7 @@ core kept busy.
   cheat's, the tutorial or a replay — and lets fall one of the things it wore, at random (never a
   torch or a quest item), and two piles of gold: an artifact as itself only if this game hasn't made
   it and both games used the standard set, otherwise a great ego of its kind; a headstone from
-  before stones kept gear gives a great item suited to the class. Not in the daily dungeon or the
+  before stones kept gear gives a great item suited to the class. Not in the daily dungeon, the weekly challenge or the
   tutorial. Two feats: *Rest Now* and *Keeper of the Barrows* (three with one character).
 - **Merchant caravans** (AVABand's own; `GameSession.Caravan.cs`): one return to town in four (from
   250 ft), a caravan camps in the square — a wagon tile in every set (`ava_shop_caravan.png`, from
@@ -368,9 +390,9 @@ core kept busy.
   character's save in two steps: the change is written to the lockers as pending (with which save, and
   when), the character is saved, then the change is made final; a game that stops in between is sorted
   out on the next start (`StrongroomStore.Recover`) — final if that save was written since, undone if
-  not — so an item is never in both a locker and a save, nor in neither. Daily-dungeon characters have none.
+  not — so an item is never in both a locker and a save, nor in neither. Daily-dungeon and weekly-challenge characters have none.
 - **Hirelings** (AVABand's own; `GameSession.Hireling.cs`, `GameSession.HirelingFight.cs`; birth option
-  *Hirelings*, `birth_ava_hirelings`, on; never in the daily dungeon or the tutorial): at the Prancing Pony,
+  *Hirelings*, `birth_ava_hirelings`, on; never in the daily dungeon, the weekly challenge or the tutorial): at the Prancing Pony,
   *Hire a sword* offers two or three a day (`HireCandidates`, from dice of their own seeded from the game
   and the day, so nothing else shifts and asking again shows the same faces) — a human, dwarf, elf or
   hobbit, a warrior or an archer, of your level or up to three below, for a fee (30 gold a level and 4 a
@@ -407,7 +429,7 @@ core kept busy.
 the Relaxed preset; `GameSession.SecondChance`): once a character, a death at 250 ft or shallower wakes
 them in town with a third of their hit points, harmful timed effects cured and food topped up
 (`Player.SecondChanceUsed`, saved), noted in the history and the dump. Not a cheat; never in the daily
-dungeon or the tutorial.
+dungeon, the weekly challenge or the tutorial.
 - **Difficulty presets and challenge runs** (AVABand's own; `Game/Challenges.cs`): the creation screen's
   *Relaxed* / *Classic* / *Hard* buttons set the birth options that matter most (connected stairs,
   monster learning, runes and flavours known, easier casting, hirelings; Classic is the defaults, and
@@ -416,7 +438,7 @@ dungeon or the tutorial.
   the shops and the caravan refuse to sell, the strongroom is shut) and *Speed run* (`birth_ava_speed_run`:
   1000 ft within 15,000 normal turns, counted down on the status bar and settled in `Player.SpeedRunResult`)
   — are birth options too, so they're saved, dumped and shown in Settings like the rest; they tag the high
-  scores and headstones (`ScoreEntry.Challenges`) and have five feats. Never in the daily dungeon or the
+  scores and headstones (`ScoreEntry.Challenges`) and have five feats. Never in the daily dungeon, the weekly challenge or the
   tutorial.
 - **Blows and armour weight, as Angband 4.2.5** (`Game/GameSession.AngbandBlows.cs`; the birth
   option *Angband 4.2's blows*, `birth_angband_blows`, on by default — off, each class's fixed blows

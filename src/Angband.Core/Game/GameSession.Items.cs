@@ -328,9 +328,10 @@ public sealed partial class GameSession
     private void TakeGold(Item gold)
     {
         Level.Objects.Remove(Player.Position, gold);
-        Publish(new MessageEvent($"You have found {gold.GoldValue} gold pieces worth of {ItemNaming.Plain(gold.Kind.Name, false)}."));
-        Player.Gold += TakeHirelingShare(gold.GoldValue); // (AVABand: your hireling's share comes out first)
-        Publish(new ItemPickedUpEvent(gold.Kind.Id, gold.GoldValue, Gold: true));
+        var value = TwistGold(gold.GoldValue); // (the weekly challenge's gold rush)
+        Publish(new MessageEvent($"You have found {value} gold pieces worth of {ItemNaming.Plain(gold.Kind.Name, false)}."));
+        Player.Gold += TakeHirelingShare(value); // (AVABand: your hireling's share comes out first)
+        Publish(new ItemPickedUpEvent(gold.Kind.Id, value, Gold: true));
     }
 
     /// <summary>

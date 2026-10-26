@@ -6,7 +6,7 @@ namespace Angband.Avalonia.ViewModels;
 // AVABand's ghosts of fallen characters in the UI: each game started or loaded is handed the graveyard's
 // fallen (before its replay starts recording, so the replay has them and never needs the graveyard), and
 // a ghost laid to rest is marked on its headstone, so it walks for no one again. Not for replays, the
-// tutorial or the daily dungeon; a cheat's ghost-laying doesn't count.
+// tutorial, the daily dungeon or the weekly challenge; a cheat's ghost-laying doesn't count.
 public sealed partial class MainWindowViewModel
 {
     /// <summary>Hands the game just attached the graveyard's fallen, and listens for a ghost laid to rest.</summary>

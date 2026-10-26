@@ -413,6 +413,7 @@ public sealed partial class GameSession
         BeginShopVisit(store);
         GreetInShop(store);
         if (NoShopping && !store.IsHome) Publish(new MessageEvent("(No shopping: you can sell here, but not buy.)"));
+        else if (TwistShopShut(store)) Publish(new MessageEvent("(Lean times: you can sell here this week, but not buy.)"));
         return 0;
     }
 
@@ -434,6 +435,11 @@ public sealed partial class GameSession
         if (NoShopping && !store.IsHome)
         {
             Publish(new MessageEvent(NoShoppingRefusal));
+            return 0;
+        }
+        if (TwistShopShut(store))
+        {
+            Publish(new MessageEvent(LeanTimesRefusal));
             return 0;
         }
         var always = store.IsAlways(stockItem);

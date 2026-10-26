@@ -72,6 +72,7 @@ public sealed partial class GameSession
         if (Player.Regenerates || Player.HasGearFlag(ItemFlags.Regen)) amount += 30;
         if (Player.HasGearFlag(ItemFlags.SlowDigest)) amount /= 5;
         amount = RaceDigestion(amount);
+        amount = TwistDigestion(amount); // (the weekly challenge's famine)
         SetFood(Player.Food - Math.Max(1, amount));
     }
 

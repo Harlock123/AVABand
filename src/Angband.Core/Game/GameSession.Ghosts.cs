@@ -221,7 +221,7 @@ public static class FallenGhosts
 // four for each — bring its ghost, somewhere out of sight of where you arrive, one a level; it walks once
 // for each character until it is laid to rest, and then for no one. Beaten, it lets fall one of the things
 // it wore (an artifact this game has already made is given as an ego of its kind instead), and gold. Not
-// in the daily dungeon or the tutorial; a replay has only the ghosts its game had.
+// in the daily dungeon, the weekly challenge or the tutorial; a replay has only the ghosts its game had.
 public sealed partial class GameSession
 {
     /// <summary>The fallen this character may meet as ghosts, those met, and those laid to rest (saved with it).</summary>
@@ -229,8 +229,8 @@ public sealed partial class GameSession
 
     private readonly Dictionary<string, MonsterRaceDef> _ghostRaces = new(StringComparer.Ordinal);
 
-    /// <summary>Whether ghosts walk for this character: the birth option, and not in the daily dungeon or the tutorial.</summary>
-    public bool GhostsOn => Options[OptionIds.AvaGhosts] && Player.DailyDate is null && !IsTutorial;
+    /// <summary>Whether ghosts walk for this character: the birth option, and not in the daily dungeon, the weekly challenge or the tutorial.</summary>
+    public bool GhostsOn => Options[OptionIds.AvaGhosts] && !Player.IsSeededRun && !IsTutorial;
 
     /// <summary>
     /// The graveyard's fallen (newest first), handed in as the game is started or loaded — before its

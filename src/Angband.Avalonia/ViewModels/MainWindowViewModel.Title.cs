@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
+using Angband.Core.Game;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -71,6 +72,8 @@ public sealed partial class MainWindowViewModel
             choices.Add(("Load a saved character", null, () => LoadRequested?.Invoke()));
         if (_saves is not null) choices.Add(("Import a save from another computer", "a character's save, copied over", RequestImport));
         if (!IsFirstRun) choices.Add(("Today's daily dungeon", "the same dungeon for everyone, today", ShowDaily));
+        if (!IsFirstRun)
+            choices.Add(("This week's challenge", $"the same for everyone all week, with a twist: {WeeklyChallenge.TwistFor(WeeklyChallenge.ThisWeek()).Name}", ShowWeekly));
         if (_records is not null) choices.Add(("High scores", null, ShowHighScores));
         if (_records?.LoadGraveyard().Fallen.Count > 0) choices.Add(("The graveyard", "those who went before", ShowGraveyard));
         if (_records is not null && _museum.Artifacts.Count + _museum.Uniques.Count > 0)

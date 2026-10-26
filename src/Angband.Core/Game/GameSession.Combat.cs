@@ -322,6 +322,7 @@ public sealed partial class GameSession
             HurtHireling(damage, "your own hand");
             return !monster.IsActive;
         }
+        if (!byHireling) damage = TwistDamageDealt(damage); // (the weekly challenge's glass cannon)
         Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage, Ally: byHireling));
         Reveal(monster);
         WakeMonster(monster);

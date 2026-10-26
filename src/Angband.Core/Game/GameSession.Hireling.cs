@@ -127,7 +127,7 @@ public sealed class FallenCompanion
 // gold you pick up. They keep close, fight what comes near (and what you tell them to), take blows
 // meant for you, heal slowly, fall back when badly hurt, learn slowly from the fights they are in — and
 // can die for good. Only one at a time; birth option "Hirelings" (birth_ava_hirelings), never in the
-// daily dungeon or the tutorial. Their turn and the fighting are in GameSession.HirelingFight.cs.
+// daily dungeon, the weekly challenge or the tutorial. Their turn and the fighting are in GameSession.HirelingFight.cs.
 public sealed partial class GameSession
 {
     /// <summary>The candidates the inn offers in a day: two, and a third one time in two.</summary>
@@ -139,8 +139,8 @@ public sealed partial class GameSession
     /// <summary>How much lower than yours a candidate's level may be.</summary>
     public const int HireLevelSpread = 3;
 
-    /// <summary>Whether this character can hire a sword (the birth option; never in the daily dungeon or the tutorial).</summary>
-    public bool HirelingsOn => Options[OptionIds.Hirelings] && Player.DailyDate is null && !IsTutorial;
+    /// <summary>Whether this character can hire a sword (the birth option; never in the daily dungeon, the weekly challenge or the tutorial).</summary>
+    public bool HirelingsOn => Options[OptionIds.Hirelings] && !Player.IsSeededRun && !IsTutorial;
 
     /// <summary>The sword in your hire, if any.</summary>
     public Hireling? Hireling { get; private set; }

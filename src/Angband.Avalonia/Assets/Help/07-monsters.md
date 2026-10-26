@@ -30,7 +30,7 @@ Beat it and it is laid to rest for good — for every character after you too, a
 the graveyard says who did it — and it lets fall one of the things it wore when it died, and gold.
 An artifact this game has already made comes as a fine ego of the same kind instead. Each ghost
 walks only once for each character; leave it be and it may wait for the next. Ghosts never walk in
-the daily dungeon or the tutorial.
+the daily dungeon, the weekly challenge or the tutorial.
 
 ## How monsters behave
 

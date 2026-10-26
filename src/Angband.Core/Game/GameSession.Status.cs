@@ -26,6 +26,7 @@ public sealed partial class GameSession
         // Angband take_hit: invulnerability shrugs off all but the mightiest blows; damage
         // reduction (DAM_RED gear or shape) comes off every other hurt.
         if (Player.Timed.Has("invuln") && damage < 9000) return;
+        damage = TwistDamageTaken(damage); // (the weekly challenge's glass cannon)
         damage -= DamageReduction;
         if (Player.IsDead || damage <= 0) return;
         Player.Hp -= damage;

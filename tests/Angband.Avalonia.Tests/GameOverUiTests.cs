@@ -361,4 +361,82 @@ public sealed class GameOverUiTests : IDisposable
         DialogFit.Show(dialog, window);
         TileRenderingTests.Save(dialog, "daily");
     }
+
+    /// <summary>
+    /// The weekly challenge: Game → Weekly challenge shows the week's character and twist; playing
+    /// it starts the week's seed, character and twist, and a try goes in the weekly table (not the
+    /// daily one) with a replay that plays back true.
+    /// </summary>
+    [AvaloniaFact]
+    public void TheWeeklyChallenge_IsPlayed_WithItsTwist_AndItsTriesKept()
+    {
+        var (window, vm) = Open();
+        vm.ReplayDirectory = Path.Combine(_dir, "replays");
+        var week = WeeklyChallenge.ThisWeek();
+        var twist = WeeklyChallenge.TwistFor(week);
+
+        // The menu item opens the daily dungeon's window, as the weekly challenge.
+        vm.ShowWeeklyCommand.Execute(null);
+        var shown = window.OwnedWindows.OfType<DailyWindow>().Last();
+        var weekly = Assert.IsType<DailyViewModel>(shown.DataContext);
+        Assert.True(weekly.IsWeekly);
+        Assert.Equal("The weekly challenge", shown.Title);
+        Assert.Equal($"The weekly challenge · {week}", weekly.Heading);
+        Assert.StartsWith("This week: a ", weekly.Character);
+        Assert.Contains(twist.Name, weekly.TwistLine);
+        Assert.True(global::Avalonia.Controls.ControlExtensions.FindControl<global::Avalonia.Controls.TextBlock>(shown, "TwistText")!.IsVisible);
+        Assert.Equal("Play this week's challenge", global::Avalonia.Controls.ControlExtensions.FindControl<global::Avalonia.Controls.Button>(shown, "PlayButton")!.Content);
+        Assert.True(weekly.IsEmpty);
+
+        weekly.PlayCommand.Execute(null);
+        Assert.False(shown.IsVisible); // playing closes the window
+        Assert.Equal(WeeklyChallenge.SeedFor(week), vm.Game.Seed);
+        Assert.Equal(week, vm.Game.Player.WeeklyWeek);
+        Assert.Same(twist, vm.Game.Twist);
+        Assert.Null(vm.Game.Player.DailyDate);
+        Assert.Equal(WeeklyChallenge.SpecFor(vm.Game.Data, week, "x").ClassId, vm.Game.Player.Class!.Id);
+        Assert.Contains(vm.Messages, m => m.Contains($"The twist — {twist.Name}"));
+
+        for (var i = 0; i < 5; i++) vm.Execute(new HoldCommand());
+        vm.Game.TakeHit(100_000, "a jackal");
+        var records = new RecordStore(Path.Combine(_dir, "records"));
+        Assert.Empty(records.LoadDaily().Entries);
+        var first = Assert.Single(records.LoadWeekly().For(week));
+        Assert.Equal(1, first.Attempt);
+        Assert.Equal(twist.Name, first.Twist);
+        Assert.StartsWith("killed by a jackal", first.Fate);
+        Assert.True(vm.FeatBook.Earned.ContainsKey("weekly")); // a first try is a feat
+        Assert.False(vm.FeatBook.Earned.ContainsKey("daily"));
+        Assert.True(records.LoadFeats().Earned.ContainsKey("weekly"));
+
+        // Its replay starts with the twist, and plays back to the same turn (the test's killing blow is no command).
+        var file = Angband.Core.Persistence.ReplayFile.Read(first.ReplayPath!);
+        var replay = new Angband.Core.Persistence.ReplayPlayer(vm.Game.Data, file);
+        Assert.Same(twist, replay.Game.Twist);
+        while (replay.Step()) { }
+        Assert.Equal(file.End!.GameTurn, replay.Game.GameTurn);
+
+        // A second try is numbered, and the share line counts the week's tries.
+        vm.StartWeekly();
+        vm.Game.TakeHit(100_000, "a cave spider");
+        var again = vm.CreateWeekly();
+        Assert.Equal(2, again.Rows.Count);
+        Assert.All(again.Rows, r => Assert.True(r.IsToday));
+        Assert.NotNull(again.Selected);
+        string? copied = null;
+        (string From, string Name)? saved = null;
+        again.CopyRequested += line => copied = line;
+        again.SaveReplayRequested += (from, name) => saved = (from, name);
+        again.Selected = again.Rows.Single(r => r.Entry.Attempt == 1);
+        again.CopyResultCommand.Execute(null);
+        Assert.StartsWith($"AVABand weekly {week} ({twist.Name}): ", copied);
+        Assert.Contains("killed by a jackal", copied);
+        Assert.EndsWith("; 2 tries.", copied);
+        again.SaveReplayCommand.Execute(null);
+        Assert.Equal((first.ReplayPath!, $"AVABand-weekly-{week}-try1.avareplay"), saved);
+
+        var dialog = new DailyWindow { DataContext = again };
+        DialogFit.Show(dialog, window);
+        TileRenderingTests.Save(dialog, "weekly");
+    }
 }

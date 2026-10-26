@@ -26,8 +26,9 @@ public sealed partial class MainWindowViewModel
             _featBook.Backfill(records.LoadScores().Entries, FeatDefs, _data);
             records.SaveFeats(_featBook);
         }
-        // The daily dungeon's feats, from its board (tries made before they were feats count too).
-        if (_featBook.CheckBoard(records.LoadDaily(), FeatDefs).Count > 0) records.SaveFeats(_featBook);
+        // The daily dungeon's and the weekly challenge's feats, from their boards (tries made before they were feats count too).
+        if (_featBook.CheckBoard(records.LoadDaily(), FeatDefs).Count + _featBook.CheckWeeklyBoard(records.LoadWeekly(), FeatDefs).Count > 0)
+            records.SaveFeats(_featBook);
         UnlocksChanged();
     }
 
@@ -160,6 +161,7 @@ public sealed partial class MainWindowViewModel
             // The graveyard keeps every end (as the scores do, not a cheat's), with its dump.
             if (!_game.IsCheater) _records.Bury(FallenRecord.From(entry, dump, CurrentReplayPath).KeepGear(_game));
             RecordDailyTry(entry);
+            RecordWeeklyTry(entry);
             var score = _game.IsCheater ? "Score not registered for cheaters."
                 : rank > 0
                 ? $"You placed #{rank} on the high-score table ({entry.Points} points)."

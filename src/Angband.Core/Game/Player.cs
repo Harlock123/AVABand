@@ -131,6 +131,18 @@ public sealed class Player : IActor
     /// <summary>The daily dungeon's day this character is playing (yyyy-MM-dd), or null for an ordinary game.</summary>
     public string? DailyDate { get; set; }
 
+    /// <summary>The weekly challenge's week this character is playing (ISO, "2026-W44"), or null for an ordinary game.</summary>
+    public string? WeeklyWeek { get; set; }
+
+    /// <summary>The weekly challenge's twist (its id, from <see cref="WeeklyChallenge.Twists"/>), or null: kept with the character so a replay plays it too.</summary>
+    public string? WeeklyTwist { get; set; }
+
+    /// <summary>
+    /// A daily dungeon or weekly challenge character: the same game for everyone, so none of what
+    /// makes your games your own — hirelings, ghosts, the strongroom, challenges.
+    /// </summary>
+    public bool IsSeededRun => DailyDate is not null || WeeklyWeek is not null;
+
     /// <summary>
     /// A speed run's end (AVABand's challenge): 0 while it's on, the turn 1000 ft was reached if in time,
     /// or -1 once the time ran out.

@@ -201,6 +201,8 @@ public sealed class PlayerSave
     /// <summary>The mods the character has been played with (AVABand's own); null for none and in older saves.</summary>
     public List<string>? Mods { get; set; }
     public string? DailyDate { get; set; }
+    public string? WeeklyWeek { get; set; }
+    public string? WeeklyTwist { get; set; }
     public long SpeedRunResult { get; set; }
     public bool SecondChanceUsed { get; set; }
     public Dictionary<string, int> NaturalStats { get; set; } = [];

@@ -21,13 +21,22 @@ public sealed class RecordStore(string directory)
     public DailyBoard LoadDaily() => DailyBoard.Load(DailyPath);
 
     /// <summary>A try at a day's dungeon, entered in the daily table; returns it (numbered).</summary>
-    public DailyEntry? RecordDaily(DailyEntry entry)
+    public DailyEntry? RecordDaily(DailyEntry entry) => Record(LoadDaily(), entry, DailyPath);
+
+    /// <summary>The weekly challenge's tries (AVABand's own).</summary>
+    public string WeeklyPath => Path.Combine(Directory, "weekly.json");
+
+    public WeeklyBoard LoadWeekly() => WeeklyBoard.Load(WeeklyPath);
+
+    /// <summary>A try at a week's challenge, entered in the weekly table; returns it (numbered).</summary>
+    public WeeklyEntry? RecordWeekly(WeeklyEntry entry) => Record(LoadWeekly(), entry, WeeklyPath);
+
+    private static TEntry? Record<TEntry>(TryBoard<TEntry> board, TEntry entry, string path) where TEntry : DailyEntry
     {
         try
         {
-            var board = LoadDaily();
             board.Add(entry);
-            board.Save(DailyPath);
+            board.Save(path);
             return entry;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)

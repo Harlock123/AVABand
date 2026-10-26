@@ -3,21 +3,21 @@
         xmlns:vm="using:Angband.Avalonia.ViewModels"
         x:Class="Angband.Avalonia.Views.DailyWindow"
         x:DataType="vm:DailyViewModel"
-        Title="The daily dungeon"
+        Title="{Binding WindowTitle}"
         Width="900" Height="560"
         WindowStartupLocation="CenterOwner">
   <DockPanel Margin="18">
-    <!-- Today's character and the way in, then every try so far. -->
+    <!-- Today's (or this week's) character, the week's twist and the way in; then every try so far. -->
     <Border DockPanel.Dock="Top" Background="#1a1512" BorderBrush="#4a3a2a" BorderThickness="1" CornerRadius="6" Padding="16" Margin="0,0,0,14">
       <DockPanel>
-        <Button x:Name="PlayButton" DockPanel.Dock="Right" Content="Play today's dungeon" Classes="accent" Command="{Binding PlayCommand}"
+        <Button x:Name="PlayButton" DockPanel.Dock="Right" Content="{Binding PlayLabel}" Classes="accent" Command="{Binding PlayCommand}"
                 VerticalAlignment="Center" Padding="16,8" />
         <StackPanel Spacing="4">
-          <TextBlock Text="{Binding Today, StringFormat='The daily dungeon · {0}'}" FontFamily="{StaticResource TitleFont}" FontSize="22" Foreground="#e2d3ae" />
+          <TextBlock Text="{Binding Heading}" FontFamily="{StaticResource TitleFont}" FontSize="22" Foreground="#e2d3ae" />
           <TextBlock Text="{Binding Character}" FontSize="16" Foreground="#ece3d6" />
           <TextBlock Text="{Binding Stats}" FontFamily="{StaticResource MonoFont}" FontSize="13" Foreground="#b8a898" />
-          <TextBlock Text="The same dungeon and character for everyone who plays it today; a new one tomorrow (UTC)."
-                     FontSize="12" Foreground="#a0907e" TextWrapping="Wrap" />
+          <TextBlock x:Name="TwistText" Text="{Binding TwistLine}" IsVisible="{Binding IsWeekly}" FontSize="14" Foreground="#f0b860" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Blurb}" FontSize="12" Foreground="#a0907e" TextWrapping="Wrap" />
         </StackPanel>
       </DockPanel>
     </Border>
@@ -32,7 +32,7 @@
       </StackPanel>
     </DockPanel>
     <Grid DockPanel.Dock="Top" ColumnDefinitions="100,60,*,140,90,*" Margin="10,0,10,6">
-      <TextBlock Grid.Column="0" Text="Day" FontWeight="SemiBold" Foreground="#8ab4f8" />
+      <TextBlock Grid.Column="0" Text="{Binding PeriodHeader}" FontWeight="SemiBold" Foreground="#8ab4f8" />
       <TextBlock Grid.Column="1" Text="Try" FontWeight="SemiBold" Foreground="#8ab4f8" />
       <TextBlock Grid.Column="2" Text="Character" FontWeight="SemiBold" Foreground="#8ab4f8" />
       <TextBlock Grid.Column="3" Text="Reached" FontWeight="SemiBold" Foreground="#8ab4f8" />
@@ -40,7 +40,7 @@
       <TextBlock Grid.Column="5" Text="Fate" FontWeight="SemiBold" Foreground="#8ab4f8" />
     </Grid>
     <Panel>
-      <TextBlock Text="No tries yet. Every day brings a new dungeon." IsVisible="{Binding IsEmpty}" Opacity="0.7"
+      <TextBlock Text="{Binding EmptyText}" IsVisible="{Binding IsEmpty}" Opacity="0.7"
                  HorizontalAlignment="Center" VerticalAlignment="Center" />
       <ListBox x:Name="Tries" ItemsSource="{Binding Rows}" SelectedItem="{Binding Selected}">
         <ListBox.ItemTemplate>

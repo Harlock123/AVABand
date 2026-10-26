@@ -74,11 +74,11 @@ public static class Challenges
 }
 
 // The challenges in play (Challenges): no shopping and the speed run's clock. Ironman and forced
-// descent are Angband's own birth options (GameSession.Options). None of them in the daily dungeon or
-// the tutorial.
+// descent are Angband's own birth options (GameSession.Options). None of them in the daily dungeon, the
+// weekly challenge or the tutorial.
 public sealed partial class GameSession
 {
-    private bool ChallengesApply => Player.DailyDate is null && !IsTutorial;
+    private bool ChallengesApply => !Player.IsSeededRun && !IsTutorial;
 
     /// <summary>The challenges this character took on, by name.</summary>
     public IReadOnlyList<string> ChallengeNames => ChallengesApply ? Challenges.Names(id => Options[id]) : [];

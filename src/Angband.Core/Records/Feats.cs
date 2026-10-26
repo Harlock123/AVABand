@@ -7,7 +7,9 @@ namespace Angband.Core.Records;
 /// <summary>A feat: a milestone any character can reach, kept for good once one has.</summary>
 /// <param name="Earned">Whether this character has done it (checked after each command).</param>
 /// <param name="OnBoard">For a daily-dungeon feat: whether the daily board shows it done (checked as each try is recorded).</param>
-public sealed record FeatDef(string Id, string Name, string Description, Func<GameSession, bool> Earned, Func<DailyBoard, bool>? OnBoard = null);
+/// <param name="OnWeekly">For a weekly-challenge feat: whether the weekly board shows it done (likewise).</param>
+public sealed record FeatDef(string Id, string Name, string Description, Func<GameSession, bool> Earned, Func<DailyBoard, bool>? OnBoard = null,
+    Func<WeeklyBoard, bool>? OnWeekly = null);
 
 /// <summary>When a feat was first done, and by whom.</summary>
 public sealed class FeatRecord
@@ -61,6 +63,11 @@ public static class Feats
         feats.Add(new("daily_deep", "Deep of the Day", $"Reach {20 * data.Constants.FeetPerLevel} ft in a daily dungeon.",
             g => g.Player.DailyDate is not null && g.Player.MaxDepth >= 20));
         feats.Add(new("daily_week", "Seven Days Running", "Try the daily dungeon seven days in a row.", _ => false, b => DailyStreak(b) >= 7));
+        feats.Add(new("weekly", "Weekly Warrior", "Finish a try at the weekly challenge.", _ => false, OnWeekly: b => b.Entries.Count > 0));
+        feats.Add(new("weekly_deep", "Week's Deepest", $"Reach {20 * data.Constants.FeetPerLevel} ft in a weekly challenge.",
+            g => g.Player.WeeklyWeek is not null && g.Player.MaxDepth >= 20));
+        feats.Add(new("weekly_month", "Four Weeks Running", "Try the weekly challenge four weeks in a row.", _ => false,
+            OnWeekly: b => WeeklyStreak(b) >= 4));
         var deep = 20 * data.Constants.FeetPerLevel;
         feats.Add(new("challenge_ironman", "Iron Will", $"Reach {deep} ft as an Ironman.",
             g => g.ChallengeNames.Contains(Challenges.Ironman.Name) && g.Player.MaxDepth >= 20));
@@ -87,6 +94,20 @@ public static class Feats
         for (int i = 0, run = 0; i < days.Count; i++)
         {
             run = i > 0 && days[i].DayNumber == days[i - 1].DayNumber + 1 ? run + 1 : 1;
+            best = Math.Max(best, run);
+        }
+        return best;
+    }
+
+    /// <summary>The longest run of weeks in a row with a weekly-challenge try on the board (a year's end is no break).</summary>
+    public static int WeeklyStreak(WeeklyBoard board)
+    {
+        var weeks = board.Entries.Select(e => WeeklyChallenge.MondayOf(e.Day)).OfType<DateOnly>()
+            .Select(monday => monday.DayNumber / 7).Distinct().Order().ToList();
+        var best = 0;
+        for (int i = 0, run = 0; i < weeks.Count; i++)
+        {
+            run = i > 0 && weeks[i] == weeks[i - 1] + 1 ? run + 1 : 1;
             best = Math.Max(best, run);
         }
         return best;
@@ -157,11 +178,19 @@ public sealed class FeatBook
     }
 
     /// <summary>Records the daily-dungeon feats the board newly shows (named for its latest try); returns them.</summary>
-    public IReadOnlyList<FeatDef> CheckBoard(DailyBoard board, IReadOnlyList<FeatDef> feats, DateTime? whenUtc = null)
+    public IReadOnlyList<FeatDef> CheckBoard(DailyBoard board, IReadOnlyList<FeatDef> feats, DateTime? whenUtc = null) =>
+        CheckTries(board.Entries, feats.Where(f => f.OnBoard is { } done && !Earned.ContainsKey(f.Id) && done(board)), whenUtc);
+
+    /// <summary>Records the weekly-challenge feats the weekly board newly shows (named for its latest try); returns them.</summary>
+    public IReadOnlyList<FeatDef> CheckWeeklyBoard(WeeklyBoard board, IReadOnlyList<FeatDef> feats, DateTime? whenUtc = null) =>
+        CheckTries(board.Entries, feats.Where(f => f.OnWeekly is { } done && !Earned.ContainsKey(f.Id) && done(board)), whenUtc);
+
+    /// <summary>Records feats a board of tries newly shows, named for its latest try.</summary>
+    private List<FeatDef> CheckTries(IEnumerable<DailyEntry> tries, IEnumerable<FeatDef> done, DateTime? whenUtc)
     {
-        var latest = board.Entries.OrderBy(e => e.DateUtc).LastOrDefault();
+        var latest = tries.OrderBy(e => e.DateUtc).LastOrDefault();
         if (latest is null) return [];
-        var fresh = feats.Where(f => f.OnBoard is { } done && !Earned.ContainsKey(f.Id) && done(board)).ToList();
+        var fresh = done.ToList();
         foreach (var feat in fresh)
             Earned[feat.Id] = new FeatRecord { WhenUtc = whenUtc ?? latest.DateUtc, Character = $"{latest.Name} the {latest.Race} {latest.Class}" };
         return fresh;

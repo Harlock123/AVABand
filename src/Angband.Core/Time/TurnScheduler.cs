@@ -40,6 +40,9 @@ public sealed class TurnScheduler
 
     public long GameTurn { get; private set; }
 
+    /// <summary>Speed added to an actor's own as it gains energy (AVABand's weekly challenge: restless foes), or null for none.</summary>
+    public Func<IActor, int>? SpeedBonus { get; set; }
+
     /// <summary>Actors still due to act in the current game turn after the one awaiting input.</summary>
     public int PendingInTurn => _ready.Count - _readyIndex;
 
@@ -108,7 +111,7 @@ public sealed class TurnScheduler
         _readyIndex = 0;
         foreach (var actor in _actors)
         {
-            actor.Energy += EnergyTable.EnergyPerTurn(actor.Speed);
+            actor.Energy += EnergyTable.EnergyPerTurn(SpeedBonus is null ? actor.Speed : actor.Speed + SpeedBonus(actor));
             if (actor.Energy >= EnergyTable.MoveEnergy) _ready.Add(actor);
         }
         _ready.Sort(static (a, b) =>

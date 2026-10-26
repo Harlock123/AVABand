@@ -261,7 +261,7 @@ public sealed partial class GameSession
 
     /// <summary>Whether this character still has its second chance (and could use one here).</summary>
     public bool SecondChanceReady =>
-        Options[OptionIds.AvaSecondChance] && !Player.SecondChanceUsed && Player.DailyDate is null && !IsTutorial;
+        Options[OptionIds.AvaSecondChance] && !Player.SecondChanceUsed && !Player.IsSeededRun && !IsTutorial;
 
     /// <summary>
     /// AVABand's second chance (birth option, on in the Relaxed preset): the first death no deeper than

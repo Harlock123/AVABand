@@ -133,7 +133,7 @@ public static class SaveGame
                 Shape = p.Shape, StatScramble = new(p.StatScramble),
                 ConHpRemainder = p.ConHpRemainder, Regenerates = p.Regenerates, Infravision = p.Infravision,
                 MaxMana = p.MaxMana, Mana = p.Mana, ManaFraction = p.ManaFraction,
-                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
+                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, WeeklyWeek = p.WeeklyWeek, WeeklyTwist = p.WeeklyTwist, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
                 MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, RecallDepth = p.RecallDepth, DeepDescentTimer = p.DeepDescentTimer,
                 LearnedSpells = [.. p.LearnedSpells], CastSpells = p.CastSpells.Order(StringComparer.Ordinal).ToList(),
                 BaseSpeed = p.BaseSpeed, BaseArmour = p.BaseArmour, BaseToHit = p.BaseToHit, BaseToDam = p.BaseToDam,
@@ -408,6 +408,8 @@ public static class SaveGame
         p.NoteMods(ps.Mods ?? []);
         p.NoteMods(data.Mods);
         p.DailyDate = ps.DailyDate;
+        p.WeeklyWeek = ps.WeeklyWeek;
+        p.WeeklyTwist = ps.WeeklyTwist;
         p.SpeedRunResult = ps.SpeedRunResult;
         p.SecondChanceUsed = ps.SecondChanceUsed;
         // Saves from before gear stat bonuses: the current stats were the natural ones.

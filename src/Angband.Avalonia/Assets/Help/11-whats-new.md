@@ -5,6 +5,13 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **The weekly challenge** (Game → Weekly challenge..., or *This week's challenge* on the title
+  screen): like the daily dungeon, but for a whole week — one dungeon and one character for
+  everyone, and a twist on the rules that changes each week: *Darkness*, *Glass cannon*, *Famine*,
+  *Swarm*, *Restless foes*, *Gold rush* or *Lean times*. Try as often as you like until Sunday is
+  out (UTC); every try goes on the weekly table with its replay, and *Copy result* makes a line to
+  share. Three new feats: *Weekly Warrior*, *Week's Deepest* and *Four Weeks Running* (Help →
+  Getting started).
 - **Unlocks earned through feats**: rewards for collectors that change nothing about the game's
   balance. Some feats unlock another picture behind the title screen (they take turns), a frame for
   your character cards (eight in all: trophy, spectral, iron, dawn, gold, and silver, elven and

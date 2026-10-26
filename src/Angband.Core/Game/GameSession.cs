@@ -31,6 +31,7 @@ public sealed partial class GameSession : ITurnHandler
         TownSeed = Rng.NextULong();
         _generator = new DungeonGenerator(data);
         _spawner = new MonsterSpawner(data);
+        Scheduler.SpeedBonus = TwistSpeedBonus; // (the weekly challenge's restless foes)
         InitItems();
         InitStores();
         TrackStats();
@@ -45,6 +46,7 @@ public sealed partial class GameSession : ITurnHandler
         Rng = new GameRandom(seed);
         _generator = new DungeonGenerator(data);
         _spawner = new MonsterSpawner(data);
+        Scheduler.SpeedBonus = TwistSpeedBonus; // (the weekly challenge's restless foes)
         Objects = new ObjectFactory(data) { CanBrowse = PlayerCanBrowse, WantsBook = PlayerWantsBook };
         Knowledge = new PlayerKnowledge(data, seed) { IgnoredCheck = IsMarkedIgnored };
         Player.Inventory = new Inventory(data.Constants.PackSize, data.Constants.QuiverSlotSize, data.Constants.QuiverSize);
@@ -626,10 +628,12 @@ public sealed partial class GameSession : ITurnHandler
             // Angband town_gen: four residents by day, eight by night, more than 3 squares off.
             if (Level.Depth == 0 && Level.ProfileId == "town")
                 Level.Population = Level.Population with { Monsters = 0 };
+            TwistDarkness(); // (the weekly challenge's darkness)
             _spawner.Populate(Level, Rng, Player.Position, unavailable);
             if (Level.Depth == 0 && Level.ProfileId == "town")
                 for (var i = 0; i < (IsDaytime ? Data.Constants.TownMonstersDay : Data.Constants.TownMonstersNight); i++)
                     _spawner.PlaceDistant(Level, Rng, Player.Position, 3, 0, unavailable);
+            TwistSwarm(unavailable); // (the weekly challenge's swarm)
             foreach (var monster in Level.Monsters.All) Scheduler.Add(monster);
             PopulateObjects();
             DisguiseMonsters();

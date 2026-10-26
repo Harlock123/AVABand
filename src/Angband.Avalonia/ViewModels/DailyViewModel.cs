@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Angband.Avalonia.ViewModels;
 
-/// <summary>A line of the daily table.</summary>
+/// <summary>A line of the daily (or weekly) table.</summary>
 public sealed record DailyRow(DailyEntry Entry, bool IsToday)
 {
     public string Day => Entry.Day;
@@ -19,16 +19,24 @@ public sealed record DailyRow(DailyEntry Entry, bool IsToday)
     public bool HasReplay => Entry.ReplayPath is { } path && File.Exists(path);
 }
 
-/// <summary>Game → Daily dungeon: today's character, a way in, and every try so far.</summary>
+/// <summary>
+/// Game → Daily dungeon: today's character, a way in, and every try so far. The weekly challenge
+/// (Game → Weekly challenge) shows in the same window: this week's character and its twist.
+/// </summary>
 public sealed partial class DailyViewModel : ObservableObject
 {
-    public DailyViewModel(string today, string character, string stats, IEnumerable<DailyEntry> tries, string? replayFolder)
+    /// <param name="today">The day ("2026-10-26"), or for the weekly challenge the week ("2026-W44").</param>
+    /// <param name="weeklyTwist">The week's twist: this is the weekly challenge, not the daily dungeon.</param>
+    public DailyViewModel(string today, string character, string stats, IEnumerable<DailyEntry> tries, string? replayFolder,
+        WeeklyTwist? weeklyTwist = null)
     {
         Today = today;
         Character = character;
         Stats = stats;
+        IsWeekly = weeklyTwist is not null;
+        TwistLine = weeklyTwist is null ? "" : $"This week's twist — {weeklyTwist.Name}: {weeklyTwist.Description}";
         foreach (var t in tries) Rows.Add(new DailyRow(t, t.Day == today));
-        // Today's best try (the table is best first within a day) is ready to share.
+        // Today's (this week's) best try (the table is best first within a day) is ready to share.
         _selected = Rows.FirstOrDefault(r => r.IsToday);
         ReplayNote = replayFolder is null ? "Every try is recorded as a replay."
             : $"Every try is recorded as a replay (in {replayFolder}). Send one to a friend, or watch theirs with Game → Watch a replay → Open a replay file…";
@@ -40,6 +48,23 @@ public sealed partial class DailyViewModel : ObservableObject
     public string ReplayNote { get; }
     public ObservableCollection<DailyRow> Rows { get; } = [];
     public bool IsEmpty => Rows.Count == 0;
+
+    /// <summary>The weekly challenge (rather than the daily dungeon).</summary>
+    public bool IsWeekly { get; }
+
+    /// <summary>The week's twist, said under its character ("" for the daily dungeon).</summary>
+    public string TwistLine { get; }
+
+    public string WindowTitle => IsWeekly ? "The weekly challenge" : "The daily dungeon";
+    public string Heading => $"{WindowTitle} · {Today}";
+    public string PlayLabel => IsWeekly ? "Play this week's challenge" : "Play today's dungeon";
+    public string PeriodHeader => IsWeekly ? "Week" : "Day";
+
+    public string Blurb => IsWeekly
+        ? "The same dungeon, character and twist for everyone who plays it this week. Try as often as you like until Sunday is out (UTC); a new challenge on Monday."
+        : "The same dungeon and character for everyone who plays it today; a new one tomorrow (UTC).";
+
+    public string EmptyText => IsWeekly ? "No tries yet. Every week brings a new challenge, with a new twist." : "No tries yet. Every day brings a new dungeon.";
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(WatchCommand))]
@@ -63,7 +88,8 @@ public sealed partial class DailyViewModel : ObservableObject
     private void CopyResult()
     {
         if (Selected is null) return;
-        var line = Selected.Entry.ShareLine();
+        // A weekly try says how many tries its week has had.
+        var line = Selected.Entry is WeeklyEntry week ? week.ShareLine(Rows.Count(r => r.Entry.Day == week.Day)) : Selected.Entry.ShareLine();
         CopyRequested?.Invoke(line);
         ShareNote = "Copied: " + line;
     }
@@ -95,7 +121,7 @@ public sealed partial class DailyViewModel : ObservableObject
 
 public sealed partial class MainWindowViewModel
 {
-    /// <summary>Raised to show the daily dungeon's window.</summary>
+    /// <summary>Raised to show the daily dungeon's window (the weekly challenge's too).</summary>
     public event Action<DailyViewModel>? DailyRequested;
 
     [RelayCommand]
@@ -105,15 +131,23 @@ public sealed partial class MainWindowViewModel
     {
         var day = DailyDungeon.Today();
         var spec = DailyDungeon.SpecFor(_data, day, DailyName);
-        var race = _data.Race(spec.RaceId);
-        var cls = _data.Class(spec.ClassId);
-        var stats = string.Join("  ", CharacterSpec.StatIds.Select(s =>
-            $"{s.ToUpperInvariant()} {StatTables.Format(Birth.FinalStat(spec.BaseStats[s], race, cls, s))}"));
-        var daily = new DailyViewModel(DailyDungeon.Stamp(day), $"Today: a {race?.Name} {cls?.Name}", stats,
+        var daily = new DailyViewModel(DailyDungeon.Stamp(day), $"Today: a {SpecName(spec)}", SpecStats(spec),
             _records?.LoadDaily().Ordered() ?? [], ReplayDirectory);
         daily.PlayRequested += StartDaily;
         daily.WatchRequested += path => PlayReplay(path);
         return daily;
+    }
+
+    /// <summary>A seeded run's character, as the window names it ("Dwarf Priest").</summary>
+    private string SpecName(CharacterSpec spec) => $"{_data.Race(spec.RaceId)?.Name} {_data.Class(spec.ClassId)?.Name}";
+
+    /// <summary>A seeded run's character's stats, as they'll be (race and class bonuses on).</summary>
+    private string SpecStats(CharacterSpec spec)
+    {
+        var race = _data.Race(spec.RaceId);
+        var cls = _data.Class(spec.ClassId);
+        return string.Join("  ", CharacterSpec.StatIds.Select(s =>
+            $"{s.ToUpperInvariant()} {StatTables.Format(Birth.FinalStat(spec.BaseStats[s], race, cls, s))}"));
     }
 
     /// <summary>The name a daily character goes by: the last character's.</summary>
@@ -129,16 +163,44 @@ public sealed partial class MainWindowViewModel
         AddMessage($"Today's daily dungeon ({DailyDungeon.Stamp(day)}): the same for everyone who plays it today. Good luck.");
     }
 
+    /// <summary>Game → Weekly challenge: this week's character and twist, in the daily dungeon's window.</summary>
+    [RelayCommand]
+    public void ShowWeekly() => DailyRequested?.Invoke(CreateWeekly());
+
+    public DailyViewModel CreateWeekly()
+    {
+        var week = WeeklyChallenge.ThisWeek();
+        var spec = WeeklyChallenge.SpecFor(_data, week, DailyName);
+        var weekly = new DailyViewModel(week, $"This week: a {SpecName(spec)}", SpecStats(spec),
+            _records?.LoadWeekly().Ordered() ?? [], ReplayDirectory, WeeklyChallenge.TwistFor(week));
+        weekly.PlayRequested += StartWeekly;
+        weekly.WatchRequested += path => PlayReplay(path);
+        return weekly;
+    }
+
+    /// <summary>A new try at this week's challenge: the week's seed, character and twist (not remembered as the last character).</summary>
+    [RelayCommand]
+    public void StartWeekly()
+    {
+        var week = WeeklyChallenge.ThisWeek();
+        var spec = WeeklyChallenge.SpecFor(_data, week, DailyName);
+        var twist = WeeklyChallenge.TwistFor(week);
+        StartGame(WeeklyChallenge.SeedFor(week), spec, game => WeeklyChallenge.Prepare(game, week));
+        AddMessage($"This week's challenge ({week}), the same for everyone who plays it this week. The twist — {twist.Name}: {twist.Description} Good luck.");
+    }
+
+    /// <summary>How a try ended, for the daily and weekly tables.</summary>
+    private static string TryFate(ScoreEntry entry) => entry.Won ? "retired victorious"
+        : $"killed by {entry.KilledBy}{(entry.Depth == 0 ? " in the town" : $" at {entry.Depth * 50} ft")}";
+
     /// <summary>On death: a daily try goes in the daily table (a cheat's doesn't).</summary>
     private void RecordDailyTry(ScoreEntry entry)
     {
         if (_records is null || _game.Player.DailyDate is not { } day || _game.IsCheater) return;
-        var fate = entry.Won ? "retired victorious"
-            : $"killed by {entry.KilledBy}{(entry.Depth == 0 ? " in the town" : $" at {entry.Depth * 50} ft")}";
         if (_records.RecordDaily(new DailyEntry
             {
                 Day = day, Name = entry.Name, Race = entry.Race, Class = entry.Class, Level = entry.MaxLevel, MaxDepth = entry.MaxDepth,
-                Points = entry.Points, Turns = entry.Turns, Fate = fate, DateUtc = entry.DateUtc, ReplayPath = CurrentReplayPath,
+                Points = entry.Points, Turns = entry.Turns, Fate = TryFate(entry), DateUtc = entry.DateUtc, ReplayPath = CurrentReplayPath,
                 Mods = entry.Mods,
             }) is { } done)
         {
@@ -148,6 +210,26 @@ public sealed partial class MainWindowViewModel
             _records.SaveFeats(_featBook);
             AddMessage($"Daily dungeon, {day}: try {done.Attempt} reached {done.MaxDepth * 50} ft"
                        + (ReferenceEquals(best, done) || best.Attempt == done.Attempt ? " — your best today." : $" (your best today: {best.MaxDepth * 50} ft)."));
+        }
+    }
+
+    /// <summary>On death: a weekly try goes in the weekly table (a cheat's doesn't).</summary>
+    private void RecordWeeklyTry(ScoreEntry entry)
+    {
+        if (_records is null || _game.Player.WeeklyWeek is not { } week || _game.IsCheater) return;
+        if (_records.RecordWeekly(new WeeklyEntry
+            {
+                Day = week, Twist = _game.Twist?.Name ?? "", Name = entry.Name, Race = entry.Race, Class = entry.Class, Level = entry.MaxLevel,
+                MaxDepth = entry.MaxDepth, Points = entry.Points, Turns = entry.Turns, Fate = TryFate(entry), DateUtc = entry.DateUtc,
+                ReplayPath = CurrentReplayPath,
+            }) is { } done)
+        {
+            var board = _records.LoadWeekly();
+            var best = board.For(week).First();
+            foreach (var feat in _featBook.CheckWeeklyBoard(board, FeatDefs)) AddMessage($"Feat: {feat.Name}! ({feat.Description})");
+            _records.SaveFeats(_featBook);
+            AddMessage($"Weekly challenge, {week}: try {done.Attempt} reached {done.MaxDepth * 50} ft"
+                       + (best.Attempt == done.Attempt ? " — your best this week." : $" (your best this week: {best.MaxDepth * 50} ft)."));
         }
     }
 }

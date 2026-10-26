@@ -94,7 +94,7 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
 - A monster you don't know is dangerous until you know it isn't. Look at it (`x` or `l`, as your
   keys have it) to read what you have learned of it; the Knowledge screen (`~`) keeps it all —
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,
-  quests, the daily dungeon, a win with each class), with who reached each first. Some feats unlock
+  quests, the daily dungeon and the weekly challenge, a win with each class), with who reached each first. Some feats unlock
   something — another title-screen picture, a frame for your character cards (Settings → Display →
   *Card frame*), or another starting kit on the creation screen (the *Delver's kit* and the
   *Scholar's kit* trade the Word of Recall scroll for goods worth no more, so the gold left over is
@@ -107,6 +107,18 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   for everyone each day — compare how far you got with friends, and swap replays: *Copy result*
   puts a line about your try on the clipboard to paste to them, and *Save replay as…* saves its
   replay to send.
+  **Game → Weekly challenge** (or *This week's challenge* on the title screen) is the same idea for
+  a whole week, Monday to Sunday (UTC): one dungeon and one character for everyone, and a **twist**
+  that changes the rules — a different one each week. Try as often as you like; every try goes on
+  the weekly table, best first, and the share line says how many tries the week has had. The
+  twists take turns, so none comes two weeks running: *Darkness* (no room in the dungeon is lit —
+  bring your own light), *Glass cannon* (you deal half as much damage again, and take half as much
+  again), *Famine* (food goes twice as fast), *Swarm* (every dungeon level has half as many monsters
+  again), *Restless foes* (every monster is a little faster, +2 speed), *Gold rush* (gold you find
+  is worth twice as much) and *Lean times* (only the General Store will sell to you; the other shops
+  and the caravan won't). Like the daily dungeon, the weekly challenge has no hirelings, ghosts,
+  strongroom or challenge runs, and it has three feats of its own: *Weekly Warrior* (finish a try),
+  *Week's Deepest* (1000 ft in one) and *Four Weeks Running*.
   **Game → Save a character card** makes a picture of your
   character to share (the graveyard can make one for a headstone too).
 

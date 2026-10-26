@@ -151,6 +151,8 @@ public sealed partial class GameSession
         var price = caravan.Prices[i];
         if (NoShopping)
             Publish(new MessageEvent(NoShoppingRefusal));
+        else if (TwistCaravanShut)
+            Publish(new MessageEvent("The merchant shakes his head. \"Lean times, friend: nothing for sale to you this week.\""));
         else if (Player.Gold < price)
             Publish(new MessageEvent($"The merchant smiles thinly. \"{price} gold, friend. I don't haggle.\""));
         else if (!Player.Inventory.CanCarry(item))
