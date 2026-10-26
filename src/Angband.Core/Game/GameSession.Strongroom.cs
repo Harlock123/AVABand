@@ -41,7 +41,7 @@ public sealed partial class GameSession
     public IStrongroom? Strongroom { get; set; }
 
     /// <summary>Whether this character can use the strongroom: the birth option, the inn's quests, and not a daily-dungeon character.</summary>
-    public bool StrongroomOn => Options[OptionIds.Strongroom] && AvaQuestsOn && Player.DailyDate is null;
+    public bool StrongroomOn => Options[OptionIds.Strongroom] && AvaQuestsOn && Player.DailyDate is null && !NoShopping;
 
     /// <summary>What leaving an item costs: 50 gold and 5% of its worth.</summary>
     public long StrongroomDepositFee(Item item) => 50 + ItemWorth(item) / 20;

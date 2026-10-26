@@ -59,8 +59,9 @@ rather than won by Grishnag's death, the palantír kept and looked into ten time
 counts the looks); a fallen character's ghost laid to rest, and three with one character; ten
 notice-board jobs; a hireling at level 20, and one brought back up from 1000 ft; the daily dungeon's
 (a first try, 1000 ft in one, and seven days running — these from the daily board,
-`FeatBook.CheckBoard`, as each try is recorded and at start-up); Sauron and Morgoth slain; and a win
-with each class.
+`FeatBook.CheckBoard`, as each try is recorded and at start-up); the challenge runs' (1000 ft as an
+Ironman and a win as one, 1500 ft with forced descent, 1000 ft without shopping, and a speed run
+made); Sauron and Morgoth slain; and a win with each class.
 They are checked after each command, said in the messages ("Feat: Into the Deep! (Reach 1000
 ft.)"), kept in `feats.json` beside the scores with who did each first and when, and listed on
 the Knowledge screen's **Feats** page. A character that cheated or used a debug command, the
@@ -352,6 +353,16 @@ core kept busy.
   (`HirelingPicture`), with a health bar of their own in the sidebar; orders on the keys, Game →
   Hireling and your right-click menu. Two feats: *Old Comrades* (a hireling at level 20) and *There and
   Back Again* (back up to town from 1000 ft or deeper with the same one). The bots never hire.
+- **Difficulty presets and challenge runs** (AVABand's own; `Game/Challenges.cs`): the creation screen's
+  *Relaxed* / *Classic* / *Hard* buttons set the birth options that matter most (connected stairs,
+  monster learning, runes and flavours known, easier casting, hirelings; Classic is the defaults, and
+  any other mix shows as Custom). Its challenges — *Ironman* (Angband's `birth_force_descend` with
+  `birth_no_recall`), *Forced descent* (`birth_force_descend`), *No shopping* (`birth_ava_no_shopping`:
+  the shops and the caravan refuse to sell, the strongroom is shut) and *Speed run* (`birth_ava_speed_run`:
+  1000 ft within 15,000 normal turns, counted down on the status bar and settled in `Player.SpeedRunResult`)
+  — are birth options too, so they're saved, dumped and shown in Settings like the rest; they tag the high
+  scores and headstones (`ScoreEntry.Challenges`) and have five feats. Never in the daily dungeon or the
+  tutorial.
 - **Blows and armour weight, as Angband 4.2.5** (`Game/GameSession.AngbandBlows.cs`; the birth
   option *Angband 4.2's blows*, `birth_angband_blows`, on by default — off, each class's fixed blows
   as before): `calc_blows` from `player-calcs.c` — Strength for the weapon's weight (`adj_str_blow` ×

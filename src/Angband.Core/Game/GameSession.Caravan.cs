@@ -137,7 +137,8 @@ public sealed partial class GameSession
         AskQuest("A merchant caravan",
             $"A merchant in travel-stained silks spreads a cloth over the tailboard. \"Come far, these have, and they'll go farther. "
             + $"Nothing like them in the shops here — and priced for it.\" You have {Player.Gold} gold."
-            + (caravan.VisitsLeft <= 1 ? " The wagon is half packed: it leaves before you're next back." : ""),
+            + (caravan.VisitsLeft <= 1 ? " The wagon is half packed: it leaves before you're next back." : "")
+            + (NoShopping ? " (You swore off shopping: you can look, but not buy.)" : ""),
             [.. choices]);
     }
 
@@ -148,7 +149,9 @@ public sealed partial class GameSession
             return;
         if (SaveGame.ItemFromJson(this, caravan.Stock[i]) is not { } item) return;
         var price = caravan.Prices[i];
-        if (Player.Gold < price)
+        if (NoShopping)
+            Publish(new MessageEvent(NoShoppingRefusal));
+        else if (Player.Gold < price)
             Publish(new MessageEvent($"The merchant smiles thinly. \"{price} gold, friend. I don't haggle.\""));
         else if (!Player.Inventory.CanCarry(item))
             Publish(new MessageEvent($"You have no room for {Describe(item)}."));

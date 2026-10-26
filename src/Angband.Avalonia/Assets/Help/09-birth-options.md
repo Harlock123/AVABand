@@ -2,6 +2,35 @@
 
 Chosen when you make a character and fixed for its life (Settings → Options shows them).
 
+## Difficulty
+
+Three buttons on the creation screen set the options that make the most difference; the rest stay
+as you left them, and the list underneath is there to fine-tune ("Custom" when it matches none).
+
+- **Relaxed** — every rune and flavour known from the start, connected stairs, easier casting,
+  hirelings, and monsters that don't learn what you resist.
+- **Classic** — AVABand as it comes (the defaults).
+- **Hard** — Angband 4.2.5's spell failure, no connected stairs and no hirelings.
+
+## Challenges
+
+Ways to make a run harder, ticked on the creation screen. Each gives the high scores and the
+character's headstone a tag (*[Ironman]*) and has feats of its own. They can be combined; none of
+them applies in the daily dungeon or the tutorial.
+
+- **Ironman** — *Force player descent* and *Word of Recall has no effect*: every staircase leads
+  down, and you never see the town again. Feats for reaching 1000 ft and for winning.
+- **Forced descent** — *Force player descent* alone: Word of Recall still takes you to town to shop
+  and back to your deepest level. A feat for reaching 1500 ft.
+- **No shopping** — the shops and the merchant caravan won't sell to you and the strongroom is shut;
+  you keep what you find (your Home still keeps your things, and you can still sell). A feat for
+  reaching 1000 ft.
+- **Speed run** — reach 1000 ft within 15,000 turns (at normal speed, resting included). The status
+  bar counts down the turns left; the history notes when you make it, or when time runs out. A feat
+  for making it.
+
+## The options
+
 - **Generate a new, random artifact set** — artifacts are made fresh for this character.
 - **Generate connected stairs** — arrive on a staircase leading back.
 - **Force player descent** — stairs only go down, and Word of Recall one level deeper.
@@ -35,6 +64,7 @@ Chosen when you make a character and fixed for its life (Settings → Options sh
   wore (Help → Monsters). On by default; never in the daily dungeon or the tutorial.
 - **Hirelings** — a sword for hire at the Prancing Pony follows you down for a fee and a share of
   your gold (Help → Quests); never in the daily dungeon or the tutorial (on by default).
+- **Challenge: no shopping** / **Challenge: speed run** — the challenges above.
 - **Persistent levels (experimental)** — levels are kept when you leave them.
 - **To-damage is a percentage of dice (experimental)** — to-dam makes each damage die bigger by a
   percentage instead of adding to every blow; slays and brands multiply the dice; criticals add

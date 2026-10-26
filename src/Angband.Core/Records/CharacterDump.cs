@@ -99,6 +99,8 @@ public static class CharacterDump
             : $" Still alive ({game.HungerLevel.ToString().ToLowerInvariant()}).");
         Line($" Seed {game.Seed}   Score {Scoring.Points(p)} points");
         if (p.HeroicBirth) Line($" Heroic: born with AVABand's heroic stats (the score counts {Scoring.HeroicPercent}%).");
+        if (game.ChallengeNames.Count > 0)
+            Line($" Challenges: {string.Join(", ", game.ChallengeNames)}" + (game.SpeedRunStatus is { } run ? $" ({run})" : "") + ".");
         if (game.IsCheater) Line($" Cheated ({string.Join(", ", game.CheatsUsed.Order(StringComparer.Ordinal))}): not scored.");
 
         // --- Abilities (Angband's birth screen names them; player_property.txt) ---

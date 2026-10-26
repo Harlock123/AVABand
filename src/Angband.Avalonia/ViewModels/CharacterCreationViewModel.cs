@@ -43,6 +43,38 @@ public sealed record RaceComparisonRow(RaceDef Race, string Name, string Str, st
     private static string Say(string mod) => mod is "" or "0" ? "0" : mod;
 }
 
+/// <summary>A challenge run on the creation screen: ticking it sets its birth options, untick puts them back to their defaults.</summary>
+public sealed partial class ChallengeRow : ObservableObject
+{
+    private readonly Action<ChallengeRow, bool> _changed;
+    private bool _showing;
+
+    public ChallengeRow(ChallengeDef def, Action<ChallengeRow, bool> changed)
+    {
+        Def = def;
+        _changed = changed;
+    }
+
+    public ChallengeDef Def { get; }
+    public string Name => Def.Name;
+    public string Description => Def.Description;
+
+    [ObservableProperty] private bool _isChecked;
+
+    /// <summary>Shows whether the birth options make this challenge (without setting them again).</summary>
+    internal void Show(bool on)
+    {
+        _showing = true;
+        IsChecked = on;
+        _showing = false;
+    }
+
+    partial void OnIsCheckedChanged(bool value)
+    {
+        if (!_showing) _changed(this, value);
+    }
+}
+
 /// <summary>One way of choosing stats, as the creation screen lists it.</summary>
 public sealed record StatMethodChoice(StatMethod Method, string Label)
 {
@@ -100,7 +132,8 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         // Birth options (Angband's birth menu), as last chosen or at their defaults.
         foreach (var o in OptionCatalog.OfKind(OptionKind.Birth))
             BirthOptionRows.Add(new OptionRow(o, last?.Options?.TryGetValue(o.Id, out var chosen) == true ? chosen : o.Default,
-                true, (_, _) => Update()));
+                true, (_, _) => { if (!_settingOptions) Update(); }));
+        foreach (var c in Angband.Core.Game.Challenges.All) ChallengeRows.Add(new ChallengeRow(c, ChallengeChanged));
         Update();
     }
 
@@ -111,6 +144,68 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
     /// <summary>Every race side by side (Compare races), the chosen one marked.</summary>
     public ObservableCollection<RaceComparisonRow> RaceComparison { get; } = [];
     public ObservableCollection<OptionRow> BirthOptionRows { get; } = [];
+
+    /// <summary>The challenge runs, ticked when the birth options make them.</summary>
+    public ObservableCollection<ChallengeRow> ChallengeRows { get; } = [];
+
+    /// <summary>What the chosen difficulty means ("Custom" when the birth options match no preset).</summary>
+    [ObservableProperty] private string _difficultyText = "";
+
+    /// <summary>The ticked challenges explained, or what challenges are.</summary>
+    [ObservableProperty] private string _challengeText = "";
+
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(IsRelaxed), nameof(IsClassic), nameof(IsHard))]
+    private string? _presetId;
+
+    public bool IsRelaxed => PresetId == "relaxed";
+    public bool IsClassic => PresetId == "classic";
+    public bool IsHard => PresetId == "hard";
+
+    // (Set while a preset or challenge sets several birth options, so the preview updates once.)
+    private bool _settingOptions;
+
+    /// <summary>A birth option's value as ticked here.</summary>
+    private bool BirthValue(string id) =>
+        BirthOptionRows.FirstOrDefault(r => r.Id == id)?.IsChecked ?? OptionCatalog.Find(id)?.Default ?? false;
+
+    /// <summary>Sets the birth options a difficulty preset names (the rest stay as they are).</summary>
+    [RelayCommand]
+    private void ApplyPreset(string id)
+    {
+        if (Angband.Core.Game.Challenges.Presets.FirstOrDefault(p => p.Id == id) is { } preset) SetOptions(preset.Options);
+    }
+
+    private void ChallengeChanged(ChallengeRow row, bool on) =>
+        SetOptions(on ? row.Def.Options : row.Def.Options.ToDictionary(o => o.Key, o => OptionCatalog.Find(o.Key)?.Default ?? false));
+
+    private void SetOptions(IReadOnlyDictionary<string, bool> values)
+    {
+        _settingOptions = true;
+        try
+        {
+            foreach (var row in BirthOptionRows)
+                if (values.TryGetValue(row.Id, out var value)) row.IsChecked = value;
+        }
+        finally
+        {
+            _settingOptions = false;
+        }
+        Update();
+    }
+
+    /// <summary>The presets and challenges as the birth options now stand.</summary>
+    private void UpdateDifficulty()
+    {
+        var preset = Angband.Core.Game.Challenges.PresetFor(BirthValue);
+        PresetId = preset?.Id;
+        DifficultyText = preset is null ? "Custom: your own mix of the birth options below." : $"{preset.Name}: {preset.Description}";
+        foreach (var row in ChallengeRows) row.Show(row.Def.IsOn(BirthValue));
+        var on = ChallengeRows.Where(r => r.IsChecked && !(r.Def == Angband.Core.Game.Challenges.ForcedDescent
+                                                          && Angband.Core.Game.Challenges.Ironman.IsOn(BirthValue))).ToList();
+        ChallengeText = on.Count == 0
+            ? "Optional ways to make it harder, each with its own feats and a tag on the high scores and your headstone."
+            : string.Join(" ", on.Select(r => $"{r.Name}: {r.Description}"));
+    }
     public int Budget => HeroicBirth.Budget(Method, _data.Constants);
 
     public StatMethod Method => SelectedMethod.Method;
@@ -277,6 +372,7 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
                 ? "Heroic roll: each stat 14 to 18/50 (Reroll, or set minimums and Autoroll)"
                 : "Rolled stats (Reroll, or set minimums and Autoroll)") + heroic;
         Error = IsPointBuy ? HeroicBirth.ValidatePointBuy(Method, BaseStats(), _data.Constants) : null;
+        UpdateDifficulty();
         UpdateRaceComparison();
         Portrait = Angband.Avalonia.Controls.Portraits.For(race?.Id, cls?.Id);
         PortraitCaption = $"{(string.IsNullOrWhiteSpace(Name) ? "Adventurer" : Name.Trim())} the {race?.Name} {cls?.Name}";

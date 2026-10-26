@@ -499,12 +499,13 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
             : player.IsDead
             ? $"*** DEAD *** killed by {player.KilledBy} on {where}  |  Level {player.Level}  |  Exp {player.Experience}  |  Ctrl+N for a new game"
             : string.Format(CultureInfo.InvariantCulture,
-                "{14} the {15} {10} L{11}  |  HP {0}/{1}{12}  |  Exp {2}/{13}  |  {3}{4}  |  {5}  |  Turn {6}  |  {7}  |  Seed {8}{9}",
+                "{14} the {15} {10} L{11}  |  HP {0}/{1}{12}  |  Exp {2}/{13}  |  {3}{4}  |  {5}  |  Turn {6}{16}  |  {7}  |  Seed {8}{9}",
                 player.Hp, player.MaxHp, player.Experience,
                 where, depth == 0 ? (_game.IsDaytime ? " (day)" : " (night)") : _game.FeelingStatus is { } lf ? " " + lf : "",
                 level.ProfileId, _game.NormalTurns, ammo, _game.Seed,
                 effects.Length > 0 ? "  |  " + effects : "",
-                player.Class?.Name ?? "", player.Level, mana, next, player.Name, player.Race?.Name ?? "");
+                player.Class?.Name ?? "", player.Level, mana, next, player.Name, player.Race?.Name ?? "",
+                _game.SpeedRunStatus is { } run ? $" ({run})" : "");
         UpdateHealthBar();
         UpdateHover();
         UpdatePath();

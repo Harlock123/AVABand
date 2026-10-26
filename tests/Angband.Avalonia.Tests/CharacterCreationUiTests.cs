@@ -236,4 +236,47 @@ public class CharacterCreationUiTests
         creationWindow.CaptureRenderedFrame();
         TileRenderingTests.Save(creationWindow, "creation-portrait");
     }
+
+    [AvaloniaFact]
+    public void Difficulty_presets_set_the_birth_options_and_challenges_tick_theirs()
+    {
+        var (window, _, _) = Open();
+        var creationWindow = window.OpenCharacterCreation();
+        var creation = (CharacterCreationViewModel)creationWindow.DataContext!;
+        bool Option(string id) => creation.BirthOptionRows.Single(r => r.Id == id).IsChecked;
+        Assert.NotNull(creationWindow.FindControl<Button>("HardButton"));
+        Assert.Equal(4, creation.ChallengeRows.Count);
+
+        creation.ApplyPresetCommand.Execute("hard");
+        Assert.True(creation.IsHard);
+        Assert.False(Option(OptionIds.ConnectStairs) || Option(OptionIds.AvaEasyCasting) || Option(OptionIds.Hirelings));
+        creation.ApplyPresetCommand.Execute("relaxed");
+        Assert.True(creation.IsRelaxed && Option(OptionIds.KnowRunes) && !Option(OptionIds.AiLearn));
+        creation.BirthOptionRows.Single(r => r.Id == OptionIds.KnowRunes).IsChecked = false;
+        Assert.Null(creation.PresetId);
+        Assert.StartsWith("Custom", creation.DifficultyText);
+        creation.ApplyPresetCommand.Execute("classic");
+        Assert.True(creation.IsClassic);
+
+        var ironman = creation.ChallengeRows.Single(r => r.Name == "Ironman");
+        var descent = creation.ChallengeRows.Single(r => r.Name == "Forced descent");
+        ironman.IsChecked = true;
+        Assert.True(Option(OptionIds.ForceDescend) && Option(OptionIds.NoRecall));
+        Assert.True(descent.IsChecked); // (an Ironman descends by force)
+        Assert.StartsWith("Ironman:", creation.ChallengeText);
+        Assert.True(creation.IsClassic); // (challenges leave the difficulty alone)
+        creation.BirthOptionRows.Single(r => r.Id == OptionIds.NoRecall).IsChecked = false;
+        Assert.False(ironman.IsChecked);
+        Assert.True(descent.IsChecked);
+        descent.IsChecked = false;
+        Assert.False(Option(OptionIds.ForceDescend));
+
+        creation.ChallengeRows.Single(r => r.Name == "Speed run").IsChecked = true;
+        Assert.True(creation.Spec()!.Options![OptionIds.AvaSpeedRun]);
+        creationWindow.CaptureRenderedFrame();
+        creationWindow.FindControl<StackPanel>("DifficultyPanel")!.BringIntoView();
+        creationWindow.CaptureRenderedFrame();
+        TileRenderingTests.Save(creationWindow, "creation-difficulty");
+        creationWindow.Close();
+    }
 }

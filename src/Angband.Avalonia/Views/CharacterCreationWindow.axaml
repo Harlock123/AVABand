@@ -107,6 +107,32 @@
         <Border Background="#12151c" CornerRadius="6" Padding="12" Margin="0,10,0,0">
           <TextBlock Text="{Binding Preview}" TextWrapping="Wrap" FontSize="13" LineHeight="20" />
         </Border>
+        <!-- Difficulty presets (they set the birth options below) and the challenge runs. -->
+        <StackPanel x:Name="DifficultyPanel" Spacing="6" Margin="0,10,0,4">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="Difficulty" FontWeight="SemiBold" VerticalAlignment="Center" Width="84" />
+            <Button x:Name="RelaxedButton" Content="Relaxed" Command="{Binding ApplyPresetCommand}" CommandParameter="relaxed" Classes.accent="{Binding IsRelaxed}" />
+            <Button x:Name="ClassicButton" Content="Classic" Command="{Binding ApplyPresetCommand}" CommandParameter="classic" Classes.accent="{Binding IsClassic}" />
+            <Button x:Name="HardButton" Content="Hard" Command="{Binding ApplyPresetCommand}" CommandParameter="hard" Classes.accent="{Binding IsHard}" />
+          </StackPanel>
+          <TextBlock Text="{Binding DifficultyText}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" />
+          <Grid ColumnDefinitions="92,*" Margin="0,4,0,0">
+            <TextBlock Text="Challenges" FontWeight="SemiBold" VerticalAlignment="Top" Margin="0,6,0,0" />
+            <ItemsControl Grid.Column="1" x:Name="ChallengeList" ItemsSource="{Binding ChallengeRows}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:ChallengeRow">
+                  <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}" ToolTip.Tip="{Binding Description}" Margin="0,0,14,0" />
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </Grid>
+          <TextBlock Text="{Binding ChallengeText}" TextWrapping="Wrap" Opacity="0.75" FontSize="12" />
+        </StackPanel>
         <Expander x:Name="RaceComparisonPanel" Header="Compare races" HorizontalAlignment="Stretch">
           <StackPanel Spacing="2">
             <Grid ColumnDefinitions="110,36,36,36,36,36,40,48" Margin="8,0,0,2">

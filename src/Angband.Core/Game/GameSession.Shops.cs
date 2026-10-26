@@ -412,6 +412,7 @@ public sealed partial class GameSession
         }
         BeginShopVisit(store);
         GreetInShop(store);
+        if (NoShopping && !store.IsHome) Publish(new MessageEvent("(No shopping: you can sell here, but not buy.)"));
         return 0;
     }
 
@@ -428,6 +429,11 @@ public sealed partial class GameSession
         if (StoreHere is not { } store || !store.Stock.Contains(stockItem))
         {
             Publish(new MessageEvent("That is not for sale here."));
+            return 0;
+        }
+        if (NoShopping && !store.IsHome)
+        {
+            Publish(new MessageEvent(NoShoppingRefusal));
             return 0;
         }
         var always = store.IsAlways(stockItem);

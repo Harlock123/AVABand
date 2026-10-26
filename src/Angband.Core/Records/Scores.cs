@@ -40,6 +40,8 @@ public sealed class ScoreEntry
     public bool Won { get; set; }
     /// <summary>Made with AVABand's heroic stats: its points count 75%, and it is tagged in the list.</summary>
     public bool Heroic { get; set; }
+    /// <summary>The challenges it took on ("Ironman", "Speed run"...), tagged in the list; null for none.</summary>
+    public List<string>? Challenges { get; set; }
     public DateTime DateUtc { get; set; }
 
     public bool IsAlive => KilledBy is null;
@@ -54,7 +56,7 @@ public sealed class ScoreEntry
             Experience = p.Experience, Gold = p.Gold, Turns = game.NormalTurns, Points = Scoring.Points(p),
             KilledBy = p.IsDead ? p.KilledBy ?? "something" : null, Seed = game.Seed,
             DateUtc = whenUtc ?? DateTime.UtcNow,
-            Won = p.IsWinner, Heroic = p.HeroicBirth,
+            Won = p.IsWinner, Heroic = p.HeroicBirth, Challenges = game.ChallengeNames is { Count: > 0 } c ? [.. c] : null,
         };
     }
 }

@@ -61,6 +61,17 @@ public static class Feats
         feats.Add(new("daily_deep", "Deep of the Day", $"Reach {20 * data.Constants.FeetPerLevel} ft in a daily dungeon.",
             g => g.Player.DailyDate is not null && g.Player.MaxDepth >= 20));
         feats.Add(new("daily_week", "Seven Days Running", "Try the daily dungeon seven days in a row.", _ => false, b => DailyStreak(b) >= 7));
+        var deep = 20 * data.Constants.FeetPerLevel;
+        feats.Add(new("challenge_ironman", "Iron Will", $"Reach {deep} ft as an Ironman.",
+            g => g.ChallengeNames.Contains(Challenges.Ironman.Name) && g.Player.MaxDepth >= 20));
+        feats.Add(new("challenge_ironman_win", "The Iron Crown", "Win the game as an Ironman.",
+            g => g.ChallengeNames.Contains(Challenges.Ironman.Name) && g.Player.IsWinner));
+        feats.Add(new("challenge_descent", "Ever Downward", $"Reach {30 * data.Constants.FeetPerLevel} ft with forced descent (or as an Ironman).",
+            g => g.ChallengeNames.Any(n => n == Challenges.ForcedDescent.Name || n == Challenges.Ironman.Name) && g.Player.MaxDepth >= 30));
+        feats.Add(new("challenge_noshop", "Self-Made", $"Reach {deep} ft without shopping (the No shopping challenge).",
+            g => g.NoShopping && g.Player.MaxDepth >= 20));
+        feats.Add(new("challenge_speed", "Quick of Foot", $"Make a speed run: {Challenges.SpeedRunDepth * data.Constants.FeetPerLevel} ft within {Challenges.SpeedRunTurns:N0} turns.",
+            g => g.SpeedRunMade));
         feats.Add(new("win", "Victory", "Win the game.", g => g.Player.IsWinner));
         foreach (var cls in data.Classes.Concat(data.Multiclasses)) // (AVABand's Warrior/Mage and the rest too)
             feats.Add(new($"win_{cls.Id}", $"Victory as a {cls.Name}", $"Win the game with a {cls.Name}.", g => g.Player.IsWinner && g.Player.Class?.Id == cls.Id));

@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Difficulty presets**: *Relaxed*, *Classic* and *Hard* buttons on the creation screen set the
+  birth options that matter most in one go (Help → Birth options); the full list stays underneath.
+- **Challenge runs**: tick *Ironman*, *Forced descent*, *No shopping* or *Speed run* (1000 ft within
+  15,000 turns) when you make a character. Each tags the high scores and the headstone and has feats
+  of its own — five new feats in all.
 - **Ghosts of fallen characters**: your dead heroes now and then turn up on the level where they
   died — one time in four on a new level at that depth — as a named ghost in their class's colour,
   as tough as a unique there, passing through walls, fighting as their class did and casting some of

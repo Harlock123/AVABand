@@ -117,6 +117,12 @@ public sealed class Player : IActor
 
     /// <summary>The daily dungeon's day this character is playing (yyyy-MM-dd), or null for an ordinary game.</summary>
     public string? DailyDate { get; set; }
+
+    /// <summary>
+    /// A speed run's end (AVABand's challenge): 0 while it's on, the turn 1000 ft was reached if in time,
+    /// or -1 once the time ran out.
+    /// </summary>
+    public long SpeedRunResult { get; set; }
     public string? KilledBy { get; set; }
     public bool IsResting { get; set; }
 
