@@ -42,6 +42,33 @@ ghost instead and it fights after all, for good. Leave the level and it fades; i
 another time. A ghost first seen, and a pleading ghost laid to rest, each have a scene: put your own
 pictures named `ghost`, `ghost-plea` or `ghost-avenged` in your art folder to use them.
 
+## Rival adventurers
+
+Every new character has a rival band (the birth option *Rival adventurers*, on by default): a leader
+and two companions, each of a race and a class — "Brannor's band": Brannor the Dwarf Warrior and
+two others. They go down the dungeon alongside you, off-screen, keeping a little behind or a little
+ahead of your deepest level. Each time you come back up to town you hear the news ("They say
+Brannor's band slew Grip, Farmer Maggot's Dog at 100 ft"), and Butterbur at the Prancing Pony
+passes on the latest. A unique they slay is dead in your game too — but only one you have long
+outgrown, never a quest's own and never one with a bounty on it. Rarely they take a modest artifact
+first, and then it won't be found.
+
+Now and then — rarely, near the depth they have reached — the band, or one of them, is on your
+level: a `p` in their class's colour, named. When you first see them, they speak. How they take to
+you was decided at birth:
+
+- **Friendly** — they wander and leave you be. Walk into one to talk: each carries one thing to
+  sell, for gold (yes or no).
+- **Wary** — they keep their distance and pass on by.
+- **Hostile** — they attack, as any unique would.
+
+You can attack a band at peace with you (walk into one and choose *Attack them*, or hit them with
+anything), but they will be hostile for good. A rival you kill drops what they carried, and the
+news tells of it; with all three dead, the band is gone. Knowledge → Rivals shows the band, how deep
+they have got, what they have done and what became of them. There are no rivals in the daily
+dungeon, the weekly challenge or the tutorial, and characters made before they existed have none.
+
+
 ## How monsters behave
 
 - They wake when you are noisy (stealth helps) and follow your scent and sound. A monster that

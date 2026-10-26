@@ -66,6 +66,8 @@ public static class OptionIds
     public const string AvaGhosts = "birth_ava_ghosts";
     /// <summary>AVABand's own: swords for hire at the Prancing Pony (never in the daily dungeon or the tutorial).</summary>
     public const string Hirelings = "birth_ava_hirelings";
+    /// <summary>AVABand's own: a rival band of adventurers, heard of in town and now and then met below (GameSession.Rivals).</summary>
+    public const string AvaRivals = "birth_ava_rivals";
     /// <summary>AVABand's own: once, a death no deeper than 250 ft sends you back to town instead (GameSession.SecondChance).</summary>
     public const string AvaSecondChance = "birth_ava_second_chance";
     /// <summary>AVABand's challenge: the shops and the caravan won't sell to you, and the strongroom is shut (Challenges).</summary>
@@ -120,6 +122,7 @@ public static class OptionCatalog
         new(OptionIds.AvaEasyCasting, "AVABand's easier casting (spell failure halved)", OptionKind.Birth, true),
         new(OptionIds.AvaGhosts, "Ghosts of fallen characters (on the levels where they fell)", OptionKind.Birth, true),
         new(OptionIds.Hirelings, "Hirelings (a sword for hire at the Prancing Pony follows you down)", OptionKind.Birth, true),
+        new(OptionIds.AvaRivals, "Rival adventurers (a band heard of in town, and now and then met below)", OptionKind.Birth, true),
         new(OptionIds.AvaSecondChance, "A second chance (once, a death no deeper than 250 ft sends you back to town)", OptionKind.Birth, false),
         new(OptionIds.AvaNoShopping, "Challenge: no shopping (the shops and the caravan won't sell to you)", OptionKind.Birth, false),
         new(OptionIds.AvaSpeedRun, "Challenge: speed run (reach 1000 ft within 15,000 turns)", OptionKind.Birth, false),

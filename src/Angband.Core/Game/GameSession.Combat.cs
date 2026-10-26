@@ -30,6 +30,11 @@ public sealed partial class GameSession
             Publish(new MessageEvent($"You hold your blow: that's {Hireling?.Name ?? "your hireling"}."));
             return 0;
         }
+        if (RivalAtPeace(monster))
+        {
+            TalkToRival(monster); // (AVABand: a rival at peace with you; attacking them is a choice of its own)
+            return 0;
+        }
         var name = MonsterName(monster);
         if (PlayerAfraid)
         {
@@ -324,6 +329,7 @@ public sealed partial class GameSession
         }
         GhostSpurned(monster); // (AVABand: a pleading ghost struck fights after all)
         if (!byHireling) damage = TwistDamageDealt(damage); // (the weekly challenge's glass cannon)
+        RivalHurt(monster); // (AVABand: a rival at peace with you is at peace no longer)
         Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage, Ally: byHireling));
         Reveal(monster);
         WakeMonster(monster);
@@ -401,6 +407,7 @@ public sealed partial class GameSession
         QuestMonsterKilled(monster);
         GhostKilled(monster); // (AVABand: a fallen character's ghost laid to rest)
         GhostAvenged(monster); // (AVABand: or what killed one, and the ghost that pleaded for it rests)
+        RivalKilled(monster); // (AVABand: one of your rival band slain)
         DropCarried(monster);
         var (items, gold) = DropMonsterLoot(monster);
         NoteKill(monster, items, gold);

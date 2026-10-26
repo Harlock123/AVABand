@@ -142,6 +142,7 @@ public sealed partial class GameSession : ITurnHandler
             game.ApplyCharacter(spec, race, cls);
             if (race is not null) game.RollBackground(race);
         }
+        game.MakeRivals(); // (AVABand: this character's rival band, from dice of its own)
         game.ChangeLevel(0, StairArrival.None);
         game.AddHistory("Began the quest to destroy Morgoth."); // Angband player_birth
         game.Publish(new MessageEvent("Welcome to AVABand. Find the stairs down ('>') to enter the dungeon."));
@@ -646,6 +647,7 @@ public sealed partial class GameSession : ITurnHandler
             PrepareQuestLevel();
             OnNewLevel();
             PlaceGhost(); // (AVABand: perhaps the ghost of someone who fell at this depth)
+            PlaceRivals(); // (AVABand: perhaps your rival band, or one of them)
             _questRoomHere = null;
             PrepareFeeling();
             CheatPeek();
@@ -661,6 +663,7 @@ public sealed partial class GameSession : ITurnHandler
             if (fromDepth > 0) BountyOnReturn(); // (and its bounty on a unique may lapse, or come down)
             if (fromDepth > 0) CaravanOnReturn(); // (AVABand: a merchant caravan comes, stays, or goes)
             if (fromDepth > 0) TownWelcome(); // (AVABand: what your renown has done for the town)
+            if (fromDepth > 0) RivalsOnReturn(); // (AVABand: your rival band has gone on, and the news of it)
         }
         HirelingArrives(fromDepth);
         _arriving = true;

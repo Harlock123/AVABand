@@ -120,7 +120,7 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   again), *Famine* (food goes twice as fast), *Swarm* (every dungeon level has half as many monsters
   again), *Restless foes* (every monster is a little faster, +2 speed), *Gold rush* (gold you find
   is worth twice as much) and *Lean times* (only the General Store will sell to you; the other shops
-  and the caravan won't). Like the daily dungeon, the weekly challenge has no hirelings, ghosts,
+  and the caravan won't). Like the daily dungeon, the weekly challenge has no hirelings, ghosts, rivals,
   strongroom or challenge runs, and it has three feats of its own: *Weekly Warrior* (finish a try),
   *Week's Deepest* (1000 ft in one) and *Four Weeks Running*.
   **Game → Save a character card** makes a picture of your

@@ -155,6 +155,7 @@
       <TabItem Header="Upgrades" Content="{Binding Upgrades}" />
       <TabItem Header="Companions" Content="{Binding Companions}" />
       <TabItem Header="Unlocks" Content="{Binding Unlocks}" />
+      <TabItem Header="Rivals" Content="{Binding Rivals}" />
     </TabControl>
   </DockPanel>
 </Window>

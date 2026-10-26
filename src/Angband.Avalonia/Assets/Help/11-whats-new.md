@@ -5,6 +5,13 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Rival adventurers** (a new birth option, on by default): every new character has a rival band —
+  a leader and two companions, each of a race and a class ("Brannor's band") — going down the
+  dungeon alongside you. Back in town you hear what they've been up to: they get a little deeper,
+  may slay a unique you've long outgrown (it's dead in your game too) and, rarely, take a modest
+  artifact before you. Now and then you meet them below: a friendly band will sell you what they
+  carry, a wary one passes by, a hostile one attacks. Knowledge → Rivals keeps their story (Help →
+  Monsters).
 - **Bounties on uniques**: the Prancing Pony's notice board now keeps a WANTED poster up — a
   living unique from your deepest to a little past it, with a hint where it haunts and its picture.
   Take it, slay the unique, and Butterbur pays gold by its level and a trophy of it; if it dies some

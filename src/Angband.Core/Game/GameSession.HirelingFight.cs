@@ -78,8 +78,8 @@ public sealed partial class GameSession
     /// A monster the hireling would fight: no friend of theirs, there to be seen — not hidden, and not
     /// invisible unless it is right beside them (they feel its blows, and strike back).
     /// </summary>
-    private static bool IsFoeOfHireling(Monster m, Monster body) =>
-        !m.IsAlly && m.IsActive && !m.Camouflaged && (!m.Race.Has(MonsterFlags.Invisible) || m.Position.ChebyshevTo(body.Position) <= 1);
+    private bool IsFoeOfHireling(Monster m, Monster body) =>
+        !m.IsAlly && !RivalAtPeace(m) && m.IsActive && !m.Camouflaged && (!m.Race.Has(MonsterFlags.Invisible) || m.Position.ChebyshevTo(body.Position) <= 1);
 
     /// <summary>
     /// The foe the hireling goes for: the one you told them to (while it lives); else the nearest awake

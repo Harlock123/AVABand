@@ -119,7 +119,7 @@ public static class FallenGhosts
         data.Classes.Concat(data.Multiclasses).FirstOrDefault(c => c.Name == g.Class);
 
     /// <summary>Each class's colour, for its ghost's letter.</summary>
-    private static string Color(string classId) => classId switch
+    internal static string Color(string classId) => classId switch
     {
         "mage" => "LightRed",
         "priest" => "LightGreen",
@@ -137,7 +137,7 @@ public static class FallenGhosts
     /// The spells each class's ghost may have, from its realm's (the level the character must have
     /// reached for each, then the monster spell standing for it): what it attacks with, and what else.
     /// </summary>
-    private static ((int Level, string Spell)[] Attacks, (int Level, string Spell)[] Others) SpellsOf(string classId) => classId switch
+    internal static ((int Level, string Spell)[] Attacks, (int Level, string Spell)[] Others) SpellsOf(string classId) => classId switch
     {
         "mage" => ([(1, "MISSILE"), (10, "BO_COLD"), (20, "BO_FIRE"), (25, "BA_COLD"), (30, "BO_ACID"), (35, "BA_FIRE"), (42, "BO_MANA")],
                    [(3, "BLINK"), (12, "CONF"), (30, "TPORT")]),
@@ -351,9 +351,11 @@ public sealed partial class GameSession
         _ghostRaces.Clear();
     }
 
-    /// <summary>A race by id: the game data's, or a ghost's.</summary>
+    /// <summary>A race by id: the game data's, a ghost's or a rival's.</summary>
     public MonsterRaceDef? MonsterRace(string id) =>
-        id.StartsWith(FallenGhosts.RacePrefix, StringComparison.Ordinal) ? GhostRace(id[FallenGhosts.RacePrefix.Length..]) : Data.Monster(id);
+        id.StartsWith(FallenGhosts.RacePrefix, StringComparison.Ordinal) ? GhostRace(id[FallenGhosts.RacePrefix.Length..])
+        : id.StartsWith(RivalBands.RacePrefix, StringComparison.Ordinal) ? RivalRace(id[RivalBands.RacePrefix.Length..]) // (AVABand's rivals)
+        : Data.Monster(id);
 
     /// <summary>The ghost of a fallen character this game knows of (by its headstone's key).</summary>
     private MonsterRaceDef? GhostRace(string key)

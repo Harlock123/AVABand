@@ -110,6 +110,7 @@ public static class SaveGame
             Hireling = g.Hireling, FallenCompanions = g.FallenCompanions.Count == 0 ? null : g.FallenCompanions,
             CharacterKills = new(g.CharacterKills),
             Ghosts = g.Ghosts,
+            Rivals = g.Rivals,
             JourneyVisits = [.. g.Visits.Select(v => new JourneyVisitSave { Turn = v.Turn, Depth = v.Depth, Profile = v.Profile })],
             JourneyKills = [.. g.Kills.Select(k => new JourneyKillSave { Turn = k.Turn, Depth = k.Depth, Race = k.RaceId, Unique = k.Unique })],
             Knowledge = new KnowledgeSave
@@ -374,6 +375,7 @@ public static class SaveGame
         g.RestoreStats(f.Stats);
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.RestoreGhosts(f.Ghosts); // (before the levels: a ghost on one is its own race)
+        g.RestoreRivals(f.Rivals); // (before the levels: so is a rival)
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));
         g.Knowledge.RestoreSeen(f.Knowledge.SeenKinds, f.Knowledge.SeenEgos, f.Knowledge.SeenArtifacts);

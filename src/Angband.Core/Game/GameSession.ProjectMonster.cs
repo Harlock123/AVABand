@@ -46,6 +46,7 @@ public sealed partial class GameSession
             HurtHireling(damage, "a blast of your own");
             return;
         }
+        if (damage > 0) RivalHurt(monster); // (AVABand: a rival at peace with you is at peace no longer)
         var hit = new MonsterHit(monster, damage, r, monster.IsVisible);
         if (element is not null) MonsterElementHandler(hit, element);
         if (hit.Skipped) return;

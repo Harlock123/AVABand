@@ -66,7 +66,7 @@ public sealed class UnlockUiTests : IDisposable
         Assert.Contains("Not yet unlocked.", kit.Describe());
         Assert.Contains("ten flasks of oil", kit.Describe());
 
-        // The page is the knowledge browser's last tab (16).
+        // The page is the knowledge browser's Unlocks tab (16).
         vm.HandleAction(Angband.Input.InputAction.MonsterKnowledge);
         var knowledge = window.OwnedWindows.OfType<KnowledgeWindow>().Last();
         var shown = (KnowledgeViewModel)knowledge.DataContext!;

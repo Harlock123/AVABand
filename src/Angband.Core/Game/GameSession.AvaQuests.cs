@@ -52,6 +52,7 @@ public sealed partial class GameSession
             case "hire": HireChoice(parts); break;
             case "strongroom": StrongroomChoice(parts); break;
             case "caravan": CaravanChoice(parts); break;
+            case "rival": RivalChoice(parts); break;
             case "offer": ShowOffer(parts[1]); break;
             case "accept": AcceptQuest(parts[1]); break;
             case "board": BoardChoice(parts); break;
@@ -165,6 +166,7 @@ public sealed partial class GameSession
                 ("none", "Got it"));
             return;
         }
+        RivalNewsAtInn(); // (AVABand: the latest word of your rival band)
         if (!AvaQuestsOn)
         {
             Publish(new MessageEvent("The Prancing Pony's common room is quiet: there's no work to be had here."));

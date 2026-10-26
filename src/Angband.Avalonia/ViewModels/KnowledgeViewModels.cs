@@ -224,6 +224,9 @@ public sealed partial class KnowledgeViewModel : ObservableObject
     /// <summary>AVABand: your hireling, and those who fell in your service.</summary>
     public KnowledgeCategoryViewModel? Companions { get; init; }
 
+    /// <summary>AVABand: your rival band — who they are, how deep they have got, what they have done, and their fate.</summary>
+    public KnowledgeCategoryViewModel? Rivals { get; init; }
+
     /// <summary>AVABand: the rewards feats unlock, earned or not.</summary>
     public KnowledgeCategoryViewModel? Unlocks { get; init; }
 
@@ -325,6 +328,7 @@ public sealed partial class MainWindowViewModel
             Feats = CreateFeatsPage(),
             Upgrades = CreateUpgrades(),
             Companions = CreateCompanions(),
+            Rivals = CreateRivalsPage(),
             Unlocks = CreateUnlocksPage(),
         };
         knowledge.RefreshHistory();
@@ -376,6 +380,36 @@ public sealed partial class MainWindowViewModel
                 : $"{_game.FallenCompanions.Count} fallen", _game.HirelingsOn
                 ? "No one has gone down with you yet. Swords can be hired at the Prancing Pony (9) in town."
                 : "This character was made without hirelings.", rows);
+    }
+
+    /// <summary>
+    /// AVABand's Rivals page: the band (its temper and how deep it has got), each of them (alive, or how
+    /// they fell), and what the news has told of them, the newest first.
+    /// </summary>
+    public KnowledgeCategoryViewModel CreateRivalsPage()
+    {
+        var feet = _data.Constants.FeetPerLevel;
+        var rows = new List<KnowledgeRow>();
+        if (_game.RivalsOn && _game.Rivals is { } band)
+        {
+            var told = band.Deeds.Where(d => d.Told).ToList();
+            var temper = band.IsHostile ? (band.Provoked ? "hostile (you attacked them)" : "hostile") : band.Temper == RivalTemper.Wary ? "wary" : "friendly";
+            var summary = band.IsGone ? $"{band.Name} is no more." : $"{band.Name}, last heard of about {band.Depth * feet} ft down. They are {temper} toward you.";
+            rows.Add(new KnowledgeRow("p", _cells.Color(band.IsGone ? "Slate" : band.IsHostile ? "Red" : "Yellow"), band.Name,
+                band.IsGone ? "gone" : $"about {band.Depth * feet} ft",
+                () => $"{summary}\n\n" + string.Join("\n", band.Members.Select(m => $"  {m.Title}{(m.Dead ? $": {m.Fate}" : "")}"))
+                      + (band.Meetings == 0 ? "\n\nYou have not met them below yet." : $"\n\nMet below {band.Meetings} {(band.Meetings == 1 ? "time" : "times")}.")));
+            foreach (var m in band.Members)
+                rows.Add(new KnowledgeRow(m.Dead ? "+" : "p", _cells.Color(m.Dead ? "Slate" : "White"), m.Title, m.Dead ? "fallen" : "alive",
+                    () => $"{m.Title}, of {band.Name}\n\n{(m.Dead ? char.ToUpperInvariant(m.Fate![0]) + m.Fate[1..] + "." : "Alive, as far as anyone knows.")}"));
+            foreach (var deed in told.AsEnumerable().Reverse())
+                rows.Add(new KnowledgeRow("!", _cells.Color("Slate"), $"They say {deed.Text}", deed.Depth > 0 ? $"{deed.Depth * feet} ft" : "",
+                    () => $"They say {deed.Text}."));
+        }
+        return new KnowledgeCategoryViewModel("Rivals", _game.Rivals is { } b && _game.RivalsOn ? (b.IsGone ? $"{b.Name} is no more" : $"{b.Name}: about {b.Depth * feet} ft down")
+                : "No rivals", _game.Rivals is null || !_game.Options[OptionIds.AvaRivals]
+                ? "This character was made without rival adventurers."
+                : "No rivals here: the daily dungeon, the weekly challenge and the tutorial have none.", rows);
     }
 
     /// <summary>AVABand's quest journal: how the town is doing, every quest taken or found, and the notice-board jobs taken.</summary>

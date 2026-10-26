@@ -108,6 +108,7 @@ public sealed partial class GameSession
         m.EverSeen = true;
         Beware(m); // (AVABand: a deadly or far-out-of-depth kind, the first time on this level)
         GhostSighted(m); // (AVABand: a fallen character's ghost wails)
+        RivalSighted(m); // (AVABand: one of your rival band speaks)
         var lore = Lore.For(m.Race.Id);
         lore.Sights++;
         if (lore.Sights == 1 && m.Race.Has(MonsterFlags.Unique)) Publish(new UniqueFirstSeenEvent(m));

@@ -62,6 +62,10 @@ them applies in the daily dungeon, the weekly challenge or the tutorial.
 - **Ghosts of fallen characters** — now and then, on a new level at the depth one of your dead
   characters fell at, its ghost walks; beat it to lay it to rest and win back one of the things it
   wore (Help → Monsters). On by default; never in the daily dungeon, the weekly challenge or the tutorial.
+- **Rival adventurers** — a rival band goes down the dungeon alongside you: you hear of their deeds
+  in town (a unique they slay is dead in your game too), and now and then meet them below — to trade
+  with, to pass by, or to fight (Help → Monsters). On by default; never in the daily dungeon, the
+  weekly challenge or the tutorial.
 - **Hirelings** — a sword for hire at the Prancing Pony follows you down for a fee and a share of
   your gold (Help → Quests); never in the daily dungeon, the weekly challenge or the tutorial (on by default).
 - **A second chance** — once in a character's life, a death no deeper than 250 ft doesn't end it: you
