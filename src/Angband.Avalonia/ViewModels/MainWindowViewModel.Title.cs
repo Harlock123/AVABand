@@ -10,8 +10,8 @@ namespace Angband.Avalonia.ViewModels;
 public sealed record TitleChoice(string Letter, string Label, string? Detail, Action Act);
 
 // The title screen (AVABand's own): Thangorodrim, the logo and the title music, with what to do —
-// continue the character saved last (or, if it died, play it again), make a new one, load another,
-// the high scores, or leave. It stays up while a dialog it opened is showing, and goes when a game
+// continue the character saved last (or, if it died, play it again), make a new one (or Play now,
+// with one made for you), load another, the high scores, or leave. It stays up while a dialog it opened is showing, and goes when a game
 // starts or loads. Its pictures can be replaced like the scenes' (title.png / title-logo.png in the
 // art folder); title scenes unlocked through feats take turns behind it.
 public sealed partial class MainWindowViewModel
@@ -66,8 +66,12 @@ public sealed partial class MainWindowViewModel
                     AddMessage("A new adventure begins.");
                 }));
         }
+        // Play now: first of all on a first run (so it's what Enter takes), after the creation screen otherwise.
+        (string, string?, Action) playNow = ("Play now", "a character made for you, straight into the town", StartPlayNow);
+        if (IsFirstRun) choices.Add(playNow);
         choices.Add((IsFirstRun ? "Begin your first adventure" : "Create a new character", "choose a race, a class and your stats",
             RequestNewCharacter));
+        if (!IsFirstRun) choices.Add(playNow);
         if (_saves?.List().Any(e => !e.Summary.IsDead) == true)
             choices.Add(("Load a saved character", null, () => LoadRequested?.Invoke()));
         if (_saves is not null) choices.Add(("Import a save from another computer", "a character's save, copied over", RequestImport));

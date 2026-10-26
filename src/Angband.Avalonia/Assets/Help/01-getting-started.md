@@ -19,8 +19,12 @@ high scores, graveyard, museum and settings stay on each computer.
 ## Your first steps
 
 The game opens on its **title screen**: *Continue* your last character (or, if they died, *Play
-again* as them), *Create a new character*, *Load* another, see the *High scores*, or *Exit* — a
-letter, the arrows and Enter, a click or the gamepad pick.
+again* as them), *Create a new character*, *Play now*, *Load* another, see the *High scores*, or
+*Exit* — a letter, the arrows and Enter, a click or the gamepad pick. New to the game? **Play now**
+skips the creation screen: you start in the town as one of a few forgiving characters (a Human
+Warrior, a Dwarf Priest, a Hobbit Rogue, a High-Elf Mage...) with a random name, the Classic
+options and the standard kit, and the messages say who you are. *Create a new character* gives you
+full control next time.
 
 Using a screen reader? Turn on Options → *Screen reader support*: messages, prompts and tips are
 then read out, and **Ctrl+Shift+D** describes what is around you (and which monsters could kill you).

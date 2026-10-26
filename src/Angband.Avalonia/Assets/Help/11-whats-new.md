@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Play now** on the title screen: one click and you're in the town with a character made for
+  you — one of eight friendly pairs such as a Hobbit Rogue, a Dwarf Priest or an Elf Ranger, with a
+  random name, its points spent on what it needs most, the Classic options and the standard kit. On
+  a first run it's the choice Enter takes; the full creation screen is the next one down.
 - **Scenes you can't miss**: meeting a unique for the first time, slaying a great foe and finishing a
   quest now always stay on screen until you press Space, Enter or Escape (or click), and only after a
   moment, so a key already on its way can't close them. Keys typed while a long turn was worked out,

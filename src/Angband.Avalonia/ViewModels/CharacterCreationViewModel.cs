@@ -357,6 +357,24 @@ public sealed partial class CharacterCreationViewModel : ObservableObject
         Name = char.ToUpperInvariant(name[0]) + name[1..];
     }
 
+    /// <summary>
+    /// Play now's choices, made as the player would here: the race and class, a random name, the
+    /// Classic preset, and the points spent on what the class needs most (point-buy, as a fresh screen has it).
+    /// </summary>
+    public void ChooseForPlayNow(PlayNowCombo combo)
+    {
+        SelectedRace = Races.First(r => r.Id == combo.RaceId);
+        SelectedClass = Classes.First(c => c.Id == combo.ClassId);
+        SelectedMethod = StatMethods.First(m => m.Method == StatMethod.PointBuy);
+        SelectedKit = Kits[0];
+        RandomName();
+        ApplyPreset("classic");
+        foreach (var challenge in ChallengeRows.Where(c => c.IsChecked).ToList()) ChallengeChanged(challenge, false);
+        var bought = PlayNow.SpendPoints(BaseStats(), combo.Stats, Budget);
+        foreach (var row in StatRows) row.Base = bought[row.Id];
+        Update();
+    }
+
     [RelayCommand]
     private void Start()
     {
