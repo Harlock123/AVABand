@@ -18,6 +18,8 @@ public sealed class FallenRecord
     public bool Heroic { get; set; }
     /// <summary>The challenges it took on, for the headstone; null for none.</summary>
     public List<string>? Challenges { get; set; }
+    /// <summary>The mods it was played with (AVABand's own), tagged on the headstone; null for none.</summary>
+    public List<string>? Mods { get; set; }
     public long Points { get; set; }
     public long Turns { get; set; }
     public ulong Seed { get; set; }
@@ -59,7 +61,7 @@ public sealed class FallenRecord
         var record = new FallenRecord
         {
             Name = e.Name, Race = e.Race, Class = e.Class, Level = e.MaxLevel > 0 ? e.MaxLevel : e.Level, MaxDepth = e.MaxDepth,
-            Depth = e.Depth, KilledBy = e.Won ? "retired victorious" : e.KilledBy ?? "something", Won = e.Won, Heroic = e.Heroic, Challenges = e.Challenges,
+            Depth = e.Depth, KilledBy = e.Won ? "retired victorious" : e.KilledBy ?? "something", Won = e.Won, Heroic = e.Heroic, Challenges = e.Challenges, Mods = e.Mods,
             Points = e.Points, Turns = e.Turns, Seed = e.Seed, DateUtc = e.DateUtc, DumpPath = dumpPath, ReplayPath = replayPath,
         };
         record.Epitaph = Epitaphs.For(record);

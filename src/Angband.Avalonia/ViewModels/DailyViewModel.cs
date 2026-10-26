@@ -12,7 +12,7 @@ public sealed record DailyRow(DailyEntry Entry, bool IsToday)
 {
     public string Day => Entry.Day;
     public string Attempt => $"try {Entry.Attempt}";
-    public string Who => $"{Entry.Name} the {Entry.Race} {Entry.Class}";
+    public string Who => $"{Entry.Name} the {Entry.Race} {Entry.Class}{Angband.Core.Records.Scoring.ModdedTag(Entry.Mods)}";
     public string Reached => $"{Entry.MaxDepth * 50} ft, level {Entry.Level}";
     public string Points => Entry.Points.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
     public string Fate => Entry.Fate;
@@ -139,6 +139,7 @@ public sealed partial class MainWindowViewModel
             {
                 Day = day, Name = entry.Name, Race = entry.Race, Class = entry.Class, Level = entry.MaxLevel, MaxDepth = entry.MaxDepth,
                 Points = entry.Points, Turns = entry.Turns, Fate = fate, DateUtc = entry.DateUtc, ReplayPath = CurrentReplayPath,
+                Mods = entry.Mods,
             }) is { } done)
         {
             var board = _records.LoadDaily();

@@ -38,6 +38,7 @@ public sealed partial class MainWindowViewModel
         var done = _game.AvaQuests.Quests.Values.Count(q => q.IsDone && q.Stage != "lost");
         if (done > 0) lines.Add($"{done} of the Prancing Pony's quests done");
         if (p.HeroicBirth) lines.Add("Heroic");
+        if (p.Mods.Count > 0) lines.Add("Modded: " + string.Join(", ", p.Mods));
         if (_game.ChallengeNames.Count > 0) lines.Add(string.Join("  ·  ", _game.ChallengeNames) + (_game.SpeedRunStatus is { } run ? $" ({run})" : ""));
         var picture = LevelPicture();
         RequestCard(new CharacterCardViewModel(p.Name, $"the {p.Race?.Name} {p.Class?.Name}", lines, null, LoadBitmap(picture), false, CardFooter));
@@ -52,7 +53,7 @@ public sealed partial class MainWindowViewModel
             f.Won ? "Retired victorious" : $"Slain by {f.KilledBy}{(f.Depth == 0 ? " in the town" : $" at {f.Depth * 50} ft")}",
             f.DateUtc.ToLocalTime().ToString("D", System.Globalization.CultureInfo.CurrentCulture),
         };
-        RequestCard(new CharacterCardViewModel(f.Name, $"the {f.Race} {f.Class}" + (f.Heroic ? " [Heroic]" : "") + Angband.Core.Game.Challenges.Tag(f.Challenges), lines, f.Epitaph,
+        RequestCard(new CharacterCardViewModel(f.Name, $"the {f.Race} {f.Class}" + (f.Heroic ? " [Heroic]" : "") + Angband.Core.Game.Challenges.Tag(f.Challenges) + Angband.Core.Records.Scoring.ModdedTag(f.Mods), lines, f.Epitaph,
             LoadBitmap(PictureFor("death")), true, CardFooter));
     }
 

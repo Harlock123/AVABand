@@ -83,10 +83,14 @@ public static class DataLoader
     /// <summary>The <c>data</c> folder shipped next to the executable.</summary>
     public static string DefaultDataDirectory => Path.Combine(AppContext.BaseDirectory, "data");
 
-    /// <summary>Per-user mod folders (each subfolder of <c>&lt;AppData&gt;/AVABand/mods</c>), in name order.</summary>
-    public static IEnumerable<string> UserModDirectories()
+    /// <summary>The per-user mods folder, <c>&lt;AppData&gt;/AVABand/mods</c> (it may not exist yet).</summary>
+    public static string UserModsRoot =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AVABand", "mods");
+
+    /// <summary>Mod folders (each subfolder of <paramref name="root"/>, by default <see cref="UserModsRoot"/>), in name order.</summary>
+    public static IEnumerable<string> UserModDirectories(string? root = null)
     {
-        var root = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AVABand", "mods");
+        root ??= UserModsRoot;
         return Directory.Exists(root)
             ? Directory.GetDirectories(root).Order(StringComparer.OrdinalIgnoreCase)
             : [];
@@ -94,6 +98,59 @@ public static class DataLoader
 
     public static GameData LoadDefault(bool includeUserMods = true) =>
         Load(includeUserMods ? [DefaultDataDirectory, .. UserModDirectories()] : [DefaultDataDirectory]);
+
+    /// <summary>
+    /// The game's data with the user's mods, skipping those switched off (Settings → Mods) and any
+    /// that fail to load; <paramref name="results"/> says what became of each mod folder.
+    /// </summary>
+    public static GameData LoadDefault(IEnumerable<string> disabledMods, out IReadOnlyList<ModLoadResult> results) =>
+        LoadWithMods(DefaultDataDirectory, [.. UserModDirectories()], disabledMods, out results);
+
+    /// <summary>
+    /// Loads <paramref name="baseDirectory"/> with each mod folder layered on in turn, skipping the ones
+    /// named in <paramref name="disabledMods"/> (by folder name, ignoring case). A mod that breaks the data
+    /// — bad JSON, an unknown colour, a monster that names a missing base — is left out and its errors
+    /// kept in its result, so one broken mod never stops AVABand from starting. (All the mods are tried
+    /// together first; only when that fails are they added one at a time to find the culprits, each
+    /// checked on top of the ones already accepted.) Throws only if the base data itself is broken.
+    /// </summary>
+    public static GameData LoadWithMods(string baseDirectory, IReadOnlyList<string> modDirectories,
+        IEnumerable<string>? disabledMods, out IReadOnlyList<ModLoadResult> results)
+    {
+        var disabled = new HashSet<string>(disabledMods ?? [], StringComparer.OrdinalIgnoreCase);
+        var outcome = modDirectories.Select(d => new ModLoadResult(ModName(d), d,
+            disabled.Contains(ModName(d)) ? ModLoadState.Disabled : ModLoadState.Loaded)).ToList();
+        var enabled = outcome.Where(r => r.State == ModLoadState.Loaded).Select(r => r.Directory).ToList();
+        results = outcome;
+        if (enabled.Count == 0) return Load([baseDirectory]);
+        try
+        {
+            return Load([baseDirectory, .. enabled]);
+        }
+        catch (GameDataException)
+        {
+            // Some mod is at fault: find which, one at a time.
+        }
+        var accepted = new List<string>();
+        GameData? data = null;
+        for (var i = 0; i < outcome.Count; i++)
+        {
+            if (outcome[i].State != ModLoadState.Loaded) continue;
+            try
+            {
+                data = Load([baseDirectory, .. accepted, outcome[i].Directory]);
+                accepted.Add(outcome[i].Directory);
+            }
+            catch (GameDataException ex)
+            {
+                outcome[i] = outcome[i] with { State = ModLoadState.Failed, Error = ex.Message };
+            }
+        }
+        return data ?? Load([baseDirectory]);
+    }
+
+    /// <summary>A mod's name: its folder's name.</summary>
+    public static string ModName(string directory) => Path.GetFileName(Path.TrimEndingDirectorySeparator(directory));
 
     public static GameData Load(params IReadOnlyList<string> directories)
     {
@@ -312,6 +369,7 @@ public static class DataLoader
         var data = new GameData(registry!, trapDefs, profiles.Items, townDef, shops, colors,
             constants ?? new GameConstants())
         {
+            Mods = [.. directories.Skip(1).Select(ModName)],
             Elements = elements.Items,
             TimedEffects = timedEffects.Items,
             BlowMethods = blowMethods.Items,

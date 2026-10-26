@@ -8,6 +8,9 @@ public static class Scoring
     /// <summary>What a heroic character's score counts for, in percent (AVABand's: see docs/heroic-balance.md).</summary>
     public const int HeroicPercent = 75;
 
+    /// <summary>" [Modded]" for a character played with mods (AVABand's own), so the tables stay honest; "" otherwise.</summary>
+    public static string ModdedTag(IReadOnlyCollection<string>? mods) => mods is { Count: > 0 } ? " [Modded]" : "";
+
     /// <summary>
     /// Angband's <c>total_points</c>: experience plus 100 points per dungeon level reached — three
     /// quarters of it for a character born with AVABand's heroic stats, which make the game easier.
@@ -42,6 +45,8 @@ public sealed class ScoreEntry
     public bool Heroic { get; set; }
     /// <summary>The challenges it took on ("Ironman", "Speed run"...), tagged in the list; null for none.</summary>
     public List<string>? Challenges { get; set; }
+    /// <summary>The mods it was played with (AVABand's own), tagged "[Modded]" in the list; null for none.</summary>
+    public List<string>? Mods { get; set; }
     public DateTime DateUtc { get; set; }
 
     public bool IsAlive => KilledBy is null;
@@ -57,6 +62,7 @@ public sealed class ScoreEntry
             KilledBy = p.IsDead ? p.KilledBy ?? "something" : null, Seed = game.Seed,
             DateUtc = whenUtc ?? DateTime.UtcNow,
             Won = p.IsWinner, Heroic = p.HeroicBirth, Challenges = game.ChallengeNames is { Count: > 0 } c ? [.. c] : null,
+            Mods = p.Mods.Count > 0 ? [.. p.Mods] : null,
         };
     }
 }

@@ -10,7 +10,7 @@ namespace Angband.Avalonia.ViewModels;
 public sealed record HeadstoneRow(FallenRecord Fallen)
 {
     public string Name => Fallen.Name;
-    public string Title => $"the {Fallen.Race} {Fallen.Class}" + (Fallen.Heroic ? " [Heroic]" : "") + Angband.Core.Game.Challenges.Tag(Fallen.Challenges);
+    public string Title => $"the {Fallen.Race} {Fallen.Class}" + (Fallen.Heroic ? " [Heroic]" : "") + Angband.Core.Game.Challenges.Tag(Fallen.Challenges) + Angband.Core.Records.Scoring.ModdedTag(Fallen.Mods);
     public string Deeds => $"Level {Fallen.Level}  ·  deepest {Fallen.MaxDepth * 50} ft";
     public string End => Fallen.Won ? "Retired victorious"
         : $"Slain by {Fallen.KilledBy}{(Fallen.Depth == 0 ? " in the town" : $" at {Fallen.Depth * 50} ft")}";

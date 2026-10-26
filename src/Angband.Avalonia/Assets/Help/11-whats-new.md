@@ -5,6 +5,12 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Mods made visible**: Settings → Mods lists the mods in your mods folder — who made each, which
+  data files it changes and how many entries it adds or replaces, and any errors — with a switch to
+  turn each off (restart to apply), a button to open the folder and one to make a small example mod
+  (a new monster and a new item) to copy from. A broken mod is now left out instead of stopping the
+  game. Characters played with mods are tagged *[Modded]* in the scores, the graveyard and the daily
+  dungeon, and their dump names the mods. A new help page, Help → Mods, tells how to make one.
 - **A death recap that teaches**: when a character dies, the game-over window now says what
   happened — the last five blows and hurts, with the hit points each left you, the escapes and
   healing you still had in your pack (only ones you recognise), and one plain tip chosen by how you

@@ -16,6 +16,8 @@ public sealed class SaveSummary
     public long GameTurn { get; set; }
     public bool IsDead { get; set; }
     public bool IsWinner { get; set; }
+    /// <summary>The mods the character has been played with (AVABand's own); null for none and in older saves.</summary>
+    public List<string>? Mods { get; set; }
     public DateTime SavedAtUtc { get; set; }
 }
 
@@ -196,6 +198,8 @@ public sealed class PlayerSave
     public Dictionary<string, int> Stats { get; set; } = [];
     public Dictionary<string, int> BaseStats { get; set; } = [];
     public bool HeroicBirth { get; set; }
+    /// <summary>The mods the character has been played with (AVABand's own); null for none and in older saves.</summary>
+    public List<string>? Mods { get; set; }
     public string? DailyDate { get; set; }
     public long SpeedRunResult { get; set; }
     public bool SecondChanceUsed { get; set; }

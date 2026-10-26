@@ -14,6 +14,7 @@ public sealed record SaveEntry(string Path, SaveSummary Summary, bool IsBackup =
     DateTime? RestoredFrom = null)
 {
     public string Title => $"{Summary.Name}, level {Summary.Level} {Summary.Race} {Summary.Class}"
+                           + Angband.Core.Records.Scoring.ModdedTag(Summary.Mods)
                            + (MainDamaged ? " — save damaged: restore an earlier one" : "");
 
     /// <summary>A backup's line in the list of earlier saves.</summary>

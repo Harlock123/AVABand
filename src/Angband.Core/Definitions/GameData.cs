@@ -37,6 +37,12 @@ public sealed class GameData
     public IReadOnlyDictionary<string, string> Colors { get; }
     public GameConstants Constants { get; }
 
+    /// <summary>
+    /// The mods layered on the game's own data (AVABand's own: their folder names under the user mods
+    /// folder, in load order); empty for the standard game. A character played with any is marked modded.
+    /// </summary>
+    public IReadOnlyList<string> Mods { get; init; } = [];
+
     public IReadOnlyList<ElementDef> Elements { get; init; } = [];
     public IReadOnlyList<TimedEffectDef> TimedEffects { get; init; } = [];
     public IReadOnlyList<BlowMethodDef> BlowMethods { get; init; } = [];

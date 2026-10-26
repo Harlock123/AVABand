@@ -133,7 +133,7 @@ public static class SaveGame
                 Shape = p.Shape, StatScramble = new(p.StatScramble),
                 ConHpRemainder = p.ConHpRemainder, Regenerates = p.Regenerates, Infravision = p.Infravision,
                 MaxMana = p.MaxMana, Mana = p.Mana, ManaFraction = p.ManaFraction,
-                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, DailyDate = p.DailyDate, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
+                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
                 MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, RecallDepth = p.RecallDepth, DeepDescentTimer = p.DeepDescentTimer,
                 LearnedSpells = [.. p.LearnedSpells], CastSpells = p.CastSpells.Order(StringComparer.Ordinal).ToList(),
                 BaseSpeed = p.BaseSpeed, BaseArmour = p.BaseArmour, BaseToHit = p.BaseToHit, BaseToDam = p.BaseToDam,
@@ -180,6 +180,7 @@ public static class SaveGame
         GameTurn = g.GameTurn,
         IsDead = g.Player.IsDead,
         IsWinner = g.Player.IsWinner,
+        Mods = g.Player.Mods.Count > 0 ? [.. g.Player.Mods] : null,
         SavedAtUtc = DateTime.UtcNow,
     };
 
@@ -403,6 +404,9 @@ public static class SaveGame
         foreach (var (k, v) in ps.Stats) p.Stats[k] = v;
         foreach (var (k, v) in ps.BaseStats) p.BaseStats[k] = v;
         p.HeroicBirth = ps.HeroicBirth;
+        // The mods it was played with, and any it is played with now (a character once modded stays so).
+        p.NoteMods(ps.Mods ?? []);
+        p.NoteMods(data.Mods);
         p.DailyDate = ps.DailyDate;
         p.SpeedRunResult = ps.SpeedRunResult;
         p.SecondChanceUsed = ps.SecondChanceUsed;

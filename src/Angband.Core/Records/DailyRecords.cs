@@ -17,10 +17,12 @@ public sealed class DailyEntry
     public string Fate { get; set; } = "";
     public DateTime DateUtc { get; set; }
     public string? ReplayPath { get; set; }
+    /// <summary>The mods the try was played with (AVABand's own): not the same dungeon as everyone else's. Null for none.</summary>
+    public List<string>? Mods { get; set; }
 
     /// <summary>A line to share with friends: "AVABand daily 2026-09-30 (try 2): Dain the Dwarf Priest reached 1450 ft…".</summary>
     public string ShareLine() =>
-        $"AVABand daily {Day}{(Attempt > 1 ? $" (try {Attempt})" : "")}: {Name} the {Race} {Class} reached {MaxDepth * 50} ft "
+        $"AVABand daily {Day}{(Attempt > 1 ? $" (try {Attempt})" : "")}{Scoring.ModdedTag(Mods)}: {Name} the {Race} {Class} reached {MaxDepth * 50} ft "
         + $"(level {Level}), {Points.ToString("N0", System.Globalization.CultureInfo.InvariantCulture)} points — {Fate}.";
 
     /// <summary>A name for the try's replay file, to send: "AVABand-daily-2026-09-30-try2.avareplay".</summary>

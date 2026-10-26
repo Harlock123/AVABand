@@ -2041,8 +2041,25 @@ The music moods: `title` (the title screen; falls back to `town`), `town` by day
 
 ## Modding
 Data loads from `data/` next to the executable, then from each folder in
-`<AppData>/AVABand/mods/*`. Entries with the same `id` replace base entries; new ids are added.
+`<AppData>/AVABand/mods/*` (in name order). Entries with the same `id` replace base entries; new ids are added.
 Vaults and room templates are 4.2.5's own formats and symbols (see `VaultDef` and `RoomTemplateDef`).
+
+- **Settings → Mods** (AVABand's own; `ViewModels/MainWindowViewModel.Mods.cs`, `Angband.Data/Mods.cs`) lists
+  each mod folder: its optional `mod.json` (`{"name", "author", "version", "description"}`), each data file it
+  holds with how many entries it adds and how many of the game's it replaces (`ModCatalog` compares ids with
+  the base `data/` without loading), any errors, and an on/off switch. Switched-off mods are kept in
+  `AppSettings.DisabledMods` and skipped by `DataLoader.LoadDefault(disabled, out results)` at the next start
+  ("Restart AVABand to apply"). *Open the mods folder* makes and opens it; *Make an example mod* writes
+  `example-mod/` (a monster in `ava_monsters.json`, an item in `ava_objects.json`).
+- **A broken mod no longer stops the game**: `DataLoader.LoadWithMods` tries every enabled mod together and,
+  if that fails, adds them one at a time on top of those accepted, leaving out each that breaks the data
+  (its errors shown on the Mods tab). Only broken base data throws.
+- **Modded characters are marked**: `GameData.Mods` names the mods loaded; `Player.Mods` keeps every mod a
+  character has been played with (saved as a nullable `PlayerSave.Mods`, so older saves load unchanged), and
+  the save summary, `ScoreEntry`, `FallenRecord` and `DailyEntry` carry it — *[Modded]* in the high scores,
+  graveyard, daily table and saves list, and a `Mods:` line in the character dump. Points are unchanged.
+- Help → Mods (`Assets/Help/12-mods.md`) is the player's guide: where the folder is on each OS, every file a mod
+  can hold, the replace-by-id rule, `mod.json` and a worked example.
 
 ## Controls and input
 Every device produces the same `InputAction`s (`Angband.Input`), and one router in the view model

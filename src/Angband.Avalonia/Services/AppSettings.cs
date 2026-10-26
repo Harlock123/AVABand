@@ -50,6 +50,12 @@ public sealed class AppSettings
     /// <summary>Interface options (Angband's '=' menu), by Angband name; missing ones take their defaults.</summary>
     public Dictionary<string, bool> Options { get; set; } = [];
 
+    /// <summary>
+    /// The mods switched off in Settings → Mods, by folder name (AVABand's own): the loader skips them at the
+    /// next start. Mods are on unless listed here, so a newly added one loads without a visit to Settings.
+    /// </summary>
+    public List<string> DisabledMods { get; set; } = [];
+
     /// <summary>Class used by "New game" (Ctrl+N).</summary>
     public string LastClass { get; set; } = "warrior";
 

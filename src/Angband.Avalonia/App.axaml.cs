@@ -22,11 +22,16 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var data = DataLoader.LoadDefault();
-            var problems = new List<string>();
-            var tilesets = TilesetCatalog.DiscoverDefault(problems);
             var settings = AppSettings.Load();
+            // The game's data with the user's mods (Settings → Mods): those switched off are skipped, and a
+            // mod that breaks the data is left out (its errors shown on the Mods tab) rather than stopping the game.
+            var data = DataLoader.LoadDefault(settings.DisabledMods, out var mods);
+            var problems = new List<string>();
+            foreach (var mod in mods.Where(m => m.State == ModLoadState.Failed))
+                problems.Add($"Mod '{mod.Name}' was not loaded: {mod.Error}");
+            var tilesets = TilesetCatalog.DiscoverDefault(problems);
             var vm = new MainWindowViewModel(data, tilesets, settings, s => s.Save());
+            vm.UseMods(DataLoader.UserModsRoot, mods);
 
             // Audio is optional: without a device (or with --no-audio) the game is simply silent.
             var engine = desktop.Args?.Contains("--no-audio") == true ? new NullAudioEngine() : OpenAlAudioEngine.CreateOrSilent(AudioBuffer.PeriodFrames(settings.AudioBuffer, VirtualMachine.Detect()));

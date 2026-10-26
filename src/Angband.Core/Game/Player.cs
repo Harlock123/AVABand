@@ -115,6 +115,19 @@ public sealed class Player : IActor
     /// <summary>Made with AVABand's heroic stats (<see cref="Game.HeroicBirth"/>): its score counts 75%, and is tagged.</summary>
     public bool HeroicBirth { get; set; }
 
+    /// <summary>
+    /// The mods this character has been played with (AVABand's own: their folder names), kept for good once
+    /// used — a modded character is tagged "[Modded]" in the scores and named so in its character dump.
+    /// </summary>
+    public List<string> Mods { get; } = [];
+
+    /// <summary>Notes the mods in <paramref name="mods"/> as played with (new ones added; none forgotten).</summary>
+    public void NoteMods(IEnumerable<string> mods)
+    {
+        foreach (var mod in mods)
+            if (!Mods.Contains(mod, StringComparer.OrdinalIgnoreCase)) Mods.Add(mod);
+    }
+
     /// <summary>The daily dungeon's day this character is playing (yyyy-MM-dd), or null for an ordinary game.</summary>
     public string? DailyDate { get; set; }
 

@@ -3,6 +3,7 @@ using Angband.Avalonia.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 
 namespace Angband.Avalonia.Views;
 
@@ -19,6 +20,30 @@ public partial class SettingsWindow : Window
     }
 
     private void OnClose(object? sender, RoutedEventArgs e) => Close();
+
+    /// <summary>The Mods tab lists what's in the mods folder now (it may have changed since the game started).</summary>
+    protected override void OnOpened(EventArgs e)
+    {
+        base.OnOpened(e);
+        if (DataContext is MainWindowViewModel vm) vm.RefreshMods();
+    }
+
+    /// <summary>Opens the mods folder in the file manager (made first, if there are no mods yet).</summary>
+    private async void OnOpenModsFolder(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel vm) return;
+        var folder = vm.ModsFolder;
+        try
+        {
+            System.IO.Directory.CreateDirectory(folder);
+            vm.ModsStatus = await Launcher.LaunchDirectoryInfoAsync(new System.IO.DirectoryInfo(folder))
+                ? "" : $"Your mods folder is {folder}";
+        }
+        catch (Exception ex) when (ex is System.IO.IOException or UnauthorizedAccessException)
+        {
+            vm.ModsStatus = $"Your mods folder is {folder}";
+        }
+    }
 
     /// <summary>Opens on the options page (Angband '=').</summary>
     public void ShowOptionsPage() => Tabs.SelectedIndex = Tabs.ItemCount - 1;
