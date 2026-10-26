@@ -52,6 +52,7 @@ public sealed partial class GraveyardViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(WatchCommand))]
+    [NotifyCanExecuteChangedFor(nameof(SaveClipCommand))]
     private HeadstoneRow? _selected;
 
     /// <summary>Raised to save the chosen stone as a character card.</summary>
@@ -73,6 +74,18 @@ public sealed partial class GraveyardViewModel : ObservableObject
     {
         if (Selected?.Fallen.ReplayPath is { } path) WatchRequested?.Invoke(path);
     }
+    /// <summary>Raised to make a clip (an animated picture) of the chosen stone's last moments, from its replay.</summary>
+    public event Action<FallenRecord>? ClipRequested;
+
+    [CommunityToolkit.Mvvm.Input.RelayCommand(CanExecute = nameof(CanWatch))]
+    private void SaveClip()
+    {
+        if (Selected is { HasReplay: true } stone) ClipRequested?.Invoke(stone.Fallen);
+    }
+
+    /// <summary>How the last clip went ("Making a clip…", then where it was saved), under the summary.</summary>
+    [ObservableProperty] private string _clipNote = "";
+
     [ObservableProperty] private string _story = "";
 
     partial void OnSelectedChanged(HeadstoneRow? value)
@@ -118,6 +131,7 @@ public sealed partial class MainWindowViewModel
         var yard = new GraveyardViewModel(_records?.LoadGraveyard() ?? new Graveyard(), background);
         yard.WatchRequested += path => PlayLastMoments(path);
         yard.CardRequested += SaveFallenCard;
+        yard.ClipRequested += f => SaveClip(f.ReplayPath!, f.Won, text => yard.ClipNote = text);
         return yard;
     }
 }

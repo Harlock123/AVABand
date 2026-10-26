@@ -5,6 +5,11 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Clips**: *Save a clip* in the graveyard (beside *Watch their last moments*), or on the menu
+  when a character dies, makes an animated picture (a GIF) of their last moments to share — the
+  end of their game played back from its replay, in the tiles or letters you play with, with who
+  they were and what killed them along the foot. It's saved in the clips folder beside your
+  records and opens in your picture viewer.
 - **Mods made visible**: Settings → Mods lists the mods in your mods folder — who made each, which
   data files it changes and how many entries it adds or replaces, and any errors — with a switch to
   turn each off (restart to apply), a button to open the folder and one to make a small example mod

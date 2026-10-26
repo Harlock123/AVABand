@@ -32,8 +32,12 @@ public sealed partial class MainWindowViewModel
         };
         if (scoreLine is not null) lines.Add(scoreLine);
         var again = SpecOf(_game);
+        // (Their replay, written as they died, for a clip of their last moments.)
+        var replay = CurrentReplayPath is { } r && File.Exists(r) && ClipDirectory is not null ? r : null;
+        var won = p.IsWinner;
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel(p.IsWinner ? "Your adventure is over" : "You have died",
-            lines, Choices(again, () => { if (again is not null) StartCharacter(again); }, sheet: true)) { Recap = RecapOf(_game) });
+            lines, Choices(again, () => { if (again is not null) StartCharacter(again); }, sheet: true,
+                clip: replay is null ? null : () => SaveClip(replay, won))) { Recap = RecapOf(_game) });
     }
 
     /// <summary>At start-up with no living character: how the last one ended, and what next.</summary>
@@ -73,7 +77,7 @@ public sealed partial class MainWindowViewModel
             game.Options.OfKind(Angband.Core.Game.OptionKind.Birth));
     }
 
-    private List<GameOverChoice> Choices(CharacterSpec? again, Action playAgain, bool sheet)
+    private List<GameOverChoice> Choices(CharacterSpec? again, Action playAgain, bool sheet, Action? clip = null)
     {
         var options = new List<(string Label, Action Act)>();
         if (again is { } spec)
@@ -82,6 +86,7 @@ public sealed partial class MainWindowViewModel
         if (_saves?.List().Any(e => !e.Summary.IsDead) == true) options.Add(("Load a saved character...", () => LoadRequested?.Invoke()));
         if (_records is not null) options.Add(("View the high scores", ShowHighScores));
         if (sheet) options.Add(("Look at the character sheet", ShowCharacterSheet));
+        if (clip is not null) options.Add(("Save a clip of their last moments (an animated GIF)", clip));
         options.Add(("Exit", () => ExitRequested?.Invoke()));
         return [.. options.Select((o, i) => new GameOverChoice(((char)('a' + i)).ToString(), o.Label, o.Act))];
     }

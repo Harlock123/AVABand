@@ -51,11 +51,15 @@
         <Button DockPanel.Dock="Right" Content="Close" Classes="accent" Click="OnClose" Margin="8,0,0,0" />
         <Button DockPanel.Dock="Right" Content="Save a card" Command="{Binding SaveCardCommand}" Margin="8,0,0,0"
                 ToolTip.Tip="A picture of this headstone's words, to share" />
+        <Button DockPanel.Dock="Right" x:Name="ClipButton" Content="Save a clip" Command="{Binding SaveClipCommand}" Margin="8,0,0,0"
+                ToolTip.Tip="An animated picture (a GIF) of their last moments, from their replay, to share" />
         <Button DockPanel.Dock="Right" x:Name="WatchButton" Content="Watch their last moments" Command="{Binding WatchCommand}"
                 ToolTip.Tip="Their game's replay, from when they came to the level where they fell" />
         <StackPanel>
           <TextBlock Text="The graveyard" FontFamily="{StaticResource TitleFont}" FontSize="26" Foreground="#e2d3ae" />
           <TextBlock Text="{Binding Summary}" Foreground="#b8a898" FontStyle="Italic" />
+          <TextBlock Text="{Binding ClipNote}" IsVisible="{Binding !!ClipNote.Length}" Foreground="#b8a898" FontSize="11"
+                     TextTrimming="CharacterEllipsis" />
         </StackPanel>
       </DockPanel>
       <Grid ColumnDefinitions="*,12,520">

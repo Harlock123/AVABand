@@ -85,6 +85,18 @@ dead the high scores remember are brought in. Cheats, the tutorial and replays a
 stone keeps what its character wore at the end, for its ghost (below), and, once that ghost is laid
 to rest, who did it and when ("Their ghost was laid to rest by …").
 
+**Clips**: the graveyard's *Save a clip* (beside *Watch their last moments*) and the game-over
+menu's *Save a clip of their last moments* make an animated GIF to share (`Views/ClipMaker.cs`,
+`Services/GifEncoder.cs`). The headstone's replay is played on, off the UI thread, to its last 80
+steps (or to when they came to the level they fell on, if later); each step is then drawn by an
+unseen map view of its own — tiles at 24 px or letters, as the map is shown now, the panel moving
+on as Angband's does rather than following every step, the torchlight held steady — with the
+game's latest words above and "Name the Race Class — slain by X at N ft" below, and "You die." is
+held at the end: 640×434, about 7 frames a second. The GIF is AVABand's own writer, with nothing
+to install: one median-cut palette for the whole clip, each frame cut down to what changed (the
+rest see-through), LZW-compressed and looping for ever — a clip is typically well under a
+megabyte. Saved in `clips/` beside the records and opened in your picture viewer.
+
 **Smarter pickup** (AVABand's own, `Game/GameSession.Pickup.cs`): on top of Angband's `pickup_always`,
 `pickup_inven` and the `=g` / `!g` inscriptions, two interface options — `pickup_ammo` (ammunition the
 wielded launcher fires, whatever its enchantment, into the quiver) and `pickup_unknown` (flavoured

@@ -96,7 +96,8 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   and its **Feats** page lists milestones across all your characters (deep levels, great foes,
   quests, the daily dungeon, a win with each class), with who reached each first. **Game → The graveyard** keeps a
   headstone for every character who died or retired, with their story — and *Watch their last
-  moments* replays how they fell. **Game → The museum** gathers what all your characters have
+  moments* replays how they fell, while *Save a clip* makes an animated picture (a GIF) of it to
+  share (the menu when a character dies offers one too). **Game → The museum** gathers what all your characters have
   done: every artifact found, every unique slain and every kind of monster seen, each with who did it
   first, and empty places for those still to come. **Game → Daily dungeon** is the same dungeon and character
   for everyone each day — compare how far you got with friends, and swap replays: *Copy result*

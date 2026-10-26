@@ -272,6 +272,7 @@ public partial class MainWindow : Window
             _subscribed.GraveyardRequested -= OnGraveyardRequested;
             _subscribed.MuseumRequested -= OnMuseumRequested;
             _subscribed.CardRequested -= OnCardRequested;
+            _subscribed.ClipRequested -= OnClipRequested;
             _subscribed.DailyRequested -= OnDailyRequested;
             _subscribed.KnowledgeRequested -= OnKnowledgeRequested;
             _subscribed.KeyCommandsRequested -= OnKeyCommandsRequested;
@@ -302,6 +303,7 @@ public partial class MainWindow : Window
         vm.GraveyardRequested += OnGraveyardRequested;
         vm.MuseumRequested += OnMuseumRequested;
         vm.CardRequested += OnCardRequested;
+        vm.ClipRequested += OnClipRequested;
         vm.DailyRequested += OnDailyRequested;
         vm.KnowledgeRequested += OnKnowledgeRequested;
         vm.KeyCommandsRequested += OnKeyCommandsRequested;
@@ -439,8 +441,30 @@ public partial class MainWindow : Window
         if (!Design.IsDesignMode && OpenSavedCards) _ = Launcher.LaunchUriAsync(new Uri(path));
     }
 
-    /// <summary>Whether a saved card opens in the picture viewer (not in tests).</summary>
+    /// <summary>Whether a saved card or clip opens in the picture viewer (not in tests).</summary>
     public static bool OpenSavedCards { get; set; } = true;
+
+    /// <summary>The clip being made, if one is (for tests, to wait for it).</summary>
+    public Task? ClipUnderWay { get; private set; }
+
+    /// <summary>A clip of a character's last moments: filmed, saved, and opened in the picture viewer.</summary>
+    private void OnClipRequested(ClipJob job, string path, Action<string>? note) => ClipUnderWay = MakeClip(job, path, note);
+
+    private async Task MakeClip(ClipJob job, string path, Action<string>? note)
+    {
+        try
+        {
+            await ClipMaker.SaveAsync(job, path, this.FindControl<Canvas>("CardHost")!);
+        }
+        catch (Exception ex)
+        {
+            // A clip is a keepsake: a replay that won't play back (or a full disk) is said, and play goes on.
+            (DataContext as MainWindowViewModel)?.ClipSaved($"(could not save it: {ex.Message})", note);
+            return;
+        }
+        (DataContext as MainWindowViewModel)?.ClipSaved(path, note);
+        if (!Design.IsDesignMode && OpenSavedCards) _ = Launcher.LaunchUriAsync(new Uri(path));
+    }
 
     private void OnDailyRequested(DailyViewModel daily) => DialogFit.Show(new DailyWindow { DataContext = daily }, this);
 
