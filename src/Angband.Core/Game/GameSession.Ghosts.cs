@@ -49,10 +49,39 @@ public sealed class GhostLog
     public List<string> Met { get; set; } = [];
     /// <summary>Ghosts this character laid to rest.</summary>
     public List<string> Laid { get; set; } = [];
+    /// <summary>The ghosts that pleaded with this character to avenge them, and how each stands (none in an older save).</summary>
+    public List<GhostPlea> Pleas { get; set; } = [];
+}
+
+/// <summary>
+/// A pleading ghost (AVABand's): one that asks you to slay what killed it, and gives you what it carried
+/// when you do. Saved with the character, so a plea left unanswered can be taken up again.
+/// </summary>
+public sealed class GhostPlea
+{
+    public const string Pleading = "pleading", Left = "left", Spurned = "spurned", Avenged = "avenged";
+
+    /// <summary>Which ghost (its headstone's key).</summary>
+    public string Key { get; set; } = "";
+    /// <summary>The race of what killed it.</summary>
+    public string Killer { get; set; } = "";
+    /// <summary>
+    /// How it stands: <see cref="Pleading"/> (it waits on the level), <see cref="Left"/> (you went, and it
+    /// may walk and plead again), <see cref="Spurned"/> (you struck it, and it fights) or <see cref="Avenged"/>.
+    /// </summary>
+    public string Stage { get; set; } = Pleading;
+    /// <summary>You have heard its plea (it pleads when first seen): the quest log has it from then.</summary>
+    public bool Spoken { get; set; }
 }
 
 /// <summary>A fallen character's ghost laid to rest (the app marks its headstone; <paramref name="Key"/> is the headstone's).</summary>
 public sealed record GhostLaidToRestEvent(string Key, string Name) : IGameEvent;
+
+/// <summary>A ghost seen for the first time: what it says — its wail, or, for a pleading ghost, its plea.</summary>
+public sealed record GhostSightedEvent(Monster Monster, FallenGhost Fallen, string Words, bool Pleading) : IGameEvent;
+
+/// <summary>A pleading ghost avenged: its thanks, as it is laid to rest (<paramref name="Ghost"/> is gone from the level).</summary>
+public sealed record GhostAvengedEvent(Monster Ghost, FallenGhost Fallen, string Words) : IGameEvent;
 
 /// <summary>
 /// AVABand's ghosts: the monster a fallen character's ghost is — its level, life, speed, blows and spells
@@ -191,7 +220,7 @@ public static class FallenGhosts
     /// <summary>What a ghost wails the first time it is seen (the same line every time for the same ghost).</summary>
     public static string Wail(FallenGhost g)
     {
-        var killer = g.KilledBy.Length == 0 ? "Something" : char.ToUpperInvariant(g.KilledBy[0]) + g.KilledBy[1..];
+        var killer = Killer(g);
         string[] lines =
         [
             $"{killer} ended me here. You will not leave so easily!",
@@ -202,6 +231,70 @@ public static class FallenGhosts
         var hash = 17L;
         foreach (var c in g.Key) hash = hash * 31 + c;
         return lines[(int)(Math.Abs(hash) % lines.Length)];
+    }
+
+    /// <summary>One ghost in this many pleads with you instead of fighting (when what killed it can be found).</summary>
+    public const int PleaChance = 3;
+
+    /// <summary>A number from a ghost's headstone key (and a game's seed): the same every time, and no dice rolled.</summary>
+    private static long Hash(string key, ulong seed = 0)
+    {
+        var hash = 17L;
+        foreach (var c in key) hash = hash * 31 + c;
+        hash ^= (long)(seed * 0x9E3779B97F4A7C15UL);
+        return (hash ^ (hash >>> 29)) & long.MaxValue;
+    }
+
+    /// <summary>Whether a ghost pleads with the character of this game rather than fighting (one in <see cref="PleaChance"/>, by its key and the seed).</summary>
+    public static bool Pleads(FallenGhost g, ulong seed) => Hash(g.Key, seed) % PleaChance == 0;
+
+    /// <summary>
+    /// The monster that killed a fallen character, from its headstone's words ("a cave orc", "an Easterling
+    /// warrior", "Grip, Farmer Maggot's Dog", or a plural): null for anything else — a trap, poison,
+    /// starvation, another ghost — and for a quest's own foes (Sauron, Morgoth), who walk only where it puts them.
+    /// </summary>
+    public static MonsterRaceDef? KillerRace(GameData data, string killedBy)
+    {
+        var name = killedBy.Trim();
+        if (name.Length == 0) return null;
+        var names = new List<string> { name };
+        foreach (var article in new[] { "a ", "an ", "the ", "some " })
+            if (name.StartsWith(article, StringComparison.OrdinalIgnoreCase)) names.Add(name[article.Length..]);
+        bool Named(MonsterRaceDef r) => names.Any(n => string.Equals(r.Name, n, StringComparison.OrdinalIgnoreCase)
+                                                      || string.Equals(r.Plural, n, StringComparison.OrdinalIgnoreCase)
+                                                      || string.Equals(r.Name + "s", n, StringComparison.OrdinalIgnoreCase)
+                                                      || string.Equals(r.Name + "es", n, StringComparison.OrdinalIgnoreCase));
+        return data.Monsters.FirstOrDefault(r => Named(r) && !r.Has(MonsterFlags.Questor));
+    }
+
+    /// <summary>What killed it, as its headstone has it, to start a sentence with.</summary>
+    private static string Killer(FallenGhost g) =>
+        g.KilledBy.Length == 0 ? "Something" : char.ToUpperInvariant(g.KilledBy[0]) + g.KilledBy[1..];
+
+    /// <summary>What a pleading ghost says the first time it is seen (the same line every time for the same ghost).</summary>
+    public static string Plea(FallenGhost g)
+    {
+        var killer = Killer(g);
+        string[] lines =
+        [
+            $"I was {g.Name} the {g.Race} {g.Class}. {killer} cut me down here. Put it to rest, and what I carried is yours.",
+            $"Hold! I mean you no harm. {killer} still walks these halls. Slay it, and take what was mine.",
+            $"{killer} ended me, and I cannot rest while it lives. Avenge me, and my things are yours.",
+            $"Please... I was {g.Name}. {killer} took my life here. End it, and I will give you all I wore.",
+        ];
+        return lines[(int)(Hash(g.Key) / 7 % lines.Length)];
+    }
+
+    /// <summary>What a pleading ghost says as it is avenged (the same line every time for the same ghost).</summary>
+    public static string Thanks(FallenGhost g)
+    {
+        string[] lines =
+        [
+            "It is done. Take what was mine, and walk on in the light.",
+            "At last... I can rest. These were mine; may they serve you better.",
+            "You kept your word. Remember me when you go deeper.",
+        ];
+        return lines[(int)(Hash(g.Key) % lines.Length)];
     }
 
     /// <summary>What a ghost of a headstone without its gear drops instead, by class: weapons and armour, or rings, amulets and devices.</summary>
@@ -222,6 +315,11 @@ public static class FallenGhosts
 // for each character until it is laid to rest, and then for no one. Beaten, it lets fall one of the things
 // it wore (an artifact this game has already made is given as an ego of its kind instead), and gold. Not
 // in the daily dungeon, the weekly challenge or the tutorial; a replay has only the ghosts its game had.
+// One ghost in three (by its key and the game's seed, so no dice are rolled to choose) pleads instead,
+// if what killed it is a monster that can still be met: it waits where it is, asks you when first seen to
+// slay its killer — placed on the level out of sight if none of its kind is there — and, when one of that
+// kind dies on the level, thanks you and is laid to rest, letting fall two or three of the things it wore.
+// Struck, it fights after all; left behind, it may walk and plead again. (Not in a replay older than 3.)
 public sealed partial class GameSession
 {
     /// <summary>The fallen this character may meet as ghosts, those met, and those laid to rest (saved with it).</summary>
@@ -239,7 +337,7 @@ public sealed partial class GameSession
     /// </summary>
     public void UseGraveyard(IEnumerable<FallenGhost> fallen)
     {
-        var met = Ghosts.Fallen.Where(f => Ghosts.Met.Contains(f.Key)).ToList();
+        var met = Ghosts.Fallen.Where(f => Ghosts.Met.Contains(f.Key) || Ghosts.Pleas.Any(p => p.Key == f.Key)).ToList();
         var self = $"{Seed:x}-";
         var fresh = !GhostsOn ? [] : fallen.Where(f => !(f.Name == Player.Name && f.Key.StartsWith(self, StringComparison.Ordinal))
                                                       && !Ghosts.Laid.Contains(f.Key)).Take(FallenGhosts.MaxKept).ToList();
@@ -288,8 +386,111 @@ public sealed partial class GameSession
             var ghost = _spawner.Place(Level, Rng, race, at);
             Scheduler.Add(ghost);
             Ghosts.Met.Add(fallen.Key);
+            if (PleadingKiller(fallen) is { } killer)
+            {
+                var plea = PleaOf(fallen);
+                if (plea is null) Ghosts.Pleas.Add(plea = new GhostPlea { Key = fallen.Key });
+                (plea.Killer, plea.Stage) = (killer.Id, GhostPlea.Pleading);
+                PlaceKiller(killer);
+            }
             Publish(new MessageEvent("A chill runs through you. Someone who fell here does not rest."));
             return;
+        }
+    }
+
+    /// <summary>Whether ghosts may plead (not when playing back a replay recorded before they could: it played without them).</summary>
+    internal bool GhostPleasOff { get; set; }
+
+    /// <summary>A ghost's plea, if it ever made one to this character.</summary>
+    private GhostPlea? PleaOf(FallenGhost fallen) => Ghosts.Pleas.FirstOrDefault(p => p.Key == fallen.Key);
+
+    /// <summary>
+    /// What a ghost walking now would ask you to slay — null if it fights instead: one in three plead (the
+    /// same ones every time in this game), and one that pleaded before and was left pleads again; never one
+    /// you struck, nor one whose killer can't be found: not a monster, or a unique that is dead or kept on
+    /// another level.
+    /// </summary>
+    private MonsterRaceDef? PleadingKiller(FallenGhost fallen)
+    {
+        if (GhostPleasOff) return null;
+        var before = PleaOf(fallen);
+        if (before is { Stage: not GhostPlea.Left } || before is null && !FallenGhosts.Pleads(fallen, Seed)) return null;
+        if (FallenGhosts.KillerRace(Data, fallen.KilledBy) is not { } killer) return null;
+        if (killer.IsUnique && (KilledUniques.Contains(killer.Id) || PersistentLevels && UniquesOnStoredLevels().Contains(killer.Id))) return null;
+        return killer;
+    }
+
+    /// <summary>
+    /// So the plea can be answered: unless one of its kind is already here, the ghost's killer somewhere out
+    /// of your sight (a unique itself; anything else one of its kind, with a friend or two if it comes in packs).
+    /// </summary>
+    private void PlaceKiller(MonsterRaceDef killer)
+    {
+        if (Level.Monsters.All.Any(m => (m.OriginalRace ?? m.Race).Id == killer.Id) || GhostSpot() is not { } at) return;
+        Scheduler.Add(_spawner.Place(Level, Rng, killer, at));
+        if (killer.IsUnique || !killer.Friends.Any(f => f.IsSame)) return;
+        var friends = Rng.RandInt1(2);
+        foreach (var dir in DirectionExtensions.Compass)
+        {
+            if (friends == 0) break;
+            if (at.Step(dir) is var p && Level.InBounds(p) && Level.IsEmptyFloor(p) && p != Player.Position)
+            {
+                Scheduler.Add(_spawner.Place(Level, Rng, killer, p));
+                friends--;
+            }
+        }
+    }
+
+    /// <summary>Whether a monster is a ghost waiting for you to avenge it (it neither moves nor fights meanwhile).</summary>
+    public bool IsPleading(Monster monster) => GhostOf(monster) is { } fallen && PleaOf(fallen) is { Stage: GhostPlea.Pleading };
+
+    /// <summary>The level left: a pleading ghost left behind fades, and may walk and plead another time (unless the level is kept, and it with it).</summary>
+    private void GhostsLeftBehind(bool kept)
+    {
+        if (kept) return;
+        foreach (var plea in Ghosts.Pleas.Where(p => p.Stage == GhostPlea.Pleading))
+        {
+            plea.Stage = GhostPlea.Left;
+            Ghosts.Met.Remove(plea.Key);
+        }
+    }
+
+    /// <summary>A pleading ghost struck (by you or your hireling): it pleads no more, and fights.</summary>
+    private void GhostSpurned(Monster monster)
+    {
+        if (GhostOf(monster) is not { } fallen || PleaOf(fallen) is not { Stage: GhostPlea.Pleading } plea) return;
+        plea.Stage = GhostPlea.Spurned;
+        Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} shrieks: \"Then you are no better than {fallen.KilledBy}!\""));
+    }
+
+    /// <summary>
+    /// A monster slain: if it was of the race that killed a ghost pleading on this level, the ghost is
+    /// avenged — it thanks you and is laid to rest, letting fall two or three of the things it wore, and gold.
+    /// </summary>
+    private void GhostAvenged(Monster killed)
+    {
+        if (Ghosts.Pleas.Count == 0) return;
+        var raceId = (killed.OriginalRace ?? killed.Race).Id;
+        foreach (var plea in Ghosts.Pleas.Where(p => p.Stage == GhostPlea.Pleading && p.Killer == raceId).ToList())
+        {
+            var ghost = Level.Monsters.All.FirstOrDefault(m => GhostOf(m)?.Key == plea.Key);
+            if (ghost is null || GhostOf(ghost) is not { } fallen) continue;
+            plea.Stage = GhostPlea.Avenged;
+            Ghosts.Laid.Add(fallen.Key);
+            var thanks = FallenGhosts.Thanks(fallen);
+            Publish(new MessageEvent($"{Capitalize(MonsterName(ghost))} whispers: \"{thanks}\""));
+            Publish(new MessageEvent($"{fallen.Name} the {fallen.Race} {fallen.Class} is laid to rest at last."));
+            Level.Monsters.Remove(ghost);
+            var level = FallenGhosts.LevelOf(fallen);
+            foreach (var item in GhostRewards(fallen, level, 2 + Rng.RandInt0(2)))
+            {
+                Publish(new MessageEvent($"As it fades, the ghost lets fall {Describe(item)}."));
+                DropNear(item, ghost.Position);
+            }
+            for (var i = 0; i < 3; i++) DropNear(MakeLevelGold(level), ghost.Position);
+            AddHistory($"Avenged the ghost of {fallen.Name}");
+            Publish(new GhostAvengedEvent(ghost, fallen, thanks));
+            Publish(new GhostLaidToRestEvent(fallen.Key, fallen.Name));
         }
     }
 
@@ -302,11 +503,22 @@ public sealed partial class GameSession
         return spots.Count == 0 ? null : spots[Rng.RandInt0(spots.Count)];
     }
 
-    /// <summary>A ghost seen for the first time: it wails.</summary>
+    /// <summary>A ghost seen for the first time: it wails — or, pleading, asks you to slay what killed it (the quest log keeps it).</summary>
     private void GhostSighted(Monster monster)
     {
-        if (GhostOf(monster) is { } fallen)
-            Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} wails: \"{FallenGhosts.Wail(fallen)}\""));
+        if (GhostOf(monster) is not { } fallen) return;
+        if (PleaOf(fallen) is { Stage: GhostPlea.Pleading } plea)
+        {
+            var words = FallenGhosts.Plea(fallen);
+            plea.Spoken = true;
+            Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} pleads: \"{words}\""));
+            Publish(new MessageEvent($"Slay {fallen.KilledBy} on this level to lay the ghost to rest (your quest log has it)."));
+            Publish(new GhostSightedEvent(monster, fallen, words, Pleading: true));
+            return;
+        }
+        var wail = FallenGhosts.Wail(fallen);
+        Publish(new MessageEvent($"{Capitalize(MonsterName(monster))} wails: \"{wail}\""));
+        Publish(new GhostSightedEvent(monster, fallen, wail, Pleading: false));
     }
 
     /// <summary>A ghost beaten: laid to rest, it lets fall one of the things it wore, and gold.</summary>
@@ -316,7 +528,7 @@ public sealed partial class GameSession
         var level = FallenGhosts.LevelOf(fallen);
         Ghosts.Laid.Add(fallen.Key);
         Publish(new MessageEvent($"{fallen.Name} the {fallen.Race} {fallen.Class} is laid to rest at last."));
-        if (GhostReward(fallen, level) is { } item)
+        foreach (var item in GhostRewards(fallen, level, 1))
         {
             Publish(new MessageEvent($"As it fades, the ghost lets fall {Describe(item)}."));
             DropNear(item, monster.Position);
@@ -326,12 +538,12 @@ public sealed partial class GameSession
     }
 
     /// <summary>
-    /// What a ghost lets fall: one of the things it wore, at random (never a quest item or a wooden torch,
-    /// nor anything the game no longer has). An artifact comes as itself only if this game hasn't made it
-    /// and both games use the standard set; otherwise as an ego of its kind. A headstone without its gear
-    /// gives a great item suited to the class instead.
+    /// What a ghost lets fall: <paramref name="count"/> of the things it wore, at random, each once (never a
+    /// quest item or a wooden torch, nor anything the game no longer has). An artifact comes as itself only if
+    /// this game hasn't made it and both games use the standard set; otherwise as an ego of its kind. A
+    /// headstone without its gear (or without enough of it) gives great items suited to the class instead.
     /// </summary>
-    private Item? GhostReward(FallenGhost fallen, int level)
+    private List<Item> GhostRewards(FallenGhost fallen, int level, int count)
     {
         var worn = new List<(string Json, ObjectKindDef Kind, string? Artifact)>();
         foreach (var json in fallen.Equipment ?? [])
@@ -349,13 +561,27 @@ public sealed partial class GameSession
                 || node["QuestTag"]?.GetValue<string>() is not null) continue;
             worn.Add((json, kind, node["Artifact"]?.GetValue<string>()));
         }
-        if (worn.Count == 0)
+        var rewards = new List<Item>();
+        for (var i = 0; i < count; i++)
         {
-            var classId = FallenGhosts.ClassOf(Data, fallen)?.Id ?? "warrior";
-            if (classId.StartsWith(Multiclass.Fighter + "_", StringComparison.Ordinal)) classId = Multiclass.Fighter;
-            return Objects.Make(Rng, level, good: true, great: true, bases: FallenGhosts.RewardBases(classId));
+            if (worn.Count == 0)
+            {
+                var classId = FallenGhosts.ClassOf(Data, fallen)?.Id ?? "warrior";
+                if (classId.StartsWith(Multiclass.Fighter + "_", StringComparison.Ordinal)) classId = Multiclass.Fighter;
+                if (Objects.Make(Rng, level, good: true, great: true, bases: FallenGhosts.RewardBases(classId)) is { } great) rewards.Add(great);
+                continue;
+            }
+            var pick = Rng.RandInt0(worn.Count);
+            if (GhostReward(fallen, level, worn[pick]) is { } item) rewards.Add(item);
+            worn.RemoveAt(pick);
         }
-        var (itemJson, itemKind, artifact) = worn[Rng.RandInt0(worn.Count)];
+        return rewards;
+    }
+
+    /// <summary>One thing a ghost wore, as it lets it fall (an artifact it can't give, as an ego of its kind).</summary>
+    private Item? GhostReward(FallenGhost fallen, int level, (string Json, ObjectKindDef Kind, string? Artifact) worn)
+    {
+        var (itemJson, itemKind, artifact) = worn;
         if (artifact is not null)
         {
             var standard = !fallen.Randarts && RandartSeed is null && Data.Artifacts.Any(a => a.Id == artifact);

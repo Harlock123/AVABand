@@ -130,6 +130,68 @@ public sealed class SceneUiTests : IDisposable
         Assert.Equal(turn, vm.Game.GameTurn);
     }
 
+    /// <summary>A ghost first seen has its scene (its wail, or its plea, under its name); a pleading one avenged, another.</summary>
+    [AvaloniaFact]
+    public void AGhostSeen_ItsPlea_AndItsRest_EachHaveAScene()
+    {
+        var (window, vm, scene) = Open();
+        var game = vm.Game;
+        game.MarkDebugUsed();
+        vm.Execute(new DebugJumpCommand(3));
+        vm.SkipScenes();
+        foreach (var m in game.Level.Monsters.All.ToList()) game.Level.Monsters.Remove(m);
+        FallenGhost Fallen(string name, string cls) => new()
+        {
+            Key = name.ToLowerInvariant() + "-1", Name = name, Race = "Elf", Class = cls, Level = 14, Depth = 3, KilledBy = "Grip, Farmer Maggot's Dog",
+            DateUtc = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc),
+        };
+        game.UseGraveyard([Fallen("Arwen", "Mage"), Fallen("Boromir", "Warrior")]);
+        game.Ghosts.Pleas.Add(new GhostPlea { Key = "arwen-1", Killer = "grip" });
+        // (In the open, with room beside you for both ghosts.)
+        game.Player.Position = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l)
+            && DirectionExtensions.Compass.All(d => game.Level.InBounds(l.Step(d)) && game.Level.IsEmptyFloor(l.Step(d))));
+        var spots = game.Level.AllLocs().Where(l => l.ChebyshevTo(game.Player.Position) == 1 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20)).ToList();
+        var spawner = new Angband.Core.Monsters.MonsterSpawner(game.Data);
+
+        // The pleading ghost: its plea under its name, its letter in its class's colour (and no unique's scene as well).
+        var arwen = spawner.Place(game.Level, game.Rng, game.MonsterRace(FallenGhosts.RacePrefix + "arwen-1")!, spots[0]);
+        vm.Execute(new HoldCommand());
+        Assert.Equal(SceneKind.GhostPlea, vm.Scene!.Kind);
+        Assert.Equal("The Ghost of Arwen", vm.Scene.Caption);
+        Assert.Equal("G", vm.Scene.Glyph);
+        Assert.Contains(FallenGhosts.Plea(game.GhostOf(arwen)!), vm.Scene.Subtitle);
+        Assert.Null(vm.Scene.Picture);                                     // (painted, without a picture of the player's own)
+        Shot(window, scene, "scene-ghost-plea");
+        vm.EndScene();
+        Assert.Null(vm.Scene);
+
+        // A ghost that fights: its wail.
+        spawner.Place(game.Level, game.Rng, game.MonsterRace(FallenGhosts.RacePrefix + "boromir-1")!, spots[1]);
+        vm.Execute(new HoldCommand());
+        Assert.Equal(SceneKind.Ghost, vm.Scene!.Kind);
+        Assert.Equal("The Ghost of Boromir", vm.Scene.Caption);
+        Assert.Contains(FallenGhosts.Wail(game.Ghosts.Fallen.Single(f => f.Name == "Boromir")), vm.Scene.Subtitle);
+        Shot(window, scene, "scene-ghost");
+        vm.SkipScenes();
+
+        // Grip slain (out of sight): Arwen is laid to rest.
+        var far = game.Level.AllLocs().First(l => game.Level.IsEmptyFloor(l)
+            && !Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        var grip = spawner.Place(game.Level, game.Rng, game.Data.Monster("grip")!, far);
+        game.ProjectileHitsMonster(grip, "test", null, 1_000_000);
+        vm.Execute(new HoldCommand());
+        Assert.Equal(SceneKind.GhostAvenged, vm.Scene!.Kind);
+        Assert.Equal("Arwen is laid to rest", vm.Scene.Caption);
+        Shot(window, scene, "scene-ghost-avenged");
+        vm.SkipScenes();
+
+        // A picture of the player's own, if they have one.
+        Directory.CreateDirectory(_art);
+        File.Copy(Path.Combine(AppContext.BaseDirectory, "art", "unique.jpg"), Path.Combine(_art, "ghost.jpg"));
+        Assert.Equal(Path.Combine(_art, "ghost.jpg"), vm.PictureFor("ghost-plea", "ghost"));
+    }
+
     [AvaloniaFact]
     public void Recall_ACavern_ADeadlyFeeling_AFirstUnique_AndDeath_EachHaveAScene()
     {

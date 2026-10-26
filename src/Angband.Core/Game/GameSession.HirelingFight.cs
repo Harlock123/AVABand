@@ -100,7 +100,7 @@ public sealed partial class GameSession
         var bestDistance = int.MaxValue;
         foreach (var m in Level.Monsters.All)
         {
-            if (!IsFoeOfHireling(m, body) || m.IsAsleep) continue;
+            if (!IsFoeOfHireling(m, body) || m.IsAsleep || IsPleading(m)) continue; // (a pleading ghost only if you say so)
             var d = body.Position.DistanceTo(m.Position);
             if (d > sight || d > bestDistance || (d == bestDistance && best is not null && m.Id > best.Id)) continue;
             if (h.Order != HirelingOrder.Hold && m.Position.DistanceTo(Player.Position) > HirelingLeash) continue;
@@ -247,7 +247,7 @@ public sealed partial class GameSession
     /// <summary>Badly hurt: a step away from the nearest foe they can see (toward you, if it's as good); false with none about.</summary>
     private bool FleeFromFoes(Monster body)
     {
-        var foes = Level.Monsters.All.Where(m => IsFoeOfHireling(m, body) && !m.IsAsleep && m.Position.DistanceTo(body.Position) <= HirelingSight
+        var foes = Level.Monsters.All.Where(m => IsFoeOfHireling(m, body) && !m.IsAsleep && !IsPleading(m) && m.Position.DistanceTo(body.Position) <= HirelingSight
                                                  && ProjectionPath.Projectable(Level, body.Position, m.Position, HirelingSight + 1)).ToList();
         if (foes.Count == 0) return false;
         int Safety(Loc p) => foes.Min(m => m.Position.DistanceTo(p));

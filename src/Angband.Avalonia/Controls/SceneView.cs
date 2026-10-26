@@ -18,14 +18,15 @@ public sealed class SceneView : Control
 {
     public const double DurationMs = 1500;
 
-    /// <summary>How long a scene lasts: death and a first unique a little longer.</summary>
+    /// <summary>How long a scene lasts: death, a first unique or a ghost a little longer (a ghost's plea longer still, to read).</summary>
     public static double DurationFor(SceneKind kind) => kind switch
     {
         SceneKind.Death => 3200,
-        SceneKind.Unique => 2200,
+        SceneKind.Unique or SceneKind.Ghost => 2200,
+        SceneKind.GhostPlea => 3600, // (its plea takes a moment to read)
         SceneKind.RecallUp or SceneKind.RecallDown => 3600,
         SceneKind.DeepDescent or SceneKind.Trapdoor => 1800,
-        SceneKind.QuestComplete or SceneKind.BossSlain => 2600,
+        SceneKind.QuestComplete or SceneKind.BossSlain or SceneKind.GhostAvenged => 2600,
         _ => DurationMs,
     };
 
@@ -59,7 +60,7 @@ public sealed class SceneView : Control
     /// The sounds a scene plays, and when (as a fraction of it): the recall cutscene's rent tearing
     /// and the hand reaching at the start, then its grasp and thunderclap (timed to the flash) —
     /// never reached while the scene holds for Space; footsteps on the stairs; a bell at death; a
-    /// swelling chord for a first unique; a rumble for a deadly level.
+    /// swelling chord for a first unique or a ghost (and the quest's chime for one avenged); a rumble for a deadly level.
     /// </summary>
     public static IReadOnlyList<(double At, string Sound)> CuesFor(SceneKind kind) => kind switch
     {
@@ -70,7 +71,8 @@ public sealed class SceneView : Control
         SceneKind.DeepDescent or SceneKind.Trapdoor => [(0, "fall")],
         SceneKind.QuestComplete => [(0, "quest-complete")],
         SceneKind.BossSlain => [(0, "boss-slain")],
-        SceneKind.Unique => [(0, "unique")],
+        SceneKind.Unique or SceneKind.Ghost or SceneKind.GhostPlea => [(0, "unique")],
+        SceneKind.GhostAvenged => [(0, "quest-complete")],
         SceneKind.Danger => [(0, "danger")],
         _ => [],
     };
@@ -380,16 +382,28 @@ public sealed class SceneView : Control
             EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
             GradientStops = { new GradientStop(Color.FromArgb(0, 0, 0, 0), 0), new GradientStop(Color.FromArgb(210, 0, 0, 0), 0.45) },
         };
-        context.FillRectangle(band, new Rect(0, Bounds.Height * 0.80, Bounds.Width, Bounds.Height * 0.20));
-        var at = new Point((Bounds.Width - text.Width) / 2, Bounds.Height * (subtitle is null ? 0.89 : 0.85));
+        // A long subtitle (a ghost's plea) wraps, centred, and lifts the caption and the band to make room.
+        FormattedText? small = null;
+        if (subtitle is not null)
+        {
+            small = new FormattedText(subtitle, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                new Typeface(FontFamily.Default, FontStyle.Italic), size * 0.6, Parchment)
+            {
+                MaxTextWidth = Math.Max(100, Bounds.Width * 0.7),
+                TextAlignment = TextAlignment.Center,
+            };
+        }
+        var y = Bounds.Height * (subtitle is null ? 0.89 : 0.85);
+        if (small is not null) y = Math.Min(y, Bounds.Height - small.Height - text.Height - size * 0.6);
+        var top = Math.Min(Bounds.Height * 0.80, y - Bounds.Height * 0.05);
+        context.FillRectangle(band, new Rect(0, top, Bounds.Width, Bounds.Height - top));
+        var at = new Point((Bounds.Width - text.Width) / 2, y);
         var shadow = new FormattedText(caption, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
             new Typeface(FontFamily.Default, FontStyle.Italic, FontWeight.SemiBold), size, Brushes.Black);
         context.DrawText(shadow, at + new Point(2, 2));
         context.DrawText(text, at);
-        if (subtitle is null) return;
-        var small = new FormattedText(subtitle, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-            new Typeface(FontFamily.Default, FontStyle.Italic), size * 0.6, Parchment);
-        context.DrawText(small, new Point((Bounds.Width - small.Width) / 2, at.Y + text.Height + 2));
+        if (small is null) return;
+        context.DrawText(small, new Point((Bounds.Width - small.MaxTextWidth) / 2, at.Y + text.Height + 2));
     }
 
     /// <summary>"Press Space to continue", small, in the corner, while a scene holds.</summary>
@@ -558,6 +572,7 @@ public sealed class SceneView : Control
             case SceneKind.Fortress: DrawFortress(context, p); break;
             case SceneKind.Danger: DrawDanger(context, p); break;
             case SceneKind.Unique: DrawUnique(context, scene, p); break;
+            case SceneKind.Ghost or SceneKind.GhostPlea or SceneKind.GhostAvenged: DrawGhost(context, scene, p); break;
             case SceneKind.Death: DrawTombstone(context, p); break;
         }
     }
@@ -730,6 +745,64 @@ public sealed class SceneView : Control
         var glyph = new FormattedText(scene.Glyph ?? "?", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
             new Typeface(new FontFamily("DejaVu Sans Mono, Consolas, Menlo, monospace"), FontStyle.Normal, FontWeight.Bold), size, new SolidColorBrush(colour));
         context.DrawText(glyph, new Point(centre.X - glyph.Width / 2, centre.Y - glyph.Height / 2));
+    }
+
+    /// <summary>
+    /// A ghost: its letter in its class's colour, pale and wavering in a cold mist that drifts across —
+    /// a pleading one softer, glowing kindly; one avenged rising into a shaft of light and fading as it goes.
+    /// </summary>
+    private void DrawGhost(DrawingContext context, AmbientScene scene, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var t = Elapsed / 1000;
+        var colour = Color.FromUInt32(scene.GlyphColor);
+        var avenged = scene.Kind == SceneKind.GhostAvenged;
+        var pleading = scene.Kind == SceneKind.GhostPlea;
+        var mist = pleading || avenged ? Color.FromRgb(170, 200, 230) : Color.FromRgb(110, 150, 190);
+        if (avenged)
+        {
+            // The light it goes into, from above.
+            var shaft = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                GradientStops = { new GradientStop(Color.FromArgb((byte)(120 + 80 * p), 255, 246, 220), 0), new GradientStop(Color.FromArgb(0, 255, 246, 220), 0.85) },
+            };
+            Polygon(context, shaft, new(w * 0.4, 0), new(w * 0.6, 0), new(w * 0.68, h), new(w * 0.32, h));
+        }
+        var rise = avenged ? h * 0.22 * p : Math.Sin(t * 1.6) * h * 0.015;
+        var centre = new Point(w / 2, h * 0.42 - rise);
+        context.FillRectangle(Glow(centre, Math.Max(w, h) * 0.38, mist, pleading ? 0.32 : 0.22), new Rect(Bounds.Size));
+        context.FillRectangle(Glow(centre, Math.Max(w, h) * 0.2, colour, 0.18 + 0.08 * Math.Sin(t * 3)), new Rect(Bounds.Size));
+        // Wisps of mist drifting across the floor and through it.
+        foreach (var (x, y, z) in Scatter(16, 61))
+        {
+            var drift = (x + t * 0.03 * (0.5 + z) * (y < 0.5 ? 1 : -1) + 2) % 1;
+            var at = new Point(drift * w * 1.3 - w * 0.15, h * (0.45 + 0.4 * y));
+            context.FillRectangle(Glow(at, w * (0.08 + 0.1 * z), mist, 0.12 + 0.1 * z), new Rect(Bounds.Size));
+        }
+        var size = h * (pleading ? 0.34 : 0.38 + 0.08 * p);
+        var waver = 0.55 + 0.2 * Math.Sin(t * 2.3) + 0.1 * Math.Sin(t * 7.1);
+        var alpha = avenged ? waver * (1 - 0.85 * p) : waver;
+        var typeface = new Typeface(new FontFamily("DejaVu Sans Mono, Consolas, Menlo, monospace"), FontStyle.Normal, FontWeight.Bold);
+        var glyph = new FormattedText(scene.Glyph ?? "G", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, size,
+            new SolidColorBrush(Color.FromArgb((byte)Math.Clamp(255 * alpha, 0, 255), colour.R, colour.G, colour.B)));
+        // A faint after-image either side, as a ghost's outline won't hold still.
+        var echo = new FormattedText(scene.Glyph ?? "G", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, size,
+            new SolidColorBrush(Color.FromArgb((byte)Math.Clamp(60 * alpha, 0, 255), mist.R, mist.G, mist.B)));
+        var at0 = new Point(centre.X - glyph.Width / 2, centre.Y - glyph.Height / 2);
+        var shift = w * 0.006 * Math.Sin(t * 4);
+        context.DrawText(echo, at0 + new Point(-shift - w * 0.004, 0));
+        context.DrawText(echo, at0 + new Point(shift + w * 0.004, 0));
+        context.DrawText(glyph, at0);
+        if (!avenged) return;
+        foreach (var (x, y, z) in Scatter(40, 62))
+        {
+            var up = (y + p * (0.6 + z)) % 1;
+            context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(80 + 150 * (1 - up)), 255, 248, 225)), null,
+                new Point(w * (0.42 + 0.16 * x) + Math.Sin(t * 2 + x * 9) * 8, h * (0.8 - 0.8 * up)), 1 + 2 * z, 1 + 2 * z);
+        }
     }
 
     /// <summary>Death: a tombstone under a night sky (Angband's own ends with one).</summary>

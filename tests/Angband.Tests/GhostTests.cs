@@ -14,10 +14,10 @@ public class GhostTests
     private static GameData Data => TestData.Game;
 
     private static FallenGhost Fallen(string name = "Aragorn", int depth = 3, int level = 12, string cls = "Warrior",
-        List<string>? gear = null, bool randarts = false) => new()
+        List<string>? gear = null, bool randarts = false, string killedBy = "Grip, Farmer Maggot's Dog") => new()
     {
         Key = $"{name.ToLowerInvariant()}-1", Name = name, Race = "Dwarf", Class = cls, Level = level, Depth = depth,
-        KilledBy = "Grip, Farmer Maggot's Dog", DateUtc = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc), Equipment = gear, Randarts = randarts,
+        KilledBy = killedBy, DateUtc = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc), Equipment = gear, Randarts = randarts,
     };
 
     private static GameSession Game(ulong seed = 5, bool ghosts = true, params FallenGhost[] fallen)
@@ -160,7 +160,9 @@ public class GhostTests
     [Fact]
     public void AGhost_WalksOnlyAtTheDepthItFellAt_OncePerCharacter_OneALevel_OutOfSightOfTheStairs()
     {
-        var game = Game(seed: 7, fallen: [Fallen("Ann", depth: 3), Fallen("Bob", depth: 3), Fallen("Cid", depth: 5)]);
+        // (Killed by a trap, so none of them pleads: a pleading ghost left behind may walk again.)
+        const string trap = "a trap door";
+        var game = Game(seed: 7, fallen: [Fallen("Ann", depth: 3, killedBy: trap), Fallen("Bob", depth: 3, killedBy: trap), Fallen("Cid", depth: 5, killedBy: trap)]);
         for (var i = 0; i < 40; i++)
         {
             game.Execute(new DebugJumpCommand(i % 2 == 0 ? 2 : 4));
@@ -361,6 +363,238 @@ public class GhostTests
         var original = Assert.Single(GhostsHere(game));
         Assert.Equal((original.Race.Id, original.Position, original.Hp), (replayed.Race.Id, replayed.Position, replayed.Hp));
         Assert.Equal(game.Ghosts.Met, player.Game.Ghosts.Met);
+    }
+
+    // --- Pleading ghosts ---------------------------------------------------------------------------
+
+    /// <summary>A seed whose character a ghost pleads with (or, with <paramref name="pleads"/> false, fights).</summary>
+    private static ulong SeedFor(FallenGhost fallen, bool pleads = true) =>
+        Enumerable.Range(1, 500).Select(i => (ulong)i).First(s => FallenGhosts.Pleads(fallen, s) == pleads);
+
+    /// <summary>A game with one ghost that will plead (its killer the one named), at 150 ft.</summary>
+    private static GameSession PleadingGame(FallenGhost fallen) => Game(seed: SeedFor(fallen), fallen: [fallen]);
+
+    private static Monster? Ghost(GameSession game) => GhostsHere(game).FirstOrDefault();
+
+    private static List<Monster> Killers(GameSession game, string raceId) =>
+        [.. game.Level.Monsters.All.Where(m => m.Race.Id == raceId)];
+
+    [Fact]
+    public void WhatKilledACharacter_IsFoundAmongTheMonsters_OnlyIfItIsOne()
+    {
+        Assert.Equal("cave_orc", FallenGhosts.KillerRace(Data, "a cave orc")?.Id);
+        Assert.Equal("grip", FallenGhosts.KillerRace(Data, "Grip, Farmer Maggot's Dog")?.Id);
+        Assert.Equal("cave_spider", FallenGhosts.KillerRace(Data, "cave spiders")?.Id);
+        Assert.Equal("soldier_ant", FallenGhosts.KillerRace(Data, "A Soldier Ant")?.Id);
+        foreach (var other in new[] { "a trap door", "poison", "starvation", "The Ghost of Bramble", "", "something", "Ripe Old Age" })
+            Assert.Null(FallenGhosts.KillerRace(Data, other));
+        // A quest's own foes walk only where the quest puts them.
+        Assert.Null(FallenGhosts.KillerRace(Data, Data.Monsters.First(r => r.Has(MonsterFlags.Questor)).Name));
+    }
+
+    [Fact]
+    public void AboutOneGhostInThree_Pleads_TheSameOnesEveryTime()
+    {
+        var pleading = Enumerable.Range(0, 600).Count(i => FallenGhosts.Pleads(Fallen($"G{i}"), 42));
+        Assert.InRange(pleading, 150, 250);
+        Assert.Equal(FallenGhosts.Pleads(Fallen("Ann"), 9), FallenGhosts.Pleads(Fallen("Ann"), 9));
+        Assert.Equal(FallenGhosts.Plea(Fallen()), FallenGhosts.Plea(Fallen()));
+        Assert.Contains("Grip, Farmer Maggot's Dog", FallenGhosts.Plea(Fallen()));
+    }
+
+    [Fact]
+    public void AGhostPleads_OnlyIfWhatKilledIt_CanStillBeMet()
+    {
+        // Grip, alive: it pleads, and Grip is put on the level for it, out of sight.
+        var fallen = Fallen();
+        var game = PleadingGame(fallen);
+        var ghost = JumpUntilGhost(game, 3)!;
+        Assert.True(game.IsPleading(ghost));
+        var plea = Assert.Single(game.Ghosts.Pleas);
+        Assert.Equal(("aragorn-1", "grip", GhostPlea.Pleading), (plea.Key, plea.Killer, plea.Stage));
+        var grip = Assert.Single(Killers(game, "grip"));
+        Assert.False(ProjectionPath.Projectable(game.Level, game.Player.Position, grip.Position, Data.Constants.MaxSight));
+
+        // A trap's victim can't plead; nor one whose killer, a unique, is already dead.
+        var trapped = Fallen(killedBy: "a trap door");
+        game = Game(seed: SeedFor(trapped), fallen: [trapped]);
+        Assert.False(game.IsPleading(JumpUntilGhost(game, 3)!));
+        Assert.Empty(game.Ghosts.Pleas);
+        game = PleadingGame(Fallen());
+        game.KilledUniques.Add("grip");
+        Assert.False(game.IsPleading(JumpUntilGhost(game, 3)!));
+        Assert.Empty(Killers(game, "grip"));
+
+        // A ghost the seed doesn't choose fights, whatever killed it.
+        game = Game(seed: SeedFor(fallen, pleads: false), fallen: [fallen]);
+        Assert.False(game.IsPleading(JumpUntilGhost(game, 3)!));
+    }
+
+    [Fact]
+    public void AnOrdinaryKiller_IsPutOnTheLevel_WithAFriendOrTwo_UnlessOneIsThere()
+    {
+        var fallen = Fallen(killedBy: "a cave orc");
+        var game = PleadingGame(fallen);
+        var ghost = JumpUntilGhost(game, 3)!;
+        Assert.True(game.IsPleading(ghost));
+        Assert.InRange(Killers(game, "cave_orc").Count, 1, 3);           // (none come naturally to 150 ft)
+    }
+
+    [Fact]
+    public void APleadingGhost_WaitsWhereItIs_AndAsksWhenSeen_AndTheQuestLogHasIt()
+    {
+        var game = Arena.Create(3,
+            "###########",
+            "#,,,,,,,,,#",
+            "#,,@,,,,,,#",
+            "#,,,,,,,,,#",
+            "###########");
+        game.UseGraveyard([Fallen()]);
+        game.Ghosts.Pleas.Add(new GhostPlea { Key = "aragorn-1", Killer = "grip" });
+        var messages = new List<string>();
+        var events = new List<IGameEvent>();
+        using var _ = game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        using var __ = game.Events.SubscribeAll(events.Add);
+        var at = game.Player.Position.Step(Angband.Core.Geometry.Direction.East).Step(Angband.Core.Geometry.Direction.East);
+        var ghost = new MonsterSpawner(Data).Place(game.Level, game.Rng, game.MonsterRace(FallenGhosts.RacePrefix + "aragorn-1")!, at);
+        game.UpdateView();
+        Assert.Contains($"The Ghost of Aragorn pleads: \"{FallenGhosts.Plea(Fallen())}\"", messages);
+        Assert.DoesNotContain(messages, m => m.Contains("wails"));
+        Assert.Contains(events, e => e is GhostSightedEvent { Pleading: true });
+        Assert.True(game.Ghosts.Pleas.Single().Spoken);
+
+        // It neither moves nor strikes.
+        var hp = game.Player.Hp;
+        for (var i = 0; i < 20; i++) game.RunMonsterTurn(ghost);
+        Assert.Equal((at, hp), (ghost.Position, game.Player.Hp));
+
+        var entry = Assert.Single(game.QuestLog(), e => e.Name == "Avenge Aragorn");
+        Assert.False(entry.Done);
+        Assert.Equal("A ghost's plea", entry.Source);
+        Assert.Contains("Grip, Farmer Maggot's Dog", entry.Status);
+    }
+
+    [Fact]
+    public void SlayingTheKiller_LaysThePleadingGhostToRest_AndItLetsFallTwoOrThreeThingsItWore()
+    {
+        var dead = GameSession.NewGame(Data, 1, "warrior");
+        var gear = new[] { "long_sword", "soft_leather_armour", "leather_shield", "hard_leather_cap", "leather_boots" }
+            .Select(id => Gear(dead.Objects.Create(id))).ToList();
+        var fallen = Fallen(gear: gear);
+        var game = PleadingGame(fallen);
+        var ghost = JumpUntilGhost(game, 3)!;
+        var grip = Killers(game, "grip").Single();
+        var before = game.Level.Objects.All.Select(o => o.Item.Serial).ToHashSet();
+        var events = new List<IGameEvent>();
+        using var _ = game.Events.SubscribeAll(events.Add);
+        game.ProjectileHitsMonster(grip, "test", null, 1_000_000);
+
+        Assert.False(ghost.IsActive);                                      // (it fades)
+        Assert.Empty(GhostsHere(game));
+        var dropped = game.Level.Objects.All.Select(o => o.Item).Where(i => !before.Contains(i.Serial)).ToList();
+        var things = dropped.Where(i => !i.IsGold && i.Kind.Base != "corpse").Select(i => i.Kind.Id).ToList();
+        Assert.InRange(things.Count(id => gear.Any(g => g.Contains($"\"{id}\""))), 2, 3);
+        Assert.Equal(things.Count, things.Distinct().Count());             // (each once)
+        Assert.True(dropped.Count(i => i.IsGold) >= 3);
+        Assert.Equal(GhostPlea.Avenged, game.Ghosts.Pleas.Single().Stage);
+        Assert.Contains("aragorn-1", game.Ghosts.Laid);
+        Assert.DoesNotContain(FallenGhosts.RacePrefix + "aragorn-1", game.KilledUniques);
+        Assert.Contains(events, e => e is GhostAvengedEvent { Fallen.Key: "aragorn-1" });
+        Assert.Contains(events, e => e is GhostLaidToRestEvent { Key: "aragorn-1", Name: "Aragorn" });
+        Assert.Contains(events, e => e is MessageEvent { Text: "Aragorn the Dwarf Warrior is laid to rest at last." });
+        Assert.True(game.QuestLog().Single(e => e.Name == "Avenge Aragorn").Done);
+        var feats = Feats.All(Data);
+        Assert.True(feats.Single(f => f.Id == "ghost_avenged").Earned(game));
+        Assert.True(feats.Single(f => f.Id == "ghost").Earned(game));
+    }
+
+    [Fact]
+    public void AnyOfTheKillersKind_OnTheLevel_Avenges_ButOnlyTheGhostHere()
+    {
+        var fallen = Fallen(killedBy: "a cave orc");
+        var game = PleadingGame(fallen);
+        var ghost = JumpUntilGhost(game, 3)!;
+        var orcs = Killers(game, "cave_orc");
+        game.ProjectileHitsMonster(orcs[^1], "test", null, 1_000_000);
+        Assert.False(ghost.IsActive);
+        Assert.Equal(GhostPlea.Avenged, game.Ghosts.Pleas.Single().Stage);
+    }
+
+    [Fact]
+    public void StrikingAPleadingGhost_TurnsItHostile_ForGood()
+    {
+        var game = PleadingGame(Fallen());
+        var ghost = JumpUntilGhost(game, 3)!;
+        var messages = new List<string>();
+        using var _ = game.Events.Subscribe<MessageEvent>(m => messages.Add(m.Text));
+        game.ProjectileHitsMonster(ghost, "test", null, 1);
+        Assert.False(game.IsPleading(ghost));
+        Assert.Equal(GhostPlea.Spurned, game.Ghosts.Pleas.Single().Stage);
+        Assert.Contains(messages, m => m.Contains("shrieks"));
+
+        // Its killer slain now, it doesn't rest; and it doesn't walk again for this character.
+        game.ProjectileHitsMonster(Killers(game, "grip").Single(), "test", null, 1_000_000);
+        Assert.True(ghost.IsActive);
+        Assert.Empty(game.Ghosts.Laid);
+        Assert.Null(JumpUntilGhost(game, 3, tries: 40));
+    }
+
+    [Fact]
+    public void APleadingGhostLeftBehind_MayWalkAndPleadAgain()
+    {
+        var game = PleadingGame(Fallen());
+        Assert.NotNull(JumpUntilGhost(game, 3));
+        game.Execute(new DebugJumpCommand(4));
+        var plea = game.Ghosts.Pleas.Single();
+        Assert.Equal(GhostPlea.Left, plea.Stage);
+        Assert.Empty(game.Ghosts.Met);
+        var again = JumpUntilGhost(game, 3)!;
+        Assert.NotNull(again);
+        Assert.True(game.IsPleading(again));
+        Assert.Equal(GhostPlea.Pleading, plea.Stage);
+    }
+
+    [Fact]
+    public void APlea_IsKeptInTheSave_AndCanBeAnsweredAfterLoading()
+    {
+        var game = PleadingGame(Fallen(gear: [Gear(GameSession.NewGame(Data, 1, "warrior").Objects.Create("long_sword"))]));
+        Assert.NotNull(JumpUntilGhost(game, 3));
+        game.Ghosts.Pleas.Single().Spoken = true;
+        using var stream = new MemoryStream();
+        SaveGame.Save(game, stream);
+        stream.Position = 0;
+        var loaded = SaveGame.Load(Data, stream);
+
+        var plea = Assert.Single(loaded.Ghosts.Pleas);
+        Assert.Equal(("aragorn-1", "grip", GhostPlea.Pleading, true), (plea.Key, plea.Killer, plea.Stage, plea.Spoken));
+        var ghost = Assert.Single(GhostsHere(loaded));
+        Assert.True(loaded.IsPleading(ghost));
+        loaded.ProjectileHitsMonster(Killers(loaded, "grip").Single(), "test", null, 1_000_000);
+        Assert.False(ghost.IsActive);
+        Assert.Contains(loaded.Level.Objects.All, o => o.Item.Kind.Id == "long_sword");
+    }
+
+    [Fact]
+    public void APleadingGhost_PlaysBack_ButAReplayFromBeforePleas_HasItFight()
+    {
+        var game = PleadingGame(Fallen());
+        game.Recorder = new ReplayRecorder(game);
+        var ghost = JumpUntilGhost(game, 3)!;
+        Assert.True(game.IsPleading(ghost));
+        for (var i = 0; i < 10; i++) game.Execute(new HoldCommand());
+        var file = game.Recorder.ToFile(game);
+        Assert.Equal(3, file.Version);
+
+        var player = new ReplayPlayer(Data, file);
+        while (player.Step()) { }
+        Assert.True(player.Matches);
+        Assert.True(player.Game.IsPleading(Assert.Single(GhostsHere(player.Game))));
+
+        file.Version = 2;
+        var older = new ReplayPlayer(Data, file);
+        while (older.Step()) { }
+        Assert.Empty(older.Game.Ghosts.Pleas);
+        Assert.All(GhostsHere(older.Game), g => Assert.False(older.Game.IsPleading(g)));
     }
 
     [Fact]

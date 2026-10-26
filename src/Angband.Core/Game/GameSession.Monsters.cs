@@ -32,6 +32,7 @@ public sealed partial class GameSession
     {
         if (Player.IsDead || !monster.IsActive) return EnergyTable.MoveEnergy;
         if (monster.IsAlly) return HirelingTurn(monster); // (AVABand's hireling: their own turn)
+        if (IsPleading(monster)) return EnergyTable.MoveEnergy; // (AVABand: a pleading ghost waits where it is)
         if (monster.Camouflaged && monster.MimicItem is not null) return EnergyTable.MoveEnergy;
         if (!CheckActive(monster)) return EnergyTable.MoveEnergy;
         if (ProcessMonsterTimed(monster)) return EnergyTable.MoveEnergy;

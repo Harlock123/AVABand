@@ -20,8 +20,11 @@ public sealed record ReplayEnd(long GameTurn, int Depth, int X, int Y, int Hp, b
 /// </summary>
 public sealed class ReplayFile
 {
-    /// <summary>2: AVABand's pickup rules and its pickup_ammo / pickup_unknown options (off when playing back a 1).</summary>
-    public const int CurrentVersion = 2;
+    /// <summary>
+    /// 2: AVABand's pickup rules and its pickup_ammo / pickup_unknown options (off when playing back a 1).
+    /// 3: pleading ghosts (a ghost in an older replay always fights).
+    /// </summary>
+    public const int CurrentVersion = 3;
     public const string Extension = ".avareplay";
 
     public int Version { get; set; } = CurrentVersion;
@@ -127,6 +130,8 @@ public sealed class ReplayPlayer
         // A game recorded before AVABand's smarter pickup played without it.
         if (file.Version < 2)
             foreach (var id in new[] { OptionIds.PickupAmmo, OptionIds.PickupUnknown }) Game.SetOption(id, false);
+        // One recorded before ghosts could plead had none.
+        if (file.Version < 3) Game.GhostPleasOff = true;
     }
 
     public GameSession Game { get; }

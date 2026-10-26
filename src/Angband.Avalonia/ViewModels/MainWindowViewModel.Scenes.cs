@@ -11,16 +11,18 @@ namespace Angband.Avalonia.ViewModels;
 public enum SceneKind
 {
     StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, Unique,
-    BossSlain, QuestComplete, Death,
+    Ghost, GhostPlea, BossSlain, GhostAvenged, QuestComplete, Death,
 }
 
 public static class SceneKinds
 {
     /// <summary>
-    /// The scenes too important to pass by unseen — a unique met, a great foe slain, a quest done: each
+    /// The scenes too important to pass by unseen — a unique or a ghost met, a ghost avenged, a great foe
+    /// slain, a quest done: each
     /// holds until Space, Enter, Escape, a click or the controller's A or B, whatever the option says.
     /// </summary>
-    public static bool HoldsForKey(SceneKind kind) => kind is SceneKind.Unique or SceneKind.BossSlain or SceneKind.QuestComplete;
+    public static bool HoldsForKey(SceneKind kind) => kind is SceneKind.Unique or SceneKind.Ghost or SceneKind.GhostPlea
+        or SceneKind.GhostAvenged or SceneKind.BossSlain or SceneKind.QuestComplete;
 }
 
 /// <summary>
@@ -37,8 +39,9 @@ public sealed record AmbientScene(SceneKind Kind, string Caption, int Depth, boo
 
 // Scenes (the option "Show scenes at moments of note", on by default): taking the stairs, Word of
 // Recall, arriving in a cavern, labyrinth or fortress, a level whose feeling is deadly, meeting a
-// unique for the very first time, and death. They queue (the stairs, then the cavern you arrive in),
-// each lasting a moment; a click ends one, a key ends them all (and does nothing more). With
+// unique for the very first time, a fallen character's ghost (and a pleading one avenged), and death.
+// They queue (the stairs, then the cavern you arrive in), each lasting a moment; a click ends one, a
+// key ends them all (and does nothing more). With
 // "Scenes stay until you press Space" each holds instead: Space, Enter, a click or the controller's A
 // moves on to the next, Escape (or B) ends them all, and other keys do nothing meanwhile. The great
 // moments (SceneKinds.HoldsForKey) always hold. Keys can't skip a scene unseen: those queued while the
@@ -301,10 +304,31 @@ public sealed partial class MainWindowViewModel
 
     private void OnUniqueFirstSeen(UniqueFirstSeenEvent e)
     {
+        if (_game.GhostOf(e.Monster) is not null) return; // (a ghost has its own scene)
         var race = e.Monster.Race;
         var name = _game.MonsterName(e.Monster);
         AddScene(SceneKind.Unique, char.ToUpperInvariant(name[0]) + name[1..], race.Glyph.ToString(), _cells.Color(race.Color),
             "You have never met it before.", "unique");
+    }
+
+    /// <summary>
+    /// The ghost of a fallen character seen: its letter in its class's colour, its name, and what it says —
+    /// its wail, or its plea (your own pictures: ghost, ghost-plea).
+    /// </summary>
+    private void OnGhostSighted(GhostSightedEvent e)
+    {
+        var race = e.Monster.Race;
+        var name = _game.MonsterName(e.Monster);
+        AddScene(e.Pleading ? SceneKind.GhostPlea : SceneKind.Ghost, char.ToUpperInvariant(name[0]) + name[1..], race.Glyph.ToString(),
+            _cells.Color(race.Color), $"“{e.Words}”", e.Pleading ? ["ghost-plea", "ghost"] : ["ghost"]);
+    }
+
+    /// <summary>A pleading ghost avenged: it fades into the light with its thanks (your own picture: ghost-avenged).</summary>
+    private void OnGhostAvenged(GhostAvengedEvent e)
+    {
+        var race = e.Ghost.Race;
+        AddScene(SceneKind.GhostAvenged, $"{e.Fallen.Name} is laid to rest", race.Glyph.ToString(), _cells.Color(race.Color),
+            $"“{e.Words}”", "ghost-avenged");
     }
 
     private void SceneForDeath()

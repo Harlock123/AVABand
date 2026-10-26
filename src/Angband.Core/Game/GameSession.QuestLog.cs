@@ -25,6 +25,8 @@ public sealed partial class GameSession
         foreach (var job in AvaQuests.Board.Where(j => j.Taken)) log.Add(JobEntry(job));
         foreach (var state in AvaQuests.Quests.Values.Reverse())
             if (QuestDef(state.Id) is not null) log.Add(StoryEntry(state));
+        foreach (var plea in Enumerable.Reverse(Ghosts.Pleas))
+            if (PleaEntry(plea) is { } entry) log.Add(entry);
         return [.. log.Where(e => !e.Done), .. log.Where(e => e.Done)];
     }
 
@@ -41,6 +43,28 @@ public sealed partial class GameSession
         var total = def.Stages.Keys.Count(k => !new AvaQuestState { Stage = k }.IsDone) + 1;
         var status = state.IsDone ? "Complete" : $"Step {Math.Min(steps.Count, total - 1)} of {total}";
         return new QuestLogEntry(def.Name, source, state.IsDone, status, steps);
+    }
+
+    /// <summary>A pleading ghost's plea, once you've heard it (or answered it unheard): who asked, what to slay, and how it stands.</summary>
+    private QuestLogEntry? PleaEntry(GhostPlea plea)
+    {
+        if (Ghosts.Fallen.FirstOrDefault(f => f.Key == plea.Key) is not { } fallen || !plea.Spoken && plea.Stage != GhostPlea.Avenged) return null;
+        var feet = $"{fallen.Depth * Data.Constants.FeetPerLevel} ft";
+        var done = plea.Stage is GhostPlea.Avenged or GhostPlea.Spurned;
+        var status = plea.Stage switch
+        {
+            GhostPlea.Avenged => "Complete",
+            GhostPlea.Spurned => "Spurned: you struck the ghost",
+            GhostPlea.Left => $"Left behind: the ghost may walk again at {feet}",
+            _ => $"Slay {fallen.KilledBy} at {feet}",
+        };
+        List<QuestLogStep> steps =
+        [
+            new($"The ghost of {fallen.Name} the {fallen.Race} {fallen.Class} asked you to slay {fallen.KilledBy}, which killed them at {feet}.", true),
+            new($"Slay {fallen.KilledBy} on the level where the ghost waits (one of its kind will do), and take what the ghost carried.",
+                plea.Stage == GhostPlea.Avenged),
+        ];
+        return new QuestLogEntry($"Avenge {fallen.Name}", "A ghost's plea", done, status, steps, Reward: "two or three things it wore, and gold");
     }
 
     private QuestLogEntry JobEntry(BoardJob job)

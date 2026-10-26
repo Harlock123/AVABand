@@ -580,6 +580,7 @@ public sealed partial class GameSession : ITurnHandler
         if (Level is not null)
         {
             TakeHirelingAlong(); // (AVABand: your hireling comes with you, so the level never keeps them)
+            GhostsLeftBehind(kept: persist && !fresh); // (AVABand: a pleading ghost may walk again)
             if (persist && !fresh) StoreCurrentLevel(); // (its artifacts stay with it)
             else PreserveUnfoundArtifacts();
         }

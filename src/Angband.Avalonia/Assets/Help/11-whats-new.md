@@ -5,11 +5,17 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Pleading ghosts**: now and then the ghost of a fallen character doesn't fight you but begs you
+  to slay what killed it — the monster (or the unique) is somewhere on the level, and the plea goes
+  in your quest log. Avenge it and the ghost is laid to rest, letting fall two or three of the
+  things it wore instead of one; strike it and it fights after all. Meeting a ghost, and laying a
+  pleading one to rest, now have scenes of their own, with its words beneath. New feat: *Unfinished
+  Business* (Help → Monsters).
 - **Play now** on the title screen: one click and you're in the town with a character made for
   you — one of eight friendly pairs such as a Hobbit Rogue, a Dwarf Priest or an Elf Ranger, with a
   random name, its points spent on what it needs most, the Classic options and the standard kit. On
   a first run it's the choice Enter takes; the full creation screen is the next one down.
-- **Scenes you can't miss**: meeting a unique for the first time, slaying a great foe and finishing a
+- **Scenes you can't miss**: meeting a unique or a ghost, laying a ghost to rest, slaying a great foe and finishing a
   quest now always stay on screen until you press Space, Enter or Escape (or click), and only after a
   moment, so a key already on its way can't close them. Keys typed while a long turn was worked out,
   and the repeats of a key you were holding down (walking, say), no longer skip any scene unseen.

@@ -32,6 +32,16 @@ An artifact this game has already made comes as a fine ego of the same kind inst
 walks only once for each character; leave it be and it may wait for the next. Ghosts never walk in
 the daily dungeon, the weekly challenge or the tutorial.
 
+Some ghosts — about one in three, if what killed them was a monster you can still meet — don't fight.
+A *pleading* ghost waits where it is, and when you first see it, it asks you to slay what killed it
+("I was Arwen the Elf Mage. A cave orc cut me down here..."). Its killer is somewhere on the level —
+the unique itself, or one of its kind, perhaps with a friend or two — and the plea goes in your quest
+log (`Ctrl+J`). Slay one of that kind on the level and the ghost thanks you and is laid to rest,
+letting fall two or three of the things it wore, and gold (feat: *Unfinished Business*). Strike the
+ghost instead and it fights after all, for good. Leave the level and it fades; it may walk, and plead,
+another time. A ghost first seen, and a pleading ghost laid to rest, each have a scene: put your own
+pictures named `ghost`, `ghost-plea` or `ghost-avenged` in your art folder to use them.
+
 ## How monsters behave
 
 - They wake when you are noisy (stealth helps) and follow your scent and sound. A monster that

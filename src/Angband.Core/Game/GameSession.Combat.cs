@@ -322,6 +322,7 @@ public sealed partial class GameSession
             HurtHireling(damage, "your own hand");
             return !monster.IsActive;
         }
+        GhostSpurned(monster); // (AVABand: a pleading ghost struck fights after all)
         if (!byHireling) damage = TwistDamageDealt(damage); // (the weekly challenge's glass cannon)
         Publish(new MonsterDamagedEvent(monster.Id, monster.Position, damage, Ally: byHireling));
         Reveal(monster);
@@ -399,6 +400,7 @@ public sealed partial class GameSession
         Level.Monsters.Remove(monster);
         QuestMonsterKilled(monster);
         GhostKilled(monster); // (AVABand: a fallen character's ghost laid to rest)
+        GhostAvenged(monster); // (AVABand: or what killed one, and the ghost that pleaded for it rests)
         DropCarried(monster);
         var (items, gold) = DropMonsterLoot(monster);
         NoteKill(monster, items, gold);

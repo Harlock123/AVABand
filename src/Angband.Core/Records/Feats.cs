@@ -52,6 +52,8 @@ public static class Feats
         feats.Add(new("ghost", "Rest Now", "Lay the ghost of one of your fallen characters to rest.", g => g.Ghosts.Laid.Count >= 1));
         feats.Add(new("ghosts_3", "Keeper of the Barrows", "Lay three ghosts of your fallen characters to rest with one character.",
             g => g.Ghosts.Laid.Count >= 3));
+        feats.Add(new("ghost_avenged", "Unfinished Business", "Slay what killed a ghost that pleaded with you, and lay it to rest.",
+            g => g.Ghosts.Pleas.Any(p => p.Stage == GhostPlea.Avenged)));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
         feats.Add(new("hireling_20", "Old Comrades", "See a hireling of yours reach level 20.", g => g.Hireling is { Level: >= 20 }));
         feats.Add(new("hireling_deep", "There and Back Again",
