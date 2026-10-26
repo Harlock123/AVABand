@@ -39,6 +39,7 @@ public sealed class SceneUiTests : IDisposable
             BundledArtDirectory = _bundled, // (empty: the painted scenes, whatever ships with the game)
         };
         vm.UseInput(InputBindings.Defaults(), null, null);
+        vm.AfterQueuedInput = a => a(); // (no input waits behind a test's turn)
         vm.StartGame(42, "warrior");
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
@@ -255,6 +256,9 @@ public sealed class SceneUiTests : IDisposable
         window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None); // typed ahead: dropped, the scene holds
         Assert.NotNull(vm.Scene);
         now += MainWindowViewModel.SceneTypeAheadMs;
+        window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None); // too soon after it appeared: still held
+        Assert.NotNull(vm.Scene);
+        now += MainWindowViewModel.SceneMinimumMs;
         Assert.True(vm.Scene!.WaitForKey);
         scene.Advance(SceneView.DurationMs * 3); // long past its usual moment
         Assert.NotNull(vm.Scene);
@@ -272,9 +276,13 @@ public sealed class SceneUiTests : IDisposable
         // The controller: A moves on, B ends them all.
         TakeStairs(vm, down: false);
         Assert.NotNull(vm.Scene);
+        vm.HandleAction(InputAction.Confirm); // (too soon)
+        Assert.NotNull(vm.Scene);
+        now += MainWindowViewModel.SceneMinimumMs;
         vm.HandleAction(InputAction.Confirm);
         Assert.Null(vm.Scene);
         TakeStairs(vm, down: true);
+        now += MainWindowViewModel.SceneMinimumMs;
         vm.HandleAction(InputAction.Cancel);
         Assert.Null(vm.Scene);
 
@@ -282,6 +290,66 @@ public sealed class SceneUiTests : IDisposable
         TakeStairs(vm, down: false);
         Assert.NotNull(vm.Scene);
         vm.StartGame(43, "warrior");
+        Assert.Null(vm.Scene);
+    }
+
+    /// <summary>
+    /// A key held as a scene appears (walking, say) doesn't end it with its repeats: only once it's let
+    /// go and pressed again. And keys queued behind a slow turn are dropped until they've all come in.
+    /// </summary>
+    [AvaloniaFact]
+    public void AHeldKey_AndKeysQueuedBehindTheTurn_DontSkipAScene()
+    {
+        var (window, vm, _) = Open();
+        long now = 1000;
+        vm.SceneClock = () => now;
+        Action? drained = null;
+        vm.AfterQueuedInput = a => drained = a;
+        window.KeyPress(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5"); // held down...
+        TakeStairs(vm, down: true);
+        Assert.NotNull(vm.Scene);
+        var turn = vm.Game.GameTurn;
+
+        now += 5000; // a slow turn: the queued keys come in long after the scene appeared
+        window.KeyPressQwerty(PhysicalKey.Digit4, RawInputModifiers.None);
+        Assert.NotNull(vm.Scene);
+        drained!();
+        now += MainWindowViewModel.SceneTypeAheadMs;
+        window.KeyPress(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5"); // ...its repeats
+        window.KeyPress(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5");
+        Assert.NotNull(vm.Scene);
+        Assert.Equal(turn, vm.Game.GameTurn);
+
+        window.KeyRelease(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5");
+        window.KeyPress(Key.D5, RawInputModifiers.None, PhysicalKey.Digit5, "5"); // pressed afresh: it ends the scene
+        Assert.Null(vm.Scene);
+        Assert.Equal(turn, vm.Game.GameTurn);
+    }
+
+    /// <summary>A unique met for the first time holds until Space, even without the option; other keys pass it by.</summary>
+    [AvaloniaFact]
+    public void AFirstUnique_HoldsUntilSpace_WithoutTheOption()
+    {
+        var (window, vm, scene) = Open();
+        long now = 1000;
+        vm.SceneClock = () => now;
+        var game = vm.Game;
+        var at = game.Level.AllLocs().First(l => l.DistanceTo(game.Player.Position) == 3 && game.Level.IsEmptyFloor(l)
+            && Angband.Core.Combat.ProjectionPath.Projectable(game.Level, game.Player.Position, l, 20));
+        new Angband.Core.Monsters.MonsterSpawner(game.Data).Place(game.Level, game.Rng, game.Data.Monster("grip")!, at, asleep: true);
+        vm.Execute(new HoldCommand());
+        Assert.Equal(SceneKind.Unique, vm.Scene!.Kind);
+        Assert.True(vm.Scene.WaitForKey);
+        Assert.True(SceneKinds.HoldsForKey(SceneKind.BossSlain) && SceneKinds.HoldsForKey(SceneKind.QuestComplete));
+        Assert.False(SceneKinds.HoldsForKey(SceneKind.StairsDown));
+
+        scene.Advance(SceneView.DurationMs * 3);
+        now += MainWindowViewModel.SceneMinimumMs;
+        var turn = game.GameTurn;
+        window.KeyPressQwerty(PhysicalKey.Digit5, RawInputModifiers.None);
+        Assert.NotNull(vm.Scene);
+        Assert.Equal(turn, game.GameTurn);
+        window.KeyPressQwerty(PhysicalKey.Space, RawInputModifiers.None);
         Assert.Null(vm.Scene);
     }
 

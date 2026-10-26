@@ -5,6 +5,10 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Scenes you can't miss**: meeting a unique for the first time, slaying a great foe and finishing a
+  quest now always stay on screen until you press Space, Enter or Escape (or click), and only after a
+  moment, so a key already on its way can't close them. Keys typed while a long turn was worked out,
+  and the repeats of a key you were holding down (walking, say), no longer skip any scene unseen.
 - **The weekly challenge** (Game → Weekly challenge..., or *This week's challenge* on the title
   screen): like the daily dungeon, but for a whole week — one dungeon and one character for
   everyone, and a twist on the rules that changes each week: *Darkness*, *Glass cannon*, *Famine*,

@@ -612,6 +612,7 @@ public partial class MainWindow : Window
     private void OnGameKeyDown(object? sender, KeyEventArgs e)
     {
         if (DataContext is not MainWindowViewModel vm || KeyboardInput.IsModifierKey(e.Key)) return;
+        vm.SceneKeyDown(e.Key.ToString());
         // A run being drawn a step at a time: a key stops it where it is (as in Angband) and does no more —
         // except the key that started it, repeating while it's held.
         if (vm.IsRunningSteps)

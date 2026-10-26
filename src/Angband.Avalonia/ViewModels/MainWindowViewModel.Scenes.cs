@@ -1,6 +1,7 @@
 using Angband.Core.Definitions;
 using Angband.Core.Game;
 using Angband.Input;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Angband.Avalonia.ViewModels;
@@ -11,6 +12,15 @@ public enum SceneKind
 {
     StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, Unique,
     BossSlain, QuestComplete, Death,
+}
+
+public static class SceneKinds
+{
+    /// <summary>
+    /// The scenes too important to pass by unseen — a unique met, a great foe slain, a quest done: each
+    /// holds until Space, Enter, Escape, a click or the controller's A or B, whatever the option says.
+    /// </summary>
+    public static bool HoldsForKey(SceneKind kind) => kind is SceneKind.Unique or SceneKind.BossSlain or SceneKind.QuestComplete;
 }
 
 /// <summary>
@@ -28,9 +38,12 @@ public sealed record AmbientScene(SceneKind Kind, string Caption, int Depth, boo
 // Scenes (the option "Show scenes at moments of note", on by default): taking the stairs, Word of
 // Recall, arriving in a cavern, labyrinth or fortress, a level whose feeling is deadly, meeting a
 // unique for the very first time, and death. They queue (the stairs, then the cavern you arrive in),
-// each lasting a moment; a click ends one, a key ends them all (and still does what it does). With
+// each lasting a moment; a click ends one, a key ends them all (and does nothing more). With
 // "Scenes stay until you press Space" each holds instead: Space, Enter, a click or the controller's A
-// moves on to the next, Escape (or B) ends them all, and other keys do nothing meanwhile.
+// moves on to the next, Escape (or B) ends them all, and other keys do nothing meanwhile. The great
+// moments (SceneKinds.HoldsForKey) always hold. Keys can't skip a scene unseen: those queued while the
+// turn was worked out are dropped, so are a held key's repeats until it's let go, and a held scene
+// takes no Space for its first moment (SceneMinimumMs).
 // Pictures are looked for in the player's art folder (<AppData>/AVABand/art), then among the bundled
 // artwork (unless "Use the bundled pictures" is off); with none, the scene is painted.
 public sealed partial class MainWindowViewModel
@@ -73,7 +86,7 @@ public sealed partial class MainWindowViewModel
         if (!ScenesOn) return;
         var depth = _game.Player.Depth;
         _pendingScenes.Add(new AmbientScene(kind, caption, depth, _game.IsDaytime, PictureFor(pictures), glyph, glyphColor, subtitle,
-            OptionValue(DisplayOptions.ScenesWait)));
+            OptionValue(DisplayOptions.ScenesWait) || SceneKinds.HoldsForKey(kind)));
     }
 
     /// <summary>After a command: the stairs taken (if any), then whatever else happened, in order of note.</summary>
@@ -103,11 +116,13 @@ public sealed partial class MainWindowViewModel
 
     /// <summary>
     /// A controller action (or key) while a scene holds for Space: Confirm moves on, Cancel ends them
-    /// all, anything else is kept from the game. False when no scene is holding.
+    /// all, anything else is kept from the game — and in its first moment, so are they. False when no
+    /// scene is holding.
     /// </summary>
     public bool HandleWaitingScene(InputAction action)
     {
         if (!SceneWaits) return false;
+        if (SceneClock() < _sceneShownAt + SceneMinimumMs) return true;
         if (action == InputAction.Confirm) EndScene();
         else if (action == InputAction.Cancel) SkipScenes();
         return true;
@@ -119,6 +134,8 @@ public sealed partial class MainWindowViewModel
         _sceneQueue.Clear();
         Scene = null;
         _sceneInputDroppedUntil = 0;
+        _sceneAwaitsIdle = false;
+        _keysHeldAtScene.Clear();
     }
 
     /// <summary>
@@ -128,6 +145,15 @@ public sealed partial class MainWindowViewModel
     /// </summary>
     public const int SceneTypeAheadMs = 250;
 
+    /// <summary>How long (ms) a scene that holds for Space is on screen before Space (or the like) ends it.</summary>
+    public const int SceneMinimumMs = 600;
+
+    /// <summary>
+    /// Runs an action once the input queued so far has been handled (the UI thread's background
+    /// priority, below input; tests run it straight away).
+    /// </summary>
+    public Action<Action> AfterQueuedInput { get; set; } = a => Dispatcher.UIThread.Post(a, DispatcherPriority.Background);
+
     /// <summary>The clock (ms) the scenes' input drop runs on (tests set their own).</summary>
     public Func<long> SceneClock { get; set; } = () => Environment.TickCount64;
 
@@ -136,10 +162,37 @@ public sealed partial class MainWindowViewModel
     /// <summary>The key that cut the scenes short, while it's still held (its repeats are dropped too).</summary>
     private string? _sceneKeyHeld;
 
-    partial void OnSceneChanged(AmbientScene? value)
+    /// <summary>The keys held down now (by name), and those that were as the scene appeared (their repeats are dropped).</summary>
+    private readonly HashSet<string> _keysDown = [], _keysHeldAtScene = [];
+
+    /// <summary>Set as a scene appears, until the input queued behind it has been handled (all of it is dropped).</summary>
+    private bool _sceneAwaitsIdle;
+
+    private long _sceneShownAt;
+
+    partial void OnSceneChanged(AmbientScene? oldValue, AmbientScene? newValue)
     {
-        if (value is not null) _sceneInputDroppedUntil = SceneClock() + SceneTypeAheadMs;
+        if (newValue is null) return;
+        _sceneShownAt = SceneClock();
+        _sceneInputDroppedUntil = _sceneShownAt + SceneTypeAheadMs;
+        if (oldValue is null)
+        {
+            _keysHeldAtScene.Clear();
+            _keysHeldAtScene.UnionWith(_keysDown);
+        }
+        // Keys typed while the turn was worked out reach us only once it's done, however long it took:
+        // the drop runs until they have all been handled, and a moment more.
+        _sceneAwaitsIdle = true;
+        AfterQueuedInput(() =>
+        {
+            if (!_sceneAwaitsIdle) return;
+            _sceneAwaitsIdle = false;
+            _sceneInputDroppedUntil = Math.Max(_sceneInputDroppedUntil, SceneClock() + SceneTypeAheadMs);
+        });
     }
+
+    /// <summary>A key pressed (by name; repeats too), before anything else sees it: the scenes keep track of what's held.</summary>
+    public void SceneKeyDown(string key) => _keysDown.Add(key);
 
     /// <summary>
     /// A key (by name; null for a controller button) before the game sees it: true when the scenes take
@@ -149,8 +202,8 @@ public sealed partial class MainWindowViewModel
     /// </summary>
     public bool SceneTakesInput(string? key)
     {
-        if (key is not null && key == _sceneKeyHeld) return true;
-        if (SceneClock() < _sceneInputDroppedUntil) return true;
+        if (key is not null && (key == _sceneKeyHeld || _keysHeldAtScene.Contains(key))) return true;
+        if (_sceneAwaitsIdle || SceneClock() < _sceneInputDroppedUntil) return true;
         if (!HasScene || SceneWaits) return false;
         SkipScenes();
         _sceneKeyHeld = key;
@@ -162,6 +215,14 @@ public sealed partial class MainWindowViewModel
     public void SceneKeyReleased(string? key)
     {
         if (key is null || key == _sceneKeyHeld) _sceneKeyHeld = null;
+        if (key is null)
+        {
+            _keysDown.Clear();
+            _keysHeldAtScene.Clear();
+            return;
+        }
+        _keysDown.Remove(key);
+        _keysHeldAtScene.Remove(key);
     }
 
     // --- What shows a scene ------------------------------------------------------------------------
