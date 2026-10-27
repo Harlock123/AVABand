@@ -42,6 +42,23 @@ ghost instead and it fights after all, for good. Leave the level and it fades; i
 another time. A ghost first seen, and a pleading ghost laid to rest, each have a scene: put your own
 pictures named `ghost`, `ghost-plea` or `ghost-avenged` in your art folder to use them.
 
+## Messages from the fallen
+
+When a character dies, the game-over window offers to *Leave a last message*: pick a ready-made phrase
+("Beware the cave orc.", "Trust not Grip, Farmer Maggot's Dog.", "Turn back. The way is shut.",
+"Treasure ahead.", "Elbereth! Gilthoniel!"...) and change it if you like, or write your own — 80 letters
+at most — and *Carve it*. It is carved on the headstone: the graveyard shows it under the epitaph, and the
+character dump has a "Last words" line. Leaving none is fine too.
+
+Your later characters may find those words (the birth option *Messages from the fallen*, on by
+default): now and then — one time in three for each, on a new level at the depth the writer fell at, and
+never more than one a level — a message is scratched into the floor of a room, a yellow `¶` (in tiles, pale
+scratches in the stone). Step on it, or look at it (`x`), to read it: "Scratched into the floor: 'Beware
+the Grip.' — Arwen the Elf Mage, killed here by Grip, Farmer Maggot's Dog." The message log keeps it, and
+each message is found only once by each character; read ten for the feat *Heeded the Fallen*. Like
+ghosts, messages are never found in the daily dungeon, the weekly challenge or the tutorial, and none
+are left from them.
+
 ## Rival adventurers
 
 Every new character has a rival band (the birth option *Rival adventurers*, on by default): a leader

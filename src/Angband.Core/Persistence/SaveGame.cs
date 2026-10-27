@@ -110,6 +110,7 @@ public static class SaveGame
             Hireling = g.Hireling, FallenCompanions = g.FallenCompanions.Count == 0 ? null : g.FallenCompanions,
             CharacterKills = new(g.CharacterKills),
             Ghosts = g.Ghosts,
+            FallenNotes = g.FloorNotes,
             Rivals = g.Rivals,
             JourneyVisits = [.. g.Visits.Select(v => new JourneyVisitSave { Turn = v.Turn, Depth = v.Depth, Profile = v.Profile })],
             JourneyKills = [.. g.Kills.Select(k => new JourneyKillSave { Turn = k.Turn, Depth = k.Depth, Race = k.RaceId, Unique = k.Unique })],
@@ -306,6 +307,7 @@ public static class SaveGame
             IsLit = level.IsLit, IsKnown = level.IsKnown, Terrain = terrainIds,
             Feeling = level.Feeling, FeelingSquaresSeen = level.FeelingSquaresSeen, Births = new(level.Births),
             Pins = level.Pins.ToDictionary(kv => kv.Key.Y * level.Width + kv.Key.X, kv => kv.Value),
+            FallenNotes = level.FallenNotes.ToDictionary(kv => kv.Key.Y * level.Width + kv.Key.X, kv => kv.Value),
             Decoy = level.Decoy is { } decoy ? decoy.Y * level.Width + decoy.X : null,
             FeelSquares = level.FeelSquares.Select(p => p.Y * level.Width + p.X).Order().ToList(),
             Features = new ushort[squares.Length], Flags = new ushort[squares.Length], Known = new int[squares.Length],
@@ -376,6 +378,7 @@ public static class SaveGame
         g.RestoreStats(f.Stats);
         foreach (var (r, n) in f.CharacterKills) g.CharacterKills[r] = n;
         g.RestoreGhosts(f.Ghosts); // (before the levels: a ghost on one is its own race)
+        g.RestoreFallenNotes(f.FallenNotes);
         g.RestoreRivals(f.Rivals); // (before the levels: so is a rival)
         g.Knowledge.Restore(f.Knowledge.Runes, f.Knowledge.AwareKinds, f.Knowledge.TriedKinds,
             f.Knowledge.Flavors.ToDictionary(kv => kv.Key, kv => new FlavorDef { Name = kv.Value[0], Color = kv.Value.ElementAtOrDefault(1) ?? "White" }));
@@ -466,6 +469,8 @@ public static class SaveGame
             foreach (var (race, n) in ls.Births) level.Births[race] = n;
             foreach (var (i, note) in ls.Pins.Where(kv => kv.Key >= 0 && kv.Key < ls.Width * ls.Height))
                 level.Pins[new Loc(i % ls.Width, i / ls.Width)] = note;
+            foreach (var (i, key) in ls.FallenNotes.Where(kv => kv.Key >= 0 && kv.Key < ls.Width * ls.Height))
+                level.FallenNotes[new Loc(i % ls.Width, i / ls.Width)] = key;
             foreach (var i in ls.FeelSquares.Where(i => i >= 0 && i < ls.Width * ls.Height))
                 level.FeelSquares.Add(new Loc(i % ls.Width, i / ls.Width));
             var featureMap = ls.Terrain.Select(id =>

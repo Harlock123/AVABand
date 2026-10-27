@@ -5,6 +5,13 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Messages from the fallen**: when a character dies, the game-over window lets you leave a last
+  message — a ready-made phrase ("Beware the cave orc.", "Turn back. The way is shut.", "Fly, you
+  fools!") or up to 80 letters of your own. It is carved on the headstone (the graveyard shows it,
+  and the character dump has it), and your later characters may find it scratched into the floor of a
+  room at the depth you fell at: step on it or look at it to read it, and the message log keeps it.
+  Each is found once by each character; read ten for the feat *Heeded the Fallen*. A new birth option,
+  on by default; never in the daily dungeon, the weekly challenge or the tutorial (Help → Monsters).
 - **Seasonal events**: a character made during **All Hallows' Eve** (24 October – 7 November,
   on now) or **Midwinter** (18 December – 6 January) is born in it, and keeps it for life. Its own
   monsters join the dungeon — pumpkin-headed scarecrows, belfry bats, corpse-candles and the

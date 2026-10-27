@@ -54,6 +54,8 @@ public static class Feats
             g => g.Ghosts.Laid.Count >= 3));
         feats.Add(new("ghost_avenged", "Unfinished Business", "Slay what killed a ghost that pleaded with you, and lay it to rest.",
             g => g.Ghosts.Pleas.Any(p => p.Stage == GhostPlea.Avenged)));
+        feats.Add(new("fallen_notes_10", "Heeded the Fallen", "Read ten messages the fallen scratched into the floor, with one character.",
+            g => g.FloorNotes.Read.Count >= 10));
         // AVABand's seasonal events: each one's unique, slain by a character born in it.
         foreach (var season in Seasons.All)
             feats.Add(new(season.FeatId, season.FeatName, season.FeatDescription, g => g.KilledUniques.Contains(season.Unique)));

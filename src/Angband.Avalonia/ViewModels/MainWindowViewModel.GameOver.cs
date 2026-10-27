@@ -37,7 +37,7 @@ public sealed partial class MainWindowViewModel
         var won = p.IsWinner;
         GameOverMenuRequested?.Invoke(new GameOverMenuViewModel(p.IsWinner ? "Your adventure is over" : "You have died",
             lines, Choices(again, () => { if (again is not null) StartCharacter(again); }, sheet: true,
-                clip: replay is null ? null : () => SaveClip(replay, won))) { Recap = RecapOf(_game) });
+                clip: replay is null ? null : () => SaveClip(replay, won))) { Recap = RecapOf(_game), LastWords = LastWordsPromptFor(_game) });
     }
 
     /// <summary>At start-up with no living character: how the last one ended, and what next.</summary>

@@ -98,6 +98,22 @@ def altar():
     return c
 
 
+def fallen_note():
+    """A message scratched into the floor by one who fell (AVABand's messages from the fallen): pale strokes in the stone."""
+    c = canvas()
+    stone_floor(c)
+    pale, deep = hexc("#d8cfa8"), hexc("#8a8068")
+    # Three rows of scratched letters, each stroke with a darker groove beneath it.
+    for y, strokes in ((4, ((2, 4), (6, 9), (11, 13))), (8, ((3, 6), (8, 8), (10, 13))), (12, ((2, 5), (7, 10)))):
+        for x0, x1 in strokes:
+            for x in range(x0, x1 + 1):
+                px(c, x, y - (x % 2), pale)
+                px(c, x, y + 1, deep)
+    px(c, 12, 12, pale)                              # a last, hurried mark
+    px(c, 13, 11, pale)
+    return c
+
+
 def hermitage():
     c = canvas()
     stone_floor(c, "#34302a", "#26221e")
@@ -480,6 +496,7 @@ DRAWN = {
     "terrain:dwarven_forge": ("ava_dwarven_forge.png", forge, True),
     "terrain:quest_altar": ("ava_quest_altar.png", altar, True),
     "terrain:hermitage": ("ava_hermitage.png", hermitage, True),
+    "terrain:fallen_note": ("ava_fallen_note.png", fallen_note, True),
     "object:key_of_belegost": ("ava_key.png", key, False),
     "terrain:cold_brazier": ("ava_brazier_cold.png", lambda: brazier(False), True),
     "terrain:lit_brazier": ("ava_brazier_lit.png", lambda: brazier(True), True),

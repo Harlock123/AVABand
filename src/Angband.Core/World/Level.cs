@@ -55,6 +55,12 @@ public sealed class Level
     /// <summary>The player's pins on this level (AVABand's own): a short note on a square, kept with the level.</summary>
     public Dictionary<Loc, string> Pins { get; } = [];
 
+    /// <summary>
+    /// AVABand's messages from the fallen: the squares with a fallen character's last words scratched into
+    /// them, and whose (the headstone's key, <see cref="Game.FallenNote.Key"/>). Kept with the level.
+    /// </summary>
+    public Dictionary<Loc, string> FallenNotes { get; } = [];
+
     /// <summary>A ranger's decoy (Angband GLYPH:DECOY), which monsters that see it go for.</summary>
     public Loc? Decoy { get; set; }
 

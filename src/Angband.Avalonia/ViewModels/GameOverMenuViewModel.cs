@@ -22,6 +22,12 @@ public sealed class GameOverMenuViewModel(string title, IReadOnlyList<string> li
     /// <summary>Whether there is a recap to show.</summary>
     public bool HasRecap => Recap is not null;
 
+    /// <summary>After a death: a last message to leave on the headstone (AVABand's messages from the fallen); null where none may be.</summary>
+    public LastWordsPrompt? LastWords { get; init; }
+
+    /// <summary>Whether a last message may be left.</summary>
+    public bool HasLastWords => LastWords is not null;
+
     /// <summary>Raised when a choice is made, before it is acted on (the window closes).</summary>
     public event Action? Chosen;
 

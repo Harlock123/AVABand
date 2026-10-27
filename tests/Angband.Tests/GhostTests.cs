@@ -583,7 +583,7 @@ public class GhostTests
         Assert.True(game.IsPleading(ghost));
         for (var i = 0; i < 10; i++) game.Execute(new HoldCommand());
         var file = game.Recorder.ToFile(game);
-        Assert.Equal(3, file.Version);
+        Assert.Equal(ReplayFile.CurrentVersion, file.Version);
 
         var player = new ReplayPlayer(Data, file);
         while (player.Step()) { }

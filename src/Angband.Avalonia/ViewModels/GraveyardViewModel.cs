@@ -16,6 +16,10 @@ public sealed record HeadstoneRow(FallenRecord Fallen)
         : $"Slain by {Fallen.KilledBy}{(Fallen.Depth == 0 ? " in the town" : $" at {Fallen.Depth * 50} ft")}";
     public string Date => Fallen.DateUtc.ToLocalTime().ToString("d", CultureInfo.CurrentCulture);
     public string Epitaph => Fallen.Epitaph;
+
+    /// <summary>The last message they left (AVABand's messages from the fallen), quoted; null for none.</summary>
+    public string? LastWords => Fallen.LastWords is { Length: > 0 } words ? $"'{words}'" : null;
+    public bool HasLastWords => LastWords is not null;
     public bool Won => Fallen.Won;
     public bool HasReplay => Fallen.ReplayPath is { } path && File.Exists(path);
 
@@ -95,7 +99,9 @@ public sealed partial class GraveyardViewModel : ObservableObject
             Story = "";
             return;
         }
-        var header = $"{value.Name}, {value.Title}\n{value.End}.\n\n“{value.Epitaph}”\n\n" + (value.Rest is { } rest ? rest + "\n\n" : "");
+        var header = $"{value.Name}, {value.Title}\n{value.End}.\n\n“{value.Epitaph}”\n\n"
+                     + (value.LastWords is { } words ? $"Their last words: {words}\n\n" : "")
+                     + (value.Rest is { } rest ? rest + "\n\n" : "");
         string? dump = null;
         try
         {

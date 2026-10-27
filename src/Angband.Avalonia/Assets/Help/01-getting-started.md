@@ -103,7 +103,8 @@ paralysed, frightened, stunned or left in the dark — saying what cures it — 
   *Card frame*), or another starting kit on the creation screen (the *Delver's kit* and the
   *Scholar's kit* trade the Word of Recall scroll for goods worth no more, so the gold left over is
   the same or a little more) — and the **Unlocks** page lists them all, with what earns each. **Game → The graveyard** keeps a
-  headstone for every character who died or retired, with their story — and *Watch their last
+  headstone for every character who died or retired, with their story and the last words they left
+  (Help → Monsters: your later characters may find them scratched into the floor) — and *Watch their last
   moments* replays how they fell, while *Save a clip* makes an animated picture (a GIF) of it to
   share (the menu when a character dies offers one too). **Game → The museum** gathers what all your characters have
   done: every artifact found, every unique slain and every kind of monster seen, each with who did it

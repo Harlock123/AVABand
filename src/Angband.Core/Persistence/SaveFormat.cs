@@ -65,6 +65,8 @@ public sealed class SaveFile
     public Dictionary<string, int> CharacterKills { get; set; } = [];
     /// <summary>AVABand's ghosts of fallen characters: those this character may meet, has met and laid to rest (absent in older saves).</summary>
     public Game.GhostLog? Ghosts { get; set; }
+    /// <summary>AVABand's messages from the fallen: the last words this character may find, and those it has read (absent in older saves).</summary>
+    public Game.FallenNoteLog? FallenNotes { get; set; }
     /// <summary>AVABand: the character's rival band (absent in older saves, and for a character made without it).</summary>
     public Game.RivalBand? Rivals { get; set; }
     /// <summary>The journey: levels arrived on and kills, in order (absent from older saves).</summary>
@@ -323,6 +325,8 @@ public sealed class LevelSave
     public Dictionary<string, int> Births { get; set; } = [];
     /// <summary>AVABand's map pins: square index → note (empty in older saves).</summary>
     public Dictionary<int, string> Pins { get; set; } = [];
+    /// <summary>AVABand's messages from the fallen: square index → the headstone's key (empty in older saves).</summary>
+    public Dictionary<int, string> FallenNotes { get; set; } = [];
     /// <summary>A ranger's decoy (square index), if any.</summary>
     public int? Decoy { get; set; }
     /// <summary>Hidden feeling squares not yet seen (square indices).</summary>

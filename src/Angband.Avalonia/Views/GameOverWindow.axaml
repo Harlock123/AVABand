@@ -37,6 +37,27 @@
         <TextBlock x:Name="RecapTip" Text="{Binding Recap.Tip}" TextWrapping="Wrap" Foreground="#e6c35c" />
       </StackPanel>
     </Border>
+    <!-- AVABand's messages from the fallen: a last message for the headstone, found later where they fell. -->
+    <Border x:Name="LastWordsPanel" IsVisible="{Binding HasLastWords}" Background="#15130f" BorderBrush="#4a4232" BorderThickness="1"
+            CornerRadius="6" Padding="14,12">
+      <StackPanel Spacing="8" DataContext="{Binding LastWords}" x:DataType="vm:LastWordsPrompt">
+        <TextBlock Text="Leave a last message" FontWeight="SemiBold" />
+        <TextBlock Text="A few words for your headstone. Those who come after may find them scratched into the floor where you fell."
+                   TextWrapping="Wrap" FontSize="12" Opacity="0.75" />
+        <StackPanel Spacing="8" IsVisible="{Binding !IsCarved}">
+          <ComboBox x:Name="LastWordsPhrases" ItemsSource="{Binding Phrases}" SelectedItem="{Binding Phrase}"
+                    PlaceholderText="Pick a ready-made phrase..." HorizontalAlignment="Stretch" />
+          <DockPanel>
+            <Button x:Name="LastWordsCarve" DockPanel.Dock="Right" Content="Carve it" Margin="8,0,0,0" Padding="12,6"
+                    IsEnabled="{Binding CanCarve}" Click="OnCarve" />
+            <TextBox x:Name="LastWordsBox" Text="{Binding Text}" MaxLength="{Binding MaxLength}"
+                     PlaceholderText="...or write your own (80 letters at most)" />
+          </DockPanel>
+        </StackPanel>
+        <TextBlock x:Name="LastWordsCarved" Text="{Binding Carved}" IsVisible="{Binding IsCarved}" TextWrapping="Wrap"
+                   Foreground="#e6c35c" FontStyle="Italic" />
+      </StackPanel>
+    </Border>
     <ItemsControl x:Name="ChoiceList" ItemsSource="{Binding Choices}" Margin="0,4,0,0">
       <ItemsControl.ItemTemplate>
         <DataTemplate x:DataType="vm:GameOverChoice">

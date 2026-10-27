@@ -432,7 +432,7 @@ public sealed partial class GameSession : ITurnHandler
         }
         else if (feature.Has(TerrainFlags.Stair))
             Publish(new MessageEvent($"There is {Article(feature.Name)} here."));
-        else QuestStep(target);
+        else if (!StepOnFallenNote(target)) QuestStep(target); // (AVABand: a fallen character's last words, scratched into the floor)
 
         // Angband do_autopickup: each object picked up costs a tenth of a turn (at most a turn).
         var picked = Level.Objects.Any(target) ? NoticeFloorObjects() : 0;
@@ -649,6 +649,7 @@ public sealed partial class GameSession : ITurnHandler
             OnNewLevel();
             PlaceGhost(); // (AVABand: perhaps the ghost of someone who fell at this depth)
             PlaceRivals(); // (AVABand: perhaps your rival band, or one of them)
+            PlaceFallenNote(); // (AVABand: perhaps the last words of someone who fell at this depth)
             _questRoomHere = null;
             PrepareFeeling();
             CheatPeek();

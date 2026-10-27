@@ -27,6 +27,22 @@ public static class CharacterDump
         : p.NaturalStats.GetValueOrDefault(stat) >= StatTables.PotionCap ? AtMaximumColor
         : null;
 
+    /// <summary>The line a dead character's last words have on its dump (AVABand's messages from the fallen).</summary>
+    public static string LastWordsLine(string words) => $" Last words: \"{words}\"";
+
+    /// <summary>
+    /// A dump already written, with the last words its character left as it died put in under how it died
+    /// (or at the end, if that line can't be found); a line of last words already there is replaced.
+    /// </summary>
+    public static string WithLastWords(string dump, string words)
+    {
+        var lines = dump.Split('\n').Where(l => !l.StartsWith(" Last words: ", StringComparison.Ordinal)).ToList();
+        var at = lines.FindIndex(l => l.StartsWith(" Killed by ", StringComparison.Ordinal));
+        if (at < 0) lines.Add(LastWordsLine(words));
+        else lines.Insert(at + 1, LastWordsLine(words));
+        return string.Join('\n', lines);
+    }
+
     public static string Build(GameSession game, IEnumerable<string>? recentMessages = null, DateTime? when = null) =>
         Build(game, recentMessages, when, marked: false);
 
@@ -97,6 +113,7 @@ public static class CharacterDump
         Line(p.IsDead && p.IsWinner ? " Retired victorious."
             : p.IsDead ? $" Killed by {p.KilledBy} {(p.Depth == 0 ? "in the town" : $"at {p.Depth * feet} ft")}."
             : $" Still alive ({game.HungerLevel.ToString().ToLowerInvariant()}).");
+        if (p.IsDead && game.LastWords is { } words) Line(LastWordsLine(words));
         Line($" Seed {game.Seed}   Score {Scoring.Points(p)} points");
         if (p.HeroicBirth) Line($" Heroic: born with AVABand's heroic stats (the score counts {Scoring.HeroicPercent}%).");
         if (game.Options[OptionIds.AvaSecondChance] && !p.IsSeededRun)

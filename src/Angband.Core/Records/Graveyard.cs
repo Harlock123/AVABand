@@ -25,6 +25,11 @@ public sealed class FallenRecord
     public ulong Seed { get; set; }
     public DateTime DateUtc { get; set; }
     public string Epitaph { get; set; } = "";
+    /// <summary>
+    /// The last message the player left as it died (AVABand's messages from the fallen): scratched into the
+    /// floor for later characters at the depth it fell at. Null for none (and on older headstones).
+    /// </summary>
+    public string? LastWords { get; set; }
     /// <summary>The character dump written at its end, if there is one.</summary>
     public string? DumpPath { get; set; }
 
@@ -152,6 +157,14 @@ public sealed class Graveyard
         if (Fallen.FirstOrDefault(f => f.Key == key) is not { LaidToRestBy: null } fallen) return false;
         fallen.LaidToRestBy = by;
         fallen.LaidToRestUtc = whenUtc;
+        return true;
+    }
+
+    /// <summary>A headstone's last words (AVABand's messages from the fallen); false if there's no such headstone.</summary>
+    public bool SetLastWords(string key, string? words)
+    {
+        if (Fallen.FirstOrDefault(f => f.Key == key) is not { } fallen) return false;
+        fallen.LastWords = words;
         return true;
     }
 

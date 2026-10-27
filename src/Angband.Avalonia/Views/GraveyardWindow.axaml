@@ -72,7 +72,7 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
               <DataTemplate x:DataType="vm:HeadstoneRow">
-                <Border Classes="stone" Classes.won="{Binding Won}" Width="196" Height="248" CornerRadius="96,96,6,6"
+                <Border Classes="stone" Classes.won="{Binding Won}" Width="196" Height="272" CornerRadius="96,96,6,6"
                         BorderBrush="#3a3733" BorderThickness="2" Padding="14,26,14,10">
                   <StackPanel Spacing="4">
                     <Path Data="M 6,0 L 10,0 L 10,6 L 16,6 L 16,10 L 10,10 L 10,22 L 6,22 L 6,10 L 0,10 L 0,6 L 6,6 Z"
@@ -82,6 +82,8 @@
                     <TextBlock Classes="carved" Text="{Binding Deeds}" FontSize="10" Margin="0,4,0,0" />
                     <TextBlock Classes="carved" Text="{Binding End}" FontSize="10" />
                     <TextBlock Classes="carved" Text="{Binding Epitaph}" FontSize="10" FontStyle="Italic" Margin="0,6,0,0" />
+                    <TextBlock x:Name="StoneLastWords" Classes="carved" Text="{Binding LastWords}" IsVisible="{Binding HasLastWords}"
+                               FontSize="10" FontWeight="SemiBold" Foreground="#3b2614" Margin="0,4,0,0" />
                     <TextBlock Classes="carved" Text="{Binding Date}" FontSize="10" Opacity="0.8" />
                   </StackPanel>
                 </Border>

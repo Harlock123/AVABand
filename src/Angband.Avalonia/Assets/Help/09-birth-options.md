@@ -62,6 +62,9 @@ them applies in the daily dungeon, the weekly challenge or the tutorial.
 - **Ghosts of fallen characters** — now and then, on a new level at the depth one of your dead
   characters fell at, its ghost walks; beat it to lay it to rest and win back one of the things it
   wore (Help → Monsters). On by default; never in the daily dungeon, the weekly challenge or the tutorial.
+- **Messages from the fallen** — the last words your dead characters left on their headstones are now
+  and then found scratched into the floor of a room at the depth they fell at (Help → Monsters). On by
+  default; never in the daily dungeon, the weekly challenge or the tutorial.
 - **Rival adventurers** — a rival band goes down the dungeon alongside you: you hear of their deeds
   in town (a unique they slay is dead in your game too), and now and then meet them below — to trade
   with, to pass by, or to fight (Help → Monsters). On by default; never in the daily dungeon, the

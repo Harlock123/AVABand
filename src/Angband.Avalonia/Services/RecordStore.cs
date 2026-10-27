@@ -80,6 +80,13 @@ public sealed class RecordStore(string directory)
         SaveGraveyard(yard);
     }
 
+    /// <summary>The last words a fallen character left (AVABand's messages from the fallen), on its headstone.</summary>
+    public void SetLastWords(string key, string? words)
+    {
+        var yard = LoadGraveyard();
+        if (yard.SetLastWords(key, words)) SaveGraveyard(yard);
+    }
+
     /// <summary>A fallen character's ghost laid to rest (AVABand's ghosts): its headstone says by whom, and when.</summary>
     public void LayToRest(string key, string by)
     {

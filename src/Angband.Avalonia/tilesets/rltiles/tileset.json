@@ -1325,6 +1325,7 @@
     "terrain:town_well": "ava_town_well.png",
     "terrain:market_stall": "ava_market_stall.png",
     "terrain:town_fountain": "ava_town_fountain.png",
-    "terrain:town_statue": "ava_town_statue.png"
+    "terrain:town_statue": "ava_town_statue.png",
+    "terrain:fallen_note": "ava_fallen_note.png"
   }
 }

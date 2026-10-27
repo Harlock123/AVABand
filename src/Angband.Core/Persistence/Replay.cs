@@ -24,8 +24,9 @@ public sealed class ReplayFile
     /// 2: AVABand's pickup rules and its pickup_ammo / pickup_unknown options (off when playing back a 1).
     /// 3: pleading ghosts (a ghost in an older replay always fights), the town grows with your renown
     /// (kept as it was when playing back a 1 or a 2), and the notice board's bounties on uniques (off).
+    /// 4: messages from the fallen, scratched into the floor (none when playing back an older one).
     /// </summary>
-    public const int CurrentVersion = 3;
+    public const int CurrentVersion = 4;
     public const string Extension = ".avareplay";
 
     public int Version { get; set; } = CurrentVersion;
@@ -139,6 +140,8 @@ public sealed class ReplayPlayer
             Game.TownGrowthHeld = true;
             Game.BeforeBounties = true;
         }
+        // One recorded before the fallen left messages found none.
+        if (file.Version < 4) Game.FallenNotesOff = true;
     }
 
     public GameSession Game { get; }
@@ -187,6 +190,7 @@ public sealed class ReplayPlayer
             case "aim-next": g.AimAtTargetNext = B(0); break;
             case "recall-sets-depth": g.RecallSetsDepth = args![0]?.GetValue<bool>(); break;
             case "recall-choice": g.RecallChoice = args![0]?.GetValue<int>(); break;
+            case "read-note": g.LookAtFallenNote(new Loc(args![0]!.GetValue<int>(), args[1]!.GetValue<int>())); break;
         }
         return true;
     }

@@ -64,6 +64,8 @@ public static class OptionIds
     public const string AvaEasyCasting = "birth_ava_easy_casting";
     /// <summary>AVABand's own: the ghosts of your fallen characters, on the levels where they fell (GameSession.Ghosts).</summary>
     public const string AvaGhosts = "birth_ava_ghosts";
+    /// <summary>AVABand's own: the last words of your fallen characters, scratched into the floor where they fell (GameSession.FallenNotes).</summary>
+    public const string AvaFallenNotes = "birth_ava_fallen_notes";
     /// <summary>AVABand's own: swords for hire at the Prancing Pony (never in the daily dungeon or the tutorial).</summary>
     public const string Hirelings = "birth_ava_hirelings";
     /// <summary>AVABand's own: a rival band of adventurers, heard of in town and now and then met below (GameSession.Rivals).</summary>
@@ -121,6 +123,7 @@ public static class OptionCatalog
         new(OptionIds.AvaBurden, "AVABand's encumbrance (more from Strength and Constitution; worn gear weighs less)", OptionKind.Birth, true),
         new(OptionIds.AvaEasyCasting, "AVABand's easier casting (spell failure halved)", OptionKind.Birth, true),
         new(OptionIds.AvaGhosts, "Ghosts of fallen characters (on the levels where they fell)", OptionKind.Birth, true),
+        new(OptionIds.AvaFallenNotes, "Messages from the fallen (their last words, scratched into the floor where they fell)", OptionKind.Birth, true),
         new(OptionIds.Hirelings, "Hirelings (a sword for hire at the Prancing Pony follows you down)", OptionKind.Birth, true),
         new(OptionIds.AvaRivals, "Rival adventurers (a band heard of in town, and now and then met below)", OptionKind.Birth, true),
         new(OptionIds.AvaSecondChance, "A second chance (once, a death no deeper than 250 ft sends you back to town)", OptionKind.Birth, false),

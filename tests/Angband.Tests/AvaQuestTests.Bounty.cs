@@ -241,7 +241,7 @@ public partial class AvaQuestTests
         var game = GameSession.NewGame(TestData.Game, 3, "warrior");
         game.Recorder = new ReplayRecorder(game);
         var file = game.Recorder.ToFile(game);
-        Assert.Equal(3, file.Version);
+        Assert.Equal(ReplayFile.CurrentVersion, file.Version);
         Assert.True(new ReplayPlayer(TestData.Game, file).Game.BountiesOn);
         file.Version = 2;
         Assert.False(new ReplayPlayer(TestData.Game, file).Game.BountiesOn);

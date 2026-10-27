@@ -97,7 +97,11 @@ public sealed partial class MainWindowViewModel
             var text = _game.LookDescription(m);
             what = char.ToUpperInvariant(text[0]) + text[1..];
         }
-        else what = DescribeSquare(_cursor).TrimEnd('.');
+        else
+        {
+            if (!IsTargeting) _game.LookAtFallenNote(_cursor); // (a fallen character's last words, read by looking at them)
+            what = DescribeSquare(_cursor).TrimEnd('.');
+        }
         LastMessage = $"{what}.  {hints}";
         OnPropertyChanged(nameof(LookedAt));
         OnPropertyChanged(nameof(Cursor));

@@ -390,6 +390,7 @@ public sealed partial class MainWindowViewModel
     {
         if (!_game.Known.IsKnown(p)) return "You know nothing about that place.";
         if (_game.IsHallucinating) return "You see something strange."; // Angband aux_hallucinate
+        if (FallenNoteText(p) is { } scratched) return scratched;
         if (p == _game.Player.Position && _game.ObjectShownAt(p) is null && _game.VisibleTrapAt(p) is null)
         {
             var here = _data.Terrain[_game.Level[p].Feature];
@@ -402,6 +403,17 @@ public sealed partial class MainWindowViewModel
         var feature = _data.Terrain[_game.Known.Feature(p)];
         if (feature.Mimic is { } mimic) feature = _data.Terrain[mimic];
         return $"You see {(("aeiou".Contains(feature.Name[0])) ? "an" : "a")} {feature.Name}.";
+    }
+
+    /// <summary>
+    /// A fallen character's last words scratched into a square (AVABand's messages from the fallen): what they
+    /// say, if you can see them now; null for any other square (Look then names the terrain).
+    /// </summary>
+    private string? FallenNoteText(Loc p)
+    {
+        if (_data.Terrain[_game.Known.Feature(p)].Id != FallenNotes.Terrain || _game.ObjectShownAt(p) is not null) return null;
+        if (_game.Player.IsBlind || !_game.Level[p].Has(Angband.Core.World.SquareFlags.Seen)) return null;
+        return _game.FallenNoteAt(p) is { } note ? FallenNotes.Text(note) : "Something was scratched into the floor here, but it is too worn to read.";
     }
 
     // --- Rebinding (Controls tab) ------------------------------------------------------------------
