@@ -48,12 +48,7 @@ public sealed partial class GameSession
     private void TwistDarkness()
     {
         if (Player.WeeklyTwist is null || Level.Depth == 0 || !TwistIs(WeeklyChallenge.Darkness)) return;
-        Level.IsLit = false;
-        foreach (var p in Level.AllLocs())
-        {
-            ref var sq = ref Level[p];
-            if (sq.Has(SquareFlags.Glow) && !Level.FeatureAt(p).Has(TerrainFlags.Bright)) sq.Flags &= ~SquareFlags.Glow;
-        }
+        PutOutTheLights();
     }
 
     /// <summary>

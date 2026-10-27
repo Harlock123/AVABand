@@ -173,7 +173,7 @@ public class ShrineTests
         game.UseLevel(level, eye); // (the room is lit: its floor is seen at once, the shrine not yet raised)
         game.PutShrine(GameSession.ShrinePowers.Single(p => p.Id == "yavanna"), new Loc(20, 3));
         game.UpdateView();
-        Assert.Contains(said, s => s.StartsWith("You see a shrine of Yavanna. A low altar", StringComparison.Ordinal));
+        Assert.Contains(said, s => s == "You see a shrine of Yavanna. Step onto it to pray or make an offering.");
         var count = said.Count(s => s.StartsWith("You see a shrine of Yavanna", StringComparison.Ordinal));
         game.UpdateView();
         game.Execute(new HoldCommand());

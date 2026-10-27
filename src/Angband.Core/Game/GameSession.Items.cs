@@ -245,7 +245,7 @@ public sealed partial class GameSession
         p.TotalInfravision = Math.Max(0, infravision);
         p.EquipmentSpeed = speed;
         light += RaceAbilityLight();
-        p.LightRadius = Math.Max(0, light);
+        p.LightRadius = Math.Max(0, CurseLight(light)); // (AVABand: a cursed level's darkness shortens it)
         p.Resists.Clear();
         foreach (var (k, v) in resists) p.Resists[k] = v;
     }
@@ -328,7 +328,7 @@ public sealed partial class GameSession
     private void TakeGold(Item gold)
     {
         Level.Objects.Remove(Player.Position, gold);
-        var value = TwistGold(gold.GoldValue); // (the weekly challenge's gold rush)
+        var value = CurseGold(TwistGold(gold.GoldValue)); // (the weekly challenge's gold rush; a cursed level's darkness)
         Publish(new MessageEvent($"You have found {value} gold pieces worth of {ItemNaming.Plain(gold.Kind.Name, false)}."));
         Player.Gold += TakeHirelingShare(value); // (AVABand: your hireling's share comes out first)
         Publish(new ItemPickedUpEvent(gold.Kind.Id, value, Gold: true));
@@ -1143,7 +1143,7 @@ public sealed partial class GameSession
     /// <summary>Places the generator's object hints and the level's object/gold budget (Angband alloc_object).</summary>
     private void PopulateObjects()
     {
-        var depth = Level.Depth;
+        var depth = Level.Depth + CurseObjectDepth; // (AVABand: a blood moon's treasure, made deeper)
         foreach (var hint in Level.SpawnHints)
         {
             if (!Level.InBounds(hint.Loc) || !Level.Has(hint.Loc, TerrainFlags.Object)) continue;
@@ -1217,7 +1217,7 @@ public sealed partial class GameSession
         if (race.Has("DROP_4")) number += 4;
         if (number == 0) return loot;
 
-        var level = Math.Max((race.Depth + Level.Depth) / 2, race.Depth);
+        var level = Math.Max((race.Depth + Level.Depth) / 2, race.Depth) + CurseObjectDepth; // (AVABand: a blood moon's, deeper)
         var good = race.Has("DROP_GOOD") || race.Has("DROP_GREAT");
         var great = race.Has("DROP_GREAT");
         for (var i = 0; i < number; i++)

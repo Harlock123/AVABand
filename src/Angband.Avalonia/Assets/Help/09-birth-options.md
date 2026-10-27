@@ -69,6 +69,10 @@ them applies in the daily dungeon, the weekly challenge or the tutorial.
   in town (a unique they slay is dead in your game too), and now and then meet them below — to trade
   with, to pass by, or to fight (Help → Monsters). On by default; never in the daily dungeon, the
   weekly challenge or the tutorial.
+- **Cursed levels** — now and then a new level from 250 ft down lies under a curse — more monsters,
+  the restless dead, a blood moon, darkness — each with a reward to match; you're told its terms as
+  you arrive and may stay, or take the stairs and leave it for nothing (Help → The dungeon). On by
+  default; never in the daily dungeon, the weekly challenge or the tutorial.
 - **Shrines** — now and then a new level has a shrine to one of the Valar (or, deeper, a dark altar
   of Morgoth) to pray at, make an offering to, or desecrate (Help → The dungeon). On by default;
   never in the daily dungeon, the weekly challenge or the tutorial.

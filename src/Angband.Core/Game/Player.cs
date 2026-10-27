@@ -143,6 +143,15 @@ public sealed class Player : IActor
     /// </summary>
     public string? Season { get; set; }
 
+    /// <summary>AVABand's cursed levels: whether the last level made was cursed (the next never is).</summary>
+    public bool LastLevelCursed { get; set; }
+
+    /// <summary>AVABand's cursed levels: turns (at normal speed) spent on cursed levels.</summary>
+    public int CursedTurns { get; set; }
+
+    /// <summary>AVABand's cursed levels: cursed levels from 500 ft down left alive, with 30 or more slain on each.</summary>
+    public int CursesDefied { get; set; }
+
     /// <summary>
     /// A daily dungeon or weekly challenge character: the same game for everyone, so none of what
     /// makes your games your own — hirelings, ghosts, the strongroom, challenges.

@@ -10,7 +10,7 @@ namespace Angband.Avalonia.ViewModels;
 /// (Several at once queue in this order: how you got here, where you are, what happened, death last.)
 public enum SceneKind
 {
-    StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, TownRaid, Unique,
+    StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, TownRaid, Cursed, Unique,
     Ghost, GhostPlea, BossSlain, GhostAvenged, QuestComplete, Death,
 }
 
@@ -18,11 +18,11 @@ public static class SceneKinds
 {
     /// <summary>
     /// The scenes too important to pass by unseen — a unique or a ghost met, a ghost avenged, a great foe
-    /// slain, a quest done, raiders in the town: each
-    /// holds until Space, Enter, Escape, a click or the controller's A or B, whatever the option says.
+    /// slain, a quest done, raiders in the town, a cursed level (its terms are to be read before you
+    /// choose): each holds until Space, Enter, Escape, a click or the controller's A or B, whatever the option says.
     /// </summary>
     public static bool HoldsForKey(SceneKind kind) => kind is SceneKind.Unique or SceneKind.Ghost or SceneKind.GhostPlea
-        or SceneKind.GhostAvenged or SceneKind.BossSlain or SceneKind.QuestComplete or SceneKind.TownRaid;
+        or SceneKind.GhostAvenged or SceneKind.BossSlain or SceneKind.QuestComplete or SceneKind.TownRaid or SceneKind.Cursed;
 }
 
 /// <summary>
@@ -96,7 +96,7 @@ public sealed partial class MainWindowViewModel
     private void ShowScenes(GameCommand command, int fromDepth)
     {
         var depth = _game.Player.Depth;
-        if (command is TakeStairsCommand && depth != fromDepth && !_game.Player.IsDead)
+        if (command is TakeStairsCommand or QuestChoiceCommand { Choice: "cursed:leave" } && depth != fromDepth && !_game.Player.IsDead)
         {
             var down = depth > fromDepth;
             var caption = down ? $"Descending… {depth * 50} ft (level {depth})"
@@ -274,6 +274,25 @@ public sealed partial class MainWindowViewModel
         if (e.Depth > 0 && _game.FeelingStatus is not null && _game.Level.Feeling % 10 is >= 1 and <= 3)
             AddScene(SceneKind.Danger, LevelFeelings.MonsterTexts[_game.Level.Feeling % 10] + ".", pictures: ["danger"]);
     }
+
+    /// <summary>
+    /// A new cursed level: the curse's name over a sigil in its colour, and its terms beneath (your own
+    /// pictures: level-cursed-&lt;curse&gt;, then level-cursed). It holds until Space, so the terms are read
+    /// before the question to stay or leave is answered.
+    /// </summary>
+    private void OnLevelCursed(LevelCursedEvent e) =>
+        AddScene(SceneKind.Cursed, $"A cursed level: {e.Name}", glyphColor: CurseColour(e.Id),
+            subtitle: $"{e.Risk}  In return: {e.Reward}", pictures: [$"level-cursed-{e.Id.Replace('_', '-')}", "level-cursed"]);
+
+    /// <summary>Each curse's colour, for its painted scene.</summary>
+    public static uint CurseColour(string id) => id switch
+    {
+        "teeming" => 0xFFE0782A,
+        "restless_dead" => 0xFF9FE0A8,
+        "blood_moon" => 0xFFD0202A,
+        "darkness" => 0xFF8A6CE0,
+        _ => 0xFFC040C0,
+    };
 
     /// <summary>Falling through the floor: a trap door, or Deep Descent's floor opening.</summary>
     private void OnFell(FellEvent e)

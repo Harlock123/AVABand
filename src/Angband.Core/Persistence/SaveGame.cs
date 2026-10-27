@@ -136,7 +136,7 @@ public static class SaveGame
                 Shape = p.Shape, StatScramble = new(p.StatScramble),
                 ConHpRemainder = p.ConHpRemainder, Regenerates = p.Regenerates, Infravision = p.Infravision,
                 MaxMana = p.MaxMana, Mana = p.Mana, ManaFraction = p.ManaFraction,
-                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, WeeklyWeek = p.WeeklyWeek, WeeklyTwist = p.WeeklyTwist, Season = p.Season, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
+                Stats = new(p.Stats), BaseStats = new(p.BaseStats), HeroicBirth = p.HeroicBirth, Mods = p.Mods.Count > 0 ? [.. p.Mods] : null, DailyDate = p.DailyDate, WeeklyWeek = p.WeeklyWeek, WeeklyTwist = p.WeeklyTwist, Season = p.Season, LastLevelCursed = p.LastLevelCursed, CursedTurns = p.CursedTurns, CursesDefied = p.CursesDefied, SpeedRunResult = p.SpeedRunResult, SecondChanceUsed = p.SecondChanceUsed, NaturalStats = new(p.NaturalStats), StatDrain = new(p.StatDrain),
                 MaxExperience = p.MaxExperience, HpGains = [.. p.HpGains], RecallTimer = p.RecallTimer, RecallDepth = p.RecallDepth, DeepDescentTimer = p.DeepDescentTimer,
                 LearnedSpells = [.. p.LearnedSpells], CastSpells = p.CastSpells.Order(StringComparer.Ordinal).ToList(),
                 BaseSpeed = p.BaseSpeed, BaseArmour = p.BaseArmour, BaseToHit = p.BaseToHit, BaseToDam = p.BaseToDam,
@@ -310,6 +310,7 @@ public static class SaveGame
             Pins = level.Pins.ToDictionary(kv => kv.Key.Y * level.Width + kv.Key.X, kv => kv.Value),
             FallenNotes = level.FallenNotes.ToDictionary(kv => kv.Key.Y * level.Width + kv.Key.X, kv => kv.Value),
             Decoy = level.Decoy is { } decoy ? decoy.Y * level.Width + decoy.X : null,
+            Curse = level.Curse, CursedKills = level.CursedKills,
             FeelSquares = level.FeelSquares.Select(p => p.Y * level.Width + p.X).Order().ToList(),
             Features = new ushort[squares.Length], Flags = new ushort[squares.Length], Known = new int[squares.Length],
             ScentNow = withScent ? g.Scent.Now : 0, Scent = withScent ? g.Scent.Raw.ToArray() : [], ScentAges = withScent,
@@ -419,6 +420,7 @@ public static class SaveGame
         p.WeeklyWeek = ps.WeeklyWeek;
         p.WeeklyTwist = ps.WeeklyTwist;
         p.Season = ps.Season;
+        (p.LastLevelCursed, p.CursedTurns, p.CursesDefied) = (ps.LastLevelCursed, ps.CursedTurns, ps.CursesDefied);
         p.SpeedRunResult = ps.SpeedRunResult;
         p.SecondChanceUsed = ps.SecondChanceUsed;
         // Saves from before gear stat bonuses: the current stats were the natural ones.
@@ -466,6 +468,7 @@ public static class SaveGame
                 ProfileId = ls.ProfileId, Seed = ls.Seed, IsLit = ls.IsLit, IsKnown = ls.IsKnown,
                 Feeling = ls.Feeling, FeelingSquaresSeen = ls.FeelingSquaresSeen,
                 Decoy = ls.Decoy is { } decoy ? new Loc(decoy % ls.Width, decoy / ls.Width) : null,
+                Curse = ls.Curse, CursedKills = ls.CursedKills,
                 Population = ls.Population.Length == 4 ? new PopulationBudget(ls.Population[0], ls.Population[1], ls.Population[2], ls.Population[3]) : default,
             };
             foreach (var (race, n) in ls.Births) level.Births[race] = n;

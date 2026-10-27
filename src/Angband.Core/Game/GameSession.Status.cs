@@ -266,6 +266,7 @@ public sealed partial class GameSession
         QuestUpkeep();
         RaidUpkeep(); // (AVABand: raiders on the town march on the square)
         SpeedRunUpkeep();
+        CursedTick(); // (AVABand: a turn on a cursed level)
         if (gameTurn % (Data.Constants.DayLength / 2) == 0 && Player.Depth == 0)
         {
             ApplyTownLighting();

@@ -26,7 +26,7 @@ public sealed class SceneView : Control
         SceneKind.GhostPlea => 3600, // (its plea takes a moment to read)
         SceneKind.RecallUp or SceneKind.RecallDown => 3600,
         SceneKind.DeepDescent or SceneKind.Trapdoor => 1800,
-        SceneKind.QuestComplete or SceneKind.BossSlain or SceneKind.GhostAvenged or SceneKind.TownRaid => 2600,
+        SceneKind.QuestComplete or SceneKind.BossSlain or SceneKind.GhostAvenged or SceneKind.TownRaid or SceneKind.Cursed => 2600,
         _ => DurationMs,
     };
 
@@ -60,7 +60,7 @@ public sealed class SceneView : Control
     /// The sounds a scene plays, and when (as a fraction of it): the recall cutscene's rent tearing
     /// and the hand reaching at the start, then its grasp and thunderclap (timed to the flash) —
     /// never reached while the scene holds for Space; footsteps on the stairs; a bell at death; a
-    /// swelling chord for a first unique or a ghost (and the quest's chime for one avenged); a rumble for a deadly level.
+    /// swelling chord for a first unique or a ghost (and the quest's chime for one avenged); a rumble for a deadly level or a cursed one.
     /// </summary>
     public static IReadOnlyList<(double At, string Sound)> CuesFor(SceneKind kind) => kind switch
     {
@@ -73,7 +73,7 @@ public sealed class SceneView : Control
         SceneKind.BossSlain => [(0, "boss-slain")],
         SceneKind.Unique or SceneKind.Ghost or SceneKind.GhostPlea => [(0, "unique")],
         SceneKind.GhostAvenged => [(0, "quest-complete")],
-        SceneKind.Danger or SceneKind.TownRaid => [(0, "danger")],
+        SceneKind.Danger or SceneKind.TownRaid or SceneKind.Cursed => [(0, "danger")],
         _ => [],
     };
 
@@ -572,6 +572,7 @@ public sealed class SceneView : Control
             case SceneKind.Fortress: DrawFortress(context, p); break;
             case SceneKind.Danger: DrawDanger(context, p); break;
             case SceneKind.TownRaid: DrawTownRaid(context, scene, p); break;
+            case SceneKind.Cursed: DrawCurse(context, scene, p); break;
             case SceneKind.Unique: DrawUnique(context, scene, p); break;
             case SceneKind.Ghost or SceneKind.GhostPlea or SceneKind.GhostAvenged: DrawGhost(context, scene, p); break;
             case SceneKind.Death: DrawTombstone(context, p); break;
@@ -800,6 +801,46 @@ public sealed class SceneView : Control
         var glyph = new FormattedText(scene.Glyph ?? "o", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
             new Typeface(new FontFamily("DejaVu Sans Mono, Consolas, Menlo, monospace"), FontStyle.Normal, FontWeight.Bold), size, new SolidColorBrush(colour));
         context.DrawText(glyph, new Point(centre.X - glyph.Width / 2, centre.Y - glyph.Height / 2));
+    }
+
+    /// <summary>
+    /// A cursed level: a ring of runes turning slowly about a dark moon rimmed in the curse's colour, its
+    /// light bleeding out into the dark and motes of it drifting up.
+    /// </summary>
+    private void DrawCurse(DrawingContext context, AmbientScene scene, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var colour = Color.FromUInt32(scene.GlyphColor);
+        var centre = new Point(w / 2, h * 0.42);
+        var r = Math.Min(w, h) * 0.2;
+        var pulse = 0.5 + 0.5 * Math.Sin(Elapsed / 1000 * 2.4);
+        context.FillRectangle(Glow(centre, Math.Max(w, h) * 0.5, colour, 0.22 + 0.08 * pulse), new Rect(Bounds.Size));
+        context.DrawEllipse(new SolidColorBrush(Color.FromRgb(8, 6, 10)), new Pen(new SolidColorBrush(colour), 3), centre, r, r);
+        context.FillRectangle(Glow(centre, r * 0.9, Colors.Black, 0.9), new Rect(Bounds.Size));
+        // The ring of runes: short strokes in threes, turning.
+        var turn = p * 0.6;
+        var ring = new Pen(new SolidColorBrush(Color.FromArgb(200, colour.R, colour.G, colour.B)), 2);
+        context.DrawEllipse(null, ring, centre, r * 1.45, r * 1.45);
+        context.DrawEllipse(null, ring, centre, r * 1.75, r * 1.75);
+        for (var i = 0; i < 24; i++)
+        {
+            var a = i / 24.0 * Math.PI * 2 + turn;
+            var mid = r * 1.6;
+            var c = new Point(centre.X + Math.Cos(a) * mid, centre.Y + Math.Sin(a) * mid);
+            var len = r * 0.11;
+            var tilt = a + (i % 3 - 1) * 0.7;
+            context.DrawLine(ring, new Point(c.X - Math.Cos(tilt) * len, c.Y - Math.Sin(tilt) * len),
+                new Point(c.X + Math.Cos(tilt) * len, c.Y + Math.Sin(tilt) * len));
+            if (i % 2 == 0) context.DrawEllipse(new SolidColorBrush(colour), null, c, 1.6, 1.6);
+        }
+        foreach (var (x, y, z) in Scatter(40, 41))
+        {
+            var rise = (y - p * (0.3 + 0.5 * z)) % 1;
+            if (rise < 0) rise += 1;
+            context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(80 + 140 * z), colour.R, colour.G, colour.B)), null,
+                new Point(w * (0.15 + 0.7 * x), h * rise), 1 + 2 * z, 1 + 2 * z);
+        }
     }
 
     /// <summary>A unique: its glyph, large, in its colour, looming out of the dark.</summary>

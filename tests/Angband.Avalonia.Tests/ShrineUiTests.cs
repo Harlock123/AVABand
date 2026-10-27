@@ -28,6 +28,7 @@ public class ShrineUiTests
         vm.StartGame(42, "warrior");
         var game = vm.Game;
         game.Player.Hp = game.Player.MaxHp = 5000;
+        game.Options[Angband.Core.Game.OptionIds.AvaCursedLevels] = false; // (a cursed level's scene would hide the shrine)
         var window = new MainWindow { DataContext = vm, Width = 1280, Height = 760 };
         window.Show();
         var mode = tiles ? "tiles" : "ascii";

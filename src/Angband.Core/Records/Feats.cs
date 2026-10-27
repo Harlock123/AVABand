@@ -20,7 +20,7 @@ public sealed class FeatRecord
 
 /// <summary>
 /// AVABand's feats (the Knowledge screen's Feats page): milestones across every character you play —
-/// depths reached, levels, uniques slain, quests done, ghosts laid to rest, seasonal events' uniques, and a win with each class. A character that
+/// depths reached, levels, uniques slain, quests done, ghosts laid to rest, cursed levels kept and defied, seasonal events' uniques, and a win with each class. A character that
 /// cheated or used a debug command, the tutorial and replays earn none.
 /// </summary>
 public static class Feats
@@ -56,6 +56,11 @@ public static class Feats
             g => g.Ghosts.Pleas.Any(p => p.Stage == GhostPlea.Avenged)));
         feats.Add(new("fallen_notes_10", "Heeded the Fallen", "Read ten messages the fallen scratched into the floor, with one character.",
             g => g.FloorNotes.Read.Count >= 10));
+        feats.Add(new("cursed_kept", "Cursed and Kept", $"Spend {LevelCurses.KeptTurns:N0} turns on cursed levels with one character.",
+            g => g.Player.CursedTurns >= LevelCurses.KeptTurns));
+        feats.Add(new("curse_defied", "Defied the Curse",
+            $"Leave a cursed level {LevelCurses.DefiedDepth * data.Constants.FeetPerLevel} ft down or deeper alive, having slain {LevelCurses.DefiedKills} monsters on it.",
+            g => g.Player.CursesDefied >= 1));
         // AVABand's seasonal events: each one's unique, slain by a character born in it.
         foreach (var season in Seasons.All)
             feats.Add(new(season.FeatId, season.FeatName, season.FeatDescription, g => g.KilledUniques.Contains(season.Unique)));

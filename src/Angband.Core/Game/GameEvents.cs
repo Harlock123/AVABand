@@ -7,6 +7,12 @@ public interface IGameEvent;
 
 public sealed record MessageEvent(string Text) : IGameEvent;
 public sealed record LevelChangedEvent(int Depth, string ProfileId) : IGameEvent;
+
+/// <summary>
+/// AVABand's cursed levels: you have arrived on a new cursed level — its curse (<see cref="LevelCurses"/>), what it
+/// threatens and what it gives — and are asked whether to stay (<paramref name="CanLeave"/>: whether you may leave it).
+/// </summary>
+public sealed record LevelCursedEvent(string Id, string Name, string Risk, string Reward, bool CanLeave) : IGameEvent;
 public sealed record PlayerMovedEvent(Loc From, Loc To) : IGameEvent;
 public sealed record DoorOpenedEvent(Loc Loc) : IGameEvent;
 public sealed record DoorClosedEvent(Loc Loc) : IGameEvent;

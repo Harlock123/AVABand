@@ -174,6 +174,7 @@ public class RepeatUiTests
         var (window, vm) = Open("warrior");
         var game = vm.Game;
         game.MarkDebugUsed();
+        game.Options[OptionIds.AvaCursedLevels] = false; // (a cursed level's question would take the scroll's)
         vm.Execute(new DebugJumpCommand(8));
         vm.Execute(new DebugJumpCommand(3));
         var scroll = game.Objects.Create("scroll_of_word_of_recall");

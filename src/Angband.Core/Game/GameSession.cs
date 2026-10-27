@@ -31,7 +31,7 @@ public sealed partial class GameSession : ITurnHandler
         TownSeed = Rng.NextULong();
         _generator = new DungeonGenerator(data);
         _spawner = new MonsterSpawner(data) { Seasonal = SeasonalRaces };
-        Scheduler.SpeedBonus = TwistSpeedBonus; // (the weekly challenge's restless foes)
+        Scheduler.SpeedBonus = SpeedBonus; // (the weekly challenge's restless foes, a cursed level's blood moon)
         InitItems();
         InitStores();
         TrackStats();
@@ -46,7 +46,7 @@ public sealed partial class GameSession : ITurnHandler
         Rng = new GameRandom(seed);
         _generator = new DungeonGenerator(data);
         _spawner = new MonsterSpawner(data) { Seasonal = SeasonalRaces };
-        Scheduler.SpeedBonus = TwistSpeedBonus; // (the weekly challenge's restless foes)
+        Scheduler.SpeedBonus = SpeedBonus; // (the weekly challenge's restless foes, a cursed level's blood moon)
         Objects = new ObjectFactory(data) { CanBrowse = PlayerCanBrowse, WantsBook = PlayerWantsBook };
         Knowledge = new PlayerKnowledge(data, seed) { IgnoredCheck = IsMarkedIgnored };
         Player.Inventory = new Inventory(data.Constants.PackSize, data.Constants.QuiverSlotSize, data.Constants.QuiverSize);
@@ -185,6 +185,7 @@ public sealed partial class GameSession : ITurnHandler
         if (IsGameOver) return false;
         ForgetSearching(command);
         if (command is not RunOnCommand) _running = false; // (anything else ends a run taken a step at a time)
+        CurseChoiceGone(command); // (AVABand: a cursed level is left for nothing only before you do anything else)
         MarkTurnForDamageNotes();
         foreach (var m in Level.Monsters.All) m.IsDetected = false; // detection lasts until the next action
         if (RefusedByShape(command)) return false;
@@ -583,10 +584,12 @@ public sealed partial class GameSession : ITurnHandler
         var persist = PersistentLevels;
         var fromDepth = Level is null ? -1 : Player.Depth;
         var from = Player.Position;
+        var leftCurse = Level?.Curse;
         KeepLostQuestItems();
         if (Level is not null && fromDepth == 0) RaidLeftBehind(depth); // (AVABand: a raid on the town, left to it)
         if (Level is not null)
         {
+            LeavingCursedLevel(); // (AVABand: a cursed level's curse defied)
             TakeHirelingAlong(); // (AVABand: your hireling comes with you, so the level never keeps them)
             GhostsLeftBehind(kept: persist && !fresh); // (AVABand: a pleading ghost may walk again)
             if (persist && !fresh) StoreCurrentLevel(); // (its artifacts stay with it)
@@ -627,6 +630,7 @@ public sealed partial class GameSession : ITurnHandler
             Player.Depth = depth;
             Player.MaxDepth = Math.Max(Player.MaxDepth, depth);
             Player.Position = generated.PlayerStart;
+            CurseNewLevel(); // (AVABand: perhaps a cursed level, from its seed)
 
             Scheduler.Clear();
             Scheduler.Add(Player);
@@ -647,6 +651,7 @@ public sealed partial class GameSession : ITurnHandler
             TwistSwarm(unavailable); // (the weekly challenge's swarm)
             foreach (var monster in Level.Monsters.All) Scheduler.Add(monster);
             PopulateObjects();
+            MakeCurse(unavailable); // (AVABand: a cursed level's own monsters and treasure)
             DisguiseMonsters();
             PrepareQuestLevel();
             OnNewLevel();
@@ -674,6 +679,7 @@ public sealed partial class GameSession : ITurnHandler
             if (fromDepth > 0) RaidOnReturn(); // (AVABand: now and then, raiders on the grown town)
         }
         HirelingArrives(fromDepth);
+        ArriveCursed(leftCurse);
         _arriving = true;
         try
         {
@@ -691,6 +697,7 @@ public sealed partial class GameSession : ITurnHandler
 
         NoteVisit();
         Publish(new LevelChangedEvent(depth, Level!.ProfileId)); // (set by either branch above)
+        TellCurse(); // (AVABand: a new cursed level's terms, and the choice to stay or leave)
     }
 
     /// <summary>What arriving says of a level out of the ordinary (none for classic and modified levels).</summary>

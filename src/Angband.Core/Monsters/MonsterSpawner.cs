@@ -265,13 +265,14 @@ public sealed class MonsterSpawner(GameData data)
 
     /// <summary>
     /// Angband pick_and_place_distant_monster: a monster of the depth (with its friends) on an empty
-    /// square more than <paramref name="distance"/> from the player, outside vaults. Null if none fits.
+    /// square more than <paramref name="distance"/> from the player, outside vaults (of the kind the
+    /// <paramref name="filter"/> allows, if one is given). Null if none fits.
     /// </summary>
     public List<Monster>? PlaceDistant(Level level, GameRandom rng, Loc player, int distance, int depth, ISet<string> uniques,
-        bool asleep = true)
+        bool asleep = true, Func<MonsterRaceDef, bool>? filter = null)
     {
         var spot = FindSpot(level, rng, p => level.IsEmptyFloor(p) && p.DistanceTo(player) > distance && !level[p].Has(SquareFlags.Vault));
-        if (spot is not { } s || PickRace(rng, depth, uniques) is not { } race) return null;
+        if (spot is not { } s || PickRace(rng, depth, uniques, filter) is not { } race) return null;
         return PlaceWithFriends(level, rng, race, s, uniques, asleep);
     }
 

@@ -5,6 +5,15 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Cursed levels** (a new birth option, on by default): now and then, from 250 ft down, a new
+  level lies under a curse, and as you arrive you're told its terms and asked to stay or leave —
+  taking the stairs back costs you nothing but the level. *Teeming* has half as many monsters again
+  and half as many good things again; the *Restless dead* bring bands of undead worth twice the
+  experience; under a *Blood moon* monsters are faster and treasure is made deeper; in *Darkness*
+  the rooms are unlit and your light shorter, but gold is worth double and something excellent is
+  hidden there. The status bar shows the curse while you stay, and there are two new feats, *Cursed
+  and Kept* and *Defied the Curse* (Help → The dungeon). Not in the daily dungeon, the weekly
+  challenge or the tutorial.
 - **Shrines** (a new birth option, on by default): about one new level in six or seven, from
   100 ft down, has a shrine in one of its rooms — to Elbereth, Aulë, Yavanna or Mandos, or, deeper,
   a dark altar of Morgoth. Step onto it to pray (usually a blessing, rarely something lasting,

@@ -61,6 +61,30 @@ feather falling soften it): a step that would cost more than a third of your hit
 first, running stops short of it and travel goes round. Monsters that fear fire won't set foot
 in it, and one left in it burns. Monsters never set off traps (nor do they in Angband 4.2.5).
 
+## Cursed levels
+
+With the birth option *Cursed levels* (on by default), now and then — about one new level in ten,
+from 250 ft down, never two in a row, and never a quest's level — a level lies under a **curse**. As
+you arrive, before you've moved, you're shown it and told its terms, and asked: **stay** and take
+them, or **take the stairs** you stand on and leave it. Leaving straight away costs you nothing but
+the level (with connected stairs you arrive on a staircase back the way you came; come by a trap
+door, Word of Recall or stairs that don't connect, and one is made under you). Escape stays. Each
+curse is a bargain, its danger and its reward made with the level:
+
+- **Teeming** — half as many monsters again; half as many objects again, every one of them good.
+- **Restless dead** — bands of the undead, stronger than the depth; every undead slain here is
+  worth twice the experience.
+- **Blood moon** — every monster here is faster (+5 speed); everything found here, on the floor or
+  dropped, is made as if 250 ft deeper.
+- **Darkness** — every room is dark and your light reaches a square less (a light of one square
+  stays one); gold here is worth twice as much, and something excellent lies hidden on the level.
+
+While you're on a cursed level the status bar says so ("Cursed: Teeming"). You needn't clear it:
+stay as long as you like and leave when you will. A kept level (persistent levels) keeps its curse.
+Two feats go with them: *Cursed and Kept* (1,000 turns spent on cursed levels) and *Defied the
+Curse* (leave a cursed level 500 ft down or deeper alive, having slain 30 monsters on it). Never in
+the daily dungeon, the weekly challenge or the tutorial.
+
 ## Stairs
 
 With *Generate connected stairs* (the default) you arrive on a staircase leading back the way you

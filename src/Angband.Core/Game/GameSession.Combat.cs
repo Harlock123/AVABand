@@ -386,6 +386,7 @@ public sealed partial class GameSession
         if (deathNote is not "") Publish(new MessageEvent(deathNote ?? $"You have {(destroyed ? "destroyed" : "slain")} {name}."));
 
         var (whole, fraction) = CombatMath.KillExperience(race.Experience, race.Depth, Player.Level);
+        (whole, fraction) = CurseExperience(race, whole, fraction); // (AVABand: the restless dead's curse)
         // (AVABand: your hireling's kill is worth half as much to you; they learn from it, or from one they had a hand in.)
         if (byHireling) (whole, fraction) = (whole / 2, (int)(((long)(whole % 2) * 0x10000 + fraction) / 2));
         HirelingKillCredit(race, killed: byHireling, helped: monster.HatesAlly);
@@ -409,6 +410,7 @@ public sealed partial class GameSession
         GhostAvenged(monster); // (AVABand: or what killed one, and the ghost that pleaded for it rests)
         RivalKilled(monster); // (AVABand: one of your rival band slain)
         RaiderKilled(monster); // (AVABand: a raider on the town, and perhaps the raid driven off)
+        CursedKill(); // (AVABand: one more slain on a cursed level)
         SeasonalKilled(monster); // (AVABand: a seasonal monster may let fall a keepsake)
         DropCarried(monster);
         var (items, gold) = DropMonsterLoot(monster);

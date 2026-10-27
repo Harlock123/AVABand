@@ -22,6 +22,7 @@ public class OverviewMapUiTests
             new AppSettings { UseTiles = tiles, TilesetId = "gervais" }, save: null);
         vm.StartGame(42, "warrior");
         vm.Game.MarkDebugUsed();
+        vm.Game.Options[Angband.Core.Game.OptionIds.AvaCursedLevels] = false; // (a cursed level's question would take the key)
         vm.Execute(new Angband.Core.Game.DebugJumpCommand(5));
         vm.Game.Known.RememberAll(vm.Game.Level); // as if the level were explored
         vm.Game.UpdateView();

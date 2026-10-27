@@ -213,6 +213,10 @@ public sealed class PlayerSave
     public string? WeeklyTwist { get; set; }
     /// <summary>AVABand's seasonal events: the event the character was born in (absent for none and in older saves).</summary>
     public string? Season { get; set; }
+    /// <summary>AVABand's cursed levels: whether the last level made was cursed, the turns spent on them and those defied (absent in older saves).</summary>
+    public bool LastLevelCursed { get; set; }
+    public int CursedTurns { get; set; }
+    public int CursesDefied { get; set; }
     public long SpeedRunResult { get; set; }
     public bool SecondChanceUsed { get; set; }
     public Dictionary<string, int> NaturalStats { get; set; } = [];
@@ -331,6 +335,9 @@ public sealed class LevelSave
     public Dictionary<int, string> FallenNotes { get; set; } = [];
     /// <summary>A ranger's decoy (square index), if any.</summary>
     public int? Decoy { get; set; }
+    /// <summary>AVABand's cursed levels: the level's curse and those slain on it (absent in older saves).</summary>
+    public string? Curse { get; set; }
+    public int CursedKills { get; set; }
     /// <summary>Hidden feeling squares not yet seen (square indices).</summary>
     public List<int> FeelSquares { get; set; } = [];
     /// <summary>Terrain ids used by <see cref="Features"/> and <see cref="Known"/> (index into this list).</summary>

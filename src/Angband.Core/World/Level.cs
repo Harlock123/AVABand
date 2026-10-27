@@ -64,6 +64,12 @@ public sealed class Level
     /// <summary>A ranger's decoy (Angband GLYPH:DECOY), which monsters that see it go for.</summary>
     public Loc? Decoy { get; set; }
 
+    /// <summary>AVABand's cursed levels: the curse this level lies under (its id, from <see cref="Game.LevelCurses"/>), or null; kept with the level.</summary>
+    public string? Curse { get; set; }
+
+    /// <summary>AVABand's cursed levels: monsters slain on this level while it was cursed (for the feat "Defied the Curse").</summary>
+    public int CursedKills { get; set; }
+
     /// <summary>The vaults built into the level at generation (for Angband's cheat_room; not saved).</summary>
     public List<string> Vaults { get; } = [];
 

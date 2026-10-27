@@ -63,6 +63,7 @@ public class DebugUiTests
         var (window, vm) = Open();
         var game = vm.Game;
         game.MarkDebugUsed(); // already agreed to
+        game.Options[Angband.Core.Game.OptionIds.AvaCursedLevels] = false; // (a cursed level's question would take the key)
         vm.JumpDeeperCommand.Execute(null);
         vm.JumpDeeperCommand.Execute(null);
         Assert.Equal(10, game.Player.Depth);

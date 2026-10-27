@@ -54,6 +54,7 @@ public sealed partial class GameSession
             case "caravan": CaravanChoice(parts); break;
             case "shrine": ShrineChoice(parts); break;
             case "rival": RivalChoice(parts); break;
+            case "cursed": return CursedChoice(parts); // (leaving takes the stairs: a turn)
             case "offer": ShowOffer(parts[1]); break;
             case "accept": AcceptQuest(parts[1]); break;
             case "board": BoardChoice(parts); break;

@@ -74,6 +74,8 @@ public static class OptionIds
     public const string AvaRaids = "birth_ava_raids";
     /// <summary>AVABand's own: now and then a shrine to one of the Valar (or a dark altar) on a new level (GameSession.Shrines).</summary>
     public const string AvaShrines = "birth_ava_shrines";
+    /// <summary>AVABand's own: now and then a new level lies under a curse, with its terms, to take or to leave (GameSession.CursedLevels).</summary>
+    public const string AvaCursedLevels = "birth_ava_cursed_levels";
     /// <summary>AVABand's own: once, a death no deeper than 250 ft sends you back to town instead (GameSession.SecondChance).</summary>
     public const string AvaSecondChance = "birth_ava_second_chance";
     /// <summary>AVABand's challenge: the shops and the caravan won't sell to you, and the strongroom is shut (Challenges).</summary>
@@ -132,6 +134,7 @@ public static class OptionCatalog
         new(OptionIds.AvaRivals, "Rival adventurers (a band heard of in town, and now and then met below)", OptionKind.Birth, true),
         new(OptionIds.AvaRaids, "Town raids (once the town has grown, raiders now and then come while you're there)", OptionKind.Birth, true),
         new(OptionIds.AvaShrines, "Shrines (now and then an altar on a new level, to pray at, make offerings to, or desecrate)", OptionKind.Birth, true),
+        new(OptionIds.AvaCursedLevels, "Cursed levels (now and then a level's curse: more danger, more reward; stay or leave)", OptionKind.Birth, true),
         new(OptionIds.AvaSecondChance, "A second chance (once, a death no deeper than 250 ft sends you back to town)", OptionKind.Birth, false),
         new(OptionIds.AvaNoShopping, "Challenge: no shopping (the shops and the caravan won't sell to you)", OptionKind.Birth, false),
         new(OptionIds.AvaSpeedRun, "Challenge: speed run (reach 1000 ft within 15,000 turns)", OptionKind.Birth, false),

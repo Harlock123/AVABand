@@ -319,6 +319,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
         _game.Events.Subscribe<GhostAvengedEvent>(OnGhostAvenged);
         _game.Events.Subscribe<TownRaidEvent>(OnTownRaid);
         _game.Events.Subscribe<FellEvent>(OnFell);
+        _game.Events.Subscribe<LevelCursedEvent>(OnLevelCursed);
         _game.Events.Subscribe<AvaQuestCompletedEvent>(OnAvaQuestCompleted);
         _game.Events.Subscribe<MonsterKilledEvent>(OnMonsterKilledForScene);
         _game.Events.Subscribe<ProjectionEvent>(OnProjection);
@@ -488,6 +489,7 @@ public sealed partial class MainWindowViewModel : ObservableObject, IMapSource
             .Append(player.DeepDescentTimer > 0 ? "Descent" : "")
             .Append(SpeedText())
             .Append(_game.BurdenPenalty > 0 ? _game.BurdenName : "") // (AVABand: why you're slow)
+            .Append(_game.CurseStatus ?? "") // (AVABand: "Cursed: Teeming")
             .Append(_game.InArena ? "Single combat" : "")
             .Append(_game.Commanded is { IsActive: true } commanded ? $"Commanding {_game.MonsterName(commanded)}" : "")
             .Append(player.IsWinner ? "*WINNER*" : "")

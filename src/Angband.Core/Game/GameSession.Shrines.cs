@@ -182,7 +182,8 @@ public sealed partial class GameSession
             _shrineWatch.Remove(p);
             if (ShrinePowerOf(Level.FeatureAt(p).Id) is not { } power) continue;
             var feature = Data.Terrain[power.Feature];
-            Publish(new MessageEvent($"You see {Article(feature.Name)}. {feature.Description}"));
+            // (Its description is for looking at it and for its question: in full here it runs off the message bar.)
+            Publish(new MessageEvent($"You see {Article(feature.Name)}. Step onto it to pray or make an offering."));
             Disturb();
         }
     }
