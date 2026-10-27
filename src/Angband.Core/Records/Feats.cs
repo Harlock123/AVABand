@@ -67,6 +67,8 @@ public static class Feats
         feats.Add(new("hireling_20", "Old Comrades", "See a hireling of yours reach level 20.", g => g.Hireling is { Level: >= 20 }));
         feats.Add(new("hireling_deep", "There and Back Again",
             $"Come back up to town from {20 * data.Constants.FeetPerLevel} ft or deeper with the same hireling.", g => g.Hireling is { DeepestReturned: >= 20 }));
+        feats.Add(new("shrines_10", "Pilgrim", "Pray or make an offering at ten shrines with one character.", g => g.Shrines.Used >= 10));
+        feats.Add(new("blasphemer", "Blasphemer", "Desecrate a shrine, and live.", g => g.Shrines.Desecrated >= 1 && !g.Player.IsDead));
         foreach (var quest in data.Quests)
             if (data.Monster(quest.Race) is { } boss)
                 feats.Add(new($"quest_{quest.Id}", $"{boss.Name} Falls", $"Slay {boss.Name}.", g => g.KilledUniques.Contains(boss.Id)));

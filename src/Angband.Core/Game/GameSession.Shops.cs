@@ -400,7 +400,7 @@ public sealed partial class GameSession
             if (Level.FeatureAt(Player.Position).Shop == "inn") EnterInn();
             else if (Level.FeatureAt(Player.Position).Shop == "artificer") EnterArtificer();
             else if (Level.FeatureAt(Player.Position).Shop == "caravan") EnterCaravan();
-            else Publish(new MessageEvent("There is no store here."));
+            else if (!ShrineStep(Player.Position)) Publish(new MessageEvent("There is no store here.")); // (AVABand: on a shrine, it asks again)
             return 0;
         }
         if (QuestAtShop(store.Id)) return 0;

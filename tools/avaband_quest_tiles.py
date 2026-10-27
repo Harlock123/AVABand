@@ -3,7 +3,7 @@
 
 Draws small pixel-art tiles (CC0, made for AVABand) — the quests' places and things (the sealed
 door, the dwarven forge, the barrow altar, the hermit's door, the braziers, the trapped apprentice,
-the Key of Belegost), every shop's door (its number and an emblem of its trade, so no two look alike) and AVABand's own items (the bags of holding, socketed bracers, gems, weapon oils
+the Key of Belegost, the dungeon's shrines), every shop's door (its number and an emblem of its trade, so no two look alike) and AVABand's own items (the bags of holding, socketed bracers, gems, weapon oils
 and monster trophies, each gem, oil and dragon scale drawn in its kind's colour) — at each tileset's cell size (drawn at
 16x16, scaled to fit), as ava_*.png in the tileset's folder; then writes every quest mapping into
 its tileset.json (the rest borrow the nearest tile the set already has: the inn a shop door, the
@@ -412,6 +412,76 @@ def statue():
     return c
 
 
+def shrine_altar(c, slab, side, foot):
+    """A shrine's altar (AVABand's shrines): a slab on a stepped foot, its colours the shrine's own."""
+    rect(c, 2, 9, 13, 10, slab)                      # the slab
+    rect(c, 2, 11, 13, 11, side)
+    rect(c, 4, 12, 11, 14, foot)                     # the foot
+    rect(c, 3, 15, 12, 15, side)
+    px(c, 3, 9, hexc("#ffffff", 120))
+
+
+def shrine(power):
+    """A shrine to one of the Valar, or Morgoth's dark altar, or one gone dark: the altar, and the power's sign above it."""
+    c = canvas()
+    stone_floor(c)
+    if power == "morgoth":
+        iron, rust, red = hexc("#3a3438"), hexc("#241e22"), hexc("#e02020")
+        shrine_altar(c, iron, rust, hexc("#2c2628"))
+        for x in (2, 5, 10, 13):                      # the spikes of its crown
+            rect(c, x, 6, x, 8, iron)
+            px(c, x, 5, red)
+        rect(c, 6, 2, 9, 7, hexc("#5a0a0a"))          # a red fire on it
+        rect(c, 7, 1, 8, 6, red)
+        px(c, 7, 3, hexc("#ffb040"))
+        px(c, 8, 4, hexc("#ffb040"))
+        for x, y in ((5, 9), (10, 10), (8, 9)):
+            px(c, x, y, hexc("#701010"))              # old stains
+        return c
+    if power == "spent":
+        shrine_altar(c, hexc("#6a6870"), hexc("#4a4850"), hexc("#3e3c44"))
+        for x, y in ((6, 9), (9, 10), (11, 9)):
+            px(c, x, y, hexc("#34323a"))              # cracks
+        return c
+    shrine_altar(c, hexc("#d8d4c8"), hexc("#9e9a90"), hexc("#86827a"))
+    if power == "elbereth":                           # a star, white and blue
+        light, glow = hexc("#ffffff"), hexc("#80e8ff")
+        rect(c, 7, 1, 8, 7, glow)
+        rect(c, 4, 4, 11, 4, glow)
+        for d in range(1, 3):
+            for x, y in ((7 - d, 4 - d), (8 + d, 4 - d), (7 - d, 4 + d), (8 + d, 4 + d)):
+                px(c, x, y, glow)
+        rect(c, 7, 3, 8, 5, light)
+        for x, y in ((2, 1), (13, 2), (3, 7), (12, 7)):
+            px(c, x, y, light)                        # the other stars
+    elif power == "aule":                             # a smith's hammer, the forge-glow behind it
+        rect(c, 3, 1, 12, 7, hexc("#6a3010", 160))
+        rect(c, 5, 1, 10, 3, hexc("#9aa0a8"))          # the head
+        rect(c, 5, 1, 10, 1, hexc("#d0d4dc"))
+        rect(c, 7, 4, 8, 8, hexc("#8a5a2a"))           # the haft
+        px(c, 4, 6, hexc("#ffa040"))
+        px(c, 11, 5, hexc("#ffa040"))
+    elif power == "yavanna":                          # a green sapling, flowering
+        rect(c, 7, 3, 8, 8, hexc("#6a4a22"))           # the stem
+        for x, y in ((5, 3), (6, 2), (9, 2), (10, 3), (4, 5), (5, 4), (10, 4), (11, 5), (6, 6), (9, 6), (7, 1), (8, 1)):
+            px(c, x, y, hexc("#40c040"))
+        for x, y in ((6, 4), (9, 5), (8, 2)):
+            px(c, x, y, hexc("#a0ff80"))
+        for x, y in ((5, 2), (10, 2), (7, 0)):
+            px(c, x, y, hexc("#ffe0f0"))              # its flowers
+        for x in (3, 5, 10, 12):
+            px(c, x, 8, hexc("#3a8a3a"))              # moss on the altar's edge
+    elif power == "mandos":                           # a grey hooded figure
+        cloak, shade = hexc("#7890a8"), hexc("#3a4858")
+        rect(c, 6, 1, 9, 2, cloak)                     # the hood
+        rect(c, 5, 3, 10, 8, cloak)
+        rect(c, 7, 2, 8, 3, shade)                     # the face, hidden
+        rect(c, 10, 3, 10, 8, shade)
+        px(c, 7, 2, hexc("#c0d8f0"))
+        px(c, 8, 2, hexc("#c0d8f0"))
+    return c
+
+
 def oil(color):
     """A stoppered flask of weapon oil (AVABand's oils), the oil in its colour."""
     c = canvas()
@@ -520,6 +590,9 @@ DRAWN["terrain:town_well"] = ("ava_town_well.png", well, True)
 DRAWN["terrain:market_stall"] = ("ava_market_stall.png", stall, True)
 DRAWN["terrain:town_fountain"] = ("ava_town_fountain.png", fountain, True)
 DRAWN["terrain:town_statue"] = ("ava_town_statue.png", statue, True)
+# Shrines in the dungeon: one to each of the Valar, Morgoth's dark altar, and an altar gone dark.
+for _power in ("elbereth", "aule", "yavanna", "mandos", "morgoth", "spent"):
+    DRAWN["terrain:shrine_" + _power] = ("ava_shrine_" + _power + ".png", (lambda pw: lambda: shrine(pw))(_power), True)
 DRAWN["object-base:oil"] = ("ava_oil.png", lambda: oil("#30b040"), False)
 DRAWN["object-base:trophy"] = ("ava_trophy.png", lambda: scale("#d03020"), False)
 for _trophy, _colour in SCALE_COLOURS.items():

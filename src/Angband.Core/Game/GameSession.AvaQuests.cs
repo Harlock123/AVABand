@@ -52,6 +52,7 @@ public sealed partial class GameSession
             case "hire": HireChoice(parts); break;
             case "strongroom": StrongroomChoice(parts); break;
             case "caravan": CaravanChoice(parts); break;
+            case "shrine": ShrineChoice(parts); break;
             case "rival": RivalChoice(parts); break;
             case "offer": ShowOffer(parts[1]); break;
             case "accept": AcceptQuest(parts[1]); break;

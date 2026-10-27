@@ -5,6 +5,13 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Shrines** (a new birth option, on by default): about one new level in six or seven, from
+  100 ft down, has a shrine in one of its rooms — to Elbereth, Aulë, Yavanna or Mandos, or, deeper,
+  a dark altar of Morgoth. Step onto it to pray (usually a blessing, rarely something lasting,
+  sometimes a curse — Morgoth's altar gives more and takes far more), to make an offering of gold or
+  of something from your pack for a gift named up front, to desecrate it, or to leave it. Each
+  answers once, then goes dark. Two new feats: *Pilgrim* and *Blasphemer*. Not in the daily
+  dungeon, the weekly challenge or the tutorial (Help → The dungeon).
 - **Raids on the town** (a new birth option, on by default): once the town has grown to its second
   stage, now and then a band of raiders — kobolds, orcs and wolves, later ogres and trolls, suited to
   your level — comes over the wall while you're there and makes for the square. Kill the leader or

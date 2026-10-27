@@ -1320,6 +1320,12 @@
     "terrain:market_stall": "ava_market_stall.png",
     "terrain:town_fountain": "ava_town_fountain.png",
     "terrain:town_statue": "ava_town_statue.png",
-    "terrain:fallen_note": "ava_fallen_note.png"
+    "terrain:fallen_note": "ava_fallen_note.png",
+    "terrain:shrine_elbereth": "ava_shrine_elbereth.png",
+    "terrain:shrine_aule": "ava_shrine_aule.png",
+    "terrain:shrine_yavanna": "ava_shrine_yavanna.png",
+    "terrain:shrine_mandos": "ava_shrine_mandos.png",
+    "terrain:shrine_morgoth": "ava_shrine_morgoth.png",
+    "terrain:shrine_spent": "ava_shrine_spent.png"
   }
 }

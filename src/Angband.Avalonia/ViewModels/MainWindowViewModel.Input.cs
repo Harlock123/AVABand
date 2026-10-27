@@ -394,7 +394,7 @@ public sealed partial class MainWindowViewModel
         if (p == _game.Player.Position && _game.ObjectShownAt(p) is null && _game.VisibleTrapAt(p) is null)
         {
             var here = _data.Terrain[_game.Level[p].Feature];
-            return $"You are on {(("aeiou".Contains(here.Name[0])) ? "an" : "a")} {here.Name}.";
+            return $"You are on {(("aeiou".Contains(here.Name[0])) ? "an" : "a")} {here.Name}." + ShrineNote(here);
         }
         if (_game.VisibleTrapAt(p) is { } trap)
             return $"You see {(("aeiou".Contains(char.ToLowerInvariant(trap.Name[0]))) ? "an" : "a")} {trap.Name}.";
@@ -402,7 +402,7 @@ public sealed partial class MainWindowViewModel
             return $"You see {_game.Describe(shown)}." + (AdviceNote(shown) is { } note ? " " + note : "");
         var feature = _data.Terrain[_game.Known.Feature(p)];
         if (feature.Mimic is { } mimic) feature = _data.Terrain[mimic];
-        return $"You see {(("aeiou".Contains(feature.Name[0])) ? "an" : "a")} {feature.Name}.";
+        return $"You see {(("aeiou".Contains(feature.Name[0])) ? "an" : "a")} {feature.Name}." + ShrineNote(feature);
     }
 
     /// <summary>
@@ -415,6 +415,9 @@ public sealed partial class MainWindowViewModel
         if (_game.Player.IsBlind || !_game.Level[p].Has(Angband.Core.World.SquareFlags.Seen)) return null;
         return _game.FallenNoteAt(p) is { } note ? FallenNotes.Text(note) : "Something was scratched into the floor here, but it is too worn to read.";
     }
+    /// <summary>A shrine looked at says whose it is, and what it is like (AVABand's own).</summary>
+    private static string ShrineNote(TerrainDef feature) =>
+        GameSession.ShrinePowerOf(feature.Id) is not null || feature.Id == "shrine_spent" ? " " + feature.Description : "";
 
     // --- Rebinding (Controls tab) ------------------------------------------------------------------
 

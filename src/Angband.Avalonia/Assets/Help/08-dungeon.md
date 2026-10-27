@@ -17,6 +17,34 @@ Rooms near the surface are mostly lit, deeper ones mostly dark. A **lit room** h
 brass sconces along its walls (a warm glow on the wall in ASCII); a dark room's walls are bare, and
 you see only as far as your own light (option *Sconces on the walls of lit rooms*).
 
+## Shrines
+
+Now and then — about one new level in six or seven, from 100 ft down — a level has a **shrine** in
+one of its rooms: an altar (`_`) hallowed to one of the Valar — **Elbereth**, the Star-kindler;
+**Aulë** the Smith; **Yavanna**, Giver of Fruits; **Mandos** the Doomsman (from 250 ft) — or, from
+500 ft, a red-lit **dark altar of Morgoth**. You're told whose it is when you first see it, and
+looking at it says so too. Step onto it (or press `_` while standing on it) and choose:
+
+- **Pray** — a gamble. Most prayers are answered with a blessing of that power's kind (Elbereth's
+  blessing, protection from evil or sight of the unseen; Aulë's heroism or resistance; Yavanna's
+  healing; Mandos's restoring), and a rare one with something lasting (a point of a stat). Some
+  bring a curse instead: slowness, the level woken around you, your life drained, the dead
+  summoned. Morgoth's altar answers more often with great gifts — two of them — and far more often
+  with two curses.
+- **Offer gold or something from your pack** — a known reward, named before you choose: an
+  offering of gold (more the deeper you are, twice as much at the dark altar), or a thing worth as
+  much as far as you know it. Worth half as much earns only a blessing; three times as much, the
+  gift and a blessing too. Elbereth maps the whole level; Aulë makes a good thing for your calling;
+  Yavanna heals every hurt and cures every ill; Mandos makes known every rune on what you wear and
+  restores your life and strength; Morgoth gives something great, made deep.
+- **Desecrate** — a great risk for a great reward: a hoard of gold and a fine thing, or the power's
+  wrath. Morgoth's altar pays more often than a shrine of the Valar (only the boldest try those).
+- **Leave it** — nothing happens; it waits.
+
+Each shrine answers once, then goes dark. The feats *Pilgrim* (use ten shrines) and *Blasphemer*
+(desecrate one and live) are for those who use them. Turn shrines off with the birth option
+*Shrines*; there are none in the daily dungeon, the weekly challenge or the tutorial.
+
 ## Traps, doors and rubble
 
 Traps are hidden until you notice them: you see one when your search skill (better with level, and

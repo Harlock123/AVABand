@@ -304,6 +304,7 @@ public sealed partial class GameSession : ITurnHandler
     /// <summary>Recomputes the player's view, light, monster visibility and noise flow.</summary>
     public void UpdateView()
     {
+        WatchShrines(); // (AVABand: before the view remembers them)
         EldarLight(); // (AVABand: a High-Elf's light slows the undead and demons in it)
         // A necromancer's unlight lets them see nearby squares without light (Angband UNLIGHT).
         var radius = Math.Max(Player.LightRadius, UnlightRadius);
@@ -332,6 +333,7 @@ public sealed partial class GameSession : ITurnHandler
                 Known.RememberObject(p, ObjectShownAt(p));
                 foreach (var item in Level.Objects.At(p)) SeeObject(item);
             }
+        NoticeShrines(); // (AVABand: a shrine first seen says whose it is)
     }
 
     /// <summary>
@@ -432,7 +434,7 @@ public sealed partial class GameSession : ITurnHandler
         }
         else if (feature.Has(TerrainFlags.Stair))
             Publish(new MessageEvent($"There is {Article(feature.Name)} here."));
-        else if (!StepOnFallenNote(target)) QuestStep(target); // (AVABand: a fallen character's last words, scratched into the floor)
+        else if (!StepOnFallenNote(target) && !ShrineStep(target)) QuestStep(target); // (AVABand: a fallen character's last words, or a shrine that asks what you'll do)
 
         // Angband do_autopickup: each object picked up costs a tenth of a turn (at most a turn).
         var picked = Level.Objects.Any(target) ? NoticeFloorObjects() : 0;
@@ -651,6 +653,7 @@ public sealed partial class GameSession : ITurnHandler
             PlaceGhost(); // (AVABand: perhaps the ghost of someone who fell at this depth)
             PlaceRivals(); // (AVABand: perhaps your rival band, or one of them)
             PlaceFallenNote(); // (AVABand: perhaps the last words of someone who fell at this depth)
+            PlaceShrine(); // (AVABand: now and then a shrine in one of its rooms)
             _questRoomHere = null;
             PrepareFeeling();
             CheatPeek();

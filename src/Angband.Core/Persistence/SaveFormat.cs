@@ -69,6 +69,8 @@ public sealed class SaveFile
     public Game.FallenNoteLog? FallenNotes { get; set; }
     /// <summary>AVABand: the character's rival band (absent in older saves, and for a character made without it).</summary>
     public Game.RivalBand? Rivals { get; set; }
+    /// <summary>AVABand: the shrines this character has used and desecrated (absent in older saves).</summary>
+    public Game.ShrineLog? Shrines { get; set; }
     /// <summary>The journey: levels arrived on and kills, in order (absent from older saves).</summary>
     public List<JourneyVisitSave> JourneyVisits { get; set; } = [];
     public List<JourneyKillSave> JourneyKills { get; set; } = [];
