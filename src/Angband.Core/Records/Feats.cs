@@ -60,6 +60,8 @@ public static class Feats
         foreach (var season in Seasons.All)
             feats.Add(new(season.FeatId, season.FeatName, season.FeatDescription, g => g.KilledUniques.Contains(season.Unique)));
         feats.Add(new("board", "Regular at the Pony", "Complete ten jobs from the notice board with one character.", g => g.AvaQuests.JobsDone >= 10));
+        feats.Add(new("raid", "Defender of Bree", "Drive a band of raiders out of the town.", g => g.AvaQuests.RaidsRepelled >= 1));
+        feats.Add(new("raid_5", "Bulwark", "Drive five bands of raiders out of the town with one character.", g => g.AvaQuests.RaidsRepelled >= 5));
         feats.Add(new("bounty", "Bounty Hunter", "Claim a bounty on a unique from the notice board.", g => g.AvaQuests.BountiesClaimed.Count >= 1));
         feats.Add(new("bounty_5", "Hunter of Legends", "Claim five bounties on uniques with one character.", g => g.AvaQuests.BountiesClaimed.Count >= 5));
         feats.Add(new("hireling_20", "Old Comrades", "See a hireling of yours reach level 20.", g => g.Hireling is { Level: >= 20 }));

@@ -26,7 +26,7 @@ public sealed class SceneView : Control
         SceneKind.GhostPlea => 3600, // (its plea takes a moment to read)
         SceneKind.RecallUp or SceneKind.RecallDown => 3600,
         SceneKind.DeepDescent or SceneKind.Trapdoor => 1800,
-        SceneKind.QuestComplete or SceneKind.BossSlain or SceneKind.GhostAvenged => 2600,
+        SceneKind.QuestComplete or SceneKind.BossSlain or SceneKind.GhostAvenged or SceneKind.TownRaid => 2600,
         _ => DurationMs,
     };
 
@@ -73,7 +73,7 @@ public sealed class SceneView : Control
         SceneKind.BossSlain => [(0, "boss-slain")],
         SceneKind.Unique or SceneKind.Ghost or SceneKind.GhostPlea => [(0, "unique")],
         SceneKind.GhostAvenged => [(0, "quest-complete")],
-        SceneKind.Danger => [(0, "danger")],
+        SceneKind.Danger or SceneKind.TownRaid => [(0, "danger")],
         _ => [],
     };
 
@@ -571,6 +571,7 @@ public sealed class SceneView : Control
             case SceneKind.Labyrinth or SceneKind.Gauntlet: DrawLabyrinth(context, p); break;
             case SceneKind.Fortress: DrawFortress(context, p); break;
             case SceneKind.Danger: DrawDanger(context, p); break;
+            case SceneKind.TownRaid: DrawTownRaid(context, scene, p); break;
             case SceneKind.Unique: DrawUnique(context, scene, p); break;
             case SceneKind.Ghost or SceneKind.GhostPlea or SceneKind.GhostAvenged: DrawGhost(context, scene, p); break;
             case SceneKind.Death: DrawTombstone(context, p); break;
@@ -731,6 +732,74 @@ public sealed class SceneView : Control
             var drift = (x + p * 0.15 * (z - 0.5)) % 1;
             context.FillRectangle(Glow(new Point(drift * w, y * h), w * (0.1 + 0.15 * z), Color.FromRgb(0, 0, 0), 0.8), new Rect(Bounds.Size));
         }
+    }
+
+    /// <summary>
+    /// Raiders in the town: rooftops black against a night sky lit orange from below, fire on the
+    /// thatch, sparks rising — and the raiders' leader, its letter in its colour, coming on out of the smoke.
+    /// </summary>
+    private void DrawTownRaid(DrawingContext context, AmbientScene scene, double p)
+    {
+        var w = Bounds.Width;
+        var h = Bounds.Height;
+        var t = Elapsed / 1000;
+        var sky = new LinearGradientBrush
+        {
+            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+            EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+            GradientStops = { new GradientStop(Color.FromRgb(10, 8, 20), 0), new GradientStop(Color.FromRgb(90, 34, 12), 0.62), new GradientStop(Color.FromRgb(30, 12, 6), 1) },
+        };
+        context.FillRectangle(sky, new Rect(Bounds.Size));
+        // The fires: glows that breathe behind the roofs.
+        foreach (var (x, _, z) in Scatter(5, 71))
+        {
+            var flicker = 0.8 + 0.2 * Math.Sin(t * (5 + 3 * z) + x * 11);
+            context.FillRectangle(Glow(new Point(w * x, h * 0.6), w * (0.12 + 0.1 * z) * flicker, Color.FromRgb(255, 120, 30), 0.55 * flicker), new Rect(Bounds.Size));
+        }
+        // The rooftops: gables and chimneys, black.
+        var roofs = new SolidColorBrush(Color.FromRgb(8, 6, 6));
+        var x0 = -w * 0.02;
+        foreach (var (rw, rh, chimney) in Scatter(9, 72))
+        {
+            var width = w * (0.09 + 0.08 * rw);
+            var eaves = h * (0.66 - 0.05 * rh);
+            var ridge = eaves - h * (0.08 + 0.08 * rh);
+            Polygon(context, roofs, new(x0, h), new(x0, eaves), new(x0 + width / 2, ridge), new(x0 + width, eaves), new(x0 + width, h));
+            if (chimney > 0.5)
+                context.FillRectangle(roofs, new Rect(x0 + width * 0.7, ridge + (eaves - ridge) * 0.2, width * 0.08, (eaves - ridge) * 0.6));
+            // Flames licking up from one roof in two, along its slopes.
+            if (rw > 0.45)
+            {
+                for (var k = 0; k < 3; k++)
+                {
+                    var lick = 0.6 + 0.4 * Math.Sin(t * 9 + k * 2 + rh * 7);
+                    var u = 0.3 + 0.2 * k;
+                    var fx = x0 + width * u;
+                    var fy = eaves - (eaves - ridge) * (1 - Math.Abs(u - 0.5) * 2) + 3;
+                    Polygon(context, new SolidColorBrush(Color.FromArgb(220, 255, (byte)(140 + 30 * k), 40)),
+                        new(fx - width * 0.05, fy), new(fx - width * 0.01, fy - h * 0.05 * lick), new(fx, fy - h * 0.09 * lick),
+                        new(fx + width * 0.02, fy - h * 0.04 * lick), new(fx + width * 0.05, fy));
+                }
+            }
+            x0 += width * 0.98;
+            if (x0 > w) break;
+        }
+        context.FillRectangle(roofs, new Rect(0, h * 0.86, w, h * 0.14));
+        // Sparks and embers rising.
+        foreach (var (x, y, z) in Scatter(60, 73))
+        {
+            var up = (y + t * (0.08 + 0.12 * z)) % 1;
+            context.DrawEllipse(new SolidColorBrush(Color.FromArgb((byte)(220 * (1 - up)), 255, (byte)(150 + 80 * z), 60)), null,
+                new Point(w * x + Math.Sin(t * 2 + x * 13) * 10, h * (0.8 - 0.75 * up)), 1 + 1.5 * z, 1 + 1.5 * z);
+        }
+        // The leader, coming on.
+        var colour = Color.FromUInt32(scene.GlyphColor);
+        var centre = new Point(w / 2, h * 0.5);
+        context.FillRectangle(Glow(centre, Math.Max(w, h) * 0.22, Colors.Black, 0.6), new Rect(Bounds.Size));
+        var size = h * (0.26 + 0.14 * p);
+        var glyph = new FormattedText(scene.Glyph ?? "o", System.Globalization.CultureInfo.InvariantCulture, FlowDirection.LeftToRight,
+            new Typeface(new FontFamily("DejaVu Sans Mono, Consolas, Menlo, monospace"), FontStyle.Normal, FontWeight.Bold), size, new SolidColorBrush(colour));
+        context.DrawText(glyph, new Point(centre.X - glyph.Width / 2, centre.Y - glyph.Height / 2));
     }
 
     /// <summary>A unique: its glyph, large, in its colour, looming out of the dark.</summary>

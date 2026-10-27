@@ -5,6 +5,12 @@ played; this page keeps it all (Help → What's new...).
 
 ## 2026-10-26
 
+- **Raids on the town** (a new birth option, on by default): once the town has grown to its second
+  stage, now and then a band of raiders — kobolds, orcs and wolves, later ogres and trolls, suited to
+  your level — comes over the wall while you're there and makes for the square. Kill the leader or
+  most of them for renown, a purse from the townsfolk and a line in your history (and two feats,
+  *Defender of Bree* and *Bulwark*); leave them to it and the town's newest improvements are spoiled
+  until your next renown. The Quests page counts the raids (Help → Quests).
 - **Messages from the fallen**: when a character dies, the game-over window lets you leave a last
   message — a ready-made phrase ("Beware the cave orc.", "Turn back. The way is shut.", "Fly, you
   fools!") or up to 80 letters of your own. It is carved on the headstone (the graveyard shows it,

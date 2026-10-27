@@ -47,6 +47,20 @@ public sealed class AvaQuestLog
     public int JobsDone { get; set; }
     /// <summary>The stage the town has grown to with your renown (AVABand's own; 0 in older saves, as the town was).</summary>
     public int TownStage { get; set; }
+    /// <summary>The raid on the town under way while you're there, if there is one (AVABand's own).</summary>
+    public TownRaid? Raid { get; set; }
+    /// <summary>Raids on the town you drove off (each one renown), and raids that got the better of it.</summary>
+    public int RaidsRepelled { get; set; }
+    public int RaidsLost { get; set; }
+    /// <summary>The last return to town was raided (the next never is).</summary>
+    public bool LastReturnRaided { get; set; }
+    /// <summary>Returns to the grown town counted (a raid's dice are its own for each).</summary>
+    public int TownReturns { get; set; }
+    /// <summary>
+    /// A raid got the better of the town: its newest improvements are spoiled until its renown reaches
+    /// this (0: the town is as its stage has it).
+    /// </summary>
+    public int SetbackUntil { get; set; }
     /// <summary>Percent added to a store's prices (negative: a discount), for what you did for or against it.</summary>
     public Dictionary<string, int> PriceAdjust { get; set; } = new();
     /// <summary>Quest items left behind on a level (kind, tag), which turn up at the Prancing Pony.</summary>
@@ -88,6 +102,21 @@ public sealed class Caravan
     public int VisitsLeft { get; set; }
     public List<string> Stock { get; set; } = [];
     public List<long> Prices { get; set; } = [];
+}
+
+/// <summary>
+/// A raid on the town (AVABand's own): the raiders by their ids on the town level (the leader first),
+/// how many came, and how long they have held the square unopposed.
+/// </summary>
+public sealed class TownRaid
+{
+    public int LeaderId { get; set; }
+    public List<int> RaiderIds { get; set; } = [];
+    /// <summary>The leader's race and the side of town they came from ("east"), as the news tells it.</summary>
+    public string Leader { get; set; } = "";
+    public string From { get; set; } = "";
+    /// <summary>Turns the raiders have stood in the square with no one to stop them.</summary>
+    public int Held { get; set; }
 }
 
 /// <summary>A quest item left behind on a level: what it was and which quest it belongs to.</summary>

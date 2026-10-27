@@ -264,6 +264,7 @@ public sealed partial class GameSession
         Publish(new WorldTickEvent(gameTurn, Player.Depth, IsDaytime));
         CountStoreDay(gameTurn);
         QuestUpkeep();
+        RaidUpkeep(); // (AVABand: raiders on the town march on the square)
         SpeedRunUpkeep();
         if (gameTurn % (Data.Constants.DayLength / 2) == 0 && Player.Depth == 0)
         {

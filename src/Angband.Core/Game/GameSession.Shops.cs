@@ -392,6 +392,7 @@ public sealed partial class GameSession
 
     private int EnterStore()
     {
+        if (ShopBarredByRaid()) return 0; // (AVABand: raiders at the door)
         if (StoreHere is { } browsing)
             foreach (var item in browsing.Stock) Knowledge.See(item);
         if (StoreHere is not { } store)

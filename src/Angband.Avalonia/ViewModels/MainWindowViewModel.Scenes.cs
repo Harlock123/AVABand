@@ -10,7 +10,7 @@ namespace Angband.Avalonia.ViewModels;
 /// (Several at once queue in this order: how you got here, where you are, what happened, death last.)
 public enum SceneKind
 {
-    StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, Unique,
+    StairsDown, StairsUp, RecallUp, RecallDown, DeepDescent, Trapdoor, Cavern, Labyrinth, Fortress, Moria, Lair, Gauntlet, Danger, TownRaid, Unique,
     Ghost, GhostPlea, BossSlain, GhostAvenged, QuestComplete, Death,
 }
 
@@ -18,11 +18,11 @@ public static class SceneKinds
 {
     /// <summary>
     /// The scenes too important to pass by unseen — a unique or a ghost met, a ghost avenged, a great foe
-    /// slain, a quest done: each
+    /// slain, a quest done, raiders in the town: each
     /// holds until Space, Enter, Escape, a click or the controller's A or B, whatever the option says.
     /// </summary>
     public static bool HoldsForKey(SceneKind kind) => kind is SceneKind.Unique or SceneKind.Ghost or SceneKind.GhostPlea
-        or SceneKind.GhostAvenged or SceneKind.BossSlain or SceneKind.QuestComplete;
+        or SceneKind.GhostAvenged or SceneKind.BossSlain or SceneKind.QuestComplete or SceneKind.TownRaid;
 }
 
 /// <summary>
@@ -329,6 +329,13 @@ public sealed partial class MainWindowViewModel
         var race = e.Ghost.Race;
         AddScene(SceneKind.GhostAvenged, $"{e.Fallen.Name} is laid to rest", race.Glyph.ToString(), _cells.Color(race.Color),
             $"“{e.Words}”", "ghost-avenged");
+    }
+
+    /// <summary>Raiders come over the town wall: their leader's letter in its colour before a burning town (your own picture: town-raid).</summary>
+    private void OnTownRaid(TownRaidEvent e)
+    {
+        var race = e.Leader.Race;
+        AddScene(SceneKind.TownRaid, e.Caption, race.Glyph.ToString(), _cells.Color(race.Color), e.Subtitle, "town-raid");
     }
 
     private void SceneForDeath()

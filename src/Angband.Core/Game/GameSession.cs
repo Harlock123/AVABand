@@ -582,6 +582,7 @@ public sealed partial class GameSession : ITurnHandler
         var fromDepth = Level is null ? -1 : Player.Depth;
         var from = Player.Position;
         KeepLostQuestItems();
+        if (Level is not null && fromDepth == 0) RaidLeftBehind(depth); // (AVABand: a raid on the town, left to it)
         if (Level is not null)
         {
             TakeHirelingAlong(); // (AVABand: your hireling comes with you, so the level never keeps them)
@@ -667,6 +668,7 @@ public sealed partial class GameSession : ITurnHandler
             if (fromDepth > 0) CaravanOnReturn(); // (AVABand: a merchant caravan comes, stays, or goes)
             if (fromDepth > 0) TownWelcome(); // (AVABand: what your renown has done for the town)
             if (fromDepth > 0) RivalsOnReturn(); // (AVABand: your rival band has gone on, and the news of it)
+            if (fromDepth > 0) RaidOnReturn(); // (AVABand: now and then, raiders on the grown town)
         }
         HirelingArrives(fromDepth);
         _arriving = true;

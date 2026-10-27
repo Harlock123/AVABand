@@ -46,8 +46,8 @@ bounties in the daily dungeon, the weekly challenge or the tutorial.
 
 ## The town grows with you
 
-Every story quest you finish and every notice-board job you're paid for earns the town **renown**
-(each character has their own). At 1, 3, 6, 10 and 15 the town improves, and you'll see it the next
+Every story quest you finish, every notice-board job you're paid for and every raid you drive off
+(below) earns the town **renown** (each character has their own). At 1, 3, 6, 10 and 15 the town improves, and you'll see it the next
 time you come back up from the dungeon (it's announced then, once):
 
 1. **Lamps** in the square (`¡` in letters), lit at night, so the middle of town isn't dark.
@@ -61,6 +61,30 @@ The shops' improvement is modest: a pile more on the shelves for each stage from
 things made a couple of levels better. Butterbur and the townsfolk notice too. The Knowledge
 screen's **Quests** page (`~`) starts with *The town*: your renown, its stage, and what the next one
 brings. The daily dungeon, the weekly challenge and the tutorial keep the town as it always was.
+
+## Raids on the town
+
+A town worth something is worth raiding. Once it has reached its second stage (and you're level 5
+or more), now and then — about one return to town in eight, never two returns running, and never
+the first return to a new stage — a **band of raiders** comes over the town wall while you're there:
+a leader and its followers of one kind, suited to your level (kobolds or jackals at first, then
+orcs and wolves, later ogres and trolls; about half your level deep, the leader a little more). It's
+announced, with a scene, and the townsfolk run for their doors. The raiders make for the square.
+
+- **Drive them off**: kill their leader, or more than half of them, and the rest flee. The town
+  counts it as renown (toward its next stage), Butterbur gives you a purse from the grateful
+  townsfolk, and it goes in your history. There are feats for driving off one raid (*Defender of
+  Bree*) and five (*Bulwark*).
+- **If you leave the town** while they're in it (by the stairs or recall), or let them stand in the
+  square unopposed for a while (about fifty turns, with you nowhere near), the raid **succeeds**: the
+  town's newest improvements are spoiled (the statue pulled down, the fountain broken, the stalls
+  smashed or the well fouled) and the shops stock a little less, until your next renown — the next
+  quest or job done. The town never falls below its first stage, and nothing of yours is touched:
+  the Home and the strongroom are safe.
+- While raiders are at a shop's door, the shopkeeper won't open (your Home always does).
+
+The Quests page's *The town* row counts the raids driven off and lost. Raids are a birth option,
+*Town raids*, on by default; never in the daily dungeon, the weekly challenge or the tutorial.
 
 ## Merchant caravans
 

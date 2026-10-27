@@ -69,6 +69,9 @@ them applies in the daily dungeon, the weekly challenge or the tutorial.
   in town (a unique they slay is dead in your game too), and now and then meet them below — to trade
   with, to pass by, or to fight (Help → Monsters). On by default; never in the daily dungeon, the
   weekly challenge or the tutorial.
+- **Town raids** — once the town has grown with your renown, a band of raiders now and then comes
+  while you're there: drive them off for renown and gold, or the town is set back for a while (Help →
+  Quests). On by default; never in the daily dungeon, the weekly challenge or the tutorial.
 - **Hirelings** — a sword for hire at the Prancing Pony follows you down for a fee and a share of
   your gold (Help → Quests); never in the daily dungeon, the weekly challenge or the tutorial (on by default).
 - **A second chance** — once in a character's life, a death no deeper than 250 ft doesn't end it: you

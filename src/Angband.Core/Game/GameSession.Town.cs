@@ -10,7 +10,7 @@ namespace Angband.Core.Game;
 // and better made, from the second stage. The stage is reached on coming back up to town (and
 // announced then, once), and kept in the save. A character without AVABand's quests, the daily
 // dungeon, the weekly challenge and the tutorial keep the town as it always was; so does a replay
-// recorded before the town could grow.
+// recorded before the town could grow. (Raids on the grown town: GameSession.Raids.cs.)
 public sealed partial class GameSession
 {
     /// <summary>The renown each stage needs: the quests and jobs done.</summary>
@@ -33,11 +33,27 @@ public sealed partial class GameSession
     /// <summary>A replay recorded before the town could grow plays it back without (ReplayPlayer sets it).</summary>
     internal bool TownGrowthHeld { get; set; }
 
-    /// <summary>The town's renown: story quests finished (not failed) and notice-board jobs done.</summary>
-    public int TownRenown => AvaQuests.Quests.Values.Count(q => q.IsDone && q.Stage != "lost") + AvaQuests.JobsDone;
+    /// <summary>The town's renown: story quests finished (not failed), notice-board jobs done and raids driven off.</summary>
+    public int TownRenown => AvaQuests.Quests.Values.Count(q => q.IsDone && q.Stage != "lost") + AvaQuests.JobsDone + AvaQuests.RaidsRepelled;
 
-    /// <summary>The stage the town has reached (0: as it always was), as built and kept in the save.</summary>
-    public int TownStage => TownGrowthOn ? Math.Clamp(AvaQuests.TownStage, 0, TownGrowth.MaxStage) : 0;
+    /// <summary>
+    /// The stage the town stands at (0: as it always was), as built and kept in the save — a stage
+    /// lower (never below the first) while a raid's damage is still being mended.
+    /// </summary>
+    public int TownStage
+    {
+        get
+        {
+            var stage = TownStageReached;
+            return TownSetBack && stage > 1 ? stage - 1 : stage;
+        }
+    }
+
+    /// <summary>The stage the town has reached with your renown (0: as it always was), whatever a raid has spoiled of it.</summary>
+    public int TownStageReached => TownGrowthOn ? Math.Clamp(AvaQuests.TownStage, 0, TownGrowth.MaxStage) : 0;
+
+    /// <summary>A raid got the better of the town, and it hasn't mended yet (it does with your next renown).</summary>
+    public bool TownSetBack => TownGrowthOn && AvaQuests.SetbackUntil > 0;
 
     /// <summary>The stage this much renown earns.</summary>
     public static int TownStageFor(int renown)
@@ -55,20 +71,42 @@ public sealed partial class GameSession
 
     private List<string>? _townNews;
 
-    /// <summary>Coming back up to town: the stage your renown has earned is reached (before the town is built).</summary>
+    /// <summary>The town grew on this return: no raid comes on the first return to a new stage.</summary>
+    private bool _townGrewOnReturn;
+
+    /// <summary>The town has mended from a raid, to be told on arriving.</summary>
+    private bool _townMended;
+
+    /// <summary>
+    /// Coming back up to town: a raid's damage mended if your renown has grown since, and the stage your
+    /// renown has earned reached (before the town is built).
+    /// </summary>
     private void GrowTown()
     {
+        _townGrewOnReturn = false;
         if (!TownGrowthOn) return;
+        if (AvaQuests.SetbackUntil > 0 && TownRenown >= AvaQuests.SetbackUntil)
+        {
+            AvaQuests.SetbackUntil = 0;
+            _townMended = true;
+        }
         var earned = TownStageFor(TownRenown);
         if (earned <= AvaQuests.TownStage) return;
         var news = TownStageNews.Skip(AvaQuests.TownStage + 1).Take(earned - AvaQuests.TownStage).ToList();
         AvaQuests.TownStage = earned;
         _townNews = news;
+        _townGrewOnReturn = true;
     }
 
     /// <summary>In town again: a new stage announced (once), or a word on how the town is doing.</summary>
     private void TownWelcome()
     {
+        if (_townMended)
+        {
+            _townMended = false;
+            Publish(new MessageEvent("The town has mended from the raid: what the raiders spoiled is put right."));
+        }
+        else if (TownSetBack) Publish(new MessageEvent("The town is still mending from the raid."));
         if (_townNews is { } news)
         {
             _townNews = null;

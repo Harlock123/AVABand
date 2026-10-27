@@ -427,20 +427,29 @@ public sealed partial class MainWindowViewModel
                 : "This character was made without AVABand's quests.", rows);
     }
 
-    /// <summary>"The town": its renown, the stage it has reached, and what the next one brings.</summary>
+    /// <summary>"The town": its renown, the stage it has reached, what the next one brings, and the raids on it.</summary>
     private KnowledgeRow CreateTownRow()
     {
-        var stage = _game.TownStage;
+        var stage = _game.TownStageReached;
         var renown = _game.TownRenown;
         var last = GameSession.TownStageNews.Length - 1;
-        var text = $"The town\n\nRenown {renown} (each story quest finished and each notice-board job done adds one). Stage {stage} of {last}.\n\n"
+        var q = _game.AvaQuests;
+        var raids = q.RaidsRepelled + q.RaidsLost > 0 || _game.Raid is not null
+            ? $"\n\nRaids on the town: {q.RaidsRepelled} driven off, {q.RaidsLost} lost."
+              + (_game.Raid is not null ? " Raiders are in the town now: drive them off!" : "")
+              + (_game.TownSetBack ? " The last raid set the town back: its newest improvements are spoiled and the shops stock less, until your next renown." : "")
+            : "";
+        var text = $"The town\n\nRenown {renown} (each story quest finished, each notice-board job done and each raid driven off adds one). Stage {stage} of {last}.\n\n"
                    + string.Join("\n", GameSession.TownStageNews.Take(stage + 1).Skip(stage == 0 ? 0 : 1).Select(n => "- " + n))
                    + (stage < last
                        ? $"\n\nNext, at renown {GameSession.TownStageRenown[stage + 1]}"
                          + (GameSession.TownStageFor(renown) > stage ? " (earned: you'll see it when you next come up from the dungeon)" : "")
                          + $": {GameSession.TownStageNews[stage + 1]}"
-                       : "\n\nThe town can grow no more: it is all your renown could make it.");
-        return new KnowledgeRow("¡", _cells.Color(stage > 0 ? "Yellow" : "Slate"), "The town", $"renown {renown}, stage {stage}", () => text);
+                       : "\n\nThe town can grow no more: it is all your renown could make it.")
+                   + raids;
+        var note = $"renown {renown}, stage {stage}" + (_game.Raid is not null ? ", raided!" : _game.TownSetBack ? ", set back" : "")
+                   + (q.RaidsRepelled + q.RaidsLost > 0 ? $", raids {q.RaidsRepelled}/{q.RaidsRepelled + q.RaidsLost} repelled" : "");
+        return new KnowledgeRow("¡", _cells.Color(_game.Raid is not null || _game.TownSetBack ? "Red" : stage > 0 ? "Yellow" : "Slate"), "The town", note, () => text);
     }
 
     /// <summary>
